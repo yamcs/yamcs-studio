@@ -6,13 +6,13 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.yamcs.csstudio.product.application"
-            name="yamcs-studio">
+            name="Yamcs Studio">
          <property
                name="windowImages"
-               value="platform:/plugin/org.yamcs.csstudio.product/icons/css16.png,platform:/plugin/org.yamcs.csstudio.product/icons/css32.png,platform:/plugin/org.yamcs.csstudio.product/icons/css48.png,platform:/plugin/org.yamcs.csstudio.product/icons/css64.png,platform:/plugin/org.yamcs.csstudio.product/icons/css128.png"/>
+               value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png"/>
          <property
                name="aboutImage"
-               value="platform:/plugin/org.yamcs.csstudio.product/icons/aboutSide.png"/>
+               value="icons/aboutSide.png"/>
          <property
                name="aboutText"
                value="Control System Studio (CSS) is a combined&#x0A;effort of several parties, including&#x0A;- SNS (Oak Ridge, TN).&#x0A;- BNL (Brookhaven, NY)&#x0A;- DESY (Hamburg, Germany)&#x0A;&#x0A;&#x0A;It provides a collection of control system&#x0A;tools in a common environment, based&#x0A;on Eclipse.&#x0A;&#x0A;See http://ics-web.sns.ornl.gov/css"/>
@@ -80,6 +80,10 @@
          </toolbar>
       </menuContribution>
    </extension>
-   
+<!--   <extension
+         point="org.eclipse.ui.activities">
+    <activity id="yamcsstudio.disablextensions" name="Hidden activities"/>
+    <activityPatternBinding activityId="yamcsstudio.disablextensions" pattern="org.eclipse.team.*"/>
+   </extension-->   
 
 </plugin>

@@ -80,8 +80,8 @@
 	</profiles>
 
 	<modules>
-		<module>yamcs-studio-plugins</module>
-		<module>yamcs-studio-features</module>
+		<module>org.yamcs.csstudio.feature</module>
+		<module>org.yamcs.csstudio.product</module>
 		<module>yamcs-studio-repository</module>
 	</modules>
 

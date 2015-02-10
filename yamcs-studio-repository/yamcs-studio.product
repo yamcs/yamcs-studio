@@ -78,12 +78,25 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
    </plugins>
 
    <features>
-      <feature id="org.csstudio.sns.feature.eclipse"/>
-      <feature id="org.csstudio.sns.feature.core"/>
-      <feature id="org.csstudio.sns.feature.snscore"/>
-      <feature id="org.csstudio.sns.feature.applications"/>
-      <feature id="org.csstudio.sns.feature.repository"/>
-      <feature id="org.csstudio.sns.feature.snsapps"/>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
+      <feature id="org.eclipse.equinox.p2.core.feature"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature"/>
+      <feature id="org.csstudio.core.feature"/>
+      <feature id="org.csstudio.utilities.feature"/>
+      <feature id="org.csstudio.boy.feature"/>
+      <feature id="org.csstudio.opibuilder.feature"/>
+      <feature id="org.eclipse.emf.ecore"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
+      <feature id="org.eclipse.emf.common"/>
+      <feature id="org.eclipse.ecf.core.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.feature"/>
+      <feature id="org.eclipse.ecf.core.ssl.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
+      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="org.yamcs.csstudio.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
