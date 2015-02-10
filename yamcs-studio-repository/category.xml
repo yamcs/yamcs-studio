@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <category-def name="opt" label="Optional Components"/>
+
+   <!--feature id="org.csstudio.scan.ui.feature">
+      <category name="opt"/>
+   </feature>
+   <feature id="org.csstudio.alarm.beast.ui.feature">
+      <category name="opt"/>
+   </feature>
+   <feature id="org.csstudio.sns.feature.beamline.image">
+      <category name="opt"/>
+   </feature>
+   <feature id="org.csstudio.sns.feature.ccr">
+      <category name="opt"/>
+   </feature-->
+</site>
