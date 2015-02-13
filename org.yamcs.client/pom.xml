@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yamcs.csstudio</groupId>
+		<artifactId>yamcs-studio</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>org.yamcs.client</artifactId>
+	<packaging>bundle</packaging>
+	
+	<properties>
+		<yamcs.version>0.27.3</yamcs.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.yamcs</groupId>
+			<artifactId>yamcs-api</artifactId>
+			<version>${yamcs.version}</version>
+			<exclusions>
+				<!-- Exclude slf4j, so we can synchronize both api and impl version from this pom. API doesn't change often -->
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<manifestLocation>META-INF</manifestLocation>
+					<unpackBundle>true</unpackBundle>
+					<instructions>
+						<Bundle-Name>Yamcs Client</Bundle-Name>
+						<Bundle-SymbolicName>org.yamcs.client;singleton:=true</Bundle-SymbolicName>
+						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
+						<Bundle-Description>OSGI-friendly repackaging of yamcs-api and dependencies</Bundle-Description>
+						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
+						<!-- 
+							Attempt to resolve all and dump in Export-Package.
+							Packages that can't be resolved, are assumed to be optional, hence the additional
+							directives in the Import-Package below.
+						 -->
+						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Import-Package>
+							<!-- 
+								Version 2.2.28.Final of hornetq does not included some dependencies in its pom. So exclude
+							 -->
+							org.hornetq.core.config; resolution:=optional,
+							org.hornetq.core.config.impl; resolution:=optional,
+							org.hornetq.core.messagecounter; resolution:=optional,
+							org.hornetq.core.paging; resolution:=optional,
+							org.hornetq.core.paging.impl; resolution:=optional,
+							org.hornetq.core.persistence; resolution:=optional,
+							org.hornetq.core.protocol.stomp; resolution:=optional,
+							org.hornetq.core.replication; resolution:=optional,
+							org.hornetq.core.security; resolution:=optional,
+							org.hornetq.core.server.cluster; resolution:=optional,
+							org.hornetq.core.server.impl; resolution:=optional,
+							org.hornetq.core.server.management; resolution:=optional,
+							org.jboss.logging; resolution:=optional,
+							<!--
+								Ignore sun.misc errors (declared as optional in Netty, which we actually repackage here) 
+							 -->
+							sun.misc; resolution:=optional,
+							<!-- 
+								Include the rest
+							 -->
+							*
+						</Import-Package>
+         				<!-- _exportcontents>*</_exportcontents-->
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

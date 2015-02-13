@@ -1,2 +1,5 @@
 .project
 .classpath
+
+# Generated
+org.yamcs.client/META-INF/MANIFEST.MF

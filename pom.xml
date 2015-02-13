@@ -13,6 +13,11 @@
 		<maven>3.0</maven>
 	</prerequisites>
 
+	<organization>
+		<name>Space Applications Services</name>
+		<url>http://www.spaceapplications.com</url>
+	</organization>
+
 	<properties>
 		<tycho.version>0.22.0</tycho.version>
 		<tycho-extras.version>0.22.0</tycho-extras.version>
@@ -42,6 +47,27 @@
 			<id>Eclipse</id>
 			<url>http://download.eclipse.org/releases/luna</url>
 			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>repository.jboss.org</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>yamcs-mvn-repo-releases</id>
+			<url>https://raw.github.com/yamcs/mvn-repo/master/releases/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>yamcs-mvn-repo-snapshots</id>
+			<url>https://raw.github.com/yamcs/mvn-repo/master/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
@@ -80,6 +106,8 @@
 	</profiles>
 
 	<modules>
+		<module>org.csstudio.utility.pvmanager.yamcs</module>
+		<module>org.yamcs.client</module>
 		<module>org.yamcs.csstudio.feature</module>
 		<module>org.yamcs.csstudio.product</module>
 		<module>yamcs-studio-repository</module>
@@ -88,6 +116,11 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.7</version>
+				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
