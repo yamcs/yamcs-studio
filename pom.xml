@@ -28,6 +28,15 @@
 		<!-- jgit.dirtyWorkingTree options: ignore, warning, error -->
 		<jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
 	</properties>
+	
+	<modules>
+		<module>org.csstudio.utility.product.yamcs</module>
+		<module>org.csstudio.utility.pvmanager.yamcs</module>
+		<module>org.csstudio.yamcs.feature</module>
+		<module>org.csstudio.yamcs.product</module>
+		<module>org.yamcs.client</module>
+		<module>yamcs-studio-repository</module>
+	</modules>
 
 	<pluginRepositories>
 		<pluginRepository>
@@ -104,14 +113,6 @@
 			</repositories>
 		</profile>
 	</profiles>
-
-	<modules>
-		<module>org.csstudio.utility.pvmanager.yamcs</module>
-		<module>org.csstudio.yamcs.feature</module>
-		<module>org.csstudio.yamcs.product</module>
-		<module>org.yamcs.client</module>
-		<module>yamcs-studio-repository</module>
-	</modules>
 
 	<build>
 		<pluginManagement>
