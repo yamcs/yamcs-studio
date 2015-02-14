@@ -9,6 +9,6 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>org.yamcs.csstudio.product</artifactId>
+	<artifactId>org.csstudio.yamcs.product</artifactId>
 	<packaging>eclipse-plugin</packaging>
 </project>

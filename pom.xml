@@ -107,15 +107,20 @@
 
 	<modules>
 		<module>org.csstudio.utility.pvmanager.yamcs</module>
+		<module>org.csstudio.yamcs.feature</module>
+		<module>org.csstudio.yamcs.product</module>
 		<module>org.yamcs.client</module>
-		<module>org.yamcs.csstudio.feature</module>
-		<module>org.yamcs.csstudio.product</module>
 		<module>yamcs-studio-repository</module>
 	</modules>
 
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.2</version>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>

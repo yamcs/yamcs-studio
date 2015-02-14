@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.csstudio.product.product" application="org.yamcs.csstudio.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.csstudio.yamcs.product.product" application="org.csstudio.yamcs.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.yamcs.csstudio.product/icons/aboutSide.png"/>
+      <image path="/org.csstudio.yamcs.product/icons/aboutSide.png"/>
       <text>
          Control System Studio (CSS) is a combined
 effort of several parties, including
@@ -37,19 +37,19 @@ openFile
       </vmArgs>
    </launcherArgs>
 
-   <windowImages i16="/org.yamcs.csstudio.product/icons/css16.png" i32="/org.yamcs.csstudio.product/icons/css32.png" i48="/org.yamcs.csstudio.product/icons/css48.png" i64="/org.yamcs.csstudio.product/icons/css64.png" i128="/org.yamcs.csstudio.product/icons/css128.png"/>
+   <windowImages i16="/org.csstudio.yamcs.product/icons/css16.png" i32="/org.csstudio.yamcs.product/icons/css32.png" i48="/org.csstudio.yamcs.product/icons/css48.png" i64="/org.csstudio.yamcs.product/icons/css64.png" i128="/org.csstudio.yamcs.product/icons/css128.png"/>
 
    <splash
-      location="org.yamcs.csstudio.product"
+      location="org.csstudio.yamcs.product"
       startupProgressRect="20,215,340,15"
       startupMessageRect="20,195,340,20"
       startupForegroundColor="FFFDFA" />
    <launcher name="yamcs-studio">
-      <linux icon="/org.yamcs.csstudio.product/icons/css48.xpm"/>
-      <macosx icon="/org.yamcs.csstudio.product/icons/css.icns"/>
+      <linux icon="/org.csstudio.yamcs.product/icons/css48.xpm"/>
+      <macosx icon="/org.csstudio.yamcs.product/icons/css.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/org.yamcs.csstudio.product/icons/css.ico"/>
+         <ico path="/org.csstudio.yamcs.product/icons/css.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -96,7 +96,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
       <feature id="org.eclipse.ecf.core.ssl.feature"/>
       <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
       <feature id="org.eclipse.e4.rcp"/>
-      <feature id="org.yamcs.csstudio.feature" version="1.0.0.qualifier"/>
+      <feature id="org.csstudio.yamcs.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>

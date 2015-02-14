@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs Studio
-Bundle-SymbolicName: org.yamcs.csstudio.product;singleton:=true
+Bundle-SymbolicName: org.csstudio.yamcs.product;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Eclipse-BundleShape: dir
 Require-Bundle: org.eclipse.core.runtime,

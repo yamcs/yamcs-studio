@@ -5,7 +5,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.yamcs.csstudio.product.application"
+            application="org.csstudio.yamcs.product.application"
             name="Yamcs Studio">
          <property
                name="windowImages"
@@ -51,7 +51,7 @@
    <extension
          point="org.eclipse.core.runtime.applications"
          id="application"
-		 name="SNS CSS">
+		 name="Yamcs Studio">
       <application>
          <run
                class="org.csstudio.startup.application.Application">

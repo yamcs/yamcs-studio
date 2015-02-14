@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.yamcs.csstudio.feature"
+      id="org.csstudio.yamcs.feature"
       label="Bundles plugin dependencies"
       version="1.0.0.qualifier"
       provider-name="Space Applications Services">
 
-   <description>
-      SNS Control Room Tools: JMS Monitor, alarm GUI, ...
-   </description>
-
    <copyright>
-      Copyright (c) 2014 Oak Ridge National Laboratory,
-OAK RIDGE, TN, USA.
+      Copyright (c) 2015 Space Applications Services
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
@@ -25,12 +20,6 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 FOR PARTICULAR PURPOSE AND NON-INFRINGEMENT.
 For details, see http://www.eclipse.org/legal/epl-v10.html
    </license>
-
-   <plugin
-         id="org.yamcs.csstudio.product"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.csstudio.utility.pvmanager"
@@ -584,5 +573,11 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          install-size="0"
          version="3.0.0.v201112011016"
          unpack="false"/>
+
+   <plugin
+         id="org.csstudio.yamcs.product"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
