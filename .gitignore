@@ -2,4 +2,5 @@
 .classpath
 
 # Generated from POM
-org.yamcs.client/META-INF/MANIFEST.MF
+org.csstudio.utility.pvmanager.yamcs/META-INF
+org.yamcs.client/META-INF
