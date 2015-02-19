@@ -5,27 +5,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.yamcs.csstudio</groupId>
-		<artifactId>yamcs-studio</artifactId>
+		<artifactId>yamcs-studio-bundles</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>org.csstudio.utility.pvmanager.yamcs</artifactId>
 	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>runtime</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.epics</groupId>
-			<artifactId>pvmanager-core</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.epics</groupId>
-			<artifactId>pvmanager-vtype</artifactId>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>${netty.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -37,11 +28,17 @@
 			<artifactId>protostuff-json</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-codec-http</artifactId>
+			<groupId>org.epics</groupId>
+			<artifactId>pvmanager-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.epics</groupId>
+			<artifactId>pvmanager-vtype</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -146,7 +143,8 @@
 							sun.security.x509; resolution:=optional,
 							*;ui.workbench=!;common=!;registry=!;texteditor=!;text=!
 						</Import-Package>
-						<!-- _snapshot>${maven.build.timestamp}</_snapshot-->
+						<!-- When uncommenting the following, build crashes when using snapshot versions -->
+						<!--_snapshot>${maven.build.timestamp}</_snapshot-->
 					</instructions>
 					<manifestLocation>META-INF</manifestLocation>
 				</configuration>

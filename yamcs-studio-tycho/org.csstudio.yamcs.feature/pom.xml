@@ -8,7 +8,7 @@
 		<artifactId>yamcs-studio</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>org.csstudio.yamcs.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 </project>

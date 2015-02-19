@@ -1,6 +1,7 @@
 .project
 .classpath
+.metadata/
 
 # Generated from POM
-org.csstudio.utility.pvmanager.yamcs/META-INF
-org.yamcs.client/META-INF
+yamcs-studio-bundles/org.csstudio.platform.libs.yamcs/META-INF/
+yamcs-studio-bundles/org.csstudio.utility.pvmanager.yamcs/META-INF/
