@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
@@ -103,10 +104,12 @@ public class YService implements WebSocketClientCallbackListener {
         for (ParameterValue pval : pdata.getParameterList()) {
             YamcsPVChannelHandler handler = channelHandlersByName.get(pval.getId().getName());
             if (handler != null) {
-                System.out.println("request to update channel "+handler.getChannelName()+" to val "+pval.getEngValue());
+                if (log.isLoggable(Level.FINER)) {
+                    log.finer("request to update channel "+handler.getChannelName()+" to val "+pval.getEngValue());
+                }
                 handler.processParameterValue(pval);
             } else {
-                System.out.println("No handler for incoming update of " + pval.getId().getName());
+                log.warning("No handler for incoming update of " + pval.getId().getName());
             }
         }
     }

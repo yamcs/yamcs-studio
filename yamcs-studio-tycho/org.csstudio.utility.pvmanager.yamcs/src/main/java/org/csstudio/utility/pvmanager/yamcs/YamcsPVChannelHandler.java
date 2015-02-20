@@ -1,5 +1,7 @@
 package org.csstudio.utility.pvmanager.yamcs;
 
+import java.util.logging.Logger;
+
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVTypeAdapter;
 import org.csstudio.utility.pvmanager.yamcs.service.YService;
 import org.epics.pvmanager.ChannelWriteCallback;
@@ -12,6 +14,7 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
     
     private YService yservice;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
+    private static final Logger log = Logger.getLogger(YamcsPVChannelHandler.class.getName());
 
     public YamcsPVChannelHandler(String channelName, YService yservice) {
         super(channelName);
@@ -23,7 +26,7 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
      */
     @Override
     protected void connect() {
-        System.out.println("Connect called on " + getChannelName());
+        log.fine("Connect called on " + getChannelName());
         yservice.connectChannelHandler(this);
         processConnection(Boolean.TRUE);
     }

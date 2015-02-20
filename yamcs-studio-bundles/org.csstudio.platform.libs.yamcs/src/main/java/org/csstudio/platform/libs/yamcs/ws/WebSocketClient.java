@@ -127,14 +127,14 @@ public class WebSocketClient {
             }
         });
         
-        System.out.println("WebSocket Client connecting");
+        log.info("WebSocket Client connecting");
         try {
             ChannelFuture future = bootstrap.connect(uri.getHost(), uri.getPort()).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (!future.isSuccess()) {
                         // Set-up reconnection attempts every second during initial set-up.
-                        System.out.println("reconnect..");
+                        log.info("reconnect..");
                         group.schedule(() -> createBootstrap(), 1L, TimeUnit.SECONDS);
                     }
                 }
@@ -196,7 +196,7 @@ public class WebSocketClient {
     public void disconnect() {
         if (connected.compareAndSet(true, false)) {
             enableReconnection.set(false);
-            System.out.println("WebSocket Client sending close");
+            log.info("WebSocket Client sending close");
             nettyChannel.writeAndFlush(new CloseWebSocketFrame());
             
             // WebSocketClientHandler will close the channel when the server responds to the CloseWebSocketFrame
