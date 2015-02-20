@@ -10,6 +10,19 @@
 	<artifactId>yamcs-studio-bundles-repository</artifactId>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.2</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.reficio</groupId>
@@ -30,10 +43,6 @@
 								</artifact>
 
 								<!-- Plugins from reactor -->
-								<artifact>
-									<id>org.yamcs.csstudio:org.csstudio.utility.pvmanager.yamcs:${project.version}</id>
-									<source>true</source>
-								</artifact>
 								<artifact>
 									<id>org.yamcs.csstudio:org.csstudio.platform.libs.yamcs:${project.version}</id>
 									<source>true</source>
@@ -146,5 +155,4 @@
 			</build>
 		</profile>
 	</profiles>
-
 </project>

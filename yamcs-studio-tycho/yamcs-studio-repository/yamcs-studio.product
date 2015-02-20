@@ -96,7 +96,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
       <feature id="org.eclipse.ecf.core.ssl.feature"/>
       <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
       <feature id="org.eclipse.e4.rcp"/>
-      <feature id="org.csstudio.yamcs.feature" version="1.0.0.qualifier"/>
+      <feature id="org.csstudio.yamcs.feature"/>
    </features>
 
    <configurations>

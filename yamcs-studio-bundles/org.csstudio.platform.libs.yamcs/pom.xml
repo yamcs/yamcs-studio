@@ -19,90 +19,145 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.yamcs</groupId>
-			<artifactId>yamcs-api</artifactId>
-			<version>${yamcs.version}</version>
-			<exclusions>
-				<!-- Exclude slf4j, so we can synchronize both api and impl version from this pom. API doesn't change often -->
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>${netty.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>${slf4j.version}</version>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-json</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.epics</groupId>
+			<artifactId>pvmanager-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.epics</groupId>
+			<artifactId>pvmanager-vtype</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>io.protostuff</groupId>
+				<artifactId>protostuff-maven-plugin</artifactId>
+				<configuration>
+					<protoModules>
+						<protoModule>
+							<source>src/main/resources/yamcs.proto</source>
+							<outputDir>target/generated-sources/proto</outputDir>
+							<output>java_bean</output>
+							<encoding>UTF-8</encoding>
+							<options>
+								<property>
+									<name>separate_schema</name>
+								</property>
+								<property>
+									<name>generate_field_map</name>
+								</property>
+							</options>
+						</protoModule>
+						<protoModule>
+							<source>src/main/resources/pvalue.proto</source>
+							<outputDir>target/generated-sources/proto</outputDir>
+							<output>java_bean</output>
+							<encoding>UTF-8</encoding>
+							<options>
+								<property>
+									<name>separate_schema</name>
+								</property>
+								<property>
+									<name>generate_field_map</name>
+								</property>
+							</options>
+						</protoModule>
+					</protoModules>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated-sources/proto</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
 				<configuration>
-					<manifestLocation>META-INF</manifestLocation>
 					<unpackBundle>true</unpackBundle>
 					<instructions>
-						<Bundle-Name>Yamcs Client</Bundle-Name>
-						<Bundle-SymbolicName>org.yamcs.client;singleton:=true</Bundle-SymbolicName>
+						<Bundle-Name>Yamcs Libs</Bundle-Name>
+						<Bundle-SymbolicName>org.csstudio.platform.libs.yamcs;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
-						<Bundle-Description>OSGI-friendly repackaging of yamcs-api and dependencies</Bundle-Description>
+						<Bundle-Description>Provides Yamcs connectivity to pvManager</Bundle-Description>
 						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
-						<!--
-							Attempt to resolve all and dump in Export-Package.
-							Packages that can't be resolved, are assumed to be optional, hence the additional
-							directives in the Import-Package below.
-						 -->
 						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Import-Package>
-							<!--
-								Version 2.2.28.Final of hornetq does not included some dependencies in its pom. So exclude
-							 -->
-							org.hornetq.core.config; resolution:=optional,
-							org.hornetq.core.config.impl; resolution:=optional,
-							org.hornetq.core.messagecounter; resolution:=optional,
-							org.hornetq.core.paging; resolution:=optional,
-							org.hornetq.core.paging.impl; resolution:=optional,
-							org.hornetq.core.persistence; resolution:=optional,
-							org.hornetq.core.protocol.stomp; resolution:=optional,
-							org.hornetq.core.replication; resolution:=optional,
-							org.hornetq.core.security; resolution:=optional,
-							org.hornetq.core.server.cluster; resolution:=optional,
-							org.hornetq.core.server.impl; resolution:=optional,
-							org.hornetq.core.server.management; resolution:=optional,
-							org.jboss.logging; resolution:=optional,
-							<!--
-								Ignore sun.misc errors (declared as optional in Netty, which we actually repackage here)
-							 -->
+							<!-- Netty comes with quite a few optional deps, should really try and import
+							it in a better way, since 4.x is said to by osgi-friendly out of the box -->
+							com.fasterxml.jackson.dataformat.smile; resolution:=optional,
+							com.google.protobuf; resolution:=optional,
+							com.jcraft.jzlib; resolution:=optional,
+							javassist; resolution:=optional,
+							org.apache.log4j; resolution:=optional,
+							org.apache.tomcat.jni; resolution:=optional,
+							org.bouncycastle.asn1.x500; resolution:=optional,
+							org.bouncycastle.cert; resolution:=optional,
+							org.bouncycastle.cert.jcajce; resolution:=optional,
+							org.bouncycastle.jce.provider; resolution:=optional,
+							org.bouncycastle.operator; resolution:=optional,
+							org.bouncycastle.operator.jcajce; resolution:=optional,
+							org.eclipse.jetty.alpn; resolution:=optional,
+							org.eclipse.jetty.npn; resolution:=optional,
+							org.jboss.marshalling; resolution:=optional,
+							org.slf4j; resolution:=optional,
+							org.slf4j.helpers; resolution:=optional,
 							sun.misc; resolution:=optional,
-							<!--
-								Include the rest
-							 -->
-							*
+							sun.security.util; resolution:=optional,
+							sun.security.x509; resolution:=optional,
+							*;ui.workbench=!;common=!;registry=!;texteditor=!;text=!
 						</Import-Package>
-         				<!-- _exportcontents>*</_exportcontents-->
+						<!-- When uncommenting the following, build crashes when using snapshot versions -->
+						<!--_snapshot>${maven.build.timestamp}</_snapshot-->
 					</instructions>
+					<manifestLocation>META-INF</manifestLocation>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
