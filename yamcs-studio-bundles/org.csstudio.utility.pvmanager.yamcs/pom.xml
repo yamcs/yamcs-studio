@@ -116,6 +116,7 @@
 						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
 						<Bundle-Description>Provides Yamcs connectivity to pvManager</Bundle-Description>
 						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
+						<Bundle-Activator>org.csstudio.utility.pvmanager.yamcs.Activator</Bundle-Activator>
 						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Import-Package>
