@@ -23,7 +23,6 @@ public class YamcsVType implements Alarm, Time, Display {
         case IN_LIMITS:
             return AlarmSeverity.NONE;
         case DISABLED:
-            System.out.println("hum no alarms?");
             return AlarmSeverity.UNDEFINED;
         case WATCH:
         case WATCH_HIGH:
@@ -54,7 +53,7 @@ public class YamcsVType implements Alarm, Time, Display {
 
     @Override
     public Timestamp getTimestamp() {
-        return Timestamp.now(); // TODO
+        return Timestamp.of(YamcsUTCString.parse(pval.getAcquisitionTimeUTC()));
     }
     
     @Override
