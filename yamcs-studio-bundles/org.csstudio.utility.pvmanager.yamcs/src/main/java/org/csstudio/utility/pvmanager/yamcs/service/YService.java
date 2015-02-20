@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.csstudio.utility.pvmanager.yamcs.Activator;
 import org.csstudio.utility.pvmanager.yamcs.InvalidIdentification;
 import org.csstudio.utility.pvmanager.yamcs.YamcsPVChannelHandler;
 import org.csstudio.utility.pvmanager.yamcs.ws.WebSocketClient;
@@ -37,7 +38,10 @@ public class YService implements WebSocketClientCallbackListener {
     
     public YService() {
         try {
-            URI uri = new URI("ws://localhost:8080/local/_websocket");
+            String yamcsHost = Activator.getDefault().getPreferenceStore().getString("yamcs_host");
+            int yamcsPort = Activator.getDefault().getPreferenceStore().getInt("yamcs_port");
+            String yamcsInstance = Activator.getDefault().getPreferenceStore().getString("yamcs_instance");
+            URI uri = new URI("ws://" + yamcsHost + ":" + yamcsPort + "/" + yamcsInstance + "/_websocket");
             wsclient = new WebSocketClient(uri, this);
             wsclient.setUserAgent(USER_AGENT);
         } catch (URISyntaxException e) {

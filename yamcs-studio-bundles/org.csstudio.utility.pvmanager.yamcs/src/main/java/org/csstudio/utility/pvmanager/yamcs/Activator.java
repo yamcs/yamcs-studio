@@ -3,7 +3,7 @@ package org.csstudio.utility.pvmanager.yamcs;
 import java.util.logging.Logger;
 
 import org.csstudio.autocomplete.AutoCompleteHelper;
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -11,7 +11,7 @@ import org.osgi.framework.BundleContext;
  * Currently we only use it as an easy way to get to the Bundle-Version
  * as declared in the manifest.
  */
-public class Activator extends Plugin {
+public class Activator extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.csstudio.utility.pvmanager.yamcs";
 	private static final Logger log = Logger.getLogger(Activator.class.getName());
