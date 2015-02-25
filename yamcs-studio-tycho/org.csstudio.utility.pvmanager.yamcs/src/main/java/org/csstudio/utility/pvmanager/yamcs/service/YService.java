@@ -1,13 +1,12 @@
 package org.csstudio.utility.pvmanager.yamcs.service;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
 import org.csstudio.utility.pvmanager.yamcs.Activator;
@@ -38,16 +37,12 @@ public class YService implements WebSocketClientCallbackListener {
     private WebSocketClient wsclient;
     
     public YService() {
-        try {
-            String yamcsHost = Activator.getDefault().getPreferenceStore().getString("yamcs_host");
-            int yamcsPort = Activator.getDefault().getPreferenceStore().getInt("yamcs_port");
-            String yamcsInstance = Activator.getDefault().getPreferenceStore().getString("yamcs_instance");
-            URI uri = new URI("ws://" + yamcsHost + ":" + yamcsPort + "/" + yamcsInstance + "/_websocket");
-            wsclient = new WebSocketClient(uri, this);
-            wsclient.setUserAgent(USER_AGENT);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid URI", e);
-        }
+        String yamcsHost = Activator.getDefault().getPreferenceStore().getString("yamcs_host");
+        int yamcsPort = Activator.getDefault().getPreferenceStore().getInt("yamcs_port");
+        String yamcsInstance = Activator.getDefault().getPreferenceStore().getString("yamcs_instance");
+        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
+        wsclient = new WebSocketClient(yprops, this);
+        wsclient.setUserAgent(USER_AGENT);
     }
     
     public synchronized void connectChannelHandler(YamcsPVChannelHandler channelHandler) {

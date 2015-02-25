@@ -36,23 +36,22 @@
 						</goals>
 						<configuration>
 							<artifacts>
-								<!-- Thirdparty artifacts -->
+								<!-- Thirdparty OSGI-friendly artifacts -->
 								<artifact>
-									<id>io.netty:netty-all:4.0.25.Final</id>
+									<id>io.netty:netty-all:${netty.version}</id>
 									<source>true</source>
 								</artifact>
 
 								<!-- Plugins from reactor -->
 								<artifact>
-									<id>org.yamcs.csstudio:org.csstudio.platform.libs.yamcs:${project.version}</id>
-									<source>true</source>
+									<id>org.yamcs.csstudio:org.csstudio.platform.libs.protostuff:${project.version}</id>
 								</artifact>
 							</artifacts>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!-- plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
@@ -75,7 +74,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin-->
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-p2-extras-plugin</artifactId>

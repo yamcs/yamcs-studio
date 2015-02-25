@@ -3,5 +3,4 @@
 .metadata/
 
 # Generated from POM
-yamcs-studio-bundles/org.csstudio.platform.libs.yamcs/META-INF/
-yamcs-studio-bundles/org.csstudio.utility.pvmanager.yamcs/META-INF/
+yamcs-studio-bundles/org.csstudio.platform.libs.protostuff/META-INF/

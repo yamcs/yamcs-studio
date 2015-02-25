@@ -13,4 +13,6 @@ Require-Bundle: org.csstudio.platform.libs.yamcs,
  org.eclipse.ui,
  org.csstudio.autocomplete,
  org.eclipse.core.runtime,
- org.csstudio.utility.pvmanager;bundle-version="4.1.0"
+ org.csstudio.utility.pvmanager,
+ org.csstudio.platform.libs.protostuff
+Export-Package: org.csstudio.utility.pvmanager.yamcs

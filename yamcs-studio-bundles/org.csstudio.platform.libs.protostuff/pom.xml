@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yamcs.csstudio</groupId>
+		<artifactId>yamcs-studio-bundles</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>org.csstudio.platform.libs.protostuff</artifactId>
+	<packaging>bundle</packaging>
+	<description>
+		There is a protostuff-uberjar which is OSGI-friendly, but it
+		really isn't that uber at all. protostuff-json is not included.
+		Therefore, repackage what we need instead.
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-json</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<unpackBundle>true</unpackBundle>
+					<instructions>
+						<Bundle-Name>Protostuff Libs</Bundle-Name>
+						<Bundle-SymbolicName>org.csstudio.platform.libs.protostuff;singleton:=true</Bundle-SymbolicName>
+						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
+						<Bundle-Description>Provides Protostuff</Bundle-Description>
+						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
+						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Import-Package>
+							com.fasterxml.jackson.dataformat.smile; resolution:="optional",
+							*
+						</Import-Package>
+						<Export-Package>*</Export-Package>
+					</instructions>
+					<manifestLocation>META-INF</manifestLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

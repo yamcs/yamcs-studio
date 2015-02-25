@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.yamcs.protobuf.NamedObjectId;
 import org.yamcs.protobuf.NamedObjectList;
 
@@ -68,8 +69,8 @@ public class WebSocketClient {
     // an InvalidException on some of them :-(
     private ConcurrentHashMap<Integer, NamedObjectList> upstreamSubscriptionsBySeqId = new ConcurrentHashMap<>();
 
-    public WebSocketClient(URI uri, WebSocketClientCallbackListener callback) {
-        this.uri = uri;
+    public WebSocketClient(YamcsConnectionProperties yprops, WebSocketClientCallbackListener callback) {
+        this.uri = yprops.webSocketURI();
         this.callback = callback;
         exec.scheduleWithFixedDelay(() -> {
             // Try to bundle multiple subscriptions in one request
