@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs PV Name lookup
+Bundle-SymbolicName: org.csstudio.autocomplete.pvmanager.yamcs;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.core.runtime,
+ org.csstudio.autocomplete,
+ org.csstudio.platform.libs.yamcs,
+ org.csstudio.platform.libs.protostuff
+Service-Component: OSGI-INF/*.xml
+Bundle-ActivationPolicy: lazy
