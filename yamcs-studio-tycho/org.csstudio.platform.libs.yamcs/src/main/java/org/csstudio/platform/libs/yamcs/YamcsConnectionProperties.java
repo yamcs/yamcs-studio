@@ -27,7 +27,7 @@ public class YamcsConnectionProperties {
 
     public URI webSocketURI() {
         try {
-            return new URI("ws://" + host + ":" + port + "/" + instance + "_websocket");
+            return new URI("ws://" + host + ":" + port + "/" + instance + "/_websocket");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

@@ -58,7 +58,7 @@
          </run>
       </application>
    </extension>
-
+   
    <!-- Note that the classes listed in here should be in plugins
         that can be loaded without locking the workspace.
         This means the plugins loaded for these classes

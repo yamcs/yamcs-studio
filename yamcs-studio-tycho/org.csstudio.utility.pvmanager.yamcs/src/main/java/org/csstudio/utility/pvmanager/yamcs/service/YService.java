@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
+import org.csstudio.platform.libs.yamcs.ui.YamcsUIPlugin;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
-import org.csstudio.utility.pvmanager.yamcs.Activator;
 import org.csstudio.utility.pvmanager.yamcs.InvalidIdentification;
 import org.csstudio.utility.pvmanager.yamcs.YamcsPVChannelHandler;
 import org.yamcs.protobuf.NamedObjectId;
@@ -37,9 +37,9 @@ public class YService implements WebSocketClientCallbackListener {
     private WebSocketClient wsclient;
     
     public YService() {
-        String yamcsHost = Activator.getDefault().getPreferenceStore().getString("yamcs_host");
-        int yamcsPort = Activator.getDefault().getPreferenceStore().getInt("yamcs_port");
-        String yamcsInstance = Activator.getDefault().getPreferenceStore().getString("yamcs_instance");
+        String yamcsHost = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
+        int yamcsPort = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
+        String yamcsInstance = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
         YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(USER_AGENT);

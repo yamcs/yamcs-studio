@@ -11,16 +11,6 @@
    </extension>
 
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="org.csstudio.platform.ui.css.applications"
-            class="org.csstudio.utility.pvmanager.yamcs.preferences.YamcsPreferencePage"
-            id="org.csstudio.utility.pvmanager.yamcs.preferences.YamcsPreferencePage"
-            name="Yamcs">
-      </page>
-   </extension>
-
-   <extension
          point ="org.eclipse.ui.startup">
       <startup
             class="org.csstudio.utility.pvmanager.yamcs.Bootstrap"/>

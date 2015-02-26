@@ -17,6 +17,7 @@ import org.csstudio.autocomplete.parser.ContentType;
 import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
+import org.csstudio.platform.libs.yamcs.ui.YamcsUIPlugin;
 import org.csstudio.platform.libs.yamcs.web.MessageHandler;
 import org.csstudio.platform.libs.yamcs.web.SimpleYamcsRequests;
 import org.yamcs.protobuf.NamedObjectId;
@@ -56,7 +57,10 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
      */
     private void loadParameterNames() {
         log.fine("Initializing yamcs content provider");
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties("localhost", 8080, "s3");
+        String yamcsHost = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
+        int yamcsPort = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
+        String yamcsInstance = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
+        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
         SimpleYamcsRequests.listAllAvailableParameters(yprops, new MessageHandler<NamedObjectList>() {
             @Override
             public void onMessage(NamedObjectList msg) {

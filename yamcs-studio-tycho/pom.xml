@@ -29,6 +29,7 @@
 	<modules>
 		<module>org.csstudio.autocomplete.pvmanager.yamcs</module>
 		<module>org.csstudio.platform.libs.yamcs</module>
+		<module>org.csstudio.platform.libs.yamcs.ui</module>
 		<module>org.csstudio.utility.product.yamcs</module>
 		<module>org.csstudio.utility.pvmanager.yamcs</module>
 		<module>org.csstudio.yamcs.feature</module>

@@ -1,18 +1,14 @@
-package org.csstudio.utility.pvmanager.yamcs;
+package org.csstudio.platform.libs.yamcs.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle. Currently we only use it
- * as an easy way to get to the Bundle-Version as declared in the manifest.
- */
-public class Activator extends AbstractUIPlugin {
+public class YamcsUIPlugin extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "org.csstudio.utility.pvmanager.yamcs";
+    public static final String PLUGIN_ID = "org.csstudio.utility.platform.libs.yamcs.ui";
 
     // The shared instance
-    private static Activator plugin;
+    private static YamcsUIPlugin plugin;
     
     @Override
     public void start(BundleContext context) throws Exception {
@@ -26,7 +22,7 @@ public class Activator extends AbstractUIPlugin {
         super.stop(context);
     }
 
-    public static Activator getDefault() {
+    public static YamcsUIPlugin getDefault() {
         return plugin;
     }
 }

@@ -1,7 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Version: 1.0.0.qualifier
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.csstudio.utility.pvmanager.yamcs.Activator
 Bundle-Description: Provides Yamcs connectivity to pvManager
 Bundle-ManifestVersion: 2
 Bundle-Name: PVManager Yamcs Support
@@ -9,10 +8,11 @@ Bundle-SymbolicName: org.csstudio.utility.pvmanager.yamcs;singleton:=tru
  e
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.csstudio.platform.libs.yamcs,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
+ org.csstudio.platform.libs.yamcs,
+ org.csstudio.platform.libs.yamcs.ui,
  org.csstudio.autocomplete,
- org.eclipse.core.runtime,
  org.csstudio.utility.pvmanager,
  org.csstudio.platform.libs.protostuff
 Export-Package: org.csstudio.utility.pvmanager.yamcs

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.csstudio.platform.libs.yamcs.ui.YamcsUIPlugin
+Bundle-Description: Common Yamcs UI libs
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs UI Libs
+Bundle-SymbolicName: org.csstudio.platform.libs.yamcs.ui;singleton:=true
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Export-Package: org.csstudio.platform.libs.yamcs.ui
