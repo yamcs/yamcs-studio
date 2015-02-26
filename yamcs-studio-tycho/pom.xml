@@ -34,6 +34,7 @@
 		<module>org.csstudio.utility.pvmanager.yamcs</module>
 		<module>org.csstudio.yamcs.feature</module>
 		<module>org.csstudio.yamcs.product</module>
+		<module>org.csstudio.yamcs.tc</module>
 		<module>yamcs-studio-repository</module>
 	</modules>
 
