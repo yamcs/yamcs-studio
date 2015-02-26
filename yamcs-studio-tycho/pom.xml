@@ -33,20 +33,13 @@
 		<module>org.csstudio.utility.product.yamcs</module>
 		<module>org.csstudio.utility.pvmanager.yamcs</module>
 		<module>org.csstudio.yamcs.feature</module>
+		<module>org.csstudio.yamcs.feature.applications</module>
+		<module>org.csstudio.yamcs.feature.core</module>
+		<module>org.csstudio.yamcs.feature.eclipse</module>
 		<module>org.csstudio.yamcs.product</module>
 		<module>org.csstudio.yamcs.tc</module>
 		<module>yamcs-studio-repository</module>
 	</modules>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.eclipse.core</groupId>
-				<artifactId>runtime</artifactId>
-				<version>3.10.0-v20140318-2214</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<pluginManagement>

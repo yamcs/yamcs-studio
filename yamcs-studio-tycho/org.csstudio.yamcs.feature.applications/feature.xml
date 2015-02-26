@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.csstudio.yamcs.feature.applications"
+      label="Generic CS-Studio Components"
+      version="1.0.0.qualifier"
+      provider-name="Space Applications Services">
+
+   <includes
+         id="org.csstudio.trends.databrowser2.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.csstudio.opibuilder.feature"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.csstudio.display.pvtable"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.csstudio.display.rdbtable"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.csstudio.utility.clock"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.csstudio.trends.databrowser2.opiwidget"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.csstudio.diag.pvmanager.probe"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.csstudio.opibuilder.widgets.extra"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
