@@ -3,20 +3,21 @@ package org.csstudio.utility.pvmanager.yamcs;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVTypeAdapter;
-import org.csstudio.utility.pvmanager.yamcs.service.YService;
+import org.csstudio.utility.pvmanager.yamcs.service.YPVListener;
+import org.csstudio.utility.pvmanager.yamcs.service.YRegistrar;
 import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
 import org.yamcs.protobuf.ParameterValue;
 
-public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> {
+public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YPVListener {
     
-    private YService yservice;
+    private YRegistrar yservice;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(YamcsPVChannelHandler.class.getName());
 
-    public YamcsPVChannelHandler(String channelName, YService yservice) {
+    public YamcsPVChannelHandler(String channelName, YRegistrar yservice) {
         super(channelName);
         this.yservice = yservice;
     }
@@ -30,6 +31,11 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
         yservice.connectChannelHandler(this);
         processConnection(Boolean.TRUE);
     }
+    
+    @Override
+    public String getPVName() {
+        return getChannelName();
+    }
 
     /**
      * This gets called when a channel has no more active readers. This could
@@ -40,7 +46,6 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
     @Override
     protected void disconnect() {
         yservice.disconnectChannelHandler(this);
-        // Not good: yservice.disconnect();
     }
     
     @Override
@@ -56,6 +61,7 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
     /**
      * Process a parameter value update to be send to the display
      */
+    @Override
     public void processParameterValue(ParameterValue pval) {
         processMessage(pval);
     }
@@ -66,10 +72,12 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
         return TYPE_ADAPTER;
     }
     
+    @Override
     public void signalYamcsConnected() {
         processConnection(Boolean.TRUE);
     }
     
+    @Override
     public void signalYamcsDisconnected() {
         processConnection(Boolean.FALSE);
     }

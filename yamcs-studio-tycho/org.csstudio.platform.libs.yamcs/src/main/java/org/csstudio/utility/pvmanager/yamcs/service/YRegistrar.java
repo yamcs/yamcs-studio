@@ -7,11 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.csstudio.platform.libs.yamcs.ui.YamcsUIPlugin;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
-import org.csstudio.utility.pvmanager.yamcs.InvalidIdentification;
-import org.csstudio.utility.pvmanager.yamcs.YamcsPVChannelHandler;
 import org.yamcs.protobuf.NamedObjectId;
 import org.yamcs.protobuf.NamedObjectList;
 import org.yamcs.protobuf.ParameterData;
@@ -25,42 +22,47 @@ import org.yamcs.protobuf.ParameterValue;
  * All methods are asynchronous, with any responses or incoming data being sent
  * to the provided callback listener.
  */
-public class YService implements WebSocketClientCallbackListener {
+public class YRegistrar implements WebSocketClientCallbackListener {
     
-    private static final String USER_AGENT = "yamcs-studio"; /// + Activator.getDefault().getBundle().getVersion().toString();
-    private static final Logger log = Logger.getLogger(YService.class.getName());
+    private static final String USER_AGENT = "yamcs-studio"; //Activator.getDefault().getBundle().getVersion().toString();
+    private static final Logger log = Logger.getLogger(YRegistrar.class.getName());
+    private static YRegistrar INSTANCE;
     
-    // Store registering channel handlers while connection is not established
-    private Map<String, YamcsPVChannelHandler> channelHandlersByName = new LinkedHashMap<>();
+    // Store listeners/handlers while connection is not established
+    private Map<String, YPVListener> listenersByName = new LinkedHashMap<>();
     
     private boolean connectionInitialized = false;
     private WebSocketClient wsclient;
     
-    public YService() {
-        String yamcsHost = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
-        int yamcsPort = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
-        String yamcsInstance = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
+    private YRegistrar(YamcsConnectionProperties yprops) {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(USER_AGENT);
     }
     
-    public synchronized void connectChannelHandler(YamcsPVChannelHandler channelHandler) {
+    // TODO connection props shouldn't come from outside since we consider this a singleton
+    public static synchronized YRegistrar getInstance(YamcsConnectionProperties yprops) {
+        if (INSTANCE == null) {
+            return new YRegistrar(yprops);
+        }
+        return INSTANCE;
+    }
+    
+    public synchronized void connectChannelHandler(YPVListener channelHandler) {
         if (!connectionInitialized) {
             wsclient.connect();
             connectionInitialized = true;
         }
-        channelHandlersByName.put(channelHandler.getChannelName(), channelHandler);
+        listenersByName.put(channelHandler.getPVName(), channelHandler);
         NamedObjectList idList = new NamedObjectList();
-        NamedObjectId id = new NamedObjectId(channelHandler.getChannelName());
-        if (!channelHandler.getChannelName().startsWith("/")) {
+        NamedObjectId id = new NamedObjectId(channelHandler.getPVName());
+        if (!channelHandler.getPVName().startsWith("/")) {
             id.setNamespace("MDB:OPS Name");
         }
         idList.setListList(Arrays.asList(id));
         wsclient.subscribe(idList);
     }
     
-    public synchronized void disconnectChannelHandler(YamcsPVChannelHandler channelHandler) {
+    public synchronized void disconnectChannelHandler(YPVListener listener) {
         // TODO
     }
     
@@ -78,7 +80,7 @@ public class YService implements WebSocketClientCallbackListener {
     public void onConnect() { // When the web socket was successfully established
         log.info("Web socket established. Notifying channel-handlers");
         // TODO we should trigger this instead on when the subscription was confirmed
-        channelHandlersByName.forEach((name, handler) -> {
+        listenersByName.forEach((name, handler) -> {
             handler.signalYamcsConnected();
         });
     }
@@ -86,21 +88,21 @@ public class YService implements WebSocketClientCallbackListener {
     @Override
     public void onDisconnect() { // When the web socket connection state changed
         log.info("Web socket disconnected. Notifying channel-handlers");
-        channelHandlersByName.forEach((name, handler) -> handler.signalYamcsDisconnected());
+        listenersByName.forEach((name, handler) -> handler.signalYamcsDisconnected());
     }
 
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
-        channelHandlersByName.get(id.getName()).reportException(new InvalidIdentification(id));
+        listenersByName.get(id.getName()).reportException(new InvalidIdentification(id));
     }
 
     @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
-            YamcsPVChannelHandler handler = channelHandlersByName.get(pval.getId().getName());
+            YPVListener handler = listenersByName.get(pval.getId().getName());
             if (handler != null) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("request to update channel "+handler.getChannelName()+" to val "+pval.getEngValue());
+                    log.finer("request to update channel "+handler.getPVName()+" to val "+pval.getEngValue());
                 }
                 handler.processParameterValue(pval);
             } else {
