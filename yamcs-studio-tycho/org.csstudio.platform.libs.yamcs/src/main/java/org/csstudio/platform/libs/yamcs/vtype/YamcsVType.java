@@ -8,9 +8,10 @@ import org.epics.vtype.Alarm;
 import org.epics.vtype.AlarmSeverity;
 import org.epics.vtype.Display;
 import org.epics.vtype.Time;
+import org.epics.vtype.VType;
 import org.yamcs.protobuf.ParameterValue;
 
-public class YamcsVType implements Alarm, Time, Display {
+public class YamcsVType implements VType, Alarm, Time, Display {
     protected ParameterValue pval;
     
     public YamcsVType(ParameterValue pval) {
@@ -134,5 +135,35 @@ public class YamcsVType implements Alarm, Time, Display {
     @Override
     public Double getUpperDisplayLimit() {
         return Double.MAX_VALUE;
+    }
+    
+    /**
+     * Converts a yamcs ParameterValue to a VType.
+     */
+    public static YamcsVType fromYamcs(ParameterValue pval) {
+        switch (pval.getEngValue().getType()) {
+        case UINT32:
+            return new Uint32VType(pval);
+        case SINT32:
+            return new Sint32VType(pval);
+        case UINT64:
+            return new Uint64VType(pval);
+        case SINT64:
+             return new Sint64VType(pval);
+        case FLOAT:
+            return new FloatVType(pval);
+        case DOUBLE:
+            return new DoubleVType(pval);
+        case BOOLEAN:
+            return new BooleanVType(pval);
+        case STRING:
+            return new StringVType(pval);
+        case BINARY:
+            return new BinaryVType(pval);
+        case TIMESTAMP:
+            throw new UnsupportedOperationException("No support for timestamp pvals");
+        default:
+            throw new IllegalStateException("Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
+        }        
     }
 }

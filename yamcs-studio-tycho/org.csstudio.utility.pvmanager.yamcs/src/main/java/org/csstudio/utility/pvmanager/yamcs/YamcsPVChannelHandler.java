@@ -13,22 +13,22 @@ import org.yamcs.protobuf.ParameterValue;
 
 public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YPVListener {
     
-    private YRegistrar yservice;
+    private YRegistrar registrar;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(YamcsPVChannelHandler.class.getName());
 
-    public YamcsPVChannelHandler(String channelName, YRegistrar yservice) {
+    public YamcsPVChannelHandler(String channelName, YRegistrar registrar) {
         super(channelName);
-        this.yservice = yservice;
+        this.registrar = registrar;
     }
 
     /**
      * Called for every first read/write on a channel
      */
     @Override
-    protected void connect() {
+    protected void connect() { // Interpret this as a subscribe
         log.fine("Connect called on " + getChannelName());
-        yservice.connectChannelHandler(this);
+        registrar.connectChannelHandler(this);
         processConnection(Boolean.TRUE);
     }
     
@@ -44,8 +44,8 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
      * TODO maybe just unsubscribe, and close websocket after timeout?
      */
     @Override
-    protected void disconnect() {
-        yservice.disconnectChannelHandler(this);
+    protected void disconnect() { // Interpret this as an unsubscribe
+        registrar.disconnectChannelHandler(this);
     }
     
     @Override
@@ -82,6 +82,7 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
         processConnection(Boolean.FALSE);
     }
     
+    @Override
     public void reportException(Exception e) { // Expose protected method
         reportExceptionToAllReadersAndWriters(e);
     }

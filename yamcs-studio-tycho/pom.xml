@@ -32,6 +32,7 @@
 		<module>org.csstudio.platform.libs.yamcs.ui</module>
 		<module>org.csstudio.utility.product.yamcs</module>
 		<module>org.csstudio.utility.pvmanager.yamcs</module>
+		<module>org.csstudio.vtype.pv.yamcs</module>
 		<module>org.csstudio.yamcs.feature</module>
 		<module>org.csstudio.yamcs.feature.applications</module>
 		<module>org.csstudio.yamcs.feature.core</module>

@@ -42,7 +42,7 @@ public class YRegistrar implements WebSocketClientCallbackListener {
     // TODO connection props shouldn't come from outside since we consider this a singleton
     public static synchronized YRegistrar getInstance(YamcsConnectionProperties yprops) {
         if (INSTANCE == null) {
-            return new YRegistrar(yprops);
+            INSTANCE = new YRegistrar(yprops);
         }
         return INSTANCE;
     }
