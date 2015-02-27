@@ -26,17 +26,15 @@
 							<archiveFileName>yamcs-studio-${project.version}</archiveFileName>
 						</product>
 					</products>
+					<formats>
+						<linux>tar.gz</linux>
+					</formats>
 				</configuration>
 				<executions>
 					<execution>
-						<id>materialize-products</id>
+						<id>create-distribution</id>
 						<goals>
 							<goal>materialize-products</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>archive-products</id>
-						<goals>
 							<goal>archive-products</goal>
 						</goals>
 					</execution>
@@ -48,14 +46,15 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
+					<repositoryName>Yamcs Studio</repositoryName>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
 	<!-- As a result of the director plugin run configured above, products will 
-		be generated under cs-studio-yamcs/repository/target/products/*, and a P2 
-		repo for installing additional features under cs-studio-yamcs/repository/target/repository. 
+		be generated under yamcs-studio/repository/target/products/*, and a P2 
+		repo for installing additional features under yamcs-studiorepository/target/repository. 
 		If a local repository is specified, mirror the build repository to that local 
 		repository -->
 	<profiles>

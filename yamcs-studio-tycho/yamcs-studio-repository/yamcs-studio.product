@@ -6,18 +6,9 @@
    <aboutInfo>
       <image path="/org.csstudio.yamcs.product/icons/aboutSide.png"/>
       <text>
-         Control System Studio (CSS) is a combined
-effort of several parties, including
-- SNS (Oak Ridge, TN).
-- BNL (Brookhaven, NY)
-- DESY (Hamburg, Germany)
+         CS-Studio customized to suit Yamcs - the Open Source Mission Control System
 
-
-It provides a collection of control system
-tools in a common environment, based
-on Eclipse.
-
-See http://ics-web.sns.ornl.gov/css
+See http://www.yamcs.org
       </text>
    </aboutInfo>
 
@@ -29,7 +20,6 @@ See http://ics-web.sns.ornl.gov/css
 openFile
       </programArgs>
       <vmArgs>-Xmx1024m
--XX:MaxPermSize=128M
 -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
 -Dorg.apache.commons.logging.simplelog.defaultlog=fatal
 -Dpython.cachedir.skip=true

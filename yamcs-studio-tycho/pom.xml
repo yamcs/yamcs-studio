@@ -128,26 +128,11 @@
 						<!-- Default behavior is to resolve ALL dependencies. -->
 						<!--<optionalDependencies>ignore</optionalDependencies> -->
 					</dependency-resolution>
-					<filters>
-						<!-- This is how features/plugins can be ignored. -->
-						<!--<filter> <type>eclipse-plugin</type> <id>artifactId</id> <removeAll
-							/> </filter> -->
-					</filters>
 					<environments>
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
 							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
 						</environment>
 						<environment>
 							<os>win32</os>
