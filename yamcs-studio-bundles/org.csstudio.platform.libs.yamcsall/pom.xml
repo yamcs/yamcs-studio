@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yamcs.csstudio</groupId>
+		<artifactId>yamcs-studio-bundles</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>org.csstudio.platform.libs.yamcsall</artifactId>
+	<packaging>bundle</packaging>
+	<description>
+		OSGI-friendly repackaging of yamcs. Usage of this bundle should be
+		considered deprecated, since we prefer the use of GPB as the payload
+		(which would mean that really, only proto's need to be shared).
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.yamcs</groupId>
+			<artifactId>yamcs-xtce</artifactId>
+			<version>${yamcs.version}</version>
+			<exclusions>
+				<!-- Exclude slf4j, so we can synchronize both api and impl version from this pom. API doesn't change often -->
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<manifestLocation>META-INF</manifestLocation>
+					<unpackBundle>true</unpackBundle>
+					<instructions>
+						<Bundle-Name>Yamcs Client</Bundle-Name>
+						<Bundle-SymbolicName>org.csstudio.platform.libs.yamcs.bundle;singleton:=true</Bundle-SymbolicName>
+						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
+						<Bundle-Description>OSGI-friendly repackaging of yamcs-xtce and dependencies</Bundle-Description>
+						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
+						<!-- 
+							Attempt to resolve all and dump in Export-Package.
+							Packages that can't be resolved, are assumed to be optional, hence the additional
+							directives in the Import-Package below.
+						 -->
+						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Import-Package>
+							<!-- 
+								Version 2.2.28.Final of hornetq does not included some dependencies in its pom. So exclude
+							 -->
+							org.hornetq.core.config; resolution:=optional,
+							org.hornetq.core.config.impl; resolution:=optional,
+							org.hornetq.core.messagecounter; resolution:=optional,
+							org.hornetq.core.paging; resolution:=optional,
+							org.hornetq.core.paging.impl; resolution:=optional,
+							org.hornetq.core.persistence; resolution:=optional,
+							org.hornetq.core.protocol.stomp; resolution:=optional,
+							org.hornetq.core.replication; resolution:=optional,
+							org.hornetq.core.security; resolution:=optional,
+							org.hornetq.core.server.cluster; resolution:=optional,
+							org.hornetq.core.server.impl; resolution:=optional,
+							org.hornetq.core.server.management; resolution:=optional,
+							org.jboss.logging; resolution:=optional,
+							<!--
+								Ignore sun.misc errors (declared as optional in Netty, which we actually repackage here) 
+							 -->
+							sun.misc; resolution:=optional,
+							<!-- 
+								Include the rest
+							 -->
+							*
+						</Import-Package>
+         				<!-- _exportcontents>*</_exportcontents-->
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
