@@ -1,7 +1,7 @@
 package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.vtype.VBoolean;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class BooleanVType extends YamcsVType implements VBoolean {
 

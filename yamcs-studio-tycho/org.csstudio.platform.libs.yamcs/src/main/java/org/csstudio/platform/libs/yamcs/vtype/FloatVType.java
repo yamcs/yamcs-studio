@@ -1,7 +1,7 @@
 package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.vtype.VFloat;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class FloatVType extends YamcsVType implements VFloat {
 

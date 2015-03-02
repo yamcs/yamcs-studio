@@ -9,7 +9,7 @@ import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YPVListener {
     

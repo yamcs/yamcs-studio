@@ -1,7 +1,7 @@
 package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.vtype.VString;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class StringVType extends YamcsVType implements VString {
 

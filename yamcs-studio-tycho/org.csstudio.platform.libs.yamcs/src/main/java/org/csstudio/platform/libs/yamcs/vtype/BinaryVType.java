@@ -9,7 +9,7 @@ import org.epics.util.array.ListInt;
 import org.epics.vtype.ArrayDimensionDisplay;
 import org.epics.vtype.VByteArray;
 import org.epics.vtype.ValueUtil;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class BinaryVType extends YamcsVType implements VByteArray {
 

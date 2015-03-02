@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.NamedObjectId;
-import org.yamcs.protobuf.NamedObjectList;
-import org.yamcs.protobuf.ParameterData;
+import org.yamcs.protostuff.NamedObjectId;
+import org.yamcs.protostuff.NamedObjectList;
+import org.yamcs.protostuff.ParameterData;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;

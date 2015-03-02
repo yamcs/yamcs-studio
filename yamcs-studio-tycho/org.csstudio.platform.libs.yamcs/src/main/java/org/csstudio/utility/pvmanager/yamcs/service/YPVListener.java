@@ -1,6 +1,6 @@
 package org.csstudio.utility.pvmanager.yamcs.service;
 
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public interface YPVListener {
 

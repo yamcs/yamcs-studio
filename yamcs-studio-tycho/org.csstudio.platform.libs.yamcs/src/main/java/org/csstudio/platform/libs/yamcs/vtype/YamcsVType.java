@@ -9,7 +9,7 @@ import org.epics.vtype.AlarmSeverity;
 import org.epics.vtype.Display;
 import org.epics.vtype.Time;
 import org.epics.vtype.VType;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
     protected ParameterValue pval;

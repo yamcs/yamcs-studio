@@ -20,8 +20,8 @@ import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.csstudio.platform.libs.yamcs.ui.YamcsUIPlugin;
 import org.csstudio.platform.libs.yamcs.web.MessageHandler;
 import org.csstudio.platform.libs.yamcs.web.SimpleYamcsRequests;
-import org.yamcs.protobuf.NamedObjectId;
-import org.yamcs.protobuf.NamedObjectList;
+import org.yamcs.protostuff.NamedObjectId;
+import org.yamcs.protostuff.NamedObjectList;
 
 /**
  * PV Name lookup for Yamcs Parameters

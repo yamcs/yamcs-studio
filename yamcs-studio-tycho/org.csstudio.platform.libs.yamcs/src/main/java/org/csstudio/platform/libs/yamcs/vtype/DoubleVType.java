@@ -1,7 +1,7 @@
 package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.vtype.VDouble;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class DoubleVType extends YamcsVType implements VDouble {
 

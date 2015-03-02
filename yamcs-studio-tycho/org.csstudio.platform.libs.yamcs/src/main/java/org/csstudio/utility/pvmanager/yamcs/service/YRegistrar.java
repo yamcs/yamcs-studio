@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
-import org.yamcs.protobuf.NamedObjectId;
-import org.yamcs.protobuf.NamedObjectList;
-import org.yamcs.protobuf.ParameterData;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.NamedObjectId;
+import org.yamcs.protostuff.NamedObjectList;
+import org.yamcs.protostuff.ParameterData;
+import org.yamcs.protostuff.ParameterValue;
 
 /**
  * Combines state accross the many-to-one relation from yamcs:// datasources to

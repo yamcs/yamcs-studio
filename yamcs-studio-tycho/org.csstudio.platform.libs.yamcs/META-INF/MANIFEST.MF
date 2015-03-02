@@ -17,4 +17,4 @@ Export-Package: org.csstudio.platform.libs.yamcs,
  org.csstudio.platform.libs.yamcs.web,
  org.csstudio.platform.libs.yamcs.ws,
  org.csstudio.utility.pvmanager.yamcs.service,
- org.yamcs.protobuf
+ org.yamcs.protostuff

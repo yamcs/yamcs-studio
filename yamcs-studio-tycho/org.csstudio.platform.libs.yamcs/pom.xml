@@ -31,6 +31,10 @@
 								<property>
 									<name>generate_field_map</name>
 								</property>
+								<property>
+									<name>org.yamcs.protobuf</name>
+									<value>org.yamcs.protostuff</value>
+								</property>
 							</options>
 						</protoModule>
 						<protoModule>
@@ -44,6 +48,10 @@
 								</property>
 								<property>
 									<name>generate_field_map</name>
+								</property>
+								<property>
+									<name>org.yamcs.protobuf</name>
+									<value>org.yamcs.protostuff</value>
 								</property>
 							</options>
 						</protoModule>

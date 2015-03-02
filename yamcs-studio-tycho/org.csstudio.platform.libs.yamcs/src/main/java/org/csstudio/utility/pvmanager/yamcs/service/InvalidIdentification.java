@@ -1,6 +1,6 @@
 package org.csstudio.utility.pvmanager.yamcs.service;
 
-import org.yamcs.protobuf.NamedObjectId;
+import org.yamcs.protostuff.NamedObjectId;
 
 /**
  * When a channel name was deemed invalid by the yamcs server

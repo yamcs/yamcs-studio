@@ -2,7 +2,7 @@ package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.ValueCache;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class YamcsVTypeAdapter implements DataSourceTypeAdapter<Boolean, ParameterValue> {
 

@@ -1,7 +1,7 @@
 package org.csstudio.platform.libs.yamcs.ws;
 
-import org.yamcs.protobuf.NamedObjectId;
-import org.yamcs.protobuf.ParameterData;
+import org.yamcs.protostuff.NamedObjectId;
+import org.yamcs.protostuff.ParameterData;
 
 public interface WebSocketClientCallbackListener {
     void onConnect();

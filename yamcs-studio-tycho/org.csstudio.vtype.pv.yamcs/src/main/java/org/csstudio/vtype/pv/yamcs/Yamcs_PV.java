@@ -9,7 +9,7 @@ import org.csstudio.platform.libs.yamcs.vtype.YamcsVType;
 import org.csstudio.utility.pvmanager.yamcs.service.YPVListener;
 import org.csstudio.utility.pvmanager.yamcs.service.YRegistrar;
 import org.csstudio.vtype.pv.PV;
-import org.yamcs.protobuf.ParameterValue;
+import org.yamcs.protostuff.ParameterValue;
 
 public class Yamcs_PV extends PV implements YPVListener {
     

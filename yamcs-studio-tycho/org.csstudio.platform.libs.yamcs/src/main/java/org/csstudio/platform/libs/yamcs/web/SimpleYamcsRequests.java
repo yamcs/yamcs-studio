@@ -25,7 +25,7 @@ import io.protostuff.ProtobufIOUtil;
 import java.net.URI;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.yamcs.protobuf.NamedObjectList;
+import org.yamcs.protostuff.NamedObjectList;
 
 public class SimpleYamcsRequests {
     

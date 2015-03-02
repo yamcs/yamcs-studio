@@ -36,8 +36,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.yamcs.protobuf.NamedObjectId;
-import org.yamcs.protobuf.NamedObjectList;
+import org.yamcs.protostuff.NamedObjectId;
+import org.yamcs.protostuff.NamedObjectList;
 
 /**
  * Netty-implementation of a Yamcs web socket client.
