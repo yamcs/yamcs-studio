@@ -36,13 +36,6 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.platform.libs.yamcs.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.utility.product.yamcs"
          download-size="0"
          install-size="0"
@@ -64,7 +57,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          version="0.0.0"/>
 
    <plugin
-         id="org.csstudio.yamcs.tc"
+         id="org.csstudio.yamcs.commanding"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -22,16 +22,66 @@ import io.netty.handler.codec.http.HttpVersion;
 import io.protostuff.Message;
 import io.protostuff.ProtobufIOUtil;
 
+import java.io.ObjectInputStream;
 import java.net.URI;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.yamcs.protostuff.NamedObjectList;
+import org.yamcs.xtce.XtceDb;
 
 public class SimpleYamcsRequests {
     
     public static void listAllAvailableParameters(YamcsConnectionProperties yprops, MessageHandler<NamedObjectList> handler) {
         URI uri = yprops.webResourceURI("/mdb/parameters");
         doSimpleRequest(uri, new NamedObjectList(), handler);
+    }
+    
+    // FIXME this is not very pretty. should use doSimpleRequest, once we can receive
+    // the mdb without the need for the yamcsall bundle.
+    public static void listAllAvailableCommands(YamcsConnectionProperties yprops, XtceDbHandler handler) {
+        URI uri = yprops.webResourceURI("/mdb/dump");
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                protected void initChannel(SocketChannel ch) throws Exception {
+                    ChannelPipeline p = ch.pipeline();
+                    p.addLast(new HttpClientCodec());
+                    p.addLast(new HttpObjectAggregator(1048576));
+                    p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
+                        @Override
+                        public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
+                            ObjectInputStream ois=new ObjectInputStream(new ByteBufInputStream(response.content()));
+                            Object o=ois.readObject();
+                            XtceDb mdb = (XtceDb) o;
+                            ois.close();
+                            ctx.close();
+                            handler.onMessage(mdb);
+                        }
+                        
+                        @Override
+                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+                            cause.printStackTrace();
+                            ctx.close();
+                            handler.onException(cause);
+                        }
+                    });
+                }
+            });
+
+            Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
+            HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.getRawPath());
+            request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
+            request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+            request.headers().set(HttpHeaders.Names.ACCEPT, "application/octet-stream");
+            ch.writeAndFlush(request);
+            ch.closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            group.shutdownGracefully();
+        }
     }
     
     private static <T extends Message<T>> void doSimpleRequest(URI uri, T target, MessageHandler<T> handler) {

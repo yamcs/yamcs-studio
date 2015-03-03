@@ -4,9 +4,9 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="org.csstudio.yamcs.tc.TelecommandView"
+            class="org.csstudio.yamcs.commanding.TelecommandView"
             icon="icons/tc.png"
-            id="org.csstudio.yamcs.tc.TelecommandView"
+            id="org.csstudio.yamcs.commanding.TelecommandView"
             name="Telecommanding">
       </view>
    </extension>
@@ -23,7 +23,7 @@
                tooltip="Show available telecommands">
             <parameter
                   name="org.eclipse.ui.views.showView.viewId"
-                  value="org.csstudio.yamcs.tc.TelecommandView">
+                  value="org.csstudio.yamcs.commanding.TelecommandView">
             </parameter>
          </command>
          <separator

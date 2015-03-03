@@ -1,4 +1,4 @@
-package org.csstudio.utility.pvmanager.yamcs.service;
+package org.csstudio.platform.libs.yamcs;
 
 import org.yamcs.protostuff.NamedObjectId;
 

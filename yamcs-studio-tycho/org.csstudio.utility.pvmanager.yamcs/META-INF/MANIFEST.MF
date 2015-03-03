@@ -10,10 +10,9 @@ Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
- org.csstudio.platform.libs.yamcs,
- org.csstudio.platform.libs.yamcs.ui,
  org.csstudio.autocomplete,
  org.csstudio.utility.pvmanager,
- org.csstudio.platform.libs.protostuff
+ org.csstudio.platform.libs.protostuff,
+ org.csstudio.platform.libs.yamcs
 Export-Package: org.csstudio.utility.pvmanager.yamcs
 Import-Package: org.epics.pvmanager.vtype

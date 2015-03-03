@@ -52,8 +52,8 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<unpackBundle>true</unpackBundle>
 					<instructions>
-						<Bundle-Name>Yamcs Client</Bundle-Name>
-						<Bundle-SymbolicName>org.csstudio.platform.libs.yamcs.bundle;singleton:=true</Bundle-SymbolicName>
+						<Bundle-Name>Yamcs client uber jar</Bundle-Name>
+						<Bundle-SymbolicName>org.csstudio.platform.libs.yamcsall;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
 						<Bundle-Description>OSGI-friendly repackaging of yamcs-xtce and dependencies</Bundle-Description>
 						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
@@ -86,11 +86,18 @@
 							 -->
 							sun.misc; resolution:=optional,
 							<!-- 
+								Not sure where this one's coming from
+							 -->
+							org.apache.log4j; resolution:=optional,
+							<!-- 
 								Include the rest
 							 -->
 							*
 						</Import-Package>
-         				<!-- _exportcontents>*</_exportcontents-->
+						<Export-Package>
+							org.yamcs.xtce,
+							org.yamcs.xtce.xml
+						</Export-Package>
 					</instructions>
 				</configuration>
 			</plugin>

@@ -4,10 +4,12 @@ Bundle-ActivationPolicy: lazy
 Bundle-Description: Provides Yamcs connectivity to pvManager
 Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs TeleCommand support
-Bundle-SymbolicName: org.csstudio.yamcs.tc;singleton:=true
+Bundle-SymbolicName: org.csstudio.yamcs.commanding;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.rap.ui;resolution:=optional
-Export-Package: org.csstudio.yamcs.tc
+ org.eclipse.rap.ui;resolution:=optional,
+ org.csstudio.platform.libs.yamcs
+Export-Package: org.csstudio.yamcs.commanding
+Import-Package: org.yamcs.xtce

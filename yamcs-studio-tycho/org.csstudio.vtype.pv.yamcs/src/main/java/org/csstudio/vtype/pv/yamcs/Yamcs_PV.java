@@ -3,11 +3,11 @@ package org.csstudio.vtype.pv.yamcs;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.YPVListener;
+import org.csstudio.platform.libs.yamcs.YRegistrar;
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.csstudio.platform.libs.yamcs.ui.YamcsUIPlugin;
+import org.csstudio.platform.libs.yamcs.YamcsPlugin;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVType;
-import org.csstudio.utility.pvmanager.yamcs.service.YPVListener;
-import org.csstudio.utility.pvmanager.yamcs.service.YRegistrar;
 import org.csstudio.vtype.pv.PV;
 import org.yamcs.protostuff.ParameterValue;
 
@@ -24,9 +24,9 @@ public class Yamcs_PV extends PV implements YPVListener {
         // Notify that this PV is read-only
         notifyListenersOfPermissions(true);
         
-        String yamcsHost = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
-        int yamcsPort = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
-        String yamcsInstance = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
+        String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
+        int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
+        String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
         registrar = YRegistrar.getInstance(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
         registrar.connectChannelHandler(this);
     }

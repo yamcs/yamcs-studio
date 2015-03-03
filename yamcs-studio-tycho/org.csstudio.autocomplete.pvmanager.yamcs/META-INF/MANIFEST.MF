@@ -9,7 +9,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.autocomplete,
  org.csstudio.platform.libs.yamcs,
- org.csstudio.platform.libs.yamcs.ui,
  org.csstudio.platform.libs.protostuff
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy

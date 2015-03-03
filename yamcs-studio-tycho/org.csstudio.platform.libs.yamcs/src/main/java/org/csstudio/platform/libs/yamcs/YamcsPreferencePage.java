@@ -1,4 +1,4 @@
-package org.csstudio.platform.libs.yamcs.ui;
+package org.csstudio.platform.libs.yamcs;
 
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -29,7 +29,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
 
 	public YamcsPreferencePage() {
 		super(GRID);
-		setPreferenceStore(YamcsUIPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(YamcsPlugin.getDefault().getPreferenceStore());
 		setDescription("Set connection properties to a Yamcs server (as used for yamcs:// datasources)");
 	}
 

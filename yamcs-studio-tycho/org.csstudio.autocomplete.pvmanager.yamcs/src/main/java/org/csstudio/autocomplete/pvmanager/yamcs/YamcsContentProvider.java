@@ -2,9 +2,6 @@ package org.csstudio.autocomplete.pvmanager.yamcs;
 
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,10 +13,8 @@ import org.csstudio.autocomplete.parser.ContentDescriptor;
 import org.csstudio.autocomplete.parser.ContentType;
 import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
-import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.csstudio.platform.libs.yamcs.ui.YamcsUIPlugin;
-import org.csstudio.platform.libs.yamcs.web.MessageHandler;
-import org.csstudio.platform.libs.yamcs.web.SimpleYamcsRequests;
+import org.csstudio.platform.libs.yamcs.MDBContextListener;
+import org.csstudio.platform.libs.yamcs.YamcsPlugin;
 import org.yamcs.protostuff.NamedObjectId;
 import org.yamcs.protostuff.NamedObjectList;
 
@@ -45,37 +40,28 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
     
     // Available parameters by their lowercase representation
     private ConcurrentHashMap<String, String> haystack = new ConcurrentHashMap<>();
-    
-    private CountDownLatch fetchEnded = new CountDownLatch(1);
 
     public YamcsContentProvider() {
-        loadParameterNames();
+        // Get initial list of parameters (this blocks, which might not be good)
+        // However, the list should already be fetched by the time the user gets here
+        loadParameterNames(YamcsPlugin.getDefault().getParameters());
+        
+        // Subscribe to future updates
+        YamcsPlugin.getDefault().addMdbListener(new MDBContextListener() {
+            @Override
+            public void onParametersChanged(NamedObjectList parameters) {
+                loadParameterNames(parameters);
+            }
+        });
     }
 
     /**
-     * Loads all available parameter names at once.
+     * Builds an index of all available parameter names
      */
-    private void loadParameterNames() {
-        log.fine("Initializing yamcs content provider");
-        String yamcsHost = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
-        int yamcsPort = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
-        String yamcsInstance = YamcsUIPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
-        SimpleYamcsRequests.listAllAvailableParameters(yprops, new MessageHandler<NamedObjectList>() {
-            @Override
-            public void onMessage(NamedObjectList msg) {
-                for (NamedObjectId id : msg.getListList()) {
-                    haystack.put(id.getName().toLowerCase(), id.getName());
-                }
-                fetchEnded.countDown();
-            }
-
-            @Override
-            public void onException(Throwable t) {
-                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", t);
-                fetchEnded.countDown();
-            }
-        });
+    private void loadParameterNames(NamedObjectList parameters) {
+        for (NamedObjectId id : parameters.getListList()) {
+            haystack.put(id.getName().toLowerCase(), id.getName());
+        }
     }
 
     @Override
@@ -85,20 +71,16 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
 
     @Override
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
-        try {
-            // Wait for it here, this blocks the pop-up appearance. so not too long.
-            // should maybe try to find some other hook maybe in some general yamcs bootstrap
-            fetchEnded.await(500, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            log.log(Level.SEVERE, "Interrupted while waiting for available yamcs parameters", e);
-        }
-        
         String content = desc.getValue();
         if (content.startsWith(YAMCS_SOURCE)) {
             content = content.substring(YAMCS_SOURCE.length());
         }
-        content = AutoCompleteHelper.trimWildcards(content);
         
+        if (haystack == null) {
+            log.info("Not matching pattern " + desc.getValue() + " since there's nothing to match with yet");
+        }
+        
+        content = AutoCompleteHelper.trimWildcards(content);
         Pattern namePattern = AutoCompleteHelper.convertToPattern(content);
         namePattern = Pattern.compile(namePattern.pattern(), Pattern.CASE_INSENSITIVE);
         

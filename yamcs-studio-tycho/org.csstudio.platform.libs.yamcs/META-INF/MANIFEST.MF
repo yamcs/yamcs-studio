@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.csstudio.platform.libs.yamcs.YamcsPlugin
 Bundle-Description: Provides Yamcs connectivity to pvManager
 Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs Libs
@@ -10,11 +11,13 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.epics.vtype,
  org.epics.util,
  io.netty.all,
- org.csstudio.platform.libs.protostuff
+ org.csstudio.platform.libs.protostuff,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.csstudio.platform.libs.yamcsall
 Import-Package: org.epics.pvmanager
 Export-Package: org.csstudio.platform.libs.yamcs,
  org.csstudio.platform.libs.yamcs.vtype,
  org.csstudio.platform.libs.yamcs.web,
  org.csstudio.platform.libs.yamcs.ws,
- org.csstudio.utility.pvmanager.yamcs.service,
  org.yamcs.protostuff

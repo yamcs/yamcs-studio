@@ -46,6 +46,9 @@
 								<artifact>
 									<id>org.yamcs.csstudio:org.csstudio.platform.libs.protostuff:${project.version}</id>
 								</artifact>
+                                <artifact>
+                                    <id>org.yamcs.csstudio:org.csstudio.platform.libs.yamcsall:${project.version}</id>
+                                </artifact>
 							</artifacts>
 						</configuration>
 					</execution>

@@ -2,9 +2,9 @@ package org.csstudio.utility.pvmanager.yamcs;
 
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.YPVListener;
+import org.csstudio.platform.libs.yamcs.YRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVTypeAdapter;
-import org.csstudio.utility.pvmanager.yamcs.service.YPVListener;
-import org.csstudio.utility.pvmanager.yamcs.service.YRegistrar;
 import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;

@@ -1,4 +1,4 @@
-package org.csstudio.utility.pvmanager.yamcs.service;
+package org.csstudio.platform.libs.yamcs;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
 import org.yamcs.protostuff.NamedObjectId;

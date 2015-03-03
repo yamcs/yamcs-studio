@@ -1,4 +1,4 @@
-package org.csstudio.yamcs.tc;
+package org.csstudio.yamcs.commanding;
 
 import java.util.Date;
 
@@ -23,12 +23,17 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.yamcs.xtce.XtceDb;
 
+/**
+ * TODO show a friendly message when the thing is still loading
+ */
 public class TelecommandView extends ViewPart {
     
     private LocalResourceManager resourceManager;
     private Action newCommandAction;
     private Image errorImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+    private XtceDb xtcedb;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -75,12 +80,15 @@ public class TelecommandView extends ViewPart {
                 
             }
         };
-        newCommandAction.setToolTipText("Refresh data");
         
         Bundle bundle = FrameworkUtil.getBundle(TelecommandView.class);
         ImageDescriptor desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/tc_add.png"), null));
         newCommandAction.setImageDescriptor(desc);
         initializeToolBar();
+    }
+    
+    private void loadAvailableCommands() {
+        //SimpleYamcsRequests.listAllAvailableCommands(, handler);
     }
     
     private void initializeToolBar() {

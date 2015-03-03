@@ -1,4 +1,4 @@
-package org.csstudio.yamcs.tc;
+package org.csstudio.yamcs.commanding;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -36,7 +36,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         container.setLayout(layout);
 
         Label lblCommand = new Label(container, SWT.NONE);
-        lblCommand.setText("Command");
+        lblCommand.setText("Template");
 
         Combo commandCombo = new Combo(container, SWT.BORDER);
         commandCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

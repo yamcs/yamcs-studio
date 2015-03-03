@@ -29,16 +29,15 @@
 	<modules>
 		<module>org.csstudio.autocomplete.pvmanager.yamcs</module>
 		<module>org.csstudio.platform.libs.yamcs</module>
-		<module>org.csstudio.platform.libs.yamcs.ui</module>
 		<module>org.csstudio.utility.product.yamcs</module>
 		<module>org.csstudio.utility.pvmanager.yamcs</module>
 		<module>org.csstudio.vtype.pv.yamcs</module>
+		<module>org.csstudio.yamcs.commanding</module>
 		<module>org.csstudio.yamcs.feature</module>
 		<module>org.csstudio.yamcs.feature.applications</module>
 		<module>org.csstudio.yamcs.feature.core</module>
 		<module>org.csstudio.yamcs.feature.eclipse</module>
 		<module>org.csstudio.yamcs.product</module>
-		<module>org.csstudio.yamcs.tc</module>
 		<module>yamcs-studio-repository</module>
 	</modules>
 
