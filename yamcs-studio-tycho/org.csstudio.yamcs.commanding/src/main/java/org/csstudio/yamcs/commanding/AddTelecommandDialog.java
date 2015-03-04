@@ -1,8 +1,12 @@
 package org.csstudio.yamcs.commanding;
 
+import java.util.Collection;
+
+import org.csstudio.platform.libs.yamcs.YamcsPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -11,11 +15,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.xtce.MetaCommand;
 
 public class AddTelecommandDialog extends TitleAreaDialog {
+    
+    private Collection<MetaCommand> commands;
 
     public AddTelecommandDialog(Shell parentShell) {
         super(parentShell);
+        commands = YamcsPlugin.getDefault().getCommands();
     }
     
     @Override
@@ -38,9 +46,38 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         Label lblCommand = new Label(container, SWT.NONE);
         lblCommand.setText("Template");
 
-        Combo commandCombo = new Combo(container, SWT.BORDER);
+        Combo commandCombo = new Combo(container, SWT.BORDER | SWT.READ_ONLY);
         commandCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        commandCombo.setItems(new String[] {"a", "b", "c"});
+        for (MetaCommand command : commands) {
+            if (!command.isAbstract()) {
+                commandCombo.add(command.getName());
+            }
+        }
+        
+        StyledText text = new StyledText(container, SWT.BORDER);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.horizontalSpan = 2;
+        text.setLayoutData(gd);
+        
+        commandCombo.addListener(SWT.Selection, event -> {
+            for (MetaCommand command : commands) {
+                String selected = ((Combo) event.widget).getText();
+                if (!command.isAbstract() && command.getName().equals(selected)) {
+                    System.out.println("yes.....");
+                    
+                    StringBuilder buf = new StringBuilder(command.getName());
+                    if (command.getArgumentList() != null) {
+                        buf.append("(\n");
+                        buf.append("\targ");
+                    } else {
+                        buf.append("()");
+                    }
+                    text.setText(buf.toString());
+                    break;
+                }
+            }
+        });
+        
         return area;
     }
 

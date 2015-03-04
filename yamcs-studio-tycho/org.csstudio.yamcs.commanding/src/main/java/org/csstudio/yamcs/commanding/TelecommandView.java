@@ -23,7 +23,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-import org.yamcs.xtce.XtceDb;
 
 /**
  * TODO show a friendly message when the thing is still loading
@@ -33,7 +32,6 @@ public class TelecommandView extends ViewPart {
     private LocalResourceManager resourceManager;
     private Action newCommandAction;
     private Image errorImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
-    private XtceDb xtcedb;
 
     @Override
     public void createPartControl(Composite parent) {

@@ -48,7 +48,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
     
     private void fetchInitialMdbAsync(YamcsConnectionProperties yprops) {
-        System.out.println("list params?");
         // Load list of parameters
         new Thread(() -> {
             SimpleYamcsRequests.listAllAvailableParameters(yprops, new MessageHandler<NamedObjectList>() {
@@ -70,7 +69,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
             });            
         }).start();
         
-        System.out.println("list commands?");
         // Load commands
         new Thread(() -> {
             SimpleYamcsRequests.listAllAvailableCommands(yprops, new XtceDbHandler() {
@@ -115,6 +113,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
         try {
             parametersLoaded.await();
             return parameters;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public Collection<MetaCommand> getCommands() {
+        try {
+            commandsLoaded.await();
+            return commands;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;
