@@ -2,7 +2,7 @@ package org.csstudio.utility.pvmanager.yamcs;
 
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.YPVListener;
+import org.csstudio.platform.libs.yamcs.YPVReader;
 import org.csstudio.platform.libs.yamcs.YRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVTypeAdapter;
 import org.epics.pvmanager.ChannelWriteCallback;
@@ -11,7 +11,7 @@ import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
 import org.yamcs.protostuff.ParameterValue;
 
-public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YPVListener {
+public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YPVReader {
     
     private YRegistrar registrar;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
@@ -27,9 +27,9 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
      */
     @Override
     protected void connect() { // Interpret this as a subscribe
-        log.fine("Connect called on " + getChannelName());
-        registrar.connectChannelHandler(this);
-        processConnection(Boolean.TRUE);
+        log.info("Connect called on " + getChannelName());
+        registrar.connectPVReader(this);
+        processConnection(Boolean.TRUE); // TODO we don't need this do we?
     }
     
     @Override
@@ -41,11 +41,11 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
      * This gets called when a channel has no more active readers. This could
      * also happen while in the same OPI runtime session. So don't close
      * the websocket here.
-     * TODO maybe just unsubscribe, and close websocket after timeout?
      */
     @Override
     protected void disconnect() { // Interpret this as an unsubscribe
-        registrar.disconnectChannelHandler(this);
+        log.info("Disconnect called on " + getChannelName());
+        registrar.disconnectPVReader(this);
     }
     
     @Override
@@ -63,6 +63,7 @@ public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, Pa
      */
     @Override
     public void processParameterValue(ParameterValue pval) {
+        log.fine(String.format("Incoming value %s", pval));
         processMessage(pval);
     }
     

@@ -2,7 +2,7 @@ package org.csstudio.platform.libs.yamcs;
 
 import org.yamcs.protostuff.ParameterValue;
 
-public interface YPVListener {
+public interface YPVReader {
 
     public void signalYamcsConnected();
     public void signalYamcsDisconnected();

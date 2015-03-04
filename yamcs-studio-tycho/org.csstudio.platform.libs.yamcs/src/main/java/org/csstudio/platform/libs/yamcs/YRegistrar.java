@@ -23,12 +23,12 @@ import org.yamcs.protostuff.ParameterValue;
  */
 public class YRegistrar implements WebSocketClientCallbackListener {
     
-    private static final String USER_AGENT = "yamcs-studio"; //Activator.getDefault().getBundle().getVersion().toString();
+    private static final String USER_AGENT = "yamcs-studio/" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(YRegistrar.class.getName());
     private static YRegistrar INSTANCE;
     
     // Store listeners/handlers while connection is not established
-    private Map<String, YPVListener> listenersByName = new LinkedHashMap<>();
+    private Map<String, YPVReader> listenersByName = new LinkedHashMap<>();
     
     private boolean connectionInitialized = false;
     private WebSocketClient wsclient;
@@ -38,31 +38,43 @@ public class YRegistrar implements WebSocketClientCallbackListener {
         wsclient.setUserAgent(USER_AGENT);
     }
     
-    // TODO connection props shouldn't come from outside since we consider this a singleton
-    public static synchronized YRegistrar getInstance(YamcsConnectionProperties yprops) {
+    public static synchronized YRegistrar getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new YRegistrar(yprops);
+            String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
+            int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
+            String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
+            INSTANCE = new YRegistrar(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
         }
         return INSTANCE;
     }
     
-    public synchronized void connectChannelHandler(YPVListener channelHandler) {
+    public synchronized void connectPVReader(YPVReader pvReader) {
         if (!connectionInitialized) {
             wsclient.connect();
             connectionInitialized = true;
         }
-        listenersByName.put(channelHandler.getPVName(), channelHandler);
-        NamedObjectList idList = new NamedObjectList();
-        NamedObjectId id = new NamedObjectId(channelHandler.getPVName());
-        if (!channelHandler.getPVName().startsWith("/")) {
-            id.setNamespace("MDB:OPS Name");
-        }
-        idList.setListList(Arrays.asList(id));
+        listenersByName.put(pvReader.getPVName(), pvReader);
+        NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
         wsclient.subscribe(idList);
     }
     
-    public synchronized void disconnectChannelHandler(YPVListener listener) {
-        // TODO
+    public synchronized void disconnectPVReader(YPVReader pvReader) {
+        if (!connectionInitialized) { // TODO Possible?
+            return;
+        }
+        listenersByName.remove(pvReader);
+        NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
+        wsclient.unsubscribe(idList);
+    }
+    
+    private static NamedObjectList wrapAsNamedObjectList(String pvName) {
+        NamedObjectList idList = new NamedObjectList();
+        NamedObjectId id = new NamedObjectId(pvName);
+        if (!pvName.startsWith("/")) {
+            id.setNamespace("MDB:OPS Name");
+        }
+        idList.setListList(Arrays.asList(id));
+        return idList;
     }
     
     public void disconnect() {
@@ -98,7 +110,7 @@ public class YRegistrar implements WebSocketClientCallbackListener {
     @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
-            YPVListener handler = listenersByName.get(pval.getId().getName());
+            YPVReader handler = listenersByName.get(pval.getId().getName());
             if (handler != null) {
                 if (log.isLoggable(Level.FINER)) {
                     log.finer("request to update channel "+handler.getPVName()+" to val "+pval.getEngValue());

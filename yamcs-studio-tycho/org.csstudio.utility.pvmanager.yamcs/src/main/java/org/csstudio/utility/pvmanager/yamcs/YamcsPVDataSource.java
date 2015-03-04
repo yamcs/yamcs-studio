@@ -1,8 +1,6 @@
 package org.csstudio.utility.pvmanager.yamcs;
 
 import org.csstudio.platform.libs.yamcs.YRegistrar;
-import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.csstudio.platform.libs.yamcs.YamcsPlugin;
 import org.epics.pvmanager.ChannelHandler;
 import org.epics.pvmanager.DataSource;
 
@@ -15,10 +13,7 @@ public class YamcsPVDataSource extends DataSource {
 
     public YamcsPVDataSource() {
         super(false);
-        String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
-        int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
-        String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-        registrar = YRegistrar.getInstance(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
+        registrar = YRegistrar.getInstance();
     }
 
     @Override

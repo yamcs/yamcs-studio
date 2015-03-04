@@ -23,20 +23,16 @@ import io.protostuff.JsonIOUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.yamcs.protostuff.NamedObjectId;
 import org.yamcs.protostuff.NamedObjectList;
 
 /**
@@ -60,30 +56,44 @@ public class WebSocketClient {
     private AtomicInteger seqId = new AtomicInteger(1);
     
     // Stores ws subscriptions to be sent to the server once ws-connection is established
-    private BlockingQueue<NamedObjectId> pendingSubscriptions = new LinkedBlockingQueue<NamedObjectId>();
+    private BlockingQueue<OutgoingEvent> pendingOutgoingEvents = new LinkedBlockingQueue<>();
     
     // Sends outgoing subscriptions to the web socket
-    private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    //private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     
     // Keeps track of sent subscriptions, so that we can do a resend when we get
     // an InvalidException on some of them :-(
     private ConcurrentHashMap<Integer, NamedObjectList> upstreamSubscriptionsBySeqId = new ConcurrentHashMap<>();
 
+    // TODO we should actually wait for the ACK to arrive, before sending the next request
     public WebSocketClient(YamcsConnectionProperties yprops, WebSocketClientCallbackListener callback) {
         this.uri = yprops.webSocketURI();
         this.callback = callback;
-        exec.scheduleWithFixedDelay(() -> {
-            // Try to bundle multiple subscriptions in one request
-            if (connected.get()) {
-                List<NamedObjectId> list = new ArrayList<>();
-                int size = pendingSubscriptions.drainTo(list);
-                if (size > 0) {
-                    NamedObjectList listWrapper = new NamedObjectList();
-                    listWrapper.setListList(list);
-                    doSubscribe(listWrapper);
+        new Thread(() -> {
+            try {
+                OutgoingEvent evt;
+                while((evt = pendingOutgoingEvents.take()) != null) {
+                    // We now have at least one event to handle
+                    Thread.sleep(500); // Wait for more events, before going into synchronized block 
+                    synchronized(pendingOutgoingEvents) {
+                        while(pendingOutgoingEvents.peek() != null 
+                                && evt.canMergeWith(pendingOutgoingEvents.peek())) {
+                            OutgoingEvent otherEvt = pendingOutgoingEvents.poll(); 
+                            evt = evt.mergeWith(otherEvt); // This is to counter bursts.
+                        }
+                    }
+                    
+                    // Good, send the merged result
+                    if (evt instanceof ParameterSubscribeEvent) {
+                        doSubscribe(((ParameterSubscribeEvent) evt).getIdList());
+                    } else if (evt instanceof ParameterUnsubscribeEvent) {
+                        doUnsubscribe(((ParameterUnsubscribeEvent) evt).getIdList());
+                    }
                 }
+            } catch(InterruptedException e) {
+                log.log(Level.SEVERE, "OOPS, got interrupted", e);
             }
-        }, 1, 1, TimeUnit.SECONDS); 
+        }).start(); 
     }
     
     /**
@@ -154,18 +164,22 @@ public class WebSocketClient {
      * is established, subscriptions will be sent in one bundle.
      */
     public void subscribe(NamedObjectList idList) {
-        for (NamedObjectId id : idList.getListList()) {
-            pendingSubscriptions.add(id);
+        // sync, because the consumer will try to merge multiple outgoing events of the same type
+        // using multiple operations on the queue.
+        synchronized(pendingOutgoingEvents) {
+            pendingOutgoingEvents.offer(new ParameterSubscribeEvent(idList));
         }
     }
     
-    private void doSubscribe(NamedObjectList idList) {
+    private void doSubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
         ByteArrayOutputStream barray = new ByteArrayOutputStream();
         try {
             JsonIOUtil.writeTo(barray, idList, idList.cachedSchema(), false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        
+        System.out.println("will send subscribe of .. " + barray.toString());
         
         int id = seqId.incrementAndGet();
         upstreamSubscriptionsBySeqId.put(id, idList);
@@ -178,8 +192,31 @@ public class WebSocketClient {
                         .append(barray.toString()).append("}]").toString()));
     }
     
+    private void doUnsubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
+        ByteArrayOutputStream barray = new ByteArrayOutputStream();
+        try {
+            JsonIOUtil.writeTo(barray, idList, idList.cachedSchema(), false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        
+        System.out.println("will send unsubscribe of .. " + barray.toString());
+        
+        int id = seqId.incrementAndGet();
+        //upstreamSubscriptionsBySeqId.put(id, idList);
+        nettyChannel.writeAndFlush(new TextWebSocketFrame(
+                new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
+                        .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
+                        .append(",").append(id)
+                        .append(",")
+                        .append("{\"request\":\"unsubscribe\",\"data\":")
+                        .append(barray.toString()).append("}]").toString()));
+    }
+    
     public void unsubscribe(NamedObjectList idList) {
-        // TODO
+        synchronized(pendingOutgoingEvents) {
+            pendingOutgoingEvents.offer(new ParameterUnsubscribeEvent(idList));
+        }
     }
     
     NamedObjectList getUpstreamSubscription(int seqId) {
@@ -208,7 +245,7 @@ public class WebSocketClient {
     }
     
     public void shutdown() {
-        exec.shutdown();
+        //exec.shutdown();
         group.shutdownGracefully();
     }
 }
