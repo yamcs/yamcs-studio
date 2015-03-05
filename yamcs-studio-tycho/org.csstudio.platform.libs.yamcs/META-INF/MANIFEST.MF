@@ -20,4 +20,5 @@ Export-Package: org.csstudio.platform.libs.yamcs,
  org.csstudio.platform.libs.yamcs.vtype,
  org.csstudio.platform.libs.yamcs.web,
  org.csstudio.platform.libs.yamcs.ws,
- org.yamcs.protostuff
+ org.yamcs.protostuff,
+ org.yamcs.web.rest.protobuf

@@ -1,19 +1,28 @@
 package org.csstudio.platform.libs.yamcs;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.web.MessageHandler;
-import org.csstudio.platform.libs.yamcs.web.SimpleYamcsRequests;
-import org.csstudio.platform.libs.yamcs.web.XtceDbHandler;
+import org.csstudio.platform.libs.yamcs.web.RESTClientEndpoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.yamcs.protostuff.NamedObjectList;
+import org.yamcs.protostuff.NamedObjectId;
+import org.yamcs.web.rest.protobuf.DumpRawMdbRequest;
+import org.yamcs.web.rest.protobuf.DumpRawMdbResponse;
+import org.yamcs.web.rest.protobuf.ListAvailableParametersRequest;
+import org.yamcs.web.rest.protobuf.ListAvailableParametersResponse;
+import org.yamcs.web.rest.protobuf.RESTService;
+import org.yamcs.web.rest.protobuf.RESTService.ResponseHandler;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.XtceDb;
 
@@ -25,13 +34,19 @@ public class YamcsPlugin extends AbstractUIPlugin {
     // The shared instance
     private static YamcsPlugin plugin;
     
+    private RESTService restService;
+    
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
     
-    private NamedObjectList parameters;
+    private List<NamedObjectId> parameterIds;
     private CountDownLatch parametersLoaded = new CountDownLatch(1);
     
     private Collection<MetaCommand> commands;
     private CountDownLatch commandsLoaded = new CountDownLatch(1);
+    
+    public RESTService getRESTService() {
+        return restService;
+    }
     
     @Override
     public void start(BundleContext context) throws Exception {
@@ -43,52 +58,58 @@ public class YamcsPlugin extends AbstractUIPlugin {
         String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
         int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
         String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
-        fetchInitialMdbAsync(yprops);
+        restService = new RESTClientEndpoint(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
+        fetchInitialMdbAsync();
     }
     
-    private void fetchInitialMdbAsync(YamcsConnectionProperties yprops) {
+    private void fetchInitialMdbAsync() {
         // Load list of parameters
-        new Thread(() -> {
-            SimpleYamcsRequests.listAllAvailableParameters(yprops, new MessageHandler<NamedObjectList>() {
-                @Override
-                public void onMessage(NamedObjectList msg) {
-                    Display.getDefault().asyncExec(() -> {
-                        parameters = msg;
-                        for (MDBContextListener l : mdbListeners) {
-                            l.onParametersChanged(parameters);
-                        }
-                        parametersLoaded.countDown();
-                    });
-                }
+        ListAvailableParametersRequest req = new ListAvailableParametersRequest();
+        req.setNamespacesList(Arrays.asList("MDB:OPS Name"));
+        restService.listAvailableParameters(req, new ResponseHandler<ListAvailableParametersResponse>() {
+            @Override
+            public void onMessage(ListAvailableParametersResponse response) {
+                Display.getDefault().asyncExec(() -> {
+                    parameterIds = response.getIdsList();
+                    for (MDBContextListener l : mdbListeners) {
+                        l.onParametersChanged(parameterIds);
+                    }
+                    parametersLoaded.countDown();
+                });
+            }
 
-                @Override
-                public void onException(Throwable t) {
-                    log.log(Level.SEVERE, "Could not fetch available yamcs parameters", t);
-                }
-            });            
-        }).start();
+            @Override
+            public void onFault(Throwable t) {
+                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", t);
+            }
+        });            
         
         // Load commands
-        new Thread(() -> {
-            SimpleYamcsRequests.listAllAvailableCommands(yprops, new XtceDbHandler() {
-                @Override
-                public void onMessage(XtceDb msg) {
+        DumpRawMdbRequest dumpRequest = new DumpRawMdbRequest();
+        restService.dumpRawMdb(dumpRequest, new ResponseHandler<DumpRawMdbResponse>() {
+            @Override
+            public void onMessage(DumpRawMdbResponse response) {
+                // In-memory :-( no easy way to get ByteString as inputstream (?)
+                byte[] barray = response.getRawMdb().toByteArray();
+                try (ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(barray))) {
+                    XtceDb mdb = (XtceDb) oin.readObject();
                     Display.getDefault().asyncExec(() -> {
-                        commands = msg.getMetaCommands();
+                        commands = mdb.getMetaCommands();
                         for (MDBContextListener l : mdbListeners) {
                             l.onCommandsChanged(commands);
                         }
                         commandsLoaded.countDown();
                     });
+                } catch (IOException | ClassNotFoundException e) {
+                    log.log(Level.SEVERE, "Could not deserialize mdb", e);
                 }
-                
-                @Override
-                public void onException(Throwable t) {
-                    log.log(Level.SEVERE, "Could not fetch available yamcs commands", t);
-                }
-            });
-        }).start();
+            }
+            
+            @Override
+            public void onFault(Throwable t) {
+                log.log(Level.SEVERE, "Could not fetch available yamcs commands", t);
+            }
+        });
     }
     
     public void addMdbListener(MDBContextListener listener) {
@@ -98,6 +119,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
+        restService.shutdown();
         super.stop(context);
     }
 
@@ -109,10 +131,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
      * Return the available parameters. Waits on the thread
      * while request is still ongoing.
      */
-    public NamedObjectList getParameters() {
+    public List<NamedObjectId> getParameterIds() {
         try {
             parametersLoaded.await();
-            return parameters;
+            return parameterIds;
         } catch (InterruptedException e) {
             e.printStackTrace();
             return null;

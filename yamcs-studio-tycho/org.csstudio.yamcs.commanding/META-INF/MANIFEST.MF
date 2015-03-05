@@ -10,6 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.rap.ui;resolution:=optional,
- org.csstudio.platform.libs.yamcs
+ org.csstudio.platform.libs.yamcs,
+ org.csstudio.platform.libs.protostuff
 Export-Package: org.csstudio.yamcs.commanding
 Import-Package: org.yamcs.xtce

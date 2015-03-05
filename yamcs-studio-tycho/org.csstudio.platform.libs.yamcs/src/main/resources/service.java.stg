@@ -1,0 +1,41 @@
+group service : base;
+
+service_block(service, module, options) ::= <<
+package <service.proto.javaPackageName>;
+
+import io.protostuff.Message;
+
+public interface <service.name> {
+	public interface ResponseHandler\<T extends Message\<T\>\> {
+	
+	    /**
+	     * The response by the server. Might contain application errors
+	     */
+	    void onMessage(T response);
+	    
+	    /**
+	     * When some uncaught exception occurred
+	     */
+	    void onFault(Throwable t);
+	}
+
+    <service:service_methods(service=it, options=options)>
+    
+    /**
+     * Performs an orderly shutdown of this service
+     */
+    void shutdown();
+}
+
+>>
+
+service_methods(service, module, options) ::= <<
+
+<service.rpcMethods:
+        {v|<service:service_method(method=v, service=service, module=module, options=options)>};
+        separator="\n\n">
+>>
+
+service_method(method, service, module, options) ::= <<
+void <method.name>(<method.argType.name> request, ResponseHandler\<<method.returnType.name>\> responseHandler);
+>>

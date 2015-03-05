@@ -1,5 +1,6 @@
 package org.csstudio.autocomplete.pvmanager.yamcs;
 
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -16,7 +17,6 @@ import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.csstudio.platform.libs.yamcs.MDBContextListener;
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
 import org.yamcs.protostuff.NamedObjectId;
-import org.yamcs.protostuff.NamedObjectList;
 
 /**
  * PV Name lookup for Yamcs Parameters
@@ -44,13 +44,13 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
     public YamcsContentProvider() {
         // Get initial list of parameters (this blocks, which might not be good)
         // However, the list should already be fetched by the time the user gets here
-        loadParameterNames(YamcsPlugin.getDefault().getParameters());
+        loadParameterNames(YamcsPlugin.getDefault().getParameterIds());
         
         // Subscribe to future updates
         YamcsPlugin.getDefault().addMdbListener(new MDBContextListener() {
             @Override
-            public void onParametersChanged(NamedObjectList parameters) {
-                loadParameterNames(parameters);
+            public void onParametersChanged(List<NamedObjectId> parameterIds) {
+                loadParameterNames(parameterIds);
             }
         });
     }
@@ -58,8 +58,8 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
     /**
      * Builds an index of all available parameter names
      */
-    private void loadParameterNames(NamedObjectList parameters) {
-        for (NamedObjectId id : parameters.getListList()) {
+    private void loadParameterNames(List<NamedObjectId> parameterIds) {
+        for (NamedObjectId id : parameterIds) {
             haystack.put(id.getName().toLowerCase(), id.getName());
         }
     }
