@@ -38,6 +38,9 @@
 		<module>org.csstudio.yamcs.feature.core</module>
 		<module>org.csstudio.yamcs.feature.eclipse</module>
 		<module>org.csstudio.yamcs.product</module>
+		<module>org.csstudio.yamcs.ycl.dsl</module>
+		<module>org.csstudio.yamcs.ycl.tests</module>
+		<module>org.csstudio.yamcs.ycl.ui</module>
 		<module>yamcs-studio-repository</module>
 	</modules>
 
@@ -194,6 +197,11 @@
 			<id>Eclipse</id>
 			<url>http://download.eclipse.org/releases/luna</url>
 			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>xtext</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
 		</repository>
 		<repository>
 			<id>repository.jboss.org</id>

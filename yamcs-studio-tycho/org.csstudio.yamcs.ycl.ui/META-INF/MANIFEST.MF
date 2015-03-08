@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.csstudio.yamcs.ycl.ui
+Bundle-Vendor: Space Applications Services
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.csstudio.yamcs.ycl.ui;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.csstudio.yamcs.ycl.dsl;visibility:=reexport,
+ org.eclipse.xtext.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.ide,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.ui,
+ org.eclipse.xtext.builder,
+ org.eclipse.xtext.xbase.lib,
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types.ui,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.compare
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.csstudio.yamcs.ycl.dsl.ui.quickfix,
+ org.csstudio.yamcs.ycl.dsl.ui.contentassist,
+ org.csstudio.yamcs.ycl.dsl.ui.contentassist.antlr,
+ org.csstudio.yamcs.ycl.dsl.ui.internal
+Bundle-Activator: org.csstudio.yamcs.ycl.dsl.ui.internal.YCLActivator
