@@ -146,7 +146,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         if((jsp.nextToken()!=JsonToken.FIELD_NAME) || (!"data".equals(jsp.getCurrentName())))
             throw new RuntimeException("Invalid message (expecting data as the next field)");
        
-        if (dtype.equals("ParameterData")) {
+        if (dtype.equals("PARAMETER")) {
             decodeParameterDataMessage(seqId, jsp);
         } else {
             throw new RuntimeException("Unsupported dt-value "+dtype);
