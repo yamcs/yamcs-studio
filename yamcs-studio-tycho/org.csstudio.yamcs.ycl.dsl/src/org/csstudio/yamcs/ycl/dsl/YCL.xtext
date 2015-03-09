@@ -23,9 +23,13 @@ terminal SL_COMMENT: '#' !('\n'|'\r')* ('\r'? '\n')?;
 terminal WS: (' '|'\t'|'\r'|'\n')+;
 
 Command:
-		name=ID ('(' (assignments+=ArgumentAssignment)* ')')?
+		name=CommandId ('(' (assignments+=ArgumentAssignment)* ')')?
 	;
 	
+CommandId:
+		id=ID
+	;
+
 ArgumentAssignment:
 		name=ID '=' value=ArgumentAssignmentValue
 	;

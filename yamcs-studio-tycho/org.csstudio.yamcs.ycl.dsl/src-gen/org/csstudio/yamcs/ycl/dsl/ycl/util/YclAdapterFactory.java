@@ -85,6 +85,11 @@ public class YclAdapterFactory extends AdapterFactoryImpl
         return createCommandAdapter();
       }
       @Override
+      public Adapter caseCommandId(CommandId object)
+      {
+        return createCommandIdAdapter();
+      }
+      @Override
       public Adapter caseArgumentAssignment(ArgumentAssignment object)
       {
         return createArgumentAssignmentAdapter();
@@ -137,6 +142,21 @@ public class YclAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createCommandAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.csstudio.yamcs.ycl.dsl.ycl.CommandId <em>Command Id</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.csstudio.yamcs.ycl.dsl.ycl.CommandId
+   * @generated
+   */
+  public Adapter createCommandIdAdapter()
   {
     return null;
   }

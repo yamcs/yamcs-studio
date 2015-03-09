@@ -46,6 +46,7 @@ public class YCLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getModelAccess().getCommandsAssignment(), "rule__Model__CommandsAssignment");
 					put(grammarAccess.getCommandAccess().getNameAssignment_0(), "rule__Command__NameAssignment_0");
 					put(grammarAccess.getCommandAccess().getAssignmentsAssignment_1_1(), "rule__Command__AssignmentsAssignment_1_1");
+					put(grammarAccess.getCommandIdAccess().getIdAssignment(), "rule__CommandId__IdAssignment");
 					put(grammarAccess.getArgumentAssignmentAccess().getNameAssignment_0(), "rule__ArgumentAssignment__NameAssignment_0");
 					put(grammarAccess.getArgumentAssignmentAccess().getValueAssignment_2(), "rule__ArgumentAssignment__ValueAssignment_2");
 				}

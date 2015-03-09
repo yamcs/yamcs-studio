@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.csstudio.yamcs.ycl.dsl.ycl.ArgumentAssignment;
 import org.csstudio.yamcs.ycl.dsl.ycl.Command;
+import org.csstudio.yamcs.ycl.dsl.ycl.CommandId;
 import org.csstudio.yamcs.ycl.dsl.ycl.YclPackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -39,24 +40,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 public class CommandImpl extends MinimalEObjectImpl.Container implements Command
 {
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * The cached value of the '{@link #getName() <em>Name</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getName()
    * @generated
    * @ordered
    */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
+  protected CommandId name;
 
   /**
    * The cached value of the '{@link #getAssignments() <em>Assignments</em>}' containment reference list.
@@ -94,7 +85,7 @@ public class CommandImpl extends MinimalEObjectImpl.Container implements Command
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getName()
+  public CommandId getName()
   {
     return name;
   }
@@ -104,12 +95,37 @@ public class CommandImpl extends MinimalEObjectImpl.Container implements Command
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setName(String newName)
+  public NotificationChain basicSetName(CommandId newName, NotificationChain msgs)
   {
-    String oldName = name;
+    CommandId oldName = name;
     name = newName;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, YclPackage.COMMAND__NAME, oldName, name));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, YclPackage.COMMAND__NAME, oldName, newName);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setName(CommandId newName)
+  {
+    if (newName != name)
+    {
+      NotificationChain msgs = null;
+      if (name != null)
+        msgs = ((InternalEObject)name).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - YclPackage.COMMAND__NAME, null, msgs);
+      if (newName != null)
+        msgs = ((InternalEObject)newName).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - YclPackage.COMMAND__NAME, null, msgs);
+      msgs = basicSetName(newName, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, YclPackage.COMMAND__NAME, newName, newName));
   }
 
   /**
@@ -136,6 +152,8 @@ public class CommandImpl extends MinimalEObjectImpl.Container implements Command
   {
     switch (featureID)
     {
+      case YclPackage.COMMAND__NAME:
+        return basicSetName(null, msgs);
       case YclPackage.COMMAND__ASSIGNMENTS:
         return ((InternalEList<?>)getAssignments()).basicRemove(otherEnd, msgs);
     }
@@ -172,7 +190,7 @@ public class CommandImpl extends MinimalEObjectImpl.Container implements Command
     switch (featureID)
     {
       case YclPackage.COMMAND__NAME:
-        setName((String)newValue);
+        setName((CommandId)newValue);
         return;
       case YclPackage.COMMAND__ASSIGNMENTS:
         getAssignments().clear();
@@ -193,7 +211,7 @@ public class CommandImpl extends MinimalEObjectImpl.Container implements Command
     switch (featureID)
     {
       case YclPackage.COMMAND__NAME:
-        setName(NAME_EDEFAULT);
+        setName((CommandId)null);
         return;
       case YclPackage.COMMAND__ASSIGNMENTS:
         getAssignments().clear();
@@ -213,28 +231,11 @@ public class CommandImpl extends MinimalEObjectImpl.Container implements Command
     switch (featureID)
     {
       case YclPackage.COMMAND__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+        return name != null;
       case YclPackage.COMMAND__ASSIGNMENTS:
         return assignments != null && !assignments.isEmpty();
     }
     return super.eIsSet(featureID);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String toString()
-  {
-    if (eIsProxy()) return super.toString();
-
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
-    result.append(')');
-    return result.toString();
   }
 
 } //CommandImpl

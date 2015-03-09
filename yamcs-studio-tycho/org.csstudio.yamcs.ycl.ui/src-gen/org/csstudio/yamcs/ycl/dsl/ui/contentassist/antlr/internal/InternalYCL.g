@@ -148,6 +148,34 @@ finally {
 
 
 
+// Entry rule entryRuleCommandId
+entryRuleCommandId 
+:
+{ before(grammarAccess.getCommandIdRule()); }
+	 ruleCommandId
+{ after(grammarAccess.getCommandIdRule()); } 
+	 EOF 
+;
+
+// Rule CommandId
+ruleCommandId
+    @init {
+		int stackSize = keepStackSize();
+    }
+	:
+(
+{ before(grammarAccess.getCommandIdAccess().getIdAssignment()); }
+(rule__CommandId__IdAssignment)
+{ after(grammarAccess.getCommandIdAccess().getIdAssignment()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+
 // Entry rule entryRuleArgumentAssignment
 entryRuleArgumentAssignment 
 :
@@ -630,8 +658,8 @@ rule__Command__NameAssignment_0
     }
 :
 (
-{ before(grammarAccess.getCommandAccess().getNameIDTerminalRuleCall_0_0()); }
-	RULE_ID{ after(grammarAccess.getCommandAccess().getNameIDTerminalRuleCall_0_0()); }
+{ before(grammarAccess.getCommandAccess().getNameCommandIdParserRuleCall_0_0()); }
+	ruleCommandId{ after(grammarAccess.getCommandAccess().getNameCommandIdParserRuleCall_0_0()); }
 )
 
 ;
@@ -647,6 +675,21 @@ rule__Command__AssignmentsAssignment_1_1
 (
 { before(grammarAccess.getCommandAccess().getAssignmentsArgumentAssignmentParserRuleCall_1_1_0()); }
 	ruleArgumentAssignment{ after(grammarAccess.getCommandAccess().getAssignmentsArgumentAssignmentParserRuleCall_1_1_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__CommandId__IdAssignment
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getCommandIdAccess().getIdIDTerminalRuleCall_0()); }
+	RULE_ID{ after(grammarAccess.getCommandIdAccess().getIdIDTerminalRuleCall_0()); }
 )
 
 ;

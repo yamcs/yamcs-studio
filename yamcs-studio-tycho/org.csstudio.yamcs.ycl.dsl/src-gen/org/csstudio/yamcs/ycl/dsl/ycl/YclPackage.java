@@ -95,7 +95,7 @@ public interface YclPackage extends EPackage
   int COMMAND = 1;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * The feature id for the '<em><b>Name</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -122,6 +122,34 @@ public interface YclPackage extends EPackage
   int COMMAND_FEATURE_COUNT = 2;
 
   /**
+   * The meta object id for the '{@link org.csstudio.yamcs.ycl.dsl.ycl.impl.CommandIdImpl <em>Command Id</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.csstudio.yamcs.ycl.dsl.ycl.impl.CommandIdImpl
+   * @see org.csstudio.yamcs.ycl.dsl.ycl.impl.YclPackageImpl#getCommandId()
+   * @generated
+   */
+  int COMMAND_ID = 2;
+
+  /**
+   * The feature id for the '<em><b>Id</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMMAND_ID__ID = 0;
+
+  /**
+   * The number of structural features of the '<em>Command Id</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMMAND_ID_FEATURE_COUNT = 1;
+
+  /**
    * The meta object id for the '{@link org.csstudio.yamcs.ycl.dsl.ycl.impl.ArgumentAssignmentImpl <em>Argument Assignment</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -129,7 +157,7 @@ public interface YclPackage extends EPackage
    * @see org.csstudio.yamcs.ycl.dsl.ycl.impl.YclPackageImpl#getArgumentAssignment()
    * @generated
    */
-  int ARGUMENT_ASSIGNMENT = 2;
+  int ARGUMENT_ASSIGNMENT = 3;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -191,15 +219,15 @@ public interface YclPackage extends EPackage
   EClass getCommand();
 
   /**
-   * Returns the meta object for the attribute '{@link org.csstudio.yamcs.ycl.dsl.ycl.Command#getName <em>Name</em>}'.
+   * Returns the meta object for the containment reference '{@link org.csstudio.yamcs.ycl.dsl.ycl.Command#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Name</em>'.
+   * @return the meta object for the containment reference '<em>Name</em>'.
    * @see org.csstudio.yamcs.ycl.dsl.ycl.Command#getName()
    * @see #getCommand()
    * @generated
    */
-  EAttribute getCommand_Name();
+  EReference getCommand_Name();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.csstudio.yamcs.ycl.dsl.ycl.Command#getAssignments <em>Assignments</em>}'.
@@ -211,6 +239,27 @@ public interface YclPackage extends EPackage
    * @generated
    */
   EReference getCommand_Assignments();
+
+  /**
+   * Returns the meta object for class '{@link org.csstudio.yamcs.ycl.dsl.ycl.CommandId <em>Command Id</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Command Id</em>'.
+   * @see org.csstudio.yamcs.ycl.dsl.ycl.CommandId
+   * @generated
+   */
+  EClass getCommandId();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.csstudio.yamcs.ycl.dsl.ycl.CommandId#getId <em>Id</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Id</em>'.
+   * @see org.csstudio.yamcs.ycl.dsl.ycl.CommandId#getId()
+   * @see #getCommandId()
+   * @generated
+   */
+  EAttribute getCommandId_Id();
 
   /**
    * Returns the meta object for class '{@link org.csstudio.yamcs.ycl.dsl.ycl.ArgumentAssignment <em>Argument Assignment</em>}'.
@@ -296,12 +345,12 @@ public interface YclPackage extends EPackage
     EClass COMMAND = eINSTANCE.getCommand();
 
     /**
-     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Name</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute COMMAND__NAME = eINSTANCE.getCommand_Name();
+    EReference COMMAND__NAME = eINSTANCE.getCommand_Name();
 
     /**
      * The meta object literal for the '<em><b>Assignments</b></em>' containment reference list feature.
@@ -310,6 +359,24 @@ public interface YclPackage extends EPackage
      * @generated
      */
     EReference COMMAND__ASSIGNMENTS = eINSTANCE.getCommand_Assignments();
+
+    /**
+     * The meta object literal for the '{@link org.csstudio.yamcs.ycl.dsl.ycl.impl.CommandIdImpl <em>Command Id</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.csstudio.yamcs.ycl.dsl.ycl.impl.CommandIdImpl
+     * @see org.csstudio.yamcs.ycl.dsl.ycl.impl.YclPackageImpl#getCommandId()
+     * @generated
+     */
+    EClass COMMAND_ID = eINSTANCE.getCommandId();
+
+    /**
+     * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute COMMAND_ID__ID = eINSTANCE.getCommandId_Id();
 
     /**
      * The meta object literal for the '{@link org.csstudio.yamcs.ycl.dsl.ycl.impl.ArgumentAssignmentImpl <em>Argument Assignment</em>}' class.

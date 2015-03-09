@@ -370,44 +370,50 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleCommand"
-    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:174:1: ruleCommand returns [EObject current=null] : ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? ) ;
+    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:174:1: ruleCommand returns [EObject current=null] : ( ( (lv_name_0_0= ruleCommandId ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? ) ;
     public final EObject ruleCommand() throws RecognitionException {
         EObject current = null;
 
-        Token lv_name_0_0=null;
         Token otherlv_1=null;
         Token otherlv_3=null;
+        EObject lv_name_0_0 = null;
+
         EObject lv_assignments_2_0 = null;
 
 
          enterRule(); 
             
         try {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:177:28: ( ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:1: ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:177:28: ( ( ( (lv_name_0_0= ruleCommandId ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:1: ( ( (lv_name_0_0= ruleCommandId ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:1: ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:2: ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )?
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:1: ( ( (lv_name_0_0= ruleCommandId ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )? )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:2: ( (lv_name_0_0= ruleCommandId ) ) (otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')' )?
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:2: ( (lv_name_0_0= RULE_ID ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:179:1: (lv_name_0_0= RULE_ID )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:178:2: ( (lv_name_0_0= ruleCommandId ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:179:1: (lv_name_0_0= ruleCommandId )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:179:1: (lv_name_0_0= RULE_ID )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:180:3: lv_name_0_0= RULE_ID
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:179:1: (lv_name_0_0= ruleCommandId )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:180:3: lv_name_0_0= ruleCommandId
             {
-            lv_name_0_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleCommand390); 
+             
+            	        newCompositeNode(grammarAccess.getCommandAccess().getNameCommandIdParserRuleCall_0_0()); 
+            	    
+            pushFollow(FOLLOW_ruleCommandId_in_ruleCommand394);
+            lv_name_0_0=ruleCommandId();
 
-            			newLeafNode(lv_name_0_0, grammarAccess.getCommandAccess().getNameIDTerminalRuleCall_0_0()); 
-            		
+            state._fsp--;
+
 
             	        if (current==null) {
-            	            current = createModelElement(grammarAccess.getCommandRule());
+            	            current = createModelElementForParent(grammarAccess.getCommandRule());
             	        }
-                   		setWithLastConsumed(
+                   		set(
                    			current, 
                    			"name",
                     		lv_name_0_0, 
-                    		"ID");
+                    		"CommandId");
+            	        afterParserOrEnumRuleCall();
             	    
 
             }
@@ -426,7 +432,7 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
                 case 1 :
                     // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:196:4: otherlv_1= '(' ( (lv_assignments_2_0= ruleArgumentAssignment ) )* otherlv_3= ')'
                     {
-                    otherlv_1=(Token)match(input,12,FOLLOW_12_in_ruleCommand408); 
+                    otherlv_1=(Token)match(input,12,FOLLOW_12_in_ruleCommand407); 
 
                         	newLeafNode(otherlv_1, grammarAccess.getCommandAccess().getLeftParenthesisKeyword_1_0());
                         
@@ -451,7 +457,7 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
                     	     
                     	    	        newCompositeNode(grammarAccess.getCommandAccess().getAssignmentsArgumentAssignmentParserRuleCall_1_1_0()); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleArgumentAssignment_in_ruleCommand429);
+                    	    pushFollow(FOLLOW_ruleArgumentAssignment_in_ruleCommand428);
                     	    lv_assignments_2_0=ruleArgumentAssignment();
 
                     	    state._fsp--;
@@ -479,7 +485,7 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    otherlv_3=(Token)match(input,13,FOLLOW_13_in_ruleCommand442); 
+                    otherlv_3=(Token)match(input,13,FOLLOW_13_in_ruleCommand441); 
 
                         	newLeafNode(otherlv_3, grammarAccess.getCommandAccess().getRightParenthesisKeyword_1_2());
                         
@@ -509,8 +515,100 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleCommand"
 
 
+    // $ANTLR start "entryRuleCommandId"
+    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:230:1: entryRuleCommandId returns [EObject current=null] : iv_ruleCommandId= ruleCommandId EOF ;
+    public final EObject entryRuleCommandId() throws RecognitionException {
+        EObject current = null;
+
+        EObject iv_ruleCommandId = null;
+
+
+        try {
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:231:2: (iv_ruleCommandId= ruleCommandId EOF )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:232:2: iv_ruleCommandId= ruleCommandId EOF
+            {
+             newCompositeNode(grammarAccess.getCommandIdRule()); 
+            pushFollow(FOLLOW_ruleCommandId_in_entryRuleCommandId479);
+            iv_ruleCommandId=ruleCommandId();
+
+            state._fsp--;
+
+             current =iv_ruleCommandId; 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleCommandId489); 
+
+            }
+
+        }
+         
+            catch (RecognitionException re) { 
+                recover(input,re); 
+                appendSkippedTokens();
+            } 
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "entryRuleCommandId"
+
+
+    // $ANTLR start "ruleCommandId"
+    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:239:1: ruleCommandId returns [EObject current=null] : ( (lv_id_0_0= RULE_ID ) ) ;
+    public final EObject ruleCommandId() throws RecognitionException {
+        EObject current = null;
+
+        Token lv_id_0_0=null;
+
+         enterRule(); 
+            
+        try {
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:242:28: ( ( (lv_id_0_0= RULE_ID ) ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:243:1: ( (lv_id_0_0= RULE_ID ) )
+            {
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:243:1: ( (lv_id_0_0= RULE_ID ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:244:1: (lv_id_0_0= RULE_ID )
+            {
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:244:1: (lv_id_0_0= RULE_ID )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:245:3: lv_id_0_0= RULE_ID
+            {
+            lv_id_0_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleCommandId530); 
+
+            			newLeafNode(lv_id_0_0, grammarAccess.getCommandIdAccess().getIdIDTerminalRuleCall_0()); 
+            		
+
+            	        if (current==null) {
+            	            current = createModelElement(grammarAccess.getCommandIdRule());
+            	        }
+                   		setWithLastConsumed(
+                   			current, 
+                   			"id",
+                    		lv_id_0_0, 
+                    		"ID");
+            	    
+
+            }
+
+
+            }
+
+
+            }
+
+             leaveRule(); 
+        }
+         
+            catch (RecognitionException re) { 
+                recover(input,re); 
+                appendSkippedTokens();
+            } 
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "ruleCommandId"
+
+
     // $ANTLR start "entryRuleArgumentAssignment"
-    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:230:1: entryRuleArgumentAssignment returns [EObject current=null] : iv_ruleArgumentAssignment= ruleArgumentAssignment EOF ;
+    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:269:1: entryRuleArgumentAssignment returns [EObject current=null] : iv_ruleArgumentAssignment= ruleArgumentAssignment EOF ;
     public final EObject entryRuleArgumentAssignment() throws RecognitionException {
         EObject current = null;
 
@@ -518,17 +616,17 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:231:2: (iv_ruleArgumentAssignment= ruleArgumentAssignment EOF )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:232:2: iv_ruleArgumentAssignment= ruleArgumentAssignment EOF
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:270:2: (iv_ruleArgumentAssignment= ruleArgumentAssignment EOF )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:271:2: iv_ruleArgumentAssignment= ruleArgumentAssignment EOF
             {
              newCompositeNode(grammarAccess.getArgumentAssignmentRule()); 
-            pushFollow(FOLLOW_ruleArgumentAssignment_in_entryRuleArgumentAssignment480);
+            pushFollow(FOLLOW_ruleArgumentAssignment_in_entryRuleArgumentAssignment570);
             iv_ruleArgumentAssignment=ruleArgumentAssignment();
 
             state._fsp--;
 
              current =iv_ruleArgumentAssignment; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleArgumentAssignment490); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleArgumentAssignment580); 
 
             }
 
@@ -546,7 +644,7 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleArgumentAssignment"
-    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:239:1: ruleArgumentAssignment returns [EObject current=null] : ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) ) ;
+    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:278:1: ruleArgumentAssignment returns [EObject current=null] : ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) ) ;
     public final EObject ruleArgumentAssignment() throws RecognitionException {
         EObject current = null;
 
@@ -558,19 +656,19 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:242:28: ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:243:1: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:281:28: ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:282:1: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:243:1: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:243:2: ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:282:1: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:282:2: ( (lv_name_0_0= RULE_ID ) ) otherlv_1= '=' ( (lv_value_2_0= ruleArgumentAssignmentValue ) )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:243:2: ( (lv_name_0_0= RULE_ID ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:244:1: (lv_name_0_0= RULE_ID )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:282:2: ( (lv_name_0_0= RULE_ID ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:283:1: (lv_name_0_0= RULE_ID )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:244:1: (lv_name_0_0= RULE_ID )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:245:3: lv_name_0_0= RULE_ID
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:283:1: (lv_name_0_0= RULE_ID )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:284:3: lv_name_0_0= RULE_ID
             {
-            lv_name_0_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleArgumentAssignment532); 
+            lv_name_0_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleArgumentAssignment622); 
 
             			newLeafNode(lv_name_0_0, grammarAccess.getArgumentAssignmentAccess().getNameIDTerminalRuleCall_0_0()); 
             		
@@ -590,20 +688,20 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,14,FOLLOW_14_in_ruleArgumentAssignment549); 
+            otherlv_1=(Token)match(input,14,FOLLOW_14_in_ruleArgumentAssignment639); 
 
                 	newLeafNode(otherlv_1, grammarAccess.getArgumentAssignmentAccess().getEqualsSignKeyword_1());
                 
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:265:1: ( (lv_value_2_0= ruleArgumentAssignmentValue ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:266:1: (lv_value_2_0= ruleArgumentAssignmentValue )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:304:1: ( (lv_value_2_0= ruleArgumentAssignmentValue ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:305:1: (lv_value_2_0= ruleArgumentAssignmentValue )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:266:1: (lv_value_2_0= ruleArgumentAssignmentValue )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:267:3: lv_value_2_0= ruleArgumentAssignmentValue
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:305:1: (lv_value_2_0= ruleArgumentAssignmentValue )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:306:3: lv_value_2_0= ruleArgumentAssignmentValue
             {
              
             	        newCompositeNode(grammarAccess.getArgumentAssignmentAccess().getValueArgumentAssignmentValueParserRuleCall_2_0()); 
             	    
-            pushFollow(FOLLOW_ruleArgumentAssignmentValue_in_ruleArgumentAssignment570);
+            pushFollow(FOLLOW_ruleArgumentAssignmentValue_in_ruleArgumentAssignment660);
             lv_value_2_0=ruleArgumentAssignmentValue();
 
             state._fsp--;
@@ -646,7 +744,7 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleArgumentAssignmentValue"
-    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:291:1: entryRuleArgumentAssignmentValue returns [String current=null] : iv_ruleArgumentAssignmentValue= ruleArgumentAssignmentValue EOF ;
+    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:330:1: entryRuleArgumentAssignmentValue returns [String current=null] : iv_ruleArgumentAssignmentValue= ruleArgumentAssignmentValue EOF ;
     public final String entryRuleArgumentAssignmentValue() throws RecognitionException {
         String current = null;
 
@@ -654,17 +752,17 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:292:2: (iv_ruleArgumentAssignmentValue= ruleArgumentAssignmentValue EOF )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:293:2: iv_ruleArgumentAssignmentValue= ruleArgumentAssignmentValue EOF
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:331:2: (iv_ruleArgumentAssignmentValue= ruleArgumentAssignmentValue EOF )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:332:2: iv_ruleArgumentAssignmentValue= ruleArgumentAssignmentValue EOF
             {
              newCompositeNode(grammarAccess.getArgumentAssignmentValueRule()); 
-            pushFollow(FOLLOW_ruleArgumentAssignmentValue_in_entryRuleArgumentAssignmentValue607);
+            pushFollow(FOLLOW_ruleArgumentAssignmentValue_in_entryRuleArgumentAssignmentValue697);
             iv_ruleArgumentAssignmentValue=ruleArgumentAssignmentValue();
 
             state._fsp--;
 
              current =iv_ruleArgumentAssignmentValue.getText(); 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleArgumentAssignmentValue618); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleArgumentAssignmentValue708); 
 
             }
 
@@ -682,7 +780,7 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleArgumentAssignmentValue"
-    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:300:1: ruleArgumentAssignmentValue returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL ) ;
+    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:339:1: ruleArgumentAssignmentValue returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL ) ;
     public final AntlrDatatypeRuleToken ruleArgumentAssignmentValue() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -695,10 +793,10 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:303:28: ( (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:304:1: (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:342:28: ( (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:343:1: (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:304:1: (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:343:1: (this_STRING_0= RULE_STRING | this_INT_1= RULE_INT | this_HEX_2= RULE_HEX | this_REAL_3= ruleREAL )
             int alt5=4;
             switch ( input.LA(1) ) {
             case RULE_STRING:
@@ -738,9 +836,9 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
 
             switch (alt5) {
                 case 1 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:304:6: this_STRING_0= RULE_STRING
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:343:6: this_STRING_0= RULE_STRING
                     {
-                    this_STRING_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleArgumentAssignmentValue658); 
+                    this_STRING_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleArgumentAssignmentValue748); 
 
                     		current.merge(this_STRING_0);
                         
@@ -751,9 +849,9 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:312:10: this_INT_1= RULE_INT
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:351:10: this_INT_1= RULE_INT
                     {
-                    this_INT_1=(Token)match(input,RULE_INT,FOLLOW_RULE_INT_in_ruleArgumentAssignmentValue684); 
+                    this_INT_1=(Token)match(input,RULE_INT,FOLLOW_RULE_INT_in_ruleArgumentAssignmentValue774); 
 
                     		current.merge(this_INT_1);
                         
@@ -764,9 +862,9 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:320:10: this_HEX_2= RULE_HEX
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:359:10: this_HEX_2= RULE_HEX
                     {
-                    this_HEX_2=(Token)match(input,RULE_HEX,FOLLOW_RULE_HEX_in_ruleArgumentAssignmentValue710); 
+                    this_HEX_2=(Token)match(input,RULE_HEX,FOLLOW_RULE_HEX_in_ruleArgumentAssignmentValue800); 
 
                     		current.merge(this_HEX_2);
                         
@@ -777,12 +875,12 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:329:5: this_REAL_3= ruleREAL
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:368:5: this_REAL_3= ruleREAL
                     {
                      
                             newCompositeNode(grammarAccess.getArgumentAssignmentValueAccess().getREALParserRuleCall_3()); 
                         
-                    pushFollow(FOLLOW_ruleREAL_in_ruleArgumentAssignmentValue743);
+                    pushFollow(FOLLOW_ruleREAL_in_ruleArgumentAssignmentValue833);
                     this_REAL_3=ruleREAL();
 
                     state._fsp--;
@@ -831,20 +929,23 @@ public class InternalYCLParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_RULE_INT_in_ruleREAL288 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleCommand_in_entryRuleCommand338 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleCommand348 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleCommand390 = new BitSet(new long[]{0x0000000000001002L});
-    public static final BitSet FOLLOW_12_in_ruleCommand408 = new BitSet(new long[]{0x0000000000002040L});
-    public static final BitSet FOLLOW_ruleArgumentAssignment_in_ruleCommand429 = new BitSet(new long[]{0x0000000000002040L});
-    public static final BitSet FOLLOW_13_in_ruleCommand442 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleArgumentAssignment_in_entryRuleArgumentAssignment480 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleArgumentAssignment490 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleArgumentAssignment532 = new BitSet(new long[]{0x0000000000004000L});
-    public static final BitSet FOLLOW_14_in_ruleArgumentAssignment549 = new BitSet(new long[]{0x0000000000000190L});
-    public static final BitSet FOLLOW_ruleArgumentAssignmentValue_in_ruleArgumentAssignment570 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleArgumentAssignmentValue_in_entryRuleArgumentAssignmentValue607 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleArgumentAssignmentValue618 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_STRING_in_ruleArgumentAssignmentValue658 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_INT_in_ruleArgumentAssignmentValue684 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_HEX_in_ruleArgumentAssignmentValue710 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleREAL_in_ruleArgumentAssignmentValue743 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleCommandId_in_ruleCommand394 = new BitSet(new long[]{0x0000000000001002L});
+    public static final BitSet FOLLOW_12_in_ruleCommand407 = new BitSet(new long[]{0x0000000000002040L});
+    public static final BitSet FOLLOW_ruleArgumentAssignment_in_ruleCommand428 = new BitSet(new long[]{0x0000000000002040L});
+    public static final BitSet FOLLOW_13_in_ruleCommand441 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleCommandId_in_entryRuleCommandId479 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleCommandId489 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleCommandId530 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleArgumentAssignment_in_entryRuleArgumentAssignment570 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleArgumentAssignment580 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleArgumentAssignment622 = new BitSet(new long[]{0x0000000000004000L});
+    public static final BitSet FOLLOW_14_in_ruleArgumentAssignment639 = new BitSet(new long[]{0x0000000000000190L});
+    public static final BitSet FOLLOW_ruleArgumentAssignmentValue_in_ruleArgumentAssignment660 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleArgumentAssignmentValue_in_entryRuleArgumentAssignmentValue697 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleArgumentAssignmentValue708 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleArgumentAssignmentValue748 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_INT_in_ruleArgumentAssignmentValue774 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_HEX_in_ruleArgumentAssignmentValue800 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleREAL_in_ruleArgumentAssignmentValue833 = new BitSet(new long[]{0x0000000000000002L});
 
 }

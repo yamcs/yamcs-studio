@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import org.csstudio.yamcs.ycl.dsl.services.YCLGrammarAccess;
 import org.csstudio.yamcs.ycl.dsl.ycl.ArgumentAssignment;
 import org.csstudio.yamcs.ycl.dsl.ycl.Command;
+import org.csstudio.yamcs.ycl.dsl.ycl.CommandId;
 import org.csstudio.yamcs.ycl.dsl.ycl.Model;
 import org.csstudio.yamcs.ycl.dsl.ycl.YclPackage;
 import org.eclipse.emf.ecore.EObject;
@@ -39,6 +40,12 @@ public class YCLSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 					return; 
 				}
 				else break;
+			case YclPackage.COMMAND_ID:
+				if(context == grammarAccess.getCommandIdRule()) {
+					sequence_CommandId(context, (CommandId) semanticObject); 
+					return; 
+				}
+				else break;
 			case YclPackage.MODEL:
 				if(context == grammarAccess.getModelRule()) {
 					sequence_Model(context, (Model) semanticObject); 
@@ -70,7 +77,23 @@ public class YCLSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (name=ID assignments+=ArgumentAssignment*)
+	 *     id=ID
+	 */
+	protected void sequence_CommandId(EObject context, CommandId semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, YclPackage.Literals.COMMAND_ID__ID) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, YclPackage.Literals.COMMAND_ID__ID));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getCommandIdAccess().getIdIDTerminalRuleCall_0(), semanticObject.getId());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=CommandId assignments+=ArgumentAssignment*)
 	 */
 	protected void sequence_Command(EObject context, Command semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -66,6 +66,7 @@ public class YclFactoryImpl extends EFactoryImpl implements YclFactory
     {
       case YclPackage.MODEL: return createModel();
       case YclPackage.COMMAND: return createCommand();
+      case YclPackage.COMMAND_ID: return createCommandId();
       case YclPackage.ARGUMENT_ASSIGNMENT: return createArgumentAssignment();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -92,6 +93,17 @@ public class YclFactoryImpl extends EFactoryImpl implements YclFactory
   {
     CommandImpl command = new CommandImpl();
     return command;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CommandId createCommandId()
+  {
+    CommandIdImpl commandId = new CommandIdImpl();
+    return commandId;
   }
 
   /**

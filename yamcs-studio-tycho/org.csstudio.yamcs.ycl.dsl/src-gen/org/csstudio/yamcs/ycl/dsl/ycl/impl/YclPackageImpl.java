@@ -4,6 +4,7 @@ package org.csstudio.yamcs.ycl.dsl.ycl.impl;
 
 import org.csstudio.yamcs.ycl.dsl.ycl.ArgumentAssignment;
 import org.csstudio.yamcs.ycl.dsl.ycl.Command;
+import org.csstudio.yamcs.ycl.dsl.ycl.CommandId;
 import org.csstudio.yamcs.ycl.dsl.ycl.Model;
 import org.csstudio.yamcs.ycl.dsl.ycl.YclFactory;
 import org.csstudio.yamcs.ycl.dsl.ycl.YclPackage;
@@ -36,6 +37,13 @@ public class YclPackageImpl extends EPackageImpl implements YclPackage
    * @generated
    */
   private EClass commandEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass commandIdEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -142,9 +150,9 @@ public class YclPackageImpl extends EPackageImpl implements YclPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getCommand_Name()
+  public EReference getCommand_Name()
   {
-    return (EAttribute)commandEClass.getEStructuralFeatures().get(0);
+    return (EReference)commandEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -155,6 +163,26 @@ public class YclPackageImpl extends EPackageImpl implements YclPackage
   public EReference getCommand_Assignments()
   {
     return (EReference)commandEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getCommandId()
+  {
+    return commandIdEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getCommandId_Id()
+  {
+    return (EAttribute)commandIdEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -221,8 +249,11 @@ public class YclPackageImpl extends EPackageImpl implements YclPackage
     createEReference(modelEClass, MODEL__COMMANDS);
 
     commandEClass = createEClass(COMMAND);
-    createEAttribute(commandEClass, COMMAND__NAME);
+    createEReference(commandEClass, COMMAND__NAME);
     createEReference(commandEClass, COMMAND__ASSIGNMENTS);
+
+    commandIdEClass = createEClass(COMMAND_ID);
+    createEAttribute(commandIdEClass, COMMAND_ID__ID);
 
     argumentAssignmentEClass = createEClass(ARGUMENT_ASSIGNMENT);
     createEAttribute(argumentAssignmentEClass, ARGUMENT_ASSIGNMENT__NAME);
@@ -264,8 +295,11 @@ public class YclPackageImpl extends EPackageImpl implements YclPackage
     initEReference(getModel_Commands(), this.getCommand(), null, "commands", null, 0, -1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(commandEClass, Command.class, "Command", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getCommand_Name(), ecorePackage.getEString(), "name", null, 0, 1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCommand_Name(), this.getCommandId(), null, "name", null, 0, 1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCommand_Assignments(), this.getArgumentAssignment(), null, "assignments", null, 0, -1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(commandIdEClass, CommandId.class, "CommandId", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getCommandId_Id(), ecorePackage.getEString(), "id", null, 0, 1, CommandId.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(argumentAssignmentEClass, ArgumentAssignment.class, "ArgumentAssignment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getArgumentAssignment_Name(), ecorePackage.getEString(), "name", null, 0, 1, ArgumentAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

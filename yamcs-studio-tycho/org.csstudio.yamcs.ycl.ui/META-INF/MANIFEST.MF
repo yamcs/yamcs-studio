@@ -16,8 +16,11 @@ Require-Bundle: org.csstudio.yamcs.ycl.dsl;visibility:=reexport,
  org.antlr.runtime,
  org.eclipse.xtext.common.types.ui,
  org.eclipse.xtext.ui.codetemplates.ui,
- org.eclipse.compare
-Import-Package: org.apache.log4j
+ org.eclipse.compare,
+ org.csstudio.platform.libs.yamcs,
+ org.csstudio.platform.libs.protostuff
+Import-Package: org.apache.log4j,
+ org.yamcs.xtce
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.csstudio.yamcs.ycl.dsl.ui.quickfix,
  org.csstudio.yamcs.ycl.dsl.ui.contentassist,

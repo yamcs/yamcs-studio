@@ -12,8 +12,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference YCL.ecore#//Model/greetings"/>
     </genClasses>
     <genClasses ecoreClass="YCL.ecore#//Command">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute YCL.ecore#//Command/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference YCL.ecore#//Command/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference YCL.ecore#//Command/assignments"/>
+    </genClasses>
+    <genClasses ecoreClass="YCL.ecore#//CommandId">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute YCL.ecore#//CommandId/id"/>
     </genClasses>
     <genClasses ecoreClass="YCL.ecore#//ArgumentAssignment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute YCL.ecore#//ArgumentAssignment/name"/>

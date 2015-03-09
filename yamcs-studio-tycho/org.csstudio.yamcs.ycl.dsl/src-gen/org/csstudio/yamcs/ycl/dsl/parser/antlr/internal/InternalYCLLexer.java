@@ -123,8 +123,8 @@ public class InternalYCLLexer extends Lexer {
         try {
             int _type = RULE_EXT_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:346:14: ( RULE_INT ( 'e' | 'E' ) ( '-' | '+' ) RULE_INT )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:346:16: RULE_INT ( 'e' | 'E' ) ( '-' | '+' ) RULE_INT
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:385:14: ( RULE_INT ( 'e' | 'E' ) ( '-' | '+' ) RULE_INT )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:385:16: RULE_INT ( 'e' | 'E' ) ( '-' | '+' ) RULE_INT
             {
             mRULE_INT(); 
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
@@ -162,10 +162,10 @@ public class InternalYCLLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:348:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:348:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:387:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:387:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:348:11: ( '^' )?
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:387:11: ( '^' )?
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -174,7 +174,7 @@ public class InternalYCLLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:348:11: '^'
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:387:11: '^'
                     {
                     match('^'); 
 
@@ -192,7 +192,7 @@ public class InternalYCLLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:348:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:387:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             loop2:
             do {
                 int alt2=2;
@@ -241,10 +241,10 @@ public class InternalYCLLexer extends Lexer {
         try {
             int _type = RULE_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:350:10: ( ( '0' .. '9' )+ )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:350:12: ( '0' .. '9' )+
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:389:10: ( ( '0' .. '9' )+ )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:389:12: ( '0' .. '9' )+
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:350:12: ( '0' .. '9' )+
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:389:12: ( '0' .. '9' )+
             int cnt3=0;
             loop3:
             do {
@@ -258,7 +258,7 @@ public class InternalYCLLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:350:13: '0' .. '9'
+            	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:389:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -290,8 +290,8 @@ public class InternalYCLLexer extends Lexer {
         try {
             int _type = RULE_HEX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:352:10: ( '0' ( 'x' | 'X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )+ )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:352:12: '0' ( 'x' | 'X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )+
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:391:10: ( '0' ( 'x' | 'X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )+ )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:391:12: '0' ( 'x' | 'X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )+
             {
             match('0'); 
             if ( input.LA(1)=='X'||input.LA(1)=='x' ) {
@@ -303,7 +303,7 @@ public class InternalYCLLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:352:26: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )+
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:391:26: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )+
             int cnt4=0;
             loop4:
             do {
@@ -357,10 +357,10 @@ public class InternalYCLLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:13: ( ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:13: ( ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -378,10 +378,10 @@ public class InternalYCLLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:16: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:16: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:20: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:20: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop5:
                     do {
                         int alt5=3;
@@ -397,7 +397,7 @@ public class InternalYCLLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:21: '\\\\' .
+                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:21: '\\\\' .
                     	    {
                     	    match('\\'); 
                     	    matchAny(); 
@@ -405,7 +405,7 @@ public class InternalYCLLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:28: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:28: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -430,10 +430,10 @@ public class InternalYCLLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:48: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:48: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:53: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:53: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop6:
                     do {
                         int alt6=3;
@@ -449,7 +449,7 @@ public class InternalYCLLexer extends Lexer {
 
                         switch (alt6) {
                     	case 1 :
-                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:54: '\\\\' .
+                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:54: '\\\\' .
                     	    {
                     	    match('\\'); 
                     	    matchAny(); 
@@ -457,7 +457,7 @@ public class InternalYCLLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:354:61: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:393:61: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -500,11 +500,11 @@ public class InternalYCLLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:17: ( '#' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:19: '#' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:17: ( '#' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:19: '#' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match('#'); 
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:23: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:23: (~ ( ( '\\n' | '\\r' ) ) )*
             loop8:
             do {
                 int alt8=2;
@@ -517,7 +517,7 @@ public class InternalYCLLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:23: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:23: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -537,7 +537,7 @@ public class InternalYCLLexer extends Lexer {
                 }
             } while (true);
 
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:39: ( ( '\\r' )? '\\n' )?
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:39: ( ( '\\r' )? '\\n' )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -546,9 +546,9 @@ public class InternalYCLLexer extends Lexer {
             }
             switch (alt10) {
                 case 1 :
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:40: ( '\\r' )? '\\n'
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:40: ( '\\r' )? '\\n'
                     {
-                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:40: ( '\\r' )?
+                    // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:40: ( '\\r' )?
                     int alt9=2;
                     int LA9_0 = input.LA(1);
 
@@ -557,7 +557,7 @@ public class InternalYCLLexer extends Lexer {
                     }
                     switch (alt9) {
                         case 1 :
-                            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:356:40: '\\r'
+                            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:395:40: '\\r'
                             {
                             match('\r'); 
 
@@ -589,10 +589,10 @@ public class InternalYCLLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:358:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:358:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:397:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:397:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:358:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.csstudio.yamcs.ycl.dsl/src-gen/org/csstudio/yamcs/ycl/dsl/parser/antlr/internal/InternalYCL.g:397:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt11=0;
             loop11:
             do {

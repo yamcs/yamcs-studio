@@ -103,7 +103,7 @@ public abstract class AbstractYCLUiModule extends DefaultUiModule {
 		return org.csstudio.yamcs.ycl.dsl.ui.quickfix.YCLQuickfixProvider.class;
 	}
 
-	// contributed by org.eclipse.xtext.ui.generator.contentAssist.ContentAssistFragment
+	// contributed by org.eclipse.xtext.ui.generator.contentAssist.JavaBasedContentAssistFragment
 	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider> bindIContentProposalProvider() {
 		return org.csstudio.yamcs.ycl.dsl.ui.contentassist.YCLProposalProvider.class;
 	}

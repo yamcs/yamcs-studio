@@ -89,9 +89,9 @@ public abstract class AbstractYCLRuntimeModule extends DefaultRuntimeModule {
 		return org.eclipse.xtext.parser.antlr.AntlrTokenDefProvider.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.validation.ValidatorFragment
-	@org.eclipse.xtext.service.SingletonBinding(eager=true)	public Class<? extends org.csstudio.yamcs.ycl.dsl.validation.YCLValidator> bindYCLValidator() {
-		return org.csstudio.yamcs.ycl.dsl.validation.YCLValidator.class;
+	// contributed by org.eclipse.xtext.generator.validation.JavaValidatorFragment
+	@org.eclipse.xtext.service.SingletonBinding(eager=true)	public Class<? extends org.csstudio.yamcs.ycl.dsl.validation.YCLJavaValidator> bindYCLJavaValidator() {
+		return org.csstudio.yamcs.ycl.dsl.validation.YCLJavaValidator.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.scoping.AbstractScopingFragment

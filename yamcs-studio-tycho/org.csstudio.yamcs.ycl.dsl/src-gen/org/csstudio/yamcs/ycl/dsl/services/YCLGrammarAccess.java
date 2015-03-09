@@ -70,7 +70,7 @@ public class YCLGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Command");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cNameIDTerminalRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final RuleCall cNameCommandIdParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Assignment cAssignmentsAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
@@ -78,17 +78,17 @@ public class YCLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
 		
 		//Command:
-		//	name=ID ("(" assignments+=ArgumentAssignment* ")")?;
+		//	name=CommandId ("(" assignments+=ArgumentAssignment* ")")?;
 		public ParserRule getRule() { return rule; }
 
-		//name=ID ("(" assignments+=ArgumentAssignment* ")")?
+		//name=CommandId ("(" assignments+=ArgumentAssignment* ")")?
 		public Group getGroup() { return cGroup; }
 
-		//name=ID
+		//name=CommandId
 		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
 
-		//ID
-		public RuleCall getNameIDTerminalRuleCall_0_0() { return cNameIDTerminalRuleCall_0_0; }
+		//CommandId
+		public RuleCall getNameCommandIdParserRuleCall_0_0() { return cNameCommandIdParserRuleCall_0_0; }
 
 		//("(" assignments+=ArgumentAssignment* ")")?
 		public Group getGroup_1() { return cGroup_1; }
@@ -104,6 +104,22 @@ public class YCLGrammarAccess extends AbstractGrammarElementFinder {
 
 		//")"
 		public Keyword getRightParenthesisKeyword_1_2() { return cRightParenthesisKeyword_1_2; }
+	}
+
+	public class CommandIdElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "CommandId");
+		private final Assignment cIdAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cIdIDTerminalRuleCall_0 = (RuleCall)cIdAssignment.eContents().get(0);
+		
+		//CommandId:
+		//	id=ID;
+		public ParserRule getRule() { return rule; }
+
+		//id=ID
+		public Assignment getIdAssignment() { return cIdAssignment; }
+
+		//ID
+		public RuleCall getIdIDTerminalRuleCall_0() { return cIdIDTerminalRuleCall_0; }
 	}
 
 	public class ArgumentAssignmentElements extends AbstractParserRuleElementFinder {
@@ -177,6 +193,7 @@ public class YCLGrammarAccess extends AbstractGrammarElementFinder {
 	private final TerminalRule tSL_COMMENT;
 	private final TerminalRule tWS;
 	private final CommandElements pCommand;
+	private final CommandIdElements pCommandId;
 	private final ArgumentAssignmentElements pArgumentAssignment;
 	private final ArgumentAssignmentValueElements pArgumentAssignmentValue;
 	
@@ -195,6 +212,7 @@ public class YCLGrammarAccess extends AbstractGrammarElementFinder {
 		this.tSL_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "SL_COMMENT");
 		this.tWS = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "WS");
 		this.pCommand = new CommandElements();
+		this.pCommandId = new CommandIdElements();
 		this.pArgumentAssignment = new ArgumentAssignmentElements();
 		this.pArgumentAssignmentValue = new ArgumentAssignmentValueElements();
 	}
@@ -287,13 +305,23 @@ public class YCLGrammarAccess extends AbstractGrammarElementFinder {
 	} 
 
 	//Command:
-	//	name=ID ("(" assignments+=ArgumentAssignment* ")")?;
+	//	name=CommandId ("(" assignments+=ArgumentAssignment* ")")?;
 	public CommandElements getCommandAccess() {
 		return pCommand;
 	}
 	
 	public ParserRule getCommandRule() {
 		return getCommandAccess().getRule();
+	}
+
+	//CommandId:
+	//	id=ID;
+	public CommandIdElements getCommandIdAccess() {
+		return pCommandId;
+	}
+	
+	public ParserRule getCommandIdRule() {
+		return getCommandIdAccess().getRule();
 	}
 
 	//ArgumentAssignment:

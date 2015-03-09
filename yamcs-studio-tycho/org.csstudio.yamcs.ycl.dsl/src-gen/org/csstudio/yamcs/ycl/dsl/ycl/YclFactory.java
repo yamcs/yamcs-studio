@@ -41,6 +41,15 @@ public interface YclFactory extends EFactory
   Command createCommand();
 
   /**
+   * Returns a new object of class '<em>Command Id</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Command Id</em>'.
+   * @generated
+   */
+  CommandId createCommandId();
+
+  /**
    * Returns a new object of class '<em>Argument Assignment</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
