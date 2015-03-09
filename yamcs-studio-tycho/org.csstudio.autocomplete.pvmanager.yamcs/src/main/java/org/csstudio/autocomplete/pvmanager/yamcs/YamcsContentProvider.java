@@ -42,8 +42,7 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
     private ConcurrentHashMap<String, String> haystack = new ConcurrentHashMap<>();
 
     public YamcsContentProvider() {
-        // Get initial list of parameters (this blocks, which might not be good)
-        // However, the list should already be fetched by the time the user gets here
+        // Get initial list of parameters
         loadParameterNames(YamcsPlugin.getDefault().getParameterIds());
         
         // Subscribe to future updates

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,10 +39,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
     
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
     
-    private List<NamedObjectId> parameterIds;
+    private List<NamedObjectId> parameterIds = Collections.emptyList();
     private CountDownLatch parametersLoaded = new CountDownLatch(1);
     
-    private Collection<MetaCommand> commands;
+    private Collection<MetaCommand> commands = Collections.emptyList();
     private CountDownLatch commandsLoaded = new CountDownLatch(1);
     
     public RESTService getRESTService() {
@@ -132,22 +133,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
      * while request is still ongoing.
      */
     public List<NamedObjectId> getParameterIds() {
-        try {
-            parametersLoaded.await();
-            return parameterIds;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return parameterIds;
     }
     
     public Collection<MetaCommand> getCommands() {
-        try {
-            commandsLoaded.await();
-            return commands;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return commands;
     }
 }
