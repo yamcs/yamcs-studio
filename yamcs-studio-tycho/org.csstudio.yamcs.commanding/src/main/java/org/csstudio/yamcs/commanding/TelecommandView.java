@@ -69,7 +69,7 @@ public class TelecommandView extends ViewPart {
         tcl.setColumnData(sentColumn.getColumn(), new ColumnWeightData(100));
         
         tableViewer.setContentProvider(ArrayContentProvider.getInstance());
-        tableViewer.setInput(new Telecommand[]{ new Telecommand(new Date(), "Switch_ON") });
+        tableViewer.setInput(new Telecommand[]{ /*new Telecommand(new Date(), "Switch_ON")*/ });
         
         newCommandAction = new Action("Add command") {
             @Override

@@ -32,21 +32,26 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.yamcs.web.rest.protobuf.DumpRawMdbRequest;
-import org.yamcs.web.rest.protobuf.DumpRawMdbResponse;
-import org.yamcs.web.rest.protobuf.ListAvailableParametersRequest;
-import org.yamcs.web.rest.protobuf.ListAvailableParametersResponse;
-import org.yamcs.web.rest.protobuf.RESTService;
-import org.yamcs.web.rest.protobuf.RequestArchiveRequest;
-import org.yamcs.web.rest.protobuf.RequestArchiveResponse;
-import org.yamcs.web.rest.protobuf.ValidateCommandRequest;
-import org.yamcs.web.rest.protobuf.ValidateCommandResponse;
+import org.yamcs.protostuff.RESTService;
+import org.yamcs.protostuff.ReplayRequest;
+import org.yamcs.protostuff.RestDumpRawMdbRequest;
+import org.yamcs.protostuff.RestDumpRawMdbResponse;
+import org.yamcs.protostuff.RestListAvailableParametersRequest;
+import org.yamcs.protostuff.RestListAvailableParametersResponse;
+import org.yamcs.protostuff.RestReplayResponse;
+import org.yamcs.protostuff.RestSendCommandRequest;
+import org.yamcs.protostuff.RestSendCommandResponse;
+import org.yamcs.protostuff.RestValidateCommandRequest;
+import org.yamcs.protostuff.RestValidateCommandResponse;
 
 /**
  * Implements the client-side API of the rest web api.
  * Sequences outgoing requests on a single thread for simplicity.
  * 
  * Instances should be shutdown() when no longer in use.
+ * 
+ * TODO accepts only json for now, because exception are not currently
+ * sent in gpb format.
  */
 public class RESTClientEndpoint implements RESTService {
     
@@ -61,26 +66,32 @@ public class RESTClientEndpoint implements RESTService {
     }
     
     @Override
-    public void requestArchive(RequestArchiveRequest request, ResponseHandler<RequestArchiveResponse> responseHandler) {
+    public void replay(ReplayRequest request, ResponseHandler<RestReplayResponse> responseHandler) {
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void validateCommand(ValidateCommandRequest request, ResponseHandler<ValidateCommandResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/commanding/validate");
-        doPOST(uri, request, new ValidateCommandResponse(), responseHandler);
-    }
-
-    @Override
-    public void listAvailableParameters(ListAvailableParametersRequest request, ResponseHandler<ListAvailableParametersResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/mdb/parameters");
-        doGET(uri, new ListAvailableParametersResponse(), responseHandler);
+    public void validateCommand(RestValidateCommandRequest request, ResponseHandler<RestValidateCommandResponse> responseHandler) {
+        URI uri = yprops.webResourceURI("/api/commanding/validate");
+        doPOST(uri, request, new RestValidateCommandResponse(), responseHandler);
     }
     
     @Override
-    public void dumpRawMdb(DumpRawMdbRequest request, ResponseHandler<DumpRawMdbResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/mdb/dump");
-        doGET(uri, new DumpRawMdbResponse(), responseHandler);
+    public void sendCommand(RestSendCommandRequest request, ResponseHandler<RestSendCommandResponse> responseHandler) {
+        URI uri = yprops.webResourceURI("/api/commanding/send");
+        doPOST(uri, request, new RestSendCommandResponse(), responseHandler);
+    }
+
+    @Override
+    public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler<RestListAvailableParametersResponse> responseHandler) {
+        URI uri = yprops.webResourceURI("/api/mdb/parameters");
+        doGET(uri, new RestListAvailableParametersResponse(), responseHandler);
+    }
+    
+    @Override
+    public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler<RestDumpRawMdbResponse> responseHandler) {
+        URI uri = yprops.webResourceURI("/api/mdb/dump");
+        doGET(uri, new RestDumpRawMdbResponse(), responseHandler);
     }
     
     private <T extends Message<T>> void doGET(URI uri, T target, ResponseHandler<T> handler) {
@@ -97,7 +108,8 @@ public class RESTClientEndpoint implements RESTService {
                         p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
                             @Override
                             public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
-                                ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
+                                //ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
+                                JsonIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema(), false);
                                 ctx.close();
                                 handler.onMessage(target);
                             }
@@ -116,7 +128,7 @@ public class RESTClientEndpoint implements RESTService {
                 HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.getRawPath());
                 request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
                 request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-                request.headers().set(HttpHeaders.Names.ACCEPT, "application/octet-stream");
+                request.headers().set(HttpHeaders.Names.ACCEPT, "application/json");
                 ch.writeAndFlush(request);
                 ch.closeFuture().sync();
             } catch (InterruptedException e) {
@@ -141,7 +153,8 @@ public class RESTClientEndpoint implements RESTService {
                         p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
                             @Override
                             public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
-                                ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
+                                JsonIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema(), false);
+                                //ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
                                 ctx.close();
                                 handler.onMessage(target);
                             }
@@ -161,7 +174,7 @@ public class RESTClientEndpoint implements RESTService {
                 request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
                 request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
                 request.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/octet-stream");
-                request.headers().set(HttpHeaders.Names.ACCEPT, "application/octet-stream");
+                request.headers().set(HttpHeaders.Names.ACCEPT, "application/json");
                 // Unclear why we need this contentbuffer. protobufioutil seems to first write there, and only afterwards stream out
                 ProtobufIOUtil.writeTo(new ByteBufOutputStream(request.content()), msg, msg.cachedSchema(), contentBuffer);
                 contentBuffer.clear(); // Prepare for next usage
@@ -182,16 +195,17 @@ public class RESTClientEndpoint implements RESTService {
     }
     
     public static void main(String... args) throws IOException {
-        ValidateCommandRequest req = new ValidateCommandRequest();
-        req.setCommandString("SWITCH_VOLTAGE_ON(votlage_num=4)");
+        RestValidateCommandRequest req = new RestValidateCommandRequest();
+        //CommandParser.toCommand("SWITCH_VOLTAGE_ON(votlage_num=4)");
+        //req.setCommandString("SWITCH_VOLTAGE_ON(votlage_num=4)");
         JsonIOUtil.writeTo(System.out, req, req.cachedSchema(), false);
         
         //
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties("localhost", 8080, "s3");
+        YamcsConnectionProperties yprops = new YamcsConnectionProperties("localhost", 8090, "s3");
         RESTClientEndpoint client = new RESTClientEndpoint(yprops);
-        client.validateCommand(req, new ResponseHandler<ValidateCommandResponse>() {
+        client.validateCommand(req, new ResponseHandler<RestValidateCommandResponse>() {
             @Override
-            public void onMessage(ValidateCommandResponse msg) {
+            public void onMessage(RestValidateCommandResponse msg) {
                 System.out.println("got back msg "+msg);
                 
             }

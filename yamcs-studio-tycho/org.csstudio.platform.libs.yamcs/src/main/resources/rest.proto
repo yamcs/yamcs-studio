@@ -1,53 +1,77 @@
-package org.yamcs.web.rest.protobuf;
+package rest;
+option java_package = "org.yamcs.protobuf";
 
 import "yamcs.proto";
+import "commanding.proto";
+import "pvalue.proto";
 
 // Generic holder for an applicative exception
 // (extend for cases where more structured info is needed)
-message ExceptionMessage {
-  optional string type=1; // exception-type
+message RestExceptionMessage {
+  optional string type=1;
   optional string msg=2;
 }
 
-message ListAvailableParametersRequest {
+message RestArgumentType {
+  optional string name=1;
+  optional string value=2;
+}
+
+message RestCommandType {
+  optional string origin=1;
+  optional int32 sequenceNumber=2;
+  optional yamcs.NamedObjectId name=3;
+  repeated RestArgumentType arguments=4;
+}
+
+message RestListAvailableParametersRequest {
   repeated string namespaces=1; // if not available, all the namespaces
 }
 
-message ListAvailableParametersResponse {
-  optional ExceptionMessage exception=1;
-  repeated NamedObjectId ids=2;
+message RestListAvailableParametersResponse {
+  optional RestExceptionMessage exception=1;
+  repeated yamcs.NamedObjectId ids=2;
 }
 
-message RequestArchiveRequest {
-  // TODO
+message RestValidateCommandRequest {
+  repeated RestCommandType commands=1;
 }
 
-message RequestArchiveResponse {
-  optional ExceptionMessage exception=1;
+message RestValidateCommandResponse {
+  optional RestExceptionMessage exception=1;
 }
 
-message ValidateCommandRequest {
-  optional string commandString=1;
+message RestDumpRawMdbRequest {
 }
 
-message ValidateCommandResponse {
-  optional ExceptionMessage exception=1;
-}
-
-// TODO refactor this out. Requires rewriting a lot of the xtce stuff
-// in proto though :(
-message DumpRawMdbRequest {
-
-}
-
-message DumpRawMdbResponse {
-  optional ExceptionMessage exception=1;
+message RestDumpRawMdbResponse {
+  optional RestExceptionMessage exception=1;
   optional bytes rawMdb=2;
 }
 
+message RestReplayResponse {
+  optional RestExceptionMessage exception=1;
+  optional pvalue.ParameterData parameterData=2;
+  optional yamcs.TmPacketData packetData=3;
+  optional commanding.CommandHistoryEntry command=4;
+  optional yamcs.Event event=5;
+  optional pvalue.ParameterData ppData=6;
+}
+
+message RestSendCommandRequest {
+  repeated RestCommandType commands=1;
+}
+
+message RestSendCommandResponse {
+  optional RestExceptionMessage exception=1;
+}
+
 service RESTService {
-  rpc listAvailableParameters(ListAvailableParametersRequest) returns (ListAvailableParametersResponse);
-  rpc requestArchive(RequestArchiveRequest) returns (RequestArchiveResponse);
-  rpc validateCommand(ValidateCommandRequest) returns (ValidateCommandResponse);
-  rpc dumpRawMdb(DumpRawMdbRequest) returns (DumpRawMdbResponse);
+  rpc listAvailableParameters(RestListAvailableParametersRequest) returns (RestListAvailableParametersResponse);
+  rpc validateCommand(RestValidateCommandRequest) returns (RestValidateCommandResponse);
+  rpc sendCommand(RestSendCommandRequest) returns (RestSendCommandResponse);
+  rpc dumpRawMdb(RestDumpRawMdbRequest) returns (RestDumpRawMdbResponse);
+
+  // Just a shortcut right now, reusing this Message. Might reconsider to improve prettyness of the exposed json API
+  rpc replay(yamcs.ReplayRequest) returns (RestReplayResponse);
 }

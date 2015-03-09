@@ -1,5 +1,6 @@
 package org.csstudio.yamcs.commanding;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,11 +21,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.web.rest.protobuf.ExceptionMessage;
-import org.yamcs.web.rest.protobuf.RESTService;
-import org.yamcs.web.rest.protobuf.RESTService.ResponseHandler;
-import org.yamcs.web.rest.protobuf.ValidateCommandRequest;
-import org.yamcs.web.rest.protobuf.ValidateCommandResponse;
+import org.yamcs.protostuff.RESTService;
+import org.yamcs.protostuff.RESTService.ResponseHandler;
+import org.yamcs.protostuff.RestExceptionMessage;
+import org.yamcs.protostuff.RestSendCommandRequest;
+import org.yamcs.protostuff.RestSendCommandResponse;
+import org.yamcs.protostuff.RestValidateCommandRequest;
+import org.yamcs.protostuff.RestValidateCommandResponse;
 import org.yamcs.xtce.Argument;
 import org.yamcs.xtce.MetaCommand;
 
@@ -65,7 +68,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         commandCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         for (MetaCommand command : commands) {
             if (!command.isAbstract()) {
-                commandCombo.add(command.getName());
+                commandCombo.add(command.getOpsName());
             }
         }
         
@@ -78,9 +81,9 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         commandCombo.addListener(SWT.Selection, event -> {
             for (MetaCommand command : commands) {
                 String selected = ((Combo) event.widget).getText();
-                if (!command.isAbstract() && command.getName().equals(selected)) {
+                if (!command.isAbstract() && command.getOpsName().equals(selected)) {
                     
-                    StringBuilder buf = new StringBuilder(command.getName());
+                    StringBuilder buf = new StringBuilder(command.getOpsName());
                     if (command.getArgumentList() != null) {
                         buf.append("(\n");
                         for (Argument arg : command.getArgumentList()) {
@@ -106,14 +109,14 @@ public class AddTelecommandDialog extends TitleAreaDialog {
 
         Button validateButton = createButton(parent, IDialogConstants.NO_ID, "Validate", true);
         validateButton.addListener(SWT.Selection, evt -> {
-            ValidateCommandRequest req = new ValidateCommandRequest();
-            req.setCommandString(text.getText());
-            restService.validateCommand(req, new ResponseHandler<ValidateCommandResponse>() {
+            RestValidateCommandRequest req = new RestValidateCommandRequest();
+            req.setCommandsList(Arrays.asList(CommandParser.toCommand(text.getText())));
+            restService.validateCommand(req, new ResponseHandler<RestValidateCommandResponse>() {
                 @Override
-                public void onMessage(ValidateCommandResponse response) {
+                public void onMessage(RestValidateCommandResponse response) {
                     Display.getDefault().asyncExec(() -> {
                         if (response.getException() != null) {
-                            ExceptionMessage ex = response.getException();
+                            RestExceptionMessage ex = response.getException();
                             setErrorMessage("[" + ex.getType() + "] " + ex.getMsg());    
                         } else {
                             setMessage("Command is valid", MessageDialog.INFORMATION);
@@ -141,8 +144,39 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         layout.numColumns++;
         layout.makeColumnsEqualWidth = false;
 
-        createButton(parent, IDialogConstants.OK_ID, "Send", true);
+        Button okButton = createButton(parent, IDialogConstants.OK_ID, "Send", true);
+        okButton.addListener(SWT.Selection, evt -> {
+            RestSendCommandRequest req = new RestSendCommandRequest();
+            req.setCommandsList(Arrays.asList(CommandParser.toCommand(text.getText())));
+            restService.sendCommand(req, new ResponseHandler<RestSendCommandResponse>() {
+                @Override
+                public void onMessage(RestSendCommandResponse response) {
+                    Display.getDefault().asyncExec(() -> {
+                        if (response.getException() != null) {
+                            RestExceptionMessage ex = response.getException();
+                            setErrorMessage("[" + ex.getType() + "] " + ex.getMsg());    
+                        } else {
+                            close();
+                        }
+                    });
+                    System.out.println("GOT response " + response);
+                }
+
+                @Override
+                public void onFault(Throwable t) {
+                    Display.getDefault().asyncExec(() -> {
+                        setErrorMessage(t.getMessage());
+                        log.log(Level.SEVERE, "Could not validate command string", t);
+                    });
+                }
+            });
+        });
         createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+    }
+    
+    @Override
+    public void okPressed() {
+        // NOP
     }
 
     @Override

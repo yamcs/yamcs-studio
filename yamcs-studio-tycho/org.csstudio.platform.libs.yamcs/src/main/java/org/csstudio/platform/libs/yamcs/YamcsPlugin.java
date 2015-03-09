@@ -17,12 +17,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.protostuff.NamedObjectId;
-import org.yamcs.web.rest.protobuf.DumpRawMdbRequest;
-import org.yamcs.web.rest.protobuf.DumpRawMdbResponse;
-import org.yamcs.web.rest.protobuf.ListAvailableParametersRequest;
-import org.yamcs.web.rest.protobuf.ListAvailableParametersResponse;
-import org.yamcs.web.rest.protobuf.RESTService;
-import org.yamcs.web.rest.protobuf.RESTService.ResponseHandler;
+import org.yamcs.protostuff.RESTService;
+import org.yamcs.protostuff.RESTService.ResponseHandler;
+import org.yamcs.protostuff.RestDumpRawMdbRequest;
+import org.yamcs.protostuff.RestDumpRawMdbResponse;
+import org.yamcs.protostuff.RestListAvailableParametersRequest;
+import org.yamcs.protostuff.RestListAvailableParametersResponse;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.XtceDb;
 
@@ -64,11 +64,11 @@ public class YamcsPlugin extends AbstractUIPlugin {
     
     private void fetchInitialMdbAsync() {
         // Load list of parameters
-        ListAvailableParametersRequest req = new ListAvailableParametersRequest();
+        RestListAvailableParametersRequest req = new RestListAvailableParametersRequest();
         req.setNamespacesList(Arrays.asList("MDB:OPS Name"));
-        restService.listAvailableParameters(req, new ResponseHandler<ListAvailableParametersResponse>() {
+        restService.listAvailableParameters(req, new ResponseHandler<RestListAvailableParametersResponse>() {
             @Override
-            public void onMessage(ListAvailableParametersResponse response) {
+            public void onMessage(RestListAvailableParametersResponse response) {
                 Display.getDefault().asyncExec(() -> {
                     parameterIds = response.getIdsList();
                     for (MDBContextListener l : mdbListeners) {
@@ -82,13 +82,13 @@ public class YamcsPlugin extends AbstractUIPlugin {
             public void onFault(Throwable t) {
                 log.log(Level.SEVERE, "Could not fetch available yamcs parameters", t);
             }
-        });            
+        });
         
         // Load commands
-        DumpRawMdbRequest dumpRequest = new DumpRawMdbRequest();
-        restService.dumpRawMdb(dumpRequest, new ResponseHandler<DumpRawMdbResponse>() {
+        RestDumpRawMdbRequest dumpRequest = new RestDumpRawMdbRequest();
+        restService.dumpRawMdb(dumpRequest, new ResponseHandler<RestDumpRawMdbResponse>() {
             @Override
-            public void onMessage(DumpRawMdbResponse response) {
+            public void onMessage(RestDumpRawMdbResponse response) {
                 // In-memory :-( no easy way to get ByteString as inputstream (?)
                 byte[] barray = response.getRawMdb().toByteArray();
                 try (ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(barray))) {
