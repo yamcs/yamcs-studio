@@ -95,6 +95,7 @@
 							*
 						</Import-Package>
 						<Export-Package>
+							org.yamcs.utils,
 							org.yamcs.xtce,
 							org.yamcs.xtce.xml
 						</Export-Package>

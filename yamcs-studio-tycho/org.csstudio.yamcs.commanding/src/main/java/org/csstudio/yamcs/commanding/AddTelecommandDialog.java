@@ -87,7 +87,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
                     if (command.getArgumentList() != null) {
                         buf.append("(\n");
                         for (Argument arg : command.getArgumentList()) {
-                            buf.append("\t" + arg.getName() + "=\n");
+                            buf.append("\t" + arg.getName() + ": \n");
                         }
                         buf.append(")");
                     } else {

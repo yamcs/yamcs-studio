@@ -13,4 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.platform.libs.yamcs,
  org.csstudio.platform.libs.protostuff
 Export-Package: org.csstudio.yamcs.commanding
-Import-Package: org.yamcs.xtce
+Import-Package: org.yamcs.utils,
+ org.yamcs.xtce
+Bundle-Activator: org.csstudio.yamcs.commanding.CommandingPlugin

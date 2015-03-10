@@ -1,5 +1,7 @@
 package org.csstudio.yamcs.commanding;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import org.yamcs.protostuff.NamedObjectId;
@@ -28,13 +30,19 @@ public class CommandParser {
         commandId.setName(commandName);
         cmd.setId(commandId);
         
+        try {
+            cmd.setOrigin(InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException e) {
+            cmd.setOrigin("Unknown");
+        }
+        
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         
         cmd.setArgumentsList(new ArrayList<RestArgumentType>());
         String[] args = argString.split(",");
         for (String arg : args) {
             RestArgumentType argumentType = new RestArgumentType();
-            String[] kvp = arg.split("=");
+            String[] kvp = arg.split(":");
             argumentType.setName(kvp[0]);
             argumentType.setValue(kvp[1]);
             cmd.getArgumentsList().add(argumentType);
@@ -44,13 +52,13 @@ public class CommandParser {
     }
     
     public static void main(String... args) {
-        String cmdString = "SWITCH_VOLTAGE_ON(vlotage_num=5)";
+        String cmdString = "SWITCH_VOLTAGE_ON(vlotage_num:5)";
         RestCommandType mc = toCommand(cmdString);
         
         System.out.println("======");
         System.out.println("" + mc.getId());
         for (RestArgumentType arg : mc.getArgumentsList()) {
-            System.out.println(" - " + arg.getName() + "=" + arg.getValue());
+            System.out.println(" - " + arg.getName() + ":" + arg.getValue());
         }
     }
 }
