@@ -19,9 +19,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.protostuff.CommandHistoryEntry;
 import org.yamcs.protostuff.NamedObjectId;
 import org.yamcs.protostuff.NamedObjectList;
 import org.yamcs.protostuff.ParameterData;
+import org.yamcs.protostuff.ProtoDataType;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -65,9 +67,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         client.setConnected(false);
         callback.onDisconnect();
         if (client.isReconnectionEnabled()) {
-            // TODO this is actually not enough. we would also need
-            // to resubscribe (probably only after checking if really we have
-            // lost our subscription)
+            // TODO this is actually not enough. we would also need to resubscribe
             ctx.channel().eventLoop().schedule(() -> client.connect(), 1L, TimeUnit.SECONDS);
         }
     }
@@ -146,10 +146,15 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         if((jsp.nextToken()!=JsonToken.FIELD_NAME) || (!"data".equals(jsp.getCurrentName())))
             throw new RuntimeException("Invalid message (expecting data as the next field)");
        
-        if (dtype.equals("PARAMETER")) {
+        switch (ProtoDataType.valueOf(dtype)) {
+        case PARAMETER:
             decodeParameterDataMessage(seqId, jsp);
-        } else {
-            throw new RuntimeException("Unsupported dt-value "+dtype);
+            break;
+        case CMD_HISTORY:
+            decodeCommandHistoryMessage(seqId, jsp);
+            break;
+        default:
+            throw new IllegalStateException("Unsupported dt-value "+dtype);
         }
     }
     
@@ -157,6 +162,12 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         ParameterData pdata = new ParameterData();
         JsonIOUtil.mergeFrom(jsdata, pdata, pdata.cachedSchema(), false);
         callback.onParameterData(pdata);
+    }
+    
+    private void decodeCommandHistoryMessage(long seqId, JsonParser jsdata) throws IOException {
+        CommandHistoryEntry cmdhistData = new CommandHistoryEntry();
+        JsonIOUtil.mergeFrom(jsdata, cmdhistData, cmdhistData.cachedSchema(), false);
+        callback.onCommandHistoryData(cmdhistData);
     }
 
     private void decodeExceptionMessage(int seqId, JsonParser jsp) throws IOException {
@@ -194,8 +205,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             client.ackSubscription(seqId);
             
             // And have another go at it
-            client.subscribe(list);
-            
+            client.sendRequest(new ParameterSubscribeEvent(list));
         } else {
             log.severe("Got exception message " + etype);
         }

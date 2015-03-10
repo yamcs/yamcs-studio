@@ -1,13 +1,19 @@
 package org.csstudio.platform.libs.yamcs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.ws.ParameterSubscribeEvent;
+import org.csstudio.platform.libs.yamcs.ws.ParameterUnsubscribeEvent;
+import org.csstudio.platform.libs.yamcs.ws.SubscribeAllCommandHistoryRequest;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
+import org.yamcs.protostuff.CommandHistoryEntry;
 import org.yamcs.protostuff.NamedObjectId;
 import org.yamcs.protostuff.NamedObjectList;
 import org.yamcs.protostuff.ParameterData;
@@ -18,6 +24,9 @@ import org.yamcs.protostuff.ParameterValue;
  * the WebSocketClient. Everything yamcs is still in WebSocketClient to keep
  * things a bit clean (and potentially reusable).
  * <p>
+ * Now also handles live subscription of command history. Maybe should clean up a bit here to
+ * extract out all the pvreader logic, because it's starting to do a bit too much.
+ * <p>
  * All methods are asynchronous, with any responses or incoming data being sent
  * to the provided callback listener.
  */
@@ -27,8 +36,9 @@ public class YRegistrar implements WebSocketClientCallbackListener {
     private static final Logger log = Logger.getLogger(YRegistrar.class.getName());
     private static YRegistrar INSTANCE;
     
-    // Store listeners/handlers while connection is not established
-    private Map<String, YPVReader> listenersByName = new LinkedHashMap<>();
+    // Store pvreaders while connection is not established
+    private Map<String, YPVReader> pvReadersByName = new LinkedHashMap<>();
+    private List<CommandHistoryListener> cmdhistListeners = new ArrayList<CommandHistoryListener>();
     
     private boolean connectionInitialized = false;
     private WebSocketClient wsclient;
@@ -53,18 +63,27 @@ public class YRegistrar implements WebSocketClientCallbackListener {
             wsclient.connect();
             connectionInitialized = true;
         }
-        listenersByName.put(pvReader.getPVName(), pvReader);
+        pvReadersByName.put(pvReader.getPVName(), pvReader);
         NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
-        wsclient.subscribe(idList);
+        wsclient.sendRequest(new ParameterSubscribeEvent(idList));
     }
     
     public synchronized void disconnectPVReader(YPVReader pvReader) {
         if (!connectionInitialized) { // TODO Possible?
             return;
         }
-        listenersByName.remove(pvReader);
+        pvReadersByName.remove(pvReader);
         NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
-        wsclient.unsubscribe(idList);
+        wsclient.sendRequest(new ParameterUnsubscribeEvent(idList));
+    }
+    
+    public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
+        if (!connectionInitialized) {
+            wsclient.connect();
+            connectionInitialized = true;
+        }
+        cmdhistListeners.add(listener);
+        wsclient.sendRequest(new SubscribeAllCommandHistoryRequest()); // TODO don't need to do this for every listener
     }
     
     private static NamedObjectList wrapAsNamedObjectList(String pvName) {
@@ -89,36 +108,42 @@ public class YRegistrar implements WebSocketClientCallbackListener {
 
     @Override
     public void onConnect() { // When the web socket was successfully established
-        log.info("Web socket established. Notifying channel-handlers");
+        log.info("Web socket established. Notifying listeners");
         // TODO we should trigger this instead on when the subscription was confirmed
-        listenersByName.forEach((name, handler) -> {
-            handler.signalYamcsConnected();
-        });
+        pvReadersByName.forEach((name, pvReader) -> pvReader.signalYamcsConnected());
+        cmdhistListeners.forEach(l -> l.signalYamcsConnected());
     }
 
     @Override
     public void onDisconnect() { // When the web socket connection state changed
-        log.info("Web socket disconnected. Notifying channel-handlers");
-        listenersByName.forEach((name, handler) -> handler.signalYamcsDisconnected());
+        log.info("Web socket disconnected. Notifying listeners");
+        pvReadersByName.forEach((name, pvReader) -> pvReader.signalYamcsDisconnected());
+        cmdhistListeners.forEach(l -> l.signalYamcsDisconnected());
     }
 
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
-        listenersByName.get(id.getName()).reportException(new InvalidIdentification(id));
+        pvReadersByName.get(id.getName()).reportException(new InvalidIdentification(id));
     }
 
     @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
-            YPVReader handler = listenersByName.get(pval.getId().getName());
-            if (handler != null) {
+            YPVReader pvReader = pvReadersByName.get(pval.getId().getName());
+            if (pvReader != null) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("request to update channel "+handler.getPVName()+" to val "+pval.getEngValue());
+                    log.finer("request to update pvreader "+pvReader.getPVName()+" to val "+pval.getEngValue());
                 }
-                handler.processParameterValue(pval);
+                pvReader.processParameterValue(pval);
             } else {
-                log.warning("No handler for incoming update of " + pval.getId().getName());
+                log.warning("No pvreader for incoming update of " + pval.getId().getName());
             }
         }
+    }
+    
+    @Override
+    public void onCommandHistoryData(CommandHistoryEntry cmdhistEntry) {
+        log.info("received back command history: "+ cmdhistEntry);
+        cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
     }
 }

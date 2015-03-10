@@ -41,6 +41,9 @@ import org.yamcs.protostuff.NamedObjectList;
  * appear to be created for every parameter separately :-/
  * Needs more research. would've thought everything under
  * same schema shares a datasource, but alas.
+ * 
+ * TODO get this completely clean of any payload information. Should be more generic. therefore
+ * transfer actual differentiating logic to the OutgoingEvent extensions.
  */
 public class WebSocketClient {
     
@@ -85,9 +88,11 @@ public class WebSocketClient {
                     
                     // Good, send the merged result
                     if (evt instanceof ParameterSubscribeEvent) {
-                        doSubscribe(((ParameterSubscribeEvent) evt).getIdList());
+                        doParameterSubscribe(((ParameterSubscribeEvent) evt).getIdList());
                     } else if (evt instanceof ParameterUnsubscribeEvent) {
-                        doUnsubscribe(((ParameterUnsubscribeEvent) evt).getIdList());
+                        doParameterUnsubscribe(((ParameterUnsubscribeEvent) evt).getIdList());
+                    } else if (evt instanceof SubscribeAllCommandHistoryRequest) {
+                        doSubscribeAllCommandHistory();
                     }
                 }
             } catch(InterruptedException e) {
@@ -160,18 +165,18 @@ public class WebSocketClient {
     }
     
     /**
-     * Adds said ids to the subscription list. As soon as the web socket
-     * is established, subscriptions will be sent in one bundle.
+     * Adds said event to the queue. As soon as the web socket
+     * is established, queue will be iterated and if possible, similar events will be merged.
      */
-    public void subscribe(NamedObjectList idList) {
+    public void sendRequest(OutgoingEvent request) {
         // sync, because the consumer will try to merge multiple outgoing events of the same type
         // using multiple operations on the queue.
         synchronized(pendingOutgoingEvents) {
-            pendingOutgoingEvents.offer(new ParameterSubscribeEvent(idList));
+            pendingOutgoingEvents.offer(request);
         }
     }
     
-    private void doSubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
+    private void doParameterSubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
         ByteArrayOutputStream barray = new ByteArrayOutputStream();
         try {
             JsonIOUtil.writeTo(barray, idList, idList.cachedSchema(), false);
@@ -192,7 +197,7 @@ public class WebSocketClient {
                         .append(barray.toString()).append("}]").toString()));
     }
     
-    private void doUnsubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
+    private void doParameterUnsubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
         ByteArrayOutputStream barray = new ByteArrayOutputStream();
         try {
             JsonIOUtil.writeTo(barray, idList, idList.cachedSchema(), false);
@@ -213,10 +218,16 @@ public class WebSocketClient {
                         .append(barray.toString()).append("}]").toString()));
     }
     
-    public void unsubscribe(NamedObjectList idList) {
-        synchronized(pendingOutgoingEvents) {
-            pendingOutgoingEvents.offer(new ParameterUnsubscribeEvent(idList));
-        }
+    private void doSubscribeAllCommandHistory() {
+        System.out.println("will send subscribe-all cmdhist");
+        
+        int id = seqId.incrementAndGet();
+        nettyChannel.writeAndFlush(new TextWebSocketFrame(
+                new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
+                        .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
+                        .append(",").append(id)
+                        .append(",")
+                        .append("{\"cmdhist\":\"subscribeAll\"}]").toString()));
     }
     
     NamedObjectList getUpstreamSubscription(int seqId) {

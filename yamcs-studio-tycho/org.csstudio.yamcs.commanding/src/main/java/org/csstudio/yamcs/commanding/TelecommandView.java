@@ -2,6 +2,8 @@ package org.csstudio.yamcs.commanding;
 
 import java.util.Date;
 
+import org.csstudio.platform.libs.yamcs.CommandHistoryListener;
+import org.csstudio.platform.libs.yamcs.YRegistrar;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
@@ -23,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.yamcs.protostuff.CommandHistoryEntry;
 
 /**
  * TODO show a friendly message when the thing is still loading
@@ -83,10 +86,25 @@ public class TelecommandView extends ViewPart {
         ImageDescriptor desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/tc_add.png"), null));
         newCommandAction.setImageDescriptor(desc);
         initializeToolBar();
+        
+        subscribeToUpdates();
     }
     
-    private void loadAvailableCommands() {
-        //SimpleYamcsRequests.listAllAvailableCommands(, handler);
+    private void subscribeToUpdates() {
+        YRegistrar.getInstance().addCommandHistoryListener(new CommandHistoryListener() {
+            @Override
+            public void signalYamcsDisconnected() {
+            }
+            
+            @Override
+            public void signalYamcsConnected() {
+            }
+            
+            @Override
+            public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
+                System.out.println("got che in view " + cmdhistEntry);
+            }
+        });
     }
     
     private void initializeToolBar() {
