@@ -26,7 +26,7 @@ public class CommandParser {
             commandId.setNamespace("MDB:OPS Name");
         }
         commandId.setName(commandName);
-        cmd.setName(commandId);
+        cmd.setId(commandId);
         
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         
@@ -48,7 +48,7 @@ public class CommandParser {
         RestCommandType mc = toCommand(cmdString);
         
         System.out.println("======");
-        System.out.println("" + mc.getName());
+        System.out.println("" + mc.getId());
         for (RestArgumentType arg : mc.getArgumentsList()) {
             System.out.println(" - " + arg.getName() + "=" + arg.getValue());
         }
