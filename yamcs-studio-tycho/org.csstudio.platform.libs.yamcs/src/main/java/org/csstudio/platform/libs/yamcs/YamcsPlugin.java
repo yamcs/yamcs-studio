@@ -121,6 +121,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         restService.shutdown();
+        YRegistrar.getInstance().shutdown();
         super.stop(context);
     }
 
