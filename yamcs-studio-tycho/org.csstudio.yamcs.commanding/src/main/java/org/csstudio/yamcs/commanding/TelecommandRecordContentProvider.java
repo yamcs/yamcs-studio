@@ -28,7 +28,7 @@ public class TelecommandRecordContentProvider implements IStructuredContentProvi
 
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        throw new UnsupportedOperationException(); // TODO could happen when switching channels
+        // TODO could happen when switching channels
     }
     
     @Override
