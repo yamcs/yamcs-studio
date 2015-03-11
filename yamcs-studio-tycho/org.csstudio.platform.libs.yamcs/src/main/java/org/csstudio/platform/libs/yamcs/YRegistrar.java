@@ -143,7 +143,6 @@ public class YRegistrar implements WebSocketClientCallbackListener {
     
     @Override
     public void onCommandHistoryData(CommandHistoryEntry cmdhistEntry) {
-        log.info("received back command history: "+ cmdhistEntry);
         cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
     }
 }

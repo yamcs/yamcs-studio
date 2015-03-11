@@ -27,13 +27,17 @@ import io.protostuff.Message;
 import io.protostuff.ProtobufIOUtil;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.yamcs.protostuff.RESTService;
 import org.yamcs.protostuff.ReplayRequest;
+import org.yamcs.protostuff.RestCommandType;
 import org.yamcs.protostuff.RestDumpRawMdbRequest;
 import org.yamcs.protostuff.RestDumpRawMdbResponse;
 import org.yamcs.protostuff.RestListAvailableParametersRequest;
@@ -58,6 +62,8 @@ public class RESTClientEndpoint implements RESTService {
     private YamcsConnectionProperties yprops;
     private ExecutorService exec = Executors.newSingleThreadExecutor();
     
+    private AtomicInteger cmdClientId = new AtomicInteger(1); // Reset for every application restart 
+    
     // Reuse the same buffer for serializing multiple post requests
     private LinkedBuffer contentBuffer = LinkedBuffer.allocate(4096); // Increase value when requests are getting too big
 
@@ -79,6 +85,16 @@ public class RESTClientEndpoint implements RESTService {
     @Override
     public void sendCommand(RestSendCommandRequest request, ResponseHandler<RestSendCommandResponse> responseHandler) {
         URI uri = yprops.webResourceURI("/api/commanding/send");
+        String origin;
+        try {
+            origin = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            origin = "Unknown";
+        }
+        for (RestCommandType cmd : request.getCommandsList()) {
+            cmd.setSequenceNumber(cmdClientId.getAndIncrement());
+            cmd.setOrigin(origin);
+        }
         doPOST(uri, request, new RestSendCommandResponse(), responseHandler);
     }
 

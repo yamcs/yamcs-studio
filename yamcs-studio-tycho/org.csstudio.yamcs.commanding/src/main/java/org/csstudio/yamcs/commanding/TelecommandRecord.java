@@ -1,9 +1,13 @@
 package org.csstudio.yamcs.commanding;
 
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.yamcs.protostuff.CommandId;
@@ -24,18 +28,32 @@ public class TelecommandRecord {
     public static final String STATUS_SUFFIX = "_Status";
     public static final String TIME_SUFFIX = "_Time";
     
+    private static final long ONE_SECOND = 1000; // millis
+    private static final long ONE_MINUTE = 60 * ONE_SECOND;
+    private static final long ONE_HOUR = 60 * ONE_MINUTE;
+    private static final long ONE_DAY = 24 * ONE_HOUR;
+    
     private CommandId id;
     private String source;
-    private String username;
+    private String username = "anonymous";
     private String finalSequenceCount;
     // TODO should use some custom object here, not properties
     private Map<String, Properties> cellPropsByColumn = new LinkedHashMap<>();
     
-    public TelecommandRecord(CommandId id, String source, String username, String finalSequenceCount) {
+    public TelecommandRecord(CommandId id) {
         this.id = id;
-        this.source = source;
-        this.username = username;
-        this.finalSequenceCount = finalSequenceCount;
+    }
+    
+    public void setFinalSequenceCount(Value finalSequenceCount) {
+        this.finalSequenceCount = valueToString(finalSequenceCount);
+    }
+    
+    public void setSource(Value source) {
+        this.source = valueToString(source);
+    }
+    
+    public void setUsername(Value username) {
+        this.username = valueToString(username);
     }
     
     public void addCellValue(String columnName, Value value) {
@@ -50,28 +68,22 @@ public class TelecommandRecord {
             cellPropsByColumn.get(columnName).setProperty(KEY_VALUE, valueToString(value));
         }
     }
-    
-    private static final long ONE_SECOND = 1000;
-    private static final long ONE_MINUTE = 60 * ONE_SECOND;
-    private static final long ONE_HOUR = 60 * ONE_MINUTE;
-    private static final long ONE_DAY = 24 * ONE_HOUR;
-    
+        
     public String toHumanTimeDiff(long generationTime, long timestamp) {
         long millis = generationTime - timestamp;
+        String sign = (millis >= 0) ? "+" : "-"; 
         if (millis >= ONE_DAY) {
             return TimeEncoding.toString(timestamp);
         } else if (millis >= ONE_HOUR) {
-            return String.format("%dh%02d", 
-                    TimeUnit.MILLISECONDS.toHours(millis),
-                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)));
+            return sign + String.format("%d h, %d m", 
+                    MILLISECONDS.toHours(millis),
+                    MILLISECONDS.toMinutes(millis) - HOURS.toMinutes(MILLISECONDS.toHours(millis)));
         } else if (millis >= ONE_MINUTE) {
-            return String.format("%d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                    TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-        } else if (millis >= ONE_SECOND) {
-            return String.format("%ds", TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+            return sign + String.format("%d m, %d s",
+                    MILLISECONDS.toMinutes(millis),
+                    MILLISECONDS.toSeconds(millis) - MINUTES.toSeconds(MILLISECONDS.toMinutes(millis)));
         } else {
-            return String.format(".%03ds", millis);
+            return String.format(Locale.US, "%+,d ms", millis);
         }
     }
     

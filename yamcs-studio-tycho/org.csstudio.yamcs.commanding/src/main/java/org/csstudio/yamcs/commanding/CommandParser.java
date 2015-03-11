@@ -1,7 +1,5 @@
 package org.csstudio.yamcs.commanding;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import org.yamcs.protostuff.NamedObjectId;
@@ -29,12 +27,6 @@ public class CommandParser {
         }
         commandId.setName(commandName);
         cmd.setId(commandId);
-        
-        try {
-            cmd.setOrigin(InetAddress.getLocalHost().getHostName());
-        } catch (UnknownHostException e) {
-            cmd.setOrigin("Unknown");
-        }
         
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         

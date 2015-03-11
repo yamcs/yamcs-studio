@@ -98,8 +98,49 @@ public class TelecommandView extends ViewPart {
     }
     
     private void addFixedColumns() {
+        TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        nameColumn.getColumn().setText("Command");
+        nameColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((TelecommandRecord) element).getSource();
+            }
+        });
+        layoutDataByColumn.put(nameColumn.getColumn(), new ColumnWeightData(200));
+        
+        TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        seqIdColumn.getColumn().setText("Src.ID");
+        seqIdColumn.getColumn().setToolTipText("Client ID");
+        seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return String.valueOf(((TelecommandRecord) element).getSequenceNumber());
+            }
+        });
+        layoutDataByColumn.put(seqIdColumn.getColumn(), new ColumnPixelData(50));
+        
+        TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        originColumn.getColumn().setText("Src.Host");
+        originColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((TelecommandRecord) element).getOrigin();
+            }
+        });
+        layoutDataByColumn.put(originColumn.getColumn(), new ColumnWeightData(70));
+
+        TableViewerColumn userColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        userColumn.getColumn().setText("User");
+        userColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((TelecommandRecord) element).getUsername();
+            }
+        });
+        layoutDataByColumn.put(userColumn.getColumn(), new ColumnWeightData(70));
+        
         TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        finalSeqColumn.getColumn().setText("Seq.");
+        finalSeqColumn.getColumn().setText("Seq.ID");
         finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
         finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -118,48 +159,7 @@ public class TelecommandView extends ViewPart {
                 return((TelecommandRecord) element).getGenerationTime();
             }
         });
-        layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(100));
-        
-        TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        seqIdColumn.getColumn().setText("Src.ID");
-        seqIdColumn.getColumn().setToolTipText("Client ID");
-        seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return String.valueOf(((TelecommandRecord) element).getSequenceNumber());
-            }
-        });
-        layoutDataByColumn.put(seqIdColumn.getColumn(), new ColumnPixelData(50));
-        
-        TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        nameColumn.getColumn().setText("Command");
-        nameColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((TelecommandRecord) element).getSource();
-            }
-        });
-        layoutDataByColumn.put(nameColumn.getColumn(), new ColumnPixelData(200));
-        
-        TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        originColumn.getColumn().setText("Src.Host");
-        originColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((TelecommandRecord) element).getOrigin();
-            }
-        });
-        layoutDataByColumn.put(originColumn.getColumn(), new ColumnWeightData(100));
-        
-        TableViewerColumn userColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        userColumn.getColumn().setText("User");
-        userColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((TelecommandRecord) element).getUsername();
-            }
-        });
-        layoutDataByColumn.put(userColumn.getColumn(), new ColumnWeightData(50));
+        layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
     }
     
     private void applyColumnLayoutData(TableColumnLayout tcl) {
@@ -216,11 +216,11 @@ public class TelecommandView extends ViewPart {
                                 }
                             });
                             dynamicColumns.add(shortName);
-                            layoutDataByColumn.put(column.getColumn(), new ColumnWeightData(100));
+                            layoutDataByColumn.put(column.getColumn(), new ColumnPixelData(90));
                             TableColumnLayout tcl = new TableColumnLayout();
                             parent.setLayout(tcl);
                             applyColumnLayoutData(tcl);
-                            column.getColumn().setWidth(30);
+                            column.getColumn().setWidth(90);
                             tableViewer.getTable().layout();
                         }
                     }

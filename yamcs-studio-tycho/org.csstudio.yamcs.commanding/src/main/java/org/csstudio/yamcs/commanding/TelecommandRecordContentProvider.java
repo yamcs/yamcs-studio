@@ -47,22 +47,8 @@ public class TelecommandRecordContentProvider implements IStructuredContentProvi
         if (recordsByCommandId.containsKey(commandId)) {
             rec = recordsByCommandId.get(commandId);
             create = false;
-        } else {
-            // These attributes 'should' be there
-            String source = commandId.getCommandName(); // In case there is no source
-            String username = "anonymous";
-            String finalSequenceCount = ""; 
-            for (CommandHistoryAttribute attr : entry.getAttrList()) {
-                if ("source".equals(attr.getName())) {
-                    source = attr.getValue().getStringValue();
-                } else if ("username".equals(attr.getName())) {
-                    username = attr.getValue().getStringValue();
-                } else if ("Final_Sequence_Count".equals(attr.getName())) {
-                    finalSequenceCount = attr.getValue().getStringValue();
-                }
-            }
-            
-            rec = new TelecommandRecord(commandId, source, username, finalSequenceCount);
+        } else {            
+            rec = new TelecommandRecord(commandId);
             recordsByCommandId.put(commandId, rec);
             create = true;
         }
@@ -80,6 +66,12 @@ public class TelecommandRecordContentProvider implements IStructuredContentProvi
                 } else {
                     rec.addCellImage(shortName, RED);
                 }
+            } else if (attr.getName().equals("Final_Sequence_Count")) {
+                rec.setFinalSequenceCount(attr.getValue());
+            } else if (attr.getName().equals("source")) {
+                rec.setSource(attr.getValue());
+            } else if (attr.getName().equals("username")) {
+                rec.setUsername(attr.getValue());
             } else {
                 rec.addCellValue(shortName, attr.getValue());
             }
