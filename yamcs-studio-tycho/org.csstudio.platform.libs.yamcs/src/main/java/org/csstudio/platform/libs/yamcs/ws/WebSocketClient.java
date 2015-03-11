@@ -41,14 +41,14 @@ import org.yamcs.protostuff.NamedObjectList;
  * appear to be created for every parameter separately :-/
  * Needs more research. would've thought everything under
  * same schema shares a datasource, but alas.
- * 
+ *
  * TODO get this completely clean of any payload information. Should be more generic. therefore
  * transfer actual differentiating logic to the OutgoingEvent extensions.
  */
 public class WebSocketClient {
-    
+
     private static final Logger log = Logger.getLogger(WebSocketClient.class.getName());
-    
+
     private WebSocketClientCallbackListener callback;
     private EventLoopGroup group = new NioEventLoopGroup();
     private URI uri;
@@ -57,13 +57,13 @@ public class WebSocketClient {
     private AtomicBoolean connected = new AtomicBoolean(false);
     private AtomicBoolean enableReconnection = new AtomicBoolean(true);
     private AtomicInteger seqId = new AtomicInteger(1);
-    
+
     // Stores ws subscriptions to be sent to the server once ws-connection is established
     private BlockingQueue<OutgoingEvent> pendingOutgoingEvents = new LinkedBlockingQueue<>();
-    
+
     // Sends outgoing subscriptions to the web socket
     //private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-    
+
     // Keeps track of sent subscriptions, so that we can do a resend when we get
     // an InvalidException on some of them :-(
     private ConcurrentHashMap<Integer, NamedObjectList> upstreamSubscriptionsBySeqId = new ConcurrentHashMap<>();
@@ -77,15 +77,15 @@ public class WebSocketClient {
                 OutgoingEvent evt;
                 while((evt = pendingOutgoingEvents.take()) != null) {
                     // We now have at least one event to handle
-                    Thread.sleep(500); // Wait for more events, before going into synchronized block 
+                    Thread.sleep(500); // Wait for more events, before going into synchronized block
                     synchronized(pendingOutgoingEvents) {
-                        while(pendingOutgoingEvents.peek() != null 
+                        while(pendingOutgoingEvents.peek() != null
                                 && evt.canMergeWith(pendingOutgoingEvents.peek())) {
-                            OutgoingEvent otherEvt = pendingOutgoingEvents.poll(); 
+                            OutgoingEvent otherEvt = pendingOutgoingEvents.poll();
                             evt = evt.mergeWith(otherEvt); // This is to counter bursts.
                         }
                     }
-                    
+
                     // Good, send the merged result
                     if (evt instanceof ParameterSubscribeEvent) {
                         doParameterSubscribe(((ParameterSubscribeEvent) evt).getIdList());
@@ -98,39 +98,39 @@ public class WebSocketClient {
             } catch(InterruptedException e) {
                 log.log(Level.SEVERE, "OOPS, got interrupted", e);
             }
-        }).start(); 
+        }).start();
     }
-    
+
     /**
      * Formatted as app/version. No spaces.
      */
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
     }
-    
+
     public void connect() {
         enableReconnection.set(true);
         createBootstrap();
     }
-    
+
     void setConnected(boolean connected) {
         this.connected.set(connected);
     }
-    
+
     public boolean isConnected() {
         return connected.get();
     }
-   
+
     private void createBootstrap() {
         HttpHeaders header = new DefaultHttpHeaders();
         if (userAgent != null) {
             header.add(HttpHeaders.Names.USER_AGENT, userAgent);
         }
-        
+
         WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(
                 uri, WebSocketVersion.V13, null, false, header);
         WebSocketClientHandler webSocketHandler = new WebSocketClientHandler(handshaker, this, callback);
-        
+
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
             @Override
@@ -142,7 +142,7 @@ public class WebSocketClient {
                         webSocketHandler);
             }
         });
-        
+
         log.info("WebSocket Client connecting");
         try {
             ChannelFuture future = bootstrap.connect(uri.getHost(), uri.getPort()).addListener(new ChannelFutureListener() {
@@ -155,7 +155,7 @@ public class WebSocketClient {
                     }
                 }
             });
-            
+
             future.sync();
             nettyChannel = future.sync().channel();
         } catch (InterruptedException e) {
@@ -163,7 +163,7 @@ public class WebSocketClient {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Adds said event to the queue. As soon as the web socket
      * is established, queue will be iterated and if possible, similar events will be merged.
@@ -175,7 +175,7 @@ public class WebSocketClient {
             pendingOutgoingEvents.offer(request);
         }
     }
-    
+
     private void doParameterSubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
         ByteArrayOutputStream barray = new ByteArrayOutputStream();
         try {
@@ -183,20 +183,20 @@ public class WebSocketClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        
+
         System.out.println("will send subscribe of .. " + barray.toString());
-        
+
         int id = seqId.incrementAndGet();
         upstreamSubscriptionsBySeqId.put(id, idList);
         nettyChannel.writeAndFlush(new TextWebSocketFrame(
                 new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
-                        .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
-                        .append(",").append(id)
-                        .append(",")
-                        .append("{\"request\":\"subscribe\",\"data\":")
-                        .append(barray.toString()).append("}]").toString()));
+                .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
+                .append(",").append(id)
+                .append(",")
+                .append("{\"request\":\"subscribe\",\"data\":")
+                .append(barray.toString()).append("}]").toString()));
     }
-    
+
     private void doParameterUnsubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
         ByteArrayOutputStream barray = new ByteArrayOutputStream();
         try {
@@ -204,57 +204,57 @@ public class WebSocketClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        
+
         System.out.println("will send unsubscribe of .. " + barray.toString());
-        
+
         int id = seqId.incrementAndGet();
         //upstreamSubscriptionsBySeqId.put(id, idList);
         nettyChannel.writeAndFlush(new TextWebSocketFrame(
                 new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
-                        .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
-                        .append(",").append(id)
-                        .append(",")
-                        .append("{\"request\":\"unsubscribe\",\"data\":")
-                        .append(barray.toString()).append("}]").toString()));
+                .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
+                .append(",").append(id)
+                .append(",")
+                .append("{\"request\":\"unsubscribe\",\"data\":")
+                .append(barray.toString()).append("}]").toString()));
     }
-    
+
     private void doSubscribeAllCommandHistory() {
         System.out.println("will send subscribe-all cmdhist");
-        
+
         int id = seqId.incrementAndGet();
         nettyChannel.writeAndFlush(new TextWebSocketFrame(
                 new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
-                        .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
-                        .append(",").append(id)
-                        .append(",")
-                        .append("{\"cmdhist\":\"subscribeAll\"}]").toString()));
+                .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
+                .append(",").append(id)
+                .append(",")
+                .append("{\"cmdhistory\":\"subscribe\"}]").toString()));
     }
-    
+
     NamedObjectList getUpstreamSubscription(int seqId) {
         return upstreamSubscriptionsBySeqId.get(seqId);
     }
-    
+
     void ackSubscription(int seqId) {
         upstreamSubscriptionsBySeqId.remove(seqId);
     }
-    
+
     boolean isReconnectionEnabled() {
         return enableReconnection.get();
     }
-    
+
     public void disconnect() {
         if (connected.compareAndSet(true, false)) {
             enableReconnection.set(false);
             log.info("WebSocket Client sending close");
             nettyChannel.writeAndFlush(new CloseWebSocketFrame());
-            
+
             // WebSocketClientHandler will close the channel when the server responds to the CloseWebSocketFrame
             nettyChannel.closeFuture().awaitUninterruptibly();
         } else {
             log.fine("Close requested, but connection was already closed");
         }
     }
-    
+
     public void shutdown() {
         //exec.shutdown();
         group.shutdownGracefully();
