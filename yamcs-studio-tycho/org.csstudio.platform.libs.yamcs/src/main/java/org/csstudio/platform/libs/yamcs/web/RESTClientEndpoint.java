@@ -51,26 +51,26 @@ import org.yamcs.protostuff.RestValidateCommandResponse;
 /**
  * Implements the client-side API of the rest web api.
  * Sequences outgoing requests on a single thread for simplicity.
- * 
+ *
  * Instances should be shutdown() when no longer in use.
- * 
+ *
  * TODO accepts only json for now, because exception are not currently
  * sent in gpb format.
  */
 public class RESTClientEndpoint implements RESTService {
-    
+
     private YamcsConnectionProperties yprops;
     private ExecutorService exec = Executors.newSingleThreadExecutor();
-    
-    private AtomicInteger cmdClientId = new AtomicInteger(1); // Reset for every application restart 
-    
+
+    private AtomicInteger cmdClientId = new AtomicInteger(1); // Reset for every application restart
+
     // Reuse the same buffer for serializing multiple post requests
     private LinkedBuffer contentBuffer = LinkedBuffer.allocate(4096); // Increase value when requests are getting too big
 
     public RESTClientEndpoint(YamcsConnectionProperties yprops) {
         this.yprops = yprops;
     }
-    
+
     @Override
     public void replay(ReplayRequest request, ResponseHandler<RestReplayResponse> responseHandler) {
         // TODO Auto-generated method stub
@@ -81,7 +81,7 @@ public class RESTClientEndpoint implements RESTService {
         URI uri = yprops.webResourceURI("/api/commanding/validate");
         doPOST(uri, request, new RestValidateCommandResponse(), responseHandler);
     }
-    
+
     @Override
     public void sendCommand(RestSendCommandRequest request, ResponseHandler<RestSendCommandResponse> responseHandler) {
         URI uri = yprops.webResourceURI("/api/commanding/send");
@@ -101,15 +101,16 @@ public class RESTClientEndpoint implements RESTService {
     @Override
     public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler<RestListAvailableParametersResponse> responseHandler) {
         URI uri = yprops.webResourceURI("/api/mdb/parameters");
-        doGET(uri, new RestListAvailableParametersResponse(), responseHandler);
+        // TODO post for now, but should become get with request body
+        doPOST(uri, request, new RestListAvailableParametersResponse(), responseHandler);
     }
-    
+
     @Override
     public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler<RestDumpRawMdbResponse> responseHandler) {
         URI uri = yprops.webResourceURI("/api/mdb/dump");
         doGET(uri, new RestDumpRawMdbResponse(), responseHandler);
     }
-    
+
     private <T extends Message<T>> void doGET(URI uri, T target, ResponseHandler<T> handler) {
         exec.execute(() -> {
             EventLoopGroup group = new NioEventLoopGroup();
@@ -129,7 +130,7 @@ public class RESTClientEndpoint implements RESTService {
                                 ctx.close();
                                 handler.onMessage(target);
                             }
-                            
+
                             @Override
                             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                                 cause.printStackTrace();
@@ -154,7 +155,7 @@ public class RESTClientEndpoint implements RESTService {
             }
         });
     }
-    
+
     private <S extends Message<S>, T extends Message<T>> void doPOST(URI uri, S msg, T target, ResponseHandler<T> handler) {
         exec.execute(() -> {
             EventLoopGroup group = new NioEventLoopGroup();
@@ -174,7 +175,7 @@ public class RESTClientEndpoint implements RESTService {
                                 ctx.close();
                                 handler.onMessage(target);
                             }
-                            
+
                             @Override
                             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                                 cause.printStackTrace();
@@ -184,7 +185,7 @@ public class RESTClientEndpoint implements RESTService {
                         });
                     }
                 });
-    
+
                 Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
                 FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uri.getRawPath());
                 request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
@@ -204,18 +205,18 @@ public class RESTClientEndpoint implements RESTService {
             }
         });
     }
-    
+
     @Override
     public void shutdown() {
         exec.shutdown();
     }
-    
+
     public static void main(String... args) throws IOException {
         RestValidateCommandRequest req = new RestValidateCommandRequest();
         //CommandParser.toCommand("SWITCH_VOLTAGE_ON(votlage_num=4)");
         //req.setCommandString("SWITCH_VOLTAGE_ON(votlage_num=4)");
         JsonIOUtil.writeTo(System.out, req, req.cachedSchema(), false);
-        
+
         //
         YamcsConnectionProperties yprops = new YamcsConnectionProperties("localhost", 8090, "s3");
         RESTClientEndpoint client = new RESTClientEndpoint(yprops);
@@ -223,7 +224,7 @@ public class RESTClientEndpoint implements RESTService {
             @Override
             public void onMessage(RestValidateCommandResponse msg) {
                 System.out.println("got back msg "+msg);
-                
+
             }
 
             @Override
@@ -232,6 +233,6 @@ public class RESTClientEndpoint implements RESTService {
                 t.printStackTrace();
             }
         });
-        
+
     }
 }

@@ -34,35 +34,35 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     // The shared instance
     private static YamcsPlugin plugin;
-    
+
     private RESTService restService;
-    
+
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
-    
+
     private List<NamedObjectId> parameterIds = Collections.emptyList();
     private CountDownLatch parametersLoaded = new CountDownLatch(1);
-    
+
     private Collection<MetaCommand> commands = Collections.emptyList();
     private CountDownLatch commandsLoaded = new CountDownLatch(1);
-    
+
     public RESTService getRESTService() {
         return restService;
     }
-    
+
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        
+
         System.out.println("yamcs plugin started....");
-        
+
         String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
         int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
         String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
         restService = new RESTClientEndpoint(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
         fetchInitialMdbAsync();
     }
-    
+
     private void fetchInitialMdbAsync() {
         // Load list of parameters
         RestListAvailableParametersRequest req = new RestListAvailableParametersRequest();
@@ -84,7 +84,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 log.log(Level.SEVERE, "Could not fetch available yamcs parameters", t);
             }
         });
-        
+
         // Load commands
         RestDumpRawMdbRequest dumpRequest = new RestDumpRawMdbRequest();
         restService.dumpRawMdb(dumpRequest, new ResponseHandler<RestDumpRawMdbResponse>() {
@@ -105,14 +105,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
                     log.log(Level.SEVERE, "Could not deserialize mdb", e);
                 }
             }
-            
+
             @Override
             public void onFault(Throwable t) {
                 log.log(Level.SEVERE, "Could not fetch available yamcs commands", t);
             }
         });
     }
-    
+
     public void addMdbListener(MDBContextListener listener) {
         mdbListeners.add(listener);
     }
@@ -130,13 +130,12 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     /**
-     * Return the available parameters. Waits on the thread
-     * while request is still ongoing.
+     * Return the available parameters
      */
     public List<NamedObjectId> getParameterIds() {
         return parameterIds;
     }
-    
+
     public Collection<MetaCommand> getCommands() {
         return commands;
     }
