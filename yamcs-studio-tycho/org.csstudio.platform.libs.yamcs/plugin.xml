@@ -4,7 +4,6 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.csstudio.platform.ui.css.applications"
             class="org.csstudio.platform.libs.yamcs.ui.prefs.YamcsPreferencePage"
             id="org.csstudio.platform.libs.yamcs.ui.prefs.YamcsPreferencePage"
             name="Yamcs">

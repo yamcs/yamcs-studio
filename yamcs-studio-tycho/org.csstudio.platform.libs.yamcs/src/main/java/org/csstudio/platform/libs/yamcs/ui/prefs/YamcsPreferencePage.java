@@ -50,7 +50,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         addField(yamcsInstance);
 
         addField(new SpacerFieldEditor(getFieldEditorParent()));
-        mdbNamespace = new StringFieldEditor("mdb_namespace", "Namespace", getFieldEditorParent());
+        mdbNamespace = new StringFieldEditor("mdb_namespace", "MDB Namespace", getFieldEditorParent());
         addField(mdbNamespace);
     }
 

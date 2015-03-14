@@ -54,8 +54,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
 
-        System.out.println("yamcs plugin started....");
-
+        log.info("yamcs plugin starting..");
         String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
         int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
         String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
