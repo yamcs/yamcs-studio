@@ -30,8 +30,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
@@ -60,7 +59,7 @@ import org.yamcs.protostuff.RestValidateCommandResponse;
 public class RESTClientEndpoint implements RESTService {
 
     private YamcsConnectionProperties yprops;
-    private ExecutorService exec = Executors.newSingleThreadExecutor();
+    private EventLoopGroup group = new NioEventLoopGroup(1);
 
     private AtomicInteger cmdClientId = new AtomicInteger(1); // Reset for every application restart
 
@@ -112,125 +111,114 @@ public class RESTClientEndpoint implements RESTService {
     }
 
     private <T extends Message<T>> void doGET(URI uri, T target, ResponseHandler<T> handler) {
-        exec.execute(() -> {
-            EventLoopGroup group = new NioEventLoopGroup();
-            try {
-                Bootstrap b = new Bootstrap();
-                b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new HttpClientCodec());
-                        p.addLast(new HttpObjectAggregator(1048576));
-                        p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
-                            @Override
-                            public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
-                                //ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
-                                JsonIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema(), false);
-                                ctx.close();
-                                handler.onMessage(target);
-                            }
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                protected void initChannel(SocketChannel ch) throws Exception {
+                    ChannelPipeline p = ch.pipeline();
+                    p.addLast(new HttpClientCodec());
+                    p.addLast(new HttpObjectAggregator(1048576));
+                    p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
+                        @Override
+                        public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
+                            //ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
+                            JsonIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema(), false);
+                            ctx.close();
+                            handler.onMessage(target);
+                        }
 
-                            @Override
-                            public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                                cause.printStackTrace();
-                                ctx.close();
-                                handler.onFault(cause);
-                            }
-                        });
-                    }
-                });
+                        @Override
+                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+                            cause.printStackTrace();
+                            ctx.close();
+                            handler.onFault(cause);
+                        }
+                    });
+                }
+            });
 
-                Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
-                HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.getRawPath());
-                request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
-                request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-                request.headers().set(HttpHeaders.Names.ACCEPT, "application/json");
-                ch.writeAndFlush(request);
-                ch.closeFuture().sync();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                group.shutdownGracefully();
-            }
-        });
+            Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
+            HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.getRawPath());
+            request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
+            request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+            request.headers().set(HttpHeaders.Names.ACCEPT, "application/json");
+            ch.writeAndFlush(request);
+            ch.closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private <S extends Message<S>, T extends Message<T>> void doPOST(URI uri, S msg, T target, ResponseHandler<T> handler) {
-        exec.execute(() -> {
-            EventLoopGroup group = new NioEventLoopGroup();
-            try {
-                Bootstrap b = new Bootstrap();
-                b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new HttpClientCodec());
-                        p.addLast(new HttpObjectAggregator(1048576));
-                        p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
-                            @Override
-                            public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
-                                JsonIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema(), false);
-                                //ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
-                                ctx.close();
-                                handler.onMessage(target);
-                            }
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                protected void initChannel(SocketChannel ch) throws Exception {
+                    ChannelPipeline p = ch.pipeline();
+                    p.addLast(new HttpClientCodec());
+                    p.addLast(new HttpObjectAggregator(1048576));
+                    p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
+                        @Override
+                        public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
+                            JsonIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema(), false);
+                            //ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
+                            ctx.close();
+                            handler.onMessage(target);
+                        }
 
-                            @Override
-                            public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                                cause.printStackTrace();
-                                ctx.close();
-                                handler.onFault(cause);
-                            }
-                        });
-                    }
-                });
+                        @Override
+                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+                            cause.printStackTrace();
+                            ctx.close();
+                            handler.onFault(cause);
+                        }
+                    });
+                }
+            });
 
-                Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
-                FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uri.getRawPath());
-                request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
-                request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-                request.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/octet-stream");
-                request.headers().set(HttpHeaders.Names.ACCEPT, "application/json");
-                // Unclear why we need this contentbuffer. protobufioutil seems to first write there, and only afterwards stream out
-                ProtobufIOUtil.writeTo(new ByteBufOutputStream(request.content()), msg, msg.cachedSchema(), contentBuffer);
-                contentBuffer.clear(); // Prepare for next usage
-                request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
-                ch.writeAndFlush(request);
-                ch.closeFuture().sync();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                group.shutdownGracefully();
-            }
-        });
+            Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
+            FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uri.getRawPath());
+            request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
+            request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+            request.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/octet-stream");
+            request.headers().set(HttpHeaders.Names.ACCEPT, "application/json");
+            // Unclear why we need this contentbuffer. protobufioutil seems to first write there, and only afterwards stream out
+            ProtobufIOUtil.writeTo(new ByteBufOutputStream(request.content()), msg, msg.cachedSchema(), contentBuffer);
+            contentBuffer.clear(); // Prepare for next usage
+            request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
+            ch.writeAndFlush(request);
+            ch.closeFuture().sync();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void shutdown() {
-        exec.shutdown();
+        group.shutdownGracefully();
     }
 
     public static void main(String... args) throws IOException {
-        RestValidateCommandRequest req = new RestValidateCommandRequest();
-        //CommandParser.toCommand("SWITCH_VOLTAGE_ON(votlage_num=4)");
-        //req.setCommandString("SWITCH_VOLTAGE_ON(votlage_num=4)");
+        RestListAvailableParametersRequest req = new RestListAvailableParametersRequest();
+        req.setNamespacesList(Arrays.asList("MDB:OPS Name"));
         JsonIOUtil.writeTo(System.out, req, req.cachedSchema(), false);
 
-        //
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties("localhost", 8090, "s3");
+        YamcsConnectionProperties yprops = new YamcsConnectionProperties("localhost", 8090, "simulator");
         RESTClientEndpoint client = new RESTClientEndpoint(yprops);
-        client.validateCommand(req, new ResponseHandler<RestValidateCommandResponse>() {
+        client.listAvailableParameters(req, new ResponseHandler<RestListAvailableParametersResponse>() {
             @Override
-            public void onMessage(RestValidateCommandResponse msg) {
+            public void onMessage(RestListAvailableParametersResponse msg) {
                 System.out.println("got back msg "+msg);
-
+                client.shutdown();
             }
 
             @Override
             public void onFault(Throwable t) {
                 System.out.println("got back fault "+t);
                 t.printStackTrace();
+                client.shutdown();
             }
         });
 
