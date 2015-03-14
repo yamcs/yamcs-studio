@@ -89,9 +89,7 @@ public class YRegistrar implements WebSocketClientCallbackListener {
     private static NamedObjectList wrapAsNamedObjectList(String pvName) {
         NamedObjectList idList = new NamedObjectList();
         NamedObjectId id = new NamedObjectId(pvName);
-        if (!pvName.startsWith("/")) {
-            id.setNamespace("MDB:OPS Name");
-        }
+        id.setNamespace(YamcsPlugin.getDefault().getMdbNamespace());
         idList.setListList(Arrays.asList(id));
         return idList;
     }

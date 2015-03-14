@@ -63,10 +63,17 @@ public class YamcsPlugin extends AbstractUIPlugin {
         fetchInitialMdbAsync();
     }
 
+    /**
+     * Returns the MDB namespace as defined in the user preferences.
+     */
+    public String getMdbNamespace() {
+        return YamcsPlugin.getDefault().getPreferenceStore().getString("mdb_namespace");
+    }
+
     private void fetchInitialMdbAsync() {
         // Load list of parameters
         RestListAvailableParametersRequest req = new RestListAvailableParametersRequest();
-        req.setNamespacesList(Arrays.asList("MDB:OPS Name"));
+        req.setNamespacesList(Arrays.asList(getMdbNamespace()));
         restService.listAvailableParameters(req, new ResponseHandler<RestListAvailableParametersResponse>() {
             @Override
             public void onMessage(RestListAvailableParametersResponse response) {
