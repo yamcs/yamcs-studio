@@ -38,6 +38,8 @@
 		<module>org.csstudio.yamcs.feature.core</module>
 		<module>org.csstudio.yamcs.feature.eclipse</module>
 		<module>org.csstudio.yamcs.product</module>
+		<module>org.csstudio.yamcs.ui.menu</module>
+		<module>org.csstudio.yamcs.ui.menu.app</module>
 		<module>org.csstudio.yamcs.ycl.dsl</module>
 		<module>org.csstudio.yamcs.ycl.tests</module>
 		<module>org.csstudio.yamcs.ycl.ui</module>
