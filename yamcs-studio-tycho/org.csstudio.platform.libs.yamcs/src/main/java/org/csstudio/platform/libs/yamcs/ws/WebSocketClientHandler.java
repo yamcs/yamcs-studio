@@ -205,7 +205,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             client.ackSubscription(seqId);
             
             // And have another go at it
-            client.sendRequest(new ParameterSubscribeEvent(list));
+            client.sendRequest(new ParameterSubscribeRequest(list));
         } else {
             log.severe("Got exception message " + etype);
         }

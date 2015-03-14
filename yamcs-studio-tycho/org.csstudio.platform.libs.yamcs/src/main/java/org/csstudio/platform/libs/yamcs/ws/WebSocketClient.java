@@ -14,14 +14,11 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
-import io.protostuff.JsonIOUtil;
+import io.netty.util.concurrent.Future;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,14 +33,7 @@ import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
 import org.yamcs.protostuff.NamedObjectList;
 
 /**
- * Netty-implementation of a Yamcs web socket client.
- * Extracted out of YamcsDataSource, since instances of that DS
- * appear to be created for every parameter separately :-/
- * Needs more research. would've thought everything under
- * same schema shares a datasource, but alas.
- *
- * TODO get this completely clean of any payload information. Should be more generic. therefore
- * transfer actual differentiating logic to the OutgoingEvent extensions.
+ * Netty-implementation of a Yamcs web socket client
  */
 public class WebSocketClient {
 
@@ -59,7 +49,7 @@ public class WebSocketClient {
     private AtomicInteger seqId = new AtomicInteger(1);
 
     // Stores ws subscriptions to be sent to the server once ws-connection is established
-    private BlockingQueue<OutgoingEvent> pendingOutgoingEvents = new LinkedBlockingQueue<>();
+    private BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
 
     // Sends outgoing subscriptions to the web socket
     //private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
@@ -74,26 +64,20 @@ public class WebSocketClient {
         this.callback = callback;
         new Thread(() -> {
             try {
-                OutgoingEvent evt;
-                while((evt = pendingOutgoingEvents.take()) != null) {
+                WebSocketRequest evt;
+                while((evt = pendingRequests.take()) != null) {
                     // We now have at least one event to handle
                     Thread.sleep(500); // Wait for more events, before going into synchronized block
-                    synchronized(pendingOutgoingEvents) {
-                        while(pendingOutgoingEvents.peek() != null
-                                && evt.canMergeWith(pendingOutgoingEvents.peek())) {
-                            OutgoingEvent otherEvt = pendingOutgoingEvents.poll();
+                    synchronized(pendingRequests) {
+                        while(pendingRequests.peek() != null
+                                && evt.canMergeWith(pendingRequests.peek())) {
+                            WebSocketRequest otherEvt = pendingRequests.poll();
                             evt = evt.mergeWith(otherEvt); // This is to counter bursts.
                         }
                     }
 
                     // Good, send the merged result
-                    if (evt instanceof ParameterSubscribeEvent) {
-                        doParameterSubscribe(((ParameterSubscribeEvent) evt).getIdList());
-                    } else if (evt instanceof ParameterUnsubscribeEvent) {
-                        doParameterUnsubscribe(((ParameterUnsubscribeEvent) evt).getIdList());
-                    } else if (evt instanceof SubscribeAllCommandHistoryRequest) {
-                        doSubscribeAllCommandHistory();
-                    }
+                    doSendRequest(evt);
                 }
             } catch(InterruptedException e) {
                 log.log(Level.SEVERE, "OOPS, got interrupted", e);
@@ -168,66 +152,24 @@ public class WebSocketClient {
      * Adds said event to the queue. As soon as the web socket
      * is established, queue will be iterated and if possible, similar events will be merged.
      */
-    public void sendRequest(OutgoingEvent request) {
+    public void sendRequest(WebSocketRequest request) {
         // sync, because the consumer will try to merge multiple outgoing events of the same type
         // using multiple operations on the queue.
-        synchronized(pendingOutgoingEvents) {
-            pendingOutgoingEvents.offer(request);
+        synchronized(pendingRequests) {
+            pendingRequests.offer(request);
         }
     }
 
-    private void doParameterSubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
-        ByteArrayOutputStream barray = new ByteArrayOutputStream();
-        try {
-            JsonIOUtil.writeTo(barray, idList, idList.cachedSchema(), false);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    /**
+     * Really does send the request upstream
+     */
+    private void doSendRequest(WebSocketRequest request) {
+        int id = seqId.incrementAndGet();
+        // upstreamSubscriptionsBySeqId.put(id, idList);
+        if (log.isLoggable(Level.FINE)) {
+            log.fine("Sending request " + request);
         }
-
-        System.out.println("will send subscribe of .. " + barray.toString());
-
-        int id = seqId.incrementAndGet();
-        upstreamSubscriptionsBySeqId.put(id, idList);
-        nettyChannel.writeAndFlush(new TextWebSocketFrame(
-                new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
-                .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
-                .append(",").append(id)
-                .append(",")
-                .append("{\"request\":\"subscribe\",\"data\":")
-                .append(barray.toString()).append("}]").toString()));
-    }
-
-    private void doParameterUnsubscribe(NamedObjectList idList) { // TODO we could probably refactor this into ParameterSubscribeEvent
-        ByteArrayOutputStream barray = new ByteArrayOutputStream();
-        try {
-            JsonIOUtil.writeTo(barray, idList, idList.cachedSchema(), false);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println("will send unsubscribe of .. " + barray.toString());
-
-        int id = seqId.incrementAndGet();
-        //upstreamSubscriptionsBySeqId.put(id, idList);
-        nettyChannel.writeAndFlush(new TextWebSocketFrame(
-                new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
-                .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
-                .append(",").append(id)
-                .append(",")
-                .append("{\"request\":\"unsubscribe\",\"data\":")
-                .append(barray.toString()).append("}]").toString()));
-    }
-
-    private void doSubscribeAllCommandHistory() {
-        System.out.println("will send subscribe-all cmdhist");
-
-        int id = seqId.incrementAndGet();
-        nettyChannel.writeAndFlush(new TextWebSocketFrame(
-                new StringBuilder("[").append(WSConstants.PROTOCOL_VERSION)
-                .append(",").append(WSConstants.MESSAGE_TYPE_REQUEST)
-                .append(",").append(id)
-                .append(",")
-                .append("{\"cmdhistory\":\"subscribe\"}]").toString()));
+        nettyChannel.writeAndFlush(request.toWebSocketFrame(WSConstants.JSON_MIME_TYPE, id));
     }
 
     NamedObjectList getUpstreamSubscription(int seqId) {
@@ -255,8 +197,11 @@ public class WebSocketClient {
         }
     }
 
-    public void shutdown() {
+    /**
+     * @return the Future which is notified when the executor has been terminated.
+     */
+    public Future<?> shutdown() {
         //exec.shutdown();
-        group.shutdownGracefully();
+        return group.shutdownGracefully();
     }
 }

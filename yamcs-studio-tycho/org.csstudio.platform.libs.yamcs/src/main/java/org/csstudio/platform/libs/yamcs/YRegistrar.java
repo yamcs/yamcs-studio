@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.ws.ParameterSubscribeEvent;
-import org.csstudio.platform.libs.yamcs.ws.ParameterUnsubscribeEvent;
-import org.csstudio.platform.libs.yamcs.ws.SubscribeAllCommandHistoryRequest;
+import org.csstudio.platform.libs.yamcs.ws.CommandHistorySubscribeAllRequest;
+import org.csstudio.platform.libs.yamcs.ws.ParameterSubscribeRequest;
+import org.csstudio.platform.libs.yamcs.ws.ParameterUnsubscribeRequest;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
 import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
 import org.yamcs.protostuff.CommandHistoryEntry;
@@ -31,23 +31,23 @@ import org.yamcs.protostuff.ParameterValue;
  * to the provided callback listener.
  */
 public class YRegistrar implements WebSocketClientCallbackListener {
-    
+
     private static final String USER_AGENT = "yamcs-studio/" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(YRegistrar.class.getName());
     private static YRegistrar INSTANCE;
-    
+
     // Store pvreaders while connection is not established
     private Map<String, YPVReader> pvReadersByName = new LinkedHashMap<>();
-    private List<CommandHistoryListener> cmdhistListeners = new ArrayList<CommandHistoryListener>();
-    
+    private List<CommandHistoryListener> cmdhistListeners = new ArrayList<>();
+
     private boolean connectionInitialized = false;
     private WebSocketClient wsclient;
-    
+
     private YRegistrar(YamcsConnectionProperties yprops) {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(USER_AGENT);
     }
-    
+
     public static synchronized YRegistrar getInstance() {
         if (INSTANCE == null) {
             String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
@@ -57,7 +57,7 @@ public class YRegistrar implements WebSocketClientCallbackListener {
         }
         return INSTANCE;
     }
-    
+
     public synchronized void connectPVReader(YPVReader pvReader) {
         if (!connectionInitialized) {
             wsclient.connect();
@@ -65,27 +65,27 @@ public class YRegistrar implements WebSocketClientCallbackListener {
         }
         pvReadersByName.put(pvReader.getPVName(), pvReader);
         NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
-        wsclient.sendRequest(new ParameterSubscribeEvent(idList));
+        wsclient.sendRequest(new ParameterSubscribeRequest(idList));
     }
-    
+
     public synchronized void disconnectPVReader(YPVReader pvReader) {
         if (!connectionInitialized) { // TODO Possible?
             return;
         }
         pvReadersByName.remove(pvReader);
         NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
-        wsclient.sendRequest(new ParameterUnsubscribeEvent(idList));
+        wsclient.sendRequest(new ParameterUnsubscribeRequest(idList));
     }
-    
+
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         if (!connectionInitialized) {
             wsclient.connect();
             connectionInitialized = true;
         }
         cmdhistListeners.add(listener);
-        wsclient.sendRequest(new SubscribeAllCommandHistoryRequest()); // TODO don't need to do this for every listener
+        wsclient.sendRequest(new CommandHistorySubscribeAllRequest()); // TODO don't need to do this for every listener
     }
-    
+
     private static NamedObjectList wrapAsNamedObjectList(String pvName) {
         NamedObjectList idList = new NamedObjectList();
         NamedObjectId id = new NamedObjectId(pvName);
@@ -95,12 +95,12 @@ public class YRegistrar implements WebSocketClientCallbackListener {
         idList.setListList(Arrays.asList(id));
         return idList;
     }
-    
+
     public void disconnect() {
         connectionInitialized = false;
         wsclient.disconnect();
     }
-    
+
     public void shutdown() {
         disconnect();
         wsclient.shutdown();
@@ -140,7 +140,7 @@ public class YRegistrar implements WebSocketClientCallbackListener {
             }
         }
     }
-    
+
     @Override
     public void onCommandHistoryData(CommandHistoryEntry cmdhistEntry) {
         cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
