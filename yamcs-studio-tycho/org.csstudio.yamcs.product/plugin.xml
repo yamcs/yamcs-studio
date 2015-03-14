@@ -84,6 +84,19 @@
          point="org.eclipse.ui.activities">
     <activity id="yamcsstudio.disablextensions" name="Hidden activities"/>
     <activityPatternBinding activityId="yamcsstudio.disablextensions" pattern="org.eclipse.team.*"/>
-   </extension-->   
-
+   </extension-->
+   
+   <!--
+   	This extension point is actually considered deprecated now, in favor of the
+   	"common navigator framework". We'll use this one until we have time to figure
+   	out the other one.
+   -->
+   <extension point="org.eclipse.ui.ide.resourceFilters">
+      
+      <!-- Hide files that should by default be hidden (.project, .pydevproject, ..) -->
+      <filter
+            selected="true"
+            pattern=".**"> <!-- Not using .* because that one is declared by org.eclipse.ui.ide as selected="false" -->
+      </filter>
+   </extension>
 </plugin>
