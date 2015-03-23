@@ -1,6 +1,12 @@
 .project
 .classpath
 .metadata/
+target/
+
+# Generated when building the CSS submodules
+# --> see css/make-css.sh
+css/settings.xml
+css/local_p2_repository/
 
 # Generated from POM
 yamcs-studio-bundles/org.csstudio.platform.libs.protostuff/META-INF/

@@ -1,0 +1,19 @@
+<settings>
+  <profiles>
+    <profile>
+      <id>css-for-yamcs</id>
+      <properties>
+        <csstudio.local.repo>REPLACE_WITH_LOCAL_P2_REPO</csstudio.local.repo>
+        <cs-studio>dummy_value</cs-studio>
+        <baselineMode>warn</baselineMode>
+        <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
+        <maven.test.skip>true</maven.test.skip>
+        <skipTests>true</skipTests>
+      </properties>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>css-for-yamcs</activeProfile>
+  </activeProfiles>
+</settings>
+
