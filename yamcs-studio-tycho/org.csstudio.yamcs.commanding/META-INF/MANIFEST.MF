@@ -11,8 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.rap.ui;resolution:=optional,
  org.csstudio.platform.libs.yamcs,
- org.csstudio.platform.libs.protostuff
+ org.csstudio.platform.libs.protostuff,
+ org.csstudio.platform.libs.yamcsall
 Export-Package: org.csstudio.yamcs.commanding
-Import-Package: org.yamcs.utils,
- org.yamcs.xtce
 Bundle-Activator: org.csstudio.yamcs.commanding.CommandingPlugin
