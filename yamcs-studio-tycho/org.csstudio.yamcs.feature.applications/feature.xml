@@ -5,10 +5,6 @@
       version="1.0.0.qualifier"
       provider-name="Space Applications Services">
 
-   <includes
-         id="org.csstudio.trends.databrowser2.feature"
-         version="0.0.0"/>
-
    <plugin
          id="org.csstudio.display.pvtable"
          download-size="0"
@@ -39,13 +35,6 @@
 
    <plugin
          id="org.csstudio.opibuilder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.opibuilder.converter"
          download-size="0"
          install-size="0"
          version="0.0.0"
