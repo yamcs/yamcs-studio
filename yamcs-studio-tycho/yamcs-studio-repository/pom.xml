@@ -14,6 +14,33 @@
 
 	<build>
 		<plugins>
+			<!-- Icons are in ../org.csstudio.yamcs.product/icons, but Tycho wants them in 
+				../yamcs-studio-repository/target/products/yamcs-studio/icons
+				(Copied from SNS-product build)
+			  -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<configuration>
+							<failOnError>true</failOnError>
+							<target>
+								<echo message="Copying icons into tycho target directory ${project.build.directory}" />
+								<copy todir="${project.build.directory}/products/yamcs-studio" verbose="false">
+									<fileset dir="${project.build.directory}/../..">
+										<include name="org.csstudio.yamcs.product/icons/**" />
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
