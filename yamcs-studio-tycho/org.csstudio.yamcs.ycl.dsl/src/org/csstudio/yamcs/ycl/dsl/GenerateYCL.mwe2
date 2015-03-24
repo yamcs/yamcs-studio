@@ -115,7 +115,8 @@ Workflow {
     		fragment = refactoring.RefactorElementNameFragment auto-inject {}
     
     		// provides the necessary bindings for java types integration
-    		fragment = types.TypesGeneratorFragment auto-inject {}
+    		// fdi: commented out because this then requires JDT in the product build :(
+    		//fragment = types.TypesGeneratorFragment auto-inject {}
     
     		// generates the required bindings only if the grammar inherits from Xbase
     		fragment = xbase.XbaseGeneratorFragment auto-inject {}
@@ -124,7 +125,7 @@ Workflow {
     		// fragment = templates.CodetemplatesGeneratorFragment auto-inject {}
     
     		// provides a compare view
-    		fragment = compare.CompareFragment auto-inject {}
+    		//fragment = compare.CompareFragment auto-inject {}
     	}
     }
 }

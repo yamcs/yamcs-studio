@@ -397,29 +397,4 @@
 	    </page>
 	</extension>
 
-  <extension point="org.eclipse.compare.contentViewers">
-    <viewer id="org.csstudio.yamcs.ycl.dsl.YCL.compare.contentViewers"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="ycl">
-    </viewer>
-  </extension>
-  <extension point="org.eclipse.compare.contentMergeViewers">
-    <viewer id="org.csstudio.yamcs.ycl.dsl.YCL.compare.contentMergeViewers"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="ycl" label="YCL Compare">
-     </viewer>
-  </extension>
-  <extension point="org.eclipse.ui.editors.documentProviders">
-    <provider id="org.csstudio.yamcs.ycl.dsl.YCL.editors.documentProviders"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="ycl">
-    </provider>
-  </extension>
-  <extension point="org.eclipse.team.core.fileTypes">
-    <fileTypes
-            extension="ycl"
-            type="text">
-    </fileTypes>
-  </extension>
-
 </plugin>
