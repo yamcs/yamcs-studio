@@ -14,7 +14,7 @@
 
 	<build>
 		<plugins>
-			<!-- Icons are in ../org.csstudio.yamcs.product/icons, but Tycho wants them in 
+			<!-- Icons are in ../org.csstudio.yamcs.product/icons, but Tycho wants them in
 				../yamcs-studio-repository/target/products/yamcs-studio/icons
 				(Copied from SNS-product build)
 			  -->
@@ -40,6 +40,105 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<dependency-resolution>
+						<optionalDependencies>ignore</optionalDependencies>
+					</dependency-resolution>
+					<filters>
+						<!-- Filter out a bunch of dependencies that are not needed in the final 
+							product. These come from the ycl xtext projects, but really are only needed 
+							for code generation. The JDT is the important one here that we really don't 
+							want, because otherwise you would be able to create java projects in the 
+							product, which is a bit out of scope... Also remark that these filters are 
+							defined at the *repository* level. NOT in the parent pom, because then they 
+							would also impact the xtext projects and then tycho would not be able to 
+							satisfy dependencies there. -->
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.debug.core</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.debug.ui</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.annotation</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.core</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.debug</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.launching</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.ui</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe.core</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe.utils</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.language</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.launch</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.lib</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.runtime</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.codegen</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.codegen.ecore</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.xtext.generator</id>
+							<removeAll />
+						</filter>
+					</filters>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -79,10 +178,10 @@
 		</plugins>
 	</build>
 
-	<!-- As a result of the director plugin run configured above, products will 
-		be generated under yamcs-studio/repository/target/products/*, and a P2 
-		repo for installing additional features under yamcs-studiorepository/target/repository. 
-		If a local repository is specified, mirror the build repository to that local 
+	<!-- As a result of the director plugin run configured above, products will
+		be generated under yamcs-studio-repository/target/products/*, and a P2
+		repo for installing additional features under yamcs-studio-repository/target/repository.
+		If a local repository is specified, mirror the build repository to that local
 		repository -->
 	<profiles>
 		<profile>

@@ -130,12 +130,6 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<configuration>
-					<dependency-resolution>
-						<extraRequirements>
-						</extraRequirements>
-						<!-- Default behavior is to resolve ALL dependencies. -->
-						<!--<optionalDependencies>ignore</optionalDependencies> -->
-					</dependency-resolution>
 					<environments>
 						<environment>
 							<os>linux</os>
