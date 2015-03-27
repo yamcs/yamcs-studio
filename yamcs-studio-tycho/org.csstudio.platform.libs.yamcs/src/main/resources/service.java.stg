@@ -9,9 +9,14 @@ public interface <service.name> {
 	public interface ResponseHandler\<T extends Message\<T\>\> {
 	
 	    /**
-	     * The response by the server. Might contain application errors
+	     * The (succesful) response of the server.
 	     */
 	    void onMessage(T response);
+	    
+	    /**
+	     * The (controlled exception) response of the server
+	     */
+	    void onException(RestExceptionMessage response);
 	    
 	    /**
 	     * When some uncaught exception occurred

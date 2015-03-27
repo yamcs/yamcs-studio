@@ -32,9 +32,9 @@ import org.yamcs.xtce.Argument;
 import org.yamcs.xtce.MetaCommand;
 
 public class AddTelecommandDialog extends TitleAreaDialog {
-    
+
     private static final Logger log = Logger.getLogger(AddTelecommandDialog.class.getName());
-    
+
     private Collection<MetaCommand> commands;
     private StyledText text;
     private RESTService restService = YamcsPlugin.getDefault().getRESTService();
@@ -43,12 +43,12 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         super(parentShell);
         commands = YamcsPlugin.getDefault().getCommands();
     }
-    
+
     @Override
     public void create() {
         super.create();
         setTitle("Send a telecommand");
-        //setMessage("informative message");
+        // setMessage("informative message");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         Composite area = (Composite) super.createDialogArea(parent);
         Composite container = new Composite(area, SWT.NONE);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
-        
+
         GridLayout layout = new GridLayout(2, false);
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
         container.setLayout(layout);
@@ -71,18 +71,18 @@ public class AddTelecommandDialog extends TitleAreaDialog {
                 commandCombo.add(command.getOpsName());
             }
         }
-        
+
         text = new StyledText(container, SWT.BORDER);
         GridData gd = new GridData(GridData.FILL_BOTH);
         gd.horizontalSpan = 2;
         text.setLayoutData(gd);
         text.addListener(SWT.Modify, evt -> setErrorMessage(null));
-        
+
         commandCombo.addListener(SWT.Selection, event -> {
             for (MetaCommand command : commands) {
                 String selected = ((Combo) event.widget).getText();
                 if (!command.isAbstract() && command.getOpsName().equals(selected)) {
-                    
+
                     StringBuilder buf = new StringBuilder(command.getOpsName());
                     if (command.getArgumentList() != null) {
                         buf.append("(\n");
@@ -98,7 +98,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
                 }
             }
         });
-        
+
         return area;
     }
 
@@ -114,15 +114,16 @@ public class AddTelecommandDialog extends TitleAreaDialog {
             restService.validateCommand(req, new ResponseHandler<RestValidateCommandResponse>() {
                 @Override
                 public void onMessage(RestValidateCommandResponse response) {
-                    Display.getDefault().asyncExec(() -> {
-                        if (response.getException() != null) {
-                            RestExceptionMessage ex = response.getException();
-                            setErrorMessage("[" + ex.getType() + "] " + ex.getMsg());    
-                        } else {
-                            setMessage("Command is valid", MessageDialog.INFORMATION);
-                        }
-                    });
+                    Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
                     System.out.println("GOT response " + response);
+                }
+
+                @Override
+                public void onException(RestExceptionMessage response) {
+                    Display.getDefault().asyncExec(() -> {
+                        setErrorMessage("[" + response.getType() + "] " + response.getMsg());
+                    });
+
                 }
 
                 @Override
@@ -140,7 +141,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         spacer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         // Update layout of the parent composite to count the spacer
-        GridLayout layout = (GridLayout)parent.getLayout();
+        GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns++;
         layout.makeColumnsEqualWidth = false;
 
@@ -151,15 +152,15 @@ public class AddTelecommandDialog extends TitleAreaDialog {
             restService.sendCommand(req, new ResponseHandler<RestSendCommandResponse>() {
                 @Override
                 public void onMessage(RestSendCommandResponse response) {
-                    Display.getDefault().asyncExec(() -> {
-                        if (response.getException() != null) {
-                            RestExceptionMessage ex = response.getException();
-                            setErrorMessage("[" + ex.getType() + "] " + ex.getMsg());    
-                        } else {
-                            close();
-                        }
-                    });
+                    Display.getDefault().asyncExec(() -> close());
                     System.out.println("GOT response " + response);
+                }
+
+                @Override
+                public void onException(RestExceptionMessage response) {
+                    Display.getDefault().asyncExec(() -> {
+                        setErrorMessage("[" + response.getType() + "] " + response.getMsg());
+                    });
                 }
 
                 @Override
@@ -173,7 +174,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         });
         createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
     }
-    
+
     @Override
     public void okPressed() {
         // NOP
