@@ -18,12 +18,12 @@ public class ParameterUnsubscribeRequest extends WebSocketRequest {
     }
 
     @Override
-    public String getRequestType() {
-        return "request";
+    public String getResource() {
+        return "parameter";
     }
 
     @Override
-    public String getRequestName() {
+    public String getOperation() {
         return "unsubscribe";
     }
 

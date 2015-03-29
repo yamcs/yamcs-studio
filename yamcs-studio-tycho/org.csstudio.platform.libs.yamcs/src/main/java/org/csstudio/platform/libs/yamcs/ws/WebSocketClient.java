@@ -52,7 +52,7 @@ public class WebSocketClient {
     private BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
 
     // Sends outgoing subscriptions to the web socket
-    //private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    // private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 
     // Keeps track of sent subscriptions, so that we can do a resend when we get
     // an InvalidException on some of them :-(
@@ -65,24 +65,24 @@ public class WebSocketClient {
         new Thread(() -> {
             try {
                 WebSocketRequest evt;
-                while((evt = pendingRequests.take()) != null) {
+                while ((evt = pendingRequests.take()) != null) {
                     // We now have at least one event to handle
-                    Thread.sleep(500); // Wait for more events, before going into synchronized block
-                    synchronized(pendingRequests) {
-                        while(pendingRequests.peek() != null
-                                && evt.canMergeWith(pendingRequests.peek())) {
-                            WebSocketRequest otherEvt = pendingRequests.poll();
-                            evt = evt.mergeWith(otherEvt); // This is to counter bursts.
-                        }
+                Thread.sleep(500); // Wait for more events, before going into synchronized block
+                synchronized (pendingRequests) {
+                    while (pendingRequests.peek() != null
+                            && evt.canMergeWith(pendingRequests.peek())) {
+                        WebSocketRequest otherEvt = pendingRequests.poll();
+                        evt = evt.mergeWith(otherEvt); // This is to counter bursts.
                     }
-
-                    // Good, send the merged result
-                    doSendRequest(evt);
                 }
-            } catch(InterruptedException e) {
-                log.log(Level.SEVERE, "OOPS, got interrupted", e);
+
+                // Good, send the merged result
+                doSendRequest(evt);
             }
-        }).start();
+        } catch (InterruptedException e) {
+            log.log(Level.SEVERE, "OOPS, got interrupted", e);
+        }
+    }   ).start();
     }
 
     /**
@@ -122,7 +122,7 @@ public class WebSocketClient {
                 ch.pipeline().addLast(
                         new HttpClientCodec(),
                         new HttpObjectAggregator(8192),
-                        //new WebSocketClientCompressionHandler(),
+                        // new WebSocketClientCompressionHandler(),
                         webSocketHandler);
             }
         });
@@ -149,13 +149,13 @@ public class WebSocketClient {
     }
 
     /**
-     * Adds said event to the queue. As soon as the web socket
-     * is established, queue will be iterated and if possible, similar events will be merged.
+     * Adds said event to the queue. As soon as the web socket is established, queue will be
+     * iterated and if possible, similar events will be merged.
      */
     public void sendRequest(WebSocketRequest request) {
         // sync, because the consumer will try to merge multiple outgoing events of the same type
         // using multiple operations on the queue.
-        synchronized(pendingRequests) {
+        synchronized (pendingRequests) {
             pendingRequests.offer(request);
         }
     }
@@ -169,7 +169,7 @@ public class WebSocketClient {
         if (log.isLoggable(Level.FINE)) {
             log.fine("Sending request " + request);
         }
-        nettyChannel.writeAndFlush(request.toWebSocketFrame(WSConstants.JSON_MIME_TYPE, id));
+        nettyChannel.writeAndFlush(request.toWebSocketFrame(id));
     }
 
     NamedObjectList getUpstreamSubscription(int seqId) {
@@ -190,7 +190,8 @@ public class WebSocketClient {
             log.info("WebSocket Client sending close");
             nettyChannel.writeAndFlush(new CloseWebSocketFrame());
 
-            // WebSocketClientHandler will close the channel when the server responds to the CloseWebSocketFrame
+            // WebSocketClientHandler will close the channel when the server responds to the
+            // CloseWebSocketFrame
             nettyChannel.closeFuture().awaitUninterruptibly();
         } else {
             log.fine("Close requested, but connection was already closed");
@@ -201,7 +202,7 @@ public class WebSocketClient {
      * @return the Future which is notified when the executor has been terminated.
      */
     public Future<?> shutdown() {
-        //exec.shutdown();
+        // exec.shutdown();
         return group.shutdownGracefully();
     }
 }

@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.rap.ui;resolution:=optional,
  org.csstudio.platform.libs.yamcs,
- org.csstudio.platform.libs.protostuff,
+ io.protostuff.uberjar,
  org.csstudio.platform.libs.yamcsall
 Export-Package: org.csstudio.yamcs.commanding
 Bundle-Activator: org.csstudio.yamcs.commanding.CommandingPlugin

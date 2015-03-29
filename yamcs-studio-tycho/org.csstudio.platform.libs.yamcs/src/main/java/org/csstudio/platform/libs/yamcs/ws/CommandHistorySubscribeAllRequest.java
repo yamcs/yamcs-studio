@@ -1,15 +1,14 @@
 package org.csstudio.platform.libs.yamcs.ws;
 
-
 public class CommandHistorySubscribeAllRequest extends WebSocketRequest {
 
     @Override
-    public String getRequestType() {
+    public String getResource() {
         return "cmdhistory";
     }
 
     @Override
-    public String getRequestName() {
+    public String getOperation() {
         return "subscribe";
     }
 }

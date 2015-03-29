@@ -11,7 +11,7 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.epics.vtype,
  org.epics.util,
  io.netty.all,
- org.csstudio.platform.libs.protostuff,
+ io.protostuff.uberjar,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.platform.libs.yamcsall

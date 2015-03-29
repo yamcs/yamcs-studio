@@ -15,7 +15,7 @@ Require-Bundle: org.csstudio.yamcs.ycl.dsl;visibility:=reexport,
  org.eclipse.xtext.xbase.lib,
  org.antlr.runtime,
  org.csstudio.platform.libs.yamcs,
- org.csstudio.platform.libs.protostuff,
+ io.protostuff.uberjar,
  org.csstudio.platform.libs.yamcsall
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

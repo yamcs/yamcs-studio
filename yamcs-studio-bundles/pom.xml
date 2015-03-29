@@ -20,7 +20,6 @@
 	</properties>
 
 	<modules>
-		<module>org.csstudio.platform.libs.protostuff</module>
 		<module>org.csstudio.platform.libs.yamcsall</module>
 		<module>yamcs-studio-bundles-repository</module>
 	</modules>
@@ -45,19 +44,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.protostuff</groupId>
-				<artifactId>protostuff-core</artifactId>
-				<version>${protostuff.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.protostuff</groupId>
-				<artifactId>protostuff-json</artifactId>
-				<version>${protostuff.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>

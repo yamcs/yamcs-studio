@@ -62,7 +62,7 @@ public class RESTClientEndpoint implements RESTService {
     private AtomicInteger cmdClientId = new AtomicInteger(1);
 
     // Reuse the same buffer for serializing multiple post requests
-    // Increae value when requests are getting too big
+    // Increase value when requests are getting too big
     private LinkedBuffer contentBuffer = LinkedBuffer.allocate(4096);
 
     public RESTClientEndpoint(YamcsConnectionProperties yprops) {

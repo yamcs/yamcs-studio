@@ -69,8 +69,23 @@
 							<outputDir>target/generated-sources/proto</outputDir>
 							<output>
 								java_bean,
-								src/main/resources/service.java.stg
+								src/main/resources/rest.service.java.stg
 							</output>
+							<encoding>UTF-8</encoding>
+							<options>
+								<property>
+									<name>generate_field_map</name>
+								</property>
+								<property>
+									<name>org.yamcs.protobuf</name>
+									<value>org.yamcs.protostuff</value>
+								</property>
+							</options>
+						</protoModule>
+						<protoModule>
+							<source>src/main/resources/websocket.proto</source>
+							<outputDir>target/generated-sources/proto</outputDir>
+							<output>java_bean</output>
 							<encoding>UTF-8</encoding>
 							<options>
 								<property>

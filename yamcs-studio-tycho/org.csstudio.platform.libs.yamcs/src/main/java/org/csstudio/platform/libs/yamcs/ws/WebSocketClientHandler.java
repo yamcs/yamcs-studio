@@ -1,40 +1,35 @@
 package org.csstudio.platform.libs.yamcs.ws;
 
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.util.CharsetUtil;
-import io.protostuff.JsonIOUtil;
+import io.protostuff.ProtobufIOUtil;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.protostuff.CommandHistoryEntry;
 import org.yamcs.protostuff.NamedObjectId;
 import org.yamcs.protostuff.NamedObjectList;
-import org.yamcs.protostuff.ParameterData;
-import org.yamcs.protostuff.ProtoDataType;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import org.yamcs.protostuff.WebSocketServerMessage;
+import org.yamcs.protostuff.WebSocketServerMessage.WebSocketExceptionData;
+import org.yamcs.protostuff.WebSocketServerMessage.WebSocketSubscriptionData;
 
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
-    
+
     private static final Logger log = Logger.getLogger(WebSocketClientHandler.class.getName());
-    
-    private JsonFactory jsonFactory = new JsonFactory();
 
     private final WebSocketClientHandshaker handshaker;
     private final WebSocketClient client;
@@ -94,127 +89,97 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         }
 
         WebSocketFrame frame = (WebSocketFrame) msg;
-        if (frame instanceof TextWebSocketFrame) {
-            TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
+        if (frame instanceof BinaryWebSocketFrame) {
+            BinaryWebSocketFrame binaryFrame = (BinaryWebSocketFrame) frame;
             if (log.isLoggable(Level.FINE)) {
-                log.fine("WebSocket Client received message: " + textFrame.text());
+                log.fine("WebSocket Client received message of size " + binaryFrame.content().readableBytes());
             }
-            decodeMessage(textFrame);
+            processFrame(binaryFrame);
         } else if (frame instanceof PongWebSocketFrame) {
             log.info("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
             log.info("WebSocket Client received closing");
             ch.close();
+        } else {
+            log.severe("Received unsupported web socket frame " + frame);
+            System.out.println(((TextWebSocketFrame) frame).text());
         }
     }
-    
-    private void decodeMessage(TextWebSocketFrame textFrame) {
+
+    private void processFrame(BinaryWebSocketFrame frame) {
         try {
-            String jstext = textFrame.text();
-            JsonParser jsp=jsonFactory.createParser(jstext);
-            if(jsp.nextToken()!=JsonToken.START_ARRAY) throw new RuntimeException("Invalid message (expecting an array)");
-            if(jsp.nextToken()!=JsonToken.VALUE_NUMBER_INT) throw new RuntimeException("Invalid message (expecting version as an integer number)");
-            int version=jsp.getIntValue();
-            if(version!=WSConstants.PROTOCOL_VERSION) throw new RuntimeException("Invalid version (expecting "+WSConstants.PROTOCOL_VERSION+" received "+version);
-    
-            if(jsp.nextToken()!=JsonToken.VALUE_NUMBER_INT) throw new RuntimeException("Invalid message (expecting type as an integer number)");
-            int messageType=jsp.getIntValue();
-            
-            if(jsp.nextToken()!=JsonToken.VALUE_NUMBER_INT) throw new RuntimeException("Invalid message (expecting seqId as an integer number)");
-            int seqId=jsp.getIntValue();
-            
-            if (messageType == WSConstants.MESSAGE_TYPE_DATA) {
-                decodeDataMessage(seqId, jsp);
-            } else if (messageType == WSConstants.MESSAGE_TYPE_REPLY) {
-                client.ackSubscription(seqId);
-            } else if (messageType == WSConstants.MESSAGE_TYPE_EXCEPTION) {
-                decodeExceptionMessage(seqId, jsp);
-            } else {
-                throw new RuntimeException("Invalid message type received: "+messageType);
+            WebSocketServerMessage message = new WebSocketServerMessage();
+            ProtobufIOUtil.mergeFrom(new ByteBufInputStream(frame.content()), message, message.cachedSchema());
+            switch (message.getType()) {
+            case REPLY:
+                client.ackSubscription(message.getReply().getSequenceNumber());
+                break;
+            case EXCEPTION:
+                processExceptionData(message.getException());
+                break;
+            case DATA:
+                processSubscriptionData(message.getData());
+                break;
+            default:
+                throw new IllegalStateException("Invalid message type received: " + message.getType());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    
-    private void decodeDataMessage(int seqId, JsonParser jsp) throws JsonParseException, IOException {
-        if(jsp.nextToken()!=JsonToken.START_OBJECT) throw new RuntimeException("Invalid message (expecting an object)");
-        if ((jsp.nextToken()!=JsonToken.FIELD_NAME) || (!"dt".equals(jsp.getCurrentName()))) throw new RuntimeException("Invalid message (expecting dt as the first field)");
-        if (jsp.nextToken()!=JsonToken.VALUE_STRING) throw new RuntimeException("Invalid message (expecting value for dt as a string)");
-        String dtype=jsp.getText();
-        
-        if((jsp.nextToken()!=JsonToken.FIELD_NAME) || (!"data".equals(jsp.getCurrentName())))
-            throw new RuntimeException("Invalid message (expecting data as the next field)");
-       
-        switch (ProtoDataType.valueOf(dtype)) {
+
+    private void processSubscriptionData(WebSocketSubscriptionData data) throws IOException {
+        switch (data.getType()) {
         case PARAMETER:
-            decodeParameterDataMessage(seqId, jsp);
+            callback.onParameterData(data.getParameterData());
             break;
         case CMD_HISTORY:
-            decodeCommandHistoryMessage(seqId, jsp);
+            callback.onCommandHistoryData(data.getCommand());
             break;
         default:
-            throw new IllegalStateException("Unsupported dt-value "+dtype);
+            throw new IllegalStateException("Unsupported data type " + data.getType());
         }
     }
-    
-    private void decodeParameterDataMessage(long seqId, JsonParser jsdata) throws IOException {
-        ParameterData pdata = new ParameterData();
-        JsonIOUtil.mergeFrom(jsdata, pdata, pdata.cachedSchema(), false);
-        callback.onParameterData(pdata);
-    }
-    
-    private void decodeCommandHistoryMessage(long seqId, JsonParser jsdata) throws IOException {
-        CommandHistoryEntry cmdhistData = new CommandHistoryEntry();
-        JsonIOUtil.mergeFrom(jsdata, cmdhistData, cmdhistData.cachedSchema(), false);
-        callback.onCommandHistoryData(cmdhistData);
-    }
 
-    private void decodeExceptionMessage(int seqId, JsonParser jsp) throws IOException {
-        if(jsp.nextToken()!=JsonToken.START_OBJECT) throw new RuntimeException("Invalid message (expecting an object)");
-        if ((jsp.nextToken()!=JsonToken.FIELD_NAME) || (!"et".equals(jsp.getCurrentName()))) throw new RuntimeException("Invalid message (expecting et as the first field)");
-        if (jsp.nextToken()!=JsonToken.VALUE_STRING) throw new RuntimeException("Invalid message (expecting value for et as a string)");
-        String etype=jsp.getText();
-        
-        if((jsp.nextToken()!=JsonToken.FIELD_NAME) || (!"msg".equals(jsp.getCurrentName())))
-            throw new RuntimeException("Invalid message (expecting msg as the next field)");
-       
-        if (etype.equals("InvalidIdentification")) {
+    private void processExceptionData(WebSocketExceptionData exceptionData) throws IOException {
+        if ("InvalidIdentification".equals(exceptionData.getType())) {
             // Well that's unfortunate, we need to resend another subscription with
             // the invalid parameters excluded
+
             NamedObjectList invalidList = new NamedObjectList();
-            JsonIOUtil.mergeFrom(jsp, invalidList, invalidList.cachedSchema(), false);
-            
-            NamedObjectList list = client.getUpstreamSubscription(seqId);
-            
-            // TODO protostuff doesn't automatically generate equals/hashcode :-(
+            byte[] barray = exceptionData.getData().toByteArray();
+            ProtobufIOUtil.mergeFrom(barray, invalidList, invalidList.cachedSchema());
+
+            NamedObjectList list = client.getUpstreamSubscription(exceptionData.getSequenceNumber());
+
             for (NamedObjectId invalidId : invalidList.getListList()) {
                 // Notify downstream channels
                 callback.onInvalidIdentification(invalidId);
-                
+
                 for (NamedObjectId id : list.getListList()) {
-                    if (id.getName().equals(invalidId.getName()) && id.getNamespace().equals(invalidId.getNamespace())) {
+                    if (id.equals(invalidId)) {
                         list.getListList().remove(id);
-                        log.info("Removed "+invalidId.getName());
+                        log.info("Removed " + invalidId.getName());
                         break;
                     }
                 }
             }
-            
-            // Get rid of the old subscription
-            client.ackSubscription(seqId);
-            
+
+            // Get rid of the current pending request
+            client.ackSubscription(exceptionData.getSequenceNumber());
+
             // And have another go at it
             client.sendRequest(new ParameterSubscribeRequest(list));
         } else {
-            log.severe("Got exception message " + etype);
+            // TODO we should throw this up based on seqNr.
+            log.severe("Got exception message " + exceptionData.getMessage());
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        
+
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }

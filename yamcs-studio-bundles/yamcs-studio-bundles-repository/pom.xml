@@ -28,11 +28,12 @@
 									<id>io.netty:netty-all:${netty.version}</id>
 									<source>true</source>
 								</artifact>
+								<artifact>
+									<id>io.protostuff:protostuff-uberjar:${protostuff.version}</id>
+									<source>true</source>
+								</artifact>
 
 								<!-- Plugins from reactor -->
-								<artifact>
-									<id>org.yamcs.csstudio:org.csstudio.platform.libs.protostuff:${project.version}</id>
-								</artifact>
                                 <artifact>
                                     <id>org.yamcs.csstudio:org.csstudio.platform.libs.yamcsall:${project.version}</id>
                                 </artifact>
