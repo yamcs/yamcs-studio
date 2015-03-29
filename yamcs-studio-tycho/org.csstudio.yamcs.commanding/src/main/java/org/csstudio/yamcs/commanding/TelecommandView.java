@@ -24,6 +24,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -38,25 +40,33 @@ import org.yamcs.protostuff.CommandHistoryEntry;
  * TODO show a friendly message when the thing is still loading
  */
 public class TelecommandView extends ViewPart {
-    
+
+    public static final String COL_COMMAND = "Command";
+    public static final String COL_SRC_ID = "Src.ID";
+    public static final String COL_SRC_HOST = "Src.Host";
+    public static final String COL_USER = "User";
+    public static final String COL_SEQ_ID = "Seq.ID";
+    public static final String COL_T = "T";
+
     // Prefix used in command attribute names
     private static final String ACK_PREFIX = "Acknowledge_";
-    
+
     // Ignored for dynamic columns, most of these are actually considered fixed columns.
     private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName", "binary", "username", "source", "Final_Sequence_Count");
-    
+
     private LocalResourceManager resourceManager;
     private Action newCommandAction;
     //private Image errorImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
     private Image greenBubble;
     private Image redBubble;
-    
+
     private Composite parent;
     private TableViewer tableViewer;
-    
+    private TelecommandViewerComparator tableViewerComparator;
+
     // Store layouts for when a new tcl is set. Because TCLs trigger only once, and we need dynamic columns
     private Map<TableColumn, ColumnLayoutData> layoutDataByColumn = new HashMap<>();
-    
+
     private TelecommandRecordContentProvider tableContentProvider;
     private Set<String> dynamicColumns = new HashSet<>();
 
@@ -64,27 +74,31 @@ public class TelecommandView extends ViewPart {
     public void createPartControl(Composite parent) {
         this.parent = parent;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        
+
         // Load images
         Bundle bundle = FrameworkUtil.getBundle(TelecommandView.class);
         ImageDescriptor desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/ok.png"), null));
         greenBubble = resourceManager.createImage(desc);
         desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/nok.png"), null));
-        redBubble = resourceManager.createImage(desc);        
-        
+        redBubble = resourceManager.createImage(desc);
+
         TableColumnLayout tcl = new TableColumnLayout();
         parent.setLayout(tcl);
-        
+
         tableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.getTable().setLinesVisible(true);
-        
+
         addFixedColumns();
         applyColumnLayoutData(tcl);
-        
+
         tableContentProvider = new TelecommandRecordContentProvider(tableViewer);
         tableViewer.setContentProvider(tableContentProvider);
-        
+        tableViewer.setInput(tableContentProvider); // ! otherwise refresh() deletes everything...
+
+        tableViewerComparator = new TelecommandViewerComparator();
+        tableViewer.setComparator(tableViewerComparator);
+
         newCommandAction = new Action("Add command") {
             @Override
             public void run() {
@@ -92,14 +106,15 @@ public class TelecommandView extends ViewPart {
             }
         };
         newCommandAction.setImageDescriptor(ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/tc_add.png"), null)));
-        
+
         initializeToolBar();
         subscribeToUpdates();
     }
-    
+
     private void addFixedColumns() {
         TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        nameColumn.getColumn().setText("Command");
+        nameColumn.getColumn().setText(COL_COMMAND);
+        nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -107,9 +122,10 @@ public class TelecommandView extends ViewPart {
             }
         });
         layoutDataByColumn.put(nameColumn.getColumn(), new ColumnWeightData(200));
-        
+
         TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        seqIdColumn.getColumn().setText("Src.ID");
+        seqIdColumn.getColumn().setText(COL_SRC_ID);
+        seqIdColumn.getColumn().addSelectionListener(getSelectionAdapter(seqIdColumn.getColumn()));
         seqIdColumn.getColumn().setToolTipText("Client ID");
         seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -118,9 +134,10 @@ public class TelecommandView extends ViewPart {
             }
         });
         layoutDataByColumn.put(seqIdColumn.getColumn(), new ColumnPixelData(50));
-        
+
         TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        originColumn.getColumn().setText("Src.Host");
+        originColumn.getColumn().setText(COL_SRC_HOST);
+        originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
         originColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -130,7 +147,8 @@ public class TelecommandView extends ViewPart {
         layoutDataByColumn.put(originColumn.getColumn(), new ColumnWeightData(70));
 
         TableViewerColumn userColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        userColumn.getColumn().setText("User");
+        userColumn.getColumn().setText(COL_USER);
+        userColumn.getColumn().addSelectionListener(getSelectionAdapter(userColumn.getColumn()));
         userColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -138,9 +156,10 @@ public class TelecommandView extends ViewPart {
             }
         });
         layoutDataByColumn.put(userColumn.getColumn(), new ColumnWeightData(70));
-        
+
         TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        finalSeqColumn.getColumn().setText("Seq.ID");
+        finalSeqColumn.getColumn().setText(COL_SEQ_ID);
+        finalSeqColumn.getColumn().addSelectionListener(getSelectionAdapter(finalSeqColumn.getColumn()));
         finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
         finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -149,89 +168,103 @@ public class TelecommandView extends ViewPart {
             }
         });
         layoutDataByColumn.put(finalSeqColumn.getColumn(), new ColumnPixelData(50));
-        
+
         TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        gentimeColumn.getColumn().setText("T");
+        gentimeColumn.getColumn().setText(COL_T);
+        gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
         gentimeColumn.getColumn().setToolTipText("Generation Time");
         gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return((TelecommandRecord) element).getGenerationTime();
+                return ((TelecommandRecord) element).getGenerationTime();
             }
         });
         layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
     }
-    
+
     private void applyColumnLayoutData(TableColumnLayout tcl) {
-        layoutDataByColumn.forEach((k,v) -> tcl.setColumnData(k, v));
+        layoutDataByColumn.forEach((k, v) -> tcl.setColumnData(k, v));
     }
-    
+
     private void subscribeToUpdates() {
         YRegistrar.getInstance().addCommandHistoryListener(new CommandHistoryListener() {
             @Override
             public void signalYamcsDisconnected() {
             }
-            
+
             @Override
             public void signalYamcsConnected() {
             }
-            
+
             @Override
             public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
                 Display.getDefault().asyncExec(() -> {
                     // Maybe we need to update structure
-                    for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
-                        if (IGNORED_ATTRIBUTES.contains(attr.getName())) {
-                            continue;
-                        }
-                        
-                        String shortName = attr.getName()
-                                .replace(ACK_PREFIX, "")
-                                .replace(TelecommandRecord.STATUS_SUFFIX, "")
-                                .replace(TelecommandRecord.TIME_SUFFIX, "");
-                        if (!dynamicColumns.contains(shortName)) {
-                            TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
-                            column.getColumn().setText(shortName);
-                            column.setLabelProvider(new ColumnLabelProvider() {
-                                @Override
-                                public String getText(Object element) {
-                                    return ((TelecommandRecord) element).getTextForColumn(shortName);
-                                }
-                                
-                                @Override
-                                public String getToolTipText(Object element) {
-                                    return ((TelecommandRecord) element).getTooltipForColumn(shortName);
-                                }
-                                
-                                @Override
-                                public Image getImage(Object element) {
-                                    String imgLoc = ((TelecommandRecord) element).getImageForColumn(shortName);
-                                    if (TelecommandRecordContentProvider.GREEN.equals(imgLoc)) {
-                                        return greenBubble;
-                                    } else if (TelecommandRecordContentProvider.RED.equals(imgLoc)) {
-                                        return redBubble;
-                                    } else {
-                                        return null;
+                        for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
+                            if (IGNORED_ATTRIBUTES.contains(attr.getName()))
+                                continue;
+
+                            String shortName = attr.getName()
+                                    .replace(ACK_PREFIX, "")
+                                    .replace(TelecommandRecord.STATUS_SUFFIX, "")
+                                    .replace(TelecommandRecord.TIME_SUFFIX, "");
+                            if (!dynamicColumns.contains(shortName)) {
+                                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
+                                column.getColumn().setText(shortName);
+                                column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
+                                column.setLabelProvider(new ColumnLabelProvider() {
+                                    @Override
+                                    public String getText(Object element) {
+                                        return ((TelecommandRecord) element).getTextForColumn(shortName);
                                     }
-                                }
-                            });
-                            dynamicColumns.add(shortName);
-                            layoutDataByColumn.put(column.getColumn(), new ColumnPixelData(90));
-                            TableColumnLayout tcl = new TableColumnLayout();
-                            parent.setLayout(tcl);
-                            applyColumnLayoutData(tcl);
-                            column.getColumn().setWidth(90);
-                            tableViewer.getTable().layout();
+
+                                    @Override
+                                    public String getToolTipText(Object element) {
+                                        return ((TelecommandRecord) element).getTooltipForColumn(shortName);
+                                    }
+
+                                    @Override
+                                    public Image getImage(Object element) {
+                                        String imgLoc = ((TelecommandRecord) element).getImageForColumn(shortName);
+                                        if (TelecommandRecordContentProvider.GREEN.equals(imgLoc))
+                                            return greenBubble;
+                                        else if (TelecommandRecordContentProvider.RED.equals(imgLoc))
+                                            return redBubble;
+                                        else
+                                            return null;
+                                    }
+                                });
+                                dynamicColumns.add(shortName);
+                                layoutDataByColumn.put(column.getColumn(), new ColumnPixelData(90));
+                                TableColumnLayout tcl = new TableColumnLayout();
+                                parent.setLayout(tcl);
+                                applyColumnLayoutData(tcl);
+                                column.getColumn().setWidth(90);
+                                tableViewer.getTable().layout();
+                            }
                         }
-                    }
-                    
-                    // Now add content
-                    tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
-                });
+
+                        // Now add content
+                        tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+                    });
             }
         });
     }
-    
+
+    private SelectionAdapter getSelectionAdapter(TableColumn column) {
+        SelectionAdapter selectionAdapter = new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                tableViewerComparator.setColumn(column);
+                int dir = tableViewerComparator.getDirection();
+                tableViewer.getTable().setSortDirection(dir);
+                tableViewer.getTable().setSortColumn(column);
+                tableViewer.refresh();
+            }
+        };
+        return selectionAdapter;
+    }
+
     private void initializeToolBar() {
         IToolBarManager toolbarManager = getViewSite().getActionBars().getToolBarManager();
         toolbarManager.add(newCommandAction);
@@ -240,7 +273,7 @@ public class TelecommandView extends ViewPart {
     @Override
     public void setFocus() {
     }
-    
+
     @Override
     public void dispose() {
         super.dispose();
