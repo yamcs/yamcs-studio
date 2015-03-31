@@ -19,7 +19,6 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.protostuff.LinkedBuffer;
@@ -55,6 +54,8 @@ import org.yamcs.protostuff.RestValidateCommandResponse;
  */
 public class RESTClientEndpoint implements RESTService {
 
+    private static final String BINARY_MIME_TYPE = "application/octet-stream";
+
     private YamcsConnectionProperties yprops;
     private EventLoopGroup group = new NioEventLoopGroup(1);
 
@@ -71,13 +72,14 @@ public class RESTClientEndpoint implements RESTService {
 
     @Override
     public void replay(ReplayRequest request, ResponseHandler<RestReplayResponse> responseHandler) {
-        // TODO Auto-generated method stub
+        URI uri = yprops.webResourceURI("/api/archive");
+        doRequest(HttpMethod.GET, uri, request, new RestReplayResponse(), responseHandler);
     }
 
     @Override
     public void validateCommand(RestValidateCommandRequest request, ResponseHandler<RestValidateCommandResponse> responseHandler) {
         URI uri = yprops.webResourceURI("/api/commanding/validate");
-        doPOST(uri, request, new RestValidateCommandResponse(), responseHandler);
+        doRequest(HttpMethod.GET, uri, request, new RestValidateCommandResponse(), responseHandler);
     }
 
     @Override
@@ -93,23 +95,22 @@ public class RESTClientEndpoint implements RESTService {
             cmd.setSequenceNumber(cmdClientId.getAndIncrement());
             cmd.setOrigin(origin);
         }
-        doPOST(uri, request, new RestSendCommandResponse(), responseHandler);
+        doRequest(HttpMethod.POST, uri, request, new RestSendCommandResponse(), responseHandler);
     }
 
     @Override
     public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler<RestListAvailableParametersResponse> responseHandler) {
         URI uri = yprops.webResourceURI("/api/mdb/parameters");
-        // TODO post for now, but should become get with request body
-        doPOST(uri, request, new RestListAvailableParametersResponse(), responseHandler);
+        doRequest(HttpMethod.GET, uri, request, new RestListAvailableParametersResponse(), responseHandler);
     }
 
     @Override
     public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler<RestDumpRawMdbResponse> responseHandler) {
         URI uri = yprops.webResourceURI("/api/mdb/dump");
-        doGET(uri, new RestDumpRawMdbResponse(), responseHandler);
+        doRequest(HttpMethod.GET, uri, null, new RestDumpRawMdbResponse(), responseHandler);
     }
 
-    private <T extends Message<T>> void doGET(URI uri, T target, ResponseHandler<T> handler) {
+    private <S extends Message<S>, T extends Message<T>> void doRequest(HttpMethod method, URI uri, S msg, T target, ResponseHandler<T> handler) {
         try {
             Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class)
@@ -145,63 +146,18 @@ public class RESTClientEndpoint implements RESTService {
                     });
 
             Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
-            HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri.getRawPath());
+            FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, uri.getRawPath());
             request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
             request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-            request.headers().set(HttpHeaders.Names.ACCEPT, "application/octet-stream");
-            ch.writeAndFlush(request);
-            ch.closeFuture().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private <S extends Message<S>, T extends Message<T>> void doPOST(URI uri, S msg, T target, ResponseHandler<T> handler) {
-        try {
-            Bootstrap b = new Bootstrap();
-            b.group(group).channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
-                            ChannelPipeline p = ch.pipeline();
-                            p.addLast(new HttpClientCodec());
-                            p.addLast(new HttpObjectAggregator(1048576));
-                            p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
-                                @Override
-                                public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
-                                    if (HttpResponseStatus.OK.equals(response.getStatus())) {
-                                        ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
-                                        ctx.close();
-                                        handler.onMessage(target);
-                                    } else {
-                                        RestExceptionMessage msg = new RestExceptionMessage();
-                                        ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), msg, msg.cachedSchema());
-                                        ctx.close();
-                                        handler.onException(msg);
-                                    }
-                                }
-
-                                @Override
-                                public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                                    cause.printStackTrace();
-                                    ctx.close();
-                                    handler.onFault(cause);
-                                }
-                            });
-                        }
-                    });
-
-            Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
-            FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uri.getRawPath());
-            request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
-            request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-            request.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/octet-stream");
-            request.headers().set(HttpHeaders.Names.ACCEPT, "application/octet-stream");
-            // Unclear why we need this contentbuffer. protobufioutil seems to
-            // first write there, and only afterwards stream out
-            ProtobufIOUtil.writeTo(new ByteBufOutputStream(request.content()), msg, msg.cachedSchema(), contentBuffer);
-            contentBuffer.clear(); // Prepare for next usage
-            request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
+            request.headers().set(HttpHeaders.Names.ACCEPT, BINARY_MIME_TYPE);
+            if (msg != null) {
+                // Unclear why we need this contentbuffer. protobufioutil seems to
+                // first write there, and only afterwards stream out
+                ProtobufIOUtil.writeTo(new ByteBufOutputStream(request.content()), msg, msg.cachedSchema(), contentBuffer);
+                contentBuffer.clear(); // Prepare for next usage
+                request.headers().set(HttpHeaders.Names.CONTENT_TYPE, BINARY_MIME_TYPE);
+                request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
+            }
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
         } catch (IOException | InterruptedException e) {
