@@ -253,5 +253,16 @@
 				</repository>
 			</repositories>
 		</profile>
-	</profiles>
+                <profile>
+                        <id>travis</id>
+                        <repositories>
+                                <repository>
+                                        <id>yamcs-studio-build-deps</id>
+                                        <url>https://dl.bintray.com/fqqb/yamcs-studio-build-deps/</url>
+                                        <layout>p2</layout>
+                                </repository>
+                        </repositories>
+                </profile>
+        </profiles>
 </project>
+

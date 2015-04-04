@@ -1,0 +1,35 @@
+sudo: false
+
+# Don't clone submodules, to save on build time we rely on
+# binary p2 repo instead using travis profile
+git:
+  submodules: false
+
+language: java
+jdk: oraclejdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+
+install:
+  - git clone --depth 1 --branch master https://github.com/yamcs/yamcs
+  - mvn install -DskipTests -f yamcs/pom.xml
+  - sed "s#REPLACE_WITH_LOCAL_P2_REPO#"`pwd`/css/local_p2_repository"#" css/settings_template.xml >css/settings.xml
+
+script:
+  - mvn verify -f yamcs-studio-bundles/pom.xml -s css/settings.xml -Pcss-for-yamcs,travis
+  - mvn verify -f yamcs-studio-tycho/pom.xml -s css/settings.xml -Pcss-for-yamcs,travis
+
+deploy:
+  provider: releases
+  api_key:
+    secure: wRRoOFh5iNtS6I6miZokq8IgGG8gNJV1D36mx46z7wacusOEA35TGLieegNzfTvwLMgLYZN4vbMyouwimaApokP+aJdhpHiGQ4pJLQ9Y1mEyjGAXiYcQ9qC6k2/mv4b3p/72cajtLfVeKT/0PIURQ6bAhiliBcUerq1Gx/9u8KU=
+  file_glob: true
+  file:
+    - yamcs-studio-tycho/yamcs-studio-repository/target/products/yamcs-studio-*.zip
+    - yamcs-studio-tycho/yamcs-studio-repository/target/products/yamcs-studio-*.tar.gz
+  skip_cleanup: true
+  on:
+    tags: true
+
