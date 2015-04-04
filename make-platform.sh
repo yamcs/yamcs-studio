@@ -68,10 +68,10 @@ then
 fi
 
 set -e
-mvn -f $PRGDIR/css/maven-osgi-bundles -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
-mvn -f $PRGDIR/css/cs-studio-thirdparty -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
-mvn -f $PRGDIR/css/cs-studio/core -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
-mvn -f $PRGDIR/css/cs-studio/applications -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
+mvn -DskipTests -f $PRGDIR/css/maven-osgi-bundles/pom.xml -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
+mvn -DskipTests -f $PRGDIR/css/cs-studio-thirdparty/pom.xml -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
+mvn -DskipTests -f $PRGDIR/css/cs-studio/core/pom.xml -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
+mvn -DskipTests -f $PRGDIR/css/cs-studio/applications/pom.xml -s $PRGDIR/css/settings.xml -Pcss-for-yamcs clean verify
 set +e
 
 echo 

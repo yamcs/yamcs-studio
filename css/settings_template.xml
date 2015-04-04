@@ -7,8 +7,6 @@
         <cs-studio>dummy_value</cs-studio>
         <baselineMode>warn</baselineMode>
         <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
-        <maven.test.skip>true</maven.test.skip>
-        <skipTests>true</skipTests>
       </properties>
     </profile>
   </profiles>
