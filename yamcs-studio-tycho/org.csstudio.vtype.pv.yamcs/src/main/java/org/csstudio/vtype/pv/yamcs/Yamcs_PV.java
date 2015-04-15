@@ -7,14 +7,14 @@ import org.csstudio.platform.libs.yamcs.YPVReader;
 import org.csstudio.platform.libs.yamcs.YRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVType;
 import org.csstudio.vtype.pv.PV;
-import org.yamcs.protostuff.ParameterValue;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 /**
- * TODO not sure how to disconnect/unsubscribe. Looks like the PVPool has some
- * logic to release a PV, but how does it trigger?
+ * TODO not sure how to disconnect/unsubscribe. Looks like the PVPool has some logic to release a
+ * PV, but how does it trigger?
  */
 public class Yamcs_PV extends PV implements YPVReader {
-    
+
     private static final Logger log = Logger.getLogger(Yamcs_PV.class.getName());
     private YRegistrar registrar;
     private String baseName;
@@ -22,10 +22,10 @@ public class Yamcs_PV extends PV implements YPVReader {
     protected Yamcs_PV(String name, String baseName) {
         super(name);
         this.baseName = baseName;
-        
+
         // Notify that this PV is read-only
         notifyListenersOfPermissions(true);
-        
+
         registrar = YRegistrar.getInstance();
         registrar.connectPVReader(this);
     }
@@ -63,7 +63,7 @@ public class Yamcs_PV extends PV implements YPVReader {
         }
         notifyListenersOfValue(YamcsVType.fromYamcs(pval));
     }
-    
+
     /**
      * Called by PVPool. Closes the PV releasing underlying resources.
      */

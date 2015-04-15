@@ -10,7 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.csstudio.platform.libs.yamcs,
- io.protostuff.uberjar,
+ org.csstudio.platform.libs.yamcsall,
  org.csstudio.vtype.pv,
  org.epics.vtype
 Export-Package: org.csstudio.vtype.pv.yamcs

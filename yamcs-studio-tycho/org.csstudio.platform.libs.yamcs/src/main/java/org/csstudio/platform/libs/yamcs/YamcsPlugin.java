@@ -1,9 +1,7 @@
 package org.csstudio.platform.libs.yamcs;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,22 +12,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.web.RESTClientEndpoint;
+import org.csstudio.platform.libs.yamcs.web.ResponseHandler;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
-import org.yamcs.protostuff.NamedObjectId;
-import org.yamcs.protostuff.RESTService;
-import org.yamcs.protostuff.RESTService.ResponseHandler;
-import org.yamcs.protostuff.RestDumpRawMdbRequest;
-import org.yamcs.protostuff.RestDumpRawMdbResponse;
-import org.yamcs.protostuff.RestExceptionMessage;
-import org.yamcs.protostuff.RestListAvailableParametersRequest;
-import org.yamcs.protostuff.RestListAvailableParametersResponse;
+import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
+import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
+import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
+import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.XtceDb;
+
+import com.google.protobuf.MessageLite;
 
 public class YamcsPlugin extends AbstractUIPlugin {
 
@@ -40,7 +40,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private static YamcsPlugin plugin;
     private BundleListener bundleListener;
 
-    private RESTService restService;
+    private RESTClientEndpoint restService;
 
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
@@ -50,7 +50,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private Collection<MetaCommand> commands = Collections.emptyList();
     private CountDownLatch commandsLoaded = new CountDownLatch(1);
 
-    public RESTService getRESTService() {
+    public RESTClientEndpoint getRESTService() {
         return restService;
     }
 
@@ -90,11 +90,12 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private void fetchInitialMdbAsync() {
         // Load list of parameters
-        RestListAvailableParametersRequest req = new RestListAvailableParametersRequest();
-        req.setNamespacesList(Arrays.asList(getMdbNamespace()));
-        restService.listAvailableParameters(req, new ResponseHandler<RestListAvailableParametersResponse>() {
+        RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
+        req.addNamespaces(getMdbNamespace());
+        restService.listAvailableParameters(req.build(), new ResponseHandler() {
             @Override
-            public void onMessage(RestListAvailableParametersResponse response) {
+            public void onMessage(MessageLite responseMsg) {
+                RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
                 Display.getDefault().asyncExec(() -> {
                     parameterIds = response.getIdsList();
                     for (MDBContextListener l : mdbListeners) {
@@ -115,16 +116,15 @@ public class YamcsPlugin extends AbstractUIPlugin {
             }
         });
 
-        System.out.println("paramaters.done, continuing to raw dump");
+        System.out.println("parameters.done, continuing to raw dump");
 
         // Load commands
-        RestDumpRawMdbRequest dumpRequest = new RestDumpRawMdbRequest();
-        restService.dumpRawMdb(dumpRequest, new ResponseHandler<RestDumpRawMdbResponse>() {
+        RestDumpRawMdbRequest.Builder dumpRequest = RestDumpRawMdbRequest.newBuilder();
+        restService.dumpRawMdb(dumpRequest.build(), new ResponseHandler() {
             @Override
-            public void onMessage(RestDumpRawMdbResponse response) {
-                // In-memory :-( no easy way to get ByteString as inputstream (?)
-                byte[] barray = response.getRawMdb().toByteArray();
-                try (ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(barray))) {
+            public void onMessage(MessageLite responseMsg) {
+                RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
+                try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
                     XtceDb mdb = (XtceDb) oin.readObject();
                     Display.getDefault().asyncExec(() -> {
                         commands = mdb.getMetaCommands();

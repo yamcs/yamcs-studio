@@ -1,5 +1,7 @@
 package org.csstudio.platform.libs.yamcs.ws;
 
+import org.yamcs.api.ws.WebSocketRequest;
+
 public class CommandHistorySubscribeAllRequest extends WebSocketRequest {
 
     @Override

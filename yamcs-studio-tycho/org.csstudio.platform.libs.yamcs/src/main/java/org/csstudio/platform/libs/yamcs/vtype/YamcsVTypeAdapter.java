@@ -2,7 +2,7 @@ package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.ValueCache;
-import org.yamcs.protostuff.ParameterValue;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class YamcsVTypeAdapter implements DataSourceTypeAdapter<Boolean, ParameterValue> {
 
@@ -20,7 +20,7 @@ public class YamcsVTypeAdapter implements DataSourceTypeAdapter<Boolean, Paramet
      * Takes the information in the message and updates the cache
      */
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public boolean updateCache(ValueCache cache, Boolean connection, ParameterValue pval) {
         cache.writeValue(YamcsVType.fromYamcs(pval));
         return true;

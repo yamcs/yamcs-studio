@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.csstudio.autocomplete,
  org.csstudio.utility.pvmanager,
- io.protostuff.uberjar,
+ org.csstudio.platform.libs.yamcsall,
  org.csstudio.platform.libs.yamcs
 Export-Package: org.csstudio.utility.pvmanager.yamcs
 Import-Package: org.epics.pvmanager.vtype

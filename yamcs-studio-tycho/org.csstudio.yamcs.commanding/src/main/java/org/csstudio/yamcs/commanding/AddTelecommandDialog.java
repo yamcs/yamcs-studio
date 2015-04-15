@@ -1,11 +1,12 @@
 package org.csstudio.yamcs.commanding;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
+import org.csstudio.platform.libs.yamcs.web.RESTClientEndpoint;
+import org.csstudio.platform.libs.yamcs.web.ResponseHandler;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -21,15 +22,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.protostuff.RESTService;
-import org.yamcs.protostuff.RESTService.ResponseHandler;
-import org.yamcs.protostuff.RestExceptionMessage;
-import org.yamcs.protostuff.RestSendCommandRequest;
-import org.yamcs.protostuff.RestSendCommandResponse;
-import org.yamcs.protostuff.RestValidateCommandRequest;
-import org.yamcs.protostuff.RestValidateCommandResponse;
+import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Rest.RestSendCommandRequest;
+import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.xtce.Argument;
 import org.yamcs.xtce.MetaCommand;
+
+import com.google.protobuf.MessageLite;
 
 public class AddTelecommandDialog extends TitleAreaDialog {
 
@@ -37,7 +36,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
 
     private Collection<MetaCommand> commands;
     private StyledText text;
-    private RESTService restService = YamcsPlugin.getDefault().getRESTService();
+    private RESTClientEndpoint restService = YamcsPlugin.getDefault().getRESTService();
 
     public AddTelecommandDialog(Shell parentShell) {
         super(parentShell);
@@ -109,11 +108,11 @@ public class AddTelecommandDialog extends TitleAreaDialog {
 
         Button validateButton = createButton(parent, IDialogConstants.NO_ID, "Validate", true);
         validateButton.addListener(SWT.Selection, evt -> {
-            RestValidateCommandRequest req = new RestValidateCommandRequest();
-            req.setCommandsList(Arrays.asList(CommandParser.toCommand(text.getText())));
-            restService.validateCommand(req, new ResponseHandler<RestValidateCommandResponse>() {
+            RestValidateCommandRequest.Builder req = RestValidateCommandRequest.newBuilder();
+            req.addCommands(CommandParser.toCommand(text.getText()));
+            restService.validateCommand(req.build(), new ResponseHandler() {
                 @Override
-                public void onMessage(RestValidateCommandResponse response) {
+                public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
                     System.out.println("GOT response " + response);
                 }
@@ -123,7 +122,6 @@ public class AddTelecommandDialog extends TitleAreaDialog {
                     Display.getDefault().asyncExec(() -> {
                         setErrorMessage("[" + response.getType() + "] " + response.getMsg());
                     });
-
                 }
 
                 @Override
@@ -147,11 +145,11 @@ public class AddTelecommandDialog extends TitleAreaDialog {
 
         Button okButton = createButton(parent, IDialogConstants.OK_ID, "Send", true);
         okButton.addListener(SWT.Selection, evt -> {
-            RestSendCommandRequest req = new RestSendCommandRequest();
-            req.setCommandsList(Arrays.asList(CommandParser.toCommand(text.getText())));
-            restService.sendCommand(req, new ResponseHandler<RestSendCommandResponse>() {
+            RestSendCommandRequest.Builder req = RestSendCommandRequest.newBuilder();
+            req.addCommands(CommandParser.toCommand(text.getText()));
+            restService.sendCommand(req.build(), new ResponseHandler() {
                 @Override
-                public void onMessage(RestSendCommandResponse response) {
+                public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> close());
                     System.out.println("GOT response " + response);
                 }

@@ -6,9 +6,9 @@ import java.util.Map;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.yamcs.protostuff.CommandHistoryAttribute;
-import org.yamcs.protostuff.CommandHistoryEntry;
-import org.yamcs.protostuff.CommandId;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
 
 public class TelecommandRecordContentProvider implements IStructuredContentProvider {
 

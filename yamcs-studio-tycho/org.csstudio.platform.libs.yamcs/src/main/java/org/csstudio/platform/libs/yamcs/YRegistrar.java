@@ -1,7 +1,6 @@
 package org.csstudio.platform.libs.yamcs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,26 +8,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.ws.CommandHistorySubscribeAllRequest;
-import org.csstudio.platform.libs.yamcs.ws.ParameterSubscribeRequest;
 import org.csstudio.platform.libs.yamcs.ws.ParameterUnsubscribeRequest;
-import org.csstudio.platform.libs.yamcs.ws.WebSocketClient;
-import org.csstudio.platform.libs.yamcs.ws.WebSocketClientCallbackListener;
-import org.yamcs.protostuff.CommandHistoryEntry;
-import org.yamcs.protostuff.NamedObjectId;
-import org.yamcs.protostuff.NamedObjectList;
-import org.yamcs.protostuff.ParameterData;
-import org.yamcs.protostuff.ParameterValue;
+import org.yamcs.api.ws.ParameterSubscribeRequest;
+import org.yamcs.api.ws.WebSocketClient;
+import org.yamcs.api.ws.WebSocketClientCallbackListener;
+import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.NamedObjectList;
 
 /**
- * Combines state accross the many-to-one relation from yamcs:// datasources to
- * the WebSocketClient. Everything yamcs is still in WebSocketClient to keep
- * things a bit clean (and potentially reusable).
+ * Combines state accross the many-to-one relation from yamcs:// datasources to the WebSocketClient.
+ * Everything yamcs is still in WebSocketClient to keep things a bit clean (and potentially
+ * reusable).
  * <p>
  * Now also handles live subscription of command history. Maybe should clean up a bit here to
  * extract out all the pvreader logic, because it's starting to do a bit too much.
  * <p>
- * All methods are asynchronous, with any responses or incoming data being sent
- * to the provided callback listener.
+ * All methods are asynchronous, with any responses or incoming data being sent to the provided
+ * callback listener.
  */
 public class YRegistrar implements WebSocketClientCallbackListener {
 
@@ -87,11 +87,9 @@ public class YRegistrar implements WebSocketClientCallbackListener {
     }
 
     private static NamedObjectList wrapAsNamedObjectList(String pvName) {
-        NamedObjectList idList = new NamedObjectList();
-        NamedObjectId id = new NamedObjectId(pvName);
-        id.setNamespace(YamcsPlugin.getDefault().getMdbNamespace());
-        idList.setListList(Arrays.asList(id));
-        return idList;
+        return NamedObjectList.newBuilder().addList(NamedObjectId.newBuilder()
+                .setNamespace(YamcsPlugin.getDefault().getMdbNamespace())
+                .setName(pvName)).build();
     }
 
     public void disconnect() {
@@ -130,7 +128,7 @@ public class YRegistrar implements WebSocketClientCallbackListener {
             YPVReader pvReader = pvReadersByName.get(pval.getId().getName());
             if (pvReader != null) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer("request to update pvreader "+pvReader.getPVName()+" to val "+pval.getEngValue());
+                    log.finer("request to update pvreader " + pvReader.getPVName() + " to val " + pval.getEngValue());
                 }
                 pvReader.processParameterValue(pval);
             } else {

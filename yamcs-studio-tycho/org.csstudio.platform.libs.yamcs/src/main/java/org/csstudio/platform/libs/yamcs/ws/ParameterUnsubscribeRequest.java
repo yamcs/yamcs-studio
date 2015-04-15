@@ -1,13 +1,13 @@
 package org.csstudio.platform.libs.yamcs.ws;
 
-import io.protostuff.Message;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.yamcs.protostuff.NamedObjectId;
-import org.yamcs.protostuff.NamedObjectList;
+import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.NamedObjectList;
+
+import com.google.protobuf.Message;
 
 public class ParameterUnsubscribeRequest extends WebSocketRequest {
 
@@ -28,10 +28,8 @@ public class ParameterUnsubscribeRequest extends WebSocketRequest {
     }
 
     @Override
-    public Message<?> getRequestData() {
-        NamedObjectList idList = new NamedObjectList();
-        idList.setListList(new ArrayList<>(ids));
-        return idList;
+    public Message getRequestData() {
+        return NamedObjectList.newBuilder().addAllList(ids).build();
     }
 
     @Override

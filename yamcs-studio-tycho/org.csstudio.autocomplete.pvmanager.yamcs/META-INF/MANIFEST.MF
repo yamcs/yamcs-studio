@@ -9,6 +9,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.autocomplete,
  org.csstudio.platform.libs.yamcs,
- io.protostuff.uberjar
+ org.csstudio.platform.libs.yamcsall
 Service-Component: OSGI-INF/*.xml
 Bundle-ActivationPolicy: lazy

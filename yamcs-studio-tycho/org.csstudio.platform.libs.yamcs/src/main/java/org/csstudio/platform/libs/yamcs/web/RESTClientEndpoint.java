@@ -21,30 +21,25 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
-import io.protostuff.LinkedBuffer;
-import io.protostuff.Message;
-import io.protostuff.ProtobufIOUtil;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.csstudio.platform.libs.yamcs.YamcsConnectionProperties;
-import org.yamcs.protostuff.RESTService;
-import org.yamcs.protostuff.ReplayRequest;
-import org.yamcs.protostuff.RestCommandType;
-import org.yamcs.protostuff.RestDumpRawMdbRequest;
-import org.yamcs.protostuff.RestDumpRawMdbResponse;
-import org.yamcs.protostuff.RestExceptionMessage;
-import org.yamcs.protostuff.RestListAvailableParametersRequest;
-import org.yamcs.protostuff.RestListAvailableParametersResponse;
-import org.yamcs.protostuff.RestReplayResponse;
-import org.yamcs.protostuff.RestSendCommandRequest;
-import org.yamcs.protostuff.RestSendCommandResponse;
-import org.yamcs.protostuff.RestValidateCommandRequest;
-import org.yamcs.protostuff.RestValidateCommandResponse;
+import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
+import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
+import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
+import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
+import org.yamcs.protobuf.Rest.RestReplayResponse;
+import org.yamcs.protobuf.Rest.RestSendCommandRequest;
+import org.yamcs.protobuf.Rest.RestSendCommandResponse;
+import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
+
+import com.google.protobuf.MessageLite;
 
 /**
  * Implements the client-side API of the rest web api. Sequences outgoing requests on a single
@@ -52,65 +47,39 @@ import org.yamcs.protostuff.RestValidateCommandResponse;
  *
  * Instances should be shutdown() when no longer in use.
  */
-public class RESTClientEndpoint implements RESTService {
+public class RESTClientEndpoint {
 
     private static final String BINARY_MIME_TYPE = "application/octet-stream";
 
     private YamcsConnectionProperties yprops;
     private EventLoopGroup group = new NioEventLoopGroup(1);
 
-    // Reset for every application restart
-    private AtomicInteger cmdClientId = new AtomicInteger(1);
-
-    // Reuse the same buffer for serializing multiple post requests
-    // Increase value when requests are getting too big
-    private LinkedBuffer contentBuffer = LinkedBuffer.allocate(4096);
-
     public RESTClientEndpoint(YamcsConnectionProperties yprops) {
         this.yprops = yprops;
     }
 
-    @Override
-    public void replay(ReplayRequest request, ResponseHandler<RestReplayResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/api/archive");
-        doRequest(HttpMethod.GET, uri, request, new RestReplayResponse(), responseHandler);
+    public void replay(ReplayRequest request, ResponseHandler responseHandler) {
+        doRequest(HttpMethod.GET, "/api/archive", request, RestReplayResponse.newBuilder(), responseHandler);
     }
 
-    @Override
-    public void validateCommand(RestValidateCommandRequest request, ResponseHandler<RestValidateCommandResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/api/commanding/validate");
-        doRequest(HttpMethod.GET, uri, request, new RestValidateCommandResponse(), responseHandler);
+    public void validateCommand(RestValidateCommandRequest request, ResponseHandler responseHandler) {
+        doRequest(HttpMethod.GET, "/api/commanding/validate", request, RestValidateCommandResponse.newBuilder(), responseHandler);
     }
 
-    @Override
-    public void sendCommand(RestSendCommandRequest request, ResponseHandler<RestSendCommandResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/api/commanding/send");
-        String origin;
-        try {
-            origin = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            origin = "Unknown";
-        }
-        for (RestCommandType cmd : request.getCommandsList()) {
-            cmd.setSequenceNumber(cmdClientId.getAndIncrement());
-            cmd.setOrigin(origin);
-        }
-        doRequest(HttpMethod.POST, uri, request, new RestSendCommandResponse(), responseHandler);
+    public void sendCommand(RestSendCommandRequest request, ResponseHandler responseHandler) {
+        doRequest(HttpMethod.POST, "/api/commanding/send", request, RestSendCommandResponse.newBuilder(), responseHandler);
     }
 
-    @Override
-    public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler<RestListAvailableParametersResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/api/mdb/parameters");
-        doRequest(HttpMethod.GET, uri, request, new RestListAvailableParametersResponse(), responseHandler);
+    public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler responseHandler) {
+        doRequest(HttpMethod.GET, "/api/mdb/parameters", request, RestListAvailableParametersResponse.newBuilder(), responseHandler);
     }
 
-    @Override
-    public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler<RestDumpRawMdbResponse> responseHandler) {
-        URI uri = yprops.webResourceURI("/api/mdb/dump");
-        doRequest(HttpMethod.GET, uri, null, new RestDumpRawMdbResponse(), responseHandler);
+    public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler responseHandler) {
+        doRequest(HttpMethod.GET, "/api/mdb/dump", null, RestDumpRawMdbResponse.newBuilder(), responseHandler);
     }
 
-    private <S extends Message<S>, T extends Message<T>> void doRequest(HttpMethod method, URI uri, S msg, T target, ResponseHandler<T> handler) {
+    private <S extends MessageLite> void doRequest(HttpMethod method, String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
+        URI resource = yprops.webResourceURI(uri);
         try {
             Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class)
@@ -124,12 +93,12 @@ public class RESTClientEndpoint implements RESTService {
                                 @Override
                                 public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
                                     if (HttpResponseStatus.OK.equals(response.getStatus())) {
-                                        ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), target, target.cachedSchema());
+                                        target.mergeFrom(new ByteBufInputStream(response.content()));
                                         ctx.close();
-                                        handler.onMessage(target);
+                                        handler.onMessage(target.build());
                                     } else {
-                                        RestExceptionMessage msg = new RestExceptionMessage();
-                                        ProtobufIOUtil.mergeFrom(new ByteBufInputStream(response.content()), msg, msg.cachedSchema());
+                                        InputStream in = new ByteBufInputStream(response.content());
+                                        RestExceptionMessage msg = RestExceptionMessage.newBuilder().mergeFrom(in).build();
                                         ctx.close();
                                         handler.onException(msg);
                                     }
@@ -145,16 +114,13 @@ public class RESTClientEndpoint implements RESTService {
                         }
                     });
 
-            Channel ch = b.connect(uri.getHost(), uri.getPort()).sync().channel();
-            FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, uri.getRawPath());
-            request.headers().set(HttpHeaders.Names.HOST, uri.getHost());
+            Channel ch = b.connect(resource.getHost(), resource.getPort()).sync().channel();
+            FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, resource.getRawPath());
+            request.headers().set(HttpHeaders.Names.HOST, resource.getHost());
             request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
             request.headers().set(HttpHeaders.Names.ACCEPT, BINARY_MIME_TYPE);
             if (msg != null) {
-                // Unclear why we need this contentbuffer. protobufioutil seems to
-                // first write there, and only afterwards stream out
-                ProtobufIOUtil.writeTo(new ByteBufOutputStream(request.content()), msg, msg.cachedSchema(), contentBuffer);
-                contentBuffer.clear(); // Prepare for next usage
+                msg.writeTo(new ByteBufOutputStream(request.content()));
                 request.headers().set(HttpHeaders.Names.CONTENT_TYPE, BINARY_MIME_TYPE);
                 request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
             }
@@ -165,7 +131,9 @@ public class RESTClientEndpoint implements RESTService {
         }
     }
 
-    @Override
+    /**
+     * Performs an orderly shutdown of this service
+     */
     public void shutdown() {
         group.shutdownGracefully();
     }

@@ -1,6 +1,6 @@
 package org.csstudio.platform.libs.yamcs;
 
-import org.yamcs.protostuff.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
 /**
  * When a channel name was deemed invalid by the yamcs server

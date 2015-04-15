@@ -9,11 +9,11 @@ import org.epics.vtype.AlarmSeverity;
 import org.epics.vtype.Display;
 import org.epics.vtype.Time;
 import org.epics.vtype.VType;
-import org.yamcs.protostuff.ParameterValue;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
     protected ParameterValue pval;
-    
+
     public YamcsVType(ParameterValue pval) {
         this.pval = pval;
     }
@@ -56,7 +56,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Timestamp getTimestamp() {
         return Timestamp.of(YamcsUTCString.parse(pval.getAcquisitionTimeUTC()));
     }
-    
+
     @Override
     public Integer getTimeUserTag() {
         return null;
@@ -66,7 +66,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public boolean isTimeValid() {
         return true;
     }
-    
+
     @Override
     public Double getLowerDisplayLimit() {
         return Double.MIN_VALUE;
@@ -102,11 +102,11 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperWarningLimit() {
-        if (pval.getWatchHigh() != null) {
+        if (pval.hasWatchHigh()) {
             return pval.getWatchHigh();
-        } else if (pval.getWarningHigh() != null) {
+        } else if (pval.hasWarningHigh()) {
             return pval.getWarningHigh();
-        } else if (pval.getDistressHigh() != null) {
+        } else if (pval.hasDistressHigh()) {
             return pval.getDistressHigh();
         } else {
             return Double.MAX_VALUE;
@@ -118,9 +118,9 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperAlarmLimit() {
-        if (pval.getCriticalHigh() != null) {
+        if (pval.hasCriticalHigh()) {
             return pval.getCriticalHigh();
-        } else if (pval.getSevereHigh() != null) {
+        } else if (pval.hasSevereHigh()) {
             return pval.getSevereHigh();
         } else {
             return Double.MAX_VALUE;
@@ -136,7 +136,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Double getUpperDisplayLimit() {
         return Double.MAX_VALUE;
     }
-    
+
     /**
      * Converts a yamcs ParameterValue to a VType.
      */
@@ -149,7 +149,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         case UINT64:
             return new Uint64VType(pval);
         case SINT64:
-             return new Sint64VType(pval);
+            return new Sint64VType(pval);
         case FLOAT:
             return new FloatVType(pval);
         case DOUBLE:
@@ -164,6 +164,6 @@ public class YamcsVType implements VType, Alarm, Time, Display {
             throw new UnsupportedOperationException("No support for timestamp pvals");
         default:
             throw new IllegalStateException("Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
-        }        
+        }
     }
 }

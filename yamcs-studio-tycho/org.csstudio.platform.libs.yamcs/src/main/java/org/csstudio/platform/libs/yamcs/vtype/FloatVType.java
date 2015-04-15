@@ -1,7 +1,7 @@
 package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.vtype.VFloat;
-import org.yamcs.protostuff.ParameterValue;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class FloatVType extends YamcsVType implements VFloat {
 
@@ -13,7 +13,7 @@ public class FloatVType extends YamcsVType implements VFloat {
     public Float getValue() {
         return pval.getEngValue().getFloatValue();
     }
-    
+
     @Override
     public String toString() {
         return String.valueOf(pval.getEngValue().getFloatValue());

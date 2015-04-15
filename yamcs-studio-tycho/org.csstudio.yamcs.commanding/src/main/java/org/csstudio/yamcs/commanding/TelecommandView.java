@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-import org.yamcs.protostuff.CommandHistoryAttribute;
-import org.yamcs.protostuff.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 
 /**
  * TODO show a friendly message when the thing is still loading

@@ -28,10 +28,6 @@
 									<id>io.netty:netty-all:${netty.version}</id>
 									<source>true</source>
 								</artifact>
-								<artifact>
-									<id>io.protostuff:protostuff-uberjar:${protostuff.version}</id>
-									<source>true</source>
-								</artifact>
 
 								<!-- Plugins from reactor -->
                                 <artifact>

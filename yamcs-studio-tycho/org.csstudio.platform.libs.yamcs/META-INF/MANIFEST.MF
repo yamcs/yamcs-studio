@@ -11,13 +11,10 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.epics.vtype,
  org.epics.util,
  io.netty.all,
- io.protostuff.uberjar,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.platform.libs.yamcsall
 Import-Package: org.epics.pvmanager
 Export-Package: org.csstudio.platform.libs.yamcs,
  org.csstudio.platform.libs.yamcs.vtype,
- org.csstudio.platform.libs.yamcs.web,
- org.csstudio.platform.libs.yamcs.ws,
- org.yamcs.protostuff
+ org.csstudio.platform.libs.yamcs.web

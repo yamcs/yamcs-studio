@@ -10,9 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.yamcs.protostuff.CommandId;
-import org.yamcs.protostuff.Value;
-import org.yamcs.protostuff.Value.Type;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -63,7 +62,7 @@ public class TelecommandRecord {
         }
 
         cellPropsByColumn.get(columnName).put(KEY_RAW_VALUE, valueToRawValue(value));
-        if (value.getType() == Type.TIMESTAMP) {
+        if (value.getType() == Value.Type.TIMESTAMP) {
             cellPropsByColumn.get(columnName).put(KEY_ACK_DURATION, id.getGenerationTime() - value.getTimestampValue());
             cellPropsByColumn.get(columnName).put(KEY_VALUE, toHumanTimeDiff(value.getTimestampValue(), id.getGenerationTime()));
             cellPropsByColumn.get(columnName).put(KEY_TOOLTIP, TimeEncoding.toString(value.getTimestampValue()));

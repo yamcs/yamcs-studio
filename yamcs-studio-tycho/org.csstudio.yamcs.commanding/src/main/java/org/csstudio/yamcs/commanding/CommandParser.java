@@ -1,45 +1,53 @@
 package org.csstudio.yamcs.commanding;
 
-import java.util.ArrayList;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
-import org.yamcs.protostuff.NamedObjectId;
-import org.yamcs.protostuff.RestArgumentType;
-import org.yamcs.protostuff.RestCommandType;
+import org.yamcs.protobuf.Rest.RestArgumentType;
+import org.yamcs.protobuf.Rest.RestCommandType;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
 /**
- * Hand-written ugly command parser. Follows some very simple logic:
- * - removes all whitespace
- * - puts in one MetaCommand xtce
+ * Hand-written ugly command parser. Follows some very simple logic: - removes all whitespace - puts
+ * in one MetaCommand xtce
  */
 public class CommandParser {
 
+    // Reset for every application restart
+    private static AtomicInteger cmdClientId = new AtomicInteger(1);
+
     public static RestCommandType toCommand(String commandString) {
-        if (commandString == null) return null;
+        if (commandString == null)
+            return null;
         commandString = commandString.replaceAll("\\s", "");
 
         int lparen = commandString.indexOf('(');
-        RestCommandType cmd = new RestCommandType();
+        RestCommandType.Builder cmd = RestCommandType.newBuilder();
 
         String commandName = commandString.substring(0, lparen);
-        NamedObjectId commandId = new NamedObjectId();
+        NamedObjectId.Builder commandId = NamedObjectId.newBuilder();
         commandId.setNamespace(YamcsPlugin.getDefault().getMdbNamespace());
         commandId.setName(commandName);
         cmd.setId(commandId);
 
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
-
-        cmd.setArgumentsList(new ArrayList<RestArgumentType>());
         String[] args = argString.split(",");
         for (String arg : args) {
-            RestArgumentType argumentType = new RestArgumentType();
             String[] kvp = arg.split(":");
-            argumentType.setName(kvp[0]);
-            argumentType.setValue(kvp[1]);
-            cmd.getArgumentsList().add(argumentType);
+            cmd.addArguments(RestArgumentType.newBuilder().setName(kvp[0]).setValue(kvp[1]));
         }
 
-        return cmd;
+        String origin;
+        try {
+            origin = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            origin = "Unknown";
+        }
+        cmd.setSequenceNumber(cmdClientId.getAndIncrement());
+        cmd.setOrigin(origin);
+        return cmd.build();
     }
 
     public static void main(String... args) {

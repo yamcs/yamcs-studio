@@ -1,7 +1,7 @@
 package org.csstudio.platform.libs.yamcs.vtype;
 
 import org.epics.vtype.VBoolean;
-import org.yamcs.protostuff.ParameterValue;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class BooleanVType extends YamcsVType implements VBoolean {
 
@@ -13,7 +13,7 @@ public class BooleanVType extends YamcsVType implements VBoolean {
     public Boolean getValue() {
         return pval.getEngValue().getBooleanValue();
     }
-    
+
     @Override
     public String toString() {
         return String.valueOf(pval.getEngValue().getBooleanValue());
