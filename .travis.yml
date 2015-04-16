@@ -1,7 +1,4 @@
-sudo: false
-
-# Don't clone submodules, to save on build time we rely on
-# binary p2 repo instead using travis profile
+# Don't clone submodules, to save on build time we rely on  binary p2 repo instead using travis profile
 git:
   submodules: false
 
