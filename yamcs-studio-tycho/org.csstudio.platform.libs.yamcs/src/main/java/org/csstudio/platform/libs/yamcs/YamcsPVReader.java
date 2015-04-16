@@ -2,7 +2,7 @@ package org.csstudio.platform.libs.yamcs;
 
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
-public interface YPVReader {
+public interface YamcsPVReader {
 
     public void signalYamcsConnected();
 

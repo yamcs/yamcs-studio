@@ -2,8 +2,8 @@ package org.csstudio.utility.pvmanager.yamcs;
 
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.YPVReader;
-import org.csstudio.platform.libs.yamcs.YRegistrar;
+import org.csstudio.platform.libs.yamcs.YamcsPVReader;
+import org.csstudio.platform.libs.yamcs.YamcsWebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVTypeAdapter;
 import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
@@ -11,13 +11,13 @@ import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
-public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YPVReader {
+public class YamcsPVChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YamcsPVReader {
 
-    private YRegistrar registrar;
+    private YamcsWebSocketRegistrar registrar;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(YamcsPVChannelHandler.class.getName());
 
-    public YamcsPVChannelHandler(String channelName, YRegistrar registrar) {
+    public YamcsPVChannelHandler(String channelName, YamcsWebSocketRegistrar registrar) {
         super(channelName);
         this.registrar = registrar;
     }

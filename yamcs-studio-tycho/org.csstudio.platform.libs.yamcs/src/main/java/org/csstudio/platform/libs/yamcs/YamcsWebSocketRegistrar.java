@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.ws.CommandHistorySubscribeAllRequest;
-import org.csstudio.platform.libs.yamcs.ws.ParameterUnsubscribeRequest;
-import org.yamcs.api.ws.ParameterSubscribeRequest;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallbackListener;
+import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Pvalue.ParameterData;
@@ -21,8 +21,6 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
 
 /**
  * Combines state accross the many-to-one relation from yamcs:// datasources to the WebSocketClient.
- * Everything yamcs is still in WebSocketClient to keep things a bit clean (and potentially
- * reusable).
  * <p>
  * Now also handles live subscription of command history. Maybe should clean up a bit here to
  * extract out all the pvreader logic, because it's starting to do a bit too much.
@@ -30,60 +28,79 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
  * All methods are asynchronous, with any responses or incoming data being sent to the provided
  * callback listener.
  */
-public class YRegistrar implements WebSocketClientCallbackListener {
+public class YamcsWebSocketRegistrar implements WebSocketClientCallbackListener {
 
     private static final String USER_AGENT = "yamcs-studio/" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
-    private static final Logger log = Logger.getLogger(YRegistrar.class.getName());
-    private static YRegistrar INSTANCE;
+    private static final Logger log = Logger.getLogger(YamcsWebSocketRegistrar.class.getName());
+    private static YamcsWebSocketRegistrar INSTANCE;
 
     // Store pvreaders while connection is not established
-    private Map<String, YPVReader> pvReadersByName = new LinkedHashMap<>();
+    private Map<String, YamcsPVReader> pvReadersByName = new LinkedHashMap<>();
     private List<CommandHistoryListener> cmdhistListeners = new ArrayList<>();
 
     private boolean connectionInitialized = false;
     private WebSocketClient wsclient;
 
-    private YRegistrar(YamcsConnectionProperties yprops) {
+    // Order all subscribe/unsubscribe events
+    private final BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
+
+    private YamcsWebSocketRegistrar(YamcsConnectionProperties yprops) {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(USER_AGENT);
+
+        new Thread(() -> {
+            try {
+                sendMergedRequests();
+            } catch (InterruptedException e) {
+                log.log(Level.SEVERE, "OOPS, got interrupted", e);
+            }
+        }).start();
     }
 
-    public static synchronized YRegistrar getInstance() {
+    private void sendMergedRequests() throws InterruptedException {
+        WebSocketRequest evt;
+        while ((evt = pendingRequests.take()) != null) {
+            // We now have at least one event to handle
+            Thread.sleep(500); // Wait for more events, before going into synchronized block
+            synchronized (pendingRequests) {
+                while (pendingRequests.peek() != null
+                        && evt instanceof MergeableWebSocketRequest
+                        && pendingRequests.peek() instanceof MergeableWebSocketRequest) {
+                    MergeableWebSocketRequest otherEvt = (MergeableWebSocketRequest) pendingRequests.poll();
+                    evt = ((MergeableWebSocketRequest) evt).mergeWith(otherEvt); // This is to counter bursts.
+                }
+            }
+
+            // Good, send the merged result
+            doSendRequest(evt);
+        }
+    }
+
+    public static synchronized YamcsWebSocketRegistrar getInstance() {
         if (INSTANCE == null) {
             String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
             int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
             String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-            INSTANCE = new YRegistrar(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
+            INSTANCE = new YamcsWebSocketRegistrar(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
         }
         return INSTANCE;
     }
 
-    public synchronized void connectPVReader(YPVReader pvReader) {
-        if (!connectionInitialized) {
-            wsclient.connect();
-            connectionInitialized = true;
-        }
+    public synchronized void connectPVReader(YamcsPVReader pvReader) {
         pvReadersByName.put(pvReader.getPVName(), pvReader);
         NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
-        wsclient.sendRequest(new ParameterSubscribeRequest(idList));
+        pendingRequests.offer(new MergeableWebSocketRequest("parameter", "subscribe", idList));
     }
 
-    public synchronized void disconnectPVReader(YPVReader pvReader) {
-        if (!connectionInitialized) { // TODO Possible?
-            return;
-        }
+    public synchronized void disconnectPVReader(YamcsPVReader pvReader) {
         pvReadersByName.remove(pvReader);
         NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
-        wsclient.sendRequest(new ParameterUnsubscribeRequest(idList));
+        pendingRequests.offer(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
     }
 
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
-        if (!connectionInitialized) {
-            wsclient.connect();
-            connectionInitialized = true;
-        }
         cmdhistListeners.add(listener);
-        wsclient.sendRequest(new CommandHistorySubscribeAllRequest()); // TODO don't need to do this for every listener
+        pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe")); // TODO don't need to do this for every listener
     }
 
     private static NamedObjectList wrapAsNamedObjectList(String pvName) {
@@ -110,6 +127,14 @@ public class YRegistrar implements WebSocketClientCallbackListener {
         cmdhistListeners.forEach(l -> l.signalYamcsConnected());
     }
 
+    private void doSendRequest(WebSocketRequest request) {
+        if (!connectionInitialized) {
+            wsclient.connect();
+            connectionInitialized = true;
+        }
+        wsclient.sendRequest(request);
+    }
+
     @Override
     public void onDisconnect() { // When the web socket connection state changed
         log.info("Web socket disconnected. Notifying listeners");
@@ -125,7 +150,7 @@ public class YRegistrar implements WebSocketClientCallbackListener {
     @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
-            YPVReader pvReader = pvReadersByName.get(pval.getId().getName());
+            YamcsPVReader pvReader = pvReadersByName.get(pval.getId().getName());
             if (pvReader != null) {
                 if (log.isLoggable(Level.FINER)) {
                     log.finer("request to update pvreader " + pvReader.getPVName() + " to val " + pval.getEngValue());

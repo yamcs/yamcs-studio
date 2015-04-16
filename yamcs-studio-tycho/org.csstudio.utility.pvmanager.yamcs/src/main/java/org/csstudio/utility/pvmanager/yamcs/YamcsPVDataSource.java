@@ -1,6 +1,6 @@
 package org.csstudio.utility.pvmanager.yamcs;
 
-import org.csstudio.platform.libs.yamcs.YRegistrar;
+import org.csstudio.platform.libs.yamcs.YamcsWebSocketRegistrar;
 import org.epics.pvmanager.ChannelHandler;
 import org.epics.pvmanager.DataSource;
 
@@ -9,11 +9,11 @@ import org.epics.pvmanager.DataSource;
  */
 public class YamcsPVDataSource extends DataSource {
 
-    private static YRegistrar registrar;
+    private static YamcsWebSocketRegistrar registrar;
 
     public YamcsPVDataSource() {
         super(false);
-        registrar = YRegistrar.getInstance();
+        registrar = YamcsWebSocketRegistrar.getInstance();
     }
 
     @Override

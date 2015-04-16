@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.csstudio.platform.libs.yamcs.CommandHistoryListener;
-import org.csstudio.platform.libs.yamcs.YRegistrar;
+import org.csstudio.platform.libs.yamcs.YamcsWebSocketRegistrar;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
@@ -187,7 +187,7 @@ public class TelecommandView extends ViewPart {
     }
 
     private void subscribeToUpdates() {
-        YRegistrar.getInstance().addCommandHistoryListener(new CommandHistoryListener() {
+        YamcsWebSocketRegistrar.getInstance().addCommandHistoryListener(new CommandHistoryListener() {
             @Override
             public void signalYamcsDisconnected() {
             }

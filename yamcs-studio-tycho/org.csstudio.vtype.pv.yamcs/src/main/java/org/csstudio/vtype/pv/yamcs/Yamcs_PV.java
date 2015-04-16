@@ -3,8 +3,8 @@ package org.csstudio.vtype.pv.yamcs;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.YPVReader;
-import org.csstudio.platform.libs.yamcs.YRegistrar;
+import org.csstudio.platform.libs.yamcs.YamcsPVReader;
+import org.csstudio.platform.libs.yamcs.YamcsWebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVType;
 import org.csstudio.vtype.pv.PV;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
@@ -13,10 +13,10 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
  * TODO not sure how to disconnect/unsubscribe. Looks like the PVPool has some logic to release a
  * PV, but how does it trigger?
  */
-public class Yamcs_PV extends PV implements YPVReader {
+public class Yamcs_PV extends PV implements YamcsPVReader {
 
     private static final Logger log = Logger.getLogger(Yamcs_PV.class.getName());
-    private YRegistrar registrar;
+    private YamcsWebSocketRegistrar registrar;
     private String baseName;
 
     protected Yamcs_PV(String name, String baseName) {
@@ -26,7 +26,7 @@ public class Yamcs_PV extends PV implements YPVReader {
         // Notify that this PV is read-only
         notifyListenersOfPermissions(true);
 
-        registrar = YRegistrar.getInstance();
+        registrar = YamcsWebSocketRegistrar.getInstance();
         registrar.connectPVReader(this);
     }
 

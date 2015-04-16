@@ -164,7 +164,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             }
             plugin = null;
             restService.shutdown();
-            YRegistrar.getInstance().shutdown();
+            YamcsWebSocketRegistrar.getInstance().shutdown();
         } finally {
             super.stop(context);
         }
