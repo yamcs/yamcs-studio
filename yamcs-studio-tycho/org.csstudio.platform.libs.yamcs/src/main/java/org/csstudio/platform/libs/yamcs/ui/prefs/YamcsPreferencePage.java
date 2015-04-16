@@ -65,7 +65,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         }
         String yamcsHostText = yamcsHost.getStringValue();
         String yamcsInstanceText = yamcsInstance.getStringValue();
-        if (!(yamcsHostText.trim().matches("[a-zA-Z\\-\\.0-9_]+")) || !(yamcsInstanceText.trim().matches("[a-zA-Z0-9_]+"))) {
+        if (!(yamcsHostText.trim().matches("[a-zA-Z\\-\\.0-9_]+")) || !(yamcsInstanceText.trim().matches("[a-zA-Z\\.\\-0-9_]+"))) {
             setErrorMessage("Not a valid host name");
             setValid(false);
         } else {
