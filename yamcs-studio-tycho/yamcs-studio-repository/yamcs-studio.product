@@ -4,7 +4,6 @@
 <product name="Yamcs Studio" uid="yamcs-studio" id="org.csstudio.yamcs.product.product" application="org.csstudio.yamcs.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.csstudio.yamcs.product/icons/aboutSide.png"/>
       <text>
          CS-Studio customized to suit Yamcs - the Open Source Mission Control System
 
@@ -30,7 +29,7 @@ openFile
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.csstudio.yamcs.product/icons/css16.png" i32="/org.csstudio.yamcs.product/icons/css32.png" i48="/org.csstudio.yamcs.product/icons/css48.png" i64="/org.csstudio.yamcs.product/icons/css64.png" i128="/org.csstudio.yamcs.product/icons/css128.png"/>
+   <windowImages i16="/org.csstudio.yamcs.product/icons/yamcs-16.png" i32="/org.csstudio.yamcs.product/icons/yamcs-32.png" i48="/org.csstudio.yamcs.product/icons/yamcs-48.png" i64="/org.csstudio.yamcs.product/icons/yamcs-64.png" i128="/org.csstudio.yamcs.product/icons/yamcs-128.png" i256="/org.csstudio.yamcs.product/icons/yamcs-256.png"/>
 
    <splash
       location="org.csstudio.yamcs.product"
@@ -38,11 +37,11 @@ openFile
       startupMessageRect="20,195,340,20"
       startupForegroundColor="FFFDFA" />
    <launcher name="yamcs-studio">
-      <linux icon="/org.csstudio.yamcs.product/icons/css48.xpm"/>
-      <macosx icon="/org.csstudio.yamcs.product/icons/css.icns"/>
+      <linux icon="/org.csstudio.yamcs.product/icons/yamcs.xpm"/>
+      <macosx icon="/org.csstudio.yamcs.product/icons/yamcs.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/org.csstudio.yamcs.product/icons/css.ico"/>
+         <ico path="/org.csstudio.yamcs.product/icons/yamcs.ico"/>
          <bmp/>
       </win>
    </launcher>

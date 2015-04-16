@@ -9,10 +9,7 @@
             name="Yamcs Studio">
          <property
                name="windowImages"
-               value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png"/>
-         <property
-               name="aboutImage"
-               value="icons/aboutSide.png"/>
+               value="icons/yamcs-16.png,icons/yamcs-32.png,icons/yamcs-48.png,icons/yamcs-64.png,icons/yamcs-128.png"/>
          <property
                name="aboutText"
                value="CS-Studio customized to suit Yamcs - the Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
@@ -38,11 +35,11 @@
          </property>
          <property
             name="introTitle"
-            value="Welcome to Control System Studio (CSS) for the SNS!">
+            value="Yamcs Studio">
          </property>
          <property
             name="introBrandingImage"
-            value="product:icons/css64.png"/>
+            value="product:icons/yamcs-64.png"/>
          <property
             name="introBrandingImageText"
             value="Yamcs Studio"/>
