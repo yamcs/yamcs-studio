@@ -5,8 +5,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
-import org.csstudio.platform.libs.yamcs.web.RESTClientEndpoint;
 import org.csstudio.platform.libs.yamcs.web.ResponseHandler;
+import org.csstudio.platform.libs.yamcs.web.RestClient;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -36,7 +36,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
 
     private Collection<MetaCommand> commands;
     private StyledText text;
-    private RESTClientEndpoint restService = YamcsPlugin.getDefault().getRESTService();
+    private RestClient restClient = YamcsPlugin.getDefault().getRestClient();
 
     public AddTelecommandDialog(Shell parentShell) {
         super(parentShell);
@@ -110,18 +110,18 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         validateButton.addListener(SWT.Selection, evt -> {
             RestValidateCommandRequest.Builder req = RestValidateCommandRequest.newBuilder();
             req.addCommands(CommandParser.toCommand(text.getText()));
-            restService.validateCommand(req.build(), new ResponseHandler() {
+            restClient.validateCommand(req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
-                    Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
-                    System.out.println("GOT response " + response);
-                }
-
-                @Override
-                public void onException(RestExceptionMessage response) {
-                    Display.getDefault().asyncExec(() -> {
-                        setErrorMessage("[" + response.getType() + "] " + response.getMsg());
-                    });
+                    if (response instanceof RestExceptionMessage) {
+                        Display.getDefault().asyncExec(() -> {
+                            RestExceptionMessage exc = (RestExceptionMessage) response;
+                            setErrorMessage("[" + exc.getType() + "] " + exc.getMsg());
+                        });
+                    } else {
+                        Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
+                        System.out.println("GOT response " + response);
+                    }
                 }
 
                 @Override
@@ -147,18 +147,17 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         okButton.addListener(SWT.Selection, evt -> {
             RestSendCommandRequest.Builder req = RestSendCommandRequest.newBuilder();
             req.addCommands(CommandParser.toCommand(text.getText()));
-            restService.sendCommand(req.build(), new ResponseHandler() {
+            restClient.sendCommand(req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
+                    if (response instanceof RestExceptionMessage) {
+                        Display.getDefault().asyncExec(() -> {
+                            RestExceptionMessage exc = (RestExceptionMessage) response;
+                            setErrorMessage("[" + exc.getType() + "] " + exc.getMsg());
+                        });
+                    }
                     Display.getDefault().asyncExec(() -> close());
                     System.out.println("GOT response " + response);
-                }
-
-                @Override
-                public void onException(RestExceptionMessage response) {
-                    Display.getDefault().asyncExec(() -> {
-                        setErrorMessage("[" + response.getType() + "] " + response.getMsg());
-                    });
                 }
 
                 @Override

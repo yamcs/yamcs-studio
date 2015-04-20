@@ -27,55 +27,61 @@ import java.io.InputStream;
 import java.net.URI;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
+import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
-import org.yamcs.protobuf.Rest.RestReplayResponse;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestSendCommandResponse;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
-import org.yamcs.protobuf.Yamcs.ReplayRequest;
 
 import com.google.protobuf.MessageLite;
 
 /**
  * Implements the client-side API of the rest web api. Sequences outgoing requests on a single
  * thread for simplicity.
- *
- * Instances should be shutdown() when no longer in use.
  */
-public class RESTClientEndpoint {
+public class RestClient {
 
     private static final String BINARY_MIME_TYPE = "application/octet-stream";
 
     private YamcsConnectionProperties yprops;
     private EventLoopGroup group = new NioEventLoopGroup(1);
 
-    public RESTClientEndpoint(YamcsConnectionProperties yprops) {
+    public RestClient(YamcsConnectionProperties yprops) {
         this.yprops = yprops;
     }
 
-    public void replay(ReplayRequest request, ResponseHandler responseHandler) {
-        doRequest(HttpMethod.GET, "/api/archive", request, RestReplayResponse.newBuilder(), responseHandler);
+    public void dumpArchive(RestDumpArchiveRequest request, ResponseHandler responseHandler) {
+        get("/api/archive", request, RestDumpArchiveResponse.newBuilder(), responseHandler);
     }
 
     public void validateCommand(RestValidateCommandRequest request, ResponseHandler responseHandler) {
-        doRequest(HttpMethod.GET, "/api/commanding/validate", request, RestValidateCommandResponse.newBuilder(), responseHandler);
+        post("/api/commanding/validator", request, RestValidateCommandResponse.newBuilder(), responseHandler);
     }
 
     public void sendCommand(RestSendCommandRequest request, ResponseHandler responseHandler) {
-        doRequest(HttpMethod.POST, "/api/commanding/send", request, RestSendCommandResponse.newBuilder(), responseHandler);
+        post("/api/commanding/queue", request, RestSendCommandResponse.newBuilder(), responseHandler);
     }
 
     public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler responseHandler) {
-        doRequest(HttpMethod.GET, "/api/mdb/parameters", request, RestListAvailableParametersResponse.newBuilder(), responseHandler);
+        get("/api/mdb/parameters", request, RestListAvailableParametersResponse.newBuilder(), responseHandler);
     }
 
     public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler responseHandler) {
-        doRequest(HttpMethod.GET, "/api/mdb/dump", null, RestDumpRawMdbResponse.newBuilder(), responseHandler);
+        get("/api/mdb/dump", null, RestDumpRawMdbResponse.newBuilder(), responseHandler);
+    }
+
+    public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
+        doRequest(HttpMethod.GET, uri, msg, target, handler);
+    }
+
+    public void post(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
+        doRequest(HttpMethod.POST, uri, msg, target, handler);
     }
 
     private <S extends MessageLite> void doRequest(HttpMethod method, String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
@@ -100,7 +106,7 @@ public class RESTClientEndpoint {
                                         InputStream in = new ByteBufInputStream(response.content());
                                         RestExceptionMessage msg = RestExceptionMessage.newBuilder().mergeFrom(in).build();
                                         ctx.close();
-                                        handler.onException(msg);
+                                        handler.onMessage(msg);
                                     }
                                 }
 
@@ -136,5 +142,24 @@ public class RESTClientEndpoint {
      */
     public void shutdown() {
         group.shutdownGracefully();
+    }
+
+    public static void main(String... args) {
+        RestListAvailableParametersRequest req = RestListAvailableParametersRequest.newBuilder().build();
+        RestClient endpoint = new RestClient(new YamcsConnectionProperties("machine", 8090, "simulator"));
+        System.out.println("ahum ");
+        endpoint.listAvailableParameters(req, new ResponseHandler() {
+
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                System.out.println("msg " + responseMsg);
+            }
+
+            @Override
+            public void onFault(Throwable t) {
+                System.out.println("t " + t);
+            }
+        });
+        endpoint.shutdown();
     }
 }

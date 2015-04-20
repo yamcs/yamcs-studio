@@ -11,8 +11,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.platform.libs.yamcs.web.RESTClientEndpoint;
 import org.csstudio.platform.libs.yamcs.web.ResponseHandler;
+import org.csstudio.platform.libs.yamcs.web.RestClient;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
@@ -40,7 +40,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private static YamcsPlugin plugin;
     private BundleListener bundleListener;
 
-    private RESTClientEndpoint restService;
+    private RestClient restClient;
 
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
@@ -50,8 +50,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private Collection<MetaCommand> commands = Collections.emptyList();
     private CountDownLatch commandsLoaded = new CountDownLatch(1);
 
-    public RESTClientEndpoint getRESTService() {
-        return restService;
+    public RestClient getRestClient() {
+        return restClient;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
         int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
         String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-        restService = new RESTClientEndpoint(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
+        restClient = new RestClient(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
 
         // Only load MDB once bundle has been fully started
         bundleListener = event -> {
@@ -92,22 +92,21 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // Load list of parameters
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
         req.addNamespaces(getMdbNamespace());
-        restService.listAvailableParameters(req.build(), new ResponseHandler() {
+        restClient.listAvailableParameters(req.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
-                Display.getDefault().asyncExec(() -> {
-                    parameterIds = response.getIdsList();
-                    for (MDBContextListener l : mdbListeners) {
-                        l.onParametersChanged(parameterIds);
-                    }
-                    parametersLoaded.countDown();
-                });
-            }
-
-            @Override
-            public void onException(RestExceptionMessage e) {
-                log.log(Level.WARNING, "Exception returned by server: " + e);
+                if (responseMsg instanceof RestExceptionMessage) {
+                    log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
+                } else {
+                    RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
+                    Display.getDefault().asyncExec(() -> {
+                        parameterIds = response.getIdsList();
+                        for (MDBContextListener l : mdbListeners) {
+                            l.onParametersChanged(parameterIds);
+                        }
+                        parametersLoaded.countDown();
+                    });
+                }
             }
 
             @Override
@@ -120,27 +119,26 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
         // Load commands
         RestDumpRawMdbRequest.Builder dumpRequest = RestDumpRawMdbRequest.newBuilder();
-        restService.dumpRawMdb(dumpRequest.build(), new ResponseHandler() {
+        restClient.dumpRawMdb(dumpRequest.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
-                try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
-                    XtceDb mdb = (XtceDb) oin.readObject();
-                    Display.getDefault().asyncExec(() -> {
-                        commands = mdb.getMetaCommands();
-                        for (MDBContextListener l : mdbListeners) {
-                            l.onCommandsChanged(commands);
-                        }
-                        commandsLoaded.countDown();
-                    });
-                } catch (IOException | ClassNotFoundException e) {
-                    log.log(Level.SEVERE, "Could not deserialize mdb", e);
+                if (responseMsg instanceof RestExceptionMessage) {
+                    log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
+                } else {
+                    RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
+                    try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
+                        XtceDb mdb = (XtceDb) oin.readObject();
+                        Display.getDefault().asyncExec(() -> {
+                            commands = mdb.getMetaCommands();
+                            for (MDBContextListener l : mdbListeners) {
+                                l.onCommandsChanged(commands);
+                            }
+                            commandsLoaded.countDown();
+                        });
+                    } catch (IOException | ClassNotFoundException e) {
+                        log.log(Level.SEVERE, "Could not deserialize mdb", e);
+                    }
                 }
-            }
-
-            @Override
-            public void onException(RestExceptionMessage e) {
-                log.log(Level.WARNING, "Exception returned by server: " + e);
             }
 
             @Override
@@ -163,7 +161,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 context.removeBundleListener(bundleListener);
             }
             plugin = null;
-            restService.shutdown();
+            restClient.shutdown();
             YamcsWebSocketRegistrar.getInstance().shutdown();
         } finally {
             super.stop(context);
