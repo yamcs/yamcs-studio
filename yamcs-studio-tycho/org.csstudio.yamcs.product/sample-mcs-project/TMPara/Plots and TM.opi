@@ -2578,25 +2578,25 @@ $(pv_value)</tooltip>
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace6PV</pv>
+              <pv trig="true">loc://trace6PV("yamcs://Simulator_BusCurrent")</pv>
             </rule>
             <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace6PV</pv>
+              <pv trig="true">loc://trace6PV("yamcs://Simulator_BusCurrent")</pv>
             </rule>
             <rule name="x axis" prop_id="trace_0_x_pv" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace7PV</pv>
+              <pv trig="true">loc://trace7PV("yamcs://Simulator_BusVoltage")</pv>
             </rule>
             <rule name="x-anxis name" prop_id="axis_0_axis_title" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace7PV</pv>
+              <pv trig="true">loc://trace7PV("yamcs://Simulator_BusVoltage")</pv>
             </rule>
           </rules>
           <axis_1_visible>true</axis_1_visible>
@@ -3033,25 +3033,25 @@ $(pv_value)</tooltip>
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace8PV</pv>
+              <pv trig="true">loc://trace8PV("sim://sine(0,100,100,1)")</pv>
             </rule>
             <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace8PV</pv>
+              <pv trig="true">loc://trace8PV("sim://sine(0,100,100,1)")</pv>
             </rule>
             <rule name="x axis" prop_id="trace_0_x_pv" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace9PV</pv>
+              <pv trig="true">loc://trace9PV("sim://ramp(0,40,0.1,1.2)")</pv>
             </rule>
             <rule name="x-anxis name" prop_id="axis_0_axis_title" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace9PV</pv>
+              <pv trig="true">loc://trace9PV("sim://ramp(0,40,0.1,1.2)")</pv>
             </rule>
           </rules>
           <axis_1_visible>true</axis_1_visible>
@@ -5843,25 +5843,25 @@ $(pv_value)</tooltip>
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace0PV</pv>
+          <pv trig="true">loc://trace0PV("yamcs://Simulator_Theta")</pv>
         </rule>
         <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace0PV</pv>
+          <pv trig="true">loc://trace0PV("yamcs://Simulator_Theta")</pv>
         </rule>
         <rule name="change trace1" prop_id="trace_1_y_pv" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace1PV</pv>
+          <pv trig="true">loc://trace1PV("yamcs://Simulator_Psi")</pv>
         </rule>
         <rule name="Update Legend1" prop_id="trace_1_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace1PV</pv>
+          <pv trig="true">loc://trace1PV("yamcs://Simulator_Psi")</pv>
         </rule>
       </rules>
       <axis_1_visible>true</axis_1_visible>
@@ -6426,25 +6426,25 @@ $(pv_value)</tooltip>
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace2PV</pv>
+          <pv trig="true">loc://trace2PV("sim://sine(0,100,100,1)")</pv>
         </rule>
         <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace2PV</pv>
+          <pv trig="true">loc://trace2PV("sim://sine(0,100,100,1)")</pv>
         </rule>
         <rule name="change trace1" prop_id="trace_1_y_pv" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace3PV</pv>
+          <pv trig="true">loc://trace3PV("sim://sine(0,100,100,2)")</pv>
         </rule>
         <rule name="Update Legend1" prop_id="trace_1_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace3PV</pv>
+          <pv trig="true">loc://trace3PV("sim://sine(0,100,100,2)")</pv>
         </rule>
       </rules>
       <axis_1_visible>true</axis_1_visible>
@@ -6950,25 +6950,25 @@ $(pv_value)</tooltip>
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace4PV</pv>
+          <pv trig="true">loc://trace4PV("sim://sine(0,100,100,1)")</pv>
         </rule>
         <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace2PV</pv>
+          <pv trig="true">loc://trace2PV("sim://sine(0,100,100,1)")</pv>
         </rule>
         <rule name="change trace1" prop_id="trace_1_y_pv" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace5PV</pv>
+          <pv trig="true">loc://trace5PV("sim://sine(0,100,100,2)")</pv>
         </rule>
         <rule name="Update Legend1" prop_id="trace_1_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace5PV</pv>
+          <pv trig="true">loc://trace5PV("sim://sine(0,100,100,2)")</pv>
         </rule>
       </rules>
       <axis_1_visible>true</axis_1_visible>
