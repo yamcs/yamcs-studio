@@ -10,7 +10,7 @@
   <macros>
     <include_parent_macros>true</include_parent_macros>
   </macros>
-  <boy_version>4.0.102.201502090717</boy_version>
+  <boy_version>4.0.103.201504151109</boy_version>
   <show_edit_range>true</show_edit_range>
   <widget_type>Display</widget_type>
   <auto_scale_widgets>
@@ -19,7 +19,7 @@
     <min_height>-1</min_height>
   </auto_scale_widgets>
   <background_color>
-    <color name="Background_main" red="146" green="230" blue="239" />
+    <color red="86" green="100" blue="122" />
   </background_color>
   <width>1900</width>
   <x>0</x>
@@ -72,7 +72,7 @@ $(pv_value)</tooltip>
     </fg_gradient_color>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </background_color>
     <width>1900</width>
     <x>0</x>
@@ -84,7 +84,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
     <line_color>
       <color red="128" green="0" blue="255" />
@@ -108,7 +108,7 @@ $(pv_value)</tooltip>
     <enabled>true</enabled>
     <wuid>561d0bec:144015a2d22:-7d2e</wuid>
     <tab_1_background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </tab_1_background_color>
     <tab_1_icon_path></tab_1_icon_path>
     <tab_2_foreground_color>
@@ -119,7 +119,7 @@ $(pv_value)</tooltip>
     </tab_1_font>
     <tab_2_enabled>true</tab_2_enabled>
     <background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </background_color>
     <width>1900</width>
     <x>0</x>
@@ -131,7 +131,7 @@ $(pv_value)</tooltip>
     </macros>
     <visible>true</visible>
     <tab_0_background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </tab_0_background_color>
     <widget_type>Tabbed Container</widget_type>
     <tab_2_font>
@@ -144,7 +144,7 @@ $(pv_value)</tooltip>
       <opifont.name fontName="Arial" height="11" style="1">MCSTab text</opifont.name>
     </tab_0_font>
     <tab_2_background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </tab_2_background_color>
     <tab_0_title>Critical Flight Data</tab_0_title>
     <tab_1_foreground_color>
@@ -172,7 +172,7 @@ $(pv_value)</tooltip>
       <transparent>true</transparent>
       <lock_children>false</lock_children>
       <scripts />
-      <height>590</height>
+      <height>592</height>
       <border_width>1</border_width>
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -201,7 +201,7 @@ $(pv_value)</tooltip>
       <fc>false</fc>
       <show_scrollbar>true</show_scrollbar>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <widget typeId="org.csstudio.opibuilder.widgets.Rectangle" version="1.0.0">
         <border_style>15</border_style>
@@ -255,7 +255,7 @@ $(pv_value)</tooltip>
         </foreground_color>
         <actions hook="false" hook_all="false" />
         <font>
-          <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+          <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
         </font>
         <line_color>
           <color red="128" green="0" blue="255" />
@@ -2864,7 +2864,7 @@ $(pv_value)</tooltip>
           </foreground_color>
           <minimum>0.0</minimum>
           <font>
-            <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+            <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
           </font>
         </widget>
         <widget typeId="org.csstudio.opibuilder.widgets.thermometer" version="1.0.0">
@@ -3056,7 +3056,7 @@ $(pv_value)</tooltip>
       <transparent>true</transparent>
       <lock_children>false</lock_children>
       <scripts />
-      <height>590</height>
+      <height>592</height>
       <border_width>1</border_width>
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -3085,7 +3085,7 @@ $(pv_value)</tooltip>
       <fc>false</fc>
       <show_scrollbar>true</show_scrollbar>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <widget typeId="org.csstudio.opibuilder.widgets.tank" version="1.0.0">
         <alarm_pulsing>false</alarm_pulsing>
@@ -3094,7 +3094,7 @@ $(pv_value)</tooltip>
         <rules />
         <effect_3d>true</effect_3d>
         <scale_font>
-          <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+          <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
         </scale_font>
         <pv_value />
         <show_scale>true</show_scale>
@@ -3166,7 +3166,7 @@ $(pv_value)</tooltip>
         </foreground_color>
         <minimum>0.0</minimum>
         <font>
-          <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+          <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
         </font>
       </widget>
     </widget>
@@ -3179,7 +3179,7 @@ $(pv_value)</tooltip>
       <transparent>true</transparent>
       <lock_children>false</lock_children>
       <scripts />
-      <height>590</height>
+      <height>592</height>
       <border_width>1</border_width>
       <scale_options>
         <width_scalable>true</width_scalable>
@@ -3208,7 +3208,7 @@ $(pv_value)</tooltip>
       <fc>false</fc>
       <show_scrollbar>true</show_scrollbar>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
         <border_style>0</border_style>
@@ -3221,7 +3221,7 @@ $(pv_value)</tooltip>
         <auto_size>true</auto_size>
         <text></text>
         <scripts />
-        <height>19</height>
+        <height>14</height>
         <border_width>1</border_width>
         <scale_options>
           <width_scalable>true</width_scalable>
@@ -3298,7 +3298,7 @@ $(pv_value)</tooltip>
           <rules />
           <effect_3d>false</effect_3d>
           <scale_font>
-            <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+            <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
           </scale_font>
           <pv_value />
           <show_scale>true</show_scale>
@@ -3368,7 +3368,7 @@ $(pv_value)</tooltip>
           </foreground_color>
           <minimum>0.0</minimum>
           <font>
-            <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+            <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
           </font>
         </widget>
         <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -3382,7 +3382,7 @@ $(pv_value)</tooltip>
           <auto_size>true</auto_size>
           <text>Off Pointing</text>
           <scripts />
-          <height>18</height>
+          <height>12</height>
           <border_width>1</border_width>
           <scale_options>
             <width_scalable>true</width_scalable>
@@ -3399,7 +3399,7 @@ $(pv_value)</tooltip>
           <background_color>
             <color red="255" green="255" blue="255" />
           </background_color>
-          <width>76</width>
+          <width>56</width>
           <x>0</x>
           <name>Label_58</name>
           <y>152</y>
@@ -3602,7 +3602,7 @@ $(pv_value)</tooltip>
             <auto_size>true</auto_size>
             <text>Longitude</text>
             <scripts />
-            <height>18</height>
+            <height>12</height>
             <border_width>1</border_width>
             <scale_options>
               <width_scalable>true</width_scalable>
@@ -3619,7 +3619,7 @@ $(pv_value)</tooltip>
             <background_color>
               <color red="255" green="255" blue="255" />
             </background_color>
-            <width>63</width>
+            <width>47</width>
             <x>0</x>
             <name>Label_22</name>
             <y>24</y>
@@ -3643,7 +3643,7 @@ $(pv_value)</tooltip>
             <auto_size>true</auto_size>
             <text>Latitude</text>
             <scripts />
-            <height>18</height>
+            <height>12</height>
             <border_width>1</border_width>
             <scale_options>
               <width_scalable>true</width_scalable>
@@ -3660,7 +3660,7 @@ $(pv_value)</tooltip>
             <background_color>
               <color red="255" green="255" blue="255" />
             </background_color>
-            <width>51</width>
+            <width>38</width>
             <x>0</x>
             <name>Label_22</name>
             <y>59</y>
@@ -3684,7 +3684,7 @@ $(pv_value)</tooltip>
             <auto_size>true</auto_size>
             <text>Altitude</text>
             <scripts />
-            <height>18</height>
+            <height>12</height>
             <border_width>1</border_width>
             <scale_options>
               <width_scalable>true</width_scalable>
@@ -3701,7 +3701,7 @@ $(pv_value)</tooltip>
             <background_color>
               <color red="255" green="255" blue="255" />
             </background_color>
-            <width>47</width>
+            <width>35</width>
             <x>0</x>
             <name>Label_22</name>
             <y>96</y>
@@ -4313,7 +4313,7 @@ $(pv_value)</tooltip>
             <auto_size>true</auto_size>
             <text>Azimuth</text>
             <scripts />
-            <height>18</height>
+            <height>12</height>
             <border_width>1</border_width>
             <scale_options>
               <width_scalable>true</width_scalable>
@@ -4330,7 +4330,7 @@ $(pv_value)</tooltip>
             <background_color>
               <color red="255" green="255" blue="255" />
             </background_color>
-            <width>53</width>
+            <width>39</width>
             <x>0</x>
             <name>Label_58</name>
             <y>15</y>
@@ -4354,7 +4354,7 @@ $(pv_value)</tooltip>
             <auto_size>true</auto_size>
             <text>Elevation</text>
             <scripts />
-            <height>18</height>
+            <height>12</height>
             <border_width>1</border_width>
             <scale_options>
               <width_scalable>true</width_scalable>
@@ -4371,7 +4371,7 @@ $(pv_value)</tooltip>
             <background_color>
               <color red="255" green="255" blue="255" />
             </background_color>
-            <width>59</width>
+            <width>44</width>
             <x>0</x>
             <name>Label_58</name>
             <y>56</y>
@@ -4395,7 +4395,7 @@ $(pv_value)</tooltip>
             <auto_size>true</auto_size>
             <text>Range</text>
             <scripts />
-            <height>18</height>
+            <height>12</height>
             <border_width>1</border_width>
             <scale_options>
               <width_scalable>true</width_scalable>
@@ -4412,7 +4412,7 @@ $(pv_value)</tooltip>
             <background_color>
               <color red="255" green="255" blue="255" />
             </background_color>
-            <width>43</width>
+            <width>32</width>
             <x>0</x>
             <name>Label_58</name>
             <y>97</y>
@@ -4786,7 +4786,7 @@ $(pv_value)</tooltip>
           <rules />
           <effect_3d>false</effect_3d>
           <scale_font>
-            <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+            <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
           </scale_font>
           <pv_value />
           <show_scale>true</show_scale>
@@ -4856,7 +4856,7 @@ $(pv_value)</tooltip>
           </foreground_color>
           <minimum>0.0</minimum>
           <font>
-            <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+            <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
           </font>
         </widget>
         <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -4870,7 +4870,7 @@ $(pv_value)</tooltip>
           <auto_size>true</auto_size>
           <text>Off Pointing</text>
           <scripts />
-          <height>18</height>
+          <height>12</height>
           <border_width>1</border_width>
           <scale_options>
             <width_scalable>true</width_scalable>
@@ -4887,7 +4887,7 @@ $(pv_value)</tooltip>
           <background_color>
             <color red="255" green="255" blue="255" />
           </background_color>
-          <width>76</width>
+          <width>56</width>
           <x>0</x>
           <name>Label_58</name>
           <y>152</y>
@@ -5050,7 +5050,7 @@ $(pv_value)</tooltip>
           <auto_size>true</auto_size>
           <text>Azimuth</text>
           <scripts />
-          <height>19</height>
+          <height>14</height>
           <border_width>1</border_width>
           <scale_options>
             <width_scalable>true</width_scalable>
@@ -5067,7 +5067,7 @@ $(pv_value)</tooltip>
           <background_color>
             <color red="255" green="255" blue="255" />
           </background_color>
-          <width>63</width>
+          <width>47</width>
           <x>0</x>
           <name>Label_58</name>
           <y>37</y>
@@ -5091,7 +5091,7 @@ $(pv_value)</tooltip>
           <auto_size>true</auto_size>
           <text>Elevation</text>
           <scripts />
-          <height>19</height>
+          <height>14</height>
           <border_width>1</border_width>
           <scale_options>
             <width_scalable>true</width_scalable>
@@ -5108,7 +5108,7 @@ $(pv_value)</tooltip>
           <background_color>
             <color red="255" green="255" blue="255" />
           </background_color>
-          <width>71</width>
+          <width>53</width>
           <x>158</x>
           <name>Label_58</name>
           <y>37</y>
@@ -5132,7 +5132,7 @@ $(pv_value)</tooltip>
           <auto_size>true</auto_size>
           <text>AUTO</text>
           <scripts />
-          <height>19</height>
+          <height>14</height>
           <border_width>1</border_width>
           <scale_options>
             <width_scalable>true</width_scalable>
@@ -5149,7 +5149,7 @@ $(pv_value)</tooltip>
           <background_color>
             <color red="255" green="255" blue="255" />
           </background_color>
-          <width>45</width>
+          <width>34</width>
           <x>95</x>
           <name>Label_58</name>
           <y>97</y>
@@ -5173,7 +5173,7 @@ $(pv_value)</tooltip>
           <auto_size>true</auto_size>
           <text>MANU</text>
           <scripts />
-          <height>19</height>
+          <height>14</height>
           <border_width>1</border_width>
           <scale_options>
             <width_scalable>true</width_scalable>
@@ -5190,7 +5190,7 @@ $(pv_value)</tooltip>
           <background_color>
             <color red="255" green="255" blue="255" />
           </background_color>
-          <width>48</width>
+          <width>37</width>
           <x>99</x>
           <name>Label_58</name>
           <y>193</y>
@@ -5653,7 +5653,7 @@ $(pv_value)</tooltip>
           </foreground_color>
           <actions hook="false" hook_all="false" />
           <font>
-            <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+            <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
           </font>
           <line_color>
             <color name="light green" red="144" green="238" blue="144" />
@@ -5879,7 +5879,7 @@ $(pv_value)</tooltip>
           </foreground_color>
           <actions hook="false" hook_all="false" />
           <font>
-            <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+            <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
           </font>
         </widget>
         <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -7009,7 +7009,7 @@ $(pv_value)</tooltip>
             <rules />
             <effect_3d>true</effect_3d>
             <scale_font>
-              <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+              <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
             </scale_font>
             <horizontal>true</horizontal>
             <pv_value />
@@ -7087,7 +7087,7 @@ $(pv_value)</tooltip>
             </foreground_color>
             <minimum>0.0</minimum>
             <font>
-              <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+              <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
             </font>
           </widget>
         </widget>
@@ -8723,7 +8723,7 @@ $(pv_value)</tooltip>
     </fg_gradient_color>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </background_color>
     <width>1900</width>
     <x>0</x>
@@ -8735,7 +8735,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
     <line_color>
       <color red="128" green="0" blue="255" />
@@ -8880,7 +8880,7 @@ tooltip.</tooltip>
     <stretch_to_fit>true</stretch_to_fit>
     <flip_vertical>false</flip_vertical>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
@@ -8975,7 +8975,7 @@ GUIUtil.fullScreen();]]></scriptText>
     <fc>false</fc>
     <show_scrollbar>false</show_scrollbar>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
       <border_style>0</border_style>
@@ -9054,7 +9054,7 @@ GUIUtil.fullScreen();]]></scriptText>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
@@ -9095,7 +9095,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
@@ -9136,7 +9136,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
@@ -9176,7 +9176,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
@@ -9216,7 +9216,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
@@ -9256,7 +9256,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
@@ -9296,7 +9296,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
@@ -9349,7 +9349,7 @@ $(pv_value)</tooltip>
         <color red="192" green="192" blue="192" />
       </foreground_color>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <off_label>OFF</off_label>
     </widget>
@@ -9392,7 +9392,7 @@ $(pv_value)</tooltip>
     <fc>false</fc>
     <show_scrollbar>false</show_scrollbar>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
       <border_style>0</border_style>
@@ -9536,7 +9536,7 @@ $(pv_value)</tooltip>
         <color red="192" green="192" blue="192" />
       </foreground_color>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <off_label>OFF</off_label>
     </widget>
@@ -9670,7 +9670,7 @@ $(pv_value)</tooltip>
         <color red="192" green="192" blue="192" />
       </foreground_color>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <off_label>OFF</off_label>
     </widget>
@@ -9764,7 +9764,7 @@ $(pv_value)</tooltip>
         <color red="192" green="192" blue="192" />
       </foreground_color>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <off_label>OFF</off_label>
     </widget>
@@ -9858,7 +9858,7 @@ $(pv_value)</tooltip>
         <color red="192" green="192" blue="192" />
       </foreground_color>
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
       <off_label>OFF</off_label>
     </widget>
@@ -10741,7 +10741,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -10793,7 +10793,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -10845,7 +10845,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -10897,7 +10897,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -10949,7 +10949,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -11001,7 +11001,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -11053,7 +11053,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -11105,7 +11105,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -11157,7 +11157,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -11209,7 +11209,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -11261,7 +11261,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
@@ -11313,7 +11313,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <font>
-        <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+        <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
       </font>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">

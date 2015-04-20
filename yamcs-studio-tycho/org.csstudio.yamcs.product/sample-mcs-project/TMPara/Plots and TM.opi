@@ -19,7 +19,7 @@
     <min_height>-1</min_height>
   </auto_scale_widgets>
   <background_color>
-    <color name="Background_main" red="146" green="230" blue="239" />
+    <color red="86" green="100" blue="122" />
   </background_color>
   <width>1900</width>
   <x>0</x>
@@ -72,7 +72,7 @@ $(pv_value)</tooltip>
     </fg_gradient_color>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </background_color>
     <width>1900</width>
     <x>0</x>
@@ -1155,7 +1155,7 @@ $(pv_value)</tooltip>
     <enabled>true</enabled>
     <wuid>561d0bec:144015a2d22:-7d2e</wuid>
     <tab_1_background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </tab_1_background_color>
     <tab_1_icon_path></tab_1_icon_path>
     <tab_2_foreground_color>
@@ -1167,7 +1167,7 @@ $(pv_value)</tooltip>
     <tab_3_title>Others</tab_3_title>
     <tab_2_enabled>true</tab_2_enabled>
     <background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </background_color>
     <width>950</width>
     <x>12</x>
@@ -1182,7 +1182,7 @@ $(pv_value)</tooltip>
     </macros>
     <visible>true</visible>
     <tab_0_background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </tab_0_background_color>
     <tab_3_foreground_color>
       <color name="TM_Text" red="0" green="0" blue="0" />
@@ -1192,7 +1192,7 @@ $(pv_value)</tooltip>
       <opifont.name fontName="Arial" height="11" style="1">MCSTab text</opifont.name>
     </tab_2_font>
     <tab_3_background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </tab_3_background_color>
     <tab_3_enabled>true</tab_3_enabled>
     <name>Tabbed Container</name>
@@ -1202,7 +1202,7 @@ $(pv_value)</tooltip>
       <opifont.name fontName="Arial" height="11" style="1">MCSTab text</opifont.name>
     </tab_0_font>
     <tab_2_background_color>
-      <color name="Background_main" red="146" green="230" blue="239" />
+      <color red="86" green="100" blue="122" />
     </tab_2_background_color>
     <tab_0_title>Power Sub-System</tab_0_title>
     <tab_1_foreground_color>
