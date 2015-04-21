@@ -3,9 +3,9 @@ package org.csstudio.vtype.pv.yamcs;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.WebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.YamcsPVReader;
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
-import org.csstudio.platform.libs.yamcs.WebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVType;
 import org.csstudio.vtype.pv.PV;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
@@ -14,13 +14,13 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
  * TODO not sure how to disconnect/unsubscribe. Looks like the PVPool has some logic to release a
  * PV, but how does it trigger?
  */
-public class Yamcs_PV extends PV implements YamcsPVReader {
+public class Para_PV extends PV implements YamcsPVReader {
 
-    private static final Logger log = Logger.getLogger(Yamcs_PV.class.getName());
+    private static final Logger log = Logger.getLogger(Para_PV.class.getName());
     private WebSocketRegistrar webSocketClient;
     private String baseName;
 
-    protected Yamcs_PV(String name, String baseName) {
+    protected Para_PV(String name, String baseName) {
         super(name);
         this.baseName = baseName;
 
@@ -59,9 +59,7 @@ public class Yamcs_PV extends PV implements YamcsPVReader {
 
     @Override
     public void processParameterValue(ParameterValue pval) {
-        if (log.isLoggable(Level.FINE)) {
-            log.fine("Incoming PV update of " + pval.getId().getName() + " at " + pval.getAcquisitionTimeUTC());
-        }
+        log.fine(String.format("Incoming PV update of %s at %s", pval.getId().getName(), pval.getAcquisitionTimeUTC()));
         notifyListenersOfValue(YamcsVType.fromYamcs(pval));
     }
 

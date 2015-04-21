@@ -31,7 +31,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
     public YamcsPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(YamcsPlugin.getDefault().getPreferenceStore());
-        setDescription("Set connection properties to a Yamcs server (as used for yamcs:// datasources)");
+        setDescription("Set connection properties to a Yamcs server");
     }
 
     /**

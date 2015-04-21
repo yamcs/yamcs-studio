@@ -1530,7 +1530,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>yamcs://Simulator_BatteryVoltage1</pv_name>
+          <pv_name>para://Simulator_BatteryVoltage1</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1702,7 +1702,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>yamcs://Simulator_BatteryTemperature1</pv_name>
+          <pv_name>para://Simulator_BatteryTemperature1</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1957,7 +1957,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>yamcs://Simulator_BatteryVoltage2</pv_name>
+          <pv_name>para://Simulator_BatteryVoltage2</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2129,7 +2129,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>yamcs://Simulator_BatteryTemperature2</pv_name>
+          <pv_name>para://Simulator_BatteryTemperature2</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2262,7 +2262,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>yamcs://Simulator_BusVoltage</pv_name>
+          <pv_name>para://Simulator_BusVoltage</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2434,7 +2434,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>yamcs://Simulator_BusCurrent</pv_name>
+          <pv_name>para://Simulator_BusCurrent</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2578,25 +2578,25 @@ $(pv_value)</tooltip>
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace6PV("yamcs://Simulator_BusCurrent")</pv>
+              <pv trig="true">loc://trace6PV("para://Simulator_BusCurrent")</pv>
             </rule>
             <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace6PV("yamcs://Simulator_BusCurrent")</pv>
+              <pv trig="true">loc://trace6PV("para://Simulator_BusCurrent")</pv>
             </rule>
             <rule name="x axis" prop_id="trace_0_x_pv" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace7PV("yamcs://Simulator_BusVoltage")</pv>
+              <pv trig="true">loc://trace7PV("para://Simulator_BusVoltage")</pv>
             </rule>
             <rule name="x-anxis name" prop_id="axis_0_axis_title" out_exp="true">
               <exp bool_exp="true">
                 <value>pvStr0</value>
               </exp>
-              <pv trig="true">loc://trace7PV("yamcs://Simulator_BusVoltage")</pv>
+              <pv trig="true">loc://trace7PV("para://Simulator_BusVoltage")</pv>
             </rule>
           </rules>
           <axis_1_visible>true</axis_1_visible>
@@ -2666,7 +2666,7 @@ $(pv_value)</tooltip>
           </scale_options>
           <items_from_pv>false</items_from_pv>
           <visible>true</visible>
-          <pv_name>loc://trace6PV("yamcs://Simulator_BusCurrent")</pv_name>
+          <pv_name>loc://trace6PV("para://Simulator_BusCurrent")</pv_name>
           <border_color>
             <color red="0" green="128" blue="255" />
           </border_color>
@@ -2684,12 +2684,12 @@ $(pv_value)</tooltip>
           </foreground_color>
           <actions hook="false" hook_all="false" />
           <items>
-            <s>yamcs://Simulator_Theta</s>
-            <s>yamcs://Simulator_Phi</s>
-            <s>yamcs://Simulator_Psi</s>
+            <s>para://Simulator_Theta</s>
+            <s>para://Simulator_Phi</s>
+            <s>para://Simulator_Psi</s>
             <s>sim://ramp(0,40,-0.1,1.2)</s>
-            <s>yamcs://Simulator_BusVoltage</s>
-            <s>yamcs://Simulator_BusCurrent</s>
+            <s>para://Simulator_BusVoltage</s>
+            <s>para://Simulator_BusCurrent</s>
           </items>
           <font>
             <fontdata fontName="Arial" height="9" style="0" />
@@ -2757,7 +2757,7 @@ $(pv_value)</tooltip>
           </scale_options>
           <items_from_pv>false</items_from_pv>
           <visible>true</visible>
-          <pv_name>loc://trace7PV("yamcs://Simulator_BusVoltage")</pv_name>
+          <pv_name>loc://trace7PV("para://Simulator_BusVoltage")</pv_name>
           <border_color>
             <color red="0" green="128" blue="255" />
           </border_color>
@@ -2777,8 +2777,8 @@ $(pv_value)</tooltip>
           <items>
             <s>sim://ramp(0,40,0.1,1.2)</s>
             <s>sim://ramp(0,50,0.2,1)</s>
-            <s>yamcs://Simulator_BusCurrent</s>
-            <s>yamcs://Simulator_BusVoltage</s>
+            <s>para://Simulator_BusCurrent</s>
+            <s>para://Simulator_BusVoltage</s>
           </items>
           <font>
             <fontdata fontName="Arial" height="9" style="0" />
@@ -3139,12 +3139,12 @@ $(pv_value)</tooltip>
           </foreground_color>
           <actions hook="false" hook_all="false" />
           <items>
-            <s>yamcs://Simulator_Theta</s>
-            <s>yamcs://Simulator_Phi</s>
-            <s>yamcs://Simulator_Psi</s>
+            <s>para://Simulator_Theta</s>
+            <s>para://Simulator_Phi</s>
+            <s>para://Simulator_Psi</s>
             <s>sim://ramp(0,40,-0.1,1.2)</s>
-            <s>yamcs://Simulator_BusVoltage</s>
-            <s>yamcs://Simulator_BusCurrent</s>
+            <s>para://Simulator_BusVoltage</s>
+            <s>para://Simulator_BusCurrent</s>
           </items>
           <font>
             <fontdata fontName="Arial" height="9" style="0" />
@@ -3232,8 +3232,8 @@ $(pv_value)</tooltip>
           <items>
             <s>sim://ramp(0,40,0.1,1.2)</s>
             <s>sim://ramp(0,50,0.2,1)</s>
-            <s>yamcs://Simulator_BusCurrent</s>
-            <s>yamcs://Simulator_BusVoltage</s>
+            <s>para://Simulator_BusCurrent</s>
+            <s>para://Simulator_BusVoltage</s>
           </items>
           <font>
             <fontdata fontName="Arial" height="9" style="0" />
@@ -5843,25 +5843,25 @@ $(pv_value)</tooltip>
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace0PV("yamcs://Simulator_Theta")</pv>
+          <pv trig="true">loc://trace0PV("para://Simulator_Theta")</pv>
         </rule>
         <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace0PV("yamcs://Simulator_Theta")</pv>
+          <pv trig="true">loc://trace0PV("para://Simulator_Theta")</pv>
         </rule>
         <rule name="change trace1" prop_id="trace_1_y_pv" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace1PV("yamcs://Simulator_Psi")</pv>
+          <pv trig="true">loc://trace1PV("para://Simulator_Psi")</pv>
         </rule>
         <rule name="Update Legend1" prop_id="trace_1_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace1PV("yamcs://Simulator_Psi")</pv>
+          <pv trig="true">loc://trace1PV("para://Simulator_Psi")</pv>
         </rule>
       </rules>
       <axis_1_visible>true</axis_1_visible>
@@ -5948,7 +5948,7 @@ $(pv_value)</tooltip>
       </scale_options>
       <items_from_pv>false</items_from_pv>
       <visible>true</visible>
-      <pv_name>loc://trace0PV("yamcs://Simulator_Theta")</pv_name>
+      <pv_name>loc://trace0PV("para://Simulator_Theta")</pv_name>
       <border_color>
         <color red="0" green="128" blue="255" />
       </border_color>
@@ -5966,9 +5966,9 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>yamcs://Simulator_Theta</s>
-        <s>yamcs://Simulator_Phi</s>
-        <s>yamcs://Simulator_Psi</s>
+        <s>para://Simulator_Theta</s>
+        <s>para://Simulator_Phi</s>
+        <s>para://Simulator_Psi</s>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
       </items>
       <font>
@@ -6037,7 +6037,7 @@ $(pv_value)</tooltip>
       </scale_options>
       <items_from_pv>false</items_from_pv>
       <visible>true</visible>
-      <pv_name>loc://trace1PV("yamcs://Simulator_Psi")</pv_name>
+      <pv_name>loc://trace1PV("para://Simulator_Psi")</pv_name>
       <border_color>
         <color red="0" green="128" blue="255" />
       </border_color>
@@ -6055,9 +6055,9 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>yamcs://Simulator_Theta</s>
-        <s>yamcs://Simulator_Phi</s>
-        <s>yamcs://Simulator_Psi</s>
+        <s>para://Simulator_Theta</s>
+        <s>para://Simulator_Phi</s>
+        <s>para://Simulator_Psi</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -6191,12 +6191,12 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>yamcs://Simulator_Theta</s>
-        <s>yamcs://Simulator_Phi</s>
-        <s>yamcs://Simulator_Psi</s>
-        <s>yamcs://Simulator_TAS</s>
-        <s>yamcs://Simulator_CAS</s>
-        <s>yamcs://Simulator_BusVoltage</s>
+        <s>para://Simulator_Theta</s>
+        <s>para://Simulator_Phi</s>
+        <s>para://Simulator_Psi</s>
+        <s>para://Simulator_TAS</s>
+        <s>para://Simulator_CAS</s>
+        <s>para://Simulator_BusVoltage</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -6282,9 +6282,9 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>yamcs://Simulator_TAS</s>
-        <s>yamcs://Simulator_CAS</s>
-        <s>yamcs://Simulator_BusCurrent</s>
+        <s>para://Simulator_TAS</s>
+        <s>para://Simulator_CAS</s>
+        <s>para://Simulator_BusCurrent</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -7067,11 +7067,11 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>yamcs://Simulator_Theta</s>
-        <s>yamcs://Simulator_Phi</s>
-        <s>yamcs://Simulator_Psi</s>
+        <s>para://Simulator_Theta</s>
+        <s>para://Simulator_Phi</s>
+        <s>para://Simulator_Psi</s>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
-        <s>yamcs://Simulator_BusVoltage</s>
+        <s>para://Simulator_BusVoltage</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -7159,7 +7159,7 @@ $(pv_value)</tooltip>
       <items>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
         <s>sim://ramp(0,50,-0.2,1)</s>
-        <s>yamcs://Simulator_BusCurrent</s>
+        <s>para://Simulator_BusCurrent</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />

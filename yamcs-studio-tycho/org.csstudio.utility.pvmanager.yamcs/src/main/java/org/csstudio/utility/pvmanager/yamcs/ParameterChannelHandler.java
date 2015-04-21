@@ -20,13 +20,13 @@ import org.yamcs.xtce.XtceDb;
  * rather than at the Datasource level. Then we wouldn't have to split out the software parameters
  * under a different scheme.
  */
-public class YamcsChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YamcsPVReader {
+public class ParameterChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YamcsPVReader {
 
     private WebSocketRegistrar webSocketClient;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
-    private static final Logger log = Logger.getLogger(YamcsChannelHandler.class.getName());
+    private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
 
-    public YamcsChannelHandler(String channelName, WebSocketRegistrar webSocketClient) {
+    public ParameterChannelHandler(String channelName, WebSocketRegistrar webSocketClient) {
         super(channelName);
         this.webSocketClient = webSocketClient;
     }

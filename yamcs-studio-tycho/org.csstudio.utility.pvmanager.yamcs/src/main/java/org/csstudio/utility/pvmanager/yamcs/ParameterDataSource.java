@@ -8,17 +8,17 @@ import org.epics.pvmanager.DataSource;
 /**
  * When running the OPIbuilder this is instantiated for every parameter separately.
  */
-public class YamcsDataSource extends DataSource {
+public class ParameterDataSource extends DataSource {
 
     private static WebSocketRegistrar webSocketClient;
 
-    public YamcsDataSource() {
+    public ParameterDataSource() {
         super(false /* read-only */);
         webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
     }
 
     @Override
     protected ChannelHandler createChannel(String channelName) {
-        return new YamcsChannelHandler(channelName, webSocketClient);
+        return new ParameterChannelHandler(channelName, webSocketClient);
     }
 }

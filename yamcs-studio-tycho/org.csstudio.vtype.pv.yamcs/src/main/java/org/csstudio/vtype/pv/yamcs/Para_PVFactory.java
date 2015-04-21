@@ -3,8 +3,8 @@ package org.csstudio.vtype.pv.yamcs;
 import org.csstudio.vtype.pv.PV;
 import org.csstudio.vtype.pv.PVFactory;
 
-public class Yamcs_PVFactory implements PVFactory {
-    public final static String TYPE = "yamcs";
+public class Para_PVFactory implements PVFactory {
+    public final static String TYPE = "para";
 
     @Override
     public String getType() {
@@ -13,6 +13,6 @@ public class Yamcs_PVFactory implements PVFactory {
 
     @Override
     public PV createPV(String name, String baseName) throws Exception {
-        return new Yamcs_PV(name, baseName);
+        return new Para_PV(name, baseName);
     }
 }

@@ -3,57 +3,57 @@
     <pvlist>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_H2TankFill</name>
+            <name>para://Simulator_H2TankFill</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_O2TankFill</name>
+            <name>para://Simulator_O2TankFill</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_H2TankTemp</name>
+            <name>para://Simulator_H2TankTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_O2TankTemp</name>
+            <name>para://Simulator_O2TankTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_H2TankPressure</name>
+            <name>para://Simulator_H2TankPressure</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_O2TankPressure</name>
+            <name>para://Simulator_O2TankPressure</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_H2ValveTemp</name>
+            <name>para://Simulator_H2ValveTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_O2ValveTemp</name>
+            <name>para://Simulator_O2ValveTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_O2ValvePressure</name>
+            <name>para://Simulator_O2ValvePressure</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_TurbineTemp</name>
+            <name>para://Simulator_TurbineTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_TurbinePressure</name>
+            <name>para://Simulator_TurbinePressure</name>
             <tolerance>0.01</tolerance>
         </pv>
     </pvlist>

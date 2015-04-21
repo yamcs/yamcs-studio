@@ -2,6 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension point="org.csstudio.vtype.pv.pvfactory">
-      <PVFactory name="Yamcs" class="org.csstudio.vtype.pv.yamcs.Yamcs_PVFactory"/>
+      <PVFactory name="Yamcs" class="org.csstudio.vtype.pv.yamcs.Para_PVFactory"/>
    </extension>
 </plugin>

@@ -3,47 +3,47 @@
     <pvlist>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_MemoryRate</name>
+            <name>para://Simulator_MemoryRate</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_PrimBusVoltage1</name>
+            <name>para://Simulator_PrimBusVoltage1</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_PrimBusCurrent1</name>
+            <name>para://Simulator_PrimBusCurrent1</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_PrimBusVoltage2</name>
+            <name>para://Simulator_PrimBusVoltage2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_PrimBusCurrent2</name>
+            <name>para://Simulator_PrimBusCurrent2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_SecBusVoltage2</name>
+            <name>para://Simulator_SecBusVoltage2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_PrimBusCurrent2</name>
+            <name>para://Simulator_PrimBusCurrent2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_SecBusVoltage3</name>
+            <name>para://Simulator_SecBusVoltage3</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>yamcs://Simulator_SecBusCurrent3</name>
+            <name>para://Simulator_SecBusCurrent3</name>
             <tolerance>0.01</tolerance>
         </pv>
     </pvlist>

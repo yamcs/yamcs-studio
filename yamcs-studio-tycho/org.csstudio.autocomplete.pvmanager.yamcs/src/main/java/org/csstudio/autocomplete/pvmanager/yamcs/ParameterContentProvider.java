@@ -32,15 +32,14 @@ import org.yamcs.protobuf.Rest.RestParameter;
  * the datasource-providers instead, but had some problems trying to figure that out, and this seems
  * to work fine for now.
  */
-public class YamcsContentProvider implements IAutoCompleteProvider {
+public class ParameterContentProvider implements IAutoCompleteProvider {
 
-    private static final String YAMCS_SOURCE = "yamcs://";
-    private static final Logger log = Logger.getLogger(YamcsContentProvider.class.getName());
+    private static final Logger log = Logger.getLogger(ParameterContentProvider.class.getName());
 
     // Available parameters by their lowercase representation
     private ConcurrentHashMap<String, String> haystack = new ConcurrentHashMap<>();
 
-    public YamcsContentProvider() {
+    public ParameterContentProvider() {
         // Get initial list of parameters
         loadParameterNames(YamcsPlugin.getDefault().getParameters());
 
@@ -73,8 +72,8 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
     @Override
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
         String content = desc.getValue();
-        if (content.startsWith(YAMCS_SOURCE)) {
-            content = content.substring(YAMCS_SOURCE.length());
+        if (content.startsWith(ParameterContentParser.PARA_SOURCE)) {
+            content = content.substring(ParameterContentParser.PARA_SOURCE.length());
         }
 
         if (haystack == null) {
