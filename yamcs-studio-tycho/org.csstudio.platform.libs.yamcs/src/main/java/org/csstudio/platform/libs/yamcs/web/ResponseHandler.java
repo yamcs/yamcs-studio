@@ -12,5 +12,5 @@ public interface ResponseHandler {
     /**
      * When some uncaught exception occurred
      */
-    void onFault(Throwable t);
+    void onException(Exception e);
 }

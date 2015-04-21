@@ -125,10 +125,10 @@ public class AddTelecommandDialog extends TitleAreaDialog {
                 }
 
                 @Override
-                public void onFault(Throwable t) {
+                public void onException(Exception e) {
                     Display.getDefault().asyncExec(() -> {
-                        setErrorMessage(t.getMessage());
-                        log.log(Level.SEVERE, "Could not validate command string", t);
+                        setErrorMessage(e.getMessage());
+                        log.log(Level.SEVERE, "Could not validate command string", e);
                     });
                 }
             });
@@ -161,10 +161,10 @@ public class AddTelecommandDialog extends TitleAreaDialog {
                 }
 
                 @Override
-                public void onFault(Throwable t) {
+                public void onException(Exception e) {
                     Display.getDefault().asyncExec(() -> {
-                        setErrorMessage(t.getMessage());
-                        log.log(Level.SEVERE, "Could not validate command string", t);
+                        setErrorMessage(e.getMessage());
+                        log.log(Level.SEVERE, "Could not validate command string", e);
                     });
                 }
             });

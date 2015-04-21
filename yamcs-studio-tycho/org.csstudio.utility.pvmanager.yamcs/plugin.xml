@@ -4,9 +4,18 @@
    <extension
          point="org.csstudio.utility.pvmanager.datasource">
       <datasource
-            datasource="org.csstudio.utility.pvmanager.yamcs.YamcsPVDataSource"
-            name="Yamcs DataSource (yamcs)"
+            datasource="org.csstudio.utility.pvmanager.yamcs.YamcsDataSource"
+            name="Yamcs Parameter"
             prefix="yamcs">
+      </datasource>
+   </extension>
+   
+   <extension
+         point="org.csstudio.utility.pvmanager.datasource">
+      <datasource
+            datasource="org.csstudio.utility.pvmanager.yamcs.SoftwareParameterDataSource"
+            name="Yamcs Software Parameter"
+            prefix="sw">
       </datasource>
    </extension>
 

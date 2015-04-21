@@ -25,7 +25,7 @@ import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.XtceDb;
 
@@ -41,18 +41,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private BundleListener bundleListener;
 
     private RestClient restClient;
+    private WebSocketRegistrar webSocketClient;
 
+    private XtceDb mdb;
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
-    private List<NamedObjectId> parameterIds = Collections.emptyList();
+    private List<RestParameter> parameters = Collections.emptyList();
     private CountDownLatch parametersLoaded = new CountDownLatch(1);
 
     private Collection<MetaCommand> commands = Collections.emptyList();
     private CountDownLatch commandsLoaded = new CountDownLatch(1);
-
-    public RestClient getRestClient() {
-        return restClient;
-    }
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -63,6 +61,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
         String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
         restClient = new RestClient(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
+        webSocketClient = new WebSocketRegistrar(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
 
         // Only load MDB once bundle has been fully started
         bundleListener = event -> {
@@ -70,15 +69,19 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 // Extra check, bundle may have been shut down between the
                 // time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
-                    log.info("loading mdb async?..");
                     fetchInitialMdbAsync();
-                    log.info("after fetch async");
                 }
             }
         };
         context.addBundleListener(bundleListener);
+    }
 
-        System.out.println("At least we got to the end of the start()");
+    public RestClient getRestClient() {
+        return restClient;
+    }
+
+    public WebSocketRegistrar getWebSocketClient() {
+        return webSocketClient;
     }
 
     /**
@@ -100,22 +103,21 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 } else {
                     RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
                     Display.getDefault().asyncExec(() -> {
-                        parameterIds = response.getIdsList();
+                        parameters = response.getParametersList();
                         for (MDBContextListener l : mdbListeners) {
-                            l.onParametersChanged(parameterIds);
+                            l.onParametersChanged(parameters);
                         }
+                        webSocketClient.refreshAllReaders();
                         parametersLoaded.countDown();
                     });
                 }
             }
 
             @Override
-            public void onFault(Throwable t) {
-                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", t);
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
             }
         });
-
-        System.out.println("parameters.done, continuing to raw dump");
 
         // Load commands
         RestDumpRawMdbRequest.Builder dumpRequest = RestDumpRawMdbRequest.newBuilder();
@@ -127,8 +129,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 } else {
                     RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
                     try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
-                        XtceDb mdb = (XtceDb) oin.readObject();
+                        XtceDb newMdb = (XtceDb) oin.readObject();
                         Display.getDefault().asyncExec(() -> {
+                            mdb = newMdb;
                             commands = mdb.getMetaCommands();
                             for (MDBContextListener l : mdbListeners) {
                                 l.onCommandsChanged(commands);
@@ -142,12 +145,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
             }
 
             @Override
-            public void onFault(Throwable t) {
-                log.log(Level.SEVERE, "Could not fetch available yamcs commands", t);
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Could not fetch available yamcs commands", e);
             }
         });
-
-        System.out.println("raw dump done, continuing to commands");
     }
 
     public void addMdbListener(MDBContextListener listener) {
@@ -157,12 +158,11 @@ public class YamcsPlugin extends AbstractUIPlugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         try {
-            if (bundleListener != null) {
+            if (bundleListener != null)
                 context.removeBundleListener(bundleListener);
-            }
             plugin = null;
             restClient.shutdown();
-            YamcsWebSocketRegistrar.getInstance().shutdown();
+            webSocketClient.shutdown();
         } finally {
             super.stop(context);
         }
@@ -175,11 +175,15 @@ public class YamcsPlugin extends AbstractUIPlugin {
     /**
      * Return the available parameters
      */
-    public List<NamedObjectId> getParameterIds() {
-        return parameterIds;
+    public List<RestParameter> getParameters() {
+        return parameters;
     }
 
     public Collection<MetaCommand> getCommands() {
         return commands;
+    }
+
+    public XtceDb getMdb() {
+        return mdb;
     }
 }

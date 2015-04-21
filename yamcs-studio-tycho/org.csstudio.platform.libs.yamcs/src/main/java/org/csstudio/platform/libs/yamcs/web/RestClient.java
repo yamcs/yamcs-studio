@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
 import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
@@ -37,7 +38,6 @@ import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestSendCommandResponse;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
-import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
 
 import com.google.protobuf.MessageLite;
 
@@ -61,7 +61,7 @@ public class RestClient {
     }
 
     public void validateCommand(RestValidateCommandRequest request, ResponseHandler responseHandler) {
-        post("/api/commanding/validator", request, RestValidateCommandResponse.newBuilder(), responseHandler);
+        post("/api/commanding/validator", request, null, responseHandler);
     }
 
     public void sendCommand(RestSendCommandRequest request, ResponseHandler responseHandler) {
@@ -74,6 +74,10 @@ public class RestClient {
 
     public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler responseHandler) {
         get("/api/mdb/dump", null, RestDumpRawMdbResponse.newBuilder(), responseHandler);
+    }
+
+    public void setParameters(ParameterData request, ResponseHandler responseHandler) {
+        post("/api/parameter/_set", request, null, responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
@@ -99,9 +103,11 @@ public class RestClient {
                                 @Override
                                 public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
                                     if (HttpResponseStatus.OK.equals(response.getStatus())) {
-                                        target.mergeFrom(new ByteBufInputStream(response.content()));
+                                        MessageLite responseMsg = null;
+                                        if (target != null)
+                                            responseMsg = target.mergeFrom(new ByteBufInputStream(response.content())).build();
                                         ctx.close();
-                                        handler.onMessage(target.build());
+                                        handler.onMessage(responseMsg);
                                     } else {
                                         InputStream in = new ByteBufInputStream(response.content());
                                         RestExceptionMessage msg = RestExceptionMessage.newBuilder().mergeFrom(in).build();
@@ -114,7 +120,11 @@ public class RestClient {
                                 public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                                     cause.printStackTrace();
                                     ctx.close();
-                                    handler.onFault(cause);
+                                    if (cause instanceof Exception) {
+                                        handler.onException((Exception) cause);
+                                    } else {
+                                        handler.onException(new Exception(cause));
+                                    }
                                 }
                             });
                         }
@@ -156,8 +166,8 @@ public class RestClient {
             }
 
             @Override
-            public void onFault(Throwable t) {
-                System.out.println("t " + t);
+            public void onException(Exception e) {
+                System.out.println("e " + e);
             }
         });
         endpoint.shutdown();

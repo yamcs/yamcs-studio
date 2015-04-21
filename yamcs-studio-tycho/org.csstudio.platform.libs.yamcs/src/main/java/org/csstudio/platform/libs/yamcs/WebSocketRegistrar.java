@@ -20,7 +20,8 @@ import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 
 /**
- * Combines state accross the many-to-one relation from yamcs:// datasources to the WebSocketClient.
+ * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient. Combines state accross the
+ * many-to-one relation from yamcs datasources.
  * <p>
  * Now also handles live subscription of command history. Maybe should clean up a bit here to
  * extract out all the pvreader logic, because it's starting to do a bit too much.
@@ -28,13 +29,13 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
  * All methods are asynchronous, with any responses or incoming data being sent to the provided
  * callback listener.
  */
-public class YamcsWebSocketRegistrar implements WebSocketClientCallbackListener {
+public class WebSocketRegistrar implements WebSocketClientCallbackListener {
 
     private static final String USER_AGENT = "yamcs-studio/" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
-    private static final Logger log = Logger.getLogger(YamcsWebSocketRegistrar.class.getName());
-    private static YamcsWebSocketRegistrar INSTANCE;
+    private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
     // Store pvreaders while connection is not established
+    // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
     private Map<String, YamcsPVReader> pvReadersByName = new LinkedHashMap<>();
     private List<CommandHistoryListener> cmdhistListeners = new ArrayList<>();
 
@@ -44,7 +45,7 @@ public class YamcsWebSocketRegistrar implements WebSocketClientCallbackListener 
     // Order all subscribe/unsubscribe events
     private final BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
 
-    private YamcsWebSocketRegistrar(YamcsConnectionProperties yprops) {
+    public WebSocketRegistrar(YamcsConnectionProperties yprops) {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(USER_AGENT);
 
@@ -76,37 +77,26 @@ public class YamcsWebSocketRegistrar implements WebSocketClientCallbackListener 
         }
     }
 
-    public static synchronized YamcsWebSocketRegistrar getInstance() {
-        if (INSTANCE == null) {
-            String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
-            int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
-            String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-            INSTANCE = new YamcsWebSocketRegistrar(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
-        }
-        return INSTANCE;
-    }
-
     public synchronized void connectPVReader(YamcsPVReader pvReader) {
         pvReadersByName.put(pvReader.getPVName(), pvReader);
-        NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
+        NamedObjectList idList = YamcsUtils.toNamedObjectList(pvReader.getPVName());
         pendingRequests.offer(new MergeableWebSocketRequest("parameter", "subscribe", idList));
     }
 
     public synchronized void disconnectPVReader(YamcsPVReader pvReader) {
         pvReadersByName.remove(pvReader);
-        NamedObjectList idList = wrapAsNamedObjectList(pvReader.getPVName());
+        NamedObjectList idList = YamcsUtils.toNamedObjectList(pvReader.getPVName());
         pendingRequests.offer(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
+    }
+
+    public synchronized void refreshAllReaders() {
+        log.info("Refreshing all pv readers");
+        pvReadersByName.forEach((name, pvReader) -> pvReader.signalYamcsConnected());
     }
 
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         cmdhistListeners.add(listener);
         pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe")); // TODO don't need to do this for every listener
-    }
-
-    private static NamedObjectList wrapAsNamedObjectList(String pvName) {
-        return NamedObjectList.newBuilder().addList(NamedObjectId.newBuilder()
-                .setNamespace(YamcsPlugin.getDefault().getMdbNamespace())
-                .setName(pvName)).build();
     }
 
     public void disconnect() {

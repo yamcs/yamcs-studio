@@ -4,7 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.platform.libs.yamcs.YamcsPVReader;
-import org.csstudio.platform.libs.yamcs.YamcsWebSocketRegistrar;
+import org.csstudio.platform.libs.yamcs.YamcsPlugin;
+import org.csstudio.platform.libs.yamcs.WebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVType;
 import org.csstudio.vtype.pv.PV;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
@@ -16,7 +17,7 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 public class Yamcs_PV extends PV implements YamcsPVReader {
 
     private static final Logger log = Logger.getLogger(Yamcs_PV.class.getName());
-    private YamcsWebSocketRegistrar registrar;
+    private WebSocketRegistrar webSocketClient;
     private String baseName;
 
     protected Yamcs_PV(String name, String baseName) {
@@ -26,8 +27,8 @@ public class Yamcs_PV extends PV implements YamcsPVReader {
         // Notify that this PV is read-only
         notifyListenersOfPermissions(true);
 
-        registrar = YamcsWebSocketRegistrar.getInstance();
-        registrar.connectPVReader(this);
+        webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
+        webSocketClient.connectPVReader(this);
     }
 
     @Override
@@ -70,6 +71,6 @@ public class Yamcs_PV extends PV implements YamcsPVReader {
     @Override
     protected void close() {
         super.close();
-        registrar.disconnectPVReader(this);
+        webSocketClient.disconnectPVReader(this);
     }
 }

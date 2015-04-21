@@ -16,7 +16,8 @@ import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.csstudio.platform.libs.yamcs.MDBContextListener;
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Rest.RestDataSource;
+import org.yamcs.protobuf.Rest.RestParameter;
 
 /**
  * PV Name lookup for Yamcs Parameters
@@ -26,7 +27,7 @@ import org.yamcs.protobuf.Yamcs.NamedObjectId;
  * lookup. Before starting a new lookup, however, <code>cancel()</code> is invoked. This means there
  * are never multiple concurrent lookups started on purpose, but a previously started lookup may
  * still continue in its thread in case <code>cancel()</code> has no immediate effect.
- * 
+ *
  * TODO this is marked in the osgi file as a high-level provider, we should try to make it as one of
  * the datasource-providers instead, but had some problems trying to figure that out, and this seems
  * to work fine for now.
@@ -41,13 +42,13 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
 
     public YamcsContentProvider() {
         // Get initial list of parameters
-        loadParameterNames(YamcsPlugin.getDefault().getParameterIds());
+        loadParameterNames(YamcsPlugin.getDefault().getParameters());
 
         // Subscribe to future updates
         YamcsPlugin.getDefault().addMdbListener(new MDBContextListener() {
             @Override
-            public void onParametersChanged(List<NamedObjectId> parameterIds) {
-                loadParameterNames(parameterIds);
+            public void onParametersChanged(List<RestParameter> parameters) {
+                loadParameterNames(parameters);
             }
         });
     }
@@ -55,9 +56,12 @@ public class YamcsContentProvider implements IAutoCompleteProvider {
     /**
      * Builds an index of all available parameter names
      */
-    private void loadParameterNames(List<NamedObjectId> parameterIds) {
-        for (NamedObjectId id : parameterIds) {
-            haystack.put(id.getName().toLowerCase(), id.getName());
+    private void loadParameterNames(List<RestParameter> parameters) {
+        for (RestParameter p : parameters) {
+            // TODO should also exclude sysparams, but yamcs server doesn't do it either right now
+            if (p.getDataSource() != RestDataSource.LOCAL) {
+                haystack.put(p.getId().getName().toLowerCase(), p.getId().getName());
+            }
         }
     }
 

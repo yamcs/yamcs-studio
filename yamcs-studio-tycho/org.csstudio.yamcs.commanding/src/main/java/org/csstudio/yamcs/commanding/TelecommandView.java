@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.csstudio.platform.libs.yamcs.CommandHistoryListener;
-import org.csstudio.platform.libs.yamcs.YamcsWebSocketRegistrar;
+import org.csstudio.platform.libs.yamcs.YamcsPlugin;
+import org.csstudio.platform.libs.yamcs.WebSocketRegistrar;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
@@ -48,6 +49,8 @@ public class TelecommandView extends ViewPart {
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_T = "T";
 
+    private WebSocketRegistrar webSocketClient;
+
     // Prefix used in command attribute names
     private static final String ACK_PREFIX = "Acknowledge_";
 
@@ -73,6 +76,7 @@ public class TelecommandView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
         this.parent = parent;
+        webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
         // Load images
@@ -187,7 +191,7 @@ public class TelecommandView extends ViewPart {
     }
 
     private void subscribeToUpdates() {
-        YamcsWebSocketRegistrar.getInstance().addCommandHistoryListener(new CommandHistoryListener() {
+        webSocketClient.addCommandHistoryListener(new CommandHistoryListener() {
             @Override
             public void signalYamcsDisconnected() {
             }
