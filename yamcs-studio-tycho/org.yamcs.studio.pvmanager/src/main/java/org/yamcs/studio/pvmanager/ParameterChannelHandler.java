@@ -78,7 +78,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
 
     @Override
     public void processConnectionInfo(PVConnectionInfo info) {
-        System.out.println("processing " + info);
+        log.fine(String.format("Processing %s", info));
         /*
          * Check that it's not actually a software parameter, because we don't want leaking between
          * the datasource schemes (the web socket client wouldn't make the distinction).
