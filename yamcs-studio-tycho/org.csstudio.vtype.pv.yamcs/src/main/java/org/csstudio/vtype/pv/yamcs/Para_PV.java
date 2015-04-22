@@ -3,6 +3,7 @@ package org.csstudio.vtype.pv.yamcs;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.PVConnectionInfo;
 import org.csstudio.platform.libs.yamcs.WebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.YamcsPVReader;
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
@@ -28,7 +29,7 @@ public class Para_PV extends PV implements YamcsPVReader {
         notifyListenersOfPermissions(true);
 
         webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
-        webSocketClient.connectPVReader(this);
+        webSocketClient.register(this);
     }
 
     @Override
@@ -37,13 +38,10 @@ public class Para_PV extends PV implements YamcsPVReader {
     }
 
     @Override
-    public void signalYamcsConnected() {
-        // TODO don't need to report this to PV listeners?
-    }
-
-    @Override
-    public void signalYamcsDisconnected() {
-        notifyListenersOfDisconnect();
+    public void processConnectionInfo(PVConnectionInfo info) {
+        if (!info.webSocketOpen) {
+            notifyListenersOfDisconnect();
+        }
     }
 
     @Override
@@ -69,6 +67,6 @@ public class Para_PV extends PV implements YamcsPVReader {
     @Override
     protected void close() {
         super.close();
-        webSocketClient.disconnectPVReader(this);
+        webSocketClient.unregister(this);
     }
 }

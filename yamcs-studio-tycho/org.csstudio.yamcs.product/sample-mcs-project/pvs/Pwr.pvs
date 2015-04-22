@@ -3,67 +3,67 @@
     <pvlist>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BusVoltage</name>
+            <name>SIMULATOR_BusVoltage</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BusCurrent</name>
+            <name>SIMULATOR_BusCurrent</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_TotalSystemCurrent</name>
+            <name>SIMULATOR_TotalSystemCurrent</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BatteryVoltage1</name>
+            <name>SIMULATOR_BatteryVoltage1</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BatteryTemperature1</name>
+            <name>SIMULATOR_BatteryTemperature1</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BatteryCapacity1</name>
+            <name>SIMULATOR_BatteryCapacity1</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BatteryVoltage2</name>
+            <name>SIMULATOR_BatteryVoltage2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BatteryTemperature2</name>
+            <name>SIMULATOR_BatteryTemperature2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BatteryVoltage3</name>
+            <name>SIMULATOR_BatteryVoltage3</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BatteryTemperature3</name>
+            <name>SIMULATOR_BatteryTemperature3</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Simulator_BatteryCapacity3</name>
+            <name>SIMULATOR_SIMULATOR_BatteryCapacity3</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_TotalSystemCurrent</name>
+            <name>SIMULATOR_TotalSystemCurrent</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_BusCurrent</name>
+            <name>SIMULATOR_BusCurrent</name>
             <tolerance>0.01</tolerance>
         </pv>
     </pvlist>

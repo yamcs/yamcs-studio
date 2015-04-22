@@ -3,57 +3,57 @@
     <pvlist>
         <pv>
             <selected>true</selected>
-            <name>Simulator_H2TankFill</name>
+            <name>SIMULATOR_H2TankFill</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_O2TankFill</name>
+            <name>SIMULATOR_O2TankFill</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_H2TankTemp</name>
+            <name>SIMULATOR_H2TankTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_O2TankTemp</name>
+            <name>SIMULATOR_O2TankTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_H2TankPressure</name>
+            <name>SIMULATOR_H2TankPressure</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_O2TankPressure</name>
+            <name>SIMULATOR_O2TankPressure</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_H2ValveTemp</name>
+            <name>SIMULATOR_H2ValveTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_O2ValveTemp</name>
+            <name>SIMULATOR_O2ValveTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_O2ValvePressure</name>
+            <name>SIMULATOR_O2ValvePressure</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_TurbineTemp</name>
+            <name>SIMULATOR_TurbineTemp</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_TurbinePressure</name>
+            <name>SIMULATOR_TurbinePressure</name>
             <tolerance>0.01</tolerance>
         </pv>
     </pvlist>

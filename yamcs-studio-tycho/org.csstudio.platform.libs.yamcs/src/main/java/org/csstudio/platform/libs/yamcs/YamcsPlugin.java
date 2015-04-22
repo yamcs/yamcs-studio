@@ -62,6 +62,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
         restClient = new RestClient(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
         webSocketClient = new WebSocketRegistrar(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
+        addMdbListener(webSocketClient);
 
         // Only load MDB once bundle has been fully started
         bundleListener = event -> {
@@ -70,6 +71,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 // time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
                     fetchInitialMdbAsync();
+                    webSocketClient.connect();
                 }
             }
         };
@@ -107,7 +109,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
                         for (MDBContextListener l : mdbListeners) {
                             l.onParametersChanged(parameters);
                         }
-                        webSocketClient.refreshAllReaders();
                         parametersLoaded.countDown();
                     });
                 }
@@ -161,6 +162,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             if (bundleListener != null)
                 context.removeBundleListener(bundleListener);
             plugin = null;
+            mdbListeners.clear();
             restClient.shutdown();
             webSocketClient.shutdown();
         } finally {

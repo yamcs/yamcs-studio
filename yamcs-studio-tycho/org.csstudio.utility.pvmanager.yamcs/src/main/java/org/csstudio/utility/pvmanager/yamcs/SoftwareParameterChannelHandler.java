@@ -2,10 +2,11 @@ package org.csstudio.utility.pvmanager.yamcs;
 
 import java.util.logging.Logger;
 
+import org.csstudio.platform.libs.yamcs.PVConnectionInfo;
+import org.csstudio.platform.libs.yamcs.WebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.YamcsPVReader;
 import org.csstudio.platform.libs.yamcs.YamcsPlugin;
 import org.csstudio.platform.libs.yamcs.YamcsUtils;
-import org.csstudio.platform.libs.yamcs.WebSocketRegistrar;
 import org.csstudio.platform.libs.yamcs.vtype.YamcsVTypeAdapter;
 import org.csstudio.platform.libs.yamcs.web.ResponseHandler;
 import org.csstudio.platform.libs.yamcs.web.RestClient;
@@ -15,24 +16,23 @@ import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.xtce.BooleanParameterType;
-import org.yamcs.xtce.DataSource;
 import org.yamcs.xtce.EnumeratedParameterType;
 import org.yamcs.xtce.FloatParameterType;
 import org.yamcs.xtce.IntegerParameterType;
 import org.yamcs.xtce.Parameter;
 import org.yamcs.xtce.ParameterType;
 import org.yamcs.xtce.StringParameterType;
-import org.yamcs.xtce.XtceDb;
 
 import com.google.protobuf.MessageLite;
 
 /**
  * Supports writable Software parameters
  */
-public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<Boolean, ParameterValue> implements YamcsPVReader {
+public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue> implements YamcsPVReader {
 
     private WebSocketRegistrar webSocketClient;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
@@ -44,30 +44,37 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<B
     }
 
     @Override
-    protected void connect() {
-        log.info("Connect called on " + getChannelName());
-
-        XtceDb mdb = YamcsPlugin.getDefault().getMdb();
-        if (mdb != null) { // MDB might not have arrived yet
-            Parameter p = mdb.getParameter(YamcsPlugin.getDefault().getMdbNamespace(), getChannelName());
-            /*
-             * Check that it's not actually a software parameter, because we don't want leaking
-             * between the datasource schemes (the web socket client wouldn't make the distinction).
-             */
-            if (p != null && p.getDataSource() == DataSource.LOCAL) {
-                webSocketClient.connectPVReader(this);
-                processConnection(Boolean.TRUE); // TODO should call this from outside, on connection.
-            } else {
-                reportExceptionToAllReadersAndWriters(new IllegalArgumentException("Not a valid software parameter channel: '" + getChannelName()
-                        + "'"));
-            }
-        }
+    public String getPVName() {
+        return getChannelName();
     }
 
     @Override
-    protected boolean isWriteConnected(Boolean payload) {
-        System.out.println("Called isWriteConnected " + payload);
-        return payload != null && payload.booleanValue();
+    protected void connect() {
+        log.info("Connect called on " + getChannelName());
+        webSocketClient.register(this);
+    }
+
+    @Override
+    protected void disconnect() { // Interpret this as an unsubscribe
+        log.info("Disconnect called on " + getChannelName());
+        webSocketClient.unregister(this);
+    }
+
+    /**
+     * Returns true when this channelhandler is connected to an open websocket and subscribed to a
+     * valid parameter.
+     */
+    @Override
+    protected boolean isConnected(PVConnectionInfo info) {
+        return info.webSocketOpen
+                && info.parameter != null
+                && info.parameter.getDataSource() == RestDataSource.LOCAL;
+    }
+
+    @Override
+    protected boolean isWriteConnected(PVConnectionInfo info) {
+        System.out.println("Called isWriteConnected " + info);
+        return isConnected(info);
     }
 
     private static Value toValue(Parameter parameter, String stringValue) {
@@ -85,26 +92,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<B
     }
 
     @Override
-    public String getPVName() {
-        return getChannelName();
-    }
-
-    /**
-     * This gets called when a channel has no more active readers. This could also happen while in
-     * the same OPI runtime session. So don't close the websocket here.
-     */
-    @Override
-    protected void disconnect() { // Interpret this as an unsubscribe
-        log.info("Disconnect called on " + getChannelName());
-        webSocketClient.disconnectPVReader(this);
-    }
-
-    @Override
-    protected boolean isConnected(Boolean connected) {
-        return connected != null && connected.booleanValue();
-    }
-
-    @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
         Parameter p = YamcsPlugin.getDefault().getMdb().getParameter(YamcsPlugin.getDefault().getMdbNamespace(), getChannelName());
         ParameterData pdata = ParameterData.newBuilder().addParameter(ParameterValue.newBuilder()
@@ -116,13 +103,11 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<B
             @Override
             public void onMessage(MessageLite responseMsg) {
                 // Report success
-                System.out.println("success!");
                 callback.channelWritten(null);
             }
 
             @Override
             public void onException(Exception e) {
-                System.out.println("failure");
                 e.printStackTrace();
                 callback.channelWritten(e);
             }
@@ -139,18 +124,23 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<B
     }
 
     @Override
-    protected DataSourceTypeAdapter<Boolean, ParameterValue> findTypeAdapter(ValueCache<?> cache, Boolean connection) {
+    protected DataSourceTypeAdapter<PVConnectionInfo, ParameterValue> findTypeAdapter(ValueCache<?> cache, PVConnectionInfo info) {
         return TYPE_ADAPTER;
     }
 
     @Override
-    public void signalYamcsConnected() {
-        processConnection(Boolean.TRUE);
-    }
+    public void processConnectionInfo(PVConnectionInfo info) {
+        /*
+         * Check that it's not actually a regular parameter, because we don't want leaking between
+         * the datasource schemes (the web socket client wouldn't make the distinction).
+         */
+        if (info.parameter != null && info.parameter.getDataSource() != RestDataSource.LOCAL) {
+            reportExceptionToAllReadersAndWriters(new IllegalArgumentException(
+                    "Not a valid software parameter channel: '" + getChannelName() + "'"));
+        }
 
-    @Override
-    public void signalYamcsDisconnected() {
-        processConnection(Boolean.FALSE);
+        // Call the real (but protected) method
+        processConnection(info);
     }
 
     @Override

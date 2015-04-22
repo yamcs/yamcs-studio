@@ -276,7 +276,7 @@ $(trace_0_y_pv_value)</tooltip>
         </axis_0_grid_color>
         <trace_0_name>Altitude (est.)</trace_0_name>
         <trace_0_update_mode>0</trace_0_update_mode>
-        <trace_1_x_pv>Simulator_ElapsedTime</trace_1_x_pv>
+        <trace_1_x_pv>SIMULATOR_ElapsedTime</trace_1_x_pv>
         <wuid>3fd07ff3:1464ce461e0:-7c52</wuid>
         <transparent>false</transparent>
         <trace_1_update_mode>0</trace_1_update_mode>
@@ -331,7 +331,7 @@ $(trace_0_y_pv_value)</tooltip>
           <height_scalable>true</height_scalable>
           <keep_wh_ratio>false</keep_wh_ratio>
         </scale_options>
-        <trace_1_y_pv>=40*exp(-0.012*'Simulator_ElapsedTime') </trace_1_y_pv>
+        <trace_1_y_pv>=40*exp(-0.012*'SIMULATOR_ElapsedTime') </trace_1_y_pv>
         <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
         <axis_0_maximum>410.0</axis_0_maximum>
         <trace_1_y_axis_index>1</trace_1_y_axis_index>
@@ -364,10 +364,10 @@ $(trace_0_y_pv_value)</tooltip>
         <border_color>
           <color name="TM_label_text" red="0" green="0" blue="0" />
         </border_color>
-        <trace_0_y_pv>='Simulator_Altitude'/1000</trace_0_y_pv>
+        <trace_0_y_pv>='SIMULATOR_Altitude'/1000</trace_0_y_pv>
         <trace_0_plot_mode>0</trace_0_plot_mode>
         <enabled>true</enabled>
-        <trace_0_x_pv>Simulator_ElapsedTime</trace_0_x_pv>
+        <trace_0_x_pv>SIMULATOR_ElapsedTime</trace_0_x_pv>
         <axis_1_scale_font>
           <opifont.name fontName="Arial" height="10" style="1">MCSLabel Text</opifont.name>
         </axis_1_scale_font>
@@ -487,10 +487,10 @@ $(trace_0_y_pv_value)</tooltip>
         <border_color>
           <color name="TM_label_text" red="0" green="0" blue="0" />
         </border_color>
-        <trace_0_y_pv>Simulator_SinkRate</trace_0_y_pv>
+        <trace_0_y_pv>SIMULATOR_SinkRate</trace_0_y_pv>
         <trace_0_plot_mode>0</trace_0_plot_mode>
         <enabled>true</enabled>
-        <trace_0_x_pv>Simulator_ElapsedTime</trace_0_x_pv>
+        <trace_0_x_pv>SIMULATOR_ElapsedTime</trace_0_x_pv>
         <axis_1_scale_font>
           <opifont.name fontName="Arial" height="10" style="1">MCSLabel Text</opifont.name>
         </axis_1_scale_font>
@@ -630,7 +630,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Longitude</pv_name>
+          <pv_name>SIMULATOR_Longitude</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -764,7 +764,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Latitude</pv_name>
+          <pv_name>SIMULATOR_Latitude</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -898,7 +898,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Altitude</pv_name>
+          <pv_name>SIMULATOR_Altitude</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1032,7 +1032,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Heading</pv_name>
+          <pv_name>SIMULATOR_Heading</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1248,7 +1248,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Alpha</pv_name>
+          <pv_name>SIMULATOR_Alpha</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1300,7 +1300,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Beta</pv_name>
+          <pv_name>SIMULATOR_Beta</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1352,7 +1352,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Theta</pv_name>
+          <pv_name>SIMULATOR_Theta</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1404,7 +1404,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Phi</pv_name>
+          <pv_name>SIMULATOR_Phi</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1456,7 +1456,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Psi</pv_name>
+          <pv_name>SIMULATOR_Psi</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -1959,7 +1959,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_TAS</pv_name>
+          <pv_name>SIMULATOR_TAS</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2011,7 +2011,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_CAS</pv_name>
+          <pv_name>SIMULATOR_CAS</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2145,7 +2145,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Mach_Number</pv_name>
+          <pv_name>SIMULATOR_Mach_Number</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2197,7 +2197,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_SinkRate</pv_name>
+          <pv_name>SIMULATOR_SinkRate</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2454,7 +2454,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>Simulator_Load_factor</pv_name>
+          <pv_name>SIMULATOR_Load_factor</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2804,7 +2804,7 @@ $(pv_value)</tooltip>
           <value_label_format></value_label_format>
           <visible>true</visible>
           <show_value_label>true</show_value_label>
-          <pv_name>=0.1*((44331.514- 'Simulator_Altitude')/11880.516)^(1/0.1902632)</pv_name>
+          <pv_name>=0.1*((44331.514- 'SIMULATOR_Altitude')/11880.516)^(1/0.1902632)</pv_name>
           <border_color>
             <color red="0" green="128" blue="255" />
           </border_color>
@@ -2887,7 +2887,7 @@ $(pv_value)</tooltip>
           <border_width>1</border_width>
           <value_label_format></value_label_format>
           <visible>true</visible>
-          <pv_name>= (-3.898148148*10^-12 )*'Simulator_Altitude'^3 + (3.757539683*10^-7)*'Simulator_Altitude'^2 - (9.198677249*10^-3)*'Simulator_Altitude'+ 18.87301587</pv_name>
+          <pv_name>= (-3.898148148*10^-12 )*'SIMULATOR_Altitude'^3 + (3.757539683*10^-7)*'SIMULATOR_Altitude'^2 - (9.198677249*10^-3)*'SIMULATOR_Altitude'+ 18.87301587</pv_name>
           <border_color>
             <color red="0" green="128" blue="255" />
           </border_color>
@@ -3020,7 +3020,7 @@ $(pv_value)</tooltip>
             <keep_wh_ratio>false</keep_wh_ratio>
           </scale_options>
           <visible>true</visible>
-          <pv_name>= (-3.898148148*10^-12 )*'Simulator_Altitude'^3 + (3.757539683*10^-7)*'Simulator_Altitude'^2 - (9.198677249*10^-3)*'Simulator_Altitude'+ 18.87301587</pv_name>
+          <pv_name>= (-3.898148148*10^-12 )*'SIMULATOR_Altitude'^3 + (3.757539683*10^-7)*'SIMULATOR_Altitude'^2 - (9.198677249*10^-3)*'SIMULATOR_Altitude'+ 18.87301587</pv_name>
           <vertical_alignment>1</vertical_alignment>
           <border_color>
             <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -4105,7 +4105,7 @@ $(pv_value)</tooltip>
               <multiline_input>false</multiline_input>
               <border_width>1</border_width>
               <visible>true</visible>
-              <pv_name>Simulator_Latitude</pv_name>
+              <pv_name>SIMULATOR_Latitude</pv_name>
               <selector_type>0</selector_type>
               <border_color>
                 <color red="0" green="128" blue="255" />
@@ -4162,7 +4162,7 @@ $(pv_value)</tooltip>
               <multiline_input>false</multiline_input>
               <border_width>1</border_width>
               <visible>true</visible>
-              <pv_name>Simulator_Longitude</pv_name>
+              <pv_name>SIMULATOR_Longitude</pv_name>
               <selector_type>0</selector_type>
               <border_color>
                 <color red="0" green="128" blue="255" />
@@ -4219,7 +4219,7 @@ $(pv_value)</tooltip>
               <multiline_input>false</multiline_input>
               <border_width>1</border_width>
               <visible>true</visible>
-              <pv_name>Simulator_Altitude</pv_name>
+              <pv_name>SIMULATOR_Altitude</pv_name>
               <selector_type>0</selector_type>
               <border_color>
                 <color red="0" green="128" blue="255" />
@@ -4459,8 +4459,8 @@ $(pv_value)</tooltip>
             <transparent>false</transparent>
             <scripts>
               <path pathString="../scripts/Elev.js" checkConnect="true" sfe="false" seoe="false">
-                <pv trig="true">Simulator_Latitude</pv>
-                <pv trig="true">Simulator_Longitude</pv>
+                <pv trig="true">SIMULATOR_Latitude</pv>
+                <pv trig="true">SIMULATOR_Longitude</pv>
                 <pv trig="true">sim://const(25000)</pv>
               </path>
             </scripts>
@@ -4522,9 +4522,9 @@ $(pv_value)</tooltip>
             <transparent>false</transparent>
             <scripts>
               <path pathString="../scripts/Azim.js" checkConnect="true" sfe="false" seoe="false">
-                <pv trig="true">Simulator_Latitude</pv>
-                <pv trig="true">Simulator_Longitude</pv>
-                <pv trig="true">Simulator_Altitude</pv>
+                <pv trig="true">SIMULATOR_Latitude</pv>
+                <pv trig="true">SIMULATOR_Longitude</pv>
+                <pv trig="true">SIMULATOR_Altitude</pv>
               </path>
             </scripts>
             <border_alarm_sensitive>false</border_alarm_sensitive>
@@ -4585,8 +4585,8 @@ $(pv_value)</tooltip>
             <transparent>false</transparent>
             <scripts>
               <path pathString="../scripts/Range.js" checkConnect="true" sfe="false" seoe="false">
-                <pv trig="true">Simulator_Latitude</pv>
-                <pv trig="true">Simulator_Longitude</pv>
+                <pv trig="true">SIMULATOR_Latitude</pv>
+                <pv trig="true">SIMULATOR_Longitude</pv>
                 <pv trig="true">sim://const(25000)</pv>
               </path>
             </scripts>
@@ -9929,7 +9929,7 @@ widget.setPropertyValue("text", new Date().toUTCString());
 }
 while (pvs[0] < 500);*/
 ]]></scriptText>
-          <pv trig="true">Simulator_ElapsedTime</pv>
+          <pv trig="true">SIMULATOR_ElapsedTime</pv>
         </path>
       </scripts>
       <border_alarm_sensitive>true</border_alarm_sensitive>
@@ -10075,7 +10075,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>='Simulator_ElapsedTime'+1800</pv_name>
+      <pv_name>='SIMULATOR_ElapsedTime'+1800</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -10209,7 +10209,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>Simulator_ElapsedTime</pv_name>
+      <pv_name>SIMULATOR_ElapsedTime</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -10293,7 +10293,7 @@ $(pv_value)</tooltip>
       <rotation_angle>0.0</rotation_angle>
       <scripts>
         <path pathString="../scripts/UTC.js" checkConnect="true" sfe="false" seoe="false">
-          <pv trig="true">Simulator_ElapsedTime</pv>
+          <pv trig="true">SIMULATOR_ElapsedTime</pv>
         </path>
       </scripts>
       <border_alarm_sensitive>true</border_alarm_sensitive>
@@ -11031,7 +11031,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>=420-'Simulator_ElapsedTime'</pv_name>
+      <pv_name>=420-'SIMULATOR_ElapsedTime'</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color red="0" green="128" blue="255" />
@@ -11291,7 +11291,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>=480-'Simulator_ElapsedTime'</pv_name>
+      <pv_name>=480-'SIMULATOR_ElapsedTime'</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color red="0" green="128" blue="255" />

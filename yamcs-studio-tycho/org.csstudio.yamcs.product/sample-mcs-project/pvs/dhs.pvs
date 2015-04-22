@@ -3,47 +3,47 @@
     <pvlist>
         <pv>
             <selected>true</selected>
-            <name>Simulator_MemoryRate</name>
+            <name>SIMULATOR_MemoryRate</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_PrimBusVoltage1</name>
+            <name>SIMULATOR_PrimBusVoltage1</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_PrimBusCurrent1</name>
+            <name>SIMULATOR_PrimBusCurrent1</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_PrimBusVoltage2</name>
+            <name>SIMULATOR_PrimBusVoltage2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_PrimBusCurrent2</name>
+            <name>SIMULATOR_PrimBusCurrent2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_SecBusVoltage2</name>
+            <name>SIMULATOR_SecBusVoltage2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_PrimBusCurrent2</name>
+            <name>SIMULATOR_PrimBusCurrent2</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_SecBusVoltage3</name>
+            <name>SIMULATOR_SecBusVoltage3</name>
             <tolerance>0.01</tolerance>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_SecBusCurrent3</name>
+            <name>SIMULATOR_SecBusCurrent3</name>
             <tolerance>0.01</tolerance>
         </pv>
     </pvlist>

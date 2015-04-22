@@ -3,85 +3,85 @@
     <pvlist>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Longitude</name>
+            <name>SIMULATOR_Longitude</name>
             <tolerance>0.01</tolerance>
             <saved_value>-60.584</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Latitude</name>
+            <name>SIMULATOR_Latitude</name>
             <tolerance>0.01</tolerance>
             <saved_value>53.235</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Altitude</name>
+            <name>SIMULATOR_Altitude</name>
             <tolerance>0.01</tolerance>
             <saved_value>3689.4</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Heading</name>
+            <name>SIMULATOR_Heading</name>
             <tolerance>0.01</tolerance>
             <saved_value>29.681</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Alpha</name>
+            <name>SIMULATOR_Alpha</name>
             <tolerance>0.01</tolerance>
             <saved_value>2.1749</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Beta</name>
+            <name>SIMULATOR_Beta</name>
             <tolerance>0.01</tolerance>
             <saved_value>0.39993</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_TAS</name>
+            <name>SIMULATOR_TAS</name>
             <tolerance>0.01</tolerance>
             <saved_value>110.5</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_CAS</name>
+            <name>SIMULATOR_CAS</name>
             <tolerance>0.01</tolerance>
             <saved_value>110.5</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Mach_Number</name>
+            <name>SIMULATOR_Mach_Number</name>
             <tolerance>0.01</tolerance>
             <saved_value>0.33915</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Load_factor</name>
+            <name>SIMULATOR_Load_factor</name>
             <tolerance>0.01</tolerance>
             <saved_value>0.80011</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_SinkRate</name>
+            <name>SIMULATOR_SinkRate</name>
             <tolerance>0.01</tolerance>
             <saved_value>39.793</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Phi</name>
+            <name>SIMULATOR_Phi</name>
             <tolerance>0.01</tolerance>
             <saved_value>7.6746</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Theta</name>
+            <name>SIMULATOR_Theta</name>
             <tolerance>0.01</tolerance>
             <saved_value>-20.686</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>Simulator_Psi</name>
+            <name>SIMULATOR_Psi</name>
             <tolerance>0.01</tolerance>
             <saved_value>29.681</saved_value>
         </pv>
