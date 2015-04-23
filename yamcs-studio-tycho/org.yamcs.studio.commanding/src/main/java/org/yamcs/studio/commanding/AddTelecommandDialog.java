@@ -164,7 +164,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
                 public void onException(Exception e) {
                     Display.getDefault().asyncExec(() -> {
                         setErrorMessage(e.getMessage());
-                        log.log(Level.SEVERE, "Could not validate command string", e);
+                        log.log(Level.SEVERE, "Could not send command", e);
                     });
                 }
             });

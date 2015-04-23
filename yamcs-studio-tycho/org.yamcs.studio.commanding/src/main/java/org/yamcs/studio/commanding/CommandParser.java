@@ -31,6 +31,7 @@ public class CommandParser {
         commandId.setNamespace(YamcsPlugin.getDefault().getMdbNamespace());
         commandId.setName(commandName);
         cmd.setId(commandId);
+        cmd.setSequenceNumber(cmdClientId.getAndIncrement());
 
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         String[] args = argString.split(",");
@@ -39,19 +40,16 @@ public class CommandParser {
             cmd.addArguments(RestArgumentType.newBuilder().setName(kvp[0]).setValue(kvp[1]));
         }
 
-        String origin;
         try {
-            origin = InetAddress.getLocalHost().getHostName();
+            cmd.setOrigin(InetAddress.getLocalHost().getHostName());
         } catch (UnknownHostException e) {
-            origin = "Unknown";
+            cmd.setOrigin("Unknown");
         }
-        cmd.setSequenceNumber(cmdClientId.getAndIncrement());
-        cmd.setOrigin(origin);
         return cmd.build();
     }
 
     public static void main(String... args) {
-        String cmdString = "SWITCH_VOLTAGE_ON(vlotage_num:5)";
+        String cmdString = "SWITCH_VOLTAGE_ON(voltage_num:5)";
         RestCommandType mc = toCommand(cmdString);
 
         System.out.println("======");
