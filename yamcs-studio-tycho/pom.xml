@@ -4,7 +4,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.yamcs.csstudio</groupId>
+	<groupId>org.yamcs.studio</groupId>
 	<artifactId>yamcs-studio</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -26,21 +26,21 @@
 	</properties>
 
 	<modules>
-		<module>org.csstudio.autocomplete.pvmanager.yamcs</module>
-		<module>org.csstudio.platform.libs.yamcs</module>
-		<module>org.csstudio.utility.product.yamcs</module>
-		<module>org.csstudio.utility.pvmanager.yamcs</module>
-		<module>org.csstudio.vtype.pv.yamcs</module>
-		<module>org.csstudio.yamcs.commanding</module>
-		<module>org.csstudio.yamcs.feature</module>
-		<module>org.csstudio.yamcs.feature.applications</module>
-		<module>org.csstudio.yamcs.feature.core</module>
-		<module>org.csstudio.yamcs.feature.eclipse</module>
-		<module>org.csstudio.yamcs.product</module>
-		<module>org.csstudio.yamcs.ui.menu</module>
-		<module>org.csstudio.yamcs.ui.menu.app</module>
-		<module>org.csstudio.yamcs.ycl.dsl</module>
-		<module>org.csstudio.yamcs.ycl.ui</module>
+		<module>org.yamcs.studio.client</module>
+		<module>org.yamcs.studio.commanding</module>
+		<module>org.yamcs.studio.product</module>
+		<module>org.yamcs.studio.pvmanager</module>
+		<module>org.yamcs.studio.pvmanager.autocomplete</module>
+		<module>org.yamcs.studio.ui.menu</module>
+		<module>org.yamcs.studio.ui.menu.app</module>
+		<module>org.yamcs.studio.utility.product</module>
+		<module>org.yamcs.studio.vtype.pv</module>
+		<module>org.yamcs.studio.ycl.dsl</module>
+		<module>org.yamcs.studio.ycl.ui</module>
+		<module>yamcs-studio-feature</module>
+		<module>yamcs-studio-feature-csstudio-applications</module>
+		<module>yamcs-studio-feature-csstudio-core</module>
+		<module>yamcs-studio-feature-eclipse</module>
 		<module>yamcs-studio-repository</module>
 	</modules>
 

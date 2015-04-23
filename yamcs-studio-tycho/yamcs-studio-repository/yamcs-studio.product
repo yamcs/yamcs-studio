@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio" uid="yamcs-studio" id="org.csstudio.yamcs.product.product" application="org.csstudio.yamcs.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.product.product" application="org.yamcs.studio.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <text>
@@ -29,19 +29,19 @@ openFile
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.csstudio.yamcs.product/icons/yamcs-16.png" i32="/org.csstudio.yamcs.product/icons/yamcs-32.png" i48="/org.csstudio.yamcs.product/icons/yamcs-48.png" i64="/org.csstudio.yamcs.product/icons/yamcs-64.png" i128="/org.csstudio.yamcs.product/icons/yamcs-128.png" i256="/org.csstudio.yamcs.product/icons/yamcs-256.png"/>
+   <windowImages i16="/org.yamcs.studio.product/icons/yamcs-16.png" i32="/org.yamcs.studio.product/icons/yamcs-32.png" i48="/org.yamcs.studio.product/icons/yamcs-48.png" i64="/org.yamcs.studio.product/icons/yamcs-64.png" i128="/org.yamcs.studio.product/icons/yamcs-128.png" i256="/org.yamcs.studio.product/icons/yamcs-256.png"/>
 
    <splash
-      location="org.csstudio.yamcs.product"
+      location="org.yamcs.studio.product"
       startupProgressRect="20,215,340,15"
       startupMessageRect="20,195,340,20"
       startupForegroundColor="FFFDFA" />
    <launcher name="yamcs-studio">
-      <linux icon="/org.csstudio.yamcs.product/icons/yamcs.xpm"/>
-      <macosx icon="/org.csstudio.yamcs.product/icons/yamcs.icns"/>
+      <linux icon="/org.yamcs.studio.product/icons/yamcs.xpm"/>
+      <macosx icon="/org.yamcs.studio.product/icons/yamcs.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/org.csstudio.yamcs.product/icons/yamcs.ico"/>
+         <ico path="/org.yamcs.studio.product/icons/yamcs.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -70,10 +70,10 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
    </plugins>
 
    <features>
-      <feature id="org.csstudio.yamcs.feature"/>
-      <feature id="org.csstudio.yamcs.feature.applications"/>
-      <feature id="org.csstudio.yamcs.feature.core"/>
-      <feature id="org.csstudio.yamcs.feature.eclipse"/>
+      <feature id="yamcs-studio-feature" version="1.0.0.qualifier"/>
+      <feature id="yamcs-studio-feature-csstudio-applications" version="1.0.0.qualifier"/>
+      <feature id="yamcs-studio-feature-csstudio-core" version="1.0.0.qualifier"/>
+      <feature id="yamcs-studio-feature-eclipse" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>

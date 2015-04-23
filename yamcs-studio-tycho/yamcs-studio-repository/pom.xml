@@ -4,7 +4,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.yamcs.csstudio</groupId>
+		<groupId>org.yamcs.studio</groupId>
 		<artifactId>yamcs-studio</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
@@ -14,7 +14,7 @@
 
 	<build>
 		<plugins>
-			<!-- Icons are in ../org.csstudio.yamcs.product/icons, but Tycho wants them in
+			<!-- Icons are in ../org.yamcs.studio.product/icons, but Tycho wants them in
 				../yamcs-studio-repository/target/products/yamcs-studio/icons
 				(Copied from SNS-product build)
 			  -->
@@ -30,7 +30,7 @@
 								<echo message="Copying icons into tycho target directory ${project.build.directory}" />
 								<copy todir="${project.build.directory}/products/yamcs-studio" verbose="false">
 									<fileset dir="${project.build.directory}/../..">
-										<include name="org.csstudio.yamcs.product/icons/**" />
+										<include name="org.yamcs.studio.product/icons/**" />
 									</fileset>
 								</copy>
 							</target>

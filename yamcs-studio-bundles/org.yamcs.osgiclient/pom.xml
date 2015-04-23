@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yamcs.studio</groupId>
+		<artifactId>yamcs-studio-bundles</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>org.yamcs.osgiclient</artifactId>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.yamcs</groupId>
+			<artifactId>yamcs-xtce</artifactId>
+			<version>${yamcs.version}</version>
+			<exclusions>
+				<!-- Exclude slf4j, so we can synchronize both api and impl version from this pom. API doesn't change often -->
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<!-- Netty is OSGI-friendly, so don't bundle it up -->
+				<exclusion>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-all</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<manifestLocation>META-INF</manifestLocation>
+					<unpackBundle>true</unpackBundle>
+					<instructions>
+						<Bundle-Name>Yamcs client uber jar</Bundle-Name>
+						<Bundle-SymbolicName>org.yamcs.osgiclient;singleton:=true</Bundle-SymbolicName>
+						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
+						<Bundle-Description>OSGI-friendly repackaging of yamcs-client</Bundle-Description>
+						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
+						<!-- 
+							Attempt to resolve all and dump in Export-Package.
+							Packages that can't be resolved, are assumed to be optional, hence the additional
+							directives in the Import-Package below.
+						 -->
+						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Import-Package>
+							*; resolution:=optional
+						</Import-Package>
+						<Export-Package>
+							com.google.protobuf,
+							io.protostuff, <!-- Temporary, until rest client is transferred to yamcs-api -->
+							org.yamcs.api,
+							org.yamcs.api.ws,
+							org.yamcs.protobuf,
+							org.yamcs.utils,
+							org.yamcs.xtce,
+							org.yamcs.xtce.xml
+						</Export-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
