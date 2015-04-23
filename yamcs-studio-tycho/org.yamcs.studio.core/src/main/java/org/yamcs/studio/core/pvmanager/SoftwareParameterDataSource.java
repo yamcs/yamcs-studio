@@ -1,4 +1,4 @@
-package org.yamcs.studio.pvmanager;
+package org.yamcs.studio.core.pvmanager;
 
 import org.epics.pvmanager.ChannelHandler;
 import org.epics.pvmanager.DataSource;

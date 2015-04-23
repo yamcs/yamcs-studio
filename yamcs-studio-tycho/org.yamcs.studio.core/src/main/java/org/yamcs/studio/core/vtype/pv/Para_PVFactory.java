@@ -1,4 +1,4 @@
-package org.yamcs.studio.vtype.pv;
+package org.yamcs.studio.core.vtype.pv;
 
 import org.csstudio.vtype.pv.PV;
 import org.csstudio.vtype.pv.PVFactory;

@@ -42,4 +42,32 @@
          </separator>
       </menuContribution>
    </extension>
+   
+   <extension point="org.csstudio.vtype.pv.pvfactory">
+      <PVFactory name="Yamcs" class="org.yamcs.studio.core.vtype.pv.Para_PVFactory"/>
+   </extension>
+   
+   <extension
+         point="org.csstudio.utility.pvmanager.datasource">
+      <datasource
+            datasource="org.yamcs.studio.core.pvmanager.ParameterDataSource"
+            name="Yamcs Parameter"
+            prefix="para">
+      </datasource>
+   </extension>
+   
+   <extension
+         point="org.csstudio.utility.pvmanager.datasource">
+      <datasource
+            datasource="org.yamcs.studio.core.pvmanager.SoftwareParameterDataSource"
+            name="Yamcs Software Parameter"
+            prefix="sw">
+      </datasource>
+   </extension>
+
+   <extension
+         point ="org.eclipse.ui.startup">
+      <startup
+            class="org.yamcs.studio.core.pvmanager.Bootstrap"/>
+   </extension>
 </plugin>

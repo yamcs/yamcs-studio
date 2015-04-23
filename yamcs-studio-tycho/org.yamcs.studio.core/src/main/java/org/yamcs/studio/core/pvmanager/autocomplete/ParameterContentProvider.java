@@ -1,4 +1,4 @@
-package org.yamcs.studio.pvmanager.autocomplete;
+package org.yamcs.studio.core.pvmanager.autocomplete;
 
 import java.util.List;
 import java.util.Map.Entry;

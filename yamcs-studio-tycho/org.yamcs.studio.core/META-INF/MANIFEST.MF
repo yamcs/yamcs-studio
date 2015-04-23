@@ -14,9 +14,16 @@ Require-Bundle: org.epics.vtype,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.rap.ui;resolution:=optional,
- org.yamcs.osgiclient
-Import-Package: org.epics.pvmanager
+ org.yamcs.osgiclient,
+ org.csstudio.vtype.pv,
+ org.csstudio.autocomplete,
+ org.csstudio.utility.pvmanager
+Import-Package: org.epics.pvmanager,
+ org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.core,
  org.yamcs.studio.core.vtype,
+ org.yamcs.studio.core.vtype.pv,
  org.yamcs.studio.core.web,
- org.yamcs.studio.core.commanding
+ org.yamcs.studio.core.commanding,
+ org.yamcs.studio.core.pvmanager
+Service-Component: OSGI-INF/*.xml

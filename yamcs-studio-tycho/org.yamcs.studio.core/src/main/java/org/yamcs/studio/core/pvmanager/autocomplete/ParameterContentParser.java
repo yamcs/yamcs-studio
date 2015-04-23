@@ -1,4 +1,4 @@
-package org.yamcs.studio.pvmanager.autocomplete;
+package org.yamcs.studio.core.pvmanager.autocomplete;
 
 import org.csstudio.autocomplete.AutoCompleteConstants;
 import org.csstudio.autocomplete.parser.ContentDescriptor;

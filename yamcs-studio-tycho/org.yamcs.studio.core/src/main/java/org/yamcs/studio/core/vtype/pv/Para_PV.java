@@ -1,4 +1,4 @@
-package org.yamcs.studio.vtype.pv;
+package org.yamcs.studio.core.vtype.pv;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

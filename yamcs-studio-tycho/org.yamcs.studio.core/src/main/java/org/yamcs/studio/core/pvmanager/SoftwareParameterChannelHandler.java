@@ -1,4 +1,4 @@
-package org.yamcs.studio.pvmanager;
+package org.yamcs.studio.core.pvmanager;
 
 import java.util.logging.Logger;
 
