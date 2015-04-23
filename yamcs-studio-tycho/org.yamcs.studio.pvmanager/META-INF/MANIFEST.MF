@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.csstudio.autocomplete,
  org.csstudio.utility.pvmanager,
  org.yamcs.osgiclient,
- org.yamcs.studio.client
+ org.yamcs.studio.core
 Service-Component: OSGI-INF/*.xml
 Export-Package: org.yamcs.studio.pvmanager
 Import-Package: org.epics.pvmanager.vtype

@@ -16,8 +16,8 @@ import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Rest.RestParameter;
-import org.yamcs.studio.client.MDBContextListener;
-import org.yamcs.studio.client.YamcsPlugin;
+import org.yamcs.studio.core.MDBContextListener;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * PV Name lookup for Yamcs Parameters

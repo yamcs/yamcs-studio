@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
-import org.yamcs.studio.client.YamcsPlugin;
-import org.yamcs.studio.client.web.ResponseHandler;
-import org.yamcs.studio.client.web.RestClient;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.xtce.Argument;
 import org.yamcs.xtce.MetaCommand;
 

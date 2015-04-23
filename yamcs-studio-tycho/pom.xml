@@ -26,7 +26,7 @@
 	</properties>
 
 	<modules>
-		<module>org.yamcs.studio.client</module>
+		<module>org.yamcs.studio.core</module>
 		<module>org.yamcs.studio.commanding</module>
 		<module>org.yamcs.studio.opibuilder.script</module>
 		<module>org.yamcs.studio.product</module>

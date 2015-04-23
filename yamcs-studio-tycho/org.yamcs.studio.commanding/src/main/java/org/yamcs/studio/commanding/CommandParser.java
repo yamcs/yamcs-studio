@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.client.YamcsPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Hand-written ugly command parser. Follows some very simple logic: - removes all whitespace - puts

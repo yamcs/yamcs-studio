@@ -2,8 +2,8 @@ package org.yamcs.studio.pvmanager;
 
 import org.epics.pvmanager.ChannelHandler;
 import org.epics.pvmanager.DataSource;
-import org.yamcs.studio.client.WebSocketRegistrar;
-import org.yamcs.studio.client.YamcsPlugin;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * When running the OPIbuilder this is instantiated for every parameter separately.

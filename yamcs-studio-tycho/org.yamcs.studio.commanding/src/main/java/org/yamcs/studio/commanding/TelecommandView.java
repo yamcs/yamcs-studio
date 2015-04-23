@@ -33,9 +33,9 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.studio.client.CommandHistoryListener;
-import org.yamcs.studio.client.WebSocketRegistrar;
-import org.yamcs.studio.client.YamcsPlugin;
+import org.yamcs.studio.core.CommandHistoryListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * TODO show a friendly message when the thing is still loading

@@ -8,10 +8,10 @@ import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
-import org.yamcs.studio.client.PVConnectionInfo;
-import org.yamcs.studio.client.WebSocketRegistrar;
-import org.yamcs.studio.client.YamcsPVReader;
-import org.yamcs.studio.client.vtype.YamcsVTypeAdapter;
+import org.yamcs.studio.core.PVConnectionInfo;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.YamcsPVReader;
+import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 
 /**
  * Supports read-only PVs. Would be good if one day CSS added support for this at the PV-level,

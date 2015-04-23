@@ -22,7 +22,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
    </license>
 
    <plugin
-         id="org.yamcs.studio.client"
+         id="org.yamcs.studio.core"
          download-size="0"
          install-size="0"
          version="0.0.0"

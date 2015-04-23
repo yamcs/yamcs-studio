@@ -5,11 +5,11 @@ import java.util.logging.Logger;
 
 import org.csstudio.vtype.pv.PV;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.client.PVConnectionInfo;
-import org.yamcs.studio.client.WebSocketRegistrar;
-import org.yamcs.studio.client.YamcsPVReader;
-import org.yamcs.studio.client.YamcsPlugin;
-import org.yamcs.studio.client.vtype.YamcsVType;
+import org.yamcs.studio.core.PVConnectionInfo;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.YamcsPVReader;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.vtype.YamcsVType;
 
 /**
  * TODO not sure how to disconnect/unsubscribe. Looks like the PVPool has some logic to release a

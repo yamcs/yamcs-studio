@@ -8,8 +8,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
-import org.yamcs.studio.client.MDBContextListener;
-import org.yamcs.studio.client.YamcsPlugin;
+import org.yamcs.studio.core.MDBContextListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.xtce.MetaCommand;
 
 /**
