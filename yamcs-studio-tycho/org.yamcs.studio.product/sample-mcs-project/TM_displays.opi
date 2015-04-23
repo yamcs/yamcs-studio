@@ -2075,7 +2075,7 @@ $(pv_value)</tooltip>
     <rules>
       <rule name="Dynamic" prop_id="image_file" out_exp="false">
         <exp bool_exp="pv0==0">
-          <value>pictures/logos/Saslogo 8cm 600dpi.png</value>
+          <value>pictures/Saslogo 8cm 600dpi.png</value>
         </exp>
         <pv trig="true">sim://ramp(0,1,1,2)</pv>
       </rule>
