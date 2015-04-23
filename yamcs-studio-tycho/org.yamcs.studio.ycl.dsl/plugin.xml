@@ -6,7 +6,7 @@
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
        uri = "http://www.yamcs.org/ycl" 
-       class = "org.yamcs.studiop.ycl.dsl.ycl.YclPackage"
+       class = "org.yamcs.studio.ycl.dsl.ycl.YclPackage"
        genModel = "model/generated/YCL.genmodel" /> 
 	
   </extension>

@@ -22,6 +22,6 @@
    <extension
          point ="org.eclipse.ui.startup">
       <startup
-            class="org.csstudio.utility.pvmanager.yamcs.Bootstrap"/>
+            class="org.yamcs.studio.pvmanager.Bootstrap"/>
    </extension>
 </plugin>
