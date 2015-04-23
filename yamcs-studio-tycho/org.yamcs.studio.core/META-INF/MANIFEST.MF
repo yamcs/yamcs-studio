@@ -13,8 +13,10 @@ Require-Bundle: org.epics.vtype,
  io.netty.all,
  org.eclipse.ui,
  org.eclipse.core.runtime,
+ org.eclipse.rap.ui;resolution:=optional,
  org.yamcs.osgiclient
 Import-Package: org.epics.pvmanager
 Export-Package: org.yamcs.studio.core,
  org.yamcs.studio.core.vtype,
- org.yamcs.studio.core.web
+ org.yamcs.studio.core.web,
+ org.yamcs.studio.core.commanding

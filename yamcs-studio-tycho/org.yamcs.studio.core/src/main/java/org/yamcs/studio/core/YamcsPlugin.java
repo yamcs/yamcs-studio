@@ -26,6 +26,7 @@ import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.utils.TimeEncoding;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.XtceDb;
 
@@ -56,6 +57,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
+
+        TimeEncoding.setUp();
 
         String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
         int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");

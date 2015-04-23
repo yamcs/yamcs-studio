@@ -1,4 +1,4 @@
-package org.yamcs.studio.commanding;
+package org.yamcs.studio.core.commanding;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;

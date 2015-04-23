@@ -1,4 +1,4 @@
-package org.yamcs.studio.commanding;
+package org.yamcs.studio.core.commanding;
 
 import java.util.Arrays;
 import java.util.HashMap;

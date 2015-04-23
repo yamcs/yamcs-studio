@@ -1,4 +1,4 @@
-package org.yamcs.studio.commanding;
+package org.yamcs.studio.core.commanding;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
