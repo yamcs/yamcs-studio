@@ -158,7 +158,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         for (ParameterValue pval : pdata.getParameterList()) {
             YamcsPVReader pvReader = pvReadersByName.get(pval.getId().getName());
             if (pvReader != null) {
-                log.info(String.format("Request to update pvreader %s to %s", pvReader.getPVName(), pval.getEngValue()));
+                log.fine(String.format("Request to update pvreader %s to %s", pvReader.getPVName(), pval.getEngValue()));
                 pvReader.processParameterValue(pval);
             } else {
                 log.warning("No pvreader for incoming update of " + pval.getId().getName());

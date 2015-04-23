@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Yamcs Parameter">
-   <implementation class="org.csstudio.autocomplete.pvmanager.yamcs.ParameterContentProvider"/>
+   <implementation class="org.yamcs.studio.pvmanager.autocomplete.ParameterContentProvider"/>
    <service>
       <provide interface="org.csstudio.autocomplete.IAutoCompleteProvider"/>
    </service>

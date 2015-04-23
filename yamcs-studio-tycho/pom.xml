@@ -31,7 +31,6 @@
 		<module>org.yamcs.studio.opibuilder.script</module>
 		<module>org.yamcs.studio.product</module>
 		<module>org.yamcs.studio.pvmanager</module>
-		<module>org.yamcs.studio.pvmanager.autocomplete</module>
 		<module>org.yamcs.studio.ui.menu</module>
 		<module>org.yamcs.studio.ui.menu.app</module>
 		<module>org.yamcs.studio.utility.product</module>
