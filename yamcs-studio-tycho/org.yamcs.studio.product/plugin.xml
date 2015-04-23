@@ -9,7 +9,7 @@
             name="Yamcs Studio">
          <property
                name="windowImages"
-               value="icons/yamcs-16.png,icons/yamcs-32.png,icons/yamcs-48.png,icons/yamcs-64.png,icons/yamcs-128.png,icons/yamcs-256.png"/>
+               value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png,icons/css256.png"/>
          <property
                name="aboutText"
                value="CS-Studio customized to suit Yamcs - the Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>

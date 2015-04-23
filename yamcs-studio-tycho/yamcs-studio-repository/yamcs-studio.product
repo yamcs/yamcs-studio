@@ -29,7 +29,7 @@ openFile
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.yamcs.studio.product/icons/yamcs-16.png" i32="/org.yamcs.studio.product/icons/yamcs-32.png" i48="/org.yamcs.studio.product/icons/yamcs-48.png" i64="/org.yamcs.studio.product/icons/yamcs-64.png" i128="/org.yamcs.studio.product/icons/yamcs-128.png" i256="/org.yamcs.studio.product/icons/yamcs-256.png"/>
+   <windowImages i16="/org.yamcs.studio.product/icons/css16.png" i32="/org.yamcs.studio.product/icons/css32.png" i48="/org.yamcs.studio.product/icons/css48.png" i64="/org.yamcs.studio.product/icons/css64.png" i128="/org.yamcs.studio.product/icons/css128.png" i256="/org.yamcs.studio.product/icons/css256.png"/>
 
    <splash
       location="org.yamcs.studio.product"
@@ -37,11 +37,11 @@ openFile
       startupMessageRect="20,195,340,20"
       startupForegroundColor="FFFDFA" />
    <launcher name="yamcs-studio">
-      <linux icon="/org.yamcs.studio.product/icons/yamcs.xpm"/>
-      <macosx icon="/org.yamcs.studio.product/icons/yamcs.icns"/>
+      <linux icon="/org.yamcs.studio.product/icons/css.xpm"/>
+      <macosx icon="/org.yamcs.studio.product/icons/css.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/org.yamcs.studio.product/icons/yamcs.ico"/>
+         <ico path="/org.yamcs.studio.product/icons/css.ico"/>
          <bmp/>
       </win>
    </launcher>

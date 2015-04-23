@@ -4,4 +4,4 @@ Bundle-Name: Yamcs Studio Messages and Branding
 Bundle-SymbolicName: org.yamcs.studio.utility.product
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Fragment-Host: org.csstudio.utility.product;bundle-version="1.1.0"
+Fragment-Host: org.csstudio.utility.product
