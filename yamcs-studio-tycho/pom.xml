@@ -38,8 +38,7 @@
 		<module>org.yamcs.studio.ycl.dsl</module>
 		<module>org.yamcs.studio.ycl.ui</module>
 		<module>yamcs-studio-feature</module>
-		<module>yamcs-studio-feature-csstudio-applications</module>
-		<module>yamcs-studio-feature-csstudio-core</module>
+		<module>yamcs-studio-feature-csstudio</module>
 		<module>yamcs-studio-feature-eclipse</module>
 		<module>yamcs-studio-repository</module>
 	</modules>

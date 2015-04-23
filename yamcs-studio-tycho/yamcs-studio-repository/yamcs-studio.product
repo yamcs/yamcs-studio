@@ -71,8 +71,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
 
    <features>
       <feature id="yamcs-studio-feature" version="1.0.0.qualifier"/>
-      <feature id="yamcs-studio-feature-csstudio-applications" version="1.0.0.qualifier"/>
-      <feature id="yamcs-studio-feature-csstudio-core" version="1.0.0.qualifier"/>
+      <feature id="yamcs-studio-feature-csstudio" version="1.0.0.qualifier"/>
       <feature id="yamcs-studio-feature-eclipse" version="1.0.0.qualifier"/>
    </features>
 
