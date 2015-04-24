@@ -46,6 +46,13 @@
       </category>
       <view
             category="org.csstudio"
+            class="org.yamcs.studio.core.archive.ArchiveView"
+            icon="icons/archive.png"
+            id="org.yamcs.studio.core.archive.ArchiveView"
+            name="Archive">
+      </view>
+      <view
+            category="org.csstudio"
             class="org.yamcs.studio.core.commanding.TelecommandView"
             icon="icons/tc.png"
             id="org.yamcs.studio.core.commanding.TelecommandView"
@@ -61,6 +68,12 @@
                relationship="stack"
                visible="true"
                id="org.yamcs.studio.core.commanding.TelecommandView">
+         </view>
+         <view
+               relative="org.eclipse.ui.views.ProgressView"
+               relationship="stack"
+               visible="true"
+               id="org.yamcs.studio.core.archive.ArchiveView">
          </view>
       </perspectiveExtension>
    </extension>
