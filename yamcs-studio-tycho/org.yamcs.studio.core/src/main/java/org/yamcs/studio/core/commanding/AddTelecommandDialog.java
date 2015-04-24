@@ -46,7 +46,7 @@ public class AddTelecommandDialog extends TitleAreaDialog {
     @Override
     public void create() {
         super.create();
-        setTitle("Send a telecommand");
+        setTitle("Issue a telecommand");
         // setMessage("informative message");
     }
 

@@ -16,12 +16,36 @@
       </page>
    </extension>
    
-   <!-- 
-   		Telecommand View
-   	 -->
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.csstudio"
+            name="CSS">
+      </category>
+      <command
+            categoryId="org.csstudio"
+            id="org.yamcs.studio.core.commanding.issueTelecommandCommand"
+            name="Issue Command">
+      </command>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.yamcs.studio.core.commanding.IssueCommandHandler"
+            commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand">
+      </handler>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.views">
+      <category
+      		name="CSS"
+      		id="org.csstudio">
+      </category>
       <view
+            category="org.csstudio"
             class="org.yamcs.studio.core.commanding.TelecommandView"
             icon="icons/tc.png"
             id="org.yamcs.studio.core.commanding.TelecommandView"
@@ -40,9 +64,10 @@
          </view>
       </perspectiveExtension>
    </extension>
-   <!-- Indicate that the tc view should be in the menu -->
+   
    <extension
          point="org.eclipse.ui.menus">
+      <!-- Indicate that the tc view should be in the menu -->
       <menuContribution
             allPopups="false"
             locationURI="menu:css?before=display">
@@ -51,7 +76,7 @@
                icon="icons/tc.png"
                label="Telecommanding"
                style="push"
-               tooltip="Show available telecommands">
+               tooltip="Open commanding view">
             <parameter
                   name="org.eclipse.ui.views.showView.viewId"
                   value="org.yamcs.studio.core.commanding.TelecommandView">
@@ -61,6 +86,21 @@
                name="org.yamcs.studio.menu.separator"
                visible="true">
          </separator>
+      </menuContribution>
+      
+      <!-- Augment the main toolbar -->
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.yamcs.studio.toolbar">
+             <command
+                   commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand"
+                   icon="icons/tc_add.png"
+                   id="org.yamcs.studio.toolbar.issueTelecommandCommand"
+                   tooltip="Issue telecommand">
+             </command>
+         </toolbar>
       </menuContribution>
    </extension>
    
@@ -91,5 +131,4 @@
             prefix="sw">
       </datasource>
    </extension>
-   
 </plugin>
