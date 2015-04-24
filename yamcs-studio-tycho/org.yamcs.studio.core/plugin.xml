@@ -2,6 +2,12 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.yamcs.studio.core.pvmanager.Bootstrap"/>
+   </extension>
+   
+   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="org.yamcs.studio.core.ui.prefs.YamcsPreferencePage"
@@ -10,6 +16,9 @@
       </page>
    </extension>
    
+   <!-- 
+   		Telecommand View
+   	 -->
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -19,7 +28,19 @@
             name="Telecommanding">
       </view>
    </extension>
-   
+   <!-- Indicate that the tc view should by default be on the bottom -->
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.csstudio.utility.product.CSStudioPerspective">
+         <view
+               relative="org.eclipse.ui.views.ProgressView"
+               relationship="stack"
+               visible="true"
+               id="org.yamcs.studio.core.commanding.TelecommandView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <!-- Indicate that the tc view should be in the menu -->
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -43,10 +64,17 @@
       </menuContribution>
    </extension>
    
+   <!-- 
+   		vtype.pv datasource (for pvtable)
+   		(only para:// at this moment, sw:// is pending)
+    -->
    <extension point="org.csstudio.vtype.pv.pvfactory">
       <PVFactory name="Yamcs" class="org.yamcs.studio.core.vtype.pv.Para_PVFactory"/>
    </extension>
    
+   <!--
+   		pvmanager datasource
+   	-->
    <extension
          point="org.csstudio.utility.pvmanager.datasource">
       <datasource
@@ -55,7 +83,6 @@
             prefix="para">
       </datasource>
    </extension>
-   
    <extension
          point="org.csstudio.utility.pvmanager.datasource">
       <datasource
@@ -64,10 +91,5 @@
             prefix="sw">
       </datasource>
    </extension>
-
-   <extension
-         point ="org.eclipse.ui.startup">
-      <startup
-            class="org.yamcs.studio.core.pvmanager.Bootstrap"/>
-   </extension>
+   
 </plugin>

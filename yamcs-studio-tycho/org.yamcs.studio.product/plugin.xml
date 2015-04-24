@@ -39,7 +39,7 @@
          </property>
          <property
             name="introBrandingImage"
-            value="product:icons/yamcs-64.png"/>
+            value="product:icons/css64.png"/>
          <property
             name="introBrandingImageText"
             value="Yamcs Studio"/>
