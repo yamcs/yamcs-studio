@@ -33,9 +33,9 @@ openFile
 
    <splash
       location="org.yamcs.studio.product"
-      startupProgressRect="20,215,340,15"
-      startupMessageRect="20,195,340,20"
-      startupForegroundColor="FFFDFA" />
+      startupProgressRect="20,215,560,15"
+      startupMessageRect="20,195,560,20"
+      startupForegroundColor="2F376D" />
    <launcher name="yamcs-studio">
       <linux icon="/org.yamcs.studio.product/icons/css.xpm"/>
       <macosx icon="/org.yamcs.studio.product/icons/css.icns"/>
