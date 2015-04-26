@@ -11,5 +11,4 @@ css/settings.xml
 css/local_p2_repository/
 
 # Generated from POM
-yamcs-studio-bundles/org.csstudio.platform.libs.protostuff/META-INF/
-yamcs-studio-bundles/org.csstudio.platform.libs.yamcsall/META-INF/
+yamcs-studio-bundles/org.yamcs.osgiclient/META-INF/
