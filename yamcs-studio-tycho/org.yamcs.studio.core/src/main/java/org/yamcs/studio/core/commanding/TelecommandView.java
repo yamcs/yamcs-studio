@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -34,14 +36,23 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
+import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
+import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.studio.core.CommandHistoryListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
+
+import com.google.protobuf.MessageLite;
 
 /**
  * TODO show a friendly message when the thing is still loading
  */
 public class TelecommandView extends ViewPart {
+
+    private static final Logger log = Logger.getLogger(TelecommandView.class.getName());
 
     public static final String COL_COMMAND = "Command";
     public static final String COL_SRC_ID = "Src.ID";
@@ -50,7 +61,8 @@ public class TelecommandView extends ViewPart {
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_T = "T";
 
-    private WebSocketRegistrar webSocketClient;
+    private WebSocketRegistrar webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
+    private RestClient restClient = YamcsPlugin.getDefault().getRestClient();
 
     // Prefix used in command attribute names
     private static final String ACK_PREFIX = "Acknowledge_";
@@ -76,7 +88,6 @@ public class TelecommandView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
         this.parent = parent;
-        webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
         // Load images
@@ -105,6 +116,7 @@ public class TelecommandView extends ViewPart {
 
         initializeToolBar();
         subscribeToUpdates();
+        fetchArchivedCommands();
     }
 
     private void addFixedColumns() {
@@ -194,57 +206,80 @@ public class TelecommandView extends ViewPart {
 
             @Override
             public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
-                Display.getDefault().asyncExec(() -> {
-                    // Maybe we need to update structure
-                        for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
-                            if (IGNORED_ATTRIBUTES.contains(attr.getName()))
-                                continue;
-
-                            String shortName = attr.getName()
-                                    .replace(ACK_PREFIX, "")
-                                    .replace(TelecommandRecord.STATUS_SUFFIX, "")
-                                    .replace(TelecommandRecord.TIME_SUFFIX, "");
-                            if (!dynamicColumns.contains(shortName)) {
-                                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
-                                column.getColumn().setText(shortName);
-                                column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
-                                column.setLabelProvider(new ColumnLabelProvider() {
-                                    @Override
-                                    public String getText(Object element) {
-                                        return ((TelecommandRecord) element).getTextForColumn(shortName);
-                                    }
-
-                                    @Override
-                                    public String getToolTipText(Object element) {
-                                        return ((TelecommandRecord) element).getTooltipForColumn(shortName);
-                                    }
-
-                                    @Override
-                                    public Image getImage(Object element) {
-                                        String imgLoc = ((TelecommandRecord) element).getImageForColumn(shortName);
-                                        if (TelecommandRecordContentProvider.GREEN.equals(imgLoc))
-                                            return greenBubble;
-                                        else if (TelecommandRecordContentProvider.RED.equals(imgLoc))
-                                            return redBubble;
-                                        else
-                                            return null;
-                                    }
-                                });
-                                dynamicColumns.add(shortName);
-                                layoutDataByColumn.put(column.getColumn(), new ColumnPixelData(90));
-                                TableColumnLayout tcl = new TableColumnLayout();
-                                parent.setLayout(tcl);
-                                applyColumnLayoutData(tcl);
-                                column.getColumn().setWidth(90);
-                                tableViewer.getTable().layout();
-                            }
-                        }
-
-                        // Now add content
-                        tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
-                    });
+                Display.getDefault().asyncExec(() -> TelecommandView.this.processCommandHistoryEntry(cmdhistEntry));
             }
         });
+    }
+
+    private void fetchArchivedCommands() {
+        // TODO limit to 'some' time in the past
+        RestDumpArchiveRequest request = RestDumpArchiveRequest.newBuilder().setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder())
+                .build();
+        restClient.dumpArchive(request, new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                RestDumpArchiveResponse response = (RestDumpArchiveResponse) responseMsg;
+                Display.getDefault().asyncExec(() -> {
+                    for (CommandHistoryEntry cmdhistEntry : response.getCommandList())
+                        TelecommandView.this.processCommandHistoryEntry(cmdhistEntry);
+                });
+            }
+
+            @Override
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Error while fetching archived telecommands", e);
+            }
+        });
+    }
+
+    private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
+        // Maybe we need to update structure
+        for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
+            if (IGNORED_ATTRIBUTES.contains(attr.getName()))
+                continue;
+
+            String shortName = attr.getName()
+                    .replace(ACK_PREFIX, "")
+                    .replace(TelecommandRecord.STATUS_SUFFIX, "")
+                    .replace(TelecommandRecord.TIME_SUFFIX, "");
+            if (!dynamicColumns.contains(shortName)) {
+                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
+                column.getColumn().setText(shortName);
+                column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
+                column.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        return ((TelecommandRecord) element).getTextForColumn(shortName);
+                    }
+
+                    @Override
+                    public String getToolTipText(Object element) {
+                        return ((TelecommandRecord) element).getTooltipForColumn(shortName);
+                    }
+
+                    @Override
+                    public Image getImage(Object element) {
+                        String imgLoc = ((TelecommandRecord) element).getImageForColumn(shortName);
+                        if (TelecommandRecordContentProvider.GREEN.equals(imgLoc))
+                            return greenBubble;
+                        else if (TelecommandRecordContentProvider.RED.equals(imgLoc))
+                            return redBubble;
+                        else
+                            return null;
+                    }
+                });
+                dynamicColumns.add(shortName);
+                layoutDataByColumn.put(column.getColumn(), new ColumnPixelData(90));
+                TableColumnLayout tcl = new TableColumnLayout();
+                parent.setLayout(tcl);
+                applyColumnLayoutData(tcl);
+                column.getColumn().setWidth(90);
+                tableViewer.getTable().layout();
+            }
+        }
+
+        // Now add content
+        tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {

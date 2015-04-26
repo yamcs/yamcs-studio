@@ -38,6 +38,7 @@ import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestSendCommandResponse;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 
 import com.google.protobuf.MessageLite;
 
@@ -155,10 +156,10 @@ public class RestClient {
     }
 
     public static void main(String... args) {
-        RestListAvailableParametersRequest req = RestListAvailableParametersRequest.newBuilder().build();
+        RestDumpArchiveRequest req = RestDumpArchiveRequest.newBuilder().setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder()).build();
         RestClient endpoint = new RestClient(new YamcsConnectionProperties("machine", 8090, "simulator"));
         System.out.println("ahum ");
-        endpoint.listAvailableParameters(req, new ResponseHandler() {
+        endpoint.dumpArchive(req, new ResponseHandler() {
 
             @Override
             public void onMessage(MessageLite responseMsg) {
