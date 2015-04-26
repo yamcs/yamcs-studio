@@ -1,6 +1,8 @@
 package org.yamcs.studio.core.commanding;
 
-import java.util.Comparator;
+import static org.yamcs.studio.core.ui.Comparators.INTEGER_COMPARATOR;
+import static org.yamcs.studio.core.ui.Comparators.LONG_COMPARATOR;
+import static org.yamcs.studio.core.ui.Comparators.STRING_COMPARATOR;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -8,30 +10,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableColumn;
 
 public class TelecommandViewerComparator extends ViewerComparator {
-    // Some null-safe comparators
-    private static final Comparator<String> STRING_COMPARATOR = (o1, o2) -> {
-        if (o1 == null ^ o2 == null)
-            return (o1 == null) ? -1 : 1;
-        if (o1 == null && o2 == null)
-            return 0;
-        return o1.compareTo(o2);
-    };
-
-    private static final Comparator<Integer> INTEGER_COMPARATOR = (o1, o2) -> {
-        if (o1 == null ^ o2 == null)
-            return (o1 == null) ? -1 : 1;
-        if (o1 == null && o2 == null)
-            return 0;
-        return o1.compareTo(o2);
-    };
-
-    private static final Comparator<Long> LONG_COMPARATOR = (o1, o2) -> {
-        if (o1 == null ^ o2 == null)
-            return (o1 == null) ? -1 : 1;
-        if (o1 == null && o2 == null)
-            return 0;
-        return o1.compareTo(o2);
-    };
 
     private String currentColumn;
     private boolean ascending;

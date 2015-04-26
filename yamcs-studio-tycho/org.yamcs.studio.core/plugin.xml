@@ -53,6 +53,13 @@
       </view>
       <view
             category="org.csstudio"
+            class="org.yamcs.studio.core.eventlog.EventLogView"
+            icon="icons/event_log.gif"
+            id="org.yamcs.studio.core.eventlog.EventLogView"
+            name="Event Log">
+      </view>
+      <view
+            category="org.csstudio"
             class="org.yamcs.studio.core.commanding.TelecommandView"
             icon="icons/tc.png"
             id="org.yamcs.studio.core.commanding.TelecommandView"
@@ -74,6 +81,12 @@
                relationship="stack"
                visible="true"
                id="org.yamcs.studio.core.archive.ArchiveView">
+         </view>
+         <view
+               relative="org.eclipse.ui.views.ProgressView"
+               relationship="stack"
+               visible="true"
+               id="org.yamcs.studio.core.eventlog.EventLogView">
          </view>
       </perspectiveExtension>
    </extension>
