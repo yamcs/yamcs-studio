@@ -49,7 +49,7 @@
             class="org.yamcs.studio.core.archive.ArchiveView"
             icon="icons/archive.png"
             id="org.yamcs.studio.core.archive.ArchiveView"
-            name="Archive">
+            name="TM Archive">
       </view>
       <view
             category="org.csstudio"
@@ -74,12 +74,6 @@
                relative="org.eclipse.ui.views.ProgressView"
                relationship="stack"
                visible="true"
-               id="org.yamcs.studio.core.commanding.TelecommandView">
-         </view>
-         <view
-               relative="org.eclipse.ui.views.ProgressView"
-               relationship="stack"
-               visible="true"
                id="org.yamcs.studio.core.archive.ArchiveView">
          </view>
          <view
@@ -87,6 +81,12 @@
                relationship="stack"
                visible="true"
                id="org.yamcs.studio.core.eventlog.EventLogView">
+         </view>
+         <view
+               relative="org.eclipse.ui.views.ProgressView"
+               relationship="stack"
+               visible="true"
+               id="org.yamcs.studio.core.commanding.TelecommandView">
          </view>
       </perspectiveExtension>
    </extension>
@@ -97,6 +97,28 @@
       <menuContribution
             allPopups="false"
             locationURI="menu:css?before=display">
+         <command
+               commandId="org.eclipse.ui.views.showView"
+               icon="icons/archive.png"
+               label="TM Archive"
+               style="push"
+               tooltip="Open TM Archive">
+            <parameter
+                  name="org.eclipse.ui.views.showView.viewId"
+                  value="org.yamcs.studio.core.archive.ArchiveView">
+            </parameter>
+         </command>
+         <command
+               commandId="org.eclipse.ui.views.showView"
+               icon="icons/event_log.gif"
+               label="Event Log"
+               style="push"
+               tooltip="Open event log">
+            <parameter
+                  name="org.eclipse.ui.views.showView.viewId"
+                  value="org.yamcs.studio.core.eventlog.EventLogView">
+            </parameter>
+         </command>
          <command
                commandId="org.eclipse.ui.views.showView"
                icon="icons/tc.png"
