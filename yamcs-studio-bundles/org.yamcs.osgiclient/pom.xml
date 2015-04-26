@@ -23,11 +23,6 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
-				<!-- Netty is OSGI-friendly, so don't bundle it up -->
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-all</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -52,7 +47,7 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<unpackBundle>true</unpackBundle>
 					<instructions>
-						<Bundle-Name>Yamcs client uber jar</Bundle-Name>
+						<Bundle-Name>Yamcs Client</Bundle-Name>
 						<Bundle-SymbolicName>org.yamcs.osgiclient;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
 						<Bundle-Description>OSGI-friendly repackaging of yamcs-client</Bundle-Description>
@@ -69,7 +64,15 @@
 						</Import-Package>
 						<Export-Package>
 							com.google.protobuf,
-							io.protostuff, <!-- Temporary, until rest client is transferred to yamcs-api -->
+							io.netty.bootstrap,
+							io.netty.buffer,
+							io.netty.channel,
+							io.netty.channel.nio,
+							io.netty.channel.socket,
+							io.netty.channel.socket.nio,
+							io.netty.handler.codec.http,
+							io.netty.util.concurrent,
+							io.protostuff,
 							org.yamcs.api,
 							org.yamcs.api.ws,
 							org.yamcs.protobuf,

@@ -23,13 +23,7 @@
 						</goals>
 						<configuration>
 							<artifacts>
-								<!-- Thirdparty OSGI-friendly artifacts -->
-								<artifact>
-									<id>io.netty:netty-all:${netty.version}</id>
-									<source>true</source>
-								</artifact>
-
-								<!-- Plugins from reactor -->
+								<!-- From reactor -->
                                 <artifact>
                                     <id>org.yamcs.studio:org.yamcs.osgiclient:${project.version}</id>
                                 </artifact>
