@@ -4,8 +4,9 @@
 <product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.product.product" application="org.yamcs.studio.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
+      <image path="/org.yamcs.studio.product/icons/aboutSide.png"/>
       <text>
-         CS-Studio customized to suit Yamcs - the Open Source Mission Control System
+         CS-Studio customized to suit Yamcs - The Open Source Mission Control System
 
 See http://www.yamcs.org
       </text>

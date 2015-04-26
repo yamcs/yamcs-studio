@@ -3,7 +3,8 @@
       id="yamcs-studio-feature"
       label="Bundles plugin dependencies"
       version="1.0.0.qualifier"
-      provider-name="Space Applications Services">
+      provider-name="Space Applications Services"
+      plugin="org.yamcs.studio.product">
 
    <copyright>
       Copyright (c) 2015 Space Applications Services
