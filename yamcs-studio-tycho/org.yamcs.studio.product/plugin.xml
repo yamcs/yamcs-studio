@@ -68,7 +68,7 @@
    <extension point="org.csstudio.startup.module">
       <startupParameters class="org.csstudio.utility.product.StartupParameters"/>
       <workspace class="org.csstudio.utility.product.WorkspacePrompt"/>
-      <workbench class="org.csstudio.utility.product.Workbench"/>
+      <workbench class="org.yamcs.studio.product.Workbench"/>
       <project class="org.yamcs.studio.product.DefaultYamcsStudioProject"/>
    </extension>
 
