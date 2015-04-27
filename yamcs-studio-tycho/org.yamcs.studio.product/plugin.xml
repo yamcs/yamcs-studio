@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.2"?>
+<?eclipse version="3.4"?>
 <plugin>
    <extension
          id="product"
@@ -18,28 +18,34 @@
                value="icons/aboutSide.png"/>
          <property
                name="appName"
-               value="Yamcs Studio">
-         </property>
+               value="Yamcs Studio"/>
+         <property
+               name="applicationXMI"
+               value="org.eclipse.platform/LegacyIDE.e4xmi"/>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://org.yamcs.studio.product/org.yamcs.studio.product.LifeCycleManager"/>
+         <property
+               name="cssTheme"
+               value="org.eclipse.e4.ui.css.theme.e4_default"/>
+         <property
+               name="applicationCSSResources"
+               value="platform:/plugin/org.eclipse.platform/images/"/>
          <property
                name="startupForegroundColor"
-               value="2F376D">
-         </property>
+               value="2F376D"/>
          <property
                name="startupMessageRect"
-               value="20,195,560,20">
-         </property>
+               value="20,195,560,20"/>
          <property
                name="startupProgressRect"
-               value="20,215,560,15">
-         </property>
+               value="20,215,560,15"/>
          <property
                name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
+               value="plugin_customization.ini"/>
          <property
             name="introTitle"
-            value="Yamcs Studio">
-         </property>
+            value="Yamcs Studio"/>
          <property
             name="introBrandingImage"
             value="product:icons/css64.png"/>
@@ -48,6 +54,15 @@
             value="Yamcs Studio"/>
       </product>
    </extension>
+   
+   <extension
+         id="postfragmentmodelprocessor"
+         point="org.eclipse.e4.workbench.model">
+      <processor
+            beforefragment="false"
+            class="org.yamcs.studio.product.PostFragmentModelProcessor"/>
+   </extension>
+   
    <extension
          point="org.eclipse.core.runtime.applications"
          id="application"

@@ -19,7 +19,15 @@ Require-Bundle: org.eclipse.core.runtime,
  org.csstudio.ui.menu.app,
  org.csstudio.startup.helper,
  org.csstudio.security,
- org.csstudio.security.ui
+ org.csstudio.security.ui,
+ org.eclipse.e4.core.services,
+ org.eclipse.e4.ui.workbench,
+ org.eclipse.e4.ui.workbench.addons.swt,
+ org.eclipse.osgi.services,
+ org.eclipse.e4.core.di,
+ org.eclipse.e4.ui.di,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.platform
 Bundle-Vendor: Space Applications Services
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.yamcs.studio.product.Activator
