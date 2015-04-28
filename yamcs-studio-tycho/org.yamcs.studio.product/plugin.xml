@@ -20,9 +20,6 @@
                name="appName"
                value="Yamcs Studio"/>
          <property
-               name="applicationXMI"
-               value="org.eclipse.platform/LegacyIDE.e4xmi"/>
-         <property
                name="lifeCycleURI"
                value="bundleclass://org.yamcs.studio.product/org.yamcs.studio.product.LifeCycleManager"/>
          <property
