@@ -158,7 +158,7 @@ $(pv_value)</tooltip>
       <height_scalable>true</height_scalable>
       <keep_wh_ratio>true</keep_wh_ratio>
     </scale_options>
-    <tab_0_icon_path>../pictures/home-16x16.png</tab_0_icon_path>
+    <tab_0_icon_path>pictures/home-16x16.png</tab_0_icon_path>
     <tab_0_enabled>true</tab_0_enabled>
     <foreground_color>
       <color name="Background_main" red="146" green="230" blue="239" />
@@ -4458,7 +4458,7 @@ $(pv_value)</tooltip>
             <wuid>-29013b4f:14660c62062:-55bb</wuid>
             <transparent>false</transparent>
             <scripts>
-              <path pathString="../scripts/Elev.js" checkConnect="true" sfe="false" seoe="false">
+              <path pathString="scripts/Elev.js" checkConnect="true" sfe="false" seoe="false">
                 <pv trig="true">SIMULATOR_Latitude</pv>
                 <pv trig="true">SIMULATOR_Longitude</pv>
                 <pv trig="true">sim://const(25000)</pv>
@@ -4521,7 +4521,7 @@ $(pv_value)</tooltip>
             <wuid>-29013b4f:14660c62062:-55ba</wuid>
             <transparent>false</transparent>
             <scripts>
-              <path pathString="../scripts/Azim.js" checkConnect="true" sfe="false" seoe="false">
+              <path pathString="scripts/Azim.js" checkConnect="true" sfe="false" seoe="false">
                 <pv trig="true">SIMULATOR_Latitude</pv>
                 <pv trig="true">SIMULATOR_Longitude</pv>
                 <pv trig="true">SIMULATOR_Altitude</pv>
@@ -4584,7 +4584,7 @@ $(pv_value)</tooltip>
             <wuid>-29013b4f:14660c62062:-55b9</wuid>
             <transparent>false</transparent>
             <scripts>
-              <path pathString="../scripts/Range.js" checkConnect="true" sfe="false" seoe="false">
+              <path pathString="scripts/Range.js" checkConnect="true" sfe="false" seoe="false">
                 <pv trig="true">SIMULATOR_Latitude</pv>
                 <pv trig="true">SIMULATOR_Longitude</pv>
                 <pv trig="true">sim://const(25000)</pv>
@@ -8751,7 +8751,7 @@ tooltip.</tooltip>
     <wuid>-4722b7fb:1449187ae6f:-7e40</wuid>
     <column_header_visible>true</column_header_visible>
     <scripts>
-      <path pathString="../scripts/DisplayPVValuesInTable.py" checkConnect="false" sfe="false" seoe="false">
+      <path pathString="scripts/DisplayPVValuesInTable.py" checkConnect="false" sfe="false" seoe="false">
         <pv trig="true">sim://noise</pv>
         <pv trig="true">sim://ramp</pv>
         <pv trig="true">sim://ramp(0,100,1,0.1)</pv>
@@ -8835,7 +8835,7 @@ tooltip.</tooltip>
     <enabled>false</enabled>
     <wuid>-26eb12a8:14527551db9:-7a2e</wuid>
     <auto_size>true</auto_size>
-    <image_file>../pictures/Saslogo 8cm 600dpi.png</image_file>
+    <image_file>pictures/Saslogo 8cm 600dpi.png</image_file>
     <scripts />
     <height>47</height>
     <border_width>1</border_width>
@@ -9037,7 +9037,7 @@ GUIUtil.fullScreen();]]></scriptText>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/pause.png</image>
+      <image>playback/pause.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -9078,7 +9078,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/stop.png</image>
+      <image>playback/stop.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -9119,7 +9119,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/forward.png</image>
+      <image>playback/forward.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -9159,7 +9159,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/backward and stop.png</image>
+      <image>playback/backward and stop.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -9199,7 +9199,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/backward.png</image>
+      <image>playback/backward.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -9239,7 +9239,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>true</keep_wh_ratio>
       </scale_options>
-      <image>../playback/play.png</image>
+      <image>playback/play.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -9279,7 +9279,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/forward and more.png</image>
+      <image>playback/forward and more.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -10292,7 +10292,7 @@ $(pv_value)</tooltip>
       <text>######</text>
       <rotation_angle>0.0</rotation_angle>
       <scripts>
-        <path pathString="../scripts/UTC.js" checkConnect="true" sfe="false" seoe="false">
+        <path pathString="scripts/UTC.js" checkConnect="true" sfe="false" seoe="false">
           <pv trig="true">SIMULATOR_ElapsedTime</pv>
         </path>
       </scripts>

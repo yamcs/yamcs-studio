@@ -96,10 +96,10 @@ $(pv_value)</tooltip>
     <rules>
       <rule name="Dynamic" prop_id="image_file" out_exp="false">
         <exp bool_exp="pv0==0">
-          <value>../pictures/Saslogo 8cm 600dpi.png</value>
+          <value>pictures/Saslogo 8cm 600dpi.png</value>
         </exp>
         <exp bool_exp="pv0==2">
-          <value>../pictures/logos/essencedesign-DC-top-01_s.jpg</value>
+          <value>pictures/logos/essencedesign-DC-top-01_s.jpg</value>
         </exp>
         <pv trig="true">sim://ramp(0,1,1,2)</pv>
       </rule>
@@ -108,7 +108,7 @@ $(pv_value)</tooltip>
     <enabled>false</enabled>
     <wuid>-26eb12a8:14527551db9:-7a2e</wuid>
     <auto_size>true</auto_size>
-    <image_file>../pictures/Saslogo 8cm 600dpi.png</image_file>
+    <image_file>pictures/Saslogo 8cm 600dpi.png</image_file>
     <scripts />
     <height>47</height>
     <border_width>1</border_width>
@@ -310,7 +310,7 @@ GUIUtil.fullScreen();]]></scriptText>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/pause.png</image>
+      <image>playback/pause.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -351,7 +351,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/stop.png</image>
+      <image>playback/stop.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -392,7 +392,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/forward.png</image>
+      <image>playback/forward.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -432,7 +432,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/backward and stop.png</image>
+      <image>playback/backward and stop.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -472,7 +472,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/backward.png</image>
+      <image>playback/backward.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -512,7 +512,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>true</keep_wh_ratio>
       </scale_options>
-      <image>../playback/play.png</image>
+      <image>playback/play.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -552,7 +552,7 @@ $(pv_value)</tooltip>
         <height_scalable>true</height_scalable>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
-      <image>../playback/forward and more.png</image>
+      <image>playback/forward and more.png</image>
       <visible>true</visible>
       <pv_name></pv_name>
       <border_color>
@@ -2821,7 +2821,7 @@ $(pv_value)</tooltip>
           </foreground_color>
           <actions hook="false" hook_all="false">
             <action type="EXECUTE_JAVASCRIPT">
-              <path>../scripts/ClearGraph3.js</path>
+              <path>scripts/ClearGraph3.js</path>
               <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
 ]]></scriptText>
               <embedded>false</embedded>
@@ -3276,7 +3276,7 @@ $(pv_value)</tooltip>
           </foreground_color>
           <actions hook="false" hook_all="false">
             <action type="EXECUTE_JAVASCRIPT">
-              <path>../scripts/ClearGraph3.js</path>
+              <path>scripts/ClearGraph3.js</path>
               <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
 ]]></scriptText>
               <embedded>false</embedded>
@@ -6100,7 +6100,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
-          <path>../scripts/ClearGraph.js</path>
+          <path>scripts/ClearGraph.js</path>
           <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
 ]]></scriptText>
           <embedded>false</embedded>
@@ -6327,7 +6327,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
-          <path>../scripts/ClearGraph1.js</path>
+          <path>scripts/ClearGraph1.js</path>
           <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
 ]]></scriptText>
           <embedded>false</embedded>
@@ -7202,7 +7202,7 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false">
         <action type="EXECUTE_JAVASCRIPT">
-          <path>../scripts/ClearGraph3.js</path>
+          <path>scripts/ClearGraph3.js</path>
           <scriptText><![CDATA[importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
 ]]></scriptText>
           <embedded>false</embedded>
