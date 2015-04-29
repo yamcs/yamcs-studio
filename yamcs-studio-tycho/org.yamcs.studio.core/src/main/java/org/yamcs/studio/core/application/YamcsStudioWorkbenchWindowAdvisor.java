@@ -1,4 +1,4 @@
-package org.yamcs.studio.product;
+package org.yamcs.studio.core.application;
 
 import org.csstudio.ui.menu.app.ApplicationActionBarAdvisor;
 import org.csstudio.utility.product.ApplicationWorkbenchWindowAdvisor;

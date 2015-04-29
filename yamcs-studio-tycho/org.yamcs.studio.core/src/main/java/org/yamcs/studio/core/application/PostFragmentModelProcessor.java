@@ -1,4 +1,4 @@
-package org.yamcs.studio.product;
+package org.yamcs.studio.core.application;
 
 import javax.inject.Inject;
 

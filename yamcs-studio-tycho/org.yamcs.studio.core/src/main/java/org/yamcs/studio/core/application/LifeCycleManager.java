@@ -1,4 +1,4 @@
-package org.yamcs.studio.product;
+package org.yamcs.studio.core.application;
 
 import org.eclipse.e4.core.services.events.IEventBroker;
 

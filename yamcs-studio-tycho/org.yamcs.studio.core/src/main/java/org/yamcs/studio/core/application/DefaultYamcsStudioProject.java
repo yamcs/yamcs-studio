@@ -1,4 +1,4 @@
-package org.yamcs.studio.product;
+package org.yamcs.studio.core.application;
 
 import java.io.File;
 import java.net.URL;
@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.osgi.framework.Bundle;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Creates a project called 'Sample MCS', but unlike the CSS DefaultProject, it will only do so if
@@ -60,7 +61,7 @@ public class DefaultYamcsStudioProject extends DefaultProject {
     }
 
     private void importSampleMCS(IProject projectHandle) throws CoreException {
-        Bundle bundle = Activator.getDefault().getBundle();
+        Bundle bundle = YamcsPlugin.getDefault().getBundle();
         try {
             URL location = FileLocator.toFileURL(bundle.getEntry("/"));
             File templateRoot = new File(location.getPath(), "sample-mcs-project");
@@ -76,7 +77,7 @@ public class DefaultYamcsStudioProject extends DefaultProject {
             operation.setContext(Display.getDefault().getActiveShell());
             operation.run(null);
         } catch (Exception e) {
-            throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage()));
+            throw new CoreException(new Status(IStatus.ERROR, YamcsPlugin.PLUGIN_ID, e.getLocalizedMessage()));
         }
     }
 }

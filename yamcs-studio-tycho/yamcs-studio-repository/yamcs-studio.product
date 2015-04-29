@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.product.product" application="org.yamcs.studio.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.core.product" application="org.yamcs.studio.core.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.yamcs.studio.product/icons/aboutSide.png"/>
+      <image path="/org.yamcs.studio.core/icons/aboutSide.png"/>
       <text>
          CS-Studio customized to suit Yamcs - The Open Source Mission Control System
 
@@ -18,8 +18,6 @@ See http://www.yamcs.org
    <launcherArgs>
       <programArgs>--launcher.defaultAction
 openFile
--data
-@user.home/workspace
       </programArgs>
       <vmArgs>-Xmx1024m
 -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
@@ -32,19 +30,19 @@ openFile
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.yamcs.studio.product/icons/css16.png" i32="/org.yamcs.studio.product/icons/css32.png" i48="/org.yamcs.studio.product/icons/css48.png" i64="/org.yamcs.studio.product/icons/css64.png" i128="/org.yamcs.studio.product/icons/css128.png" i256="/org.yamcs.studio.product/icons/css256.png"/>
+   <windowImages i16="/org.yamcs.studio.core/icons/css16.png" i32="/org.yamcs.studio.core/icons/css32.png" i48="/org.yamcs.studio.core/icons/css48.png" i64="/org.yamcs.studio.core/icons/css64.png" i128="/org.yamcs.studio.core/icons/css128.png" i256="/org.yamcs.studio.core/icons/css256.png"/>
 
    <splash
-      location="org.yamcs.studio.product"
+      location="org.yamcs.studio.core"
       startupProgressRect="20,215,560,15"
       startupMessageRect="20,195,560,20"
       startupForegroundColor="2F376D" />
-   <launcher name="yamcs-studio">
-      <linux icon="/org.yamcs.studio.product/icons/css.xpm"/>
-      <macosx icon="/org.yamcs.studio.product/icons/css.icns"/>
+   <launcher name="Yamcs Studio">
+      <linux icon="/org.yamcs.studio.core/icons/css.xpm"/>
+      <macosx icon="/org.yamcs.studio.core/icons/css.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/org.yamcs.studio.product/icons/css.ico"/>
+         <ico path="/org.yamcs.studio.core/icons/css.ico"/>
          <bmp/>
       </win>
    </launcher>

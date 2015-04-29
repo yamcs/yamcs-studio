@@ -1,4 +1,4 @@
-package org.yamcs.studio.product;
+package org.yamcs.studio.core.application;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -6,7 +6,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 
 public class YamcsPerspective implements IPerspectiveFactory {
 
-    public static final String ID = "org.yamcs.studio.product.YamcsPerspective";
+    public static final String ID = "org.yamcs.studio.core.application.YamcsPerspective";
 
     private static final String EVENT_LOG_VIEW_ID = "org.yamcs.studio.core.eventlog.EventLogView";
     private static final String ARCHIVE_VIEW_ID = "org.yamcs.studio.core.archive.ArchiveView";

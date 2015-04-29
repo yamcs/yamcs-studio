@@ -2,6 +2,119 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.yamcs.studio.core.application"
+            name="Yamcs Studio">
+         <property
+               name="windowImages"
+               value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png,icons/css256.png"/>
+         <property
+               name="aboutText"
+               value="CS-Studio customized to suit Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+         <property
+               name="aboutImage"
+               value="icons/aboutSide.png"/>
+         <property
+               name="appName"
+               value="Yamcs Studio"/>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.application.LifeCycleManager"/>
+         <property
+               name="cssTheme"
+               value="org.eclipse.e4.ui.css.theme.e4_default"/>
+         <property
+               name="applicationCSSResources"
+               value="platform:/plugin/org.eclipse.platform/images/"/>
+         <property
+               name="startupForegroundColor"
+               value="2F376D"/>
+         <property
+               name="startupMessageRect"
+               value="20,195,560,20"/>
+         <property
+               name="startupProgressRect"
+               value="20,215,560,15"/>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini"/>
+         <property
+            name="introTitle"
+            value="Yamcs Studio"/>
+         <property
+            name="introBrandingImage"
+            value="product:icons/css64.png"/>
+         <property
+            name="introBrandingImageText"
+            value="Yamcs Studio"/>
+      </product>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.runtime.applications"
+         id="application"
+		 name="Yamcs Studio">
+      <application>
+         <run
+               class="org.csstudio.startup.application.Application">
+         </run>
+      </application>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.yamcs.studio.core.application.YamcsPerspective"
+            icon="icons/css16.png"
+            id="org.yamcs.studio.core.application.YamcsPerspective"
+            name="Yamcs">
+      </perspective>
+   </extension>
+   
+   <extension
+         id="postfragmentmodelprocessor"
+         point="org.eclipse.e4.workbench.model">
+      <processor
+            beforefragment="false"
+            class="org.yamcs.studio.core.application.PostFragmentModelProcessor"/>
+   </extension>
+   
+   <!-- Note that the classes listed in here should be in plugins
+        that can be loaded without locking the workspace.
+        This means the plugins loaded for these classes
+        should not use preferences or anything else that
+        triggers initialization of the workspace
+     -->
+   <extension point="org.csstudio.startup.module">
+      <startupParameters class="org.csstudio.utility.product.StartupParameters"/>
+      <workspace class="org.csstudio.utility.product.WorkspacePrompt"/>
+      <workbench class="org.yamcs.studio.core.application.Workbench"/>
+      <project class="org.yamcs.studio.core.application.DefaultYamcsStudioProject"/>
+   </extension>
+
+<!--   <extension
+         point="org.eclipse.ui.activities">
+    <activity id="yamcsstudio.disablextensions" name="Hidden activities"/>
+    <activityPatternBinding activityId="yamcsstudio.disablextensions" pattern="org.eclipse.team.*"/>
+   </extension-->
+   
+   <!--
+   	This extension point is actually considered deprecated now, in favor of the
+   	"common navigator framework". We'll use this one until we have time to figure
+   	out the other one.
+   -->
+   <extension point="org.eclipse.ui.ide.resourceFilters">
+      
+      <!-- Hide files that should by default be hidden (.project, .pydevproject, ..) -->
+      <filter
+            selected="true"
+            pattern=".**"> <!-- Not using .* because that one is declared by org.eclipse.ui.ide as selected="false" -->
+      </filter>
+   </extension>
+   
+   <extension
          point="org.eclipse.ui.startup">
       <startup
             class="org.yamcs.studio.core.pvmanager.Bootstrap"/>
@@ -87,7 +200,7 @@
       </perspectiveExtension>
       
       <!-- Yamcs Perspective (might get rid of this eventually) -->
-      <perspectiveExtension targetID="org.yamcs.studio.product.YamcsPerspective">
+      <perspectiveExtension targetID="org.yamcs.studio.core.application.YamcsPerspective">
          <!-- Remove stuff that has to with files/selections -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
          <hiddenMenuItem id="org.csstudio.opibuilder.topfiles"/>
@@ -202,6 +315,12 @@
    
    <extension
          point="org.eclipse.ui.menus">
+      <!-- TODO Do we actually need this, or does some other plugin already take care of w/e this was supposed to do? -->
+      <menuContribution
+            allPopups="true"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
+         <toolbar id="additions"/>
+      </menuContribution>
       <!-- Add direct menu to switch perspectives (because we disable the horrible
            built-in perspective-switcher-bar) -->
       <!-- TODO rewrite this to use only one command, with a default checked radio state -->
@@ -212,12 +331,12 @@
                label="Perspective">
            	<command
                   commandId="org.eclipse.ui.perspectives.showPerspective"
-                  icon="platform:/plugin/org.yamcs.studio.product/icons/css16.png"
+                  icon="platform:/plugin/org.yamcs.studio.core/icons/css16.png"
                   label="Yamcs Dashboard"
                   style="radio">
                <parameter
                      name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                     value="org.yamcs.studio.product.YamcsPerspective"/>
+                     value="org.yamcs.studio.core.application.YamcsPerspective"/>
             </command>
             <command
                   commandId="org.eclipse.ui.perspectives.showPerspective"
