@@ -76,10 +76,14 @@
          <!-- Hide possiblity to jump to other perspectives that we unwillingly
               inherited from other plugin.xml's -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.open_perspective"/>
-         <!-- Already in menu which seems enough for this type of thing -->
+         <!-- This is only marginally useful and can be done by other means (ctrl-f / ctrl-h) -->
+         <hiddenMenuItem id="textSearchSubMenu"/>
+         <hiddenMenuItem id="org.eclipse.search.ui.openFileSearchPage"/>
+         <!-- Already in menu which seems enough for this type of stuff -->
          <hiddenToolBarItem id="org.csstudio.security.login"/>
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
          <hiddenToolBarItem id="org.csstudio.diag.pvmanager.probe.OpenProbe"/>
+         <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>
       </perspectiveExtension>
       
       <!-- Yamcs Perspective (might get rid of this eventually) -->
