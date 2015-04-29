@@ -81,6 +81,7 @@
          <!-- Trying to keep this perspective editor-free -->
          <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
          <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
+         <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
       </perspectiveExtension>
       
       <!-- OPI Runtime Perspective -->
@@ -131,6 +132,8 @@
       
       <!-- OPI Editor Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
+         <!-- Not very useful with the navigator already there -->
+         <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
          <view
                relative="org.eclipse.ui.console.ConsoleView"
