@@ -68,10 +68,16 @@
 
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
-      <!-- Yamcs Perspective (might get rid of this eventually) -->
-      <perspectiveExtension targetID="org.yamcs.studio.product.YamcsPerspective">
+      <perspectiveExtension targetID="*">
          <!-- Don't need this, views are accessible through Window menu -->
          <hiddenMenuItem id="css"/>
+         <!-- Already in menu which seems enough for this type of thing -->
+         <hiddenToolBarItem id="org.csstudio.security.login"/>
+         <hiddenToolBarItem id="org.csstudio.security.logout"/>
+      </perspectiveExtension>
+      
+      <!-- Yamcs Perspective (might get rid of this eventually) -->
+      <perspectiveExtension targetID="org.yamcs.studio.product.YamcsPerspective">
          <!-- Trying to keep this perspective editor-free -->
          <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
          <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
@@ -79,8 +85,6 @@
       
       <!-- OPI Runtime Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
-         <!-- Don't need this, views are accessible through Window menu -->
-         <hiddenMenuItem id="css"/>
          <!-- Trying to keep this perspective editor-free -->
          <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
          <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
@@ -127,8 +131,6 @@
       
       <!-- OPI Editor Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
-         <!-- Don't need this, views are accessible through Window menu -->
-         <hiddenMenuItem id="css"/>
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
          <view
                relative="org.eclipse.ui.console.ConsoleView"
