@@ -19,6 +19,8 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 
 /**
  * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient. Combines state accross the
@@ -164,6 +166,14 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
                 log.warning("No pvreader for incoming update of " + pval.getId().getName());
             }
         }
+    }
+
+    @Override
+    public void onClientInfoData(ClientInfo clientInfo) {
+    }
+
+    @Override
+    public void onProcessorInfoData(ProcessorInfo processorInfo) {
     }
 
     @Override
