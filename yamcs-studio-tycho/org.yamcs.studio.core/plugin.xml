@@ -71,6 +71,9 @@
       <perspectiveExtension targetID="*">
          <!-- Don't need this, views are accessible through Window menu -->
          <hiddenMenuItem id="css"/>
+         <!-- Hide possiblity to jump to other perspectives that we unwillingly
+              inherited from other plugin.xml's -->
+         <hiddenMenuItem id="org.csstudio.ui.menu.app.open_perspective"/>
          <!-- Already in menu which seems enough for this type of thing -->
          <hiddenToolBarItem id="org.csstudio.security.login"/>
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
