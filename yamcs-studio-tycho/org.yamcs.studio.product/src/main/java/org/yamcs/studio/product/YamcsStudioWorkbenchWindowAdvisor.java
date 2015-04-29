@@ -18,6 +18,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
         super.preWindowOpen();
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         configurer.setInitialSize(new Point(1920, 1200));
+        configurer.setShowPerspectiveBar(false);
         configurer.setTitle("Yamcs Studio");
     }
 

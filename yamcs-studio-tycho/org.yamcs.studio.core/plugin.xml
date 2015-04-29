@@ -92,49 +92,43 @@
    
    <extension
          point="org.eclipse.ui.menus">
-      <!-- Indicate that the tc view should be in the menu -->
+      <!-- Add direct menu to switch perspectives (because we disable the horrible
+           built-in perspective-switcher-bar) -->
+      <!-- TODO rewrite this to use only one command, with a default checked radio state -->
       <menuContribution
-            allPopups="false"
-            locationURI="menu:css?before=display">
-         <command
-               commandId="org.eclipse.ui.views.showView"
-               icon="icons/archive.png"
-               label="TM Archive"
-               style="push"
-               tooltip="Open TM Archive">
-            <parameter
-                  name="org.eclipse.ui.views.showView.viewId"
-                  value="org.yamcs.studio.core.archive.ArchiveView">
-            </parameter>
-         </command>
-         <command
-               commandId="org.eclipse.ui.views.showView"
-               icon="icons/event_log.gif"
-               label="Event Log"
-               style="push"
-               tooltip="Open event log">
-            <parameter
-                  name="org.eclipse.ui.views.showView.viewId"
-                  value="org.yamcs.studio.core.eventlog.EventLogView">
-            </parameter>
-         </command>
-         <command
-               commandId="org.eclipse.ui.views.showView"
-               icon="icons/tc.png"
-               label="Telecommanding"
-               style="push"
-               tooltip="Open commanding view">
-            <parameter
-                  name="org.eclipse.ui.views.showView.viewId"
-                  value="org.yamcs.studio.core.commanding.TelecommandView">
-            </parameter>
-         </command>
-         <separator
-               name="org.yamcs.studio.menu.separator"
-               visible="true">
-         </separator>
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="org.yamcs.studio.ui.perspectiveMenu"
+               label="Perspective">
+           	<command
+                  commandId="org.eclipse.ui.perspectives.showPerspective"
+                  icon="platform:/plugin/org.yamcs.studio.product/icons/css16.png"
+                  label="Yamcs (default)"
+                  style="radio">
+               <parameter
+                     name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                     value="org.yamcs.studio.product.YamcsPerspective"/>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.perspectives.showPerspective"
+                  icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIBuilder.png"
+                  label="OPI Editor"
+                  style="radio">
+               <parameter
+                     name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                     value="org.csstudio.opibuilder.opieditor"/>
+            </command>
+            <command
+                  commandId="org.eclipse.ui.perspectives.showPerspective"
+                  icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIRunner.png"
+                  label="OPI Runtime"
+                  style="radio">
+               <parameter
+                     name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                     value="org.csstudio.opibuilder.OPIRuntime.perspective"/>
+            </command>
+         </menu>
       </menuContribution>
-      
       <!-- Augment the main toolbar -->
       <menuContribution
             allPopups="false"

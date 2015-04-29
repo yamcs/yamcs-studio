@@ -53,6 +53,16 @@
    </extension>
    
    <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.yamcs.studio.product.YamcsPerspective"
+            icon="icons/css16.png"
+            id="org.yamcs.studio.product.YamcsPerspective"
+            name="Yamcs">
+      </perspective>
+   </extension>
+   
+   <extension
          id="postfragmentmodelprocessor"
          point="org.eclipse.e4.workbench.model">
       <processor

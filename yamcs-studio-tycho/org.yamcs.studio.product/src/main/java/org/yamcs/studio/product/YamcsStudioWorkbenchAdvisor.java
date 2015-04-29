@@ -2,7 +2,6 @@ package org.yamcs.studio.product;
 
 import org.csstudio.startup.application.OpenDocumentEventProcessor;
 import org.csstudio.utility.product.ApplicationWorkbenchAdvisor;
-import org.csstudio.utility.product.CSStudioPerspective;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
@@ -19,6 +18,6 @@ public class YamcsStudioWorkbenchAdvisor extends ApplicationWorkbenchAdvisor {
 
     @Override
     public String getInitialWindowPerspectiveId() {
-        return CSStudioPerspective.ID;
+        return YamcsPerspective.ID;
     }
 }
