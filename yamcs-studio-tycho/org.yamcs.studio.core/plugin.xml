@@ -65,35 +65,61 @@
             name="Telecommanding">
       </view>
    </extension>
-   <!-- Indicate, for the runtime perspective, that the tc view should by default be
-        on the bottom of the runtime perspective -->
+
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
+      <!-- OPI Runtime Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
                closeable="false"
-               minimized="true"
                id="org.yamcs.studio.core.archive.ArchiveView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
                closeable="false"
-               minimized="true"
                id="org.yamcs.studio.core.eventlog.EventLogView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
                closeable="false"
-               minimized="true"
                id="org.yamcs.studio.core.commanding.TelecommandView">
          </view>
+         <!-- Add view shortcuts too, because even with the closeable="false",
+              it is still possible to close them (by first detaching them and
+              then closing the detached window. Boooo -->
+         <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.TelecommandView"/>
+      </perspectiveExtension>
+      
+      <!-- OPI Editor Perspective -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
+      	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.core.archive.ArchiveView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.core.eventlog.EventLogView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.core.commanding.TelecommandView">
+         </view>
+         <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.TelecommandView"/>
       </perspectiveExtension>
    </extension>
    
