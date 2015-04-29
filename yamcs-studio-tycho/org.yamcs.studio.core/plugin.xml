@@ -69,7 +69,7 @@
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <!-- Yamcs Perspective (might get rid of this eventually) -->
-      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
+      <perspectiveExtension targetID="org.yamcs.studio.product.YamcsPerspective">
          <!-- Don't need this, views are accessible through Window menu -->
          <hiddenMenuItem id="css"/>
       </perspectiveExtension>
