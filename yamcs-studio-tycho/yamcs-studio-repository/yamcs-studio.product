@@ -18,6 +18,8 @@ See http://www.yamcs.org
    <launcherArgs>
       <programArgs>--launcher.defaultAction
 openFile
+-data
+@user.home/workspace
       </programArgs>
       <vmArgs>-Xmx1024m
 -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
