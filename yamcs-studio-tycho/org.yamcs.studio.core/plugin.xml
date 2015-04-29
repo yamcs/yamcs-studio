@@ -65,26 +65,33 @@
             name="Telecommanding">
       </view>
    </extension>
-   <!-- Indicate that the tc view should by default be on the bottom -->
+   <!-- Indicate, for the runtime perspective, that the tc view should by default be
+        on the bottom of the runtime perspective -->
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension targetID="org.csstudio.utility.product.CSStudioPerspective">
+      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
          <view
-               relative="org.eclipse.ui.views.ProgressView"
+               relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="true"
+               closeable="false"
+               minimized="true"
                id="org.yamcs.studio.core.archive.ArchiveView">
          </view>
          <view
-               relative="org.eclipse.ui.views.ProgressView"
+               relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="true"
+               closeable="false"
+               minimized="true"
                id="org.yamcs.studio.core.eventlog.EventLogView">
          </view>
          <view
-               relative="org.eclipse.ui.views.ProgressView"
+               relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="true"
+               closeable="false"
+               minimized="true"
                id="org.yamcs.studio.core.commanding.TelecommandView">
          </view>
       </perspectiveExtension>
