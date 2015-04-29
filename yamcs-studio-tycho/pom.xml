@@ -29,7 +29,6 @@
 		<module>org.yamcs.studio.core</module>
 		<module>org.yamcs.studio.opibuilder.script</module>
 		<module>org.yamcs.studio.product</module>
-		<module>org.yamcs.studio.ui.menu</module>
 		<module>org.yamcs.studio.ui.menu.app</module>
 		<module>org.yamcs.studio.ycl.dsl</module>
 		<module>org.yamcs.studio.ycl.ui</module>
