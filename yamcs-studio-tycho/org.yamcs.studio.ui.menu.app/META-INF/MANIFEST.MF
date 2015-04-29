@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: CSS UI Menu App message overrides
-Bundle-SymbolicName: org.yamcs.studio.ui.menu.app
-Bundle-Version: 1.0.0.qualifier
-Bundle-Description: Overrides messages for some common locales
-Bundle-Vendor: Space Applications Services
-Fragment-Host: org.csstudio.ui.menu.app

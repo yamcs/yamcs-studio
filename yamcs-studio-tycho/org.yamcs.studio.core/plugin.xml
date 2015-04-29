@@ -71,6 +71,8 @@
       <perspectiveExtension targetID="*">
          <!-- Don't need this, views are accessible through Window menu -->
          <hiddenMenuItem id="css"/>
+         <!-- Don't need this, don't know many apps that do this. just quit and re-open -->
+         <hiddenMenuItem id="org.csstudio.ui.menu.app.restart"/>
          <!-- Hide possiblity to jump to other perspectives that we unwillingly
               inherited from other plugin.xml's -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.open_perspective"/>
