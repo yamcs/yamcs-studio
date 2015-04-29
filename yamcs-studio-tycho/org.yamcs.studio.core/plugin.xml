@@ -77,6 +77,7 @@
          <!-- Already in menu which seems enough for this type of thing -->
          <hiddenToolBarItem id="org.csstudio.security.login"/>
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
+         <hiddenToolBarItem id="org.csstudio.diag.pvmanager.probe.OpenProbe"/>
       </perspectiveExtension>
       
       <!-- Yamcs Perspective (might get rid of this eventually) -->
