@@ -68,8 +68,16 @@
 
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
+      <!-- Yamcs Perspective (might get rid of this eventually) -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
+         <!-- Don't need this, views are accessible through Window menu -->
+         <hiddenMenuItem id="css"/>
+      </perspectiveExtension>
+      
       <!-- OPI Runtime Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
+         <!-- Don't need this, views are accessible through Window menu -->
+         <hiddenMenuItem id="css"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -88,16 +96,33 @@
                closeable="false"
                id="org.yamcs.studio.core.commanding.TelecommandView">
          </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               closeable="false"
+               id="org.csstudio.diag.pvmanager.probe">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               closeable="false"
+               id="org.csstudio.utility.sysmon.SysMonView">
+         </view>
          <!-- Add view shortcuts too, because even with the closeable="false",
               it is still possible to close them (by first detaching them and
               then closing the detached window. Boooo -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.core.commanding.TelecommandView"/>
+         <!-- CS-Studio -->
+         <viewShortcut id="org.csstudio.diag.pvmanager.probe"/>
+         <viewShortcut id="org.csstudio.utility.sysmon.SysMonView"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
+         <!-- Don't need this, views are accessible through Window menu -->
+         <hiddenMenuItem id="css"/>
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -117,9 +142,18 @@
                visible="false"
                id="org.yamcs.studio.core.commanding.TelecommandView">
          </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView">
+         </view>
+         <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.core.commanding.TelecommandView"/>
+         <!-- CS-Studio -->
+         <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
    </extension>
    
@@ -136,7 +170,7 @@
            	<command
                   commandId="org.eclipse.ui.perspectives.showPerspective"
                   icon="platform:/plugin/org.yamcs.studio.product/icons/css16.png"
-                  label="Yamcs (default)"
+                  label="Yamcs Dashboard"
                   style="radio">
                <parameter
                      name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"

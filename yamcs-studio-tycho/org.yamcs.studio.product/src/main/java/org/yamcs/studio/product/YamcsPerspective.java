@@ -36,9 +36,9 @@ public class YamcsPerspective implements IPerspectiveFactory {
         //layout.addPerspectiveShortcut("org.csstudio.opibuilder.OPIRuntime.perspective");
 
         // Populate the "Window > Show View" menu
-        layout.addShowViewShortcut("org.csstudio.diag.pvmanager.probe");
-
-        // This doesn't seem to do anything running on 4.x (?)
-        layout.setFixed(true);
+        // (in case the user succeeded in closing our uncloseable views (by first detaching them)
+        layout.addShowViewShortcut(TELECOMMAND_VIEW_ID);
+        layout.addShowViewShortcut(ARCHIVE_VIEW_ID);
+        layout.addShowViewShortcut(EVENT_LOG_VIEW_ID);
     }
 }
