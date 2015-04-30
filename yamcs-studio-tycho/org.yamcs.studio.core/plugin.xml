@@ -314,13 +314,24 @@
    </extension>
    
    <extension
-         point="org.eclipse.ui.menus">
+         point="org.eclipse.ui.menus">         
       <!-- TODO Do we actually need this, or does some other plugin already take care of w/e this was supposed to do? -->
       <menuContribution
             allPopups="true"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
          <toolbar id="additions"/>
       </menuContribution>
+      
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.trim.command2">
+         <toolbar
+               id="org.yamcs.studio.core.infobar">
+            <control
+                  class="org.yamcs.studio.core.ui.TrimBarInfo">
+            </control>
+         </toolbar>
+      </menuContribution>
+      
       <!-- Add direct menu to switch perspectives (because we disable the horrible
            built-in perspective-switcher-bar) -->
       <!-- TODO rewrite this to use only one command, with a default checked radio state -->

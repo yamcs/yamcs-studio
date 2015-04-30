@@ -30,11 +30,6 @@ public class YamcsPerspective implements IPerspectiveFactory {
         layout.getViewLayout(ARCHIVE_VIEW_ID).setCloseable(false);
         layout.getViewLayout(EVENT_LOG_VIEW_ID).setCloseable(false);
 
-        // Populate the "Window > Open Perspective" menu
-        //layout.addPerspectiveShortcut(ID);
-        //layout.addPerspectiveShortcut("org.csstudio.opibuilder.opieditor");
-        //layout.addPerspectiveShortcut("org.csstudio.opibuilder.OPIRuntime.perspective");
-
         // Populate the "Window > Show View" menu
         // (in case the user succeeded in closing our uncloseable views (by first detaching them)
         layout.addShowViewShortcut(TELECOMMAND_VIEW_ID);
