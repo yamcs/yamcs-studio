@@ -20,6 +20,9 @@
                name="appName"
                value="Yamcs Studio"/>
          <property
+               name="applicationXMI"
+               value="platform:/plugin/org.yamcs.studio.core/Application.e4xmi"/>
+         <property
                name="lifeCycleURI"
                value="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.application.LifeCycleManager"/>
          <property
@@ -161,22 +164,24 @@
             class="org.yamcs.studio.core.archive.ArchiveView"
             icon="icons/archive.png"
             id="org.yamcs.studio.core.archive.ArchiveView"
-            name="TM Archive">
-      </view>
+            name="TM Archive"/>
       <view
             category="org.csstudio"
             class="org.yamcs.studio.core.eventlog.EventLogView"
             icon="icons/event_log.gif"
             id="org.yamcs.studio.core.eventlog.EventLogView"
-            name="Event Log">
-      </view>
+            name="Event Log"/>
       <view
             category="org.csstudio"
             class="org.yamcs.studio.core.commanding.TelecommandView"
             icon="icons/tc.png"
             id="org.yamcs.studio.core.commanding.TelecommandView"
-            name="Telecommanding">
-      </view>
+            name="Telecommanding"/>
+      <view
+            category="org.csstudio"
+            class="org.yamcs.studio.core.ui.TopView"
+            id="org.yamcs.studio.core.ui.TopView"
+            name="Replay Control"/>
    </extension>
 
    <extension
@@ -234,6 +239,16 @@
          <!-- Trying to keep this perspective editor-free -->
          <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
          <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
+         <view
+               relative="org.eclipse.ui.editorss"
+               relationship="top"
+               standalone="true"
+               showTitle="false"
+               closeable="false"
+               moveable="false"
+               minimized="false"
+               id="org.yamcs.studio.core.ui.TopView">
+         </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -320,16 +335,6 @@
             allPopups="true"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
          <toolbar id="additions"/>
-      </menuContribution>
-      
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ui.trim.command2">
-         <toolbar
-               id="org.yamcs.studio.core.infobar">
-            <control
-                  class="org.yamcs.studio.core.ui.TrimBarInfo">
-            </control>
-         </toolbar>
       </menuContribution>
       
       <!-- Add direct menu to switch perspectives (because we disable the horrible
