@@ -1,5 +1,6 @@
 package org.yamcs.studio.core.application;
 
+import org.csstudio.ui.menu.app.ApplicationActionBarAdvisor;
 import org.csstudio.utility.product.ApplicationWorkbenchWindowAdvisor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.application.ActionBarAdvisor;
@@ -24,6 +25,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
 
     @Override
     public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
-        return new YamcsStudioActionBarAdvisor(configurer);
+        return new ApplicationActionBarAdvisor(configurer);
     }
 }

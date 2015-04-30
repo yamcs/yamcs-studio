@@ -15,7 +15,6 @@ public class YamcsPerspective implements IPerspectiveFactory {
     @Override
     public void createInitialLayout(IPageLayout layout) {
         String editor = layout.getEditorArea();
-
         layout.setEditorAreaVisible(false);
 
         layout.addView(EVENT_LOG_VIEW_ID, IPageLayout.RIGHT, 0.66f, editor);
