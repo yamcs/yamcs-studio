@@ -364,20 +364,6 @@
             </command>
          </menu>
       </menuContribution>
-      <!-- Augment the main toolbar -->
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar
-               id="org.yamcs.studio.toolbar">
-             <command
-                   commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand"
-                   icon="icons/tc_add.png"
-                   id="org.yamcs.studio.toolbar.issueTelecommandCommand"
-                   tooltip="Issue telecommand">
-             </command>
-         </toolbar>
-      </menuContribution>
    </extension>
    
    <!-- 
