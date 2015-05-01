@@ -46,10 +46,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     private LinkedHashMap<String, NavigatorItem> itemsByName = new LinkedHashMap<>();
 
-    SideNavigator sideNavigator;
     protected Prefs prefs;
 
-    private JPanel insetPanel; // Contains switchable navigator insets (depends on open item)
     private JPanel navigatorItemPanel; // Contains switchable items
     private NavigatorItem activeItem; // Currently opened item from SideNav
     public ReplayPanel replayPanel;
@@ -100,25 +98,13 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         };
         itemsByName.put(allViewer.getLabelName(), allViewer);
 
-        sideNavigator = new SideNavigator(this);
-        add(sideNavigator, BorderLayout.WEST);
-
         navigatorItemPanel = new JPanel(new CardLayout());
         add(navigatorItemPanel, BorderLayout.CENTER);
-
-        insetPanel = new JPanel(new CardLayout());
-        insetPanel.setVisible(false);
-        sideNavigator.add(insetPanel, BorderLayout.SOUTH);
 
         for (Map.Entry<String, NavigatorItem> entry : itemsByName.entrySet()) {
             String name = entry.getKey();
             NavigatorItem navigatorItem = entry.getValue();
             navigatorItemPanel.add(navigatorItem.getContentPanel(), name);
-            sideNavigator.addItem(name, navigatorItem.getIndent(), navigatorItem);
-            JComponent navInset = navigatorItem.getNavigatorInset();
-            if (navInset != null) {
-                insetPanel.add(navInset, name);
-            }
         }
 
         openItem("Archive");
@@ -162,18 +148,9 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     void fireIntentionToSwitchActiveItem(NavigatorItem sourceItem) {
         if (activeItem == sourceItem)
             return;
-        sideNavigator.updateActiveItem(sourceItem); // UI-only
 
         CardLayout ncl = (CardLayout) navigatorItemPanel.getLayout();
         ncl.show(navigatorItemPanel, sourceItem.getLabelName());
-
-        if (sourceItem.getNavigatorInset() != null) {
-            CardLayout icl = (CardLayout) insetPanel.getLayout();
-            icl.show(insetPanel, sourceItem.getLabelName());
-            insetPanel.setVisible(true);
-        } else {
-            insetPanel.setVisible(false);
-        }
 
         if (activeItem != null)
             activeItem.onClose();

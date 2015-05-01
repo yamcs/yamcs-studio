@@ -40,20 +40,10 @@ public abstract class NavigatorItem {
 
     /**
      * Build the GUI component for the content panel (called only once)
-     * 
+     *
      * @return the content pane to be visualized when the item is selected from the SideNavigator
      */
     public abstract JComponent createContentPanel();
-
-    /**
-     * Build the GUI component for the navigator inset (called only once)
-     * 
-     * @return optional panel to be put in the lower part of the SideNavigator when this
-     *         NavigatorItem is active
-     */
-    public JComponent createNavigatorInset() {
-        return null;
-    }
 
     /**
      * Called when this item is opened Defaults to NOP.
@@ -102,12 +92,5 @@ public abstract class NavigatorItem {
             contentPanel = createContentPanel();
         }
         return contentPanel;
-    }
-
-    JComponent getNavigatorInset() {
-        if (navigatorInset == null) {
-            navigatorInset = createNavigatorInset();
-        }
-        return navigatorInset;
     }
 }

@@ -203,7 +203,6 @@ public class DataView extends JScrollPane {
         } else {
             setToolTipText(TimeEncoding.toCombinedFormat(instant));
         }
-        dataViewer.signalMousePosition(instant);
     }
 
     public void zoomIn() {
@@ -372,7 +371,6 @@ public class DataView extends JScrollPane {
     }
 
     public void doMouseExited(MouseEvent e) {
-        dataViewer.signalMousePosition(TimeEncoding.INVALID_INSTANT);
         mouseLocatorX = -1;
         repaint(); // Force removal of needle in paint()
     }
@@ -412,19 +410,6 @@ public class DataView extends JScrollPane {
 
     /** called from the tagBox when a tag is selected. Update tmBox selection to this */
     public void selectedTag(ArchiveTag tag) {
-        archivePanel.passiveUpdate = true;
-        if (tag.hasStart()) {
-            dataViewer.signalSelectionStartChange(tag.getStart());
-        } else {
-            dataViewer.signalSelectionStartChange(archivePanel.dataStart);
-        }
-        archivePanel.passiveUpdate = false;
-
-        if (tag.hasStop()) {
-            dataViewer.signalSelectionStopChange(tag.getStop());
-        } else {
-            dataViewer.signalSelectionStopChange(archivePanel.dataStop);
-        }
     }
 
     public void setMoveLeftPointer() {

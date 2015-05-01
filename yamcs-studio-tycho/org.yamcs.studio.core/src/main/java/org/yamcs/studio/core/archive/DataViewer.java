@@ -3,28 +3,19 @@ package org.yamcs.studio.core.archive;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
 import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.Yamcs;
-import org.yamcs.utils.TimeEncoding;
 
 /**
  * Adds controls to a wrapped {@link org.yamcs.ui.archivebrowser.DataView}
@@ -37,13 +28,6 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
 
     JButton zoomInButton, zoomOutButton, showAllButton, newTagButton;
     boolean replayEnabled;
-
-    private JFormattedTextField mouseLocator;
-    private JFormattedTextField selectionStart;
-    private JFormattedTextField selectionStop;
-
-    private JLabel mouseLocatorLabel;
-    private JLabel dottedSquare;
 
     public DataViewer(YamcsConnector yconnector, ArchiveIndexReceiver indexReceiver, ArchivePanel archivePanel, boolean replayEnabled) {
         super(yconnector, indexReceiver);
@@ -71,120 +55,15 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
     public void onClose() {
     }
 
-    /**
-     * Includes a date range for showing the selected interval, and a field that follows the mouse
-     * position (similar to TT, but without day of the year formatting.)
-     */
-    @Override
-    public JComponent createNavigatorInset() {
-        Box vbox = Box.createVerticalBox();
-        Border outsideBorder = BorderFactory.createMatteBorder(1, 0, 0, 0, UiColors.BORDER_COLOR);
-        Border insideBorder = BorderFactory.createEmptyBorder(0, 10, 0, 10);
-        vbox.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
-
-        InstantFormat iformat = new InstantFormat();
-
-        Box mouseBox = Box.createHorizontalBox();
-        mouseLocatorLabel = new JLabel("\u27a5");
-        mouseLocatorLabel.setForeground(Color.LIGHT_GRAY);
-        mouseLocatorLabel.setToolTipText("Mouse position");
-        mouseBox.add(mouseLocatorLabel);
-        mouseLocator = new JFormattedTextField(iformat);
-        mouseLocator.setHorizontalAlignment(JTextField.CENTER);
-        mouseLocator.setEditable(false);
-        mouseLocator.setMaximumSize(new Dimension(150, mouseLocator.getPreferredSize().height));
-        mouseLocator.setMinimumSize(mouseLocator.getMaximumSize());
-        mouseLocator.setPreferredSize(mouseLocator.getMaximumSize());
-        mouseLocator.setFont(mouseLocator.getFont().deriveFont(mouseLocator.getFont().getSize2D() - 3));
-        mouseBox.add(mouseLocator);
-
-        Box selectionStartBox = Box.createHorizontalBox();
-        dottedSquare = new JLabel("\u2b1a");
-        dottedSquare.setForeground(Color.GRAY);
-        dottedSquare.setToolTipText("Selected date range");
-        selectionStartBox.add(dottedSquare);
-        selectionStart = new JFormattedTextField(iformat);
-        selectionStart.setHorizontalAlignment(JTextField.CENTER);
-        selectionStart.setEditable(false);
-        selectionStart.setMaximumSize(new Dimension(150, selectionStart.getPreferredSize().height));
-        selectionStart.setMinimumSize(selectionStart.getMaximumSize());
-        selectionStart.setPreferredSize(selectionStart.getMaximumSize());
-        selectionStart.setFont(selectionStart.getFont().deriveFont(selectionStart.getFont().getSize2D() - 3));
-        selectionStartBox.add(selectionStart);
-        selectionStart.addPropertyChangeListener("value", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                dataView.updateSelection((Long) selectionStart.getValue(), (Long) selectionStop.getValue());
-            }
-        });
-
-        Box selectionStopBox = Box.createHorizontalBox();
-        selectionStop = new JFormattedTextField(iformat);
-        selectionStop.setHorizontalAlignment(JTextField.CENTER);
-        selectionStop.setEditable(false);
-        selectionStop.setMaximumSize(new Dimension(150, selectionStop.getPreferredSize().height));
-        selectionStop.setMinimumSize(selectionStop.getMaximumSize());
-        selectionStop.setPreferredSize(selectionStop.getMaximumSize());
-        selectionStop.setFont(selectionStop.getFont().deriveFont(selectionStop.getFont().getSize2D() - 3));
-        selectionStopBox.add(selectionStop);
-        selectionStop.addPropertyChangeListener("value", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                dataView.updateSelection((Long) selectionStart.getValue(), (Long) selectionStop.getValue());
-            }
-        });
-
-        mouseBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        vbox.add(mouseBox);
-        selectionStartBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        vbox.add(selectionStartBox);
-        selectionStopBox.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        vbox.add(selectionStopBox);
-
-        return vbox;
-    }
-
-    public void signalMousePosition(long instant) {
-        mouseLocatorLabel.setForeground((instant == TimeEncoding.INVALID_INSTANT) ? Color.LIGHT_GRAY : Color.GRAY);
-        mouseLocator.setValue(instant);
-    }
-
     public void signalSelectionChange(Selection selection) {
         if (selection != null) {
-            signalSelectionStartChange(selection.getStartInstant());
-            signalSelectionStopChange(selection.getStopInstant());
-            if (selection.getStartInstant() != TimeEncoding.INVALID_INSTANT
-                    || selection.getStopInstant() != TimeEncoding.INVALID_INSTANT) {
-                dottedSquare.setForeground(Color.BLUE);
-            } else {
-                dottedSquare.setForeground(Color.GRAY);
-            }
             if (replayEnabled) {
                 archivePanel.replayPanel.applySelectionButton.setEnabled(true);
             }
         } else {
-            signalSelectionStartChange(TimeEncoding.INVALID_INSTANT);
-            signalSelectionStopChange(TimeEncoding.INVALID_INSTANT);
-            if (dottedSquare != null) { // FIXME gui set-up should not need resetSelection() call
-                dottedSquare.setForeground(Color.GRAY);
-            }
             if (replayEnabled) {
                 archivePanel.replayPanel.applySelectionButton.setEnabled(false);
             }
-        }
-    }
-
-    public void signalSelectionStartChange(long startInstant) {
-        if (selectionStart != null) { // FIXME Can be null during gui set-up.
-            selectionStart.setEditable((startInstant != TimeEncoding.INVALID_INSTANT));
-            selectionStart.setValue(startInstant);
-        }
-    }
-
-    public void signalSelectionStopChange(long stopInstant) {
-        if (selectionStop != null) { // FIXME Can be null during gui set-up.
-            selectionStop.setEditable((stopInstant != TimeEncoding.INVALID_INSTANT));
-            selectionStop.setValue(stopInstant);
         }
     }
 
