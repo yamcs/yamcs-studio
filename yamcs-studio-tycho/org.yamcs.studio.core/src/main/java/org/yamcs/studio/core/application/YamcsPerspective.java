@@ -19,11 +19,11 @@ public class YamcsPerspective implements IPerspectiveFactory {
 
         layout.addView(EVENT_LOG_VIEW_ID, IPageLayout.RIGHT, 0.66f, editor);
 
+        IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.8f, EVENT_LOG_VIEW_ID);
+        bottom.addView(TELECOMMAND_VIEW_ID);
+
         IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, 0.50f, EVENT_LOG_VIEW_ID);
         topLeft.addView(ARCHIVE_VIEW_ID);
-
-        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.50f, ARCHIVE_VIEW_ID);
-        bottomLeft.addView(TELECOMMAND_VIEW_ID);
 
         layout.getViewLayout(TELECOMMAND_VIEW_ID).setCloseable(false);
         layout.getViewLayout(ARCHIVE_VIEW_ID).setCloseable(false);
