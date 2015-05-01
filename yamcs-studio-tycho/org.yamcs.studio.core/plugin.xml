@@ -167,6 +167,14 @@
                priorityLevel="workbench">
          </variable>
       </sourceProvider>
+      <!-- Workbench state for the Tag command -->
+      <sourceProvider
+            provider="org.yamcs.studio.core.archive.TagCommandState">
+         <variable
+               name="org.yamcs.studio.core.archive.state.tagEnabled"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
    </extension>
    
    <extension
@@ -199,6 +207,11 @@
             categoryId="org.csstudio"
             id="org.yamcs.studio.core.archive.zoomClearCommand"
             name="Zoom all the way out">
+      </command>
+      <command
+            categoryId="org.csstudio"
+            id="org.yamcs.studio.core.archive.zoomClearCommand"
+            name="Tag the selected range">
       </command>
    </extension>
    
@@ -250,6 +263,16 @@
                   <equals value="true"/>
                </with>
             </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.archive.TagHandler"
+            commandId="org.yamcs.studio.core.archive.tagCommand">
+         <activeWhen>
+            <with
+                  variable="org.yamcs.studio.core.archive.state.tagEnabled">
+               <equals value="true"/>
+            </with>
          </activeWhen>
       </handler>
    </extension>
@@ -419,9 +442,7 @@
       </perspectiveExtension>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.menus">         
-      <!-- TODO Do we actually need this, or does some other plugin already take care of w/e this was supposed to do? -->
+   <extension point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="true"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
@@ -484,9 +505,8 @@
                icon="icons/refresh.gif"
                label="Refresh"
                style="push"/>
-         <separator
-               name="org.yamcs.studio.core.archive.zoomActions"
-               visible="true"/>
+         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
+         <!--separator name="org.yamcs.studio.core.archive.zoomActions" visible="true"/-->
          <command
                commandId="org.yamcs.studio.core.archive.zoomInCommand"
                icon="icons/zoom_in.png"
@@ -502,6 +522,15 @@
                icon="icons/zoom_clear.png"
                label="Zoom all the way out"
                style="push"/>
+         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
+         <!--separator name="org.yamcs.studio.core.archive.tagActions" visible="true"/-->
+         <command
+               commandId="org.yamcs.studio.core.archive.tagCommand"
+               icon="icons/tag.gif"
+               label="Tag the selected range"
+               style="push"/>
+         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
+         <!--separator name="org.yamcs.studio.core.archive.filterActions" visible="true"/-->
          <command
                commandId="org.yamcs.studio.core.archive.refreshCommand"
                icon="icons/filter.png"

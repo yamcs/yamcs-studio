@@ -4,7 +4,6 @@ import static org.yamcs.utils.TimeEncoding.INVALID_INSTANT;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Insets;
@@ -14,9 +13,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -44,12 +41,9 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     ArchiveView archiveView;
 
-    private LinkedHashMap<String, NavigatorItem> itemsByName = new LinkedHashMap<>();
-
     protected Prefs prefs;
 
-    private JPanel navigatorItemPanel; // Contains switchable items
-    private NavigatorItem activeItem; // Currently opened item from SideNav
+    private DataViewer dataViewer;
     public ReplayPanel replayPanel;
 
     int loadCount, recCount;
@@ -77,59 +71,28 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             // fixedTop.add(replayPanel);
         }
 
-        // This is a bit clumsy right now with the inner classes, but will make more
-        // sense once we add custom components to different DataViewers.
-        DataViewer allViewer = new DataViewer(archiveView.yconnector, archiveView.indexReceiver, this, replayEnabled) {
-            @Override
-            public String getLabelName() {
-                return "Archive";
-            }
-
-            @Override
-            public JComponent createContentPanel() {
-                JComponent component = super.createContentPanel();
-                addIndex("completeness", "completeness index");
-                addIndex("tm", "tm histogram", 1000);
-                addIndex("pp", "pp histogram", 1000);
-                addIndex("cmdhist", "cmdhist histogram", 1000);
-                addVerticalGlue();
-                return component;
-            }
-        };
-        itemsByName.put(allViewer.getLabelName(), allViewer);
-
-        navigatorItemPanel = new JPanel(new CardLayout());
-        add(navigatorItemPanel, BorderLayout.CENTER);
-
-        for (Map.Entry<String, NavigatorItem> entry : itemsByName.entrySet()) {
-            String name = entry.getKey();
-            NavigatorItem navigatorItem = entry.getValue();
-            navigatorItemPanel.add(navigatorItem.getContentPanel(), name);
-        }
-
-        openItem("Archive");
+        dataViewer = new DataViewer(archiveView.indexReceiver, this, replayEnabled);
+        add(dataViewer, BorderLayout.CENTER);
 
         // Catch mouse events globally, to deal more easily with events on child components
         Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) { // EDT
-                if (activeItem instanceof DataViewer) {
-                    DataView dataView = ((DataViewer) activeItem).getDataView();
-                    if (!(event.getSource() instanceof JScrollBar)
-                            && !(event.getSource() instanceof TagTimeline)
-                            && SwingUtilities.isDescendingFrom((Component) event.getSource(), dataView)) {
-                        MouseEvent me = SwingUtilities.convertMouseEvent((Component) event.getSource(), (MouseEvent) event, dataView.indexPanel);
-                        if (event.getID() == MouseEvent.MOUSE_DRAGGED) {
-                            dataView.doMouseDragged(me);
-                        } else if (event.getID() == MouseEvent.MOUSE_PRESSED) {
-                            dataView.doMousePressed(me);
-                        } else if (event.getID() == MouseEvent.MOUSE_RELEASED) {
-                            dataView.doMouseReleased(me);
-                        } else if (event.getID() == MouseEvent.MOUSE_MOVED) {
-                            dataView.doMouseMoved(me);
-                        } else if (event.getID() == MouseEvent.MOUSE_EXITED) {
-                            dataView.doMouseExited(me);
-                        }
+                DataView dataView = dataViewer.getDataView();
+                if (!(event.getSource() instanceof JScrollBar)
+                        && !(event.getSource() instanceof TagTimeline)
+                        && SwingUtilities.isDescendingFrom((Component) event.getSource(), dataView)) {
+                    MouseEvent me = SwingUtilities.convertMouseEvent((Component) event.getSource(), (MouseEvent) event, dataView.indexPanel);
+                    if (event.getID() == MouseEvent.MOUSE_DRAGGED) {
+                        dataView.doMouseDragged(me);
+                    } else if (event.getID() == MouseEvent.MOUSE_PRESSED) {
+                        dataView.doMousePressed(me);
+                    } else if (event.getID() == MouseEvent.MOUSE_RELEASED) {
+                        dataView.doMouseReleased(me);
+                    } else if (event.getID() == MouseEvent.MOUSE_MOVED) {
+                        dataView.doMouseMoved(me);
+                    } else if (event.getID() == MouseEvent.MOUSE_EXITED) {
+                        dataView.doMouseExited(me);
                     }
                 }
             }
@@ -137,29 +100,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     public DataViewer getDataViewer() {
-        return (DataViewer) activeItem;
-    }
-
-    public void openItem(String name) {
-        NavigatorItem item = getItemByName(name);
-        fireIntentionToSwitchActiveItem(item);
-    }
-
-    public NavigatorItem getItemByName(String name) {
-        return itemsByName.get(name);
-    }
-
-    void fireIntentionToSwitchActiveItem(NavigatorItem sourceItem) {
-        if (activeItem == sourceItem)
-            return;
-
-        CardLayout ncl = (CardLayout) navigatorItemPanel.getLayout();
-        ncl.show(navigatorItemPanel, sourceItem.getLabelName());
-
-        if (activeItem != null)
-            activeItem.onClose();
-        sourceItem.onOpen();
-        activeItem = sourceItem;
+        return dataViewer;
     }
 
     public void startReloading() {
@@ -169,9 +110,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         setBusyPointer();
         archiveView.setRefreshEnabled(false);
 
-        for (NavigatorItem item : itemsByName.values()) {
-            item.startReloading();
-        }
+        dataViewer.startReloading();
 
         if (lowOnMemoryReported) {
             System.gc();
@@ -283,10 +222,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     public synchronized void receiveArchiveRecords(IndexResult ir) {
-        for (NavigatorItem navigatorItem : itemsByName.values()) {
-            navigatorItem.receiveArchiveRecords(ir);
-        }
-
+        dataViewer.receiveArchiveRecords(ir);
         long start, stop;
         for (ArchiveRecord r : ir.getRecordsList()) {
             start = r.getFirst();
@@ -304,9 +240,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     public void receiveArchiveRecordsError(final String errorMessage) {
         SwingUtilities.invokeLater(() -> {
-            for (NavigatorItem navigatorItem : itemsByName.values()) {
-                navigatorItem.receiveArchiveRecordsError(errorMessage);
-            }
             JOptionPane.showMessageDialog(ArchivePanel.this, "Error when receiving archive records: " + errorMessage,
                     "error receiving archive records", JOptionPane.ERROR_MESSAGE);
             archiveView.setRefreshEnabled(true);
@@ -321,9 +254,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     public synchronized void archiveLoadFinished() {
         loadCount = 0;
         if ((dataStart != INVALID_INSTANT) && (dataStop != INVALID_INSTANT)) {
-            for (NavigatorItem item : itemsByName.values()) {
-                item.archiveLoadFinished();
-            }
+            dataViewer.archiveLoadFinished();
             prefs.savePreferences();
         }
 
@@ -334,51 +265,35 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     public void tagAdded(ArchiveTag ntag) {
-        for (NavigatorItem navigatorItem : itemsByName.values()) {
-            navigatorItem.tagAdded(ntag);
-        }
+        dataViewer.tagAdded(ntag);
     }
 
     public void tagRemoved(ArchiveTag rtag) {
-        for (NavigatorItem navigatorItem : itemsByName.values()) {
-            navigatorItem.tagRemoved(rtag);
-        }
+        dataViewer.tagRemoved(rtag);
     }
 
     public void tagChanged(ArchiveTag oldTag, ArchiveTag newTag) {
-        for (NavigatorItem navigatorItem : itemsByName.values()) {
-            navigatorItem.tagChanged(oldTag, newTag);
-        }
+        dataViewer.tagChanged(oldTag, newTag);
     }
 
     public void tagsAdded(List<ArchiveTag> tagList) {
-        for (NavigatorItem navigatorItem : itemsByName.values()) {
-            navigatorItem.receiveTags(tagList);
-        }
+        dataViewer.receiveTags(tagList);
     }
 
     // TODO only used by selector. Rework maybe in custom replay launcher
     public Selection getSelection() {
-        DataViewer dataViewer = (DataViewer) activeItem;
         return dataViewer.getDataView().getSelection();
     }
 
     // TODO only used by selector. Rework maybe in custom replay launcher
     public List<String> getSelectedPackets(String tableName) {
-        DataViewer dataViewer = (DataViewer) activeItem;
         if (dataViewer.getDataView().indexBoxes.containsKey(tableName)) {
             return dataViewer.getDataView().getSelectedPackets("tm");
         }
         return Collections.emptyList();
     }
 
-    public void onWindowResizing() {
-        activeItem.windowResized();
-    }
-
     public void onWindowResized() {
-        for (NavigatorItem navigatorItem : itemsByName.values()) {
-            navigatorItem.windowResized();
-        }
+        dataViewer.windowResized();
     }
 }

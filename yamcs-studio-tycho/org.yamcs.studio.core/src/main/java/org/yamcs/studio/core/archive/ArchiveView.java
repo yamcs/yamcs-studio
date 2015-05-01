@@ -41,21 +41,12 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
 
         archivePanel.setPreferredSize(new Dimension(300, 400));
 
-        // While resizing, only update active item (slight performance gain)
-        // When done resizing, update all
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                archivePanel.onWindowResizing();
+                archivePanel.onWindowResized();
             }
         });
-
-        /*
-         * addComponentListener(new ComponentAdapter() {
-         * 
-         * @Override public void componentResized(ComponentEvent e) {
-         * archivePanel.onWindowResized(); } });
-         */
 
         frame.add(archivePanel);
 
@@ -132,6 +123,23 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
             ZoomClearCommandState commandState = (ZoomClearCommandState) service.getSourceProvider(ZoomClearCommandState.STATE_KEY_ENABLED);
+            commandState.setEnabled(enabled);
+        });
+    }
+
+    public boolean isTagEnabled() {
+        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+        TagCommandState commandState = (TagCommandState) service.getSourceProvider(TagCommandState.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(TagCommandState.STATE_KEY_ENABLED);
+    }
+
+    public void setTagEnabled(boolean enabled) {
+        // Back to the SWT thread, to be sure
+        Display.getDefault().asyncExec(() -> {
+            IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+            ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+            TagCommandState commandState = (TagCommandState) service.getSourceProvider(TagCommandState.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }

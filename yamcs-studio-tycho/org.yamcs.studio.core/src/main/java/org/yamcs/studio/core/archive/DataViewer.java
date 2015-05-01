@@ -2,57 +2,49 @@ package org.yamcs.studio.core.archive;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.Yamcs;
+import org.yamcs.protobuf.Yamcs.ArchiveTag;
+import org.yamcs.studio.core.archive.TagBox.TagEvent;
 
 /**
- * Adds controls to a wrapped {@link org.yamcs.ui.archivebrowser.DataView}
+ * Adds controls to a wrapped {@link org.yamcs.ui.archivebrowser.DataView} TODO merge with DataView.
+ * There are no more controls to be found here.
  */
-public abstract class DataViewer extends NavigatorItem implements ActionListener {
+public class DataViewer extends JPanel implements ActionListener {
+    private static final long serialVersionUID = 1L;
 
     private ArchivePanel archivePanel;
     private DataView dataView;
-    public JToolBar buttonToolbar;
 
-    JButton newTagButton;
+    private ArchiveIndexReceiver indexReceiver;
+
     boolean replayEnabled;
 
-    public DataViewer(YamcsConnector yconnector, ArchiveIndexReceiver indexReceiver, ArchivePanel archivePanel, boolean replayEnabled) {
-        super(yconnector, indexReceiver);
+    public DataViewer(ArchiveIndexReceiver indexReceiver, ArchivePanel archivePanel, boolean replayEnabled) {
+        super(new BorderLayout());
+        this.indexReceiver = indexReceiver;
         this.archivePanel = archivePanel;
         this.replayEnabled = replayEnabled;
-    }
 
-    @Override
-    public JComponent createContentPanel() {
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder());
-        contentPanel.setBackground(Color.WHITE);
-        contentPanel.add(createButtonToolbar(), BorderLayout.NORTH);
+        setBorder(BorderFactory.createEmptyBorder());
+        setBackground(Color.WHITE);
         dataView = new DataView(archivePanel, this);
         dataView.addActionListener(this);
-        contentPanel.add(dataView, BorderLayout.CENTER);
-        return contentPanel;
-    }
+        add(dataView, BorderLayout.CENTER);
 
-    @Override
-    public void onOpen() {
-    }
-
-    @Override
-    public void onClose() {
+        addIndex("completeness", "completeness index");
+        addIndex("tm", "tm histogram", 1000);
+        addIndex("pp", "pp histogram", 1000);
+        addIndex("cmdhist", "cmdhist histogram", 1000);
+        addVerticalGlue();
     }
 
     public void signalSelectionChange(Selection selection) {
@@ -83,24 +75,6 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         dataView.addVerticalGlue();
     }
 
-    private JToolBar createButtonToolbar() {
-        buttonToolbar = new JToolBar("Button Toolbar");
-        buttonToolbar.setAlignmentX(Component.LEFT_ALIGNMENT);
-        buttonToolbar.setBackground(Color.WHITE);
-        buttonToolbar.setFloatable(false);
-        buttonToolbar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        newTagButton = new JButton("New Tag");
-        newTagButton.setVisible(archivePanel.archiveView.indexReceiver.supportsTags());
-        newTagButton.setEnabled(false);
-        newTagButton.setToolTipText("Define a new tag for the current selection");
-        newTagButton.addActionListener(this);
-        newTagButton.setActionCommand("new-tag-button");
-        newTagButton.setVisible(false);
-        buttonToolbar.add(newTagButton);
-        return buttonToolbar;
-    }
-
     public void zoomIn() {
         dataView.zoomIn();
         archivePanel.archiveView.setZoomOutEnabled(true);
@@ -116,15 +90,18 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         archivePanel.archiveView.setZoomOutEnabled(false);
     }
 
+    public void tagSelectedRange() {
+        Selection sel = dataView.getSelection();
+        dataView.headerPanel.tagBox.createNewTag(sel.getStartInstant(), sel.getStopInstant());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equalsIgnoreCase("completeness_selection_finished")) {
-            if (indexReceiver.supportsTags())
-                newTagButton.setEnabled(true);
+            archivePanel.archiveView.setTagEnabled(indexReceiver.supportsTags());
         } else if (cmd.toLowerCase().endsWith("selection_finished")) {
-            if (indexReceiver.supportsTags())
-                newTagButton.setEnabled(true);
+            archivePanel.archiveView.setTagEnabled(indexReceiver.supportsTags());
             if (cmd.startsWith("pp") || cmd.startsWith("tm")) {
                 //packetRetrieval.setEnabled(true);
                 //parameterRetrieval.setEnabled(true);
@@ -132,19 +109,15 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
                 //cmdHistRetrieval.setEnabled(true);
             }
         } else if (cmd.equalsIgnoreCase("selection_reset")) {
-            if (newTagButton != null)
-                newTagButton.setEnabled(false);
-        } else if (cmd.equalsIgnoreCase("new-tag-button")) {
-            Selection sel = dataView.getSelection();
-            dataView.headerPanel.tagBox.createNewTag(sel.getStartInstant(), sel.getStopInstant());
+            archivePanel.archiveView.setTagEnabled(false);
         } else if (cmd.equalsIgnoreCase("insert-tag")) {
-            TagBox.TagEvent te = (TagBox.TagEvent) e;
+            TagEvent te = (TagEvent) e;
             indexReceiver.insertTag(archivePanel.archiveView.getInstance(), te.newTag);
         } else if (cmd.equalsIgnoreCase("update-tag")) {
-            TagBox.TagEvent te = (TagBox.TagEvent) e;
+            TagEvent te = (TagEvent) e;
             indexReceiver.updateTag(archivePanel.archiveView.getInstance(), te.oldTag, te.newTag);
         } else if (cmd.equalsIgnoreCase("delete-tag")) {
-            TagBox.TagEvent te = (TagBox.TagEvent) e;
+            TagEvent te = (TagEvent) e;
             indexReceiver.deleteTag(archivePanel.archiveView.getInstance(), te.oldTag);
         }
     }
@@ -153,7 +126,6 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         return dataView;
     }
 
-    @Override
     public void startReloading() {
         SwingUtilities.invokeLater(() -> {
             archivePanel.archiveView.setZoomInEnabled(false);
@@ -170,7 +142,6 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         dataView.headerPanel.tagBox.tags.clear();
     }
 
-    @Override
     public void windowResized() {
         if (dataView.zoomStack.isEmpty() || dataView.zoomStack.size() == 1) {
             dataView.refreshDisplay(true);
@@ -180,7 +151,6 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         }
     }
 
-    @Override
     public void receiveArchiveRecords(Yamcs.IndexResult ir) {
         if ("completeness".equals(ir.getType())) {
             if (dataView.indexBoxes.containsKey("completeness")) {
@@ -196,28 +166,23 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         }
     }
 
-    @Override
     public void archiveLoadFinished() {
         dataView.archiveLoadFinished();
     }
 
-    @Override
-    public void receiveTags(List<Yamcs.ArchiveTag> tagList) {
+    public void receiveTags(List<ArchiveTag> tagList) {
         dataView.headerPanel.tagBox.addTags(tagList);
     }
 
-    @Override
-    public void tagAdded(Yamcs.ArchiveTag ntag) {
+    public void tagAdded(ArchiveTag ntag) {
         dataView.headerPanel.tagBox.addTag(ntag);
     }
 
-    @Override
-    public void tagRemoved(Yamcs.ArchiveTag rtag) {
+    public void tagRemoved(ArchiveTag rtag) {
         dataView.headerPanel.tagBox.removeTag(rtag);
     }
 
-    @Override
-    public void tagChanged(Yamcs.ArchiveTag oldTag, Yamcs.ArchiveTag newTag) {
+    public void tagChanged(ArchiveTag oldTag, ArchiveTag newTag) {
         dataView.headerPanel.tagBox.updateTag(oldTag, newTag);
     }
 }
