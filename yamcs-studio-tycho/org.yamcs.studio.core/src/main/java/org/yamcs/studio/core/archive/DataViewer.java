@@ -26,7 +26,7 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
     private DataView dataView;
     public JToolBar buttonToolbar;
 
-    JButton zoomInButton, zoomOutButton, showAllButton, newTagButton;
+    JButton newTagButton;
     boolean replayEnabled;
 
     public DataViewer(YamcsConnector yconnector, ArchiveIndexReceiver indexReceiver, ArchivePanel archivePanel, boolean replayEnabled) {
@@ -90,24 +90,6 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         buttonToolbar.setFloatable(false);
         buttonToolbar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        zoomInButton = new JButton("Zoom In");
-        zoomInButton.setActionCommand("zoomin");
-        zoomInButton.addActionListener(this);
-        zoomInButton.setEnabled(false);
-        buttonToolbar.add(zoomInButton);
-
-        zoomOutButton = new JButton("Zoom Out");
-        zoomOutButton.setActionCommand("zoomout");
-        zoomOutButton.addActionListener(this);
-        zoomOutButton.setEnabled(false);
-        buttonToolbar.add(zoomOutButton);
-
-        showAllButton = new JButton("Show All");
-        showAllButton.setActionCommand("showall");
-        showAllButton.addActionListener(this);
-        showAllButton.setEnabled(false);
-        buttonToolbar.add(showAllButton);
-
         newTagButton = new JButton("New Tag");
         newTagButton.setVisible(archivePanel.archiveView.indexReceiver.supportsTags());
         newTagButton.setEnabled(false);
@@ -119,19 +101,25 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
         return buttonToolbar;
     }
 
+    public void zoomIn() {
+        dataView.zoomIn();
+        archivePanel.archiveView.setZoomOutEnabled(true);
+    }
+
+    public void zoomOut() {
+        dataView.zoomOut();
+        archivePanel.archiveView.setZoomOutEnabled(dataView.zoomStack.size() > 1);
+    }
+
+    public void clearZoom() {
+        dataView.showAll();
+        archivePanel.archiveView.setZoomOutEnabled(false);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
-        if (cmd.equals("showall")) {
-            dataView.showAll();
-            zoomOutButton.setEnabled(false);
-        } else if (cmd.equals("zoomout")) {
-            dataView.zoomOut();
-            zoomOutButton.setEnabled(dataView.zoomStack.size() > 1);
-        } else if (cmd.equals("zoomin")) {
-            dataView.zoomIn();
-            zoomOutButton.setEnabled(true);
-        } else if (cmd.equalsIgnoreCase("completeness_selection_finished")) {
+        if (cmd.equalsIgnoreCase("completeness_selection_finished")) {
             if (indexReceiver.supportsTags())
                 newTagButton.setEnabled(true);
         } else if (cmd.toLowerCase().endsWith("selection_finished")) {
@@ -167,15 +155,12 @@ public abstract class DataViewer extends NavigatorItem implements ActionListener
 
     @Override
     public void startReloading() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                zoomInButton.setEnabled(false);
-                zoomOutButton.setEnabled(false);
-                showAllButton.setEnabled(false);
-                if (replayEnabled) {
-                    archivePanel.replayPanel.applySelectionButton.setEnabled(false);
-                }
+        SwingUtilities.invokeLater(() -> {
+            archivePanel.archiveView.setZoomInEnabled(false);
+            archivePanel.archiveView.setZoomOutEnabled(false);
+            archivePanel.archiveView.setZoomClearEnabled(false);
+            if (replayEnabled) {
+                archivePanel.replayPanel.applySelectionButton.setEnabled(false);
             }
         });
 

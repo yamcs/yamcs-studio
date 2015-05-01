@@ -85,6 +85,57 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
         });
     }
 
+    public boolean isZoomInEnabled() {
+        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+        ZoomInCommandState commandState = (ZoomInCommandState) service.getSourceProvider(ZoomInCommandState.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(ZoomInCommandState.STATE_KEY_ENABLED);
+    }
+
+    public void setZoomInEnabled(boolean enabled) {
+        // Back to the SWT thread, to be sure
+        Display.getDefault().asyncExec(() -> {
+            IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+            ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+            ZoomInCommandState commandState = (ZoomInCommandState) service.getSourceProvider(ZoomInCommandState.STATE_KEY_ENABLED);
+            commandState.setEnabled(enabled);
+        });
+    }
+
+    public boolean isZoomOutEnabled() {
+        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+        ZoomOutCommandState commandState = (ZoomOutCommandState) service.getSourceProvider(ZoomOutCommandState.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(ZoomOutCommandState.STATE_KEY_ENABLED);
+    }
+
+    public void setZoomOutEnabled(boolean enabled) {
+        // Back to the SWT thread, to be sure
+        Display.getDefault().asyncExec(() -> {
+            IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+            ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+            ZoomOutCommandState commandState = (ZoomOutCommandState) service.getSourceProvider(ZoomOutCommandState.STATE_KEY_ENABLED);
+            commandState.setEnabled(enabled);
+        });
+    }
+
+    public boolean isZoomClearEnabled() {
+        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+        ZoomClearCommandState commandState = (ZoomClearCommandState) service.getSourceProvider(ZoomClearCommandState.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(ZoomClearCommandState.STATE_KEY_ENABLED);
+    }
+
+    public void setZoomClearEnabled(boolean enabled) {
+        // Back to the SWT thread, to be sure
+        Display.getDefault().asyncExec(() -> {
+            IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+            ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+            ZoomClearCommandState commandState = (ZoomClearCommandState) service.getSourceProvider(ZoomClearCommandState.STATE_KEY_ENABLED);
+            commandState.setEnabled(enabled);
+        });
+    }
+
     protected void showMessage(String msg) {
         System.out.println(msg);
         //JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.PLAIN_MESSAGE);
@@ -162,13 +213,7 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
         archivePanel.archiveLoadFinished();
     }
 
-    public void refresh(RefreshCommandState state) {
-        System.out.println("incoming state is " + state);
-        refresh();
-    }
-
-    private void refresh() {
-        //debugLog("requestData() mark 1 "+new Date());
+    public void refresh() {
         archivePanel.startReloading();
         TimeInterval interval = archivePanel.getRequestedDataInterval();
         indexReceiver.getIndex(instance, interval);

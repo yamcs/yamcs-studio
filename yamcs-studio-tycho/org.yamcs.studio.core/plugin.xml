@@ -143,6 +143,30 @@
                priorityLevel="workbench">
          </variable>
       </sourceProvider>
+      <!-- Workbench state for the ZoomIn command -->
+      <sourceProvider
+            provider="org.yamcs.studio.core.archive.ZoomInCommandState">
+         <variable
+               name="org.yamcs.studio.core.archive.state.zoomInEnabled"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+      <!-- Workbench state for the ZoomOut command -->
+      <sourceProvider
+            provider="org.yamcs.studio.core.archive.ZoomOutCommandState">
+         <variable
+               name="org.yamcs.studio.core.archive.state.zoomOutEnabled"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+      <!-- Workbench state for the ZoomClear command -->
+      <sourceProvider
+            provider="org.yamcs.studio.core.archive.ZoomClearCommandState">
+         <variable
+               name="org.yamcs.studio.core.archive.state.zoomClearEnabled"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
    </extension>
    
    <extension
@@ -161,6 +185,21 @@
             id="org.yamcs.studio.core.archive.refreshCommand"
             name="Refresh">
       </command>
+      <command
+            categoryId="org.csstudio"
+            id="org.yamcs.studio.core.archive.zoomInCommand"
+            name="Zoom In">
+      </command>
+      <command
+            categoryId="org.csstudio"
+            id="org.yamcs.studio.core.archive.zoomOutCommand"
+            name="Zoom Out">
+      </command>
+      <command
+            categoryId="org.csstudio"
+            id="org.yamcs.studio.core.archive.zoomClearCommand"
+            name="Zoom all the way out">
+      </command>
    </extension>
    
    <extension
@@ -177,6 +216,40 @@
                   variable="org.yamcs.studio.core.archive.state.refreshEnabled">
                <equals value="true"/>
             </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.archive.ZoomInHandler"
+            commandId="org.yamcs.studio.core.archive.zoomInCommand">
+         <activeWhen>
+            <with
+                  variable="org.yamcs.studio.core.archive.state.zoomInEnabled">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.archive.ZoomOutHandler"
+            commandId="org.yamcs.studio.core.archive.zoomOutCommand">
+         <activeWhen>
+            <with
+                  variable="org.yamcs.studio.core.archive.state.zoomOutEnabled">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.archive.ZoomClearHandler"
+            commandId="org.yamcs.studio.core.archive.zoomClearCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.core.archive.state.zoomOutEnabled">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.core.archive.state.zoomClearEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
          </activeWhen>
       </handler>
    </extension>
@@ -415,14 +488,19 @@
                name="org.yamcs.studio.core.archive.zoomActions"
                visible="true"/>
          <command
-               commandId="org.yamcs.studio.core.archive.refreshCommand"
-               icon="icons/zoom_out.png"
-               label="Zoom out"
+               commandId="org.yamcs.studio.core.archive.zoomInCommand"
+               icon="icons/zoom_in.png"
+               label="Zoom In"
                style="push"/>
          <command
-               commandId="org.yamcs.studio.core.archive.refreshCommand"
-               icon="icons/zoom_in.png"
-               label="Zoom in"
+               commandId="org.yamcs.studio.core.archive.zoomOutCommand"
+               icon="icons/zoom_out.png"
+               label="Zoom Out"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.core.archive.zoomClearCommand"
+               icon="icons/zoom_clear.png"
+               label="Zoom all the way out"
                style="push"/>
          <command
                commandId="org.yamcs.studio.core.archive.refreshCommand"

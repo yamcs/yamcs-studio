@@ -136,6 +136,10 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         }, AWTEvent.MOUSE_EVENT_MASK + AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
+    public DataViewer getDataViewer() {
+        return (DataViewer) activeItem;
+    }
+
     public void openItem(String name) {
         NavigatorItem item = getItemByName(name);
         fireIntentionToSwitchActiveItem(item);

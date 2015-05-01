@@ -303,9 +303,9 @@ public class DataView extends JScrollPane {
             @Override
             public void run() {
                 //debugLog("receiveHrdpRecords() mark 1");
-                dataViewer.zoomInButton.setEnabled(true);
-                dataViewer.zoomOutButton.setEnabled(false);
-                dataViewer.showAllButton.setEnabled(true);
+                archivePanel.archiveView.setZoomInEnabled(true);
+                archivePanel.archiveView.setZoomOutEnabled(false);
+                archivePanel.archiveView.setZoomClearEnabled(true);
             }
         });
         refreshDisplay();

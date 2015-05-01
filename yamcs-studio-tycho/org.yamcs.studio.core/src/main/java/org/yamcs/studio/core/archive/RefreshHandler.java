@@ -30,7 +30,7 @@ public class RefreshHandler extends AbstractHandler {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
 
         // We trust on the ArchiveView to re-enable the commandState (on the swt-thread) once it's done
-        SwingUtilities.invokeLater(() -> ((ArchiveView) part).refresh(commandState));
+        SwingUtilities.invokeLater(() -> ((ArchiveView) part).refresh());
 
         return null;
     }
