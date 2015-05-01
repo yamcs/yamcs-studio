@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -29,8 +28,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -114,7 +111,6 @@ public class TelecommandView extends ViewPart {
         tableViewerComparator = new TelecommandViewerComparator();
         tableViewer.setComparator(tableViewerComparator);
 
-        initializeToolBar();
         subscribeToUpdates();
         fetchArchivedCommands();
     }
@@ -294,15 +290,6 @@ public class TelecommandView extends ViewPart {
             }
         };
         return selectionAdapter;
-    }
-
-    private void initializeToolBar() { // TODO should move this mess to plugin.xml
-        IToolBarManager toolbarManager = getViewSite().getActionBars().getToolBarManager();
-        CommandContributionItemParameter issueTelecommandParameter = new CommandContributionItemParameter(
-                getViewSite(), null, "org.yamcs.studio.core.commanding.issueTelecommandCommand", CommandContributionItem.STYLE_PUSH);
-        Bundle bundle = FrameworkUtil.getBundle(TelecommandView.class);
-        issueTelecommandParameter.icon = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/tc_add.png"), null));
-        toolbarManager.add(new CommandContributionItem(issueTelecommandParameter));
     }
 
     @Override

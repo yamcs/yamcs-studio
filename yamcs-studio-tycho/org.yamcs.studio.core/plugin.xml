@@ -364,6 +364,16 @@
             </command>
          </menu>
       </menuContribution>
+      
+      <!-- Add icon to the Telecommanding view toolbar -->
+      <menuContribution
+            locationURI="toolbar:org.yamcs.studio.core.commanding.TelecommandView">
+         <command
+               commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand"
+               icon="icons/tc_add.png"
+               label="Issue Telecommand"
+               style="push"/>
+      </menuContribution>
    </extension>
    
    <!-- 
