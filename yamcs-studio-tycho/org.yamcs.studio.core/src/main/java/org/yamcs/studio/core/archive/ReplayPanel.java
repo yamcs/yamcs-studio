@@ -25,7 +25,7 @@ import org.yamcs.utils.TimeEncoding;
 
 /**
  * Panel containing the replay controls (start/stop, start/stop/current time)
- * 
+ *
  * @author nm
  *
  */
@@ -79,8 +79,8 @@ public class ReplayPanel extends JPanel {
 
         // play/stop button
 
-        replayStartIcon = ArchivePanel.getIcon("start.gif");
-        replayStopIcon = ArchivePanel.getIcon("stop.gif");
+        //replayStartIcon = ArchivePanel.getIcon("start.gif");
+        //replayStopIcon = ArchivePanel.getIcon("stop.gif");
         playStopButton = new JButton(replayStopIcon); // the Play/Stop button
         playStopButton.setEnabled(false);
         playStopButton.addActionListener(new ActionListener() {
@@ -223,7 +223,7 @@ public class ReplayPanel extends JPanel {
 
     /**
      * called by the yamcs monitor when a channelinfo update is received from the server
-     * 
+     *
      * @param ci
      */
     public void updateChannelInfol(ProcessorInfo ci) {
@@ -238,7 +238,7 @@ public class ReplayPanel extends JPanel {
 
     /**
      * called by yamcs monitor when the selected channel has changed
-     * 
+     *
      * @param ci
      */
     public void setupReplayPanel(ProcessorInfo ci) {

@@ -170,7 +170,7 @@ public class DataView extends JScrollPane {
     }
 
     void setPointer(MouseEvent e) {
-        if (archivePanel.prefs.reloadButton.isEnabled()) {
+        if (archivePanel.archiveView.isRefreshEnabled()) {
             setNormalPointer();
             if (currentSelection != null) {
                 if (Math.abs(e.getX() - currentSelection.getStartX()) <= cursorSnap) {

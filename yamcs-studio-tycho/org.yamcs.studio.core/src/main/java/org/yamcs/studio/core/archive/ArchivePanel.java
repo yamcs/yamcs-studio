@@ -19,13 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
-import javax.swing.JToolBar;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
@@ -47,11 +44,10 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     ArchiveView archiveView;
 
-    private LinkedHashMap<String, NavigatorItem> itemsByName = new LinkedHashMap<String, NavigatorItem>();
+    private LinkedHashMap<String, NavigatorItem> itemsByName = new LinkedHashMap<>();
 
     SideNavigator sideNavigator;
-    public JToolBar archiveToolbar;
-    protected PrefsToolbar prefs;
+    protected Prefs prefs;
 
     private JPanel insetPanel; // Contains switchable navigator insets (depends on open item)
     private JPanel navigatorItemPanel; // Contains switchable items
@@ -70,19 +66,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         super(new BorderLayout());
         this.archiveView = archiveView;
 
-        /*
-         * Upper fixed content
-         */
-        Box fixedTop = Box.createVerticalBox();
-        fixedTop.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, UiColors.BORDER_COLOR));
-        prefs = new PrefsToolbar();
-        prefs.setAlignmentX(Component.LEFT_ALIGNMENT);
-        fixedTop.add(prefs);
-
-        archiveToolbar = new JToolBar();
-        archiveToolbar.setFloatable(false);
-        archiveToolbar.setAlignmentX(Component.LEFT_ALIGNMENT);
-        fixedTop.add(archiveToolbar);
+        prefs = new Prefs();
 
         //
         // transport control panel (only enabled when a HRDP data channel is selected)
@@ -115,8 +99,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             }
         };
         itemsByName.put(allViewer.getLabelName(), allViewer);
-
-        add(fixedTop, BorderLayout.NORTH);
 
         sideNavigator = new SideNavigator(this);
         add(sideNavigator, BorderLayout.WEST);
@@ -204,13 +186,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         archiveView.setInstance("simulator"); // FIXME
 
         setBusyPointer();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                prefs.reloadButton.setEnabled(false);
-                //debugLog("requestData() mark 5 "+new Date());
-            }
-        });
+        archiveView.setRefreshEnabled(false);
 
         for (NavigatorItem item : itemsByName.values()) {
             item.startReloading();
@@ -221,10 +197,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             lowOnMemoryReported = false;
         }
         dataStart = dataStop = INVALID_INSTANT;
-    }
-
-    public static ImageIcon getIcon(String imagename) {
-        return new ImageIcon(ArchivePanel.class.getResource("/org/yamcs/images/" + imagename));
     }
 
     static protected void debugLog(String s) {
@@ -302,11 +274,11 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     public void connected() {
-        prefs.reloadButton.setEnabled(true);
+        archiveView.setRefreshEnabled(true);
     }
 
     public void disconnected() {
-        prefs.reloadButton.setEnabled(false);
+        archiveView.setRefreshEnabled(false);
     }
 
     public void setBusyPointer() {
@@ -350,17 +322,14 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     public void receiveArchiveRecordsError(final String errorMessage) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (NavigatorItem navigatorItem : itemsByName.values()) {
-                    navigatorItem.receiveArchiveRecordsError(errorMessage);
-                }
-                JOptionPane.showMessageDialog(ArchivePanel.this, "Error when receiving archive records: " + errorMessage,
-                        "error receiving archive records", JOptionPane.ERROR_MESSAGE);
-                prefs.reloadButton.setEnabled(true);
-                setNormalPointer();
+        SwingUtilities.invokeLater(() -> {
+            for (NavigatorItem navigatorItem : itemsByName.values()) {
+                navigatorItem.receiveArchiveRecordsError(errorMessage);
             }
+            JOptionPane.showMessageDialog(ArchivePanel.this, "Error when receiving archive records: " + errorMessage,
+                    "error receiving archive records", JOptionPane.ERROR_MESSAGE);
+            archiveView.setRefreshEnabled(true);
+            setNormalPointer();
         });
     }
 
@@ -377,12 +346,9 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             prefs.savePreferences();
         }
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                prefs.reloadButton.setEnabled(true);
-                setNormalPointer();
-            }
+        SwingUtilities.invokeLater(() -> {
+            archiveView.setRefreshEnabled(true);
+            setNormalPointer();
         });
     }
 

@@ -68,7 +68,6 @@ public class TelecommandView extends ViewPart {
     private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName", "binary", "username", "source", "Final_Sequence_Count");
 
     private LocalResourceManager resourceManager;
-    //private Image errorImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
     private Image greenBubble;
     private Image redBubble;
 

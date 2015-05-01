@@ -133,6 +133,19 @@
    </extension>
    
    <extension
+         point="org.eclipse.ui.services">
+      <!-- This one provides the workbench state for the RefreshArchive command
+           because we don't want the user to refresh again while a fetch is already in progress -->
+      <sourceProvider
+            provider="org.yamcs.studio.core.archive.RefreshCommandState">
+         <variable
+               name="org.yamcs.studio.core.archive.state.refreshEnabled"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+   </extension>
+   
+   <extension
          point="org.eclipse.ui.commands">
       <category
             id="org.csstudio"
@@ -143,6 +156,11 @@
             id="org.yamcs.studio.core.commanding.issueTelecommandCommand"
             name="Issue Command">
       </command>
+      <command
+            categoryId="org.csstudio"
+            id="org.yamcs.studio.core.archive.refreshCommand"
+            name="Refresh">
+      </command>
    </extension>
    
    <extension
@@ -150,6 +168,16 @@
       <handler
             class="org.yamcs.studio.core.commanding.IssueCommandHandler"
             commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.archive.RefreshHandler"
+            commandId="org.yamcs.studio.core.archive.refreshCommand">
+         <activeWhen>
+            <with
+                  variable="org.yamcs.studio.core.archive.state.refreshEnabled">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
       </handler>
    </extension>
    
@@ -164,7 +192,7 @@
             class="org.yamcs.studio.core.archive.ArchiveView"
             icon="icons/archive.png"
             id="org.yamcs.studio.core.archive.ArchiveView"
-            name="TM Archive"/>
+            name="Archive"/>
       <view
             category="org.csstudio"
             class="org.yamcs.studio.core.eventlog.EventLogView"
@@ -373,6 +401,34 @@
                icon="icons/tc_add.png"
                label="Issue Telecommand"
                style="push"/>
+      </menuContribution>
+      
+      <!-- Add icons to the Archive view toolbar -->
+      <menuContribution
+            locationURI="toolbar:org.yamcs.studio.core.archive.ArchiveView">
+         <command
+               commandId="org.yamcs.studio.core.archive.refreshCommand"
+               icon="icons/refresh.gif"
+               label="Refresh"
+               style="push"/>
+         <separator
+               name="org.yamcs.studio.core.archive.zoomActions"
+               visible="true"/>
+         <command
+               commandId="org.yamcs.studio.core.archive.refreshCommand"
+               icon="icons/zoom_out.png"
+               label="Zoom out"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.core.archive.refreshCommand"
+               icon="icons/zoom_in.png"
+               label="Zoom in"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.core.archive.refreshCommand"
+               icon="icons/filter.png"
+               label="Filter"
+               style="pulldown"/>
       </menuContribution>
    </extension>
    
