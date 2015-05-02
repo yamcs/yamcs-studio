@@ -210,8 +210,8 @@
       </command>
       <command
             categoryId="org.csstudio"
-            id="org.yamcs.studio.core.archive.zoomClearCommand"
-            name="Tag the selected range">
+            id="org.yamcs.studio.core.archive.tagCommand"
+            name="Annotate the selected range">
       </command>
    </extension>
    
@@ -495,6 +495,7 @@
                icon="icons/tc_add.png"
                label="Issue Telecommand"
                style="push"/>
+         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
       </menuContribution>
       
       <!-- Add icons to the Archive view toolbar -->
@@ -527,15 +528,15 @@
          <command
                commandId="org.yamcs.studio.core.archive.tagCommand"
                icon="icons/tag.gif"
-               label="Tag the selected range"
+               label="Annotate the selected range"
                style="push"/>
-         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
          <!--separator name="org.yamcs.studio.core.archive.filterActions" visible="true"/-->
          <command
                commandId="org.yamcs.studio.core.archive.refreshCommand"
                icon="icons/filter.png"
                label="Filter"
                style="pulldown"/>
+         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
       </menuContribution>
    </extension>
    

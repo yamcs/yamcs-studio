@@ -18,9 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.WindowConstants;
 
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.utils.TimeEncoding;
 
@@ -33,21 +36,13 @@ public class TagBox extends Box implements MouseListener {
     final long DO_NOT_DRAW = Long.MIN_VALUE;
 
     JLabel tagLabelItem;
-    JPopupMenu editTagPopup, newTagPopup;
+    JPopupMenu editTagPopup;
     JMenuItem removeTagMenuItem, editTagMenuItem;
     int selectedRow = -1, selectedIndex = -1;
 
-    List<List<ArchiveTag>> tags = new ArrayList<List<ArchiveTag>>();//all tags loaded from yarch
+    List<List<ArchiveTag>> tags = new ArrayList<>();//all tags loaded from yarch
 
-    TagEditDialog tagEditDialog;
     ZoomSpec zoom;
-
-    private void buildTagEditDialog() {
-        if (tagEditDialog == null) {
-            tagEditDialog = new TagEditDialog(null);
-            tagEditDialog.setModal(true);
-        }
-    }
 
     TagBox(DataView dataView) {
         super(BoxLayout.PAGE_AXIS);
@@ -83,7 +78,7 @@ public class TagBox extends Box implements MouseListener {
 
     /**
      * insert a tag in tags, in order ensuring no overlap.
-     * 
+     *
      * @param tag
      */
     private void insertTag(ArchiveTag tag) {
@@ -108,7 +103,7 @@ public class TagBox extends Box implements MouseListener {
             }
         }
         if (!inserted) {
-            List<ArchiveTag> atl = new ArrayList<ArchiveTag>();
+            List<ArchiveTag> atl = new ArrayList<>();
             atl.add(tag);
             tags.add(atl);
         }
@@ -124,22 +119,23 @@ public class TagBox extends Box implements MouseListener {
         hbox.add(Box.createHorizontalGlue());
         editTagPopup.insert(hbox, 0);
         editTagPopup.addSeparator();
-        editTagMenuItem = new JMenuItem("Edit Tag");
-        editTagMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buildTagEditDialog();
-                ArchiveTag selectedTag = tags.get(selectedRow).get(selectedIndex);
-                tagEditDialog.fillFrom(selectedTag);
-                tagEditDialog.setVisible(true);
-                if (tagEditDialog.ok) {
-                    dataView.emitActionEvent(new TagEvent(this, "update-tag", selectedTag, tagEditDialog.getTag()));
+        editTagMenuItem = new JMenuItem("Edit Annotation");
+        editTagMenuItem.addActionListener(evt -> {
+            ArchiveTag selectedTag = tags.get(selectedRow).get(selectedIndex);
+            Display.getDefault().asyncExec(() -> {
+                TagDialog dialog = new TagDialog(Display.getCurrent().getActiveShell());
+                dialog.fillFrom(selectedTag);
+                if (dialog.open() == Window.OK) {
+                    SwingUtilities.invokeLater(() -> {
+                        System.out.println("signal update to " + dialog.buildArchiveTag());
+                        dataView.emitActionEvent(new TagEvent(this, "update-tag", selectedTag, dialog.buildArchiveTag()));
+                    });
                 }
-            }
+            });
         });
         editTagPopup.add(editTagMenuItem);
 
-        removeTagMenuItem = new JMenuItem("Remove Tag");
+        removeTagMenuItem = new JMenuItem("Remove Annotation");
         removeTagMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -151,31 +147,20 @@ public class TagBox extends Box implements MouseListener {
             }
         });
         editTagPopup.add(removeTagMenuItem);
-
-        newTagPopup = new JPopupMenu();
-        JMenuItem newTagMenuItem = new JMenuItem("New Tag");
-        newTagMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buildTagEditDialog();
-                tagEditDialog.setVisible(true);
-                if (tagEditDialog.ok) {
-                    dataView.emitActionEvent(new TagEvent(this, "insert-tag", null, tagEditDialog.getTag()));
-                }
-            }
-        });
-        newTagPopup.add(newTagMenuItem);
     }
 
     public void createNewTag(long start, long stop) {
-        buildTagEditDialog();
-        tagEditDialog.startTextField.setValue(start);
-        tagEditDialog.stopTextField.setValue(stop);
-        tagEditDialog.setVisible(true);
-
-        if (tagEditDialog.ok) {
-            dataView.emitActionEvent(new TagEvent(this, "insert-tag", null, tagEditDialog.getTag()));
-        }
+        Display.getDefault().asyncExec(() -> {
+            TagDialog dialog = new TagDialog(Display.getCurrent().getActiveShell());
+            dialog.setStartTime(start);
+            dialog.setStopTime(stop);
+            if (dialog.open() == Window.OK) {
+                SwingUtilities.invokeLater(() -> {
+                    System.out.println("signal insertion of " + dialog.buildArchiveTag());
+                    dataView.emitActionEvent(new TagEvent(this, "insert-tag", null, dialog.buildArchiveTag()));
+                });
+            }
+        });
     }
 
     public void doMousePressed(MouseEvent e, int row, int index) {
@@ -194,9 +179,6 @@ public class TagBox extends Box implements MouseListener {
             tagLabelItem.setText(selectedTag.getName());
             editTagPopup.validate();
             editTagPopup.show(e.getComponent(), e.getX(), e.getY());
-        } else {
-            newTagPopup.validate();
-            newTagPopup.show(e.getComponent(), e.getX(), e.getY());
         }
     }
 

@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 
+import org.eclipse.swt.graphics.RGB;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.utils.TimeEncoding;
 
@@ -160,14 +161,13 @@ public class TagTimeline extends JPanel implements MouseInputListener {
 
             big.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
             for (ArchiveTag at : tags) {
-                Color bgcolor, fgcolor;
-                if (at.hasColor()) {
-                    bgcolor = ColorUtils.getColor(at.getColor());
-                    fgcolor = ColorUtils.getOpposite(at.getColor());
-                } else {
-                    bgcolor = Color.white;
-                    fgcolor = Color.black;
-                }
+                // TODO store these values in a map, rather than calculating all the time
+                RGB rgb = toRGB(at);
+                Color bgcolor = new Color(rgb.red, rgb.green, rgb.blue);
+
+                int brightness = (int) Math.sqrt(.241 * rgb.red * rgb.red + .691 * rgb.green * rgb.green + .068 * rgb.blue * rgb.blue);
+                Color fgcolor = (brightness < 130) ? Color.WHITE : Color.BLACK;
+
                 big.setColor(bgcolor);
                 long start = (at.hasStart()) ? at.getStart() : zoom.startInstant;
                 int x1 = zoom.convertInstantToPixel(start);
@@ -197,5 +197,56 @@ public class TagTimeline extends JPanel implements MouseInputListener {
 
         g.drawImage(image, 0, 0, this);
 
+    }
+
+    /**
+     * These are the only colors encoded by old versions of the swing clients. They are encoded as
+     * textual color names rather than hex values.
+     * <p>
+     * We keep this in place for a good while, because there are still archives around that use
+     * these color values.
+     */
+    private static enum SwingTagColor {
+        BLACK(Color.BLACK),
+        BLUE(Color.BLUE),
+        CYAN(Color.CYAN),
+        GRAY(Color.GRAY),
+        GREEN(Color.GREEN),
+        MAGENTA(Color.MAGENTA),
+        ORANGE(Color.ORANGE),
+        PINK(Color.PINK),
+        RED(Color.RED),
+        YELLOW(Color.YELLOW);
+
+        private Color awtColor;
+
+        private SwingTagColor(Color awtColor) {
+            this.awtColor = awtColor;
+        }
+    }
+
+    /**
+     * Returns the RGB value for a specific tag. Compatible with the Swing archive-browser which
+     * does not support the full RGB spectrum.
+     * <p>
+     * Defaults to white if no color is specified, or the color could not be interpreted
+     */
+    public static RGB toRGB(ArchiveTag tag) {
+        if (!tag.hasColor())
+            return new RGB(0xff, 0xff, 0xff);
+        if (tag.getColor().startsWith("#")) {
+            int r = Integer.valueOf(tag.getColor().substring(1, 3), 16);
+            int g = Integer.valueOf(tag.getColor().substring(3, 5), 16);
+            int b = Integer.valueOf(tag.getColor().substring(5, 7), 16);
+            return new RGB(r, g, b);
+        } else {
+            SwingTagColor swingColor = SwingTagColor.valueOf(tag.getColor().toUpperCase());
+            if (swingColor != null) {
+                java.awt.Color awtColor = swingColor.awtColor;
+                return new RGB(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
+            } else {
+                return new RGB(0xff, 0xff, 0xff);
+            }
+        }
     }
 }

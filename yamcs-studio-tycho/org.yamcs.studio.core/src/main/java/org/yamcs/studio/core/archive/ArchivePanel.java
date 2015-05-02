@@ -154,10 +154,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             this.info = info;
         }
 
-        /**
-         *
-         * @return frequency in Hz
-         */
         float getFrequency() {
             float freq = (float) (tmcount - 1) / ((stopInstant - startInstant) / 1000.0f);
             freq = Math.round(freq * 1000) / 1000.0f;

@@ -57,7 +57,6 @@ public class AddTelecommandDialog extends TitleAreaDialog {
         container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         GridLayout layout = new GridLayout(2, false);
-        container.setLayoutData(new GridData(GridData.FILL_BOTH));
         container.setLayout(layout);
 
         Label lblCommand = new Label(container, SWT.NONE);

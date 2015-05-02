@@ -60,6 +60,7 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
     }
 
     public boolean isRefreshEnabled() {
+        // Not necessarily on the SWT thread. This is a bit of a risk. Maybe we should do a blocking Display.getDefault().syncExec
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
         RefreshCommandState commandState = (RefreshCommandState) service.getSourceProvider(RefreshCommandState.STATE_KEY_ENABLED);

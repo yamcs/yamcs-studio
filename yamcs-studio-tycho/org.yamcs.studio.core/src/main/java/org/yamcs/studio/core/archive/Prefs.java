@@ -22,10 +22,7 @@ public class Prefs {
     }
 
     public TimeInterval getInterval() {
-        TimeInterval interval = new TimeInterval();
-        interval.setStart(startTimestamp);
-        interval.setStop(endTimestamp);
-        return interval;
+        return new TimeInterval(startTimestamp, endTimestamp);
     }
 
     public long getEndTimestamp() {

@@ -48,6 +48,7 @@ import org.yamcs.studio.core.archive.ArchivePanel.IndexChunkSpec;
  */
 public class IndexBox extends Box implements MouseListener {
     private static final long serialVersionUID = 1L;
+    public static final Color BORDER_COLOR = new Color(216, 216, 216);
     DataView dataView;
 
     JLabel popupLabelItem;
@@ -78,7 +79,7 @@ public class IndexBox extends Box implements MouseListener {
     IndexBox(DataView dataView, String name) {
         super(BoxLayout.Y_AXIS);
         topPanel = new JPanel(new GridBagLayout()); // In panel, so that border can fill width
-        Border outsideBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, UiColors.BORDER_COLOR);
+        Border outsideBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_COLOR);
         Border insideBorder = BorderFactory.createEmptyBorder(10, 0, 2, 0);
         topPanel.setBorder(BorderFactory.createCompoundBorder(outsideBorder, insideBorder));
         topPanel.setBackground(Color.WHITE);
