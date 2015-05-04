@@ -2,8 +2,8 @@
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xsi:schemaLocation="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic http://www.eclipse.org/ui/2010/UIModel/application#//ui/basic http://www.eclipse.org/ui/2010/UIModel/application/ui/menu http://www.eclipse.org/ui/2010/UIModel/application#//ui/menu" xmi:id="org.eclipse.e4.legacy.ide.application" elementId="org.eclipse.e4.legacy.ide.application" bindingContexts="_SeXUHO8EEd6BC9cDb6iV7y">
   <children xsi:type="basic:TrimmedWindow" xmi:id="IDEWindow" elementId="IDEWindow" width="1024" height="768">
     <trimBars xmi:id="_RjwO0O8KEeS326vRcvfizg" elementId="org.yamcs.studio.core.trimbar.0" toBeRendered="false" visible="false" side="Bottom"/>
-    <trimBars xmi:id="_sInegO8TEeS326vRcvfizg" elementId="org.yamcs.studio.core.trimbar.1">
-      <children xsi:type="menu:ToolControl" xmi:id="_cbV34O8UEeS326vRcvfizg" elementId="org.yamcs.studio.core.toolcontrol.1" contributionURI="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.ui.TopItem"/>
+    <trimBars xmi:id="_sInegO8TEeS326vRcvfizg" elementId="org.eclipse.ui.main.toolbar">
+      <children xsi:type="menu:ToolControl" xmi:id="_cbV34O8UEeS326vRcvfizg" elementId="org.yamcs.studio.core.toolcontrol.1" accessibilityPhrase="" contributionURI="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.ui.TopItem"/>
       <children xsi:type="menu:ToolControl" xmi:id="_xNy9sO8VEeS326vRcvfizg" elementId="org.yamcs.studio.core.toolcontrol.2" toBeRendered="false" visible="false" contributionURI="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.ui.SpacerControl">
         <tags>stretch</tags>
       </children>
