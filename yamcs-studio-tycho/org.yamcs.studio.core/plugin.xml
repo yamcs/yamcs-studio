@@ -507,7 +507,6 @@
                label="Refresh"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
-         <!--separator name="org.yamcs.studio.core.archive.zoomActions" visible="true"/-->
          <command
                commandId="org.yamcs.studio.core.archive.zoomInCommand"
                icon="icons/zoom_in.png"
@@ -524,18 +523,16 @@
                label="Zoom all the way out"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
-         <!--separator name="org.yamcs.studio.core.archive.tagActions" visible="true"/-->
          <command
                commandId="org.yamcs.studio.core.archive.tagCommand"
                icon="icons/tag.gif"
                label="Annotate the selected range"
                style="push"/>
-         <!--separator name="org.yamcs.studio.core.archive.filterActions" visible="true"/-->
          <command
-               commandId="org.yamcs.studio.core.archive.refreshCommand"
-               icon="icons/filter.png"
-               label="Filter"
-               style="pulldown"/>
+               commandId="org.yamcs.studio.core.archive.tagCommand"
+               icon="icons/replay.png"
+               label="Replay"
+               style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
       </menuContribution>
    </extension>
