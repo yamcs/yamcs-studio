@@ -1,40 +1,33 @@
 package org.yamcs.studio.core.archive;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
 import org.yamcs.utils.TimeEncoding;
 
 public class Prefs {
-    private static final long serialVersionUID = 1L;
-    Preferences prefs;
 
-    private long startTimestamp = 0;
-    private long endTimestamp = TimeEncoding.currentInstant();
+    private Preferences prefs = Preferences.userNodeForPackage(ArchivePanel.class);
 
-    public Prefs() {
-        prefs = Preferences.userNodeForPackage(ArchivePanel.class);
-        loadFromPrefs();
-    }
-
-    public void savePreferences() {
-        prefs.putLong("rangeStart", getStartTimestamp());
-        prefs.putLong("rangeEnd", getEndTimestamp());
+    public void saveRange(TimeInterval range) {
+        putObject(prefs, "range", range);
     }
 
     public TimeInterval getInterval() {
-        return new TimeInterval(startTimestamp, endTimestamp);
-    }
-
-    public long getEndTimestamp() {
-        return TimeEncoding.currentInstant();
-    }
-
-    public long getStartTimestamp() {
-        return 0;
+        TimeInterval range = (TimeInterval) getObject(prefs, "range");
+        if (range == null) {
+            range = new TimeInterval();
+            range.setStart(TimeEncoding.currentInstant() - 30 * 24 * 3600);
+        }
+        return range;
     }
 
     public void setVisiblePackets(Object[] packets) {
-        StringBuffer strbuf = new StringBuffer();
+        StringBuilder strbuf = new StringBuilder();
         for (Object s : packets) {
             strbuf.append(" ");
             strbuf.append(s.toString());
@@ -42,13 +35,41 @@ public class Prefs {
         prefs.put("packets", strbuf.toString().trim());
     }
 
-    void loadFromPrefs() {
-        startTimestamp = prefs.getLong("rangeStart", TimeEncoding.currentInstant() - 30 * 24 * 3600);
-        endTimestamp = prefs.getLong("rangeEnd", TimeEncoding.currentInstant());
-    }
-
     public String[] getVisiblePackets() {
         String[] s = prefs.get("packets", "").split(" ");
         return s[0].equals("") ? new String[0] : s;
+    }
+
+    static public void putObject(Preferences prefs, String key, Object o) {
+        try {
+            byte[] raw = object2Bytes(o);
+            prefs.putByteArray(key, raw);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static public Object getObject(Preferences prefs, String key) {
+        byte[] raw = prefs.getByteArray(key, null);
+        if (raw == null)
+            return null;
+        try {
+            return bytes2Object(raw);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static private byte[] object2Bytes(Object o) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(o);
+        return baos.toByteArray();
+    }
+
+    static private Object bytes2Object(byte[] raw) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+        return new ObjectInputStream(bais).readObject();
     }
 }

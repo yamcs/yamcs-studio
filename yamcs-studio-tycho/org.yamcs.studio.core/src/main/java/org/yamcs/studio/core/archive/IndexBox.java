@@ -255,7 +255,7 @@ public class IndexBox extends Box implements MouseListener {
                 }
             }
         }
-        PrefsObject.putObject(prefs, "indexLines", visiblePackets);
+        Prefs.putObject(prefs, "indexLines", visiblePackets);
     }
 
     @Override
@@ -544,7 +544,7 @@ public class IndexBox extends Box implements MouseListener {
     }
 
     public void dataLoadFinished() {
-        Object o = PrefsObject.getObject(prefs, "indexLines");
+        Object o = Prefs.getObject(prefs, "indexLines");
         if (o == null)
             return;
 

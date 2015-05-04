@@ -4,14 +4,20 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
@@ -21,6 +27,7 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
+import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart implements ArchiveIndexListener, ConnectionListener {
 
@@ -31,6 +38,7 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
 
     @Override
     public void createPartControl(Composite parent) {
+        createActions();
         yconnector = new YamcsConnector();
         indexReceiver = new YamcsArchiveIndexReceiver(yconnector);
 
@@ -38,7 +46,6 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
         java.awt.Frame frame = SWT_AWT.new_Frame(locationComp);
 
         archivePanel = new ArchivePanel(this, false);
-
         archivePanel.setPreferredSize(new Dimension(300, 400));
 
         frame.addComponentListener(new ComponentAdapter() {
@@ -57,6 +64,68 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
         } catch (URISyntaxException e1) {
             e1.printStackTrace();
         }
+    }
+
+    private void createActions() {
+        IActionBars bars = getViewSite().getActionBars();
+        IMenuManager mgr = bars.getMenuManager();
+        // There's probably a better way of doing this radio stuff, but going forward now
+        List<Action> actions = new ArrayList<>();
+
+        Action lastMonthAction = new Action("Last month", IAction.AS_RADIO_BUTTON) {
+            @Override
+            public void run() {
+                actions.forEach(action -> action.setChecked(action == this));
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MONTH, -1);
+                doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+            }
+        };
+        actions.add(lastMonthAction);
+        mgr.add(lastMonthAction);
+
+        Action last3MonthsAction = new Action("Last 3 months", IAction.AS_RADIO_BUTTON) {
+            @Override
+            public void run() {
+                actions.forEach(action -> action.setChecked(action == this));
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MONTH, -3);
+                doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+            }
+        };
+        actions.add(last3MonthsAction);
+        mgr.add(last3MonthsAction);
+
+        Action last12MonthsAction = new Action("Last 12 months", IAction.AS_RADIO_BUTTON) {
+            @Override
+            public void run() {
+                actions.forEach(action -> action.setChecked(action == this));
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MONTH, -12);
+                doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+            }
+        };
+        actions.add(last12MonthsAction);
+        mgr.add(last12MonthsAction);
+
+        Action customAction = new Action("Custom...", IAction.AS_RADIO_BUTTON) {
+            @Override
+            public void run() {
+                ;//handleFilter();
+                actions.forEach(action -> action.setChecked(action == this));
+            }
+        };
+        actions.add(customAction);
+        mgr.add(customAction);
+    }
+
+    private void doFilter(TimeInterval range) {
+        SwingUtilities.invokeLater(() -> {
+            System.out.println("will save range: " + TimeEncoding.toCombinedFormat(range.calculateStart()));
+            System.out.println(".... ending " + TimeEncoding.toCombinedFormat(range.calculateStop()));
+            archivePanel.prefs.saveRange(range);
+            refresh();
+        });
     }
 
     public boolean isRefreshEnabled() {
@@ -225,6 +294,7 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
     public void refresh() {
         archivePanel.startReloading();
         TimeInterval interval = archivePanel.getRequestedDataInterval();
+        System.out.println(".... refreshing with interval " + TimeEncoding.toCombinedFormat(interval.calculateStart()));
         indexReceiver.getIndex(instance, interval);
     }
 
@@ -263,7 +333,6 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
     @Override
     public void dispose() {
         super.dispose();
-
         if (yconnector != null)
             yconnector.disconnect();
     }

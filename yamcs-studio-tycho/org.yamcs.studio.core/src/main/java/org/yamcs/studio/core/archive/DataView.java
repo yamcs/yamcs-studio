@@ -231,8 +231,8 @@ public class DataView extends JScrollPane {
 
         long range = stopInstant - startInstant;
 
-        long reqStart = archivePanel.getRequestedDataStart();
-        long reqStop = archivePanel.getRequestedDataStop();
+        long reqStart = archivePanel.getRequestedDataInterval().calculateStart();
+        long reqStop = archivePanel.getRequestedDataInterval().calculateStop();
         long zstart = startInstant - range * 2;
         if (reqStart != TimeEncoding.INVALID_INSTANT) {
             zstart = Math.max(zstart, reqStart);
@@ -253,75 +253,61 @@ public class DataView extends JScrollPane {
     }
 
     void setViewLocationFromZoomstack() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (zoomStack.isEmpty())
-                    return;
-                final ZoomSpec currentZoom = zoomStack.peek();
-                final JViewport vp = getViewport();
-                int x = (int) ((currentZoom.viewLocation - currentZoom.startInstant) / currentZoom.pixelRatio);
-                vp.setViewPosition(new Point(x, vp.getViewPosition().y));
-                //debugLog("zoom out, view width " + vp.getView().getSize().width + " location " + x + " = " + currentZoom.viewLocation);
-            }
-        });
+        SwingUtilities.invokeLater(() -> {
+            if (zoomStack.isEmpty())
+                return;
+            final ZoomSpec currentZoom = zoomStack.peek();
+            final JViewport vp = getViewport();
+            int x = (int) ((currentZoom.viewLocation - currentZoom.startInstant) / currentZoom.pixelRatio);
+            vp.setViewPosition(new Point(x, vp.getViewPosition().y));
+            //debugLog("zoom out, view width " + vp.getView().getSize().width + " location " + x + " = " + currentZoom.viewLocation);
+            });
     }
 
     public void archiveLoadFinished() {
         for (IndexBox ib : indexBoxes.values()) {
             ib.dataLoadFinished();
         }
-        if (zoomStack.isEmpty() ||
-                ((archivePanel.prefs.getStartTimestamp() != lastStartTimestamp) ||
-                (archivePanel.prefs.getEndTimestamp() != lastEndTimestamp)
-                )) {
-
+        TimeInterval intv = archivePanel.getRequestedDataInterval();
+        long intvStart = intv.calculateStart();
+        long intvStop = intv.calculateStop();
+        if (zoomStack.isEmpty() || intvStart != lastStartTimestamp || intvStop != lastEndTimestamp) {
             int w = getViewport().getExtentSize().width;
             zoomStack.clear();
-            long reqStart = archivePanel.getRequestedDataStart();
+            long reqStart = intvStart;
             long zstart = archivePanel.dataStart;
-            if (reqStart != TimeEncoding.INVALID_INSTANT) {
+            if (reqStart != TimeEncoding.INVALID_INSTANT)
                 zstart = Math.min(reqStart, zstart);
-            }
 
-            long reqStop = archivePanel.getRequestedDataStop();
+            long reqStop = intvStop;
             long zstop = archivePanel.dataStop;
 
-            if (reqStop != TimeEncoding.INVALID_INSTANT) {
+            if (reqStop != TimeEncoding.INVALID_INSTANT)
                 zstop = Math.max(reqStop, zstop);
-            }
             long range = zstop - zstart;
             zstart -= range / 100;
             zstop += range / 100;
             zoomStack.push(new ZoomSpec(zstart, zstop, w, zstop - zstart));
         }
 
-        lastStartTimestamp = archivePanel.prefs.getStartTimestamp();
-        lastEndTimestamp = archivePanel.prefs.getEndTimestamp();
+        lastStartTimestamp = intvStart;
+        lastEndTimestamp = intvStop;
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                //debugLog("receiveHrdpRecords() mark 1");
-                archivePanel.archiveView.setZoomInEnabled(true);
-                archivePanel.archiveView.setZoomOutEnabled(false);
-                archivePanel.archiveView.setZoomClearEnabled(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            archivePanel.archiveView.setZoomInEnabled(true);
+            archivePanel.archiveView.setZoomOutEnabled(false);
+            archivePanel.archiveView.setZoomClearEnabled(true);
         });
         refreshDisplay();
     }
 
     void emitActionEvent(String cmd) {
         ActionEvent ae = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, cmd);
-        for (ActionListener al : actionListeners) {
-            al.actionPerformed(ae);
-        }
+        actionListeners.forEach(l -> l.actionPerformed(ae));
     }
 
     void emitActionEvent(ActionEvent ae) {
-        for (ActionListener al : actionListeners) {
-            al.actionPerformed(ae);
-        }
+        actionListeners.forEach(l -> l.actionPerformed(ae));
     }
 
     void showAll() {

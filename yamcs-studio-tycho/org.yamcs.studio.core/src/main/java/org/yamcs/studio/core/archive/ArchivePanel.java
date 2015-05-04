@@ -41,7 +41,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     ArchiveView archiveView;
 
-    protected Prefs prefs;
+    Prefs prefs;
 
     private DataViewer dataViewer;
     public ReplayPanel replayPanel;
@@ -209,14 +209,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         return prefs.getInterval();
     }
 
-    public long getRequestedDataStop() {
-        return prefs.getEndTimestamp();
-    }
-
-    public long getRequestedDataStart() {
-        return prefs.getStartTimestamp();
-    }
-
     public synchronized void receiveArchiveRecords(IndexResult ir) {
         dataViewer.receiveArchiveRecords(ir);
         long start, stop;
@@ -249,10 +241,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     public synchronized void archiveLoadFinished() {
         loadCount = 0;
-        if ((dataStart != INVALID_INSTANT) && (dataStop != INVALID_INSTANT)) {
+        if ((dataStart != INVALID_INSTANT) && (dataStop != INVALID_INSTANT))
             dataViewer.archiveLoadFinished();
-            prefs.savePreferences();
-        }
 
         SwingUtilities.invokeLater(() -> {
             archiveView.setRefreshEnabled(true);
@@ -283,9 +273,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     // TODO only used by selector. Rework maybe in custom replay launcher
     public List<String> getSelectedPackets(String tableName) {
-        if (dataViewer.getDataView().indexBoxes.containsKey(tableName)) {
+        if (dataViewer.getDataView().indexBoxes.containsKey(tableName))
             return dataViewer.getDataView().getSelectedPackets("tm");
-        }
         return Collections.emptyList();
     }
 

@@ -1,11 +1,19 @@
 package org.yamcs.studio.core.archive;
 
+import java.io.Serializable;
+import java.util.Objects;
+
+import org.yamcs.utils.TimeEncoding;
+
 /**
  * time interval where both ends can be open
- * 
+ *
  **/
-public class TimeInterval {
-    private long start, stop;
+public class TimeInterval implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private long start;
+    private long stop;
     private boolean hasStart = false;
     private boolean hasStop = false;
 
@@ -18,6 +26,12 @@ public class TimeInterval {
      * Creates a TimeInterval with no ends
      */
     public TimeInterval() {
+    }
+
+    public static TimeInterval starting(long start) {
+        TimeInterval range = new TimeInterval();
+        range.setStart(start);
+        return range;
     }
 
     public boolean hasStart() {
@@ -44,6 +58,31 @@ public class TimeInterval {
 
     public long getStop() {
         return stop;
+    }
+
+    public long calculateStart() {
+        if (hasStart)
+            return start;
+        else
+            return TimeEncoding.currentInstant();
+    }
+
+    public long calculateStop() {
+        if (hasStop)
+            return stop;
+        else
+            return TimeEncoding.currentInstant();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TimeInterval))
+            return false;
+        TimeInterval other = (TimeInterval) obj;
+        return Objects.equals(start, other.start)
+                && Objects.equals(stop, other.stop)
+                && Objects.equals(hasStart, other.hasStart)
+                && Objects.equals(hasStop, other.hasStop);
     }
 
     @Override
