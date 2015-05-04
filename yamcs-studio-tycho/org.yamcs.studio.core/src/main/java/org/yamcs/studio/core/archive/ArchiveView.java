@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import javax.swing.SwingUtilities;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
@@ -69,60 +69,57 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
     private void createActions() {
         IActionBars bars = getViewSite().getActionBars();
         IMenuManager mgr = bars.getMenuManager();
-        // There's probably a better way of doing this radio stuff, but going forward now
-        List<Action> actions = new ArrayList<>();
-
-        Action lastMonthAction = new Action("Last month", IAction.AS_RADIO_BUTTON) {
+        mgr.add(new Action("Last month", IAction.AS_RADIO_BUTTON) {
             @Override
             public void run() {
-                actions.forEach(action -> action.setChecked(action == this));
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.MONTH, -1);
-                doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                if (isChecked()) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, -1);
+                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                }
             }
-        };
-        actions.add(lastMonthAction);
-        mgr.add(lastMonthAction);
-
-        Action last3MonthsAction = new Action("Last 3 months", IAction.AS_RADIO_BUTTON) {
+        });
+        mgr.add(new Action("Last 3 months", IAction.AS_RADIO_BUTTON) {
             @Override
             public void run() {
-                actions.forEach(action -> action.setChecked(action == this));
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.MONTH, -3);
-                doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                if (isChecked()) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, -3);
+                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                }
             }
-        };
-        actions.add(last3MonthsAction);
-        mgr.add(last3MonthsAction);
-
-        Action last12MonthsAction = new Action("Last 12 months", IAction.AS_RADIO_BUTTON) {
+        });
+        mgr.add(new Action("Last 12 months", IAction.AS_RADIO_BUTTON) {
             @Override
             public void run() {
-                actions.forEach(action -> action.setChecked(action == this));
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.MONTH, -12);
-                doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                if (isChecked()) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, -12);
+                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                }
             }
-        };
-        actions.add(last12MonthsAction);
-        mgr.add(last12MonthsAction);
-
-        Action customAction = new Action("Custom...", IAction.AS_RADIO_BUTTON) {
+        });
+        mgr.add(new Action("Custom...", IAction.AS_RADIO_BUTTON) {
             @Override
             public void run() {
-                ;//handleFilter();
-                actions.forEach(action -> action.setChecked(action == this));
+                if (isChecked()) {
+                    CustomizeRangeDialog dialog = new CustomizeRangeDialog(Display.getCurrent().getActiveShell());
+                    dialog.setInitialRange(archivePanel.prefs.getInterval());
+                    if (dialog.open() == Window.OK) {
+                        TimeInterval range = new TimeInterval();
+                        if (dialog.hasStartTime())
+                            range.setStart(dialog.getStartTime());
+                        if (dialog.hasStopTime())
+                            range.setStop(dialog.getStopTime());
+                        doFilter(range);
+                    }
+                }
             }
-        };
-        actions.add(customAction);
-        mgr.add(customAction);
+        });
     }
 
     private void doFilter(TimeInterval range) {
         SwingUtilities.invokeLater(() -> {
-            System.out.println("will save range: " + TimeEncoding.toCombinedFormat(range.calculateStart()));
-            System.out.println(".... ending " + TimeEncoding.toCombinedFormat(range.calculateStop()));
             archivePanel.prefs.saveRange(range);
             refresh();
         });
@@ -294,7 +291,6 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
     public void refresh() {
         archivePanel.startReloading();
         TimeInterval interval = archivePanel.getRequestedDataInterval();
-        System.out.println(".... refreshing with interval " + TimeEncoding.toCombinedFormat(interval.calculateStart()));
         indexReceiver.getIndex(instance, interval);
     }
 

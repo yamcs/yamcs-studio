@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -136,14 +135,11 @@ public class TagBox extends Box implements MouseListener {
         editTagPopup.add(editTagMenuItem);
 
         removeTagMenuItem = new JMenuItem("Remove Annotation");
-        removeTagMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArchiveTag selectedTag = tags.get(selectedRow).get(selectedIndex);
-                int answer = JOptionPane.showConfirmDialog(null, "Remove " + selectedTag.getName() + " ?", "Are you sure?", JOptionPane.YES_NO_OPTION);
-                if (answer == JOptionPane.YES_OPTION) {
-                    dataView.emitActionEvent(new TagEvent(this, "delete-tag", selectedTag, null));
-                }
+        removeTagMenuItem.addActionListener(evt -> {
+            ArchiveTag selectedTag = tags.get(selectedRow).get(selectedIndex);
+            int answer = JOptionPane.showConfirmDialog(null, "Remove " + selectedTag.getName() + " ?", "Are you sure?", JOptionPane.YES_NO_OPTION);
+            if (answer == JOptionPane.YES_OPTION) {
+                dataView.emitActionEvent(new TagEvent(this, "delete-tag", selectedTag, null));
             }
         });
         editTagPopup.add(removeTagMenuItem);

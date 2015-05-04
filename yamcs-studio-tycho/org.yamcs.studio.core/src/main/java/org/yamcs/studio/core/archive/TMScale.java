@@ -43,7 +43,7 @@ public class TMScale extends JSlider {
         return sdf;
     }
 
-    Hashtable<Integer, JComponent> labels = new Hashtable<Integer, JComponent>();
+    Hashtable<Integer, JComponent> labels = new Hashtable<>();
     ZoomSpec zoom;
     long div;
 
