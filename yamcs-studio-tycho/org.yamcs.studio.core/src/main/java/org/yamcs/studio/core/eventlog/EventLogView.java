@@ -135,11 +135,22 @@ public class EventLogView extends ViewPart {
     }
 
     public void addEvents(List<Event> events) {
-        Display.getDefault().asyncExec(() -> tableContentProvider.addEvents(events));
+        Display.getDefault().asyncExec(() -> {
+            if (tableViewer.getTable().isDisposed())
+                return;
+            tableContentProvider.addEvents(events);
+        });
     }
 
     public void addEvent(Event event) {
-        Display.getDefault().asyncExec(() -> tableContentProvider.addEvent(event));
+        Display.getDefault().asyncExec(() -> {
+            if (tableViewer.getTable().isDisposed())
+                return;
+            tableContentProvider.addEvent(event);
+            EventNotificationPopup popup = new EventNotificationPopup(tableViewer.getTable().getDisplay(), event);
+            popup.setDelayClose(2000L);
+            popup.open();
+        });
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {

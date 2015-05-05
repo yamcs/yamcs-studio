@@ -40,7 +40,8 @@ Require-Bundle: org.epics.vtype,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.platform,
- javax.inject
+ javax.inject,
+ org.eclipse.mylyn.commons.ui
 Import-Package: org.epics.pvmanager,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.core,
