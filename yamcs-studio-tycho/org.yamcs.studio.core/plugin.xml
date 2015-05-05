@@ -213,6 +213,11 @@
             id="org.yamcs.studio.core.archive.tagCommand"
             name="Annotate the selected range">
       </command>
+      <command
+            categoryId="org.csstudio"
+            id="org.yamcs.studio.core.eventlog.clearCommand"
+            name="Clear Log View">
+      </command>
    </extension>
    
    <extension
@@ -274,6 +279,10 @@
                <equals value="true"/>
             </with>
          </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.eventlog.ClearHandler"
+            commandId="org.yamcs.studio.core.eventlog.clearCommand">
       </handler>
    </extension>
    
@@ -533,7 +542,16 @@
                icon="icons/replay.png"
                label="Replay"
                style="push"/>
-         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
+      </menuContribution>
+
+      <!-- Add icons to the Event Log view toolbar -->
+      <menuContribution
+            locationURI="toolbar:org.yamcs.studio.core.eventlog.EventLogView">
+         <command
+               commandId="org.yamcs.studio.core.eventlog.clearCommand"
+               icon="icons/clear.gif"
+               label="Clear Log View"
+               style="push"/>
       </menuContribution>
    </extension>
    

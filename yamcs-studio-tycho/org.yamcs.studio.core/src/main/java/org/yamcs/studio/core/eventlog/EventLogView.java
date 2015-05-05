@@ -60,6 +60,12 @@ public class EventLogView extends ViewPart {
         yconnector.connect(YamcsPlugin.getDefault().getHornetqConnectionProperties());
     }
 
+    public void clear() {
+        tableViewer.getTable().setRedraw(false);
+        tableViewer.getTable().clearAll();
+        tableViewer.getTable().setRedraw(true);
+    }
+
     private void addFixedColumns() {
         TableViewerColumn descriptionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         descriptionColumn.getColumn().setText(COL_DESCRIPTION);
