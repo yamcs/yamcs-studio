@@ -183,6 +183,10 @@ public class TelecommandView extends ViewPart {
             }
         });
         layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
+
+        // TODO use IMemento or something
+        tableViewer.getTable().setSortColumn(gentimeColumn.getColumn());
+        tableViewer.getTable().setSortDirection(SWT.DOWN);
     }
 
     private void applyColumnLayoutData(TableColumnLayout tcl) {

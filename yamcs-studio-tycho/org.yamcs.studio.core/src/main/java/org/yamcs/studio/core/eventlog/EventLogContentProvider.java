@@ -1,6 +1,8 @@
 package org.yamcs.studio.core.eventlog;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -29,5 +31,28 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     @Override
     public Object[] getElements(Object inputElement) {
         return eventsBySequenceNumber.values().toArray();
+    }
+
+    public void addEvent(Event event) {
+        if (eventsBySequenceNumber.containsKey(event.getSeqNumber())) {
+            // Hmm not sure if this will do an equals
+            tableViewer.update(event, null);
+        } else {
+            tableViewer.add(event);
+            eventsBySequenceNumber.put(event.getSeqNumber(), event);
+        }
+    }
+
+    public void addEvents(List<Event> events) {
+        List<Object> needsUpdating = new ArrayList<>();
+        events.forEach(evt -> {
+            if (eventsBySequenceNumber.containsKey(evt.getSeqNumber()))
+                needsUpdating.add(evt);
+            eventsBySequenceNumber.put(evt.getSeqNumber(), evt);
+        });
+        tableViewer.update(needsUpdating.toArray(), null);
+
+        events.removeAll(needsUpdating);
+        tableViewer.add(events.toArray());
     }
 }
