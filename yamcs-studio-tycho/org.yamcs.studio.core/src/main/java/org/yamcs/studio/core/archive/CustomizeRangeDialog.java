@@ -78,12 +78,13 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         Label lbl = new Label(startLabelWrapper, SWT.NONE);
         lbl.setText("Start");
         startClosed = new Button(startLabelWrapper, SWT.CHECK | SWT.NONE);
-        startClosed.setSelection(startClosedValue);
         startClosed.addListener(SWT.Selection, e -> {
             startDate.setVisible(startClosed.getSelection());
             startTime.setVisible(startClosed.getSelection());
             validate();
         });
+        startClosed.setSelection(startClosedValue);
+        startClosed.setVisible(startClosedValue);
 
         Composite startComposite = new Composite(container, SWT.NONE);
         RowLayout rl = new RowLayout();
@@ -109,12 +110,13 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         lbl = new Label(stopLabelWrapper, SWT.NONE);
         lbl.setText("Stop");
         stopClosed = new Button(stopLabelWrapper, SWT.CHECK | SWT.NONE);
-        stopClosed.setSelection(stopClosedValue);
         stopClosed.addListener(SWT.Selection, e -> {
             stopDate.setVisible(stopClosed.getSelection());
             stopTime.setVisible(stopClosed.getSelection());
             validate();
         });
+        stopClosed.setSelection(stopClosedValue);
+        stopClosed.setVisible(stopClosedValue);
 
         Composite stopComposite = new Composite(container, SWT.NONE);
         rl = new RowLayout();
