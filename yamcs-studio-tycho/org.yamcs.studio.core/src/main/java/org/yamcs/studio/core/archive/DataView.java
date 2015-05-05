@@ -36,9 +36,9 @@ public class DataView extends JScrollPane {
     private static final long serialVersionUID = 1L;
     HeaderPanel headerPanel;
     IndexPanel indexPanel;
-    Map<String, IndexBox> indexBoxes = new HashMap<String, IndexBox>();
+    Map<String, IndexBox> indexBoxes = new HashMap<>();
     private boolean showTagBox = true;
-    Stack<ZoomSpec> zoomStack = new Stack<ZoomSpec>();
+    Stack<ZoomSpec> zoomStack = new Stack<>();
     private List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 
     private DataViewer dataViewer;

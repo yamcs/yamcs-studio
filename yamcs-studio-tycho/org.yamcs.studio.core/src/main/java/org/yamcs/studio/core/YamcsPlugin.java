@@ -17,6 +17,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
+import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
@@ -43,6 +44,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private RestClient restClient;
     private WebSocketRegistrar webSocketClient;
+    private YamcsConnectData hornetqProps;
 
     private XtceDb mdb;
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
@@ -63,8 +65,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
         String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
         int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
         String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-        restClient = new RestClient(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
-        webSocketClient = new WebSocketRegistrar(new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance));
+        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
+        hornetqProps = new YamcsConnectData();
+        hornetqProps.host = yamcsHost;
+        hornetqProps.port = 5445;
+        hornetqProps.instance = yamcsInstance;
+
+        restClient = new RestClient(yprops);
+        webSocketClient = new WebSocketRegistrar(yprops);
         addMdbListener(webSocketClient);
 
         // Only load MDB once bundle has been fully started
@@ -87,6 +95,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public WebSocketRegistrar getWebSocketClient() {
         return webSocketClient;
+    }
+
+    public YamcsConnectData getHornetqConnectionProperties() {
+        return hornetqProps;
     }
 
     /**

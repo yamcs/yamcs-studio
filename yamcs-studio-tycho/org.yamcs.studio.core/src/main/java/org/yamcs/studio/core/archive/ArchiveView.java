@@ -3,7 +3,6 @@ package org.yamcs.studio.core.archive;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -23,10 +22,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.YamcsException;
 import org.yamcs.api.ConnectionListener;
-import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart implements ArchiveIndexListener, ConnectionListener {
@@ -59,11 +58,7 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
 
         indexReceiver.setIndexListener(this);
         yconnector.addConnectionListener(this);
-        try {
-            yconnector.connect(YamcsConnectData.parse("yamcs://machine:5445/simulator"));
-        } catch (URISyntaxException e1) {
-            e1.printStackTrace();
-        }
+        yconnector.connect(YamcsPlugin.getDefault().getHornetqConnectionProperties());
     }
 
     private void createActions() {

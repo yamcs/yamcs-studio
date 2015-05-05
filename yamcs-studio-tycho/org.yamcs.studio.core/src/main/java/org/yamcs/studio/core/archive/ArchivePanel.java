@@ -105,7 +105,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     public void startReloading() {
         recCount = 0;
-        archiveView.setInstance("simulator"); // FIXME
+        archiveView.setInstance(archiveView.yconnector.getConnectionParams().instance); // TODO do we need this in Studio?
 
         setBusyPointer();
         archiveView.setRefreshEnabled(false);

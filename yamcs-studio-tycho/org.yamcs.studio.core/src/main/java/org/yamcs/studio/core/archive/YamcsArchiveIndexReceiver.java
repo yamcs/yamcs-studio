@@ -45,7 +45,6 @@ public class YamcsArchiveIndexReceiver implements ConnectionListener, ArchiveInd
             @Override
             public void run() {
                 try {
-                    int seq = 0;
                     IndexRequest.Builder request = IndexRequest.newBuilder().setInstance(instance);
                     if (interval.hasStart())
                         request.setStart(interval.getStart());
@@ -63,7 +62,6 @@ public class YamcsArchiveIndexReceiver implements ConnectionListener, ArchiveInd
                             break;
                         }
                         indexListener.receiveArchiveRecords(ir);
-                        seq++;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
