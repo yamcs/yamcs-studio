@@ -5,6 +5,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.swing.SwingUtilities;
 
@@ -68,8 +69,12 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     cal.add(Calendar.MONTH, -1);
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
                     doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
                 }
             }
@@ -78,8 +83,12 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     cal.add(Calendar.MONTH, -3);
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
                     doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
                 }
             }
@@ -88,8 +97,12 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance();
+                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     cal.add(Calendar.MONTH, -12);
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
                     doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
                 }
             }

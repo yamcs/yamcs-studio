@@ -1,7 +1,9 @@
 package org.yamcs.studio.core.archive;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import org.yamcs.utils.TimeEncoding;
 
@@ -63,15 +65,28 @@ public class TimeInterval implements Serializable {
     public long calculateStart() {
         if (hasStart)
             return start;
-        else
-            return TimeEncoding.currentInstant();
+        else {
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            return TimeEncoding.fromCalendar(cal);
+        }
     }
 
     public long calculateStop() {
         if (hasStop)
             return stop;
-        else
-            return TimeEncoding.currentInstant();
+        else {
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            return TimeEncoding.fromCalendar(cal);
+        }
     }
 
     @Override

@@ -78,7 +78,7 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         Label lbl = new Label(startLabelWrapper, SWT.NONE);
         lbl.setText("Start");
         startClosed = new Button(startLabelWrapper, SWT.CHECK | SWT.NONE);
-        startClosed.setSelection(true);
+        startClosed.setSelection(startClosedValue);
         startClosed.addListener(SWT.Selection, e -> {
             startDate.setVisible(startClosed.getSelection());
             startTime.setVisible(startClosed.getSelection());
@@ -109,7 +109,7 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         lbl = new Label(stopLabelWrapper, SWT.NONE);
         lbl.setText("Stop");
         stopClosed = new Button(stopLabelWrapper, SWT.CHECK | SWT.NONE);
-        stopClosed.setSelection(true);
+        stopClosed.setSelection(stopClosedValue);
         stopClosed.addListener(SWT.Selection, e -> {
             stopDate.setVisible(stopClosed.getSelection());
             stopTime.setVisible(stopClosed.getSelection());
@@ -159,10 +159,10 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
     }
 
     public void setInitialRange(TimeInterval range) {
-        if (range.hasStart())
-            setStartTime(range.getStart());
-        if (range.hasStop())
-            setStopTime(range.getStop());
+        startClosedValue = range.hasStart();
+        stopClosedValue = range.hasStop();
+        setStartTime(range.calculateStart());
+        setStopTime(range.calculateStop());
     }
 
     private void setStartTime(long startTime) {

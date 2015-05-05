@@ -134,7 +134,9 @@ public class TagDialog extends TitleAreaDialog {
         gd.verticalAlignment = SWT.TOP;
         lbl.setLayoutData(gd);
         description = new Text(container, SWT.MULTI | SWT.BORDER);
-        description.setLayoutData(new GridData(GridData.FILL_BOTH));
+        gd = new GridData(GridData.FILL_BOTH);
+        gd.heightHint = description.getLineHeight() * 3;
+        description.setLayoutData(gd);
         description.setText(descriptionValue);
 
         Composite startLabelWrapper = new Composite(container, SWT.NONE);
