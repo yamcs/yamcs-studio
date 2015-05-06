@@ -24,6 +24,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.utils.TimeEncoding;
@@ -153,9 +156,6 @@ public class CreateReplayDialog extends TitleAreaDialog {
         for (TableItem item : packetsTable.getTable().getItems())
             item.setChecked(true);
 
-        lbl = new Label(container, SWT.NONE);
-        lbl.setText("Speed");
-
         return container;
     }
 
@@ -177,6 +177,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
         nameValue = name.getText();
         startTimeValue = toCalendar(startDate, startTime);
         stopTimeValue = toCalendar(stopDate, stopTime);
+        for (TableItem item : packetsTable.getTable().getItems())
+            if (!item.getChecked())
+                packetsValue.remove(item.getText());
         super.okPressed();
     }
 
@@ -194,11 +197,19 @@ public class CreateReplayDialog extends TitleAreaDialog {
     }
 
     public ProcessorManagementRequest toProcessorManagementRequest() {
+        PacketReplayRequest.Builder prr = PacketReplayRequest.newBuilder();
+        packetsValue.forEach(s -> prr.addNameFilter(NamedObjectId.newBuilder().setNamespace("MDB:OPS Name").setName(s)));
+        ReplayRequest.Builder rr = ReplayRequest.newBuilder()
+                .setStart(TimeEncoding.fromCalendar(startTimeValue))
+                .setStop(TimeEncoding.fromCalendar(stopTimeValue))
+                .setPacketRequest(prr);
         return ProcessorManagementRequest.newBuilder()
                 .setOperation(ProcessorManagementRequest.Operation.CREATE_PROCESSOR)
                 .setInstance(YamcsPlugin.getDefault().getInstance())
                 .setName(nameValue)
                 .setType("Archive")
+                .setReplaySpec(rr)
+                .addClientId(YamcsPlugin.getDefault().getClientInfo().getId())
                 .build();
     }
 

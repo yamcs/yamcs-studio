@@ -42,6 +42,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private Map<String, YamcsPVReader> pvReadersByName = new LinkedHashMap<>();
     private Map<String, RestParameter> availableParametersByName = new LinkedHashMap<>();
     private List<CommandHistoryListener> cmdhistListeners = new ArrayList<>();
+    private List<ClientInfoListener> clientInfoListeners = new ArrayList<>();
 
     private WebSocketClient wsclient;
 
@@ -64,6 +65,8 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     public void connect() {
         wsclient.connect();
+        // Needs improvement. Get our assigned client-id, to use later in rest-replay calls
+        pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
     }
 
     @Override
@@ -116,9 +119,8 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     @Override
     public synchronized void onParametersChanged(List<RestParameter> parameters) {
         log.info("Refreshing all pv readers");
-        for (RestParameter p : parameters) {
+        for (RestParameter p : parameters)
             availableParametersByName.put(p.getId().getName(), p);
-        }
         pvReadersByName.forEach((name, pvReader) -> {
             RestParameter parameter = availableParametersByName.get(name);
             System.out.println("signaling " + name + ", " + parameter);
@@ -129,6 +131,10 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         cmdhistListeners.add(listener);
         pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe")); // TODO don't need to do this for every listener
+    }
+
+    public synchronized void addClientInfoListener(ClientInfoListener listener) {
+        clientInfoListeners.add(listener);
     }
 
     public void shutdown() {
@@ -170,6 +176,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onClientInfoData(ClientInfo clientInfo) {
+        clientInfoListeners.forEach(l -> l.processClientInfo(clientInfo));
     }
 
     @Override

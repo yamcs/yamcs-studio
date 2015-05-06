@@ -25,6 +25,7 @@ import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestParameter;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
@@ -45,6 +46,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private RestClient restClient;
     private WebSocketRegistrar webSocketClient;
     private YamcsConnectData hornetqProps;
+    private ClientInfo clientInfo;
 
     private XtceDb mdb;
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
@@ -82,6 +84,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 // time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
                     fetchInitialMdbAsync();
+                    webSocketClient.addClientInfoListener(clientInfo -> this.clientInfo = clientInfo);
                     webSocketClient.connect();
                 }
             }
@@ -99,6 +102,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public YamcsConnectData getHornetqConnectionProperties() {
         return hornetqProps;
+    }
+
+    public ClientInfo getClientInfo() {
+        return clientInfo;
     }
 
     public String getInstance() {

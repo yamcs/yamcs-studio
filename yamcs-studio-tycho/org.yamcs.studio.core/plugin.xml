@@ -476,14 +476,17 @@
            built-in perspective-switcher-bar) -->
       <!-- TODO rewrite this to use only one command, with a default checked radio state -->
       <menuContribution
-            locationURI="menu:window?before=views">
+            locationURI="menu:window?after=additions">
+       	 <separator
+       	       name="perspectives"
+       	       visible="true"/>
        	 <command
                commandId="org.eclipse.ui.perspectives.showPerspective"
                icon="platform:/plugin/org.yamcs.studio.core/icons/css16.png"
                label="Yamcs Dashboard"
                style="radio">
             <parameter
-                 name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                  name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
                   value="org.yamcs.studio.core.application.YamcsPerspective"/>
             <parameter
                   name="org.eclipse.ui.perspectives.showPerspective.newWindow"

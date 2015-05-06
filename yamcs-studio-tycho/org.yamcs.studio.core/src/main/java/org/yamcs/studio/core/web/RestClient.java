@@ -39,6 +39,7 @@ import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestSendCommandResponse;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
+import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 
 import com.google.protobuf.MessageLite;
 
@@ -79,6 +80,10 @@ public class RestClient {
 
     public void setParameters(ParameterData request, ResponseHandler responseHandler) {
         post("/api/parameter/_set", request, null, responseHandler);
+    }
+
+    public void createProcessorRequest(ProcessorManagementRequest request, ResponseHandler responseHandler) {
+        post("/api/management/processor", request, null, responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
