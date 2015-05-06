@@ -1,58 +1,66 @@
 package org.yamcs.studio.core.archive;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
+import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.utils.TimeEncoding;
 
-public class CustomizeRangeDialog extends TitleAreaDialog {
+public class CreateReplayDialog extends TitleAreaDialog {
+
+    private Text name;
+    private String nameValue = "replay";
 
     private DateTime startDate;
     private DateTime startTime;
     private Calendar startTimeValue;
-    private Button startClosed;
 
     private DateTime stopDate;
     private DateTime stopTime;
     private Calendar stopTimeValue;
-    private Button stopClosed;
 
-    private boolean startClosedValue;
-    private boolean stopClosedValue;
+    private TableViewer packetsTable;
+    private List<String> packetsValue;
 
-    public CustomizeRangeDialog(Shell parentShell) {
+    public CreateReplayDialog(Shell parentShell) {
         super(parentShell);
     }
 
     @Override
     public void create() {
         super.create();
-        setTitle("Load archive data");
+        setTitle("Start a new replay");
+        setMessage("Replays can be joined by other users", IMessageProvider.INFORMATION);
     }
 
     private void validate() {
         String errorMessage = null;
-        if (!startClosed.getSelection() && !stopClosed.getSelection()) {
-            errorMessage = "At least one of start or stop has to be specified";
-        } else if (startClosed.getSelection() && stopClosed.getSelection()) {
-            Calendar start = CustomizeRangeDialog.toCalendar(startDate, startTime);
-            Calendar stop = CustomizeRangeDialog.toCalendar(stopDate, stopTime);
-            if (start.after(stop)) {
-                errorMessage = "Stop has to be greater than start";
-            }
-        }
+        Calendar start = CreateReplayDialog.toCalendar(startDate, startTime);
+        Calendar stop = CreateReplayDialog.toCalendar(stopDate, stopTime);
+        if (start.after(stop))
+            errorMessage = "Stop has to be greater than start";
 
         setErrorMessage(errorMessage);
         getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
@@ -70,23 +78,14 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         layout.verticalSpacing = 2;
         container.setLayout(layout);
 
-        Composite startLabelWrapper = new Composite(container, SWT.NONE);
-        GridLayout gl = new GridLayout(2, false);
-        gl.marginHeight = 0;
-        gl.marginWidth = 0;
-        startLabelWrapper.setLayout(gl);
-        Label lbl = new Label(startLabelWrapper, SWT.NONE);
-        lbl.setText("Start");
-        startClosed = new Button(startLabelWrapper, SWT.CHECK | SWT.NONE);
-        startClosed.addListener(SWT.Selection, e -> {
-            startDate.setVisible(startClosed.getSelection());
-            startTime.setVisible(startClosed.getSelection());
-            validate();
-        });
-        startClosed.setSelection(startClosedValue);
-        startDate.setVisible(startClosedValue);
-        startTime.setVisible(startClosedValue);
+        Label lbl = new Label(container, SWT.NONE);
+        lbl.setText("Name");
+        name = new Text(container, SWT.BORDER);
+        name.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        name.setText(nameValue);
 
+        lbl = new Label(container, SWT.NONE);
+        lbl.setText("Start");
         Composite startComposite = new Composite(container, SWT.NONE);
         RowLayout rl = new RowLayout();
         rl.marginLeft = 0;
@@ -103,23 +102,8 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
             startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
         }
 
-        Composite stopLabelWrapper = new Composite(container, SWT.NONE);
-        gl = new GridLayout(2, false);
-        gl.marginHeight = 0;
-        gl.marginWidth = 0;
-        stopLabelWrapper.setLayout(gl);
-        lbl = new Label(stopLabelWrapper, SWT.NONE);
+        lbl = new Label(container, SWT.NONE);
         lbl.setText("Stop");
-        stopClosed = new Button(stopLabelWrapper, SWT.CHECK | SWT.NONE);
-        stopClosed.addListener(SWT.Selection, e -> {
-            stopDate.setVisible(stopClosed.getSelection());
-            stopTime.setVisible(stopClosed.getSelection());
-            validate();
-        });
-        stopClosed.setSelection(stopClosedValue);
-        stopDate.setVisible(stopClosedValue);
-        stopTime.setVisible(stopClosedValue);
-
         Composite stopComposite = new Composite(container, SWT.NONE);
         rl = new RowLayout();
         rl.marginLeft = 0;
@@ -137,6 +121,41 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
             stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE), stopTimeValue.get(Calendar.SECOND));
         }
 
+        lbl = new Label(container, SWT.NONE);
+        lbl.setText("Packets");
+        GridData gd = new GridData();
+        gd.verticalAlignment = SWT.TOP;
+        lbl.setLayoutData(gd);
+
+        Composite tableWrapper = new Composite(container, SWT.NONE);
+        TableColumnLayout tcl = new TableColumnLayout();
+        tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        tableWrapper.setLayout(tcl);
+
+        packetsTable = new TableViewer(tableWrapper, SWT.CHECK | SWT.V_SCROLL | SWT.SINGLE | SWT.BORDER);
+        packetsTable.getTable().setHeaderVisible(false);
+        packetsTable.getTable().setLinesVisible(true);
+
+        TableViewerColumn nameColumn = new TableViewerColumn(packetsTable, SWT.NONE);
+        nameColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return (String) element;
+            }
+        });
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
+
+        packetsTable.setContentProvider(ArrayContentProvider.getInstance());
+        gd = new GridData();
+        gd.heightHint = 5 * packetsTable.getTable().getItemHeight();
+        packetsTable.getTable().setLayoutData(gd);
+        packetsTable.setInput(packetsValue);
+        for (TableItem item : packetsTable.getTable().getItems())
+            item.setChecked(true);
+
+        lbl = new Label(container, SWT.NONE);
+        lbl.setText("Speed");
+
         return container;
     }
 
@@ -151,50 +170,36 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
     }
 
     /**
-     * Save our stuff, because everything is gonna get disposed
+     * Save our stuff, because everything is gonna get disposed.
      */
     @Override
     protected void okPressed() {
-        startTimeValue = (startClosed.getSelection()) ? toCalendar(startDate, startTime) : null;
-        startClosedValue = startClosed.getSelection();
-        stopTimeValue = (stopClosed.getSelection()) ? toCalendar(stopDate, stopTime) : null;
-        stopClosedValue = stopClosed.getSelection();
+        nameValue = name.getText();
+        startTimeValue = toCalendar(startDate, startTime);
+        stopTimeValue = toCalendar(stopDate, stopTime);
         super.okPressed();
     }
 
-    public void setInitialRange(TimeInterval range) {
-        startClosedValue = range.hasStart();
-        stopClosedValue = range.hasStop();
-        setStartTime(range.calculateStart());
-        setStopTime(range.calculateStop());
+    public String getName() {
+        return nameValue;
     }
 
-    private void setStartTime(long startTime) {
-        startTimeValue = TimeEncoding.toCalendar(startTime);
-        if (startTimeValue != null)
-            startTimeValue.setTimeZone(TimeZone.getTimeZone("UTC"));
+    public void initialize(TimeInterval interval, List<String> packets) {
+        startTimeValue = TimeEncoding.toCalendar(interval.calculateStart());
+        startTimeValue.setTimeZone(TimeZone.getTimeZone("UTC"));
+        stopTimeValue = TimeEncoding.toCalendar(interval.calculateStop());
+        stopTimeValue.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        packetsValue = packets;
     }
 
-    private void setStopTime(long stopTime) {
-        stopTimeValue = TimeEncoding.toCalendar(stopTime);
-        if (stopTimeValue != null)
-            stopTimeValue.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
-
-    public boolean hasStartTime() {
-        return startClosedValue;
-    }
-
-    public boolean hasStopTime() {
-        return stopClosedValue;
-    }
-
-    public long getStartTime() {
-        return TimeEncoding.fromCalendar(startTimeValue);
-    }
-
-    public long getStopTime() {
-        return TimeEncoding.fromCalendar(stopTimeValue);
+    public ProcessorManagementRequest toProcessorManagementRequest() {
+        return ProcessorManagementRequest.newBuilder()
+                .setOperation(ProcessorManagementRequest.Operation.CREATE_PROCESSOR)
+                .setInstance(YamcsPlugin.getDefault().getInstance())
+                .setName(nameValue)
+                .setType("Archive")
+                .build();
     }
 
     @Override

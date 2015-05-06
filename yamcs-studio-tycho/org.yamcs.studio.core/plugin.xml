@@ -215,6 +215,11 @@
       </command>
       <command
             categoryId="org.csstudio"
+            id="org.yamcs.studio.core.archive.createReplayCommand"
+            name="Create Replay">
+      </command>
+      <command
+            categoryId="org.csstudio"
             id="org.yamcs.studio.core.eventlog.clearCommand"
             name="Clear Log View">
       </command>
@@ -273,6 +278,16 @@
       <handler
             class="org.yamcs.studio.core.archive.TagHandler"
             commandId="org.yamcs.studio.core.archive.tagCommand">
+         <activeWhen>
+            <with
+                  variable="org.yamcs.studio.core.archive.state.tagEnabled">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.archive.CreateReplayHandler"
+            commandId="org.yamcs.studio.core.archive.createReplayCommand">
          <activeWhen>
             <with
                   variable="org.yamcs.studio.core.archive.state.tagEnabled">
@@ -538,18 +553,18 @@
          <command
                commandId="org.yamcs.studio.core.archive.zoomClearCommand"
                icon="icons/zoom_clear.png"
-               label="Zoom all the way out"
+               label="Zoom Out Completely"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.core.archive.tagCommand"
                icon="icons/tag.gif"
-               label="Annotate the selected range"
+               label="Annotate Selected Range"
                style="push"/>
          <command
-               commandId="org.yamcs.studio.core.archive.tagCommand"
+               commandId="org.yamcs.studio.core.archive.createReplayCommand"
                icon="icons/replay.png"
-               label="Replay"
+               label="Replay Selected Range"
                style="push"/>
       </menuContribution>
 

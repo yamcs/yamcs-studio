@@ -101,6 +101,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return hornetqProps;
     }
 
+    public String getInstance() {
+        return YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
+    }
+
     /**
      * Returns the MDB namespace as defined in the user preferences.
      */
@@ -121,9 +125,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                     RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
                     Display.getDefault().asyncExec(() -> {
                         parameters = response.getParametersList();
-                        for (MDBContextListener l : mdbListeners) {
-                            l.onParametersChanged(parameters);
-                        }
+                        mdbListeners.forEach(l -> l.onParametersChanged(parameters));
                         parametersLoaded.countDown();
                     });
                 }
@@ -149,9 +151,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                         Display.getDefault().asyncExec(() -> {
                             mdb = newMdb;
                             commands = mdb.getMetaCommands();
-                            for (MDBContextListener l : mdbListeners) {
-                                l.onCommandsChanged(commands);
-                            }
+                            mdbListeners.forEach(l -> l.onCommandsChanged(commands));
                             commandsLoaded.countDown();
                         });
                     } catch (IOException | ClassNotFoundException e) {
