@@ -64,6 +64,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             tableViewer.getTable().setRedraw(false);
             Collection<Event> events = eventsBySequenceNumber.values();
             tableViewer.remove(events.toArray());
+            eventsBySequenceNumber.clear();
             tableViewer.getTable().setRedraw(true);
         });
     }
