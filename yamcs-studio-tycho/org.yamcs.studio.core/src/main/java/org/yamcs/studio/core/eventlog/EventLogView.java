@@ -61,9 +61,7 @@ public class EventLogView extends ViewPart {
     }
 
     public void clear() {
-        tableViewer.getTable().setRedraw(false);
-        tableViewer.getTable().clearAll();
-        tableViewer.getTable().setRedraw(true);
+        tableContentProvider.clearAll();
     }
 
     private void addFixedColumns() {

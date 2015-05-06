@@ -1,6 +1,7 @@
 package org.yamcs.studio.core.eventlog;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.yamcs.protobuf.Yamcs.Event;
 
 public class EventLogContentProvider implements IStructuredContentProvider {
@@ -54,5 +56,15 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
         events.removeAll(needsUpdating);
         tableViewer.add(events.toArray());
+    }
+
+    public void clearAll() {
+        // TODO not sure if this is the recommended way to delete all. Need to verify
+        BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
+            tableViewer.getTable().setRedraw(false);
+            Collection<Event> events = eventsBySequenceNumber.values();
+            tableViewer.remove(events.toArray());
+            tableViewer.getTable().setRedraw(true);
+        });
     }
 }
