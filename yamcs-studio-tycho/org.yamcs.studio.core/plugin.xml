@@ -516,6 +516,9 @@
                   name="org.eclipse.ui.perspectives.showPerspective.newWindow"
                   value="true"/>
          </command>
+       	 <separator
+       	       name="perspectivesEnd"
+       	       visible="true"/>
       </menuContribution>
       
       <!-- Add icon to the Telecommanding view toolbar -->
