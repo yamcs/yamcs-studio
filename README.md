@@ -5,6 +5,7 @@ Yamcs Studio is a version of CS-Studio packaged and configured to suit [Yamcs â€
 * Data source definition for connecting to the Yamcs Mission Control System. This enables subscribing to realtime or replayed telemetry data
 * Autocompletion on parameter names
 * Browsing the Yamcs Archive
+* Viewing the Yamcs Event Log
 * Basic support for sending telecommands to Yamcs Server
 
 
