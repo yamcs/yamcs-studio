@@ -335,6 +335,8 @@
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
          <hiddenToolBarItem id="org.csstudio.diag.pvmanager.probe.OpenProbe"/>
          <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>
+         <!-- Try to avoid confusion, perspectives already will open new windows -->
+         <hiddenMenuItem id="org.eclipse.ui.window.newWindow"/>
       </perspectiveExtension>
       
       <!-- Yamcs Perspective (might get rid of this eventually) -->
@@ -462,38 +464,43 @@
            built-in perspective-switcher-bar) -->
       <!-- TODO rewrite this to use only one command, with a default checked radio state -->
       <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu">
-         <menu
-               id="org.yamcs.studio.ui.perspectiveMenu"
-               label="Perspective">
-           	<command
-                  commandId="org.eclipse.ui.perspectives.showPerspective"
-                  icon="platform:/plugin/org.yamcs.studio.core/icons/css16.png"
-                  label="Yamcs Dashboard"
-                  style="radio">
-               <parameter
-                     name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                     value="org.yamcs.studio.core.application.YamcsPerspective"/>
-            </command>
-            <command
-                  commandId="org.eclipse.ui.perspectives.showPerspective"
-                  icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIBuilder.png"
-                  label="OPI Editor"
-                  style="radio">
-               <parameter
-                     name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                     value="org.csstudio.opibuilder.opieditor"/>
-            </command>
-            <command
-                  commandId="org.eclipse.ui.perspectives.showPerspective"
-                  icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIRunner.png"
-                  label="OPI Runtime"
-                  style="radio">
-               <parameter
-                     name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                     value="org.csstudio.opibuilder.OPIRuntime.perspective"/>
-            </command>
-         </menu>
+            locationURI="menu:window?before=views">
+       	 <command
+               commandId="org.eclipse.ui.perspectives.showPerspective"
+               icon="platform:/plugin/org.yamcs.studio.core/icons/css16.png"
+               label="Yamcs Dashboard"
+               style="radio">
+            <parameter
+                 name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                  value="org.yamcs.studio.core.application.YamcsPerspective"/>
+            <parameter
+                  name="org.eclipse.ui.perspectives.showPerspective.newWindow"
+                  value="true"/>
+         </command>
+         <command
+               commandId="org.eclipse.ui.perspectives.showPerspective"
+               icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIBuilder.png"
+               label="OPI Editor"
+               style="radio">
+            <parameter
+                  name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                  value="org.csstudio.opibuilder.opieditor"/>
+            <parameter
+                  name="org.eclipse.ui.perspectives.showPerspective.newWindow"
+                  value="true"/>
+         </command>
+         <command
+               commandId="org.eclipse.ui.perspectives.showPerspective"
+               icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIRunner.png"
+               label="OPI Runtime"
+               style="radio">
+            <parameter
+                  name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
+                  value="org.csstudio.opibuilder.OPIRuntime.perspective"/>
+            <parameter
+                  name="org.eclipse.ui.perspectives.showPerspective.newWindow"
+                  value="true"/>
+         </command>
       </menuContribution>
       
       <!-- Add icon to the Telecommanding view toolbar -->
