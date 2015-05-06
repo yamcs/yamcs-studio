@@ -335,8 +335,10 @@
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
          <hiddenToolBarItem id="org.csstudio.diag.pvmanager.probe.OpenProbe"/>
          <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>
-         <!-- Try to avoid confusion, perspectives already will open new windows -->
-         <hiddenMenuItem id="org.eclipse.ui.window.newWindow"/>
+         <!-- Try to avoid confusion, perspectives already will open new windows
+              Currently commented out because this seemed to be the culprit of sporadic
+              full-shutdowns with core dump while mousing through menus -->
+         <!--hiddenMenuItem id="org.eclipse.ui.window.newWindow"/-->
       </perspectiveExtension>
       
       <!-- Yamcs Perspective (might get rid of this eventually) -->
