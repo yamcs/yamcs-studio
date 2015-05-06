@@ -3,7 +3,7 @@
   <children xsi:type="basic:TrimmedWindow" xmi:id="IDEWindow" elementId="IDEWindow" width="1024" height="768">
     <trimBars xmi:id="_RjwO0O8KEeS326vRcvfizg" elementId="org.yamcs.studio.core.trimbar.0" toBeRendered="false" visible="false" side="Bottom"/>
     <trimBars xmi:id="_sInegO8TEeS326vRcvfizg" elementId="org.eclipse.ui.main.toolbar">
-      <children xsi:type="menu:ToolControl" xmi:id="_cbV34O8UEeS326vRcvfizg" elementId="org.yamcs.studio.core.toolcontrol.1" accessibilityPhrase="" contributionURI="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.ui.TopItem"/>
+      <children xsi:type="menu:ToolControl" xmi:id="_cbV34O8UEeS326vRcvfizg" elementId="org.yamcs.studio.core.toolcontrol.1" toBeRendered="false" visible="false" accessibilityPhrase="" contributionURI="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.ui.TopItem"/>
       <children xsi:type="menu:ToolControl" xmi:id="_xNy9sO8VEeS326vRcvfizg" elementId="org.yamcs.studio.core.toolcontrol.2" toBeRendered="false" visible="false" contributionURI="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.ui.SpacerControl">
         <tags>stretch</tags>
       </children>

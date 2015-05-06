@@ -325,11 +325,6 @@
             icon="icons/tc.png"
             id="org.yamcs.studio.core.commanding.TelecommandView"
             name="Telecommanding"/>
-      <view
-            category="org.csstudio"
-            class="org.yamcs.studio.core.ui.TopView"
-            id="org.yamcs.studio.core.ui.TopView"
-            name="Replay Control"/>
    </extension>
 
    <extension
