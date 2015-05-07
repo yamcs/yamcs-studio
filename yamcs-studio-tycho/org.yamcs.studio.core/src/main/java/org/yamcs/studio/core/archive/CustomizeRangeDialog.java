@@ -84,8 +84,6 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
             validate();
         });
         startClosed.setSelection(startClosedValue);
-        startDate.setVisible(startClosedValue);
-        startTime.setVisible(startClosedValue);
 
         Composite startComposite = new Composite(container, SWT.NONE);
         RowLayout rl = new RowLayout();
@@ -102,6 +100,8 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
             startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
             startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
         }
+        startDate.setVisible(startClosedValue);
+        startTime.setVisible(startClosedValue);
 
         Composite stopLabelWrapper = new Composite(container, SWT.NONE);
         gl = new GridLayout(2, false);
@@ -117,8 +117,6 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
             validate();
         });
         stopClosed.setSelection(stopClosedValue);
-        stopDate.setVisible(stopClosedValue);
-        stopTime.setVisible(stopClosedValue);
 
         Composite stopComposite = new Composite(container, SWT.NONE);
         rl = new RowLayout();
@@ -136,6 +134,8 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
             stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH), stopTimeValue.get(Calendar.DAY_OF_MONTH));
             stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE), stopTimeValue.get(Calendar.SECOND));
         }
+        stopDate.setVisible(stopClosedValue);
+        stopTime.setVisible(stopClosedValue);
 
         return container;
     }
