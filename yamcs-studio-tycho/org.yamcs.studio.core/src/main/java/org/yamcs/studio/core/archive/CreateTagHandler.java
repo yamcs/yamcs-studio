@@ -11,7 +11,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 /**
  * Handels the enabled state for the tag command
  */
-public class TagHandler extends AbstractHandler {
+public class CreateTagHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {

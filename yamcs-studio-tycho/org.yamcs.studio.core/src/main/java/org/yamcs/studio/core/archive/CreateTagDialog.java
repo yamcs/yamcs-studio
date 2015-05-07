@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.utils.TimeEncoding;
 
-public class TagDialog extends TitleAreaDialog {
+public class CreateTagDialog extends TitleAreaDialog {
 
     private LocalResourceManager resourceManager;
     private Cursor handCursor;
@@ -53,7 +53,7 @@ public class TagDialog extends TitleAreaDialog {
     private Text description;
     private String descriptionValue = "";
 
-    public TagDialog(Shell parentShell) {
+    public CreateTagDialog(Shell parentShell) {
         super(parentShell);
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parentShell);
         handCursor = new Cursor(Display.getCurrent(), SWT.CURSOR_HAND);
@@ -71,8 +71,8 @@ public class TagDialog extends TitleAreaDialog {
         if (!startClosed.getSelection() && !stopClosed.getSelection()) {
             errorMessage = "At least one of start or stop has to be specified";
         } else if (startClosed.getSelection() && stopClosed.getSelection()) {
-            Calendar start = TagDialog.toCalendar(startDate, startTime);
-            Calendar stop = TagDialog.toCalendar(stopDate, stopTime);
+            Calendar start = CreateTagDialog.toCalendar(startDate, startTime);
+            Calendar stop = CreateTagDialog.toCalendar(stopDate, stopTime);
             if (start.after(stop)) {
                 errorMessage = "Stop has to be greater than start";
             }

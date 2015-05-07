@@ -64,15 +64,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
         TimeEncoding.setUp();
 
-        String yamcsHost = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
-        int yamcsPort = YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
-        String yamcsInstance = YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
+        // Enable all our clients
+        String yamcsHost = getHost();
+        int yamcsPort = getWebPort();
+        String yamcsInstance = getInstance();
         hornetqProps = new YamcsConnectData();
         hornetqProps.host = yamcsHost;
         hornetqProps.port = 5445;
         hornetqProps.instance = yamcsInstance;
 
+        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
         restClient = new RestClient(yprops);
         webSocketClient = new WebSocketRegistrar(yprops);
         addMdbListener(webSocketClient);
@@ -110,6 +111,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public String getInstance() {
         return YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
+    }
+
+    public String getHost() {
+        return YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
+    }
+
+    public int getWebPort() {
+        return YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
     }
 
     /**

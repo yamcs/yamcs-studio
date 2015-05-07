@@ -72,7 +72,7 @@
             class="org.yamcs.studio.core.application.YamcsPerspective"
             icon="icons/css16.png"
             id="org.yamcs.studio.core.application.YamcsPerspective"
-            name="Yamcs">
+            name="Yamcs Dashboard">
       </perspective>
    </extension>
    
@@ -276,8 +276,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.core.archive.TagHandler"
-            commandId="org.yamcs.studio.core.archive.tagCommand">
+            class="org.yamcs.studio.core.archive.CreateTagHandler"
+            commandId="org.yamcs.studio.core.archive.createTagCommand">
          <activeWhen>
             <with
                   variable="org.yamcs.studio.core.archive.state.tagEnabled">
@@ -558,7 +558,7 @@
                style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
          <command
-               commandId="org.yamcs.studio.core.archive.tagCommand"
+               commandId="org.yamcs.studio.core.archive.createTagCommand"
                icon="icons/tag.gif"
                label="Annotate Selected Range"
                style="push"/>
