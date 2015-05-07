@@ -3,9 +3,12 @@ package org.yamcs.studio.core.archive;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -20,18 +23,26 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
 import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
+import com.google.protobuf.MessageLite;
+
 public class CreateReplayDialog extends TitleAreaDialog {
+
+    private static final Logger log = Logger.getLogger(CreateReplayDialog.class.getName());
 
     private Text name;
     private String nameValue = "replay";
@@ -169,18 +180,36 @@ public class CreateReplayDialog extends TitleAreaDialog {
         return cal;
     }
 
-    /**
-     * Save our stuff, because everything is gonna get disposed.
-     */
     @Override
     protected void okPressed() {
-        nameValue = name.getText();
-        startTimeValue = toCalendar(startDate, startTime);
-        stopTimeValue = toCalendar(stopDate, stopTime);
-        for (TableItem item : packetsTable.getTable().getItems())
-            if (!item.getChecked())
-                packetsValue.remove(item.getText());
-        super.okPressed();
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+        ProcessorManagementRequest req = toProcessorManagementRequest();
+        RestClient restClient = YamcsPlugin.getDefault().getRestClient();
+        restClient.createProcessorRequest(req, new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                Display.getDefault().asyncExec(() -> {
+                    if (responseMsg instanceof RestExceptionMessage) {
+                        log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
+                        String type = ((RestExceptionMessage) responseMsg).getType();
+                        String msg = ((RestExceptionMessage) responseMsg).getMsg();
+                        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not create replay", type + "\n" + msg);
+                        getButton(IDialogConstants.OK_ID).setEnabled(true);
+                    } else {
+                        CreateReplayDialog.super.okPressed();
+                    }
+                });
+            }
+
+            @Override
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not create replay", e.getMessage());
+                    getButton(IDialogConstants.OK_ID).setEnabled(true);
+                });
+            }
+        });
     }
 
     public String getName() {
@@ -198,15 +227,18 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     public ProcessorManagementRequest toProcessorManagementRequest() {
         PacketReplayRequest.Builder prr = PacketReplayRequest.newBuilder();
-        packetsValue.forEach(s -> prr.addNameFilter(NamedObjectId.newBuilder().setNamespace("MDB:OPS Name").setName(s)));
+        for (TableItem item : packetsTable.getTable().getItems())
+            if (item.getChecked())
+                prr.addNameFilter(NamedObjectId.newBuilder().setNamespace("MDB:OPS Name").setName(item.getText()));
+
         ReplayRequest.Builder rr = ReplayRequest.newBuilder()
-                .setStart(TimeEncoding.fromCalendar(startTimeValue))
-                .setStop(TimeEncoding.fromCalendar(stopTimeValue))
+                .setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)))
+                .setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)))
                 .setPacketRequest(prr);
         return ProcessorManagementRequest.newBuilder()
                 .setOperation(ProcessorManagementRequest.Operation.CREATE_PROCESSOR)
                 .setInstance(YamcsPlugin.getDefault().getInstance())
-                .setName(nameValue)
+                .setName(name.getText())
                 .setType("Archive")
                 .setReplaySpec(rr)
                 .addClientId(YamcsPlugin.getDefault().getClientInfo().getId())
