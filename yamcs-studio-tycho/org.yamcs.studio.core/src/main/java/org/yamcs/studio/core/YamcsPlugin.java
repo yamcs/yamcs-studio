@@ -35,7 +35,7 @@ import com.google.protobuf.MessageLite;
 
 public class YamcsPlugin extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "org.csstudio.utility.platform.libs.yamcs";
+    public static final String PLUGIN_ID = "org.yamcs.studio.core";
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());
 
     // The shared instance
