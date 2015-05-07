@@ -23,13 +23,17 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.YamcsException;
 import org.yamcs.api.ConnectionListener;
+import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.YamcsConnector;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.utils.TimeEncoding;
 
-public class ArchiveView extends ViewPart implements ArchiveIndexListener, ConnectionListener {
+public class ArchiveView extends ViewPart implements StudioConnectionListener, ArchiveIndexListener, ConnectionListener {
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
@@ -39,6 +43,7 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
     @Override
     public void createPartControl(Composite parent) {
         createActions();
+
         yconnector = new YamcsConnector();
         indexReceiver = new YamcsArchiveIndexReceiver(yconnector);
 
@@ -59,7 +64,15 @@ public class ArchiveView extends ViewPart implements ArchiveIndexListener, Conne
 
         indexReceiver.setIndexListener(this);
         yconnector.addConnectionListener(this);
-        yconnector.connect(YamcsPlugin.getDefault().getHornetqConnectionProperties());
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    /**
+     * Called when we get green light from YamcsPlugin
+     */
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps) {
+        yconnector.connect(hornetqProps);
     }
 
     private void createActions() {

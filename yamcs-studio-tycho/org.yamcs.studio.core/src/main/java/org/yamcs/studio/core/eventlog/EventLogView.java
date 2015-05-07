@@ -18,12 +18,16 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.YamcsConnector;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.utils.TimeEncoding;
 
-public class EventLogView extends ViewPart {
+public class EventLogView extends ViewPart implements StudioConnectionListener {
 
     public static final String COL_SOURCE = "Source";
     public static final String COL_RECEIVED = "Received";
@@ -38,6 +42,8 @@ public class EventLogView extends ViewPart {
     private TableColumnLayout tcl;
 
     private EventLogContentProvider tableContentProvider;
+
+    private YamcsConnector yconnector;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -55,9 +61,17 @@ public class EventLogView extends ViewPart {
         tableViewerComparator = new EventLogViewerComparator();
         tableViewer.setComparator(tableViewerComparator);
 
-        YamcsConnector yconnector = new YamcsConnector();
+        yconnector = new YamcsConnector();
         new YamcsEventReceiver(yconnector, this);
-        yconnector.connect(YamcsPlugin.getDefault().getHornetqConnectionProperties());
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    /**
+     * Called when we get green light from YamcsPlugin
+     */
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps) {
+        yconnector.connect(hornetqProps);
     }
 
     public void clear() {
@@ -130,6 +144,8 @@ public class EventLogView extends ViewPart {
     @Override
     public void dispose() {
         super.dispose();
+        if (yconnector != null)
+            yconnector.disconnect();
     }
 
     public void addEvents(List<Event> events) {

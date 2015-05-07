@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,52 +44,52 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private RestClient restClient;
     private WebSocketRegistrar webSocketClient;
-    private YamcsConnectData hornetqProps;
-    private ClientInfo clientInfo;
 
-    private XtceDb mdb;
+    private ClientInfo clientInfo;
+    private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
+
+    // We should eventually refactor consumers of this into StudioConnectionListeners instead
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
+    private XtceDb mdb;
     private List<RestParameter> parameters = Collections.emptyList();
-    private CountDownLatch parametersLoaded = new CountDownLatch(1);
-
     private Collection<MetaCommand> commands = Collections.emptyList();
-    private CountDownLatch commandsLoaded = new CountDownLatch(1);
 
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-
         TimeEncoding.setUp();
 
-        // Enable all our clients
-        String yamcsHost = getHost();
-        int yamcsPort = getWebPort();
-        String yamcsInstance = getInstance();
-        hornetqProps = new YamcsConnectData();
-        hornetqProps.host = yamcsHost;
-        hornetqProps.port = 5445;
-        hornetqProps.instance = yamcsInstance;
-
-        YamcsConnectionProperties yprops = new YamcsConnectionProperties(yamcsHost, yamcsPort, yamcsInstance);
-        restClient = new RestClient(yprops);
-        webSocketClient = new WebSocketRegistrar(yprops);
+        YamcsConnectionProperties webProps = new YamcsConnectionProperties(getHost(), getWebPort(), getInstance());
+        restClient = new RestClient(webProps);
+        webSocketClient = new WebSocketRegistrar(webProps);
         addMdbListener(webSocketClient);
 
-        // Only load MDB once bundle has been fully started
+        // Only connect once bundle has been fully started
         bundleListener = event -> {
             if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STARTED) {
-                // Extra check, bundle may have been shut down between the
-                // time this event was queued and now
+                // Bundle may have been shut down between the time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
-                    fetchInitialMdbAsync();
-                    webSocketClient.addClientInfoListener(clientInfo -> this.clientInfo = clientInfo);
+                    // We use this one response as a signal, after which we start other clients as well
+                    webSocketClient.addClientInfoListener(clientInfo -> setupConnections(clientInfo));
                     webSocketClient.connect();
                 }
             }
         };
         context.addBundleListener(bundleListener);
+    }
+
+    // Likely not on the swt thread
+    private void setupConnections(ClientInfo clientInfo) {
+        log.fine(String.format("Got back clientInfo %s", clientInfo));
+        this.clientInfo = clientInfo;
+        loadParameters();
+        loadCommands();
+
+        studioConnectionListeners.forEach(l -> {
+            l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
+        });
     }
 
     public RestClient getRestClient() {
@@ -101,12 +100,20 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return webSocketClient;
     }
 
-    public YamcsConnectData getHornetqConnectionProperties() {
-        return hornetqProps;
-    }
-
     public ClientInfo getClientInfo() {
         return clientInfo;
+    }
+
+    private YamcsConnectionProperties getWebProperties() {
+        return new YamcsConnectionProperties(getHost(), getWebPort(), getInstance());
+    }
+
+    private YamcsConnectData getHornetqProperties() {
+        YamcsConnectData hornetqProps = new YamcsConnectData();
+        hornetqProps.host = getHost();
+        hornetqProps.port = 5445;
+        hornetqProps.instance = getInstance();
+        return hornetqProps;
     }
 
     public String getInstance() {
@@ -121,15 +128,12 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
     }
 
-    /**
-     * Returns the MDB namespace as defined in the user preferences.
-     */
     public String getMdbNamespace() {
         return YamcsPlugin.getDefault().getPreferenceStore().getString("mdb_namespace");
     }
 
-    private void fetchInitialMdbAsync() {
-        // Load list of parameters
+    private void loadParameters() {
+        log.fine("Fetching available parameters");
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
         req.addNamespaces(getMdbNamespace());
         restClient.listAvailableParameters(req.build(), new ResponseHandler() {
@@ -142,7 +146,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
                     Display.getDefault().asyncExec(() -> {
                         parameters = response.getParametersList();
                         mdbListeners.forEach(l -> l.onParametersChanged(parameters));
-                        parametersLoaded.countDown();
                     });
                 }
             }
@@ -152,8 +155,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
             }
         });
+    }
 
-        // Load commands
+    private void loadCommands() {
+        log.fine("Fetching available commands");
         RestDumpRawMdbRequest.Builder dumpRequest = RestDumpRawMdbRequest.newBuilder();
         restClient.dumpRawMdb(dumpRequest.build(), new ResponseHandler() {
             @Override
@@ -168,7 +173,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
                             mdb = newMdb;
                             commands = mdb.getMetaCommands();
                             mdbListeners.forEach(l -> l.onCommandsChanged(commands));
-                            commandsLoaded.countDown();
                         });
                     } catch (IOException | ClassNotFoundException e) {
                         log.log(Level.SEVERE, "Could not deserialize mdb", e);
@@ -183,6 +187,17 @@ public class YamcsPlugin extends AbstractUIPlugin {
         });
     }
 
+    public void addStudioConnectionListener(StudioConnectionListener listener) {
+        studioConnectionListeners.add(listener);
+        if (clientInfo != null)
+            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
+    }
+
+    /**
+     * Use addStudioConnectionListener instead, and fetch the mdb info from YamcsPlugin whenever the
+     * connection is established/changed.
+     */
+    @Deprecated
     public void addMdbListener(MDBContextListener listener) {
         mdbListeners.add(listener);
     }
@@ -193,6 +208,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             if (bundleListener != null)
                 context.removeBundleListener(bundleListener);
             plugin = null;
+            studioConnectionListeners.clear();
             mdbListeners.clear();
             restClient.shutdown();
             webSocketClient.shutdown();
@@ -205,9 +221,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return plugin;
     }
 
-    /**
-     * Return the available parameters
-     */
     public List<RestParameter> getParameters() {
         return parameters;
     }

@@ -71,7 +71,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onConnect() { // When the web socket was successfully established
-        log.info("Web socket established. Notifying listeners");
+        log.fine("WebSocket established. Notifying listeners");
         reportConnectionState();
         cmdhistListeners.forEach(l -> l.signalYamcsConnected());
         requestSender.start(); // Go over pending subscription requests
@@ -118,12 +118,12 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public synchronized void onParametersChanged(List<RestParameter> parameters) {
-        log.info("Refreshing all pv readers");
+        log.fine("Refreshing all pv readers");
         for (RestParameter p : parameters)
             availableParametersByName.put(p.getId().getName(), p);
         pvReadersByName.forEach((name, pvReader) -> {
             RestParameter parameter = availableParametersByName.get(name);
-            System.out.println("signaling " + name + ", " + parameter);
+            log.finer(String.format("Signaling %s --> %s", name, parameter));
             pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), parameter));
         });
     }

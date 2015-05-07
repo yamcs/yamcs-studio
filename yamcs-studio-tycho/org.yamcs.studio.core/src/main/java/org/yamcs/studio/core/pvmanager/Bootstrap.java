@@ -19,6 +19,6 @@ public class Bootstrap implements IStartup {
         for (String prefix : AutoCompleteHelper.retrievePVManagerSupported()) {
             msg.append(prefix + "://   ");
         }
-        log.info(msg.toString());
+        log.fine(msg.toString());
     }
 }
