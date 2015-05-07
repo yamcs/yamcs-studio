@@ -1,12 +1,15 @@
 package org.yamcs.studio.core.ui.prefs;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -60,9 +63,8 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
     @Override
     protected void checkState() {
         super.checkState();
-        if (!isValid()) {
+        if (!isValid())
             return;
-        }
         String yamcsHostText = yamcsHost.getStringValue();
         String yamcsInstanceText = yamcsInstance.getStringValue();
         if (!(yamcsHostText.trim().matches("[a-zA-Z\\-\\.0-9_]+")) || !(yamcsInstanceText.trim().matches("[a-zA-Z\\.\\-0-9_]+"))) {
@@ -89,8 +91,29 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
 
     @Override
     public boolean performOk() {
+        // Detect changes (there's probably a better way to do this)
+        YamcsPlugin plugin = YamcsPlugin.getDefault();
+        boolean changed = !yamcsHost.getStringValue().equals(plugin.getHost()) ||
+                yamcsPort.getIntValue() != plugin.getWebPort() ||
+                !yamcsInstance.getStringValue().equals(plugin.getInstance()) ||
+                !mdbNamespace.getStringValue().equals(plugin.getMdbNamespace());
+        // Save to store
         boolean ret = super.performOk();
-        // TODO replace yservice or do something smarter than that
+        // Hint that user should restart
+        if (changed)
+            askRestart();
         return ret;
+    }
+
+    /**
+     * Shows a dialog asking to restart workspace if pkg-config preferences have been changed.
+     */
+    private static void askRestart() {
+        MessageDialog dialog = new MessageDialog(null, "Restart workspace?", null, "Changes made to Yamcs" +
+                " preferences require a restart in order to take effect.\n\n" +
+                "Would you like to restart Yamcs Studio now?",
+                MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
+        if (dialog.open() == 0)
+            Display.getDefault().asyncExec(() -> PlatformUI.getWorkbench().restart());
     }
 }

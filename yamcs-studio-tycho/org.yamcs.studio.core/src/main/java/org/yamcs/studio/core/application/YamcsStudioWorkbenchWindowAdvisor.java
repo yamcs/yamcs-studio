@@ -20,7 +20,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         configurer.setInitialSize(new Point(1920, 1200));
         configurer.setShowPerspectiveBar(false);
-        configurer.setShowStatusLine(false); // Shouldn't do anything. Controlled through e4xmi
+        configurer.setShowStatusLine(false);
         setTitle(configurer, "Yamcs Studio");
     }
 
