@@ -144,7 +144,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onDisconnect() { // When the web socket connection state changed
-        log.info("Web socket disconnected. Notifying listeners");
+        log.fine("WebSocket disconnected. Notifying listeners");
         reportConnectionState();
         cmdhistListeners.forEach(l -> l.signalYamcsDisconnected());
     }

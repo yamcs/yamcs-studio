@@ -39,6 +39,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
     private void setTitle(IWorkbenchWindowConfigurer configurer, String label) {
         String host = YamcsPlugin.getDefault().getHost();
         String instance = YamcsPlugin.getDefault().getInstance();
-        configurer.setTitle(String.format("anonymous \u2022 %s \u2022 %s/%s", label, host, instance));
+        configurer.setTitle(String.format("%s \u2022 anonymous@%s/%s", label, host, instance));
     }
 }
