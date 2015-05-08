@@ -380,36 +380,39 @@
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               closeable="false"
+               visible="false"
+               closeable="true"
                id="org.yamcs.studio.core.archive.ArchiveView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               closeable="false"
+               visible="false"
+               closeable="true"
                id="org.yamcs.studio.core.eventlog.EventLogView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               closeable="false"
+               visible="false"
+               closeable="true"
                id="org.yamcs.studio.core.commanding.TelecommandView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.csstudio.diag.pvmanager.probe">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.csstudio.utility.sysmon.SysMonView">
          </view>
-         <!-- Add view shortcuts too, because even with the closeable="false",
-              it is still possible to close them (by first detaching them and
-              then closing the detached window. Boooo -->
+         <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.core.commanding.TelecommandView"/>
