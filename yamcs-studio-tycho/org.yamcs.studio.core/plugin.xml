@@ -214,6 +214,18 @@
             id="org.yamcs.studio.core.eventlog.clearCommand"
             name="Clear Log View">
       </command>
+      <command
+            defaultHandler="org.yamcs.studio.core.ui.OpenPerspectiveHandler"
+            id="org.yamcs.studio.core.ui.commands.openPerspectiveCommand"
+            name="Open Perspective">
+         <commandParameter
+               id="org.eclipse.ui.commands.radioStateParameter"
+               name="Perspective Parameter"
+               optional="false"/>
+         <state
+               class="org.eclipse.ui.handlers.RadioState:org.yamcs.studio.core.application.YamcsPerspective"
+               id="org.eclipse.ui.commands.radioState"/>
+      </command>
    </extension>
    
    <extension
@@ -468,50 +480,14 @@
       
       <!-- Add direct menu to switch perspectives (because we disable the horrible
            built-in perspective-switcher-bar) -->
-      <!-- TODO rewrite this to use only one command, with a default checked radio state -->
       <menuContribution
             locationURI="menu:window?after=additions">
        	 <separator
-       	       name="perspectives"
+       	       name="start-of-perspectives"
        	       visible="true"/>
-       	 <command
-               commandId="org.eclipse.ui.perspectives.showPerspective"
-               icon="platform:/plugin/org.yamcs.studio.core/icons/css16.png"
-               label="Yamcs Dashboard"
-               style="radio">
-            <parameter
-                  name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                  value="org.yamcs.studio.core.application.YamcsPerspective"/>
-            <parameter
-                  name="org.eclipse.ui.perspectives.showPerspective.newWindow"
-                  value="true"/>
-         </command>
-         <command
-               commandId="org.eclipse.ui.perspectives.showPerspective"
-               icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIBuilder.png"
-               label="OPI Editor"
-               style="radio">
-            <parameter
-                  name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                  value="org.csstudio.opibuilder.opieditor"/>
-            <parameter
-                  name="org.eclipse.ui.perspectives.showPerspective.newWindow"
-                  value="true"/>
-         </command>
-         <command
-               commandId="org.eclipse.ui.perspectives.showPerspective"
-               icon="platform:/plugin/org.csstudio.opibuilder/icons/OPIRunner.png"
-               label="OPI Runtime"
-               style="radio">
-            <parameter
-                  name="org.eclipse.ui.perspectives.showPerspective.perspectiveId"
-                  value="org.csstudio.opibuilder.OPIRuntime.perspective"/>
-            <parameter
-                  name="org.eclipse.ui.perspectives.showPerspective.newWindow"
-                  value="true"/>
-         </command>
+       	 <dynamic class="org.yamcs.studio.core.ui.PerspectiveItems"/>
        	 <separator
-       	       name="perspectivesEnd"
+       	       name="end-of-perspectives"
        	       visible="true"/>
       </menuContribution>
       
