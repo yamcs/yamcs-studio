@@ -193,11 +193,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
             listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
     }
 
-    /**
-     * Use addStudioConnectionListener instead, and fetch the mdb info from YamcsPlugin whenever the
-     * connection is established/changed.
-     */
-    @Deprecated
     public void addMdbListener(MDBContextListener listener) {
         mdbListeners.add(listener);
     }
