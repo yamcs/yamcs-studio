@@ -17,15 +17,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
+import org.yamcs.studio.core.application.IDs;
 
 public class PerspectiveItems extends CompoundContributionItem {
 
     public static final String OPEN_PERSPECTIVE_COMMAND = "org.yamcs.studio.core.ui.commands.openPerspectiveCommand";
-    private static final List<String> SUPPORTED_PERSPECTIVES = Arrays.asList(
-            "org.yamcs.studio.core.application.YamcsPerspective",
-            "org.csstudio.opibuilder.opieditor",
-            "org.csstudio.opibuilder.OPIRuntime.perspective"
-            );
+    private static final List<String> SUPPORTED_PERSPECTIVES = Arrays.asList(IDs.OPI_EDITOR_PERSPECTIVE, IDs.OPI_RUNTIME_PERSPECTIVE);
 
     @Override
     public IContributionItem[] getContributionItems() {

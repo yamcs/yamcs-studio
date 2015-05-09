@@ -64,16 +64,6 @@
    </extension>
    
    <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.yamcs.studio.core.application.YamcsPerspective"
-            icon="icons/css16.png"
-            id="org.yamcs.studio.core.application.YamcsPerspective"
-            name="Yamcs Dashboard">
-      </perspective>
-   </extension>
-   
-   <extension
          id="postfragmentmodelprocessor"
          point="org.eclipse.e4.workbench.model">
       <processor
@@ -354,28 +344,6 @@
          <!--hiddenMenuItem id="org.eclipse.ui.window.newWindow"/-->
       </perspectiveExtension>
       
-      <!-- Yamcs Perspective (might get rid of this eventually) -->
-      <perspectiveExtension targetID="org.yamcs.studio.core.application.YamcsPerspective">
-         <!-- Remove stuff that has to with files/selections -->
-         <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
-         <hiddenMenuItem id="org.csstudio.opibuilder.topfiles"/>
-         <hiddenMenuItem id="org.eclipse.ui.edit.text.openLocalFile"/>
-         <hiddenMenuItem id="org.eclipse.ui.newWizard"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.close"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.closeAll"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.save"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.saveAll"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.saveAs"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.import"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.export"/>
-         <hiddenMenuItem id="org.eclipse.ui.edit.findReplace"/>
-         <hiddenMenuItem id="org.eclipse.search.menu"/>
-         <!-- Trying to keep this perspective editor-free -->
-         <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
-         <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
-         <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
-      </perspectiveExtension>
-      
       <!-- OPI Runtime Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
          <!-- Probably doesn't make sense in runtime perspective -->
@@ -392,21 +360,21 @@
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.core.archive.ArchiveView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.core.eventlog.EventLogView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.core.commanding.TelecommandView">
          </view>

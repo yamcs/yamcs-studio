@@ -75,10 +75,8 @@ public class ProcessorInfo extends WorkbenchWindowControlContribution implements
 
     @Override
     public void onProcessorSwitch(String processorName) {
-        System.out.println("called with " + processorName);
         Display.getDefault().asyncExec(() -> {
             this.processorName = processorName;
-            top.layout();
             processor.redraw();
         });
     }
