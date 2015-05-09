@@ -478,6 +478,16 @@
          <toolbar id="additions"/>
       </menuContribution>
       
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?before=file">
+         <toolbar
+               id="org.yamcs.studio.core.ui.topbar">
+            <control
+                  class="org.yamcs.studio.core.ui.ProcessorInfo">
+            </control>
+         </toolbar>
+      </menuContribution>
+      
       <!-- Add direct menu to switch perspectives (because we disable the horrible
            built-in perspective-switcher-bar) -->
       <menuContribution
@@ -547,6 +557,7 @@
                icon="icons/clear.gif"
                label="Clear Log View"
                style="push"/>
+         <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
       </menuContribution>
    </extension>
    

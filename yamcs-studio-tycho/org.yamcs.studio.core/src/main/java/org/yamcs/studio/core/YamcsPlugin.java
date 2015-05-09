@@ -47,8 +47,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private ClientInfo clientInfo;
     private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
-
-    // We should eventually refactor consumers of this into StudioConnectionListeners instead
+    private Set<ProcessorListener> processorListeners = new HashSet<>();
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
     private XtceDb mdb;
@@ -90,6 +89,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         studioConnectionListeners.forEach(l -> {
             l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
         });
+        processorListeners.forEach(l -> l.onProcessorSwitch(clientInfo.getProcessorName()));
     }
 
     public RestClient getRestClient() {
@@ -193,6 +193,12 @@ public class YamcsPlugin extends AbstractUIPlugin {
             listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
     }
 
+    public void addProcessorListener(ProcessorListener listener) {
+        processorListeners.add(listener);
+        if (clientInfo != null)
+            listener.onProcessorSwitch(clientInfo.getProcessorName());
+    }
+
     public void addMdbListener(MDBContextListener listener) {
         mdbListeners.add(listener);
     }
@@ -204,6 +210,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 context.removeBundleListener(bundleListener);
             plugin = null;
             studioConnectionListeners.clear();
+            processorListeners.clear();
             mdbListeners.clear();
             restClient.shutdown();
             webSocketClient.shutdown();
