@@ -23,8 +23,8 @@
                name="lifeCycleURI"
                value="bundleclass://org.yamcs.studio.core/org.yamcs.studio.core.application.LifeCycleManager"/>
          <property
-               name="cssTheme"
-               value="org.eclipse.e4.ui.css.theme.e4_default"/>
+               name="applicationCSS"
+               value="platform:/plugin/org.yamcs.studio.core/css/default.css"/>
          <property
                name="applicationCSSResources"
                value="platform:/plugin/org.eclipse.platform/images/"/>
