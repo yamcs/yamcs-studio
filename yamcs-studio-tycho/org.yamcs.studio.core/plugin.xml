@@ -444,13 +444,12 @@
       <!-- Redefines the actionSet from the opibuilder plugin, so that we can customize it a bit -->
       <actionSet
             id="org.yamcs.studio.opibuilder.actionSet"
-            label="Display Actions"
+            label="Bookmark Actions"
             visible="true">
          <action
                class="org.yamcs.studio.core.actions.OpenFavouritesAction"
-               icon="icons/favourites.gif"
                id="org.csstudio.opibuilder.openTopFileAction"
-               label="Bookmarks"
+               label="&#9733; Bookmarks"
                pulldown="true"
                style="pulldown"
                toolbarPath="Normal/additions"
@@ -560,6 +559,58 @@
                label="Clear Log View"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
+      </menuContribution>
+      
+      <!-- Augment the main toolbar -->
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.yamcs.studio.toolbar">
+             <command
+                   commandId="org.yamcs.studio.core.processor.spacer"
+                   icon="icons/spacer40x32.png"
+                   tooltip=""
+                   id="org.yamcs.studio.toolbar.spacer40x32">
+             </command>
+             <command
+                   commandId="org.yamcs.studio.core.processor.firstCommand"
+                   icon="icons/first.png"
+                   id="org.yamcs.studio.toolbar.stepFirstProcessor"
+                   tooltip="Step to First Update">
+             </command>
+             <command
+                   commandId="org.yamcs.studio.core.processor.reverseCommand"
+                   icon="icons/reverse.png"
+                   id="org.yamcs.studio.toolbar.reverseProcessor"
+                   tooltip="Step to Previous Update">
+             </command>
+             <command
+                   commandId="org.yamcs.studio.core.processor.pauseCommand"
+                   icon="icons/pause.png"
+                   id="org.yamcs.studio.toolbar.pauseProcessor"
+                   tooltip="Pause Processing">
+             </command>
+             <command
+                   commandId="org.yamcs.studio.core.processor.forwardCommand"
+                   icon="icons/forward.png"
+                   id="org.yamcs.studio.toolbar.forwardProcessor"
+                   tooltip="Step to Next Update">
+             </command>
+             <command
+                   commandId="org.yamcs.studio.core.processor.lastCommand"
+                   icon="icons/last.png"
+                   id="org.yamcs.studio.toolbar.stepLastProcessor"
+                   tooltip="Step to Last Update">
+             </command>
+             <command
+                   commandId="org.yamcs.studio.core.processor.spacer"
+                   icon="icons/spacer40x32.png"
+                   tooltip=""
+                   id="org.yamcs.studio.toolbar.spacer40x32">
+             </command>
+             <control class="org.yamcs.studio.core.ui.TimeInfo"/>
+         </toolbar>
       </menuContribution>
    </extension>
    
