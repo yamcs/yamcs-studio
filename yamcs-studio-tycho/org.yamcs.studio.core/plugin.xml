@@ -292,6 +292,10 @@
             class="org.yamcs.studio.core.eventlog.ClearHandler"
             commandId="org.yamcs.studio.core.eventlog.clearCommand">
       </handler>
+      <handler
+            class="org.yamcs.studio.core.processor.PauseHandler"
+            commandId="org.yamcs.studio.core.processor.pauseCommand">
+      </handler>
    </extension>
    
    <extension

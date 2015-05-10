@@ -185,7 +185,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
         ProcessorManagementRequest req = toProcessorManagementRequest();
         RestClient restClient = YamcsPlugin.getDefault().getRestClient();
-        restClient.createProcessorRequest(req, new ResponseHandler() {
+        restClient.createProcessorManagementRequest(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {
