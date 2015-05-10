@@ -1,6 +1,8 @@
 package org.yamcs.studio.core.ui;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -14,13 +16,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
-/**
- * TODO on-click should change time format to ordinal or some such and should be stored for next
- * workbench run.
- */
 public class TimeInfo extends WorkbenchWindowControlContribution {
 
     private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+
+    private SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+    private SimpleDateFormat format2 = new SimpleDateFormat("yyyy-DD HH:mm:ss", Locale.US);
+    private SimpleDateFormat format = format1; // TODO load from some pref store
 
     @Override
     protected Control createControl(Composite parent) {
@@ -36,7 +38,7 @@ public class TimeInfo extends WorkbenchWindowControlContribution {
             GC gc = evt.gc;
             int text_y = (time.getBounds().height - gc.getFontMetrics().getHeight()) / 2;
             gc.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY));
-            gc.drawText("" + new Date(), 0, text_y);
+            gc.drawText(format.format(new Date()), 0, text_y, true);
         });
 
         GridData gd = new GridData(GridData.FILL_VERTICAL);
@@ -45,9 +47,16 @@ public class TimeInfo extends WorkbenchWindowControlContribution {
 
         exec.scheduleAtFixedRate(() -> {
             parent.getDisplay().asyncExec(() -> {
-                time.redraw();
+                if (!time.isDisposed())
+                    time.redraw();
             });
         }, 500, 500, TimeUnit.MILLISECONDS);
+
+        time.addListener(SWT.MouseDown, l -> {
+            format = (format == format1) ? format2 : format1;
+            if (!time.isDisposed())
+                time.redraw();
+        });
 
         return top;
     }

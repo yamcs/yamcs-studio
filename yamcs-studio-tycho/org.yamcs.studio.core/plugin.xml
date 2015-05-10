@@ -333,11 +333,15 @@
          <!-- This is only marginally useful and can be done by other means (ctrl-f / ctrl-h) -->
          <hiddenMenuItem id="textSearchSubMenu"/>
          <hiddenMenuItem id="org.eclipse.search.ui.openFileSearchPage"/>
+         <!-- Already accessible from toolbar in Runtime perspective -->
+         <hiddenMenuItem id="org.csstudio.opibuilder.topfiles"/>
          <!-- Already in menu which seems enough for this type of stuff -->
          <hiddenToolBarItem id="org.csstudio.security.login"/>
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
          <hiddenToolBarItem id="org.csstudio.diag.pvmanager.probe.OpenProbe"/>
          <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>
+         <!-- Looks weird with the '...' in the label. Want to replace to sth in file-menu instead, like eclipse -->
+         <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
          <!-- Try to avoid confusion, perspectives already will open new windows
               Currently commented out because this seemed to be the culprit of sporadic
               full-shutdowns with core dump while mousing through menus -->
@@ -347,6 +351,7 @@
       <!-- OPI Runtime Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
          <!-- Probably doesn't make sense in runtime perspective -->
+         <hiddenMenuItem id="org.eclipse.ui.newWizard"/>
          <hiddenMenuItem id="org.eclipse.ui.file.save"/>
          <hiddenMenuItem id="org.eclipse.ui.file.saveAll"/>
          <hiddenMenuItem id="org.eclipse.ui.file.saveAs"/>

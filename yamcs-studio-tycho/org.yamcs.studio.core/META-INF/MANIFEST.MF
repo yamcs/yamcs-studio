@@ -41,8 +41,7 @@ Require-Bundle: org.epics.vtype,
  org.eclipse.platform,
  javax.inject,
  org.eclipse.mylyn.commons.ui,
- org.csstudio.opibuilder,
- org.csstudio.ui.util
+ org.csstudio.opibuilder
 Import-Package: org.epics.pvmanager,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.core,

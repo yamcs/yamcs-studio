@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.IContributionItem;
@@ -19,6 +18,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.application.IDs;
 
 public class PerspectiveItems extends CompoundContributionItem {
@@ -27,8 +27,7 @@ public class PerspectiveItems extends CompoundContributionItem {
     private static final List<String> SUPPORTED_PERSPECTIVES = Arrays.asList(IDs.OPI_EDITOR_PERSPECTIVE, IDs.OPI_RUNTIME_PERSPECTIVE);
 
     // The runtime perspective image is identical to the builder in our current cs-studio dependencies, so override.
-    private static ImageDescriptor OPI_RUNTIME_IMAGE = CustomMediaFactory.getInstance()
-            .getImageDescriptorFromPlugin(IDs.OPI_RUNTIME_PERSPECTIVE, "icons/OPIRunner.png"); //$NON-NLS-1$
+    private static ImageDescriptor OPI_RUNTIME_IMAGE = YamcsPlugin.getImageDescriptor("icons/OPIRunner.png");
 
     @Override
     public IContributionItem[] getContributionItems() {
