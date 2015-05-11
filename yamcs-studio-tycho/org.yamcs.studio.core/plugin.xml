@@ -282,10 +282,30 @@
       <handler
             class="org.yamcs.studio.core.processor.PauseHandler"
             commandId="org.yamcs.studio.core.processor.pauseCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.core.processor.state.processing">
+                  <equals value="RUNNING"/>
+               </with>
+               <with variable="org.yamcs.studio.core.processor.state.replay">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
       </handler>
       <handler
             class="org.yamcs.studio.core.processor.PlayHandler"
             commandId="org.yamcs.studio.core.processor.playCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.core.processor.state.processing">
+                  <equals value="PAUSED"/>
+               </with>
+               <with variable="org.yamcs.studio.core.processor.state.replay">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
       </handler>
    </extension>
    
@@ -337,10 +357,8 @@
          <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>
          <!-- Looks weird with the '...' in the label. Want to replace to sth in file-menu instead, like eclipse -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
-         <!-- Try to avoid confusion, perspectives already will open new windows
-              Currently commented out because this seemed to be the culprit of sporadic
-              full-shutdowns with core dump while mousing through menus -->
-         <!--hiddenMenuItem id="org.eclipse.ui.window.newWindow"/-->
+         <!-- Try to avoid confusion, perspectives already will open new windows -->
+         <hiddenMenuItem id="org.eclipse.ui.window.newWindow"/>
          <!-- Hide this loaded help menu, with something simpler defined in action bar advisor -->
          <hiddenMenuItem id="help"/>
       </perspectiveExtension>
@@ -606,16 +624,6 @@
 	              </with>
 	           </or>
 	        </visibleWhen>
-            <activeWhen>
-               <and>
-                  <with variable="org.yamcs.studio.core.processor.state.processing">
-                     <equals value="RUNNING"/>
-                  </with>
-                  <with variable="org.yamcs.studio.core.processor.state.replay">
-                     <equals value="true"/>
-                  </with>
-               </and>
-            </activeWhen>
          </command>
          <command
                commandId="org.yamcs.studio.core.processor.playCommand"
@@ -638,11 +646,6 @@
 	              </with>
 	           </or>
 	        </visibleWhen>
-            <activeWhen>
-               <with variable="org.yamcs.studio.core.processor.state.processing">
-                  <equals value="PAUSED"/>
-               </with>
-            </activeWhen>
          </command>
          <command
                commandId="org.yamcs.studio.core.processor.forwardCommand"
