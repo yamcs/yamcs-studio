@@ -104,12 +104,21 @@
       </filter>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.preferencePages">
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.csstudio.opibuilder.preferences.CommonPreferencePage"
+            id="org.yamcs.studio.opibuilder.preferences"
+            name="OPI Editor">
+      </page>
+      <page
+            class="org.csstudio.opibuilder.preferences.OPIRuntimePreferencePage"
+            id="org.yamcs.studio.opibuilder.preferences.opiruntime"
+            name="OPI Runtime">
+      </page>
       <page
             class="org.yamcs.studio.core.ui.prefs.YamcsPreferencePage"
             id="org.yamcs.studio.core.ui.prefs.YamcsPreferencePage"
-            name="Yamcs">
+            name="Yamcs Server">
       </page>
    </extension>
    
