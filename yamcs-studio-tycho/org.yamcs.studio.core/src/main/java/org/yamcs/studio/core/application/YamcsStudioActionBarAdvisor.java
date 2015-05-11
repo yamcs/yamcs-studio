@@ -18,7 +18,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
-import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.part.CoolItemGroupMarker;
 
 /**
@@ -51,6 +50,8 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     final private IWorkbenchWindow window;
 
     private IWorkbenchAction save;
+    private IWorkbenchAction helpContentsAction;
+    private IWorkbenchAction aboutAction;
 
     public YamcsStudioActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -83,21 +84,31 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         if (window.getWorkbench().getIntroManager().hasIntro())
             register(ActionFactory.INTRO.create(window));
 
-        register(ActionFactory.HELP_CONTENTS.create(window));
+        helpContentsAction = ActionFactory.HELP_CONTENTS.create(window);
+        register(helpContentsAction);
+        aboutAction = ActionFactory.ABOUT.create(window);
+        register(aboutAction);
     }
 
     @Override
     protected void fillMenuBar(final IMenuManager menubar) {
         menubar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+
+        IMenuManager windowMenu = new MenuManager("Window", "window");
+        menubar.add(windowMenu);
+
+        // plugin.xml in css menu.app defines a non-brandable icon.
+        // through plugin.xml in this bundle, that help menu is hidden, and
+        // we replace it here with another one (shorter) version
+        IMenuManager helpMenu = new MenuManager("Help", "help-2");
+        menubar.add(helpMenu);
+        helpMenu.add(helpContentsAction);
+        helpMenu.add(aboutAction);
     }
 
     @Override
     protected void fillCoolBar(ICoolBarManager coolbar) {
-        // Set up the context Menu
-        final MenuManager coolbarPopupMenuManager = new MenuManager();
-        coolbar.setContextMenuManager(coolbarPopupMenuManager);
-        final IMenuService menuService = (IMenuService) window.getService(IMenuService.class);
-        menuService.populateContributionManager(coolbarPopupMenuManager, "popup:windowCoolbarContextMenu");
+        coolbar.setLockLayout(true);
 
         // Specific to Yamcs Studio
         IToolBarManager studioBar = new ToolBarManager();
