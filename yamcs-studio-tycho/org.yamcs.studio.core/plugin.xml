@@ -115,46 +115,35 @@
    
    <extension
          point="org.eclipse.ui.services">
-      <!-- This one provides the workbench state for the RefreshArchive command
-           because we don't want the user to refresh again while a fetch is already in progress -->
-      <sourceProvider
-            provider="org.yamcs.studio.core.archive.RefreshCommandState">
+      <sourceProvider provider="org.yamcs.studio.core.archive.RefreshCommandState">
          <variable
                name="org.yamcs.studio.core.archive.state.refreshEnabled"
-               priorityLevel="workbench">
-         </variable>
+               priorityLevel="workbench" />
       </sourceProvider>
-      <!-- Workbench state for the ZoomIn command -->
-      <sourceProvider
-            provider="org.yamcs.studio.core.archive.ZoomInCommandState">
+      <sourceProvider provider="org.yamcs.studio.core.archive.ZoomInCommandState">
          <variable
                name="org.yamcs.studio.core.archive.state.zoomInEnabled"
-               priorityLevel="workbench">
-         </variable>
+               priorityLevel="workbench" />
       </sourceProvider>
-      <!-- Workbench state for the ZoomOut command -->
-      <sourceProvider
-            provider="org.yamcs.studio.core.archive.ZoomOutCommandState">
+      <sourceProvider provider="org.yamcs.studio.core.archive.ZoomOutCommandState">
          <variable
                name="org.yamcs.studio.core.archive.state.zoomOutEnabled"
-               priorityLevel="workbench">
-         </variable>
+               priorityLevel="workbench" />
       </sourceProvider>
-      <!-- Workbench state for the ZoomClear command -->
-      <sourceProvider
-            provider="org.yamcs.studio.core.archive.ZoomClearCommandState">
+      <sourceProvider provider="org.yamcs.studio.core.archive.ZoomClearCommandState">
          <variable
                name="org.yamcs.studio.core.archive.state.zoomClearEnabled"
-               priorityLevel="workbench">
-         </variable>
+               priorityLevel="workbench" />
       </sourceProvider>
-      <!-- Workbench state for the Tag command -->
-      <sourceProvider
-            provider="org.yamcs.studio.core.archive.TagCommandState">
+      <sourceProvider provider="org.yamcs.studio.core.archive.TagCommandState">
          <variable
                name="org.yamcs.studio.core.archive.state.tagEnabled"
-               priorityLevel="workbench">
-         </variable>
+               priorityLevel="workbench" />
+      </sourceProvider>
+      <sourceProvider provider="org.yamcs.studio.core.processor.ProcessingCommandState">
+         <variable
+               name="org.yamcs.studio.core.processor.state.processing"
+               priorityLevel="workbench" />
       </sourceProvider>
    </extension>
    
@@ -228,8 +217,7 @@
             class="org.yamcs.studio.core.archive.RefreshHandler"
             commandId="org.yamcs.studio.core.archive.refreshCommand">
          <activeWhen>
-            <with
-                  variable="org.yamcs.studio.core.archive.state.refreshEnabled">
+            <with variable="org.yamcs.studio.core.archive.state.refreshEnabled">
                <equals value="true"/>
             </with>
          </activeWhen>
@@ -238,8 +226,7 @@
             class="org.yamcs.studio.core.archive.ZoomInHandler"
             commandId="org.yamcs.studio.core.archive.zoomInCommand">
          <activeWhen>
-            <with
-                  variable="org.yamcs.studio.core.archive.state.zoomInEnabled">
+            <with variable="org.yamcs.studio.core.archive.state.zoomInEnabled">
                <equals value="true"/>
             </with>
          </activeWhen>
@@ -248,8 +235,7 @@
             class="org.yamcs.studio.core.archive.ZoomOutHandler"
             commandId="org.yamcs.studio.core.archive.zoomOutCommand">
          <activeWhen>
-            <with
-                  variable="org.yamcs.studio.core.archive.state.zoomOutEnabled">
+            <with variable="org.yamcs.studio.core.archive.state.zoomOutEnabled">
                <equals value="true"/>
             </with>
          </activeWhen>
@@ -272,8 +258,7 @@
             class="org.yamcs.studio.core.archive.CreateTagHandler"
             commandId="org.yamcs.studio.core.archive.createTagCommand">
          <activeWhen>
-            <with
-                  variable="org.yamcs.studio.core.archive.state.tagEnabled">
+            <with variable="org.yamcs.studio.core.archive.state.tagEnabled">
                <equals value="true"/>
             </with>
          </activeWhen>
@@ -282,8 +267,7 @@
             class="org.yamcs.studio.core.archive.CreateReplayHandler"
             commandId="org.yamcs.studio.core.archive.createReplayCommand">
          <activeWhen>
-            <with
-                  variable="org.yamcs.studio.core.archive.state.tagEnabled">
+            <with variable="org.yamcs.studio.core.archive.state.tagEnabled">
                <equals value="true"/>
             </with>
          </activeWhen>
@@ -295,6 +279,10 @@
       <handler
             class="org.yamcs.studio.core.processor.PauseHandler"
             commandId="org.yamcs.studio.core.processor.pauseCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.processor.PlayHandler"
+            commandId="org.yamcs.studio.core.processor.playCommand">
       </handler>
    </extension>
    
@@ -571,7 +559,7 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:studiocoolbar?after=processorinfo">
-         <control id="studiocontributions.processorInfo" class="org.yamcs.studio.core.ui.ProcessorInfoControlContribution"/>
+         <control id="studiocontributions.processorInfo" class="org.yamcs.studio.core.processor.ProcessorInfoControlContribution"/>
       </menuContribution>
       
       <menuContribution
@@ -600,6 +588,56 @@
                icon="icons/pause.png"
                id="org.yamcs.studio.toolbar.pauseProcessor"
                tooltip="Pause Processing">
+	        <visibleWhen>
+	           <or>
+                  <with variable="org.yamcs.studio.core.processor.state.processing">
+                     <equals value=""/>
+                  </with>
+	              <with variable="org.yamcs.studio.core.processor.state.processing">
+	                 <equals value="INITIALIZATION"/>
+	              </with>
+	              <with variable="org.yamcs.studio.core.processor.state.processing">
+	                 <equals value="RUNNING"/>
+	              </with>
+	           </or>
+	        </visibleWhen>
+            <activeWhen>
+               <and>
+                  <with variable="org.yamcs.studio.core.processor.state.processing">
+                     <equals value="RUNNING"/>
+                  </with>
+                  <with variable="org.yamcs.studio.core.processor.state.replay">
+                     <equals value="true"/>
+                  </with>
+               </and>
+            </activeWhen>
+         </command>
+         <command
+               commandId="org.yamcs.studio.core.processor.playCommand"
+               icon="icons/play.png"
+               id="org.yamcs.studio.toolbar.playProcessor"
+               tooltip="Resume Processing">
+	        <visibleWhen>
+	           <or>
+	              <with variable="org.yamcs.studio.core.processor.state.processing">
+	                 <equals value="STOPPED"/>
+	              </with>
+	              <with variable="org.yamcs.studio.core.processor.state.processing">
+	                 <equals value="ERROR"/>
+	              </with>
+	              <with variable="org.yamcs.studio.core.processor.state.processing">
+	                 <equals value="PAUSED"/>
+	              </with>
+	              <with variable="org.yamcs.studio.core.processor.state.processing">
+	                 <equals value="CLOSED"/>
+	              </with>
+	           </or>
+	        </visibleWhen>
+            <activeWhen>
+               <with variable="org.yamcs.studio.core.processor.state.processing">
+                  <equals value="PAUSED"/>
+               </with>
+            </activeWhen>
          </command>
          <command
                commandId="org.yamcs.studio.core.processor.forwardCommand"
@@ -619,7 +657,7 @@
                tooltip=""
                id="org.yamcs.studio.toolbar.spacer40x32">
          </command>
-         <control id="studiocontributions.timeInfo" class="org.yamcs.studio.core.ui.TimeInfoControlContribution" />
+         <control id="studiocontributions.timeInfo" class="org.yamcs.studio.core.processor.TimeInfoControlContribution" />
       </menuContribution>
    </extension>
    

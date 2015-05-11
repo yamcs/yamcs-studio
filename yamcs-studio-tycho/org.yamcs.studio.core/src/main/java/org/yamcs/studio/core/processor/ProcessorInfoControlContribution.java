@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.ui;
+package org.yamcs.studio.core.processor;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;

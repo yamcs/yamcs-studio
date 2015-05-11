@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.ui;
+package org.yamcs.studio.core.processor;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -82,9 +82,12 @@ public class TimeInfoControlContribution extends WorkbenchWindowControlContribut
 
     @Override
     public void updateStatistics(Statistics stats) {
+        // Check for disposal on all involved threads
         if (canvas.isDisposed())
             return;
         canvas.getDisplay().asyncExec(() -> {
+            if (canvas.isDisposed())
+                return;
             ClientInfo clientInfo = YamcsPlugin.getDefault().getClientInfo();
             if (clientInfo != null
                     && stats.getYProcessorName().equals(clientInfo.getProcessorName())

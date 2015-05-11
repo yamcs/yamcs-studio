@@ -18,7 +18,8 @@ public class ZoomInCommandState extends AbstractSourceProvider {
     private boolean enabled = false;
 
     public void setEnabled(boolean enabled) {
-        fireSourceChanged(ISources.WORKBENCH, STATE_KEY_ENABLED, enabled);
+        this.enabled = enabled;
+        fireSourceChanged(ISources.WORKBENCH, getCurrentState());
     }
 
     @Override
