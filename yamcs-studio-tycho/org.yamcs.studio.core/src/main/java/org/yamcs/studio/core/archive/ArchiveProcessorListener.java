@@ -66,6 +66,8 @@ public class ArchiveProcessorListener implements ProcessorListener {
         if (display.isDisposed())
             return;
         display.asyncExec(() -> {
+            if (display.isDisposed())
+                return;
             ClientInfo clientInfo = YamcsPlugin.getDefault().getClientInfo();
             if (clientInfo != null
                     && stats.getYProcessorName().equals(clientInfo.getProcessorName())

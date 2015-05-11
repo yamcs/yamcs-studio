@@ -1,7 +1,6 @@
 package org.yamcs.studio.core.application;
 
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
@@ -51,7 +50,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     final private IWorkbenchWindow window;
 
-    private IWorkbenchAction lock_toolbar, edit_actionsets, save;
+    private IWorkbenchAction save;
 
     public YamcsStudioActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -76,12 +75,6 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
      */
     @Override
     protected void makeActions(final IWorkbenchWindow window) {
-        lock_toolbar = ActionFactory.LOCK_TOOL_BAR.create(window);
-        register(lock_toolbar);
-
-        edit_actionsets = ActionFactory.EDIT_ACTION_SETS.create(window);
-        register(edit_actionsets);
-
         save = ActionFactory.SAVE.create(window);
         register(save);
 
@@ -102,8 +95,6 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolbar) {
         // Set up the context Menu
         final MenuManager coolbarPopupMenuManager = new MenuManager();
-        coolbarPopupMenuManager.add(new ActionContributionItem(lock_toolbar));
-        coolbarPopupMenuManager.add(new ActionContributionItem(edit_actionsets));
         coolbar.setContextMenuManager(coolbarPopupMenuManager);
         final IMenuService menuService = (IMenuService) window.getService(IMenuService.class);
         menuService.populateContributionManager(coolbarPopupMenuManager, "popup:windowCoolbarContextMenu");
