@@ -65,6 +65,9 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         indexReceiver.setIndexListener(this);
         yconnector.addConnectionListener(this);
         YamcsPlugin.getDefault().addStudioConnectionListener(this);
+
+        ArchiveProcessorListener processorListener = new ArchiveProcessorListener(parent.getDisplay(), archivePanel.getDataViewer());
+        YamcsPlugin.getDefault().addProcessorListener(processorListener);
     }
 
     /**

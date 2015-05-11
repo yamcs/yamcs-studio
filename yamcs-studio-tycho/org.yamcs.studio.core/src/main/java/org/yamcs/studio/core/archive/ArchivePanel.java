@@ -43,7 +43,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     Prefs prefs;
 
     private DataViewer dataViewer;
-    public ReplayPanel replayPanel;
 
     int loadCount, recCount;
     boolean passiveUpdate = false;
@@ -58,9 +57,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         this.archiveView = archiveView;
 
         prefs = new Prefs();
-
-        replayPanel = new ReplayPanel();
-
         dataViewer = new DataViewer(archiveView.indexReceiver, this);
         add(dataViewer, BorderLayout.CENTER);
 
@@ -121,10 +117,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
                 + "max(" + c.getMaximumSize().width + "," + c.getMaximumSize().height + ") "
                 + "size(" + c.getSize().width + "," + c.getSize().height + ") "
                 + "insets(" + in.top + "," + in.left + "," + in.bottom + "," + in.right + ")");
-    }
-
-    void playOrStopPressed() {
-        // to be reimplemented by subclass ArchiveReplay in YamcsMonitor
     }
 
     @Override

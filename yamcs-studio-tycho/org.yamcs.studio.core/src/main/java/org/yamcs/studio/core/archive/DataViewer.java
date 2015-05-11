@@ -54,7 +54,6 @@ public class DataViewer extends JPanel implements ActionListener {
 
     public void addIndex(String tableName, String name, int mergeTime) {
         dataView.addIndex(tableName, name, mergeTime);
-        archivePanel.replayPanel.setDataViewer(this); // TODO move up
     }
 
     public void addVerticalGlue() {
