@@ -414,6 +414,14 @@
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
          <!-- Not very useful with the navigator already there -->
          <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.firstProcessor"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.reverseProcessor"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.pauseProcessor"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.forwardProcessor"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.lastProcessor"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.spacer40x32"/>
+         <hiddenToolBarItem id="studiocontributions.processorInfo"/>
+         <hiddenToolBarItem id="studiocontributions.timeInfo"/>
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -563,9 +571,7 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:studiocoolbar?after=processorinfo">
-         <control
-               class="org.yamcs.studio.core.ui.ProcessorInfoControlContribution">
-         </control>
+         <control id="studiocontributions.processorInfo" class="org.yamcs.studio.core.ui.ProcessorInfoControlContribution"/>
       </menuContribution>
       
       <menuContribution
@@ -580,7 +586,7 @@
          <command
                commandId="org.yamcs.studio.core.processor.firstCommand"
                icon="icons/first.png"
-               id="org.yamcs.studio.toolbar.stepFirstProcessor"
+               id="org.yamcs.studio.toolbar.firstProcessor"
                tooltip="Step to First Update">
          </command>
          <command
@@ -604,7 +610,7 @@
          <command
                commandId="org.yamcs.studio.core.processor.lastCommand"
                icon="icons/last.png"
-               id="org.yamcs.studio.toolbar.stepLastProcessor"
+               id="org.yamcs.studio.toolbar.lastProcessor"
                tooltip="Step to Last Update">
          </command>
          <command
@@ -613,7 +619,7 @@
                tooltip=""
                id="org.yamcs.studio.toolbar.spacer40x32">
          </command>
-         <control class="org.yamcs.studio.core.ui.TimeInfoControlContribution"/>
+         <control id="studiocontributions.timeInfo" class="org.yamcs.studio.core.ui.TimeInfoControlContribution" />
       </menuContribution>
    </extension>
    
