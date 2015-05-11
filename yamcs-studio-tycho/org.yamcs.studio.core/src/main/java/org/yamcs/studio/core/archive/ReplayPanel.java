@@ -5,11 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,6 +17,7 @@ import org.yamcs.protobuf.Yamcs.ReplayStatus.ReplayState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.TmStatistics;
+import org.yamcs.studio.core.YProcessorControlClient;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -30,10 +27,12 @@ import org.yamcs.utils.TimeEncoding;
  *
  */
 public class ReplayPanel extends JPanel {
+
+    private static final long serialVersionUID = 1L;
+
     protected JLabel replayStartLabel, replayCurrentLabel, replayStopLabel, channelNameLabel, replayStatusLabel, replaySpeedLabel;
     protected ImageIcon replayStartIcon, replayStopIcon;
     protected JButton playStopButton;
-    public JButton applySelectionButton;
     protected ProcessorInfo currentYProcInfo;
     int replayButtonFunction;
     static final int STOP = 0;
@@ -83,12 +82,7 @@ public class ReplayPanel extends JPanel {
         //replayStopIcon = ArchivePanel.getIcon("stop.gif");
         playStopButton = new JButton(replayStopIcon); // the Play/Stop button
         playStopButton.setEnabled(false);
-        playStopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                playOrStopPressed();
-            }
-        });
+
         gbc.weightx = 0.0;
         gbc.weighty = 1.0;
         gbc.gridwidth = 1;
@@ -170,20 +164,6 @@ public class ReplayPanel extends JPanel {
         centerPanel.add(replaySpeedLabel);
 
         add(centerPanel, BorderLayout.CENTER);
-
-        Box buttonPanel = Box.createVerticalBox();
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
-        applySelectionButton = new JButton("Apply Selection");
-        applySelectionButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        applySelectionButton.setEnabled(false);
-        applySelectionButton.setToolTipText("Apply the selection to the replay");
-        applySelectionButton.setActionCommand("apply");
-
-        buttonPanel.add(Box.createVerticalGlue());
-        buttonPanel.add(applySelectionButton);
-        buttonPanel.add(Box.createVerticalGlue());
-
-        add(buttonPanel, BorderLayout.EAST);
     }
 
     public void setDataViewer(DataViewer dataViewer) {
@@ -192,16 +172,6 @@ public class ReplayPanel extends JPanel {
 
     public void setChannelControlClient(YProcessorControlClient cc) {
         this.channelControl = cc;
-    }
-
-    void playOrStopPressed() {
-        if (currentYProcInfo != null) {
-            if (replayButtonFunction == STOP) {
-                pauseReplay();
-            } else {
-                resumeReplay();
-            }
-        }
     }
 
     public void clearReplayPanel() {
@@ -233,6 +203,7 @@ public class ReplayPanel extends JPanel {
                 || !ci.hasReplayRequest())
             return;
         currentYProcInfo = ci;
+        System.out.println("Update from hornetq: " + ci);
         updateReplayPanel();
     }
 
@@ -318,43 +289,6 @@ public class ReplayPanel extends JPanel {
             replayCurrentLabel.setText(TimeEncoding.toString(currentInstant));
             dataViewer.getDataView().setCurrentLocator(currentInstant);
         }
-    }
-
-    void pauseReplay() {
-        try {
-            channelControl.pauseArchiveReplay(currentYProcInfo.getInstance(), currentYProcInfo.getName());
-        } catch (Exception e) {
-            debugLog("exception when stopping replay for channel " + currentYProcInfo.getName() + " :" + e.getMessage());
-        }
-    }
-
-    void resumeReplay() {
-        if (currentInstant == TimeEncoding.INVALID_INSTANT) {
-            debugLog("start replay from " + TimeEncoding.toString(currentYProcInfo.getReplayRequest().getStart()));
-        } else {
-            debugLog("start replay from " + TimeEncoding.toString(currentInstant));
-        }
-        try {
-            channelControl.resumeArchiveReplay(currentYProcInfo.getInstance(), currentYProcInfo.getName());
-        } catch (Exception e) {
-            debugLog("exception when starting replay for channel " + currentYProcInfo.getInstance() + "." + currentYProcInfo.getName() + " :"
-                    + e.getMessage());
-        }
-    }
-
-    void seekReplay(long newPosition) {
-        debugLog("seeking replay to " + TimeEncoding.toString(newPosition));
-        try {
-            channelControl.seekArchiveReplay(currentYProcInfo.getInstance(), currentYProcInfo.getName(), newPosition);
-        } catch (Exception e) {
-            debugLog("exception when starting replay for channel " + currentYProcInfo.getInstance() + "." + currentYProcInfo.getName() + " :"
-                    + e.getMessage());
-        }
-    }
-
-    private void debugLog(String string) {
-        System.err.println(string);
-
     }
 
     public void channelStateChanged(ProcessorInfo ci) {

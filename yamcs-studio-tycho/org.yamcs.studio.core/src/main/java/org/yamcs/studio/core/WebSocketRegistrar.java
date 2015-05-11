@@ -100,6 +100,10 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         }
     }
 
+    public void updateClientinfo() { // Would prefer if this became a subscription
+        pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
+    }
+
     public synchronized void register(YamcsPVReader pvReader) {
         pvReadersByName.put(pvReader.getPVName(), pvReader);
         // Report current connection state

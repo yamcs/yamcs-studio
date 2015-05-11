@@ -26,13 +26,10 @@ public class DataViewer extends JPanel implements ActionListener {
 
     private ArchiveIndexReceiver indexReceiver;
 
-    boolean replayEnabled;
-
-    public DataViewer(ArchiveIndexReceiver indexReceiver, ArchivePanel archivePanel, boolean replayEnabled) {
+    public DataViewer(ArchiveIndexReceiver indexReceiver, ArchivePanel archivePanel) {
         super(new BorderLayout());
         this.indexReceiver = indexReceiver;
         this.archivePanel = archivePanel;
-        this.replayEnabled = replayEnabled;
 
         setBorder(BorderFactory.createEmptyBorder());
         setBackground(Color.WHITE);
@@ -48,15 +45,7 @@ public class DataViewer extends JPanel implements ActionListener {
     }
 
     public void signalSelectionChange(Selection selection) {
-        if (selection != null) {
-            if (replayEnabled) {
-                archivePanel.replayPanel.applySelectionButton.setEnabled(true);
-            }
-        } else {
-            if (replayEnabled) {
-                archivePanel.replayPanel.applySelectionButton.setEnabled(false);
-            }
-        }
+        // TODO should probably update swt buttons here
     }
 
     public void addIndex(String tableName, String name) {
@@ -65,10 +54,7 @@ public class DataViewer extends JPanel implements ActionListener {
 
     public void addIndex(String tableName, String name, int mergeTime) {
         dataView.addIndex(tableName, name, mergeTime);
-        if (replayEnabled && "tm".equals(tableName)) {
-            // TODO move up
-            archivePanel.replayPanel.setDataViewer(this);
-        }
+        archivePanel.replayPanel.setDataViewer(this); // TODO move up
     }
 
     public void addVerticalGlue() {
@@ -131,9 +117,6 @@ public class DataViewer extends JPanel implements ActionListener {
             archivePanel.archiveView.setZoomInEnabled(false);
             archivePanel.archiveView.setZoomOutEnabled(false);
             archivePanel.archiveView.setZoomClearEnabled(false);
-            if (replayEnabled) {
-                archivePanel.replayPanel.applySelectionButton.setEnabled(false);
-            }
         });
 
         for (IndexBox ib : dataView.indexBoxes.values()) {

@@ -193,19 +193,21 @@ public class CreateReplayDialog extends TitleAreaDialog {
                         log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
                         String type = ((RestExceptionMessage) responseMsg).getType();
                         String msg = ((RestExceptionMessage) responseMsg).getMsg();
-                        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not create replay", type + "\n" + msg);
+                        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay", type + "\n" + msg);
                         getButton(IDialogConstants.OK_ID).setEnabled(true);
                     } else {
                         CreateReplayDialog.super.okPressed();
+                        // Would prefer to get updates to this from the web socket client
+                        YamcsPlugin.getDefault().refreshClientInfo();
                     }
                 });
             }
 
             @Override
             public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
+                log.log(Level.SEVERE, "Could not start replay", e);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not create replay", e.getMessage());
+                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay", e.getMessage());
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 });
             }

@@ -50,7 +50,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         Composite locationComp = new Composite(parent, SWT.EMBEDDED);
         java.awt.Frame frame = SWT_AWT.new_Frame(locationComp);
 
-        archivePanel = new ArchivePanel(this, false);
+        archivePanel = new ArchivePanel(this);
         archivePanel.setPreferredSize(new Dimension(300, 400));
 
         frame.addComponentListener(new ComponentAdapter() {

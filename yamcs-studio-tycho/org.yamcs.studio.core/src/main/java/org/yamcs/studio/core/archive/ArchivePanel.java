@@ -15,7 +15,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -54,24 +53,15 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     volatile boolean lowOnMemoryReported = false;
 
-    public ArchivePanel(ArchiveView archiveView, boolean replayEnabled) {
+    public ArchivePanel(ArchiveView archiveView) {
         super(new BorderLayout());
         this.archiveView = archiveView;
 
         prefs = new Prefs();
 
-        //
-        // transport control panel (only enabled when a HRDP data channel is selected)
-        //
-        if (replayEnabled) {
-            replayPanel = new ReplayPanel();
-            replayPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Replay Control"));
-            replayPanel.setToolTipText("Doubleclick between the start/stop locators to reposition the replay.");
-            replayPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            // fixedTop.add(replayPanel);
-        }
+        replayPanel = new ReplayPanel();
 
-        dataViewer = new DataViewer(archiveView.indexReceiver, this, replayEnabled);
+        dataViewer = new DataViewer(archiveView.indexReceiver, this);
         add(dataViewer, BorderLayout.CENTER);
 
         // Catch mouse events globally, to deal more easily with events on child components
@@ -236,7 +226,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     void seekReplay(long newPosition) {
-        replayPanel.seekReplay(newPosition);
+        // TODO through rest
+        // replayPanel.seekReplay(newPosition);
     }
 
     public synchronized void archiveLoadFinished() {

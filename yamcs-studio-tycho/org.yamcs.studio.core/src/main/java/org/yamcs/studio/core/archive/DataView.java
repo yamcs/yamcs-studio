@@ -559,7 +559,7 @@ public class DataView extends JScrollPane {
                 return;
             dragButton = e.getButton();
             if (dragButton == MouseEvent.BUTTON1) {
-                if (dataViewer.replayEnabled && (e.getClickCount() == 2)) {
+                if (e.getClickCount() == 2) {
                     drawPreviewLocator = true;
                     previewLocatorAlpha = 0.8f;
                     previewLocatorX = e.getX();

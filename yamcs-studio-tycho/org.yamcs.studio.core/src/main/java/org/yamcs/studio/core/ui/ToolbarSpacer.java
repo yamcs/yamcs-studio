@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 /**
- * This is a HACK because Eclipse 4.3 doesn't seem to show separators on the toolbar whatever I try
+ * A custom spacer. Eclipse separators look a bit crappy, and don't even seem to work in 4.3
  */
 public class ToolbarSpacer extends WorkbenchWindowControlContribution {
 

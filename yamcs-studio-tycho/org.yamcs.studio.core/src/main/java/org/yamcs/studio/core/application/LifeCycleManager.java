@@ -1,10 +1,18 @@
 package org.yamcs.studio.core.application;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.csstudio.autocomplete.AutoCompleteHelper;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.workbench.UIEvents.UILifeCycle;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.services.IEvaluationService;
 
 @SuppressWarnings("restriction")
 public class LifeCycleManager {
@@ -14,14 +22,22 @@ public class LifeCycleManager {
     @PostContextCreate
     public void postContextCreate(IEventBroker broker) {
         registerAutocompleteExtensions();
-        /*
-         * broker.subscribe(UILifeCycle.APP_STARTUP_COMPLETE, evt -> { System.out.println("-0-0-0");
-         * for (String s : evt.getPropertyNames()) { System.out.println("11 got all this: " + s +
-         * " ---> " + evt.getProperty(s)); }
-         *
-         * MApplication app = (MApplication) evt.getProperty("org.eclipse.e4.data");
-         * System.out.println("11 have trims " + app.getTrimContributions()); });
-         */
+
+        // This is about as hacky as it gets. Have an unknown problem with the toolbar disappearing after
+        // workbench restart. Below code does a double 'toggle' on it, to make it appear again.
+        // TODO Find exact reason why. In previous commit this did not appear to be a problem (?)
+        broker.subscribe(UILifeCycle.APP_STARTUP_COMPLETE, evt -> {
+            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+            IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
+            try {
+                Command cmd = commandService.getCommand("org.eclipse.ui.ToggleCoolbarAction");
+                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
     }
 
     /**

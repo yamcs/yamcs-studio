@@ -29,6 +29,7 @@ import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
@@ -46,12 +47,13 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private static YamcsPlugin plugin;
     private BundleListener bundleListener;
 
+    private YProcessorControlClient processorControlClient;
     private RestClient restClient;
     private WebSocketRegistrar webSocketClient;
 
     private ClientInfo clientInfo;
+
     private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
-    private Set<ProcessorListener> processorListeners = new HashSet<>();
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
     private XtceDb mdb;
@@ -64,7 +66,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
         plugin = this;
         TimeEncoding.setUp();
 
-        YamcsConnectionProperties webProps = new YamcsConnectionProperties(getHost(), getWebPort(), getInstance());
+        // This functionality only available in HornetQ for now. Gives us processor state. And updates on clients
+        processorControlClient = new YProcessorControlClient();
+
+        YamcsConnectionProperties webProps = getWebProperties();
         restClient = new RestClient(webProps);
         webSocketClient = new WebSocketRegistrar(webProps);
         addMdbListener(webSocketClient);
@@ -86,14 +91,18 @@ public class YamcsPlugin extends AbstractUIPlugin {
     // Likely not on the swt thread
     private void setupConnections(ClientInfo clientInfo) {
         log.fine(String.format("Got back clientInfo %s", clientInfo));
+        // Need to improve this code. Currently doesn't support changing connections
+        boolean doSetup = (this.clientInfo == null);
         this.clientInfo = clientInfo;
-        loadParameters();
-        loadCommands();
+        if (doSetup) {
+            loadParameters();
+            loadCommands();
 
-        studioConnectionListeners.forEach(l -> {
-            l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
-        });
-        processorListeners.forEach(l -> l.onProcessorSwitch(clientInfo.getProcessorName()));
+            studioConnectionListeners.forEach(l -> {
+                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
+            });
+        }
+        ///processorListeners.forEach(l -> l.onProcessorSwitch(clientInfo.getProcessorName()));
     }
 
     public RestClient getRestClient() {
@@ -106,6 +115,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public ClientInfo getClientInfo() {
         return clientInfo;
+    }
+
+    public ProcessorInfo getProcessorInfo(String processorName) {
+        return processorControlClient.getProcessorInfo(processorName);
     }
 
     private YamcsConnectionProperties getWebProperties() {
@@ -198,9 +211,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public void addProcessorListener(ProcessorListener listener) {
-        processorListeners.add(listener);
-        if (clientInfo != null)
-            listener.onProcessorSwitch(clientInfo.getProcessorName());
+        processorControlClient.addProcessorListener(listener);
     }
 
     public void addMdbListener(MDBContextListener listener) {
@@ -213,9 +224,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
             if (bundleListener != null)
                 context.removeBundleListener(bundleListener);
             plugin = null;
-            studioConnectionListeners.clear();
-            processorListeners.clear();
-            mdbListeners.clear();
+            //studioConnectionListeners.clear();
+            //mdbListeners.clear();
+            processorControlClient.close();
             restClient.shutdown();
             webSocketClient.shutdown();
         } finally {
@@ -242,5 +253,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public XtceDb getMdb() {
         return mdb;
+    }
+
+    public void refreshClientInfo() {
+        webSocketClient.updateClientinfo();
     }
 }
