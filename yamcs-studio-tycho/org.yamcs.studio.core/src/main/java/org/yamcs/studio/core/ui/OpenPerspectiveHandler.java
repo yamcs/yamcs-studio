@@ -7,7 +7,6 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -17,10 +16,8 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.menus.UIElement;
 
-@SuppressWarnings("restriction")
 public class OpenPerspectiveHandler extends AbstractHandler implements IElementUpdater {
 
     @Override
@@ -51,7 +48,7 @@ public class OpenPerspectiveHandler extends AbstractHandler implements IElementU
 
     /*
      * Workaround to allow checking radio items in a dynamic contribution
-     *
+     * 
      * https://bugs.eclipse.org/bugs/show_bug.cgi?id=398647
      */
     @Override
@@ -71,8 +68,7 @@ public class OpenPerspectiveHandler extends AbstractHandler implements IElementU
     private void openNewWindowPerspective(String perspectiveId, IWorkbenchWindow activeWorkbenchWindow) throws ExecutionException {
         IWorkbench workbench = PlatformUI.getWorkbench();
         try {
-            IAdaptable input = ((Workbench) workbench).getDefaultPageInput();
-            workbench.openWorkbenchWindow(perspectiveId, input);
+            workbench.openWorkbenchWindow(perspectiveId, null);
         } catch (WorkbenchException e) {
             ErrorDialog.openError(activeWorkbenchWindow.getShell(),
                     "Could not open window", e.getMessage(), e.getStatus());
