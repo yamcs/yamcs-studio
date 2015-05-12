@@ -162,46 +162,46 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="org.csstudio"
-            name="CSS">
+            id="org.yamcs.studio"
+            name="Yamcs">
       </category>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.commanding.issueTelecommandCommand"
             name="Issue Command">
       </command>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.archive.refreshCommand"
             name="Refresh">
       </command>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.archive.zoomInCommand"
             name="Zoom In">
       </command>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.archive.zoomOutCommand"
             name="Zoom Out">
       </command>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.archive.zoomClearCommand"
             name="Zoom all the way out">
       </command>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.archive.tagCommand"
             name="Annotate the selected range">
       </command>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.archive.createReplayCommand"
             name="Create Replay">
       </command>
       <command
-            categoryId="org.csstudio"
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.eventlog.clearCommand"
             name="Clear Log View">
       </command>
@@ -321,27 +321,33 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-      		name="CSS"
-      		id="org.csstudio">
+      		name="Yamcs Server"
+      		id="org.yamcs.studio.server">
       </category>
       <view
-            category="org.csstudio"
+            category="org.yamcs.studio.server"
             class="org.yamcs.studio.core.archive.ArchiveView"
             icon="icons/archive.png"
             id="org.yamcs.studio.core.archive.ArchiveView"
             name="Archive"/>
       <view
-            category="org.csstudio"
+            category="org.yamcs.studio.server"
             class="org.yamcs.studio.core.eventlog.EventLogView"
             icon="icons/event_log.gif"
             id="org.yamcs.studio.core.eventlog.EventLogView"
             name="Event Log"/>
       <view
-            category="org.csstudio"
+            category="org.yamcs.studio.server"
             class="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"
             icon="icons/tc.png"
             id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"
             name="Command History"/>
+      <view
+            category="org.yamcs.studio.server"
+            class="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"
+            icon="icons/stacked.png"
+            id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"
+            name="Command Stack"/>
    </extension>
 
    <extension
@@ -405,6 +411,13 @@
                relationship="stack"
                visible="true"
                closeable="true"
+               id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
                id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView">
          </view>
          <view
@@ -424,6 +437,7 @@
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.diag.pvmanager.probe"/>
@@ -447,29 +461,31 @@
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.core.archive.ArchiveView">
-         </view>
+               id="org.yamcs.studio.core.archive.ArchiveView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.core.eventlog.EventLogView">
-         </view>
+               id="org.yamcs.studio.core.eventlog.EventLogView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView">
-         </view>
+               id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView">
-         </view>
+               id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
@@ -529,9 +545,9 @@
        	       visible="true"/>
       </menuContribution>
       
-      <!-- Add icon to the Command History view toolbar -->
+      <!-- Add icon to the Command Stack view toolbar -->
       <menuContribution
-            locationURI="toolbar:org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView">
+            locationURI="toolbar:org.yamcs.studio.core.commanding.cmdstack.CommandStackView">
          <command
                commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand"
                icon="icons/tc_add.png"
