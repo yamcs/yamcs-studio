@@ -2,16 +2,30 @@ package org.yamcs.studio.core.actions;
 
 import org.csstudio.opibuilder.actions.OpenTopOPIsAction;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IActionDelegate2;
 
 /**
- * Default behaviour is to open the first file in the list, which i consider a usability problem.
- * What it really should do is always show the menu. Needs more research on how to achieve that
- * though...
+ * Does some hacks to open the menu also with the main button click. Ideally we should spend some
+ * more time here to align the menu to the pulldown arrow, as now it depends on the mouse location.
  */
-public class OpenFavouritesAction extends OpenTopOPIsAction {
+public class OpenFavouritesAction extends OpenTopOPIsAction implements IActionDelegate2 {
+
+    @Override
+    public void init(IAction action) {
+    }
 
     @Override
     public void run(IAction action) {
-        // NOP. (TODO show the getMenu())
+        // NOP. (runWithEvent is used instead, since we implement IActionDelegate2)
+    }
+
+    @Override
+    public void runWithEvent(IAction action, Event event) {
+        ToolItem item = (ToolItem) event.widget;
+        Menu menu = getMenu(item.getParent());
+        menu.setVisible(true);
     }
 }
