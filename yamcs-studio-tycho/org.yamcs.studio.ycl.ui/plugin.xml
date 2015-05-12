@@ -6,48 +6,48 @@
     <extension
             point="org.eclipse.ui.editors">
         <editor
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
             extensions="ycl"
-            id="org.csstudio.yamcs.ycl.dsl.YCL"
+            id="org.yamcs.studio.ycl.dsl.YCL"
             name="YCL Editor">
         </editor>
     </extension>
     <extension
         point="org.eclipse.ui.handlers">
         <handler
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
             commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
             <activeWhen>
                 <reference
-                    definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+                    definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
                 </reference>
             </activeWhen>
         </handler>
         <handler
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
-            commandId="org.csstudio.yamcs.ycl.dsl.YCL.validate">
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+            commandId="org.yamcs.studio.ycl.dsl.YCL.validate">
          <activeWhen>
             <reference
-                    definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+                    definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
             </reference>
          </activeWhen>
       	</handler>
       	<!-- copy qualified name -->
         <handler
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
             commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
             <activeWhen>
-				<reference definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened" />
+				<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened" />
             </activeWhen>
         </handler>
         <handler
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
             commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
             <activeWhen>
             	<and>
-            		<reference definitionId="org.csstudio.yamcs.ycl.dsl.YCL.XtextEditor.opened" />
+            		<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.XtextEditor.opened" />
 	                <iterate>
 						<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 					</iterate>
@@ -56,22 +56,22 @@
         </handler>
     </extension>
     <extension point="org.eclipse.core.expressions.definitions">
-        <definition id="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+        <definition id="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
             <and>
                 <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
                 <with variable="activeEditor">
                     <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
-                        value="org.csstudio.yamcs.ycl.dsl.YCL" 
+                        value="org.yamcs.studio.ycl.dsl.YCL" 
                         forcePluginActivation="true"/>
                 </with>        
             </and>
         </definition>
-        <definition id="org.csstudio.yamcs.ycl.dsl.YCL.XtextEditor.opened">
+        <definition id="org.yamcs.studio.ycl.dsl.YCL.XtextEditor.opened">
             <and>
                 <reference definitionId="isXtextEditorActive"/>
                 <with variable="activeEditor">
                     <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
-                        value="org.csstudio.yamcs.ycl.dsl.YCL" 
+                        value="org.yamcs.studio.ycl.dsl.YCL" 
                         forcePluginActivation="true"/>
                 </with>        
             </and>
@@ -80,33 +80,33 @@
     <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.csstudio.yamcs.ycl.dsl.YCL"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.yamcs.studio.ycl.dsl.YCL"
             name="YCL">
-            <keywordReference id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"/>
+            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
         </page>
         <page
-            category="org.csstudio.yamcs.ycl.dsl.YCL"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
-            id="org.csstudio.yamcs.ycl.dsl.YCL.coloring"
+            category="org.yamcs.studio.ycl.dsl.YCL"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            id="org.yamcs.studio.ycl.dsl.YCL.coloring"
             name="Syntax Coloring">
-            <keywordReference id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"/>
+            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
         </page>
         <page
-            category="org.csstudio.yamcs.ycl.dsl.YCL"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
-            id="org.csstudio.yamcs.ycl.dsl.YCL.templates"
+            category="org.yamcs.studio.ycl.dsl.YCL"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+            id="org.yamcs.studio.ycl.dsl.YCL.templates"
             name="Templates">
-            <keywordReference id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"/>
+            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
         </page>
     </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.csstudio.yamcs.ycl.dsl.YCL"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.yamcs.studio.ycl.dsl.YCL"
             name="YCL">
-            <keywordReference id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"/>
+            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -116,14 +116,14 @@
     <extension
         point="org.eclipse.ui.keywords">
         <keyword
-            id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"
+            id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"
             label="YCL"/>
     </extension>
     <extension
          point="org.eclipse.ui.commands">
       <command
             description="Trigger expensive validation"
-            id="org.csstudio.yamcs.ycl.dsl.YCL.validate"
+            id="org.yamcs.studio.ycl.dsl.YCL.validate"
             name="Validate">
       </command>
       <!-- copy qualified name -->
@@ -144,12 +144,12 @@
         <menuContribution
             locationURI="popup:#TextEditorContext?after=group.edit">
              <command
-                 commandId="org.csstudio.yamcs.ycl.dsl.YCL.validate"
+                 commandId="org.yamcs.studio.ycl.dsl.YCL.validate"
                  style="push"
                  tooltip="Trigger expensive validation">
             <visibleWhen checkEnabled="false">
                 <reference
-                    definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+                    definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
                 </reference>
             </visibleWhen>
          </command>  
@@ -159,7 +159,7 @@
          	<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName" 
          		style="push" tooltip="Copy Qualified Name">
             	<visibleWhen checkEnabled="false">
-                	<reference definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened" />
+                	<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened" />
             	</visibleWhen>
          	</command>  
          </menuContribution>
@@ -167,7 +167,7 @@
          	<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
             	style="push" tooltip="Copy Qualified Name">
             	<visibleWhen checkEnabled="false">
-                	<reference definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened" />
+                	<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened" />
             	</visibleWhen>
          	</command>  
          </menuContribution>
@@ -176,7 +176,7 @@
 				style="push" tooltip="Copy Qualified Name">
          		<visibleWhen checkEnabled="false">
 	            	<and>
-	            		<reference definitionId="org.csstudio.yamcs.ycl.dsl.YCL.XtextEditor.opened" />
+	            		<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.XtextEditor.opened" />
 						<iterate>
 							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 						</iterate>
@@ -189,7 +189,7 @@
 		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
 			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
 				<visibleWhen checkEnabled="false">
-                	<reference definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+                	<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
                 	</reference>
             	</visibleWhen>
 			</command>
@@ -197,11 +197,11 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 	    <handler
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
             commandId="org.eclipse.xtext.ui.editor.FindReferences">
             <activeWhen>
                 <reference
-                    definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+                    definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
                 </reference>
             </activeWhen>
         </handler>
@@ -212,45 +212,45 @@
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
-			class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
 			type="ycl">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="ycl">
         </resourceServiceProvider>
     </extension>
 
 
-	<!-- marker definitions for org.csstudio.yamcs.ycl.dsl.YCL -->
-	<extension
-	        id="ycl.check.fast"
-	        name="YCL Problem"
-	        point="org.eclipse.core.resources.markers">
-	    <super type="org.eclipse.xtext.ui.check.fast"/>
-	    <persistent value="true"/>
-	</extension>
-	<extension
-	        id="ycl.check.normal"
-	        name="YCL Problem"
-	        point="org.eclipse.core.resources.markers">
-	    <super type="org.eclipse.xtext.ui.check.normal"/>
-	    <persistent value="true"/>
-	</extension>
-	<extension
-	        id="ycl.check.expensive"
-	        name="YCL Problem"
-	        point="org.eclipse.core.resources.markers">
-	    <super type="org.eclipse.xtext.ui.check.expensive"/>
-	    <persistent value="true"/>
-	</extension>
+    <!-- marker definitions for org.yamcs.studio.ycl.dsl.YCL -->
+    <extension
+            id="ycl.check.fast"
+            name="YCL Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="ycl.check.normal"
+            name="YCL Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="ycl.check.expensive"
+            name="YCL Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
 
    <extension
          point="org.eclipse.xtext.builder.participant">
       <participant
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
             fileExtensions="ycl"
             >
       </participant>
@@ -258,37 +258,58 @@
    <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            category="org.csstudio.yamcs.ycl.dsl.YCL"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.csstudio.yamcs.ycl.dsl.YCL.compiler.preferencePage"
+            category="org.yamcs.studio.ycl.dsl.YCL"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+            id="org.yamcs.studio.ycl.dsl.YCL.compiler.preferencePage"
             name="Compiler">
-            <keywordReference id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"/>
+            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
         </page>
     </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            category="org.csstudio.yamcs.ycl.dsl.YCL"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.csstudio.yamcs.ycl.dsl.YCL.compiler.propertyPage"
+            category="org.yamcs.studio.ycl.dsl.YCL"
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+            id="org.yamcs.studio.ycl.dsl.YCL.compiler.propertyPage"
             name="Compiler">
-            <keywordReference id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"/>
+            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
 	        <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
         </page>
     </extension>
+    <extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?after=xtext.ui.openDeclaration">
+			<command
+				commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand"
+				id="org.yamcs.studio.ycl.dsl.YCL.OpenGeneratedCode"
+				style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened" />
+					</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
+			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
+				<activeWhen>
+					<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened" />
+				</activeWhen>
+		</handler>
+	</extension>
 
 	<!-- Quick Outline -->
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler 
-			class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
 				<reference
-					definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+					definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -308,33 +329,33 @@
 				style="push"
 				tooltip="Open Quick Outline">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened"/>
+					<reference definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened"/>
 				</visibleWhen>
 			</command>
 		</menuContribution>
 	</extension>
-    <!-- quickfix marker resolution generator for org.csstudio.yamcs.ycl.dsl.YCL -->
+    <!-- quickfix marker resolution generator for org.yamcs.studio.ycl.dsl.YCL -->
     <extension
             point="org.eclipse.ui.ide.markerResolution">
         <markerResolutionGenerator
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="org.csstudio.yamcs.ycl.dsl.ui.ycl.check.fast">
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.yamcs.studio.ycl.dsl.ui.ycl.check.fast">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
             </attribute>
         </markerResolutionGenerator>
         <markerResolutionGenerator
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="org.csstudio.yamcs.ycl.dsl.ui.ycl.check.normal">
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.yamcs.studio.ycl.dsl.ui.ycl.check.normal">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
             </attribute>
         </markerResolutionGenerator>
         <markerResolutionGenerator
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="org.csstudio.yamcs.ycl.dsl.ui.ycl.check.expensive">
+            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.yamcs.studio.ycl.dsl.ui.ycl.check.expensive">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
@@ -344,11 +365,11 @@
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
-			class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
 				<reference
-					definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+					definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -360,7 +381,7 @@
                style="push">
             <visibleWhen checkEnabled="false">
                <reference
-                     definitionId="org.csstudio.yamcs.ycl.dsl.YCL.Editor.opened">
+                     definitionId="org.yamcs.studio.ycl.dsl.YCL.Editor.opened">
                </reference>
             </visibleWhen>
          </command>
@@ -368,31 +389,12 @@
    </extension>
    <extension point="org.eclipse.ui.preferencePages">
 	    <page
-	        category="org.csstudio.yamcs.ycl.dsl.YCL"
-	        class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-	        id="org.csstudio.yamcs.ycl.dsl.YCL.refactoring"
+	        category="org.yamcs.studio.ycl.dsl.YCL"
+	        class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+	        id="org.yamcs.studio.ycl.dsl.YCL.refactoring"
 	        name="Refactoring">
-	        <keywordReference id="org.csstudio.yamcs.ycl.dsl.ui.keyword_YCL"/>
+	        <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
 	    </page>
 	</extension>
-
-  <extension point="org.eclipse.compare.contentViewers">
-    <viewer id="org.csstudio.yamcs.ycl.dsl.YCL.compare.contentViewers"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="ycl">
-    </viewer>
-  </extension>
-  <extension point="org.eclipse.compare.contentMergeViewers">
-    <viewer id="org.csstudio.yamcs.ycl.dsl.YCL.compare.contentMergeViewers"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="ycl" label="YCL Compare">
-     </viewer>
-  </extension>
-  <extension point="org.eclipse.ui.editors.documentProviders">
-    <provider id="org.csstudio.yamcs.ycl.dsl.YCL.editors.documentProviders"
-            class="org.csstudio.yamcs.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="ycl">
-    </provider>
-  </extension>
 
 </plugin>
