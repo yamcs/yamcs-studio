@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.commanding;
+package org.yamcs.studio.core.commanding.cmdhist;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
 
-public class TelecommandRecordContentProvider implements IStructuredContentProvider {
+public class CommandHistoryRecordContentProvider implements IStructuredContentProvider {
 
     public static final String GREEN = "icons/ok.png";
     public static final String RED = "icons/nok.png";
@@ -19,10 +19,10 @@ public class TelecommandRecordContentProvider implements IStructuredContentProvi
     private static final String STATUS_SUFFIX = "_Status";
     private static final String TIME_SUFFIX = "_Time";
 
-    private Map<CommandId, TelecommandRecord> recordsByCommandId = new LinkedHashMap<>();
+    private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
     private TableViewer tableViewer;
 
-    public TelecommandRecordContentProvider(TableViewer tableViewer) {
+    public CommandHistoryRecordContentProvider(TableViewer tableViewer) {
         this.tableViewer = tableViewer;
     }
 
@@ -42,13 +42,13 @@ public class TelecommandRecordContentProvider implements IStructuredContentProvi
 
     public void processCommandHistoryEntry(CommandHistoryEntry entry) {
         CommandId commandId = entry.getCommandId();
-        TelecommandRecord rec;
+        CommandHistoryRecord rec;
         boolean create;
         if (recordsByCommandId.containsKey(commandId)) {
             rec = recordsByCommandId.get(commandId);
             create = false;
         } else {
-            rec = new TelecommandRecord(commandId);
+            rec = new CommandHistoryRecord(commandId);
             recordsByCommandId.put(commandId, rec);
             create = true;
         }

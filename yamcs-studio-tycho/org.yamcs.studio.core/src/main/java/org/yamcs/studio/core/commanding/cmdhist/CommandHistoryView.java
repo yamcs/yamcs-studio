@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.commanding;
+package org.yamcs.studio.core.commanding.cmdhist;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,9 +47,9 @@ import com.google.protobuf.MessageLite;
 /**
  * TODO show a friendly message when the thing is still loading
  */
-public class TelecommandView extends ViewPart {
+public class CommandHistoryView extends ViewPart {
 
-    private static final Logger log = Logger.getLogger(TelecommandView.class.getName());
+    private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
 
     public static final String COL_COMMAND = "Command";
     public static final String COL_SRC_ID = "Src.ID";
@@ -73,12 +73,12 @@ public class TelecommandView extends ViewPart {
 
     private Composite parent;
     private TableViewer tableViewer;
-    private TelecommandViewerComparator tableViewerComparator;
+    private CommandHistoryViewerComparator tableViewerComparator;
 
     // Store layouts for when a new tcl is set. Because TCLs trigger only once, and we need dynamic columns
     private Map<TableColumn, ColumnLayoutData> layoutDataByColumn = new HashMap<>();
 
-    private TelecommandRecordContentProvider tableContentProvider;
+    private CommandHistoryRecordContentProvider tableContentProvider;
     private Set<String> dynamicColumns = new HashSet<>();
 
     @Override
@@ -87,7 +87,7 @@ public class TelecommandView extends ViewPart {
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
         // Load images
-        Bundle bundle = FrameworkUtil.getBundle(TelecommandView.class);
+        Bundle bundle = FrameworkUtil.getBundle(CommandHistoryView.class);
         ImageDescriptor desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/ok.png"), null));
         greenBubble = resourceManager.createImage(desc);
         desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/nok.png"), null));
@@ -103,11 +103,11 @@ public class TelecommandView extends ViewPart {
         addFixedColumns();
         applyColumnLayoutData(tcl);
 
-        tableContentProvider = new TelecommandRecordContentProvider(tableViewer);
+        tableContentProvider = new CommandHistoryRecordContentProvider(tableViewer);
         tableViewer.setContentProvider(tableContentProvider);
         tableViewer.setInput(tableContentProvider); // ! otherwise refresh() deletes everything...
 
-        tableViewerComparator = new TelecommandViewerComparator();
+        tableViewerComparator = new CommandHistoryViewerComparator();
         tableViewer.setComparator(tableViewerComparator);
 
         subscribeToUpdates();
@@ -121,7 +121,7 @@ public class TelecommandView extends ViewPart {
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((TelecommandRecord) element).getSource();
+                return ((CommandHistoryRecord) element).getSource();
             }
         });
         layoutDataByColumn.put(nameColumn.getColumn(), new ColumnWeightData(200));
@@ -133,7 +133,7 @@ public class TelecommandView extends ViewPart {
         seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return String.valueOf(((TelecommandRecord) element).getSequenceNumber());
+                return String.valueOf(((CommandHistoryRecord) element).getSequenceNumber());
             }
         });
         layoutDataByColumn.put(seqIdColumn.getColumn(), new ColumnPixelData(50));
@@ -144,7 +144,7 @@ public class TelecommandView extends ViewPart {
         originColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((TelecommandRecord) element).getOrigin();
+                return ((CommandHistoryRecord) element).getOrigin();
             }
         });
         layoutDataByColumn.put(originColumn.getColumn(), new ColumnWeightData(70));
@@ -155,7 +155,7 @@ public class TelecommandView extends ViewPart {
         userColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((TelecommandRecord) element).getUsername();
+                return ((CommandHistoryRecord) element).getUsername();
             }
         });
         layoutDataByColumn.put(userColumn.getColumn(), new ColumnWeightData(70));
@@ -167,7 +167,7 @@ public class TelecommandView extends ViewPart {
         finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return String.valueOf(((TelecommandRecord) element).getFinalSequenceCount());
+                return String.valueOf(((CommandHistoryRecord) element).getFinalSequenceCount());
             }
         });
         layoutDataByColumn.put(finalSeqColumn.getColumn(), new ColumnPixelData(50));
@@ -179,7 +179,7 @@ public class TelecommandView extends ViewPart {
         gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((TelecommandRecord) element).getGenerationTime();
+                return ((CommandHistoryRecord) element).getGenerationTime();
             }
         });
         layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
@@ -205,7 +205,7 @@ public class TelecommandView extends ViewPart {
 
             @Override
             public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
-                Display.getDefault().asyncExec(() -> TelecommandView.this.processCommandHistoryEntry(cmdhistEntry));
+                Display.getDefault().asyncExec(() -> CommandHistoryView.this.processCommandHistoryEntry(cmdhistEntry));
             }
         });
     }
@@ -220,7 +220,7 @@ public class TelecommandView extends ViewPart {
                 RestDumpArchiveResponse response = (RestDumpArchiveResponse) responseMsg;
                 Display.getDefault().asyncExec(() -> {
                     for (CommandHistoryEntry cmdhistEntry : response.getCommandList())
-                        TelecommandView.this.processCommandHistoryEntry(cmdhistEntry);
+                        CommandHistoryView.this.processCommandHistoryEntry(cmdhistEntry);
                 });
             }
 
@@ -239,8 +239,8 @@ public class TelecommandView extends ViewPart {
 
             String shortName = attr.getName()
                     .replace(ACK_PREFIX, "")
-                    .replace(TelecommandRecord.STATUS_SUFFIX, "")
-                    .replace(TelecommandRecord.TIME_SUFFIX, "");
+                    .replace(CommandHistoryRecord.STATUS_SUFFIX, "")
+                    .replace(CommandHistoryRecord.TIME_SUFFIX, "");
             if (!dynamicColumns.contains(shortName)) {
                 TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
                 column.getColumn().setText(shortName);
@@ -248,20 +248,20 @@ public class TelecommandView extends ViewPart {
                 column.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        return ((TelecommandRecord) element).getTextForColumn(shortName);
+                        return ((CommandHistoryRecord) element).getTextForColumn(shortName);
                     }
 
                     @Override
                     public String getToolTipText(Object element) {
-                        return ((TelecommandRecord) element).getTooltipForColumn(shortName);
+                        return ((CommandHistoryRecord) element).getTooltipForColumn(shortName);
                     }
 
                     @Override
                     public Image getImage(Object element) {
-                        String imgLoc = ((TelecommandRecord) element).getImageForColumn(shortName);
-                        if (TelecommandRecordContentProvider.GREEN.equals(imgLoc))
+                        String imgLoc = ((CommandHistoryRecord) element).getImageForColumn(shortName);
+                        if (CommandHistoryRecordContentProvider.GREEN.equals(imgLoc))
                             return greenBubble;
-                        else if (TelecommandRecordContentProvider.RED.equals(imgLoc))
+                        else if (CommandHistoryRecordContentProvider.RED.equals(imgLoc))
                             return redBubble;
                         else
                             return null;

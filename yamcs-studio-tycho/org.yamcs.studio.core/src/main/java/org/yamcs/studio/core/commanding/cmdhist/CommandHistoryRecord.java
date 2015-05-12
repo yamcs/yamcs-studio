@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.commanding;
+package org.yamcs.studio.core.commanding.cmdhist;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -17,7 +17,7 @@ import org.yamcs.utils.TimeEncoding;
 /**
  * Keeps an assembled state of multiple events related to one CommandId
  */
-public class TelecommandRecord {
+public class CommandHistoryRecord {
 
     private static final String KEY_RAW_VALUE = "RAW_VALUE";
     private static final String KEY_ACK_DURATION = "ACK_DURATION";
@@ -25,7 +25,7 @@ public class TelecommandRecord {
     private static final String KEY_IMAGE = "IMAGE";
     private static final String KEY_TOOLTIP = "TOOLTIP";
 
-    private static final Logger log = Logger.getLogger(TelecommandRecord.class.getName());
+    private static final Logger log = Logger.getLogger(CommandHistoryRecord.class.getName());
     public static final String STATUS_SUFFIX = "_Status";
     public static final String TIME_SUFFIX = "_Time";
 
@@ -40,7 +40,7 @@ public class TelecommandRecord {
     private String finalSequenceCount;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
-    public TelecommandRecord(CommandId id) {
+    public CommandHistoryRecord(CommandId id) {
         this.id = id;
     }
 

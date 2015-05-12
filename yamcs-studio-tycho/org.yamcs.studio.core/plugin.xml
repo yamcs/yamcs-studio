@@ -338,10 +338,10 @@
             name="Event Log"/>
       <view
             category="org.csstudio"
-            class="org.yamcs.studio.core.commanding.TelecommandView"
+            class="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"
             icon="icons/tc.png"
-            id="org.yamcs.studio.core.commanding.TelecommandView"
-            name="Telecommanding"/>
+            id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"
+            name="Command History"/>
    </extension>
 
    <extension
@@ -405,7 +405,7 @@
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.core.commanding.TelecommandView">
+               id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -424,7 +424,7 @@
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.core.commanding.TelecommandView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.diag.pvmanager.probe"/>
          <viewShortcut id="org.csstudio.utility.sysmon.SysMonView"/>
@@ -459,7 +459,7 @@
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.core.commanding.TelecommandView">
+               id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -470,7 +470,7 @@
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.core.commanding.TelecommandView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
@@ -529,9 +529,9 @@
        	       visible="true"/>
       </menuContribution>
       
-      <!-- Add icon to the Telecommanding view toolbar -->
+      <!-- Add icon to the Command History view toolbar -->
       <menuContribution
-            locationURI="toolbar:org.yamcs.studio.core.commanding.TelecommandView">
+            locationURI="toolbar:org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView">
          <command
                commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand"
                icon="icons/tc_add.png"
