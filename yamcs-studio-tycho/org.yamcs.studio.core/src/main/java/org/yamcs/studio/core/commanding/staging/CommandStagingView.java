@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.commanding.cmdstack;
+package org.yamcs.studio.core.commanding.staging;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
@@ -12,7 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-public class CommandStackView extends ViewPart {
+public class CommandStagingView extends ViewPart {
 
     public static final String COL_ROW_ID = "#";
     public static final String COL_COMMAND = "Command";
@@ -21,7 +21,7 @@ public class CommandStackView extends ViewPart {
 
     private TableViewer tableViewer;
 
-    private CommandStackViewerContentProvider tableContentProvider;
+    private CommandStagingViewerContentProvider tableContentProvider;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -35,10 +35,10 @@ public class CommandStackView extends ViewPart {
         tableViewer.getTable().setLinesVisible(true);
         addFixedColumns(tcl);
 
-        tableContentProvider = new CommandStackViewerContentProvider(tableViewer);
+        tableContentProvider = new CommandStagingViewerContentProvider(tableViewer);
         tableViewer.setContentProvider(tableContentProvider);
         tableViewer.setInput(tableContentProvider); // ! otherwise refresh() deletes everything...
-        tableViewer.setComparator(new CommandStackViewerComparator());
+        tableViewer.setComparator(new CommandStagingViewerComparator());
     }
 
     private void addFixedColumns(TableColumnLayout tcl) {

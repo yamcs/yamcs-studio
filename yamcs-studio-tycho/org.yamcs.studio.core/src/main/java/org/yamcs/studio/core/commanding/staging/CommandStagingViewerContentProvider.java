@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.commanding.cmdstack;
+package org.yamcs.studio.core.commanding.staging;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,12 +10,12 @@ import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.studio.core.commanding.cmdhist.CommandHistoryRecord;
 
-public class CommandStackViewerContentProvider implements IStructuredContentProvider {
+public class CommandStagingViewerContentProvider implements IStructuredContentProvider {
 
     private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
     private TableViewer tableViewer;
 
-    public CommandStackViewerContentProvider(TableViewer tableViewer) {
+    public CommandStagingViewerContentProvider(TableViewer tableViewer) {
         this.tableViewer = tableViewer;
     }
 

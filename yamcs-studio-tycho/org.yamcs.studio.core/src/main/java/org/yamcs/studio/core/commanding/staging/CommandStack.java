@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.commanding.cmdstack;
+package org.yamcs.studio.core.commanding.staging;
 
 import java.util.ArrayList;
 import java.util.List;

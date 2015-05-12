@@ -172,8 +172,8 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.core.commanding.cmdstack.addToCommandStackCommand"
-            name="Add To Command Stack Command">
+            id="org.yamcs.studio.core.commanding.staging.stageCommandCommand"
+            name="Stage Command">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -231,8 +231,8 @@
             commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.core.commanding.cmdstack.AddToCommandStackCommandHandler"
-            commandId="org.yamcs.studio.core.commanding.cmdstack.addToCommandStackCommand">
+            class="org.yamcs.studio.core.commanding.staging.StageCommandCommandHandler"
+            commandId="org.yamcs.studio.core.commanding.staging.stageCommandCommand">
       </handler>
       <handler
             class="org.yamcs.studio.core.archive.RefreshHandler"
@@ -353,10 +353,10 @@
             name="Command History"/>
       <view
             category="org.yamcs.studio.server"
-            class="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"
+            class="org.yamcs.studio.core.commanding.staging.CommandStagingView"
             icon="icons/stacked.png"
-            id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"
-            name="Command Stack"/>
+            id="org.yamcs.studio.core.commanding.staging.CommandStagingView"
+            name="Command Staging"/>
    </extension>
 
    <extension
@@ -420,7 +420,7 @@
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView">
+               id="org.yamcs.studio.core.commanding.staging.CommandStagingView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -446,7 +446,7 @@
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.staging.CommandStagingView"/>
          <viewShortcut id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.diag.pvmanager.probe"/>
@@ -480,7 +480,7 @@
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"/>
+               id="org.yamcs.studio.core.commanding.staging.CommandStagingView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -494,7 +494,7 @@
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.core.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.core.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.core.commanding.cmdstack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.core.commanding.staging.CommandStagingView"/>
          <viewShortcut id="org.yamcs.studio.core.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
@@ -554,13 +554,13 @@
        	       visible="true"/>
       </menuContribution>
       
-      <!-- Add icon to the Command Stack view toolbar -->
+      <!-- Add icon to the Command Staging view toolbar -->
       <menuContribution
-            locationURI="toolbar:org.yamcs.studio.core.commanding.cmdstack.CommandStackView">
+            locationURI="toolbar:org.yamcs.studio.core.commanding.staging.CommandStagingView">
          <command
-               commandId="org.yamcs.studio.core.commanding.cmdstack.addToCommandStackCommand"
+               commandId="org.yamcs.studio.core.commanding.staging.stageCommandCommand"
                icon="icons/tc_add.png"
-               label="Add to Command Stack"
+               label="Stage command"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
       </menuContribution>

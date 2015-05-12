@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.commanding.cmdstack;
+package org.yamcs.studio.core.commanding.staging;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -21,21 +21,22 @@ import org.yamcs.studio.ycl.dsl.ui.internal.YCLActivator;
 import com.google.inject.Injector;
 
 /**
+ * Inspiration for embedded editors:
  * https://github.com/eclipse/xtext/tree/master/plugins/org.eclipse.xtext.ui.codetemplates.ui/src/
  * org/eclipse/xtext/ui/codetemplates/ui/preferences
  *
  */
 @SuppressWarnings("restriction")
-public class AddToCommandStackDialog extends TitleAreaDialog {
+public class StageCommandDialog extends TitleAreaDialog {
 
-    public AddToCommandStackDialog(Shell parentShell) {
+    public StageCommandDialog(Shell parentShell) {
         super(parentShell);
     }
 
     @Override
     public void create() {
         super.create();
-        setTitle("Add to Command Stack");
+        setTitle("Stage one or more commands");
         // setMessage("informative message");
     }
 
