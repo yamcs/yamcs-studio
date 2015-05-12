@@ -78,29 +78,6 @@
         </definition>
     </extension>
     <extension
-            point="org.eclipse.ui.preferencePages">
-        <page
-            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.yamcs.studio.ycl.dsl.YCL"
-            name="YCL">
-            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
-        </page>
-        <page
-            category="org.yamcs.studio.ycl.dsl.YCL"
-            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
-            id="org.yamcs.studio.ycl.dsl.YCL.coloring"
-            name="Syntax Coloring">
-            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
-        </page>
-        <page
-            category="org.yamcs.studio.ycl.dsl.YCL"
-            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
-            id="org.yamcs.studio.ycl.dsl.YCL.templates"
-            name="Templates">
-            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
-        </page>
-    </extension>
-    <extension
             point="org.eclipse.ui.propertyPages">
         <page
             class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
@@ -255,16 +232,6 @@
             >
       </participant>
    </extension>
-   <extension
-            point="org.eclipse.ui.preferencePages">
-        <page
-            category="org.yamcs.studio.ycl.dsl.YCL"
-            class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.yamcs.studio.ycl.dsl.YCL.compiler.preferencePage"
-            name="Compiler">
-            <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
-        </page>
-    </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
@@ -387,14 +354,5 @@
          </command>
       </menuContribution>
    </extension>
-   <extension point="org.eclipse.ui.preferencePages">
-	    <page
-	        category="org.yamcs.studio.ycl.dsl.YCL"
-	        class="org.yamcs.studio.ycl.dsl.ui.YCLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-	        id="org.yamcs.studio.ycl.dsl.YCL.refactoring"
-	        name="Refactoring">
-	        <keywordReference id="org.yamcs.studio.ycl.dsl.ui.keyword_YCL"/>
-	    </page>
-	</extension>
 
 </plugin>

@@ -30,6 +30,5 @@ public class YamcsStudioWorkbenchAdvisor extends ApplicationWorkbenchAdvisor {
         pm.remove("org.eclipse.team.ui.TeamPreferences");
         pm.remove("org.csstudio.platform.ui.css.applications");
         pm.remove("org.csstudio.platform.ui.css.platform");
-        pm.remove("org.csstudio.yamcs.ycl.dsl.YCL");
     }
 }
