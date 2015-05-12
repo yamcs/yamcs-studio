@@ -15,19 +15,21 @@ import com.google.inject.Provider;
  * Use this class to register components to be used within the IDE.
  */
 public class YCLUiModule extends org.yamcs.studio.ycl.dsl.ui.AbstractYCLUiModule {
+
     public YCLUiModule(AbstractUIPlugin plugin) {
         super(plugin);
     }
 
+    /**
+     * This prevents an annoying pop-up from asking whether you want to add the seemingly useless
+     * 'xtext nature' to the project whenever you open a *.ycl file.
+     * <p>
+     * The default behaviour was to return the NatureAddingEditorCallback.
+     *
+     * @author fdi
+     */
     @Override
     public Class<? extends IXtextEditorCallback> bindIXtextEditorCallback() {
-        /*
-         * This prevents an annoying pop-up from asking whether you want to add the seemingly
-         * useless 'xtext nature' to the project whenever you open a *.ycl file. <p> The default
-         * behaviour was to return the NatureAddingEditorCallback.
-         * 
-         * @author fdi
-         */
         return IXtextEditorCallback.NullImpl.class;
     }
 
@@ -54,4 +56,9 @@ public class YCLUiModule extends org.yamcs.studio.ycl.dsl.ui.AbstractYCLUiModule
     public Provider<IAllContainersState> provideIAllContainersState() {
         return Access.getWorkspaceProjectsState();
     }
+
+    /*
+     * public Class<? extends IScopeProvider> bindIScopeProvider() { return
+     * SyntheticResourceAwareScopeProvider.class; }
+     */
 }

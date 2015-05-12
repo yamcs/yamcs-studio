@@ -172,6 +172,11 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.core.commanding.cmdstack.addToCommandStackCommand"
+            name="Add To Command Stack Command">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.archive.refreshCommand"
             name="Refresh">
       </command>
@@ -224,6 +229,10 @@
       <handler
             class="org.yamcs.studio.core.commanding.IssueCommandHandler"
             commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.core.commanding.cmdstack.AddToCommandStackCommandHandler"
+            commandId="org.yamcs.studio.core.commanding.cmdstack.addToCommandStackCommand">
       </handler>
       <handler
             class="org.yamcs.studio.core.archive.RefreshHandler"
@@ -549,9 +558,9 @@
       <menuContribution
             locationURI="toolbar:org.yamcs.studio.core.commanding.cmdstack.CommandStackView">
          <command
-               commandId="org.yamcs.studio.core.commanding.issueTelecommandCommand"
+               commandId="org.yamcs.studio.core.commanding.cmdstack.addToCommandStackCommand"
                icon="icons/tc_add.png"
-               label="Issue Telecommand"
+               label="Add to Command Stack"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.ToolbarSpacer"/>
       </menuContribution>
