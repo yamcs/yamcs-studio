@@ -15,7 +15,6 @@ import org.yamcs.studio.core.PVConnectionInfo;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.YamcsUtils;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -41,6 +40,11 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     public SoftwareParameterChannelHandler(String channelName, WebSocketRegistrar webSocketClient) {
         super(channelName);
         this.webSocketClient = webSocketClient;
+    }
+
+    @Override
+    public String getMdbNamespace() {
+        return YamcsPlugin.getDefault().getMdbNamespace();
     }
 
     @Override
@@ -95,7 +99,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     protected void write(Object newValue, ChannelWriteCallback callback) {
         Parameter p = YamcsPlugin.getDefault().getMdb().getParameter(YamcsPlugin.getDefault().getMdbNamespace(), getChannelName());
         ParameterData pdata = ParameterData.newBuilder().addParameter(ParameterValue.newBuilder()
-                .setId(YamcsUtils.toNamedObjectId(getPVName()))
+                .setId(toNamedObjectId())
                 .setEngValue(toValue(p, (String) newValue))).build();
 
         RestClient client = YamcsPlugin.getDefault().getRestClient();

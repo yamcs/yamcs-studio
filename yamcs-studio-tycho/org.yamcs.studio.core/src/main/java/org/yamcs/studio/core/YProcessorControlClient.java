@@ -10,10 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.services.ISourceProviderService;
 import org.hornetq.api.core.HornetQException;
 import org.hornetq.api.core.client.ClientMessage;
 import org.yamcs.YamcsException;
@@ -27,7 +23,6 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.processor.ProcessingCommandState;
 
 /**
  * controls yprocessors in yamcs server via hornetq TODO move this to websocket instead
@@ -100,22 +95,18 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
             if ("yprocUpdated".equals(eventName)) {
                 ProcessorInfo processorInfo = (ProcessorInfo) Protocol.decode(msg, ProcessorInfo.newBuilder());
                 processorInfoByName.put(processorInfo.getName(), processorInfo);
-                updateGlobalProcessingState(processorInfo);
                 listeners.forEach(l -> l.processorUpdated(processorInfo));
             } else if ("yprocClosed".equals(eventName)) {
                 ProcessorInfo processorInfo = (ProcessorInfo) Protocol.decode(msg, ProcessorInfo.newBuilder());
                 processorInfoByName.remove(processorInfo.getName());
-                updateGlobalProcessingState(processorInfo);
                 listeners.forEach(l -> l.yProcessorClosed(processorInfo));
             } else if ("clientUpdated".equals(eventName)) {
                 ClientInfo clientInfo = (ClientInfo) Protocol.decode(msg, ClientInfo.newBuilder());
                 clientInfoById.put(clientInfo.getId(), clientInfo);
-                updateGlobalProcessingState(clientInfo);
                 listeners.forEach(l -> l.clientUpdated(clientInfo));
             } else if ("clientDisconnected".equals(eventName)) {
                 ClientInfo clientInfo = (ClientInfo) Protocol.decode(msg, ClientInfo.newBuilder());
                 clientInfoById.remove(clientInfo.getId());
-                updateGlobalProcessingState(clientInfo);
                 listeners.forEach(l -> l.clientDisconnected(clientInfo));
             } else {
                 log.warning("Received unknown message '" + eventName + "'");
@@ -123,35 +114,6 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
         } catch (YamcsApiException e) {
             log.log(Level.SEVERE, "Error when decoding message", e);
         }
-    }
-
-    private void updateGlobalProcessingState(ProcessorInfo processorInfo) {
-        // First update state of various buttons (at the level of the workbench)
-        // (TODO sometimes clientInfo has not been updated yet, that's whey we have the next method too)
-        Display.getDefault().asyncExec(() -> {
-            ClientInfo clientInfo = YamcsPlugin.getDefault().getClientInfo();
-            if (clientInfo.getProcessorName().equals(processorInfo.getName())) {
-                doUpdateGlobalProcessingState(processorInfo);
-            }
-        });
-    }
-
-    private void updateGlobalProcessingState(ClientInfo clientInfo) {
-        // TODO Not sure which one of this method or the previous would trigger first, and whether that's deterministic
-        // therefore, just have similar logic here.
-        Display.getDefault().asyncExec(() -> {
-            if (clientInfo.getId() == YamcsPlugin.getDefault().getClientInfo().getId()) {
-                ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(clientInfo.getProcessorName());
-                doUpdateGlobalProcessingState(processorInfo);
-            }
-        });
-    }
-
-    private void doUpdateGlobalProcessingState(ProcessorInfo processorInfo) {
-        IWorkbench workbench = PlatformUI.getWorkbench();
-        ISourceProviderService service = (ISourceProviderService) workbench.getService(ISourceProviderService.class);
-        ProcessingCommandState state = (ProcessingCommandState) service.getSourceProvider(ProcessingCommandState.STATE_KEY_PROCESSING);
-        state.updateState(processorInfo);
     }
 
     private void sendStatistics(ClientMessage msg) {

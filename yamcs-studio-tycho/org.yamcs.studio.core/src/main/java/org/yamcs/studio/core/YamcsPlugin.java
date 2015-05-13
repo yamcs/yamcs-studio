@@ -10,16 +10,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
-import org.osgi.framework.FrameworkUtil;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
@@ -134,19 +130,19 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public String getInstance() {
-        return YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_instance");
+        return getPreferenceStore().getString("yamcs_instance");
     }
 
     public String getHost() {
-        return YamcsPlugin.getDefault().getPreferenceStore().getString("yamcs_host");
+        return getPreferenceStore().getString("yamcs_host");
     }
 
     public int getWebPort() {
-        return YamcsPlugin.getDefault().getPreferenceStore().getInt("yamcs_port");
+        return getPreferenceStore().getInt("yamcs_port");
     }
 
     public String getMdbNamespace() {
-        return YamcsPlugin.getDefault().getPreferenceStore().getString("mdb_namespace");
+        return getPreferenceStore().getString("mdb_namespace");
     }
 
     private void loadParameters() {
@@ -236,11 +232,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public static YamcsPlugin getDefault() {
         return plugin;
-    }
-
-    public static ImageDescriptor getImageDescriptor(String path) {
-        Bundle bundle = FrameworkUtil.getBundle(YamcsPlugin.class);
-        return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
     }
 
     public List<RestParameter> getParameters() {

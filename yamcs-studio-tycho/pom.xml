@@ -28,6 +28,7 @@
 	<modules>
 		<module>org.yamcs.studio.core</module>
 		<module>org.yamcs.studio.opibuilder.script</module>
+		<module>org.yamcs.studio.ui</module>
 		<module>org.yamcs.studio.ycl.dsl</module>
 		<module>org.yamcs.studio.ycl.ui</module>
 		<module>yamcs-studio-feature</module>

@@ -14,6 +14,7 @@ Require-Bundle: org.yamcs.studio.ycl.dsl;visibility:=reexport,
  org.eclipse.xtext.builder,
  org.eclipse.xtext.xbase.lib,
  org.antlr.runtime,
+ org.yamcs.studio.core,
  org.yamcs.osgiclient
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

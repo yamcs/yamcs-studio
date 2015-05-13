@@ -14,7 +14,7 @@
 
 	<build>
 		<plugins>
-			<!-- Icons are in ../org.yamcs.studio.core/icons, but Tycho wants them in
+			<!-- Icons are in ../org.yamcs.studio.ui/icons, but Tycho wants them in
 				../yamcs-studio-repository/target/products/yamcs-studio/icons
 				(Copied from SNS-product build)
 			  -->
@@ -30,7 +30,7 @@
 								<echo message="Copying icons into tycho target directory ${project.build.directory}" />
 								<copy todir="${project.build.directory}/products/yamcs-studio" verbose="false">
 									<fileset dir="${project.build.directory}/../..">
-										<include name="org.yamcs.studio.core/icons/**" />
+										<include name="org.yamcs.studio.ui/icons/**" />
 									</fileset>
 								</copy>
 							</target>

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.yamcs.studio.core.YamcsPlugin
-Bundle-Description: Provides Yamcs connectivity to pvManager
+Bundle-Description: Yamcs Studio Connectivity
 Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs Studio
 Bundle-SymbolicName: org.yamcs.studio.core;singleton:=true
@@ -14,43 +14,17 @@ Require-Bundle: org.epics.vtype,
  org.eclipse.core.runtime,
  org.yamcs.osgiclient,
  org.csstudio.vtype.pv,
- org.csstudio.autocomplete,
  org.csstudio.utility.pvmanager,
  org.eclipse.core.resources,
  org.eclipse.core.expressions,
- org.eclipse.equinox.security;bundle-version="1.0.200",
- org.eclipse.ui.ide;bundle-version="3.6.0",
- org.csstudio.logging,
- org.csstudio.logging.ui,
- org.csstudio.workspace,
- org.csstudio.startup,
- org.csstudio.utility.product,
- org.csstudio.apputil.ui,
- org.csstudio.ui.menu.app,
- org.csstudio.startup.helper,
- org.csstudio.security,
- org.csstudio.security.ui,
- org.eclipse.e4.core.services,
- org.eclipse.e4.core.contexts,
- org.eclipse.e4.ui.workbench,
- org.eclipse.e4.ui.workbench.addons.swt,
  org.eclipse.osgi.services,
- org.eclipse.e4.core.di,
- org.eclipse.e4.ui.di,
- org.eclipse.e4.ui.model.workbench,
  org.eclipse.platform,
- javax.inject,
- org.eclipse.mylyn.commons.ui,
- org.csstudio.opibuilder,
- org.eclipse.xtext.ui,
- org.yamcs.studio.ycl.ui
+ javax.inject
 Import-Package: org.epics.pvmanager,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.core,
  org.yamcs.studio.core.vtype,
  org.yamcs.studio.core.vtype.pv,
  org.yamcs.studio.core.web,
- org.yamcs.studio.core.commanding,
  org.yamcs.studio.core.pvmanager
-Service-Component: OSGI-INF/*.xml
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

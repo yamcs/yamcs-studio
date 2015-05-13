@@ -13,26 +13,26 @@ public interface ProcessorListener {
     /**
      * Called when *any* processor is updated. Includes 'replay state', 'replay configuration'.
      */
-    public void processorUpdated(ProcessorInfo ci);
+    public void processorUpdated(ProcessorInfo processorInfo);
 
     /**
      * Called when *any* processor is closed
      */
-    public void yProcessorClosed(ProcessorInfo ci);
+    public void yProcessorClosed(ProcessorInfo processorInfo);
 
     /**
      * Called when *any* processor's statistics are updated. Includes current time of the replay.
      */
-    public void updateStatistics(Statistics s);
+    public void updateStatistics(Statistics stats);
 
     /**
      * Called when *any* client's ClientInfo was updated. Includes things like the subscribed
      * processor.
      */
-    public void clientUpdated(ClientInfo ci);
+    public void clientUpdated(ClientInfo clientInfo);
 
     /**
      * Called when *any* client was disconnected.
      */
-    public void clientDisconnected(ClientInfo ci);
+    public void clientDisconnected(ClientInfo clientInfo);
 }

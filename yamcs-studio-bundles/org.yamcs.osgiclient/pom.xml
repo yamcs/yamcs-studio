@@ -47,7 +47,7 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<unpackBundle>true</unpackBundle>
 					<instructions>
-						<Bundle-Name>Yamcs Client</Bundle-Name>
+						<Bundle-Name>Yamcs OSGI Client</Bundle-Name>
 						<Bundle-SymbolicName>org.yamcs.osgiclient;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
 						<Bundle-Description>OSGI-friendly repackaging of yamcs-client</Bundle-Description>

@@ -110,13 +110,13 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         RestParameter p = availableParametersByName.get(pvReader.getPVName());
         pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), p));
         // Register (pending) websocket request
-        NamedObjectList idList = YamcsUtils.toNamedObjectList(pvReader.getPVName());
+        NamedObjectList idList = pvReader.toNamedObjectList();
         pendingRequests.offer(new MergeableWebSocketRequest("parameter", "subscribe", idList));
     }
 
     public synchronized void unregister(YamcsPVReader pvReader) {
         pvReadersByName.remove(pvReader);
-        NamedObjectList idList = YamcsUtils.toNamedObjectList(pvReader.getPVName());
+        NamedObjectList idList = pvReader.toNamedObjectList();
         pendingRequests.offer(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
     }
 

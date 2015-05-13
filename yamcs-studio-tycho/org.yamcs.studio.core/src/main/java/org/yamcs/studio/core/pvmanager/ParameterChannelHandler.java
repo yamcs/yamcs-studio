@@ -11,6 +11,7 @@ import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.studio.core.PVConnectionInfo;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 
 /**
@@ -27,6 +28,11 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     public ParameterChannelHandler(String channelName, WebSocketRegistrar webSocketClient) {
         super(channelName);
         this.webSocketClient = webSocketClient;
+    }
+
+    @Override
+    public String getMdbNamespace() {
+        return YamcsPlugin.getDefault().getMdbNamespace();
     }
 
     @Override

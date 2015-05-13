@@ -7,4 +7,5 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Space Applications Services
 Fragment-Host: org.csstudio.opibuilder
 Require-Bundle: org.yamcs.studio.core,
+ org.yamcs.studio.ui,
  org.yamcs.osgiclient

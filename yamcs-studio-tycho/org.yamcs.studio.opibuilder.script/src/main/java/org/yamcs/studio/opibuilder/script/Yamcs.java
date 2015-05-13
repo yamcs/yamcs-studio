@@ -7,10 +7,10 @@ import org.csstudio.opibuilder.scriptUtil.ConsoleUtil;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
-import org.yamcs.studio.core.commanding.CommandParser;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.ui.commanding.CommandParser;
 
 import com.google.protobuf.MessageLite;
 

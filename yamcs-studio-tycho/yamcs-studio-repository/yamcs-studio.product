@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.core.product" application="org.yamcs.studio.core.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.ui.product" application="org.yamcs.studio.ui.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.yamcs.studio.core/icons/aboutSide.png"/>
+      <image path="/org.yamcs.studio.ui/icons/aboutSide.png"/>
       <text>
          CS-Studio customized to suit Yamcs - The Open Source Mission Control System
 
@@ -30,19 +30,19 @@ openFile
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.yamcs.studio.core/icons/css16.png" i32="/org.yamcs.studio.core/icons/css32.png" i48="/org.yamcs.studio.core/icons/css48.png" i64="/org.yamcs.studio.core/icons/css64.png" i128="/org.yamcs.studio.core/icons/css128.png" i256="/org.yamcs.studio.core/icons/css256.png"/>
+   <windowImages i16="/org.yamcs.studio.ui/icons/css16.png" i32="/org.yamcs.studio.ui/icons/css32.png" i48="/org.yamcs.studio.ui/icons/css48.png" i64="/org.yamcs.studio.ui/icons/css64.png" i128="/org.yamcs.studio.ui/icons/css128.png" i256="/org.yamcs.studio.ui/icons/css256.png"/>
 
    <splash
-      location="org.yamcs.studio.core"
+      location="org.yamcs.studio.ui"
       startupProgressRect="20,215,560,15"
       startupMessageRect="20,195,560,20"
       startupForegroundColor="2F376D" />
    <launcher name="Yamcs Studio">
-      <linux icon="/org.yamcs.studio.core/icons/css.xpm"/>
-      <macosx icon="/org.yamcs.studio.core/icons/css.icns"/>
+      <linux icon="/org.yamcs.studio.ui/icons/css.xpm"/>
+      <macosx icon="/org.yamcs.studio.ui/icons/css.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/org.yamcs.studio.core/icons/css.ico"/>
+         <ico path="/org.yamcs.studio.ui/icons/css.ico"/>
          <bmp/>
       </win>
    </launcher>
