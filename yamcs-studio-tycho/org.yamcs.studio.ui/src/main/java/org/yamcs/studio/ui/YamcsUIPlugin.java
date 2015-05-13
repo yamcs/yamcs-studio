@@ -46,7 +46,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin implements ProcessorListener
     }
 
     public static ImageDescriptor getImageDescriptor(String path) {
-        Bundle bundle = FrameworkUtil.getBundle(YamcsPlugin.class);
+        Bundle bundle = FrameworkUtil.getBundle(YamcsUIPlugin.class);
         return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
     }
 
