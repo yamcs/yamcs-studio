@@ -52,7 +52,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private final Thread requestSender;
 
     public WebSocketRegistrar(YamcsConnectionProperties yprops) {
-        wsclient = new WebSocketClient(yprops, this);
+        wsclient = new WebSocketClient(yprops, this, null, null);
         wsclient.setUserAgent(USER_AGENT);
         requestSender = new Thread(() -> {
             try {
