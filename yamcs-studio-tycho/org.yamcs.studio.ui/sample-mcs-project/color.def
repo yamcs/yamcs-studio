@@ -22,7 +22,7 @@ Yellow = 255,255,0
 Purple = 128,0,255
 
 MCS_Text = 255,255,0
-Background_main1 = 146,230,239
+Background_main1 = 86,100,122
 Background_main = 146,230,239
 Background_TMlist= 192,192,192
 Background_text box=255,255,255
