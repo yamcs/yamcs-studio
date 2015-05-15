@@ -8,7 +8,6 @@ import java.util.List;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -25,9 +24,6 @@ public class PerspectiveItems extends CompoundContributionItem {
     public static final String OPEN_PERSPECTIVE_COMMAND = "org.yamcs.studio.ui.commands.openPerspectiveCommand";
     private static final List<String> SUPPORTED_PERSPECTIVES = Arrays.asList(IDs.OPI_EDITOR_PERSPECTIVE, IDs.OPI_RUNTIME_PERSPECTIVE);
 
-    // The runtime perspective image is identical to the builder in our current cs-studio dependencies, so override.
-    private static ImageDescriptor OPI_RUNTIME_IMAGE = YamcsUIPlugin.getImageDescriptor("icons/OPIRunner.png");
-
     @Override
     public IContributionItem[] getContributionItems() {
         IWorkbench workbench = PlatformUI.getWorkbench();
@@ -35,7 +31,6 @@ public class PerspectiveItems extends CompoundContributionItem {
         for (IPerspectiveDescriptor perspective : workbench.getPerspectiveRegistry().getPerspectives()) {
             if (SUPPORTED_PERSPECTIVES.contains(perspective.getId())) {
                 CommandContributionItem item = createProfileItem(perspective);
-                item.setVisible(true);
                 items.add(item);
             }
         }
@@ -54,11 +49,6 @@ public class PerspectiveItems extends CompoundContributionItem {
         params.put(RadioState.PARAMETER_ID, perspective.getId());
 
         itemParameter.label = perspective.getLabel();
-        if (perspective.getId().equals(IDs.OPI_RUNTIME_PERSPECTIVE))
-            itemParameter.icon = OPI_RUNTIME_IMAGE;
-        else
-            itemParameter.icon = perspective.getImageDescriptor();
-        itemParameter.tooltip = perspective.getDescription();
         itemParameter.parameters = params;
 
         return new CommandContributionItem(itemParameter);
