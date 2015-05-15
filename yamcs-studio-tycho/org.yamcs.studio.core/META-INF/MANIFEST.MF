@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.yamcs.studio.core.YamcsPlugin
-Bundle-Description: Yamcs Studio Connectivity
+Bundle-Description: Yamcs Studio Core
 Bundle-ManifestVersion: 2
-Bundle-Name: Yamcs Studio
+Bundle-Name: Yamcs Studio Core
 Bundle-SymbolicName: org.yamcs.studio.core;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

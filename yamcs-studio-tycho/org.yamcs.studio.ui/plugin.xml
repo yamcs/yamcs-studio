@@ -605,84 +605,93 @@
       <menuContribution
             allPopups="false"
             locationURI="toolbar:studiocoolbar?after=processorcontrols">
+         <!-- Must be outside of toolbar, to trigger the height -->
          <command
                commandId="org.yamcs.studio.ui.processor.spacer"
                icon="icons/spacer40x32.png"
                tooltip=""
                id="org.yamcs.studio.toolbar.spacer40x32">
          </command>
-         <command
-               commandId="org.yamcs.studio.ui.processor.firstCommand"
-               icon="icons/first.png"
-               id="org.yamcs.studio.toolbar.firstProcessor"
-               tooltip="Step to First Update">
-         </command>
-         <command
-               commandId="org.yamcs.studio.ui.processor.reverseCommand"
-               icon="icons/reverse.png"
-               id="org.yamcs.studio.toolbar.reverseProcessor"
-               tooltip="Step to Previous Update">
-         </command>
-         <command
-               commandId="org.yamcs.studio.ui.processor.pauseCommand"
-               icon="icons/pause.png"
-               id="org.yamcs.studio.toolbar.pauseProcessor"
-               tooltip="Pause Processing">
-	        <visibleWhen>
-	           <or>
+      </menuContribution>
+      
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <!-- Commands inside toolbar so that they don't stretch -->
+         <toolbar id="controls.processorcontrols">
+            <command
+                  commandId="org.yamcs.studio.ui.processor.firstCommand"
+                  icon="icons/first.png"
+                  id="org.yamcs.studio.toolbar.firstProcessor"
+                  tooltip="Step to First Update">
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.processor.reverseCommand"
+                  icon="icons/reverse.png"
+                  id="org.yamcs.studio.toolbar.reverseProcessor"
+                  tooltip="Step to Previous Update">
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.processor.pauseCommand"
+                  icon="icons/pause.png"
+                  id="org.yamcs.studio.toolbar.pauseProcessor"
+                  tooltip="Pause Processing">
+            <visibleWhen>
+               <or>
                   <with variable="org.yamcs.studio.ui.processor.state.processing">
                      <equals value=""/>
                   </with>
-	              <with variable="org.yamcs.studio.ui.processor.state.processing">
-	                 <equals value="INITIALIZATION"/>
-	              </with>
-	              <with variable="org.yamcs.studio.ui.processor.state.processing">
-	                 <equals value="RUNNING"/>
-	              </with>
-	           </or>
-	        </visibleWhen>
-         </command>
-         <command
-               commandId="org.yamcs.studio.ui.processor.playCommand"
-               icon="icons/play.png"
-               id="org.yamcs.studio.toolbar.playProcessor"
-               tooltip="Resume Processing">
-	        <visibleWhen>
-	           <or>
-	              <with variable="org.yamcs.studio.ui.processor.state.processing">
-	                 <equals value="STOPPED"/>
-	              </with>
-	              <with variable="org.yamcs.studio.ui.processor.state.processing">
-	                 <equals value="ERROR"/>
-	              </with>
-	              <with variable="org.yamcs.studio.ui.processor.state.processing">
-	                 <equals value="PAUSED"/>
-	              </with>
-	              <with variable="org.yamcs.studio.ui.processor.state.processing">
-	                 <equals value="CLOSED"/>
-	              </with>
-	           </or>
-	        </visibleWhen>
-         </command>
-         <command
-               commandId="org.yamcs.studio.ui.processor.forwardCommand"
-               icon="icons/forward.png"
-               id="org.yamcs.studio.toolbar.forwardProcessor"
-               tooltip="Step to Next Update">
-         </command>
-         <command
-               commandId="org.yamcs.studio.ui.processor.lastCommand"
-               icon="icons/last.png"
-               id="org.yamcs.studio.toolbar.lastProcessor"
-               tooltip="Step to Last Update">
-         </command>
-         <command
-               commandId="org.yamcs.studio.ui.processor.spacer"
-               icon="icons/spacer40x32.png"
-               tooltip=""
-               id="org.yamcs.studio.toolbar.spacer40x32">
-         </command>
-         <control id="studiocontributions.timeInfo" class="org.yamcs.studio.ui.processor.TimeInfoControlContribution" />
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="INITIALIZATION"/>
+                  </with>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="RUNNING"/>
+                  </with>
+               </or>
+            </visibleWhen>
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.processor.playCommand"
+                  icon="icons/play.png"
+                  id="org.yamcs.studio.toolbar.playProcessor"
+                  tooltip="Resume Processing">
+               <visibleWhen>
+                  <or>
+                     <with variable="org.yamcs.studio.ui.processor.state.processing">
+                        <equals value="STOPPED"/>
+                     </with>
+                     <with variable="org.yamcs.studio.ui.processor.state.processing">
+                        <equals value="ERROR"/>
+                     </with>
+                     <with variable="org.yamcs.studio.ui.processor.state.processing">
+                        <equals value="PAUSED"/>
+                     </with>
+                     <with variable="org.yamcs.studio.ui.processor.state.processing">
+                        <equals value="CLOSED"/>
+                     </with>
+                  </or>
+  	         </visibleWhen>
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.processor.forwardCommand"
+                  icon="icons/forward.png"
+                  id="org.yamcs.studio.toolbar.forwardProcessor"
+                  tooltip="Step to Next Update">
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.processor.lastCommand"
+                  icon="icons/last.png"
+                  id="org.yamcs.studio.toolbar.lastProcessor"
+                  tooltip="Step to Last Update">
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.processor.spacer"
+                  icon="icons/spacer40x32.png"
+                  tooltip=""
+                  id="org.yamcs.studio.toolbar.spacer40x32">
+            </command>
+            <control id="studiocontributions.timeInfo" class="org.yamcs.studio.ui.processor.TimeInfoControlContribution" />
+         </toolbar>
       </menuContribution>
    </extension>
 </plugin>
