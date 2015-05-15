@@ -46,6 +46,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
         processor.addPaintListener(evt -> {
             GC gc = evt.gc;
+            gc.setAntialias(SWT.YES);
             if (processorInfo != null) {
                 gc.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
                 gc.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
