@@ -229,7 +229,7 @@
             commandId="org.yamcs.studio.ui.commanding.stack.addCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.RefreshHandler"
+            class="org.yamcs.studio.ui.handlers.RefreshArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.refreshCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.refreshEnabled">
@@ -292,6 +292,28 @@
             commandId="org.yamcs.studio.ui.eventlog.clearCommand">
       </handler>
       <handler
+            class="org.yamcs.studio.ui.handlers.GoToBeginningHandler"
+            commandId="org.yamcs.studio.ui.processor.goToBeginningCommand">
+         <activeWhen>
+            <and>
+               <or>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="RUNNING"/>
+                  </with>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="PAUSED"/>
+                  </with>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="STOPPED"/>
+                  </with>
+               </or>
+               <with variable="org.yamcs.studio.ui.processor.state.replay">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="org.yamcs.studio.ui.handlers.PauseHandler"
             commandId="org.yamcs.studio.ui.processor.pauseCommand">
          <activeWhen>
@@ -310,9 +332,36 @@
             commandId="org.yamcs.studio.ui.processor.playCommand">
          <activeWhen>
             <and>
+               <or>
                <with variable="org.yamcs.studio.ui.processor.state.processing">
                   <equals value="PAUSED"/>
                </with>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="STOPPED"/>
+                  </with>
+               </or>
+               <with variable="org.yamcs.studio.ui.processor.state.replay">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.handlers.GoToEndHandler"
+            commandId="org.yamcs.studio.ui.processor.goToEndCommand">
+         <activeWhen>
+            <and>
+               <or>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="RUNNING"/>
+                  </with>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="PAUSED"/>
+                  </with>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="STOPPED"/>
+                  </with>
+               </or>
                <with variable="org.yamcs.studio.ui.processor.state.replay">
                   <equals value="true"/>
                </with>
@@ -620,9 +669,9 @@
          <!-- Commands inside toolbar so that they don't stretch -->
          <toolbar id="controls.processorcontrols">
             <command
-                  commandId="org.yamcs.studio.ui.processor.firstCommand"
+                  commandId="org.yamcs.studio.ui.processor.goToBeginningCommand"
                   icon="icons/first.png"
-                  id="org.yamcs.studio.toolbar.firstProcessor"
+                  id="org.yamcs.studio.toolbar.goToBeginningProcessor"
                   tooltip="Step to First Update">
             </command>
             <command
@@ -679,9 +728,9 @@
                   tooltip="Step to Next Update">
             </command>
             <command
-                  commandId="org.yamcs.studio.ui.processor.lastCommand"
+                  commandId="org.yamcs.studio.ui.processor.goToEndCommand"
                   icon="icons/last.png"
-                  id="org.yamcs.studio.toolbar.lastProcessor"
+                  id="org.yamcs.studio.toolbar.goToEndProcessor"
                   tooltip="Step to Last Update">
             </command>
             <command
