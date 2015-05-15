@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.commanding.staging;
+package org.yamcs.studio.ui.commanding.stack;
 
 /**
  * Non-UI client-side structure to keep track of a non-issued command. For now, used only as part of

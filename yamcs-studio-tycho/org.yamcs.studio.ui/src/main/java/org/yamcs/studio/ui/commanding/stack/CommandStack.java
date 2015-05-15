@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.commanding.staging;
+package org.yamcs.studio.ui.commanding.stack;
 
 import java.util.ArrayList;
 import java.util.List;

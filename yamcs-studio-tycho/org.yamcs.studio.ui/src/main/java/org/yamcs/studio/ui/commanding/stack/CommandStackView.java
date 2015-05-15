@@ -1,15 +1,15 @@
-package org.yamcs.studio.ui.commanding.staging;
+package org.yamcs.studio.ui.commanding.stack;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
@@ -22,37 +22,35 @@ import com.google.inject.Injector;
 
 /**
  * Inspiration for embedded editors:
- * https://github.com/eclipse/xtext/tree/master/plugins/org.eclipse.xtext.ui.codetemplates.ui/src/
- * org/eclipse/xtext/ui/codetemplates/ui/preferences
- *
+ * https://github.com/eclipse/xtext/tree/master/plugins/org.eclipse
+ * .xtext.ui.codetemplates.ui/src/org/eclipse/xtext/ui/codetemplates/ui/preferences
  */
 @SuppressWarnings("restriction")
-public class StageCommandDialog extends TitleAreaDialog {
+public class CommandStackView extends ViewPart {
 
-    public StageCommandDialog(Shell parentShell) {
-        super(parentShell);
-    }
-
-    @Override
-    public void create() {
-        super.create();
-        setTitle("Stage one or more commands");
-        // setMessage("informative message");
-    }
+    private LocalResourceManager resourceManager;
+    private CommandStackTableViewer tableViewer;
 
     @Override
-    protected Control createDialogArea(Composite parent) {
-        Composite area = (Composite) super.createDialogArea(parent);
+    public void createPartControl(Composite parent) {
+        resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
-        Composite codeComposite = new Composite(area, SWT.NONE);
-        codeComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        parent.setLayout(new FillLayout());
+
+        SashForm topDownSplit = new SashForm(parent, SWT.VERTICAL);
+        topDownSplit.setLayout(new FillLayout());
+
+        Composite tableWrapper = new Composite(topDownSplit, SWT.NONE);
+        tableViewer = new CommandStackTableViewer(tableWrapper);
+
+        Composite entryPanel = new Composite(topDownSplit, SWT.NONE);
         GridLayout gl = new GridLayout();
         gl.marginHeight = 0;
         gl.marginWidth = 0;
-        codeComposite.setLayout(gl);
-        installSyntaxHighlighting(codeComposite);
+        entryPanel.setLayout(gl);
+        installSyntaxHighlighting(entryPanel);
 
-        return area;
+        topDownSplit.setWeights(new int[] { 70, 30 });
     }
 
     private void installSyntaxHighlighting(Composite composite) {
@@ -80,7 +78,12 @@ public class StageCommandDialog extends TitleAreaDialog {
     }
 
     @Override
-    protected Point getInitialSize() {
-        return new Point(500, 375);
+    public void setFocus() {
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        resourceManager.dispose();
     }
 }

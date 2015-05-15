@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.commanding.staging;
+package org.yamcs.studio.ui.commanding.stack;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -7,7 +7,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
  * Non-configurable ordering. So that user can have some consistency here. Sorting is always in
  * natural intended execution order.
  */
-public class CommandStagingViewerComparator extends ViewerComparator {
+public class CommandStackTableComparator extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {

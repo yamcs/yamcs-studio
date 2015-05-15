@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.archive;
+package org.yamcs.studio.ui.handlers;
 
 import javax.swing.SwingUtilities;
 
@@ -8,13 +8,15 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.services.ISourceProviderService;
+import org.yamcs.studio.ui.archive.ArchiveView;
+import org.yamcs.studio.ui.archive.RefreshCommandState;
 
 /**
  * Handels the refresh of the archive view. The most tricky thing here is that we need to disable
  * the refresh button until it's actually refreshed, to prevent a double click from the user, which
  * would otherwise break our hornetq client.
  */
-public class RefreshHandler extends AbstractHandler {
+public class RefreshArchiveHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {

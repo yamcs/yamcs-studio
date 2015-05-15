@@ -122,7 +122,7 @@ public class TagBox extends Box implements MouseListener {
         editTagMenuItem.addActionListener(evt -> {
             ArchiveTag selectedTag = tags.get(selectedRow).get(selectedIndex);
             Display.getDefault().asyncExec(() -> {
-                CreateTagDialog dialog = new CreateTagDialog(Display.getCurrent().getActiveShell());
+                CreateAnnotationDialog dialog = new CreateAnnotationDialog(Display.getCurrent().getActiveShell());
                 dialog.fillFrom(selectedTag);
                 if (dialog.open() == Window.OK) {
                     SwingUtilities.invokeLater(() -> {
@@ -147,7 +147,7 @@ public class TagBox extends Box implements MouseListener {
 
     public void createNewTag(long start, long stop) {
         Display.getDefault().asyncExec(() -> {
-            CreateTagDialog dialog = new CreateTagDialog(Display.getCurrent().getActiveShell());
+            CreateAnnotationDialog dialog = new CreateAnnotationDialog(Display.getCurrent().getActiveShell());
             dialog.setStartTime(start);
             dialog.setStopTime(stop);
             if (dialog.open() == Window.OK) {

@@ -7,12 +7,13 @@
   visibility: hidden;
 }
 
-/*
+
 .MTrimBar#org-eclipse-ui-main-toolbar {
-    background-color: #181b20 #1d2027 100%;
+    /*background-color: #c4d1ed;*/
+    /*background-color: #272b33;*/
 }
 
-.MTrimBar.freeze#org-eclipse-ui-main-toolbar {
+/*.MTrimBar.freeze#org-eclipse-ui-main-toolbar {
     background-color: #d9e3f3 rgb(170, 176, 191) 100%;
 }
 */

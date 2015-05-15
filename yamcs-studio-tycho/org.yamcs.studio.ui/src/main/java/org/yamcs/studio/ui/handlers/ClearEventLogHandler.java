@@ -1,26 +1,22 @@
-package org.yamcs.studio.ui.archive;
-
-import javax.swing.SwingUtilities;
+package org.yamcs.studio.ui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.ui.eventlog.EventLogView;
 
 /**
- * Handels the enabled state for the zoom-clear command
+ * Handels the enabled state for the tag command
  */
-public class ZoomClearHandler extends AbstractHandler {
+public class ClearEventLogHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
-        SwingUtilities.invokeLater(() -> {
-            ArchiveView view = (ArchiveView) part;
-            view.archivePanel.getDataViewer().clearZoom();
-        });
-
+        EventLogView view = (EventLogView) part;
+        view.clear();
         return null;
     }
 }

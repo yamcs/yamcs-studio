@@ -172,11 +172,6 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.staging.stageCommandCommand"
-            name="Stage Command">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.archive.refreshCommand"
             name="Refresh">
       </command>
@@ -224,18 +219,17 @@
       </command>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.handlers">
+   <extension point="org.eclipse.ui.handlers">
       <handler
-            class="org.yamcs.studio.ui.commanding.IssueCommandHandler"
+            class="org.yamcs.studio.ui.handlers.IssueCommandHandler"
             commandId="org.yamcs.studio.ui.commanding.issueTelecommandCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.ui.commanding.staging.StageCommandCommandHandler"
-            commandId="org.yamcs.studio.ui.commanding.staging.stageCommandCommand">
+            class="org.yamcs.studio.ui.handlers.AddToCommandStackHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.addCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.ui.archive.RefreshHandler"
+            class="org.yamcs.studio.ui.handlers.RefreshHandler"
             commandId="org.yamcs.studio.ui.archive.refreshCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.refreshEnabled">
@@ -244,7 +238,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.archive.ZoomInHandler"
+            class="org.yamcs.studio.ui.handlers.ZoomInHandler"
             commandId="org.yamcs.studio.ui.archive.zoomInCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.zoomInEnabled">
@@ -253,7 +247,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.archive.ZoomOutHandler"
+            class="org.yamcs.studio.ui.handlers.ZoomOutHandler"
             commandId="org.yamcs.studio.ui.archive.zoomOutCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.zoomOutEnabled">
@@ -262,7 +256,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.archive.ZoomClearHandler"
+            class="org.yamcs.studio.ui.handlers.ZoomClearHandler"
             commandId="org.yamcs.studio.ui.archive.zoomClearCommand">
          <activeWhen>
             <and>
@@ -276,7 +270,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.archive.CreateTagHandler"
+            class="org.yamcs.studio.ui.handlers.AnnotateArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.createTagCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
@@ -285,7 +279,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.archive.CreateReplayHandler"
+            class="org.yamcs.studio.ui.handlers.CreateReplayHandler"
             commandId="org.yamcs.studio.ui.archive.createReplayCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
@@ -294,11 +288,11 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.eventlog.ClearHandler"
+            class="org.yamcs.studio.ui.handlers.ClearEventLogHandler"
             commandId="org.yamcs.studio.ui.eventlog.clearCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.ui.processor.PauseHandler"
+            class="org.yamcs.studio.ui.handlers.PauseHandler"
             commandId="org.yamcs.studio.ui.processor.pauseCommand">
          <activeWhen>
             <and>
@@ -312,7 +306,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.processor.PlayHandler"
+            class="org.yamcs.studio.ui.handlers.PlayHandler"
             commandId="org.yamcs.studio.ui.processor.playCommand">
          <activeWhen>
             <and>
@@ -327,8 +321,7 @@
       </handler>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.views">
+   <extension point="org.eclipse.ui.views">
       <category
       		name="Yamcs Server"
       		id="org.yamcs.studio.server">
@@ -353,10 +346,10 @@
             name="Command History"/>
       <view
             category="org.yamcs.studio.server"
-            class="org.yamcs.studio.ui.commanding.staging.CommandStagingView"
-            icon="icons/stacked.png"
-            id="org.yamcs.studio.ui.commanding.staging.CommandStagingView"
-            name="Command Staging"/>
+            class="org.yamcs.studio.ui.commanding.stack.CommandStackView"
+            icon="icons/stack.png"
+            id="org.yamcs.studio.ui.commanding.stack.CommandStackView"
+            name="Command Stack"/>
    </extension>
 
    <extension
@@ -420,7 +413,7 @@
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.commanding.staging.CommandStagingView">
+               id="org.yamcs.studio.ui.commanding.stack.CommandStackView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -446,7 +439,7 @@
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.staging.CommandStagingView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.diag.pvmanager.probe"/>
@@ -480,7 +473,7 @@
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.commanding.staging.CommandStagingView"/>
+               id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -494,15 +487,14 @@
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.staging.CommandStagingView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.actionSets">
+   <extension point="org.eclipse.ui.actionSets">
       <!-- Redefines the actionSet from the opibuilder plugin, so that we can customize it a bit -->
       <actionSet
             id="org.yamcs.studio.opibuilder.actionSet"
@@ -543,31 +535,23 @@
       
       <!-- Add direct menu to switch perspectives (because we disable the horrible
            built-in perspective-switcher-bar) -->
-      <menuContribution
-            locationURI="menu:window?after=additions">
-       	 <separator
-       	       name="start-of-perspectives"
-       	       visible="true"/>
-       	 <dynamic class="org.yamcs.studio.ui.PerspectiveItems"/>
-       	 <separator
-       	       name="end-of-perspectives"
-       	       visible="true"/>
+      <menuContribution locationURI="menu:window?after=additions">
+       	 <separator name="start-of-perspectives" visible="true"/>
+       	 <dynamic id="org.yamcs.studio.ui.menu.perspectiveItems" class="org.yamcs.studio.ui.PerspectiveItems"/>
+       	 <separator name="end-of-perspectives" visible="true"/>
       </menuContribution>
       
-      <!-- Add icon to the Command Staging view toolbar -->
-      <menuContribution
-            locationURI="toolbar:org.yamcs.studio.ui.commanding.staging.CommandStagingView">
-         <command
-               commandId="org.yamcs.studio.ui.commanding.staging.stageCommandCommand"
-               icon="icons/tc_add.png"
-               label="Stage command"
-               style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.addCommand"
+                icon="icons/add.gif"
+                label="Add to Stack"
+                style="pulldown"/>
+          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
       
       <!-- Add icons to the Archive view toolbar -->
-      <menuContribution
-            locationURI="toolbar:org.yamcs.studio.ui.archive.ArchiveView">
+      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.archive.ArchiveView">
          <command
                commandId="org.yamcs.studio.ui.archive.refreshCommand"
                icon="icons/refresh.gif"
@@ -603,8 +587,7 @@
       </menuContribution>
 
       <!-- Add icons to the Event Log view toolbar -->
-      <menuContribution
-            locationURI="toolbar:org.yamcs.studio.ui.eventlog.EventLogView">
+      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.eventlog.EventLogView">
          <command
                commandId="org.yamcs.studio.ui.eventlog.clearCommand"
                icon="icons/clear.gif"
