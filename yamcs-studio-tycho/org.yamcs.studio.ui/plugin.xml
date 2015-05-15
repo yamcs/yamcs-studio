@@ -83,6 +83,10 @@
       <workbench class="org.yamcs.studio.ui.application.Workbench"/>
       <project class="org.yamcs.studio.ui.application.DefaultYamcsStudioProject"/>
    </extension>
+   
+   <extension point="org.eclipse.ui.startup">
+      <startup class="org.yamcs.studio.ui.AfterWorkbenchBootstrap"/>
+   </extension>
 
 <!--   <extension
          point="org.eclipse.ui.activities">
@@ -333,9 +337,9 @@
          <activeWhen>
             <and>
                <or>
-               <with variable="org.yamcs.studio.ui.processor.state.processing">
-                  <equals value="PAUSED"/>
-               </with>
+                  <with variable="org.yamcs.studio.ui.processor.state.processing">
+                     <equals value="PAUSED"/>
+                  </with>
                   <with variable="org.yamcs.studio.ui.processor.state.processing">
                      <equals value="STOPPED"/>
                   </with>
