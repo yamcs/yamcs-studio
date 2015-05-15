@@ -1,30 +1,35 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.MetaCommand;
+
 /**
- * Non-UI client-side structure to keep track of a non-issued command. For now, used only as part of
- * a command stack. Could also eventually be renamed to StackedCommand
+ * Keep track of a non-issued command. For now, used only as part of a command stack. Could also
+ * eventually be renamed to StackedCommand
  *
  * @see {@link CommandStack}
  */
 public class Telecommand {
 
-    private CommandStack commandStack;
-    private String commandText;
+    private MetaCommand meta;
+    private Map<Argument, String> assignments = new HashMap<>();
 
-    public Telecommand(CommandStack commandStack, String commandText) {
-        this.commandStack = commandStack;
-        this.commandText = commandText;
+    public void setMetaCommand(MetaCommand meta) {
+        this.meta = meta;
     }
 
-    public int getRowId() {
-        return commandStack.indexOf(this);
+    public MetaCommand getMetaCommand() {
+        return meta;
     }
 
-    public CommandStack commandStack() {
-        return commandStack;
+    public void addAssignment(Argument arg, String value) {
+        assignments.put(arg, value);
     }
 
-    public String getCommandText() {
-        return commandText;
+    public Map<Argument, String> getAssignments() {
+        return assignments;
     }
 }

@@ -32,17 +32,16 @@ public class CommandStackTableViewer extends TableViewer {
         contentProvider = new CommandStackTableContentProvider(this);
         setContentProvider(contentProvider);
         setInput(contentProvider); // ! otherwise refresh() deletes everything...
-        setComparator(new CommandStackTableComparator());
     }
 
     private void addFixedColumns(TableColumnLayout tcl) {
-        TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.NONE);
+        TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
         rowIdColumn.getColumn().setText(COL_ROW_ID);
         rowIdColumn.getColumn().setToolTipText("Sequence Number within Stack");
         rowIdColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return String.valueOf(((Telecommand) element).getRowId());
+                return String.valueOf(contentProvider.indexOf(element) + 1);
             }
         });
         tcl.setColumnData(rowIdColumn.getColumn(), new ColumnPixelData(50));
@@ -52,12 +51,16 @@ public class CommandStackTableViewer extends TableViewer {
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((Telecommand) element).getCommandText();
+                return ((Telecommand) element).getMetaCommand().getName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(200));
 
         //nameColumn.setEditingSupport(new TextEditingSupport(this));
+    }
+
+    public void addTelecommand(Telecommand command) {
+        contentProvider.addTelecommand(command);
     }
 
     private static final class TextEditingSupport extends EditingSupport {

@@ -12,7 +12,15 @@ import java.util.List;
  */
 public class CommandStack {
 
+    private static final CommandStack INSTANCE = new CommandStack();
     private List<Telecommand> commands = new ArrayList<>();
+
+    private CommandStack() {
+    }
+
+    public static CommandStack getInstance() {
+        return INSTANCE;
+    }
 
     public void addCommand(Telecommand command) {
         commands.add(command);

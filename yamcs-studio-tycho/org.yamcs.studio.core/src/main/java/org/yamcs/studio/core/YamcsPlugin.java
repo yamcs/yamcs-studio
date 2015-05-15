@@ -220,8 +220,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
             if (bundleListener != null)
                 context.removeBundleListener(bundleListener);
             plugin = null;
-            //studioConnectionListeners.clear();
-            //mdbListeners.clear();
             processorControlClient.close();
             restClient.shutdown();
             webSocketClient.shutdown();

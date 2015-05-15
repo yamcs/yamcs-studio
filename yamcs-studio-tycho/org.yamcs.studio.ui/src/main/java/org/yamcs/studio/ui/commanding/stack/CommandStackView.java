@@ -53,6 +53,10 @@ public class CommandStackView extends ViewPart {
         topDownSplit.setWeights(new int[] { 70, 30 });
     }
 
+    public void addTelecommand(Telecommand command) {
+        tableViewer.addTelecommand(command);
+    }
+
     private void installSyntaxHighlighting(Composite composite) {
         YCLActivator activator = YCLActivator.getInstance();
         Injector injector = activator.getInjector(YCLActivator.ORG_YAMCS_STUDIO_YCL_DSL_YCL);

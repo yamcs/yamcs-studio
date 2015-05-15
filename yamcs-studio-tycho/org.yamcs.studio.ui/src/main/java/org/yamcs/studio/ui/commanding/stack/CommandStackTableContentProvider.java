@@ -1,18 +1,15 @@
 package org.yamcs.studio.ui.commanding.stack;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Commanding.CommandId;
-import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryRecord;
 
 public class CommandStackTableContentProvider implements IStructuredContentProvider {
 
-    private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
+    private List<Telecommand> records = new ArrayList<>();
     private TableViewer tableViewer;
 
     public CommandStackTableContentProvider(TableViewer tableViewer) {
@@ -30,25 +27,15 @@ public class CommandStackTableContentProvider implements IStructuredContentProvi
 
     @Override
     public Object[] getElements(Object inputElement) {
-        return recordsByCommandId.values().toArray();
+        return records.toArray();
     }
 
-    public void processCommandHistoryEntry(CommandHistoryEntry entry) {
-        CommandId commandId = entry.getCommandId();
-        CommandHistoryRecord rec;
-        boolean create;
-        if (recordsByCommandId.containsKey(commandId)) {
-            rec = recordsByCommandId.get(commandId);
-            create = false;
-        } else {
-            rec = new CommandHistoryRecord(commandId);
-            recordsByCommandId.put(commandId, rec);
-            create = true;
-        }
+    public int indexOf(Object element) {
+        return records.indexOf(element);
+    }
 
-        if (create)
-            tableViewer.add(rec);
-        else
-            tableViewer.update(rec, null); // Null, means all properties
+    public void addTelecommand(Telecommand entry) {
+        records.add(entry);
+        tableViewer.add(entry);
     }
 }
