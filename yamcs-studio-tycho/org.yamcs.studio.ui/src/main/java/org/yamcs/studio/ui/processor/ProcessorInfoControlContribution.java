@@ -133,7 +133,8 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         Display.getDefault().asyncExec(() -> {
             if (processorInfo != null && updatedInfo.getName().equals(processorInfo.getName())) {
                 processorInfo = updatedInfo;
-                processor.redraw();
+                if (!processor.isDisposed())
+                    processor.redraw();
             }
         });
     }
