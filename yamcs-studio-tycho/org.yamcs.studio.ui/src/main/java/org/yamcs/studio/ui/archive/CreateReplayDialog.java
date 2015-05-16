@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Yamcs.EndAction;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
 import org.yamcs.protobuf.Yamcs.ReplayRequest;
@@ -236,6 +237,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         ReplayRequest.Builder rr = ReplayRequest.newBuilder()
                 .setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)))
                 .setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)))
+                .setEndAction(EndAction.STOP)
                 .setPacketRequest(prr);
         return ProcessorManagementRequest.newBuilder()
                 .setOperation(ProcessorManagementRequest.Operation.CREATE_PROCESSOR)
