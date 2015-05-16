@@ -88,11 +88,10 @@
       <startup class="org.yamcs.studio.ui.AfterWorkbenchBootstrap"/>
    </extension>
 
-<!--   <extension
-         point="org.eclipse.ui.activities">
-    <activity id="yamcsstudio.disablextensions" name="Hidden activities"/>
-    <activityPatternBinding activityId="yamcsstudio.disablextensions" pattern="org.eclipse.team.*"/>
-   </extension-->
+   <extension point="org.eclipse.ui.activities">
+      <activity id="yamcsstudio.disablextensions" name="Hidden activities"/>
+      <activityPatternBinding activityId="yamcsstudio.disablextensions" pattern="org.eclipse.team.*"/>
+   </extension>
    
    <!--
    	This extension point is actually considered deprecated now, in favor of the
