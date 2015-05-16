@@ -3,12 +3,10 @@ package org.yamcs.studio.ui.archive;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
@@ -22,7 +20,6 @@ import javax.swing.event.MouseInputListener;
 
 import org.eclipse.swt.graphics.RGB;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.utils.TimeEncoding;
 
 public class TagTimeline extends JPanel implements MouseInputListener {
     private static final long serialVersionUID = 1L;
@@ -47,18 +44,12 @@ public class TagTimeline extends JPanel implements MouseInputListener {
         setMinimumSize(new Dimension(0, 2 + l.getPreferredSize().height));
         setPreferredSize(getMinimumSize());
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 2 + l.getPreferredSize().height));
-        addMouseMotionListener(this);
         addMouseListener(this);
         setOpaque(false);
     }
 
     private static Font deriveFont(Font f) {
         return f.deriveFont(Font.PLAIN, f.getSize2D() - 2);
-    }
-
-    @Override
-    public Point getToolTipLocation(MouseEvent e) {
-        return tagBox.getToolTipLocation(e);
     }
 
     private MouseEvent translateEvent(MouseEvent e, Component dest) {
@@ -89,37 +80,12 @@ public class TagTimeline extends JPanel implements MouseInputListener {
     public void mouseClicked(MouseEvent e) {
     }
 
-    ArchiveTag lastMouseTag = null;
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        long t = zoom.convertPixelToInstant(e.getX() + leftDelta);
-        int index = time2Tag(tags, t);
-        ArchiveTag at = null;
-        if (index != -1)
-            at = tags.get(index);
-        if (at == lastMouseTag)
-            return;
-        lastMouseTag = at;
-        if (at != null) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            StringBuilder sb = new StringBuilder();
-            sb.append("<html>").append(at.getName()).append("<hr>");
-            if (at.hasStart()) {
-                sb.append("Start: ").append(TimeEncoding.toString(at.getStart())).append("<br>");
-            }
-            if (at.hasStop()) {
-                sb.append("Stop: ").append(TimeEncoding.toString(at.getStop())).append("<br>");
-            }
-            if (at.hasDescription()) {
-                sb.append(at.getDescription());
-            }
-            sb.append("</html>");
-            setToolTipText(sb.toString());
-        } else {
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            setToolTipText(null);
-        }
     }
 
     static int time2Tag(List<ArchiveTag> tagList, long t) {
@@ -140,13 +106,6 @@ public class TagTimeline extends JPanel implements MouseInputListener {
             }
         }
         return -1;
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        // TTM does not show the tooltip in mouseDragged() so we send a MOUSE_MOVED event
-        dispatchEvent(new MouseEvent(e.getComponent(), MouseEvent.MOUSE_MOVED, e.getWhen(), e.getModifiers(),
-                e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
     }
 
     @Override

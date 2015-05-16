@@ -2,7 +2,6 @@ package org.yamcs.studio.ui.archive;
 
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,7 +17,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
 import javax.swing.WindowConstants;
 
 import org.eclipse.jface.window.Window;
@@ -50,11 +48,6 @@ public class TagBox extends Box implements MouseListener {
         startLocator = stopLocator = currentLocator = DO_NOT_DRAW;
         drawPreviewLocator = false;
         setOpaque(false);
-
-        ToolTipManager ttmgr = ToolTipManager.sharedInstance();
-        ttmgr.setInitialDelay(0);
-        ttmgr.setReshowDelay(0);
-        ttmgr.setDismissDelay(Integer.MAX_VALUE);
 
         buildPopup();
         addMouseListener(this);
@@ -186,11 +179,6 @@ public class TagBox extends Box implements MouseListener {
      * changeColorMenuItem.setVisible(false); packetPopup.validate();
      * packetPopup.show(e.getComponent(), e.getX(), e.getY()); } } }
      */
-
-    @Override
-    public Point getToolTipLocation(MouseEvent event) {
-        return new Point(event.getX() - 94, event.getY() + 20);
-    }
 
     void setToZoom(ZoomSpec zoom) {
         this.zoom = zoom;

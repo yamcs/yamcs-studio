@@ -5,7 +5,9 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -22,7 +24,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
 
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.utils.TimeEncoding;
@@ -34,6 +35,7 @@ import org.yamcs.utils.TimeEncoding;
 public class DataView extends JScrollPane {
 
     private static final long serialVersionUID = 1L;
+    private static final Color GRAY = new Color(102, 102, 102);
     HeaderPanel headerPanel;
     IndexPanel indexPanel;
     Map<String, IndexBox> indexBoxes = new HashMap<>();
@@ -115,10 +117,6 @@ public class DataView extends JScrollPane {
             }
         }, 1000, 150);
 
-        ToolTipManager ttmgr = ToolTipManager.sharedInstance();
-        ttmgr.setInitialDelay(0);
-        ttmgr.setReshowDelay(0);
-        ttmgr.setDismissDelay(Integer.MAX_VALUE);
         setOpaque(false);
     }
 
@@ -181,11 +179,6 @@ public class DataView extends JScrollPane {
                 }
             }
         }
-    }
-
-    @Override
-    public Point getToolTipLocation(MouseEvent event) {
-        return new Point(event.getX() - 94, event.getY() + 20);
     }
 
     long getMouseInstant(MouseEvent e) {
@@ -328,9 +321,6 @@ public class DataView extends JScrollPane {
 
     public void doMouseDragged(MouseEvent e) {
         indexPanel.doMouseDragged(e);
-        // TTM does not show the tooltip in mouseDragged() so we send a MOUSE_MOVED event
-        dispatchEvent(new MouseEvent(e.getComponent(), MouseEvent.MOUSE_MOVED, e.getWhen(), e.getModifiers(),
-                e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
     }
 
     public void doMouseMoved(MouseEvent e) {
@@ -615,6 +605,8 @@ public class DataView extends JScrollPane {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // draw the selection rectangle over all the TM panels
             if ((getComponentCount() > 0) && !zoomStack.isEmpty()) {
@@ -655,7 +647,7 @@ public class DataView extends JScrollPane {
                             final int[] py = { handleHeight, handleHeight / 2, 0 };
                             g.setColor(handleFill);
                             g.fillPolygon(px, py, px.length);
-                            g.setColor(Color.BLACK);
+                            g.setColor(Color.DARK_GRAY);
                             g.drawPolygon(px, py, px.length);
                             g.drawLine(x, 0, x, h - 1);
                         }
@@ -669,7 +661,7 @@ public class DataView extends JScrollPane {
                             final int[] py = { handleHeight, handleHeight / 2, 0 };
                             g.setColor(handleFill);
                             g.fillPolygon(px, py, px.length);
-                            g.setColor(Color.BLACK);
+                            g.setColor(Color.DARK_GRAY);
                             g.drawPolygon(px, py, px.length);
                             g.drawLine(x, 0, x, 0 + h - 1);
                         }
@@ -680,13 +672,8 @@ public class DataView extends JScrollPane {
                         x = zoom.convertInstantToPixel(currentLocator);
                         //debugLog("currentLocator (" + x + "," + y + ") box width " + getSize().width);
                         if ((x >= 0) && (x < xmax)) {
-                            final int[] px = { x - handleWidth2 / 2, x, x + handleWidth2 / 2 };
-                            final int[] py = { handleHeight, 0, handleHeight };
-                            g.setColor(currentFill);
-                            g.fillPolygon(px, py, px.length);
-                            g.setColor(Color.BLACK);
-                            g.drawPolygon(px, py, px.length);
-                            g.drawLine(x, handleHeight, x, h - 1);
+                            g.setColor(GRAY);
+                            g.drawLine(x, 0, x, h - 1);
                         }
                     }
 
@@ -699,10 +686,9 @@ public class DataView extends JScrollPane {
                         g.setColor(new Color(c[0], c[1], c[2], previewLocatorAlpha));
                         g.fillPolygon(px, py, px.length);
 
-                        c = Color.BLACK.getRGBColorComponents(c);
+                        c = GRAY.getRGBColorComponents(c);
                         g.setColor(new Color(c[0], c[1], c[2], previewLocatorAlpha));
-                        g.drawPolygon(px, py, px.length);
-                        g.drawLine(previewLocatorX, handleHeight, previewLocatorX, h - 1);
+                        g.drawLine(previewLocatorX, 0, previewLocatorX, h - 1);
                     }
                 }
             }

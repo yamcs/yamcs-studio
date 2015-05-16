@@ -1,7 +1,6 @@
 package org.yamcs.studio.ui.archive;
 
 import java.awt.Component;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
@@ -10,7 +9,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 
 import org.yamcs.studio.ui.archive.IndexBox.IndexLineSpec;
-import org.yamcs.utils.TimeEncoding;
 
 /**
  * Represents a horizontal TM line composed of a label and a timeline
@@ -29,11 +27,6 @@ class IndexLine extends JPanel implements MouseInputListener {
         setBorder(BorderFactory.createEmptyBorder());
         addMouseListener(this);
         addMouseMotionListener(this);
-    }
-
-    @Override
-    public Point getToolTipLocation(MouseEvent e) {
-        return indexBox.getToolTipLocation(e);
     }
 
     private MouseEvent translateEvent(MouseEvent e) {
@@ -86,7 +79,6 @@ class IndexLine extends JPanel implements MouseInputListener {
     @Override
     public void mouseMoved(MouseEvent e) {
         MouseEvent transEvent = translateEvent(e);
-        setToolTipText(TimeEncoding.toCombinedFormat(indexBox.dataView.getMouseInstant(transEvent)));
         indexBox.dataView.setPointer(transEvent);
     }
 

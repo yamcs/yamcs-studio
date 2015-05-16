@@ -49,12 +49,13 @@ import org.yamcs.studio.ui.archive.ArchivePanel.IndexChunkSpec;
 public class IndexBox extends Box implements MouseListener {
     private static final long serialVersionUID = 1L;
     public static final Color BORDER_COLOR = new Color(216, 216, 216);
+    private static final Color PACKET_LABEL_COLOR = new Color(102, 102, 102);
     DataView dataView;
 
     JLabel popupLabelItem;
     JSeparator popupLabelSeparator;
     JPopupMenu packetPopup;
-    JMenuItem removePacketMenuItem, removeExceptPacketMenuItem, removePayloadMenuItem, changeColorMenuItem, copyOpsnameMenuItem;
+    JMenuItem removePacketMenuItem, removeExceptPacketMenuItem, removePayloadMenuItem, copyOpsnameMenuItem;
     IndexLineSpec selectedPacket;
     static final int tmRowHeight = 20;
 
@@ -91,7 +92,8 @@ public class IndexBox extends Box implements MouseListener {
         titleLabel = new JLabel(name);
         titleLabel.setBackground(Color.red);
         titleLabel.setMaximumSize(new Dimension(titleLabel.getMaximumSize().width, titleLabel.getPreferredSize().height));
-        titleLabel.setForeground(new Color(51, 51, 51));
+        //titleLabel.setForeground(new Color(51, 51, 51));
+        titleLabel.setFont(titleLabel.getFont().deriveFont(~Font.BOLD));
         topPanel.setMaximumSize(new Dimension(topPanel.getMaximumSize().width, titleLabel.getPreferredSize().height + 13));
         topPanel.add(titleLabel, cons);
         topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -191,18 +193,6 @@ public class IndexBox extends Box implements MouseListener {
             });
             packetPopup.add(copyOpsnameMenuItem);
 
-            changeColorMenuItem = new JMenuItem("Change Color");
-            changeColorMenuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    selectedPacket.newColor();
-                    dataView.setBusyPointer();
-                    redrawTmPanel(selectedPacket);
-                    dataView.setNormalPointer();
-                }
-            });
-            packetPopup.add(changeColorMenuItem);
-
             //populateMenuItem = new JMenuItem("Populate From Current Channel");
             //populateMenuItem.addActionListener(this);
             //populateMenuItem.setActionCommand("populate-from-current-channel");
@@ -298,7 +288,6 @@ public class IndexBox extends Box implements MouseListener {
                 removeExceptPacketMenuItem.setVisible(true);
                 removePacketMenuItem.setVisible(true);
                 copyOpsnameMenuItem.setVisible(true);
-                changeColorMenuItem.setVisible(true);
 
                 popupLabelItem.setText(selectedPacket.lineName);
                 removePacketMenuItem.setText(String.format("Hide %s Packet", selectedPacket.lineName));
@@ -310,7 +299,6 @@ public class IndexBox extends Box implements MouseListener {
                 removePacketMenuItem.setVisible(false);
                 removeExceptPacketMenuItem.setVisible(false);
                 copyOpsnameMenuItem.setVisible(false);
-                changeColorMenuItem.setVisible(false);
             }
             packetPopup.validate();
             packetPopup.show(e.getComponent(), e.getX(), e.getY());
@@ -577,7 +565,7 @@ public class IndexBox extends Box implements MouseListener {
         indexLine.setBackground(Color.RED);
         do {
             pktlab = new JLabel(pkt.lineName);
-            pktlab.setForeground(pkt.color);
+            pktlab.setForeground(PACKET_LABEL_COLOR);
             if (font == null) {
                 font = pktlab.getFont();
                 font = font.deriveFont((float) (font.getSize() - 3));
@@ -609,14 +597,12 @@ public class IndexBox extends Box implements MouseListener {
         indexLine.repaint();
 
         //  System.out.println("indexLine.preferred size: "+indexLine.getPreferredSize());
-        //pkt.assocLabel.setToolTipText(pkt.opsname + ", " + count + " Chunks");
     }
 
     class IndexLineSpec implements Comparable<IndexLineSpec>, ActionListener {
         String shortName, lineName;
         String grpName;
         boolean enabled;
-        Color color;
         JMenuItem assocMenuItem;
         JComponent assocLabel;
         IndexLine assocIndexLine;
@@ -629,11 +615,6 @@ public class IndexBox extends Box implements MouseListener {
             assocMenuItem = null;
             assocIndexLine = null;
             assocLabel = null;
-            newColor();
-        }
-
-        public void newColor() {
-            color = new Color((float) (Math.random() * 0.4 + 0.2), (float) (Math.random() * 0.4 + 0.2), (float) (Math.random() * 0.4 + 0.2));
         }
 
         @Override

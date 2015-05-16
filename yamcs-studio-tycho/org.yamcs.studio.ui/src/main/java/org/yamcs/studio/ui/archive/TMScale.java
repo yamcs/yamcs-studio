@@ -50,7 +50,7 @@ public class TMScale extends JSlider {
     public TMScale() {
         super(JSlider.HORIZONTAL, 0, 100, 100);
         setUI(new TMScaleUI(this));
-        setBackground(Color.LIGHT_GRAY);
+        setBackground(Color.WHITE);
         setPaintTicks(true);
         setPaintLabels(true);
         setPaintTrack(false);
@@ -305,6 +305,7 @@ public class TMScale extends JSlider {
             Font smallerFont = getLabelFont();
             lbl.setFont(smallerFont);
             lbl.setSize(lbl.getPreferredSize());
+            lbl.setForeground(Color.LIGHT_GRAY);
         }
     }
 

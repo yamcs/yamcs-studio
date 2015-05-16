@@ -22,10 +22,10 @@ import org.yamcs.utils.TimeEncoding;
 
 class Timeline extends JPanel implements MouseListener {
     private static final long serialVersionUID = 1L;
+    private static final Color BLUEISH = new Color(135, 206, 250);
     private final IndexBox tmBox;
     TreeSet<IndexChunkSpec> tmspec;
     IndexLineSpec pkt;
-    Color color;
     ZoomSpec zoom;
     int leftDelta; //we have to move everything to the left with this amount (because this component is in a bordered parent)
     BufferedImage image = null;
@@ -35,7 +35,6 @@ class Timeline extends JPanel implements MouseListener {
         setBorder(BorderFactory.createEmptyBorder());
         this.tmBox = tmBox;
         this.pkt = pkt;
-        this.color = pkt.color;
         this.zoom = zoom;
         this.leftDelta = leftDelta;
         addMouseListener(this);
@@ -79,8 +78,6 @@ class Timeline extends JPanel implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        MouseEvent transEvent = translateEvent(e, tmBox);
-        setToolTipText(TimeEncoding.toCombinedFormat(tmBox.dataView.getMouseInstant(transEvent)));
     }
 
     @Override
@@ -89,16 +86,15 @@ class Timeline extends JPanel implements MouseListener {
 
     @Override
     public String getToolTipText(MouseEvent e) {
-        String tt = TimeEncoding.toCombinedFormat(tmBox.dataView.getMouseInstant(translateEvent(e, tmBox)));
-
         IndexChunkSpec c1 = zoom.convertPixelToChunk(translateEvent(e, tmBox).getX());
         IndexChunkSpec chunk = tmspec.floor(c1);
         if ((chunk == null) || chunk.stopInstant < c1.startInstant) {
             chunk = tmspec.ceiling(c1);
             if ((chunk == null) || (chunk.startInstant > c1.stopInstant))
-                return tt;
+                return super.getToolTipText();
         }
 
+        String tt = TimeEncoding.toCombinedFormat(tmBox.dataView.getMouseInstant(translateEvent(e, tmBox)));
         DateTimeComponents dtcStart = TimeEncoding.toUtc(chunk.startInstant);
         DateTimeComponents dtcStop = TimeEncoding.toUtc(chunk.stopInstant);
 
@@ -129,7 +125,7 @@ class Timeline extends JPanel implements MouseListener {
 
             big.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
             //big.clearRect(0, 0, getWidth(),getHeight());
-            big.setColor(color);
+            big.setColor(BLUEISH);
             for (IndexChunkSpec pkt : tmspec) {
                 int x1 = zoom.convertInstantToPixel(pkt.startInstant);
                 int x2 = zoom.convertInstantToPixel(pkt.stopInstant);
