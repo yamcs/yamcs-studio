@@ -46,7 +46,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
         processor.addPaintListener(evt -> {
             GC gc = evt.gc;
-            gc.setAntialias(SWT.YES);
+            gc.setAntialias(SWT.ON);
             if (processorInfo != null) {
                 gc.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GREEN));
                 gc.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
@@ -118,7 +118,8 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         Display.getDefault().asyncExec(() -> {
             if (updatedInfo.getId() == YamcsPlugin.getDefault().getClientInfo().getId()) {
                 processorInfo = YamcsPlugin.getDefault().getProcessorInfo(updatedInfo.getProcessorName());
-                processor.redraw();
+                if (!processor.isDisposed())
+                    processor.redraw();
             }
         });
     }
