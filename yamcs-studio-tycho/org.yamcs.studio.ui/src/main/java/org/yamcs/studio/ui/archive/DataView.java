@@ -196,15 +196,6 @@ public class DataView extends JScrollPane {
         return previewLocator;
     }
 
-    void setMouseLabel(MouseEvent e) {
-        long instant = getMouseInstant(e);
-        if (instant == TimeEncoding.INVALID_INSTANT) {
-            setToolTipText(null);
-        } else {
-            setToolTipText(TimeEncoding.toCombinedFormat(instant));
-        }
-    }
-
     public void zoomIn() {
         ZoomSpec zoom = zoomStack.peek();
         final JViewport vp = getViewport();
@@ -344,7 +335,6 @@ public class DataView extends JScrollPane {
 
     public void doMouseMoved(MouseEvent e) {
         headerPanel.doMouseMoved(e);
-        setMouseLabel(e);
         setPointer(e);
     }
 
@@ -613,7 +603,6 @@ public class DataView extends JScrollPane {
                     } else {
                         currentSelection.set(startX, stopX);
                     }
-                    setMouseLabel(e);
                     setPointer(e);
                     repaint();
 
