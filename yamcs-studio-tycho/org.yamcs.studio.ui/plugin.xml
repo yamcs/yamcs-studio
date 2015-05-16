@@ -387,7 +387,7 @@
       <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.eventlog.EventLogView"
-            icon="icons/event_log.gif"
+            icon="icons/event_log.png"
             id="org.yamcs.studio.ui.eventlog.EventLogView"
             name="Event Log"/>
       <view

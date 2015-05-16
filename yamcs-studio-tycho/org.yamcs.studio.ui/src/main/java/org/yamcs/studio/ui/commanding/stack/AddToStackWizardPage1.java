@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
@@ -21,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.Significance;
 import org.yamcs.xtce.Significance.Levels;
@@ -29,6 +33,12 @@ public class AddToStackWizardPage1 extends WizardPage {
 
     private Image errorIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
     private Image warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+    private Image level1Image;
+    private Image level2Image;
+    private Image level3Image;
+    private Image level4Image;
+    private Image level5Image;
+
     private Telecommand command;
 
     public AddToStackWizardPage1(Telecommand command) {
@@ -42,6 +52,13 @@ public class AddToStackWizardPage1 extends WizardPage {
     public void createControl(Composite parent) {
         Composite tableWrapper = new Composite(parent, SWT.NONE);
         setControl(tableWrapper);
+
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), tableWrapper);
+        level1Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level1s.png"));
+        level2Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level2s.png"));
+        level3Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level3s.png"));
+        level4Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level4s.png"));
+        level5Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level5s.png"));
 
         TableColumnLayout tcl = new TableColumnLayout();
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -66,12 +83,15 @@ public class AddToStackWizardPage1 extends WizardPage {
                     return null;
                 switch (cmd.getDefaultSignificance().getConsequenceLevel()) {
                 case watch:
+                    return level1Image;
                 case warning:
-                    return warnIcon;
+                    return level2Image;
                 case distress:
+                    return level3Image;
                 case critical:
+                    return level4Image;
                 case severe:
-                    return errorIcon;
+                    return level5Image;
                 default:
                     return null;
                 }

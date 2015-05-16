@@ -1,6 +1,8 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.yamcs.xtce.Argument;
@@ -31,5 +33,35 @@ public class Telecommand {
 
     public Map<Argument, String> getAssignments() {
         return assignments;
+    }
+
+    public String getAssignedStringValue(Argument argument) {
+        return assignments.get(argument);
+    }
+
+    public boolean isAssigned(Argument arg) {
+        return assignments.get(arg) != null;
+    }
+
+    public boolean isValid(Argument arg) {
+        if (!isAssigned(arg))
+            return false;
+        return true; // TODO
+    }
+
+    public boolean isValid() {
+        for (Argument arg : meta.getArgumentList())
+            if (!isValid(arg))
+                return false;
+        return true;
+    }
+
+    public List<Argument> getMissingArguments() {
+        List<Argument> res = new ArrayList<>();
+        for (Argument arg : meta.getArgumentList()) {
+            if (assignments.get(arg) == null)
+                res.add(arg);
+        }
+        return res;
     }
 }
