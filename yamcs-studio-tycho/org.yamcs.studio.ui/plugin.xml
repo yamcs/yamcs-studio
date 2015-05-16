@@ -654,17 +654,17 @@
          <control id="studiocontributions.processorInfo" class="org.yamcs.studio.ui.processor.ProcessorInfoControlContribution"/>
       </menuContribution>
       
-      <menuContribution
+      <!--menuContribution
             allPopups="false"
             locationURI="toolbar:studiocoolbar?after=processorcontrols">
-         <!-- Must be outside of toolbar, to trigger the height -->
+         <!- - Must be outside of toolbar, to trigger the height - ->
          <command
                commandId="org.yamcs.studio.ui.processor.spacer"
                icon="icons/spacer40x32.png"
                tooltip=""
                id="org.yamcs.studio.toolbar.spacer40x32">
          </command>
-      </menuContribution>
+      </menuContribution-->
       
       <menuContribution
             allPopups="false"
