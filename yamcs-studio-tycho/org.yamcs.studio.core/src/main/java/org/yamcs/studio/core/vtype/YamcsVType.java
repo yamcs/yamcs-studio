@@ -54,7 +54,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public Timestamp getTimestamp() {
-        return Timestamp.of(YamcsUTCString.parse(pval.getAcquisitionTimeUTC()));
+        return Timestamp.of(YamcsUTCString.parse(pval.getGenerationTimeUTC()));
     }
 
     @Override
