@@ -589,7 +589,7 @@
            built-in perspective-switcher-bar) -->
       <menuContribution locationURI="menu:window?after=additions">
        	 <separator name="start-of-perspectives" visible="true"/>
-       	 <dynamic id="org.yamcs.studio.ui.menu.perspectiveItems" class="org.yamcs.studio.ui.PerspectiveItems"/>
+       	 <dynamic id="org.yamcs.studio.ui.menu.perspectiveItems" class="org.yamcs.studio.ui.OpenWindowsCompoundContributionItem"/>
        	 <separator name="end-of-perspectives" visible="true"/>
       </menuContribution>
       

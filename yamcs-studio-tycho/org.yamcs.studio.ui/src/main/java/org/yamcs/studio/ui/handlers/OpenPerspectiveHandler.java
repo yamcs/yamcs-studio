@@ -17,7 +17,7 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
-import org.yamcs.studio.ui.PerspectiveItems;
+import org.yamcs.studio.ui.OpenWindowsCompoundContributionItem;
 
 public class OpenPerspectiveHandler extends AbstractHandler implements IElementUpdater {
 
@@ -56,7 +56,7 @@ public class OpenPerspectiveHandler extends AbstractHandler implements IElementU
     public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
         ICommandService service = (ICommandService) element.getServiceLocator().getService(ICommandService.class);
         String state = (String) parameters.get(RadioState.PARAMETER_ID);
-        Command command = service.getCommand(PerspectiveItems.OPEN_PERSPECTIVE_COMMAND);
+        Command command = service.getCommand(OpenWindowsCompoundContributionItem.OPEN_PERSPECTIVE_COMMAND);
         State commandState = command.getState(RadioState.STATE_ID);
         if (commandState.getValue().equals(state)) {
             element.setChecked(true);

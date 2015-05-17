@@ -19,7 +19,11 @@ import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.yamcs.studio.ui.application.IDs;
 
-public class PerspectiveItems extends CompoundContributionItem {
+/**
+ * Interprets perspectives as 'windows'. Provides capability of switching from one window to
+ * another, and creating it if necessary.
+ */
+public class OpenWindowsCompoundContributionItem extends CompoundContributionItem {
 
     public static final String OPEN_PERSPECTIVE_COMMAND = "org.yamcs.studio.ui.commands.openPerspectiveCommand";
     private static final List<String> SUPPORTED_PERSPECTIVES = Arrays.asList(IDs.OPI_EDITOR_PERSPECTIVE, IDs.OPI_RUNTIME_PERSPECTIVE);
