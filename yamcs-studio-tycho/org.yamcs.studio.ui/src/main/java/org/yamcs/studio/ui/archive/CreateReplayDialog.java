@@ -6,6 +6,9 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.opibuilder.runmode.IOPIRuntime;
+import org.csstudio.opibuilder.runmode.OPIView;
+import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,6 +31,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Yamcs.EndAction;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -185,6 +197,8 @@ public class CreateReplayDialog extends TitleAreaDialog {
     protected void okPressed() {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
         ProcessorManagementRequest req = toProcessorManagementRequest();
+        resetDisplays();
+
         RestClient restClient = YamcsPlugin.getDefault().getRestClient();
         restClient.createProcessorManagementRequest(req, new ResponseHandler() {
             @Override
@@ -213,6 +227,33 @@ public class CreateReplayDialog extends TitleAreaDialog {
                 });
             }
         });
+    }
+
+    private void resetDisplays() {
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                for (IViewReference reference : page.getViewReferences()) {
+                    IViewPart viewPart = reference.getView(false);
+                    if (viewPart instanceof IOPIRuntime)
+                        refreshDisplay((IOPIRuntime) viewPart);
+                }
+                for (IEditorReference reference : page.getEditorReferences()) {
+                    IEditorPart editorPart = reference.getEditor(false);
+                    if (editorPart instanceof IOPIRuntime)
+                        refreshDisplay((IOPIRuntime) editorPart);
+                }
+            }
+        }
+    }
+
+    private void refreshDisplay(IOPIRuntime opiRuntime) {
+        try {
+            OPIView.ignoreMemento();
+            opiRuntime.setOPIInput(opiRuntime.getOPIInput());
+        } catch (PartInitException e) {
+            ErrorHandlerUtil.handleError("Failed to refresh OPI", e);
+        }
     }
 
     public String getName() {
