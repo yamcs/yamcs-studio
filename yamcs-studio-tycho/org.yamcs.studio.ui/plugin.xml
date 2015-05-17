@@ -209,7 +209,7 @@
             name="Clear Log View">
       </command>
       <command
-            defaultHandler="org.yamcs.studio.ui.OpenPerspectiveHandler"
+            defaultHandler="org.yamcs.studio.ui.handlers.OpenPerspectiveHandler"
             id="org.yamcs.studio.ui.commands.openPerspectiveCommand"
             name="Open Perspective">
          <commandParameter
@@ -502,11 +502,11 @@
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
          <!-- Not very useful with the navigator already there -->
          <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.firstProcessor"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.goToBeginningProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.reverseProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.pauseProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.forwardProcessor"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.lastProcessor"/>
+         <hiddenToolBarItem id="org.yamcs.studio.toolbar.goToEndProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.spacer40x32"/>
          <hiddenToolBarItem id="studiocontributions.processorInfo"/>
          <hiddenToolBarItem id="studiocontributions.timeInfo"/>

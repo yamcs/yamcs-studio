@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.Significance;
@@ -70,12 +71,7 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         TableViewerColumn significanceColumn = new TableViewerColumn(commandsTable, SWT.NONE);
         significanceColumn.getColumn().setAlignment(SWT.CENTER);
-        significanceColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return null;
-            }
-
+        significanceColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
                 MetaCommand cmd = (MetaCommand) element;
@@ -97,7 +93,7 @@ public class AddToStackWizardPage1 extends WizardPage {
                 }
             }
         });
-        tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(20));
+        tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn nameColumn = new TableViewerColumn(commandsTable, SWT.NONE);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {

@@ -96,7 +96,7 @@ public class CommandStackTableViewer extends TableViewer {
             }
         });
         significanceColumn.getColumn().setResizable(false);
-        tcl.setColumnData(significanceColumn.getColumn(), new ColumnWeightData(1));
+        tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
         rowIdColumn.getColumn().setText(COL_ROW_ID);
@@ -132,7 +132,7 @@ public class CommandStackTableViewer extends TableViewer {
         releaseColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return "Release";
+                return "ASAP";
             }
         });
         tcl.setColumnData(releaseColumn.getColumn(), new ColumnPixelData(80));
