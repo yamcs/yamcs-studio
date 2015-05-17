@@ -89,13 +89,16 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
             synchronized (pendingRequests) {
                 while (pendingRequests.peek() != null
                         && evt instanceof MergeableWebSocketRequest
-                        && pendingRequests.peek() instanceof MergeableWebSocketRequest) {
+                        && pendingRequests.peek() instanceof MergeableWebSocketRequest
+                        && evt.getResource().equals(pendingRequests.peek().getResource())
+                        && evt.getOperation().equals(pendingRequests.peek().getOperation())) {
                     MergeableWebSocketRequest otherEvt = (MergeableWebSocketRequest) pendingRequests.poll();
                     evt = ((MergeableWebSocketRequest) evt).mergeWith(otherEvt); // This is to counter bursts.
                 }
             }
 
             // Good, send the merged result
+            log.fine(String.format("Sending request %s", evt));
             wsclient.sendRequest(evt);
         }
     }

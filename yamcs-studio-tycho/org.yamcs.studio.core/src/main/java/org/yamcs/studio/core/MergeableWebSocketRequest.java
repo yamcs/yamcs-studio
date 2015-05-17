@@ -13,6 +13,9 @@ import com.google.protobuf.Message;
  * Wraps a yamcs web socket request and provides a mechanism to combine multiple requests together.
  * The purpose of this is to act against request bursts that could occur when opening for example a
  * display with many parameters on it.
+ * <p>
+ * Note that only web socket requests with the same resource/operation pair should be merged
+ * together.
  */
 public class MergeableWebSocketRequest extends WebSocketRequest {
 
