@@ -5,7 +5,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.swing.SwingUtilities;
 
@@ -31,6 +30,7 @@ import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart implements StudioConnectionListener, ArchiveIndexListener, ConnectionListener {
@@ -85,7 +85,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
                     cal.add(Calendar.MONTH, -1);
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
@@ -99,7 +99,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
                     cal.add(Calendar.MONTH, -3);
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
@@ -113,7 +113,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
                     cal.add(Calendar.MONTH, -12);
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);

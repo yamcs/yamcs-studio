@@ -49,6 +49,7 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;
@@ -184,7 +185,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
     }
 
     private static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
         cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
         cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
         cal.set(Calendar.MINUTE, timeWidget.getMinutes());
@@ -262,9 +263,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     public void initialize(TimeInterval interval, List<String> packets) {
         startTimeValue = TimeEncoding.toCalendar(interval.calculateStart());
-        startTimeValue.setTimeZone(TimeZone.getTimeZone("UTC"));
+        startTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
         stopTimeValue = TimeEncoding.toCalendar(interval.calculateStop());
-        stopTimeValue.setTimeZone(TimeZone.getTimeZone("UTC"));
+        stopTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
 
         packetsValue = packets;
     }

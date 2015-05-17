@@ -17,8 +17,6 @@ import javax.swing.SwingUtilities;
 
 import org.yamcs.studio.ui.archive.ArchivePanel.IndexChunkSpec;
 import org.yamcs.studio.ui.archive.IndexBox.IndexLineSpec;
-import org.yamcs.utils.TaiUtcConverter.DateTimeComponents;
-import org.yamcs.utils.TimeEncoding;
 
 class Timeline extends JPanel implements MouseListener {
     private static final long serialVersionUID = 1L;
@@ -82,36 +80,6 @@ class Timeline extends JPanel implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public String getToolTipText(MouseEvent e) {
-        IndexChunkSpec c1 = zoom.convertPixelToChunk(translateEvent(e, tmBox).getX());
-        IndexChunkSpec chunk = tmspec.floor(c1);
-        if ((chunk == null) || chunk.stopInstant < c1.startInstant) {
-            chunk = tmspec.ceiling(c1);
-            if ((chunk == null) || (chunk.startInstant > c1.stopInstant))
-                return super.getToolTipText();
-        }
-
-        String tt = TimeEncoding.toCombinedFormat(tmBox.dataView.getMouseInstant(translateEvent(e, tmBox)));
-        DateTimeComponents dtcStart = TimeEncoding.toUtc(chunk.startInstant);
-        DateTimeComponents dtcStop = TimeEncoding.toUtc(chunk.stopInstant);
-
-        String timestring = (dtcStart.year == dtcStop.year) &&
-                (dtcStart.doy == dtcStop.doy) ?
-                String.format("%s - %s", TimeEncoding.toCombinedFormat(chunk.startInstant), dtcStop.toIso8860String()) :
-                String.format("%s - %s", TimeEncoding.toCombinedFormat(chunk.startInstant), TimeEncoding.toCombinedFormat(chunk.stopInstant));
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>").append(tt).append("<hr>Index Record: ").append(chunk.tmcount).append(" Packets");
-        if (chunk.tmcount > 1)
-            sb.append(" @ ").append(chunk.getFrequency()).append("Hz");
-        sb.append("<br>").append(timestring);
-        if (chunk.info != null)
-            sb.append("<br>").append(chunk.info);
-        sb.append("</html>");
-        return sb.toString();
     }
 
     @Override

@@ -3,7 +3,6 @@ package org.yamcs.studio.ui.processor;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -19,6 +18,7 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.TmStatistics;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 public class TimeInfoControlContribution extends WorkbenchWindowControlContribution implements ProcessorListener {
@@ -67,7 +67,8 @@ public class TimeInfoControlContribution extends WorkbenchWindowControlContribut
         } else {
             // TODO Improve this. Don't use Date
             Calendar cal = TimeEncoding.toCalendar(processorTime);
-            cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+            cal.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+            format.setTimeZone(cal.getTimeZone());
             return format.format(cal.getTime());
         }
     }

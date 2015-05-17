@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui;
 
+import java.util.TimeZone;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -36,5 +38,13 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
     public static ImageDescriptor getImageDescriptor(String path) {
         Bundle bundle = FrameworkUtil.getBundle(YamcsUIPlugin.class);
         return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
+    }
+
+    public TimeZone getTimeZone() {
+        // Currently always using local timezone, because need to hack into XYChart because
+        // it doesn't support Timezones. Only date formats seem to be accounted for.
+        // At least for now, it should stay consistent with the workbench
+        // TODO Research modifications to SWT xychart and then make this controllable from user prefs
+        return TimeZone.getDefault();
     }
 }

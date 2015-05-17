@@ -3,8 +3,8 @@ package org.yamcs.studio.ui.archive;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
-import java.util.TimeZone;
 
+import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -66,7 +66,7 @@ public class TimeInterval implements Serializable {
         if (hasStart)
             return start;
         else {
-            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
@@ -79,7 +79,7 @@ public class TimeInterval implements Serializable {
         if (hasStop)
             return stop;
         else {
-            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
             cal.add(Calendar.DAY_OF_MONTH, 1);
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
