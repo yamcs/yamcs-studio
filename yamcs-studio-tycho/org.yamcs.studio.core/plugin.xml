@@ -26,4 +26,12 @@
             prefix="sw">
       </datasource>
    </extension>
+   <extension
+         id="org.yamcs.studio.core.YamcsLoginModule"
+         point="org.eclipse.equinox.security.loginModule">
+      <loginModule
+            class="org.yamcs.studio.core.YamcsLoginModule"
+            description="Authentication of username/password against the Yamcs server">
+      </loginModule>
+   </extension>
 </plugin>

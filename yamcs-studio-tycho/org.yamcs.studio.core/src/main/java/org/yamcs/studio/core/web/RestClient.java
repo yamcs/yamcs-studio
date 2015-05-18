@@ -25,6 +25,7 @@ import io.netty.handler.codec.http.HttpVersion;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Base64;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterData;
@@ -41,6 +42,7 @@ import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
+import org.yamcs.studio.core.YamcsCredentials;
 
 import com.google.protobuf.MessageLite;
 
@@ -55,8 +57,12 @@ public class RestClient {
     private YamcsConnectionProperties yprops;
     private EventLoopGroup group = new NioEventLoopGroup(1);
 
-    public RestClient(YamcsConnectionProperties yprops) {
+    YamcsCredentials credentials;
+
+    public RestClient(YamcsConnectionProperties yprops, YamcsCredentials yamcsCredentials) {
         this.yprops = yprops;
+        this.credentials = yamcsCredentials;
+
     }
 
     public void dumpArchive(RestDumpArchiveRequest request, ResponseHandler responseHandler) {
@@ -146,6 +152,16 @@ public class RestClient {
             request.headers().set(HttpHeaders.Names.HOST, resource.getHost());
             request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
             request.headers().set(HttpHeaders.Names.ACCEPT, BINARY_MIME_TYPE);
+
+            if (credentials != null) {
+                String credentialsClear = credentials.getUsername();
+                if (credentials.getPasswordS() != null)
+                    credentialsClear += ":" + credentials.getPasswordS();
+                String credentialsB64 = new String(Base64.getEncoder().encode(credentialsClear.getBytes()));
+                String authorization = "Basic " + credentialsB64;
+                request.headers().set(HttpHeaders.Names.AUTHORIZATION, authorization);
+            }
+
             if (msg != null) {
                 msg.writeTo(new ByteBufOutputStream(request.content()));
                 request.headers().set(HttpHeaders.Names.CONTENT_TYPE, BINARY_MIME_TYPE);
@@ -167,7 +183,8 @@ public class RestClient {
 
     public static void main(String... args) {
         RestDumpArchiveRequest req = RestDumpArchiveRequest.newBuilder().setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder()).build();
-        RestClient endpoint = new RestClient(new YamcsConnectionProperties("machine", 8090, "simulator"));
+        RestClient endpoint = new RestClient(new YamcsConnectionProperties("machine", 8090, "simulator"),
+                new YamcsCredentials("operator", "password"));
         System.out.println("ahum ");
         endpoint.dumpArchive(req, new ResponseHandler() {
 

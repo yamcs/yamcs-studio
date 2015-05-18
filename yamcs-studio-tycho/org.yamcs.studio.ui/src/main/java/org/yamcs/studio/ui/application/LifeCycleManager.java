@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IEvaluationService;
+import org.yamcs.studio.core.YamcsPlugin;
 
 @SuppressWarnings("restriction")
 public class LifeCycleManager {
@@ -34,6 +35,12 @@ public class LifeCycleManager {
                 Command cmd = commandService.getCommand("org.eclipse.ui.ToggleCoolbarAction");
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+
+                if (YamcsPlugin.getDefault().getPrivilegesEnabled())
+                {
+                    cmd = commandService.getCommand("org.csstudio.security.login");
+                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                }
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

@@ -78,6 +78,15 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         yconnector.connect(hornetqProps);
     }
 
+    /**
+     * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
+     * processConnectionInfo)
+     */
+    @Override
+    public void disconnect() {
+        yconnector.disconnect();
+    }
+
     private void createActions() {
         IActionBars bars = getViewSite().getActionBars();
         IMenuManager mgr = bars.getMenuManager();
@@ -356,4 +365,5 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         if (yconnector != null)
             yconnector.disconnect();
     }
+
 }

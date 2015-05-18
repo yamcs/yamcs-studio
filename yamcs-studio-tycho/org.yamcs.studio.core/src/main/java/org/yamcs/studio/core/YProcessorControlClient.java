@@ -63,6 +63,22 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
         yconnector.connect(hornetqProps);
     }
 
+    /**
+     * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
+     * processConnectionInfo)
+     */
+    @Override
+    public void disconnect() {
+        yconnector.disconnect();
+        listeners.forEach(l -> l.clientDisconnected(null));
+        listeners.clear();
+        //        try {
+        //            this.close();
+        //        } catch (HornetQException e) {
+        //            log.log(Level.SEVERE, "", e);
+        //        }
+    }
+
     @Override
     public void connecting(String url) {
     }
@@ -150,4 +166,5 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
         if (yclient != null)
             yclient.close();
     }
+
 }
