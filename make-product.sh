@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Set available memory for java in maven builds
+export MAVEN_OPTS="-Xmx1024M -Xss128M -XX:+CMSClassUnloadingEnabled"
+
 # resolve links - $0 may be a softlink
 PRG="$0"
 
@@ -22,8 +25,8 @@ then
 fi
 
 set -e
-mvn -f $PRGDIR/yamcs-studio-bundles clean verify
-mvn -f $PRGDIR/yamcs-studio-tycho clean verify
+mvn -f $PRGDIR/yamcs-studio-bundles/pom.xml clean verify
+mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify
 set +e
 
 echo
