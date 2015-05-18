@@ -90,8 +90,6 @@ public class CommandStackTableViewer extends TableViewer {
                 return cmd.getMetaCommand().getDefaultSignificance().getReasonForWarning();
             }
         });
-        significanceColumn.getColumn().setResizable(false);
-        significanceColumn.getColumn().setWidth(50);
         tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
@@ -103,7 +101,6 @@ public class CommandStackTableViewer extends TableViewer {
                 return String.valueOf(contentProvider.indexOf(element) + 1);
             }
         });
-        rowIdColumn.getColumn().setWidth(50);
         tcl.setColumnData(rowIdColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
@@ -120,7 +117,6 @@ public class CommandStackTableViewer extends TableViewer {
                 return cmd.isValid() ? yesImage : noImage;
             }
         });
-        sptvColumn.getColumn().setResizable(false);
         tcl.setColumnData(sptvColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn releaseColumn = new TableViewerColumn(this, SWT.NONE);
