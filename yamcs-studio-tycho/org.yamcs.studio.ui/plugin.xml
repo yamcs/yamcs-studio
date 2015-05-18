@@ -228,6 +228,10 @@
             commandId="org.yamcs.studio.ui.commanding.issueTelecommandCommand">
       </handler>
       <handler
+            class="org.yamcs.studio.ui.handlers.AddToCommandStackHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.addCommand">
+      </handler>
+      <handler
             class="org.yamcs.studio.ui.handlers.RefreshArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.refreshCommand">
          <activeWhen>
@@ -590,11 +594,11 @@
       </menuContribution>
       
        <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
-          <!--command
+          <command
                 commandId="org.yamcs.studio.ui.commanding.stack.addCommand"
                 icon="icons/add.gif"
                 label="Add to Stack"
-                style="pulldown"/-->
+                style="pulldown"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
       
