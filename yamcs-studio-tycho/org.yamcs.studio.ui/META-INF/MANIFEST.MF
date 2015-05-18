@@ -44,7 +44,8 @@ Require-Bundle: org.epics.vtype,
  org.csstudio.opibuilder,
  org.eclipse.xtext.ui,
  org.yamcs.studio.ycl.ui,
- org.yamcs.studio.core
+ org.yamcs.studio.core,
+ org.eclipse.ui.forms
 Import-Package: org.epics.pvmanager,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.ui.commanding

@@ -4,17 +4,14 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 
@@ -24,6 +21,7 @@ public class CommandStackTableViewer extends TableViewer {
     public static final String COL_COMMAND = "Command";
     public static final String COL_SPTV = "SPTV";
     public static final String COL_RELEASE = "Release";
+    public static final String COL_ASRUN = "As-Run";
 
     private final Image warnImage;
     private final Image errorImage;
@@ -37,10 +35,10 @@ public class CommandStackTableViewer extends TableViewer {
 
     private CommandStackTableContentProvider contentProvider;
 
-    public CommandStackTableViewer(Composite parent) {
-        super(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+    public CommandStackTableViewer(TableColumnLayout tcl, Table table) {
+        super(table);
 
-        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), table);
         warnImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/warn.png"));
         errorImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/error.png"));
         level1Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level1s.png"));
@@ -50,9 +48,6 @@ public class CommandStackTableViewer extends TableViewer {
         level5Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level5s.png"));
         yesImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/yes.png"));
         noImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/no.png"));
-
-        TableColumnLayout tcl = new TableColumnLayout();
-        parent.setLayout(tcl);
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(false);
@@ -96,6 +91,7 @@ public class CommandStackTableViewer extends TableViewer {
             }
         });
         significanceColumn.getColumn().setResizable(false);
+        significanceColumn.getColumn().setWidth(50);
         tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
@@ -107,6 +103,7 @@ public class CommandStackTableViewer extends TableViewer {
                 return String.valueOf(contentProvider.indexOf(element) + 1);
             }
         });
+        rowIdColumn.getColumn().setWidth(50);
         tcl.setColumnData(rowIdColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
@@ -126,7 +123,7 @@ public class CommandStackTableViewer extends TableViewer {
         sptvColumn.getColumn().setResizable(false);
         tcl.setColumnData(sptvColumn.getColumn(), new ColumnPixelData(50));
 
-        TableViewerColumn releaseColumn = new TableViewerColumn(this, SWT.CENTER);
+        TableViewerColumn releaseColumn = new TableViewerColumn(this, SWT.NONE);
         releaseColumn.getColumn().setText(COL_RELEASE);
         releaseColumn.getColumn().setToolTipText("Release Time");
         releaseColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -137,44 +134,18 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(releaseColumn.getColumn(), new ColumnPixelData(80));
 
-        //nameColumn.setEditingSupport(new TextEditingSupport(this));
+        TableViewerColumn asRunColumn = new TableViewerColumn(this, SWT.NONE);
+        asRunColumn.getColumn().setText(COL_ASRUN);
+        asRunColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return null;
+            }
+        });
+        tcl.setColumnData(asRunColumn.getColumn(), new ColumnPixelData(80));
     }
 
     public void addTelecommand(Telecommand command) {
         contentProvider.addTelecommand(command);
-    }
-
-    private static final class TextEditingSupport extends EditingSupport {
-
-        private TableViewer viewer;
-        private CellEditor editor;
-
-        public TextEditingSupport(TableViewer viewer) {
-            super(viewer);
-            this.viewer = viewer;
-            editor = new TextCellEditor(viewer.getTable());
-        }
-
-        @Override
-        protected CellEditor getCellEditor(Object element) {
-            return editor;
-        }
-
-        @Override
-        protected boolean canEdit(Object element) {
-            return true;
-        }
-
-        @Override
-        protected Object getValue(Object element) {
-            return "123";
-        }
-
-        @Override
-        protected void setValue(Object element, Object value) {
-            String stringValue = String.valueOf(value);
-
-            viewer.update(element, null);
-        }
     }
 }

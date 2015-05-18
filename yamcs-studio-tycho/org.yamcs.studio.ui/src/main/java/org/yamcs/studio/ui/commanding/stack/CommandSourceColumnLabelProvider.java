@@ -9,18 +9,12 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.yamcs.xtce.Argument;
 
 public class CommandSourceColumnLabelProvider extends StyledCellLabelProvider {
-
-    private Image errorIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
-    private Image warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
 
     private ResourceManager resourceManager;
 
@@ -29,7 +23,6 @@ public class CommandSourceColumnLabelProvider extends StyledCellLabelProvider {
     private final Styler bracketStyler;
     private final Styler argNameStyler;
     private final Styler numberStyler;
-    private final Styler textStyler;
     private final Styler errorStyler;
 
     public CommandSourceColumnLabelProvider() {
@@ -55,13 +48,6 @@ public class CommandSourceColumnLabelProvider extends StyledCellLabelProvider {
             public void applyStyles(TextStyle textStyle) {
                 textStyle.font = JFaceResources.getTextFont();
                 textStyle.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
-            }
-        };
-        textStyler = new Styler() {
-            @Override
-            public void applyStyles(TextStyle textStyle) {
-                textStyle.font = JFaceResources.getTextFont();
-                textStyle.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN);
             }
         };
         errorStyler = new Styler() {

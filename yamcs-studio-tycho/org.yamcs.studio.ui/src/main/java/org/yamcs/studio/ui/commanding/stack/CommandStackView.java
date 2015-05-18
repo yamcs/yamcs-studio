@@ -1,35 +1,29 @@
 package org.yamcs.studio.ui.commanding.stack;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.ManagedForm;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
-import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
-import org.yamcs.studio.ycl.dsl.ui.internal.YCLActivator;
 
-import com.google.inject.Injector;
-
-/**
- * Inspiration for embedded editors:
- * https://github.com/eclipse/xtext/tree/master/plugins/org.eclipse
- * .xtext.ui.codetemplates.ui/src/org/eclipse/xtext/ui/codetemplates/ui/preferences
- */
-@SuppressWarnings("restriction")
 public class CommandStackView extends ViewPart {
 
     private LocalResourceManager resourceManager;
-    private CommandStackTableViewer tableViewer;
+    private CommandStackTableViewer commandTableViewer;
+    private ArgumentTableViewer argumentTableViewer;
+
+    // Toolit for ArgumentsForm
+    private FormToolkit tk;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -37,48 +31,56 @@ public class CommandStackView extends ViewPart {
 
         parent.setLayout(new FillLayout());
 
-        SashForm topDownSplit = new SashForm(parent, SWT.VERTICAL);
-        topDownSplit.setLayout(new FillLayout());
+        ManagedForm managedForm = new ManagedForm(parent);
+        managedForm.getForm().setText("Overview");
+        managedForm.getToolkit().decorateFormHeading(managedForm.getForm().getForm());
 
-        Composite tableWrapper = new Composite(topDownSplit, SWT.NONE);
-        tableViewer = new CommandStackTableViewer(tableWrapper);
+        CommandStackMasterDetailsBlock block = new CommandStackMasterDetailsBlock(this);
+        block.createContent(managedForm);
+    }
 
-        Composite entryPanel = new Composite(topDownSplit, SWT.NONE);
-        GridLayout gl = new GridLayout();
-        gl.marginHeight = 0;
-        gl.marginWidth = 0;
-        entryPanel.setLayout(gl);
-        installSyntaxHighlighting(entryPanel);
+    private Section createArgumentsSection(Form form) {
+        Section section = tk.createSection(form.getBody(), Section.TITLE_BAR);
+        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+        section.setLayoutData(td);
+        section.setText("Arguments");
+        Composite sectionClient = tk.createComposite(section);
+        sectionClient.setLayout(new GridLayout(2, false));
 
-        topDownSplit.setWeights(new int[] { 70, 30 });
+        tk.createLabel(sectionClient, "abc");
+        Text text = tk.createText(sectionClient, "");
+        text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        section.setClient(sectionClient);
+        return section;
+    }
+
+    private Section createConstraintsSection(Form form) {
+        Section section = tk.createSection(form.getBody(), Section.TITLE_BAR);
+        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
+        section.setLayoutData(td);
+        section.setText("Constraints");
+        Composite sectionClient = tk.createComposite(section);
+        GridLayout gl = new GridLayout(2, false);
+        gl.horizontalSpacing = 10;
+        sectionClient.setLayout(gl);
+
+        tk.createLabel(sectionClient, "Transmission Constraints");
+        Label lbl = tk.createLabel(sectionClient, "ab\ncd", SWT.WRAP);
+        lbl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        lbl.setEnabled(false);
+
+        tk.createLabel(sectionClient, "Timeout");
+        lbl = tk.createLabel(sectionClient, "10000");
+        lbl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        lbl.setEnabled(false);
+
+        section.setClient(sectionClient);
+        return section;
     }
 
     public void addTelecommand(Telecommand command) {
-        tableViewer.addTelecommand(command);
-    }
-
-    private void installSyntaxHighlighting(Composite composite) {
-        YCLActivator activator = YCLActivator.getInstance();
-        Injector injector = activator.getInjector(YCLActivator.ORG_YAMCS_STUDIO_YCL_DSL_YCL);
-
-        XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
-        resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE); // TODO needed?
-
-        IEditedResourceProvider resourceProvider = new IEditedResourceProvider() {
-            @Override
-            public XtextResource createResource() {
-                try {
-                    Resource resource = resourceSet.createResource(URI.createURI("dummy:/ex.ycl"));
-                    return (XtextResource) resource;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        };
-
-        EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
-        EmbeddedEditor handle = factory.newEditor(resourceProvider).withParent(composite);
-        EmbeddedEditorModelAccess partialEditor = handle.createPartialEditor();
+        commandTableViewer.addTelecommand(command);
     }
 
     @Override
@@ -87,7 +89,8 @@ public class CommandStackView extends ViewPart {
 
     @Override
     public void dispose() {
-        super.dispose();
         resourceManager.dispose();
+        tk.dispose();
+        super.dispose();
     }
 }

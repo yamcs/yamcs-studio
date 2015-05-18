@@ -1,11 +1,14 @@
 package org.yamcs.studio.ui.commanding.stack;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.ArgumentAssignment;
 import org.yamcs.xtce.MetaCommand;
 
 /**
@@ -33,6 +36,41 @@ public class Telecommand {
 
     public Map<Argument, String> getAssignments() {
         return assignments;
+    }
+
+    public Collection<TelecommandArgument> getEffectiveAssignments() {
+        // We want this to be top-down, as-defined in mdb
+        Map<String, TelecommandArgument> argumentsByName = new LinkedHashMap<>();
+        List<MetaCommand> hierarchy = new ArrayList<>();
+        hierarchy.add(meta);
+        MetaCommand base = meta;
+        while (base.getBaseMetaCommand() != null) {
+            base = base.getBaseMetaCommand();
+            hierarchy.add(0, base);
+        }
+
+        // From parent to child. Children can override initial values (= defaults)
+        for (MetaCommand cmd : hierarchy) {
+            // Set all values, even if null initial value. This gives us consistent ordering
+            for (Argument argument : cmd.getArgumentList()) {
+                String name = argument.getName();
+                String value = argument.getInitialValue();
+                boolean editable = true;
+                argumentsByName.put(name, new TelecommandArgument(name, value, editable));
+            }
+
+            // Override with actual assignments
+            // TODO this should return an empty list in yamcs. Not null
+            if (cmd.getArgumentAssignmentList() != null)
+                for (ArgumentAssignment argumentAssignment : cmd.getArgumentAssignmentList()) {
+                    String name = argumentAssignment.getArgumentName();
+                    String value = argumentAssignment.getArgumentValue();
+                    boolean editable = (cmd == meta);
+                    argumentsByName.put(name, new TelecommandArgument(name, value, editable));
+                }
+        }
+
+        return argumentsByName.values();
     }
 
     public String getAssignedStringValue(Argument argument) {
