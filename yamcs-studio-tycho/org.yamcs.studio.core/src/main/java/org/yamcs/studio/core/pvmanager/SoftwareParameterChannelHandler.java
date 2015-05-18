@@ -103,6 +103,12 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
                 .setEngValue(toValue(p, (String) newValue))).build();
 
         RestClient client = YamcsPlugin.getDefault().getRestClient();
+        if (client == null)
+        {
+            callback.channelWritten(new Exception("Client is disconnected from Yamcs server"));
+            return;
+        }
+
         client.setParameters(pdata, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {

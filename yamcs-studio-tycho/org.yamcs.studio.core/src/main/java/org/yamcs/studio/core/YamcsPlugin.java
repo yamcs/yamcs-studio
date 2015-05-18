@@ -48,6 +48,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private WebSocketRegistrar webSocketClient;
 
     private ClientInfo clientInfo;
+    //YamcsCredentials testcredentials = new YamcsCredentials("operator", "password");
+    YamcsCredentials currentCredentials = null;
 
     private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
@@ -61,31 +63,72 @@ public class YamcsPlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
         TimeEncoding.setUp();
-
-        // This functionality only available in HornetQ for now. Gives us processor state. And updates on clients
         processorControlClient = new YProcessorControlClient();
-
-        YamcsConnectionProperties webProps = getWebProperties();
-        restClient = new RestClient(webProps);
-        webSocketClient = new WebSocketRegistrar(webProps);
-        addMdbListener(webSocketClient);
-
         // Only connect once bundle has been fully started
         bundleListener = event -> {
             if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STARTED) {
                 // Bundle may have been shut down between the time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
-                    // We use this one response as a signal, after which we start other clients as well
-                    webSocketClient.addClientInfoListener(clientInfo -> setupConnections(clientInfo));
-                    webSocketClient.connect();
+
+                    setWebConnections(currentCredentials);
+
                 }
             }
         };
         context.addBundleListener(bundleListener);
     }
 
+    private void setWebConnections(YamcsCredentials yamcsCredentials)
+    {
+        //  TODO: allow login/logout (ie connection/disconnection)
+        //   disconnect();
+        //        // check if authentication is activated
+        //        if (getPreferenceStore().getBoolean("yamcs_privileges") && currentCredentials == null)
+        //        {
+        //            log.info("User not logged in. Not establising connection to Yamcs server");
+        //            return;
+        //        }
+
+        // common properties
+        YamcsConnectionProperties webProps = getWebProperties();
+
+        // REST
+        restClient = new RestClient(webProps, yamcsCredentials);
+
+        // WebSocket
+        webSocketClient = new WebSocketRegistrar(webProps, yamcsCredentials);
+        addMdbListener(webSocketClient);
+
+        // we start other clients as well
+        webSocketClient.addClientInfoListener(clientInfo -> setupConnections(clientInfo, currentCredentials));
+        webSocketClient.connect();
+
+    }
+
+    private void disconnect()
+    {
+        // Various clients (HornetQ)
+        for (StudioConnectionListener scl : studioConnectionListeners)
+        {
+            scl.disconnect();
+        }
+
+        // WebSocket
+        if (webSocketClient != null)
+        {
+            removeMdbListener(webSocketClient);
+            webSocketClient.shutdown();
+        }
+
+        // REST
+        if (restClient != null)
+            restClient.shutdown();
+        restClient = null;
+
+    }
+
     // Likely not on the swt thread
-    private void setupConnections(ClientInfo clientInfo) {
+    private void setupConnections(ClientInfo clientInfo, YamcsCredentials credentials) {
         log.fine(String.format("Got back clientInfo %s", clientInfo));
         // Need to improve this code. Currently doesn't support changing connections
         boolean doSetup = (this.clientInfo == null);
@@ -95,10 +138,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
             loadCommands();
 
             studioConnectionListeners.forEach(l -> {
-                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
+                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(credentials));
             });
         }
-        ///processorListeners.forEach(l -> l.onProcessorSwitch(clientInfo.getProcessorName()));
+
     }
 
     public RestClient getRestClient() {
@@ -117,15 +160,20 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return processorControlClient.getProcessorInfo(processorName);
     }
 
-    private YamcsConnectionProperties getWebProperties() {
+    public YamcsConnectionProperties getWebProperties() {
         return new YamcsConnectionProperties(getHost(), getWebPort(), getInstance());
     }
 
-    private YamcsConnectData getHornetqProperties() {
+    private YamcsConnectData getHornetqProperties(YamcsCredentials credentials) {
         YamcsConnectData hornetqProps = new YamcsConnectData();
         hornetqProps.host = getHost();
         hornetqProps.port = 5445;
         hornetqProps.instance = getInstance();
+        if (credentials != null) {
+            hornetqProps.username = credentials.getUsername();
+            hornetqProps.password = credentials.getPasswordS();
+            hornetqProps.ssl = true;
+        }
         return hornetqProps;
     }
 
@@ -139,6 +187,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public int getWebPort() {
         return getPreferenceStore().getInt("yamcs_port");
+    }
+
+    public boolean getPrivilegesEnabled() {
+        return getPreferenceStore().getBoolean("yamcs_privileges");
     }
 
     public String getMdbNamespace() {
@@ -203,7 +255,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         studioConnectionListeners.add(listener);
         if (clientInfo != null)
-            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties());
+            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials));
     }
 
     public void addProcessorListener(ProcessorListener listener) {
@@ -214,15 +266,22 @@ public class YamcsPlugin extends AbstractUIPlugin {
         mdbListeners.add(listener);
     }
 
+    public void removeMdbListener(MDBContextListener listener) {
+        mdbListeners.remove(listener);
+    }
+
     @Override
     public void stop(BundleContext context) throws Exception {
         try {
             if (bundleListener != null)
                 context.removeBundleListener(bundleListener);
             plugin = null;
-            processorControlClient.close();
-            restClient.shutdown();
-            webSocketClient.shutdown();
+            if (processorControlClient != null)
+                processorControlClient.close();
+            if (restClient != null)
+                restClient.shutdown();
+            if (webSocketClient != null)
+                webSocketClient.shutdown();
         } finally {
             super.stop(context);
         }
@@ -247,4 +306,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public void refreshClientInfo() {
         webSocketClient.updateClientinfo();
     }
+
+    public void setAuthenticatedPrincipal(YamcsCredentials yamcsCredentials) throws Exception {
+        // store the current credential
+        currentCredentials = yamcsCredentials;
+
+        // (re)establish the connections to the yamcs server
+        setWebConnections(currentCredentials);
+
+    }
+
 }

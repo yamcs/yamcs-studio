@@ -43,13 +43,15 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected void connect() {
         log.info("Connect called on " + getChannelName());
-        webSocketClient.register(this);
+        if (webSocketClient != null)
+            webSocketClient.register(this);
     }
 
     @Override
     protected void disconnect() { // Interpret this as an unsubscribe
         log.info("Disconnect called on " + getChannelName());
-        webSocketClient.unregister(this);
+        if (webSocketClient != null)
+            webSocketClient.unregister(this);
     }
 
     /**

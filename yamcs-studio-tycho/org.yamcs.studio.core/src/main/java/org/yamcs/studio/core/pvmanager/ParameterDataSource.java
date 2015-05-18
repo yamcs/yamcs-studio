@@ -14,11 +14,11 @@ public class ParameterDataSource extends DataSource {
 
     public ParameterDataSource() {
         super(false /* read-only */);
-        webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
     }
 
     @Override
     protected ChannelHandler createChannel(String channelName) {
+        webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
         return new ParameterChannelHandler(channelName, webSocketClient);
     }
 }

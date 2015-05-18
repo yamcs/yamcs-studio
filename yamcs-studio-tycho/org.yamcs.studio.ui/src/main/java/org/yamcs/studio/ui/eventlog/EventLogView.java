@@ -74,6 +74,15 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
         yconnector.connect(hornetqProps);
     }
 
+    /**
+     * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
+     * processConnectionInfo)
+     */
+    @Override
+    public void disconnect() {
+        yconnector.disconnect();
+    }
+
     public void clear() {
         tableContentProvider.clearAll();
     }

@@ -15,5 +15,15 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
  */
 public interface StudioConnectionListener {
 
+    /**
+     * Called when we get green light from YamcsPlugin
+     */
     void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps);
+
+    /**
+     * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
+     * processConnectionInfo)
+     */
+    void disconnect();
+
 }

@@ -26,6 +26,11 @@ public class Yamcs {
 
     public static void issueCommand(String text) {
         RestClient client = YamcsPlugin.getDefault().getRestClient();
+        if (client == null)
+        {
+            ConsoleUtil.writeError("Could not send command, client is disonnected from Yamcs server");
+            return;
+        }
 
         RestSendCommandRequest req = RestSendCommandRequest.newBuilder()
                 .addCommands(CommandParser.toCommand(text)).build();

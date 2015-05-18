@@ -19,7 +19,8 @@ Require-Bundle: org.epics.vtype,
  org.eclipse.core.expressions,
  org.eclipse.osgi.services,
  org.eclipse.platform,
- javax.inject
+ javax.inject,
+ org.eclipse.equinox.security
 Import-Package: org.epics.pvmanager,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.core,
