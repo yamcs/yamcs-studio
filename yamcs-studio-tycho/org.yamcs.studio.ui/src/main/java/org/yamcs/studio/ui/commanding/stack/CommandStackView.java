@@ -51,6 +51,7 @@ import com.google.protobuf.MessageLite;
 public class CommandStackView extends ViewPart {
 
     private static final Logger log = Logger.getLogger(CommandStackView.class.getName());
+    public static final String ID = "org.yamcs.studio.ui.commanding.stack.CommandStackView";
 
     private CommandStackTableViewer commandTableViewer;
     private Label nextCommandText;

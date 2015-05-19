@@ -16,7 +16,7 @@ public class AddToCommandStackHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-        IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
+        IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
         CommandStackView commandStackView = (CommandStackView) part;
 
         AddToStackWizard wizard = new AddToStackWizard();
