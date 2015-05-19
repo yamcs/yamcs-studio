@@ -6,28 +6,41 @@ import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.PVConnectionInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
+import org.yamcs.studio.core.web.RestClient;
 
 /**
  * Supports read-only PVs. Would be good if one day CSS added support for this at the PV-level,
  * rather than at the Datasource level. Then we wouldn't have to split out the software parameters
  * under a different scheme.
  */
-public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue> implements YamcsPVReader {
+public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
+        implements YamcsPVReader, StudioConnectionListener {
 
     private WebSocketRegistrar webSocketClient;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
 
-    public ParameterChannelHandler(String channelName, WebSocketRegistrar webSocketClient) {
+    public ParameterChannelHandler(String channelName) {
         super(channelName);
-        this.webSocketClient = webSocketClient;
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        log.info("processConnectionInfo called on " + getChannelName());
+        updateWebSocket(webSocketClient);
+        connect();
     }
 
     @Override
@@ -48,7 +61,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
-    protected void disconnect() { // Interpret this as an unsubscribe
+    public void disconnect() { // Interpret this as an unsubscribe
         log.info("Disconnect called on " + getChannelName());
         if (webSocketClient != null)
             webSocketClient.unregister(this);
@@ -82,6 +95,12 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected DataSourceTypeAdapter<PVConnectionInfo, ParameterValue> findTypeAdapter(ValueCache<?> cache, PVConnectionInfo info) {
         return TYPE_ADAPTER;
+    }
+
+    public void updateWebSocket(WebSocketRegistrar webSocketClient)
+    {
+        this.disconnect();
+        this.webSocketClient = webSocketClient;
     }
 
     @Override

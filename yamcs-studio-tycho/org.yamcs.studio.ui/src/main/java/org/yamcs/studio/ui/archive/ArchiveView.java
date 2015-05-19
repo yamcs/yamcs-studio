@@ -29,7 +29,9 @@ import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
@@ -74,7 +76,8 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
      * Called when we get green light from YamcsPlugin
      */
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps) {
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
+            RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
     }
 

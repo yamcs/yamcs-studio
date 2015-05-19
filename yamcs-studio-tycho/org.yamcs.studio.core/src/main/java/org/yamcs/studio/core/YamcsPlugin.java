@@ -73,9 +73,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STARTED) {
                 // Bundle may have been shut down between the time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
-
                     setWebConnections(currentCredentials);
-
                 }
             }
         };
@@ -84,6 +82,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private void setWebConnections(YamcsCredentials yamcsCredentials)
     {
+
         //  TODO: allow login/logout (ie connection/disconnection)
         //   disconnect();
         //        // check if authentication is activated
@@ -127,7 +126,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // REST
         if (restClient != null)
             restClient.shutdown();
-        restClient = null;
+        //restClient = null;
 
     }
 
@@ -135,14 +134,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private void setupConnections(ClientInfo clientInfo, YamcsCredentials credentials) {
         log.fine(String.format("Got back clientInfo %s", clientInfo));
         // Need to improve this code. Currently doesn't support changing connections
-        boolean doSetup = (this.clientInfo == null);
+        //boolean doSetup = (this.clientInfo == null);
         this.clientInfo = clientInfo;
-        if (doSetup) {
+        if (true) {
             loadParameters();
             loadCommands();
 
             studioConnectionListeners.forEach(l -> {
-                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(credentials));
+                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
             });
         }
 
@@ -262,8 +261,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         studioConnectionListeners.add(listener);
-        if (clientInfo != null)
-            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials));
+        if (clientInfo != null && restClient != null && webSocketClient != null)
+            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
     }
 
     public void addProcessorListener(ProcessorListener listener) {
@@ -320,6 +319,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         currentCredentials = yamcsCredentials;
 
         // (re)establish the connections to the yamcs server
+        //  disconnect();
         setWebConnections(currentCredentials);
 
     }

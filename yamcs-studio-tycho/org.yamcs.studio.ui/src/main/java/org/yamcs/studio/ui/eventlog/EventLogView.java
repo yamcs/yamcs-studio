@@ -24,7 +24,9 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class EventLogView extends ViewPart implements StudioConnectionListener {
@@ -70,7 +72,8 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
      * Called when we get green light from YamcsPlugin
      */
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps) {
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
+            RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
     }
 
