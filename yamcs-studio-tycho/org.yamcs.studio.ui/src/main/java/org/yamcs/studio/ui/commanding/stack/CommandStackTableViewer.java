@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -21,6 +22,7 @@ public class CommandStackTableViewer extends TableViewer {
     public static final String COL_ROW_ID = "#";
     public static final String COL_COMMAND = "Command";
     public static final String COL_SPTV = "SPTV";
+    public static final String COL_DPTV = "DPTV";
     public static final String COL_RELEASE = "Release";
     public static final String COL_ASRUN = "As-Run";
 
@@ -114,16 +116,39 @@ public class CommandStackTableViewer extends TableViewer {
 
         TableViewerColumn sptvColumn = new TableViewerColumn(this, SWT.CENTER);
         sptvColumn.getColumn().setText(COL_SPTV);
-        sptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
+        sptvColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
-            public Image getImage(Object element) {
+            public String getText(Object element) {
                 Telecommand cmd = (Telecommand) element;
-                return cmd.isValid() ? yesImage : noImage;
+                return cmd.isValid() ? "\u2713" : "\u2718";
+            }
+
+            @Override
+            public Color getForeground(Object element) {
+                Telecommand cmd = (Telecommand) element;
+                return getTable().getDisplay().getSystemColor(cmd.isValid() ? SWT.COLOR_DARK_GREEN : SWT.COLOR_RED);
             }
         });
         tcl.setColumnData(sptvColumn.getColumn(), new ColumnPixelData(50));
 
-        TableViewerColumn releaseColumn = new TableViewerColumn(this, SWT.NONE);
+        TableViewerColumn dptvColumn = new TableViewerColumn(this, SWT.CENTER);
+        dptvColumn.getColumn().setText(COL_DPTV);
+        dptvColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return "";
+            }
+
+            @Override
+            public Color getForeground(Object element) {
+                return super.getForeground(element);
+                //Telecommand cmd = (Telecommand) element;
+                //return getTable().getDisplay().getSystemColor(cmd.isValid() ? SWT.COLOR_DARK_GREEN : SWT.COLOR_RED);
+            }
+        });
+        tcl.setColumnData(dptvColumn.getColumn(), new ColumnPixelData(50));
+
+        TableViewerColumn releaseColumn = new TableViewerColumn(this, SWT.CENTER);
         releaseColumn.getColumn().setText(COL_RELEASE);
         releaseColumn.getColumn().setToolTipText("Release Time");
         releaseColumn.setLabelProvider(new ColumnLabelProvider() {

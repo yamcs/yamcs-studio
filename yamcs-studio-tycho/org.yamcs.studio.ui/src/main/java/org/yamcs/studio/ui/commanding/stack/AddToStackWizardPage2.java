@@ -31,6 +31,7 @@ public class AddToStackWizardPage2 extends WizardPage {
         desc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Composite argumentsComposite = new Composite(composite, SWT.NONE);
+        argumentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         argumentsComposite.setLayout(new GridLayout(2, false));
         for (Argument arg : command.getMetaCommand().getArgumentList()) {
             Label lbl = new Label(argumentsComposite, SWT.NONE);
@@ -42,7 +43,13 @@ public class AddToStackWizardPage2 extends WizardPage {
                 text.setText(arg.getInitialValue());
                 command.addAssignment(arg, arg.getInitialValue());
             }
-            text.addModifyListener(evt -> command.addAssignment(arg, text.getText()));
+            text.addModifyListener(evt -> {
+                if (text.getText().trim().isEmpty()) {
+                    command.addAssignment(arg, null);
+                } else {
+                    command.addAssignment(arg, text.getText());
+                }
+            });
         }
     }
 }

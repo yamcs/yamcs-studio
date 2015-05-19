@@ -3,10 +3,12 @@ package org.yamcs.studio.ui.commanding.stack;
 import java.util.List;
 
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -21,11 +23,9 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.studio.ui.YamcsUIPlugin;
 
 public class CommandStackView extends ViewPart {
 
-    private LocalResourceManager resourceManager;
     private CommandStackTableViewer commandTableViewer;
     private Label messagePanel;
     private Label nextCommandLabel;
@@ -35,31 +35,19 @@ public class CommandStackView extends ViewPart {
     private FormToolkit tk;
     private ScrolledForm form;
 
-    private Image yesImage;
-
     @Override
     public void createPartControl(Composite parent) {
-        resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        yesImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/yes.png"));
-
         parent.setLayout(new FillLayout());
 
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout gl = new GridLayout(2, false);
-        gl.marginHeight = 0;
-        gl.marginWidth = 0;
-        composite.setLayout(gl);
+        SashForm sash = new SashForm(parent, SWT.HORIZONTAL | SWT.SMOOTH);
+        sash.setLayout(new FillLayout());
 
-        Composite tableWrapper = new Composite(composite, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_BOTH);
-        tableWrapper.setLayoutData(gd);
+        Composite tableWrapper = new Composite(sash, SWT.NONE);
         TableColumnLayout tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
         commandTableViewer = new CommandStackTableViewer(tableWrapper, tcl);
 
-        Composite rightPane = new Composite(composite, SWT.NONE);
-        gd = new GridData(GridData.FILL_BOTH);
-        rightPane.setLayoutData(gd);
+        Composite rightPane = new Composite(sash, SWT.NONE);
         rightPane.setLayout(new FillLayout());
         tk = new FormToolkit(rightPane.getDisplay());
         form = tk.createScrolledForm(rightPane);
@@ -70,6 +58,32 @@ public class CommandStackView extends ViewPart {
         form.getBody().setLayout(layout);
         createSPTVChecksSection(form.getForm());
         createNextCommandSection(form.getForm());
+
+        commandTableViewer.addDoubleClickListener(evt -> {
+            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            if (sel.getFirstElement() != null) {
+                EditStackedCommandDialog dialog = new EditStackedCommandDialog(parent.getShell(), (Telecommand) sel.getFirstElement());
+                if (dialog.open() == Window.OK) {
+                    commandTableViewer.refresh();
+                    refreshMessagePanel();
+                }
+            }
+        });
+        commandTableViewer.getTable().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.DEL) {
+                    IStructuredSelection sel = (IStructuredSelection) commandTableViewer.getSelection();
+                    if (!sel.isEmpty()) {
+                        CommandStack.getInstance().getCommands().removeAll(sel.toList());
+                        commandTableViewer.refresh();
+                        refreshMessagePanel();
+                    }
+                }
+            }
+        });
+
+        sash.setWeights(new int[] { 70, 30 });
     }
 
     private Section createSPTVChecksSection(Form form) {
@@ -164,7 +178,7 @@ public class CommandStackView extends ViewPart {
         }
 
         if (!errorMessages.isEmpty()) {
-            nextCommandLabel.setText("Fix all SPTV Checks first.");
+            nextCommandLabel.setText("Fix SPTV checks first ");
         } else if (stack.getCommands().isEmpty()) {
             nextCommandLabel.setText("Empty Stack");
         } else {
