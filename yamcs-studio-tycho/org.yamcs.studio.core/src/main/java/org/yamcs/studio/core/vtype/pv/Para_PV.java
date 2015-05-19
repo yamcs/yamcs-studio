@@ -4,18 +4,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.vtype.pv.PV;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.PVConnectionInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.vtype.YamcsVType;
+import org.yamcs.studio.core.web.RestClient;
 
 /**
  * TODO not sure how to disconnect/unsubscribe. Looks like the PVPool has some logic to release a
  * PV, but how does it trigger?
  */
-public class Para_PV extends PV implements YamcsPVReader {
+public class Para_PV extends PV implements YamcsPVReader, StudioConnectionListener {
 
     private static final Logger log = Logger.getLogger(Para_PV.class.getName());
     private WebSocketRegistrar webSocketClient;
@@ -28,8 +33,21 @@ public class Para_PV extends PV implements YamcsPVReader {
         // Notify that this PV is read-only
         notifyListenersOfPermissions(true);
 
-        webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
-        webSocketClient.register(this);
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient)
+    {
+        this.webSocketClient = webSocketClient;
+        this.webSocketClient.register(this);
+    };
+
+    @Override
+    public void disconnect()
+    {
+        webSocketClient.unregister(this);
     }
 
     @Override

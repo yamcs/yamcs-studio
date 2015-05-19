@@ -39,7 +39,8 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         log.info("processConnectionInfo called on " + getChannelName());
-        updateWebSocket(webSocketClient);
+        this.disconnect();
+        this.webSocketClient = webSocketClient;
         connect();
     }
 
@@ -95,12 +96,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected DataSourceTypeAdapter<PVConnectionInfo, ParameterValue> findTypeAdapter(ValueCache<?> cache, PVConnectionInfo info) {
         return TYPE_ADAPTER;
-    }
-
-    public void updateWebSocket(WebSocketRegistrar webSocketClient)
-    {
-        this.disconnect();
-        this.webSocketClient = webSocketClient;
     }
 
     @Override

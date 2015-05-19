@@ -172,6 +172,7 @@ public class RestClient {
             ch.closeFuture().sync();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            handler.onException(e);
         }
     }
 

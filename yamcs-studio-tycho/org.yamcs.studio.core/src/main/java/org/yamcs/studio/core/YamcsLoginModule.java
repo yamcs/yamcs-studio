@@ -114,13 +114,20 @@ public class YamcsLoginModule implements LoginModule {
         RestClient restClient = new RestClient(webProps, new YamcsCredentials(user, password));
 
         AuthReponseHandler arh = new AuthReponseHandler();
-        restClient.listAvailableParameters(req.build(), arh);
+
+        try {
+            restClient.listAvailableParameters(req.build(), arh);
+        } catch (Exception e)
+        {
+            return false;
+        }
 
         while (!arh.resultReceived)
         {
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException e1) {
+            } catch (InterruptedException e) {
+                return false;
             }
         }
         return arh.authenticated;
@@ -180,7 +187,7 @@ public class YamcsLoginModule implements LoginModule {
 
         @Override
         public void onException(Exception e) {
-            log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
+            log.log(Level.WARNING, "Could not fetch available yamcs parameters", e);
 
             resultReceived = true;
             authenticated = false;

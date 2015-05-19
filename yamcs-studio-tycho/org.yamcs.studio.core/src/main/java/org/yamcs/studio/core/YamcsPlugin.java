@@ -151,7 +151,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return restClient;
     }
 
-    public WebSocketRegistrar getWebSocketClient() {
+    private WebSocketRegistrar getWebSocketClient() {
         return webSocketClient;
     }
 
@@ -321,7 +321,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // (re)establish the connections to the yamcs server
         //  disconnect();
         setWebConnections(currentCredentials);
-
     }
 
 }
