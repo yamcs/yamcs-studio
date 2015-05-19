@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Non-ui client-side structure for keeping track of an ordered set of commands with various options
- * and checks.
+ * Client-side structure for keeping track of an ordered set of commands with various options and
+ * checks.
  * <p>
  * Currently a stack is considered to be something at a workbench level, but this would ideally be
  * refactored later on.
@@ -26,10 +26,26 @@ public class CommandStack {
         commands.add(command);
     }
 
-    /**
-     * Returns zero-based index of a command within its stack, or -1 if it could not be found.
-     */
+    public List<Telecommand> getCommands() {
+        return commands;
+    }
+
+    public void checkForErrors() {
+    }
+
     public int indexOf(Telecommand command) {
         return commands.indexOf(command);
+    }
+
+    public List<String> getErrorMessages() {
+        List<String> msgs = new ArrayList<>();
+        for (Telecommand cmd : commands)
+            for (String msg : cmd.getMessages())
+                msgs.add(msg);
+        return msgs;
+    }
+
+    public Telecommand getNextCommand() {
+        return commands.get(0);
     }
 }

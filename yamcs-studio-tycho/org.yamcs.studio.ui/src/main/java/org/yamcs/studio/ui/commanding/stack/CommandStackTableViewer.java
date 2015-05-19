@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
@@ -30,15 +31,16 @@ public class CommandStackTableViewer extends TableViewer {
     private final Image level3Image;
     private final Image level4Image;
     private final Image level5Image;
+
     private final Image yesImage;
     private final Image noImage;
 
     private CommandStackTableContentProvider contentProvider;
 
-    public CommandStackTableViewer(TableColumnLayout tcl, Table table) {
-        super(table);
+    public CommandStackTableViewer(Composite parent, TableColumnLayout tcl) {
+        super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
 
-        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), table);
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         warnImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/warn.png"));
         errorImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/error.png"));
         level1Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level1s.png"));
@@ -50,7 +52,7 @@ public class CommandStackTableViewer extends TableViewer {
         noImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/no.png"));
 
         getTable().setHeaderVisible(true);
-        getTable().setLinesVisible(false);
+        getTable().setLinesVisible(true);
         addFixedColumns(tcl);
 
         contentProvider = new CommandStackTableContentProvider(this);
@@ -90,7 +92,6 @@ public class CommandStackTableViewer extends TableViewer {
                 return cmd.getMetaCommand().getDefaultSignificance().getReasonForWarning();
             }
         });
-        significanceColumn.getColumn().setResizable(false);
         significanceColumn.getColumn().setWidth(50);
         tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
 
@@ -120,7 +121,6 @@ public class CommandStackTableViewer extends TableViewer {
                 return cmd.isValid() ? yesImage : noImage;
             }
         });
-        sptvColumn.getColumn().setResizable(false);
         tcl.setColumnData(sptvColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn releaseColumn = new TableViewerColumn(this, SWT.NONE);

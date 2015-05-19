@@ -73,6 +73,15 @@ public class Telecommand {
         return argumentsByName.values();
     }
 
+    public List<String> getMessages() {
+        List<String> messages = new ArrayList<String>();
+        for (Argument arg : meta.getArgumentList())
+            if (!isValid(arg))
+                messages.add(String.format("#%d: Missing argument '%s'", CommandStack.getInstance().indexOf(this) + 1, arg.getName()));
+
+        return messages;
+    }
+
     public String getAssignedStringValue(Argument argument) {
         return assignments.get(argument);
     }

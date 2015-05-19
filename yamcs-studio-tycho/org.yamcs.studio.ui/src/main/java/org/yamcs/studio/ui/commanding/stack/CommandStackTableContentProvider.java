@@ -1,15 +1,12 @@
 package org.yamcs.studio.ui.commanding.stack;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 public class CommandStackTableContentProvider implements IStructuredContentProvider {
 
-    private List<Telecommand> records = new ArrayList<>();
+    private CommandStack stack = CommandStack.getInstance();
     private TableViewer tableViewer;
 
     public CommandStackTableContentProvider(TableViewer tableViewer) {
@@ -27,15 +24,15 @@ public class CommandStackTableContentProvider implements IStructuredContentProvi
 
     @Override
     public Object[] getElements(Object inputElement) {
-        return records.toArray();
+        return stack.getCommands().toArray();
     }
 
     public int indexOf(Object element) {
-        return records.indexOf(element);
+        return stack.getCommands().indexOf(element);
     }
 
     public void addTelecommand(Telecommand entry) {
-        records.add(entry);
+        stack.addCommand(entry);
         tableViewer.add(entry);
     }
 }
