@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class AddToStackWizard extends Wizard {
 
-    private Telecommand command;
+    private StackedCommand command;
 
     @Override
     public String getWindowTitle() {
@@ -14,7 +14,7 @@ public class AddToStackWizard extends Wizard {
 
     @Override
     public void addPages() {
-        command = new Telecommand();
+        command = new StackedCommand();
         addPage(new AddToStackWizardPage1(command));
         addPage(new AddToStackWizardPage2(command));
     }
@@ -29,7 +29,7 @@ public class AddToStackWizard extends Wizard {
         // NOP. Page2 is dynamic, and needs to be created *after* page1
     }
 
-    public Telecommand getTelecommand() {
+    public StackedCommand getTelecommand() {
         return command;
     }
 }

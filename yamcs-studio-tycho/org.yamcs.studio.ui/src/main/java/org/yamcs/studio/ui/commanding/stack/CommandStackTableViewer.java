@@ -26,32 +26,25 @@ public class CommandStackTableViewer extends TableViewer {
     public static final String COL_RELEASE = "Release";
     public static final String COL_ASRUN = "As-Run";
 
-    private final Image warnImage;
-    private final Image errorImage;
     private final Image level1Image;
     private final Image level2Image;
     private final Image level3Image;
     private final Image level4Image;
     private final Image level5Image;
 
-    private final Image yesImage;
-    private final Image noImage;
-
+    private CommandStackView styleProvider;
     private CommandStackTableContentProvider contentProvider;
 
-    public CommandStackTableViewer(Composite parent, TableColumnLayout tcl) {
+    public CommandStackTableViewer(Composite parent, TableColumnLayout tcl, CommandStackView styleProvider) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
+        this.styleProvider = styleProvider;
 
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        warnImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/warn.png"));
-        errorImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/error.png"));
         level1Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level1s.png"));
         level2Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level2s.png"));
         level3Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level3s.png"));
         level4Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level4s.png"));
         level5Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level5s.png"));
-        yesImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/yes.png"));
-        noImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/no.png"));
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -67,7 +60,7 @@ public class CommandStackTableViewer extends TableViewer {
         significanceColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
-                Telecommand cmd = (Telecommand) element;
+                StackedCommand cmd = (StackedCommand) element;
                 if (cmd.getMetaCommand().getDefaultSignificance() == null)
                     return null;
                 switch (cmd.getMetaCommand().getDefaultSignificance().getConsequenceLevel()) {
@@ -88,7 +81,7 @@ public class CommandStackTableViewer extends TableViewer {
 
             @Override
             public String getToolTipText(Object element) {
-                Telecommand cmd = (Telecommand) element;
+                StackedCommand cmd = (StackedCommand) element;
                 if (cmd.getMetaCommand().getDefaultSignificance() == null)
                     return null;
                 return cmd.getMetaCommand().getDefaultSignificance().getReasonForWarning();
@@ -103,7 +96,22 @@ public class CommandStackTableViewer extends TableViewer {
         rowIdColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return String.valueOf(contentProvider.indexOf(element) + 1);
+                CommandStack stack = CommandStack.getInstance();
+                if (element.equals(stack.getNextCommand()) && stack.getErrorMessages().isEmpty() && stack.getCommands().size() > 1) {
+                    return "\u2022";
+                } else {
+                    return String.valueOf(contentProvider.indexOf(element) + 1);
+                }
+            }
+
+            @Override
+            public Color getForeground(Object element) {
+                CommandStack stack = CommandStack.getInstance();
+                if (element.equals(stack.getNextCommand()) && stack.getErrorMessages().isEmpty() && stack.getCommands().size() > 1) {
+                    return getTable().getDisplay().getSystemColor(SWT.COLOR_BLUE);
+                } else {
+                    return super.getForeground(element);
+                }
             }
         });
         rowIdColumn.getColumn().setWidth(50);
@@ -111,7 +119,7 @@ public class CommandStackTableViewer extends TableViewer {
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
-        nameColumn.setLabelProvider(new CommandSourceColumnLabelProvider());
+        nameColumn.setLabelProvider(new CommandSourceColumnLabelProvider(styleProvider));
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(200));
 
         TableViewerColumn sptvColumn = new TableViewerColumn(this, SWT.CENTER);
@@ -119,13 +127,13 @@ public class CommandStackTableViewer extends TableViewer {
         sptvColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                Telecommand cmd = (Telecommand) element;
+                StackedCommand cmd = (StackedCommand) element;
                 return cmd.isValid() ? "\u2713" : "\u2718";
             }
 
             @Override
             public Color getForeground(Object element) {
-                Telecommand cmd = (Telecommand) element;
+                StackedCommand cmd = (StackedCommand) element;
                 return getTable().getDisplay().getSystemColor(cmd.isValid() ? SWT.COLOR_DARK_GREEN : SWT.COLOR_RED);
             }
         });
@@ -159,7 +167,7 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(releaseColumn.getColumn(), new ColumnPixelData(80));
 
-        TableViewerColumn asRunColumn = new TableViewerColumn(this, SWT.NONE);
+        TableViewerColumn asRunColumn = new TableViewerColumn(this, SWT.CENTER);
         asRunColumn.getColumn().setText(COL_ASRUN);
         asRunColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -170,7 +178,7 @@ public class CommandStackTableViewer extends TableViewer {
         tcl.setColumnData(asRunColumn.getColumn(), new ColumnPixelData(80));
     }
 
-    public void addTelecommand(Telecommand command) {
+    public void addTelecommand(StackedCommand command) {
         contentProvider.addTelecommand(command);
     }
 }

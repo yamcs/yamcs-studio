@@ -13,7 +13,8 @@ import java.util.List;
 public class CommandStack {
 
     private static final CommandStack INSTANCE = new CommandStack();
-    private List<Telecommand> commands = new ArrayList<>();
+    private List<StackedCommand> commands = new ArrayList<>();
+    private StackedCommand nextCommand;
 
     private CommandStack() {
     }
@@ -22,30 +23,46 @@ public class CommandStack {
         return INSTANCE;
     }
 
-    public void addCommand(Telecommand command) {
+    public void addCommand(StackedCommand command) {
         commands.add(command);
     }
 
-    public List<Telecommand> getCommands() {
+    public List<StackedCommand> getCommands() {
         return commands;
     }
 
     public void checkForErrors() {
     }
 
-    public int indexOf(Telecommand command) {
+    public int indexOf(StackedCommand command) {
         return commands.indexOf(command);
     }
 
     public List<String> getErrorMessages() {
         List<String> msgs = new ArrayList<>();
-        for (Telecommand cmd : commands)
+        for (StackedCommand cmd : commands)
             for (String msg : cmd.getMessages())
                 msgs.add(msg);
         return msgs;
     }
 
-    public Telecommand getNextCommand() {
-        return commands.get(0);
+    public StackedCommand getNextCommand() {
+        return nextCommand;
+    }
+
+    // This looks like something we could do better
+    public StackedCommand incrementAndGet() {
+        if (commands.isEmpty()) {
+            nextCommand = null;
+        } else if (nextCommand == null) {
+            nextCommand = commands.get(0);
+        } else {
+            int idx = commands.indexOf(nextCommand);
+            if (++idx < commands.size())
+                nextCommand = commands.get(idx);
+            else
+                nextCommand = null;
+        }
+        return nextCommand;
     }
 }

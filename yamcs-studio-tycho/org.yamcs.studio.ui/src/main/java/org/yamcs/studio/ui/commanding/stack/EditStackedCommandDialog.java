@@ -17,10 +17,10 @@ import org.yamcs.xtce.Argument;
 
 public class EditStackedCommandDialog extends TitleAreaDialog {
 
-    private Telecommand command;
+    private StackedCommand command;
     private List<Text> textFields = new ArrayList<>();
 
-    public EditStackedCommandDialog(Shell parentShell, Telecommand command) {
+    public EditStackedCommandDialog(Shell parentShell, StackedCommand command) {
         super(parentShell);
         this.command = command;
     }

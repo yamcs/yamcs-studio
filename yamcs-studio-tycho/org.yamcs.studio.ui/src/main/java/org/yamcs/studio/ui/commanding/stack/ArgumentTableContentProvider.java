@@ -15,7 +15,7 @@ public class ArgumentTableContentProvider implements IStructuredContentProvider 
 
     @Override
     public Object[] getElements(Object inputElement) {
-        Telecommand cmd = (Telecommand) inputElement;
+        StackedCommand cmd = (StackedCommand) inputElement;
         return cmd.getEffectiveAssignments().toArray();
     }
 }

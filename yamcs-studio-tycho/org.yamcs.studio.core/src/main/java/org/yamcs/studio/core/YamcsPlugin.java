@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +58,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private XtceDb mdb;
     private List<RestParameter> parameters = Collections.emptyList();
     private Collection<MetaCommand> commands = Collections.emptyList();
+
+    // Reset for every application restart
+    private static AtomicInteger cmdClientId = new AtomicInteger(1);
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -154,6 +158,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public ClientInfo getClientInfo() {
         return clientInfo;
+    }
+
+    public static int getNextCommandClientId() {
+        return cmdClientId.incrementAndGet();
     }
 
     public ProcessorInfo getProcessorInfo(String processorName) {

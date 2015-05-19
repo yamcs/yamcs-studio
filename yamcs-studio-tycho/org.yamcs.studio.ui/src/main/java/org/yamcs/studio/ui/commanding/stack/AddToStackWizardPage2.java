@@ -11,9 +11,9 @@ import org.yamcs.xtce.Argument;
 
 public class AddToStackWizardPage2 extends WizardPage {
 
-    private Telecommand command;
+    private StackedCommand command;
 
-    public AddToStackWizardPage2(Telecommand command) {
+    public AddToStackWizardPage2(StackedCommand command) {
         super("Specify Parameters");
         setTitle("Specify Parameters");
         this.command = command;

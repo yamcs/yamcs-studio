@@ -31,7 +31,7 @@ public class CommandStackTableContentProvider implements IStructuredContentProvi
         return stack.getCommands().indexOf(element);
     }
 
-    public void addTelecommand(Telecommand entry) {
+    public void addTelecommand(StackedCommand entry) {
         stack.addCommand(entry);
         tableViewer.add(entry);
     }

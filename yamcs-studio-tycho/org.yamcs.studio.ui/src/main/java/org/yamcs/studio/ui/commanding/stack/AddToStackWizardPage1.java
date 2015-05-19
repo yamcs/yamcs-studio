@@ -36,9 +36,9 @@ public class AddToStackWizardPage1 extends WizardPage {
     private Image level4Image;
     private Image level5Image;
 
-    private Telecommand command;
+    private StackedCommand command;
 
-    public AddToStackWizardPage1(Telecommand command) {
+    public AddToStackWizardPage1(StackedCommand command) {
         super("Choose a command");
         setTitle("Choose a command");
         this.command = command;

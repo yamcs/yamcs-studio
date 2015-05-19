@@ -1,20 +1,34 @@
 package org.yamcs.studio.ui.commanding.stack;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -23,21 +37,67 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Rest.RestSendCommandRequest;
+import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+
+import com.google.protobuf.MessageLite;
 
 public class CommandStackView extends ViewPart {
 
+    private static final Logger log = Logger.getLogger(CommandStackView.class.getName());
+
     private CommandStackTableViewer commandTableViewer;
-    private Label messagePanel;
-    private Label nextCommandLabel;
+    private Label nextCommandText;
+    private Label nextCommandState;
+    private StyledText nextCommandLabel;
     private Button armToggle;
     private Button goButton;
 
     private FormToolkit tk;
     private ScrolledForm form;
 
+    private Styler bracketStyler;
+    private Styler argNameStyler;
+    private Styler numberStyler;
+    private Styler errorStyler;
+
     @Override
     public void createPartControl(Composite parent) {
         parent.setLayout(new FillLayout());
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        Color errorBackgroundColor = resourceManager.createColor(new RGB(255, 221, 221));
+        bracketStyler = new Styler() {
+            @Override
+            public void applyStyles(TextStyle textStyle) {
+                textStyle.font = JFaceResources.getTextFont();
+            }
+        };
+        argNameStyler = new Styler() {
+            @Override
+            public void applyStyles(TextStyle textStyle) {
+                textStyle.font = JFaceResources.getTextFont();
+                textStyle.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
+            }
+        };
+        numberStyler = new Styler() {
+            @Override
+            public void applyStyles(TextStyle textStyle) {
+                textStyle.font = JFaceResources.getTextFont();
+                textStyle.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
+            }
+        };
+        errorStyler = new Styler() {
+            @Override
+            public void applyStyles(TextStyle textStyle) {
+                textStyle.font = JFaceResources.getTextFont();
+                textStyle.background = errorBackgroundColor;
+                textStyle.foreground = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+            }
+        };
 
         SashForm sash = new SashForm(parent, SWT.HORIZONTAL | SWT.SMOOTH);
         sash.setLayout(new FillLayout());
@@ -45,7 +105,7 @@ public class CommandStackView extends ViewPart {
         Composite tableWrapper = new Composite(sash, SWT.NONE);
         TableColumnLayout tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
-        commandTableViewer = new CommandStackTableViewer(tableWrapper, tcl);
+        commandTableViewer = new CommandStackTableViewer(tableWrapper, tcl, this);
 
         Composite rightPane = new Composite(sash, SWT.NONE);
         rightPane.setLayout(new FillLayout());
@@ -54,18 +114,21 @@ public class CommandStackView extends ViewPart {
         form.setText("Stack Status");
         tk.decorateFormHeading(form.getForm());
         TableWrapLayout layout = new TableWrapLayout();
-        layout.verticalSpacing = 15;
+        layout.leftMargin = 10;
+        layout.rightMargin = 10;
+        layout.topMargin = 10;
+        layout.bottomMargin = 10;
+        layout.verticalSpacing = 20;
         form.getBody().setLayout(layout);
         createSPTVChecksSection(form.getForm());
-        createNextCommandSection(form.getForm());
+        createNextCommandSection();
 
         commandTableViewer.addDoubleClickListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
-                EditStackedCommandDialog dialog = new EditStackedCommandDialog(parent.getShell(), (Telecommand) sel.getFirstElement());
+                EditStackedCommandDialog dialog = new EditStackedCommandDialog(parent.getShell(), (StackedCommand) sel.getFirstElement());
                 if (dialog.open() == Window.OK) {
-                    commandTableViewer.refresh();
-                    refreshMessagePanel();
+                    refreshState();
                 }
             }
         });
@@ -76,14 +139,29 @@ public class CommandStackView extends ViewPart {
                     IStructuredSelection sel = (IStructuredSelection) commandTableViewer.getSelection();
                     if (!sel.isEmpty()) {
                         CommandStack.getInstance().getCommands().removeAll(sel.toList());
-                        commandTableViewer.refresh();
-                        refreshMessagePanel();
+                        refreshState();
                     }
                 }
             }
         });
 
         sash.setWeights(new int[] { 70, 30 });
+    }
+
+    public Styler getBracketStyler() {
+        return bracketStyler;
+    }
+
+    public Styler getArgNameStyler() {
+        return argNameStyler;
+    }
+
+    public Styler getNumberStyler() {
+        return numberStyler;
+    }
+
+    public Styler getErrorStyler() {
+        return errorStyler;
     }
 
     private Section createSPTVChecksSection(Form form) {
@@ -94,38 +172,141 @@ public class CommandStackView extends ViewPart {
         Composite sectionClient = tk.createComposite(section);
         sectionClient.setLayout(new GridLayout());
 
-        messagePanel = tk.createLabel(sectionClient, "Empty Stack");
-        messagePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        nextCommandText = tk.createLabel(sectionClient, "Empty Stack");
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        nextCommandText.setLayoutData(gd);
 
         section.setClient(sectionClient);
         return section;
     }
 
-    private Section createNextCommandSection(Form form) {
-        Section section = tk.createSection(form.getBody(), Section.TITLE_BAR);
+    private Section createNextCommandSection() {
+        Section section = tk.createSection(form.getForm().getBody(), Section.TITLE_BAR);
         TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
         section.setLayoutData(td);
         section.setText("Next Command");
         Composite sectionClient = tk.createComposite(section);
-        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayout(new GridLayout(2, false));
 
-        nextCommandLabel = tk.createLabel(sectionClient, "Empty Stack");
-        nextCommandLabel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        nextCommandLabel = new StyledText(sectionClient, SWT.NONE);
+        tk.adapt(nextCommandLabel, false, false);
+        nextCommandLabel.setText("Empty Stack");
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        nextCommandLabel.setLayoutData(gd);
 
         Composite controls = tk.createComposite(sectionClient, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalAlignment = SWT.CENTER;
+        gd.horizontalSpan = 2;
         controls.setLayoutData(gd);
         controls.setLayout(new RowLayout());
         armToggle = tk.createButton(controls, "Arm", SWT.TOGGLE);
         armToggle.setEnabled(false);
-        goButton = tk.createButton(controls, "Issue", SWT.PUSH);
+        goButton = tk.createButton(controls, "Fire", SWT.PUSH);
         goButton.setEnabled(false);
 
-        armToggle.addListener(SWT.Selection, evt -> goButton.setEnabled(armToggle.getSelection()));
+        nextCommandState = new Label(section, SWT.NONE);
+        nextCommandState.setText("                       "); // TODO i know i know
+        section.setTextClient(nextCommandState);
+
+        armToggle.addListener(SWT.Selection, evt -> {
+            StackedCommand command = CommandStack.getInstance().getNextCommand();
+            if (armToggle.getSelection()) {
+                nextCommandState.setText("validating...");
+                armCommand(command);
+            } else {
+                command.setState(State.UNARMED);
+                nextCommandState.setText(command.getState().getText());
+                goButton.setEnabled(false);
+            }
+        });
 
         section.setClient(sectionClient);
         return section;
+    }
+
+    // TODO move this to a handler
+    private void armCommand(StackedCommand command) {
+        armToggle.setEnabled(false);
+        RestValidateCommandRequest req = RestValidateCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
+        YamcsPlugin.getDefault().getRestClient().validateCommand(req, new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite response) {
+                Display.getDefault().asyncExec(() -> {
+                    if (response instanceof RestExceptionMessage) {
+                        RestExceptionMessage exc = (RestExceptionMessage) response;
+                        command.setState(State.REJECTED);
+                        nextCommandState.setText(command.getState().getText());
+                        armToggle.setSelection(false);
+                        MessageDialog.openError(Display.getDefault().getActiveShell(),
+                                "Could not arm command", exc.getMsg());
+                    } else {
+                        System.out.println("Got back req");
+                        log.fine(String.format("Command armed", req));
+                        command.setState(State.ARMED);
+                        goButton.setEnabled(true);
+                        nextCommandState.setText(command.getState().getText());
+                        armToggle.setEnabled(true);
+                    }
+                });
+            }
+
+            @Override
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Could not arm command", e);
+                Display.getDefault().asyncExec(() -> {
+                    command.setState(State.REJECTED);
+                    nextCommandState.setText(command.getState().getText());
+                    armToggle.setSelection(false);
+                    MessageDialog.openError(Display.getDefault().getActiveShell(),
+                            "Could not arm command", e.getMessage());
+                    armToggle.setEnabled(true);
+                });
+            }
+        });
+    }
+
+    // TODO move this to a handler
+    private void fireCommand(StackedCommand command) {
+        armToggle.setEnabled(false);
+        armToggle.setSelection(false);
+        goButton.setEnabled(false);
+        RestSendCommandRequest req = RestSendCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
+        YamcsPlugin.getDefault().getRestClient().sendCommand(req, new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite response) {
+                Display.getDefault().asyncExec(() -> {
+                    if (response instanceof RestExceptionMessage) {
+                        RestExceptionMessage exc = (RestExceptionMessage) response;
+                        command.setState(State.REJECTED);
+                        nextCommandState.setText(command.getState().getText());
+                        MessageDialog.openError(Display.getDefault().getActiveShell(),
+                                "Could not fire command", exc.getMsg());
+                    } else {
+                        log.fine(String.format("Command fired", req));
+                        command.setState(State.ISSUED);
+                        jumpToNextCommand();
+                    }
+                });
+            }
+
+            @Override
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Could not fire command", e);
+                Display.getDefault().asyncExec(() -> {
+                    command.setState(State.REJECTED);
+                    nextCommandState.setText(command.getState().getText());
+                    MessageDialog.openError(Display.getDefault().getActiveShell(),
+                            "Could not fire command", e.getMessage());
+                });
+            }
+        });
+    }
+
+    private void jumpToNextCommand() {
+        CommandStack.getInstance().incrementAndGet();
+        refreshState();
     }
 
     private Section createConstraintsSection(Form form) {
@@ -152,20 +333,31 @@ public class CommandStackView extends ViewPart {
         return section;
     }
 
-    public void addTelecommand(Telecommand command) {
+    public void addTelecommand(StackedCommand command) {
         commandTableViewer.addTelecommand(command);
-        refreshMessagePanel();
+        refreshState();
     }
 
-    private void refreshMessagePanel() {
+    private void refreshState() {
+        commandTableViewer.refresh();
+
         CommandStack stack = CommandStack.getInstance();
         String text = "";
         List<String> errorMessages = stack.getErrorMessages();
 
+        armToggle.setSelection(false);
+        goButton.setEnabled(false);
+        if (stack.getNextCommand() != null) {
+            stack.getNextCommand().setState(State.UNARMED);
+            nextCommandState.setText(stack.getNextCommand().getState().getText());
+        } else {
+            nextCommandState.setText("");
+        }
+
         if (stack.getCommands().isEmpty()) {
-            messagePanel.setText("Empty Stack");
+            nextCommandText.setText("Empty Stack");
         } else if (errorMessages.isEmpty()) {
-            messagePanel.setText("\u2713 passed");
+            nextCommandText.setText("\u2713 passed");
         } else {
             boolean first = true;
             for (String message : errorMessages) {
@@ -174,16 +366,19 @@ public class CommandStackView extends ViewPart {
                 first = false;
                 text += message;
             }
-            messagePanel.setText(text);
+            nextCommandText.setText(text);
         }
 
+        nextCommandLabel.setStyleRanges(new StyleRange[] {});
         if (!errorMessages.isEmpty()) {
             nextCommandLabel.setText("Fix SPTV checks first ");
         } else if (stack.getCommands().isEmpty()) {
             nextCommandLabel.setText("Empty Stack");
         } else {
-            Telecommand cmd = stack.getNextCommand();
-            nextCommandLabel.setText("#" + stack.indexOf(cmd));
+            StackedCommand cmd = stack.getNextCommand();
+            StyledString str = cmd.toStyledString(this);
+            nextCommandLabel.setText(str.getString());
+            nextCommandLabel.setStyleRanges(str.getStyleRanges());
         }
 
         if (errorMessages.isEmpty() && !stack.getCommands().isEmpty()) {

@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,20 +9,80 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.StyledString;
+import org.yamcs.protobuf.Rest.RestArgumentType;
+import org.yamcs.protobuf.Rest.RestCommandType;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.xtce.Argument;
 import org.yamcs.xtce.ArgumentAssignment;
 import org.yamcs.xtce.MetaCommand;
 
 /**
- * Keep track of a non-issued command. For now, used only as part of a command stack. Could also
- * eventually be renamed to StackedCommand
+ * Keep track of the lifecycle of a stacked command.
  *
  * @see {@link CommandStack}
  */
-public class Telecommand {
+public class StackedCommand {
+
+    public enum State {
+        UNARMED("Unarmed"),
+        ARMED("Armed"),
+        ISSUED("Issued"),
+        REJECTED("Rejected");
+
+        private String text;
+
+        private State(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
 
     private MetaCommand meta;
     private Map<Argument, String> assignments = new HashMap<>();
+    private State state = State.UNARMED;
+
+    public StyledString toStyledString(CommandStackView styleProvider) {
+        StyledString str = new StyledString();
+        str.append(meta.getOpsName());
+        str.append("(", styleProvider.getBracketStyler());
+        boolean first = true;
+        for (Argument arg : meta.getArgumentList()) {
+            if (!first)
+                str.append(", ", styleProvider.getBracketStyler());
+            first = false;
+            str.append(arg.getName() + ": ", styleProvider.getArgNameStyler());
+            String value = getAssignedStringValue(arg);
+            if (value == null) {
+                str.append("??", styleProvider.getErrorStyler());
+            } else {
+                str.append(value, isValid(arg) ? styleProvider.getNumberStyler() : styleProvider.getErrorStyler());
+            }
+        }
+        str.append(")", styleProvider.getBracketStyler());
+        return str;
+    }
+
+    public RestCommandType.Builder toRestCommandType() {
+        RestCommandType.Builder req = RestCommandType.newBuilder();
+        req.setId(NamedObjectId.newBuilder()
+                .setNamespace(YamcsPlugin.getDefault().getMdbNamespace())
+                .setName(meta.getOpsName()));
+        req.setSequenceNumber(YamcsPlugin.getNextCommandClientId());
+        assignments.forEach((k, v) -> {
+            req.addArguments(RestArgumentType.newBuilder().setName(k.getName()).setValue(v));
+        });
+        try {
+            req.setOrigin(InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException e) {
+            req.setOrigin("Unknown");
+        }
+        return req;
+    }
 
     public void setMetaCommand(MetaCommand meta) {
         this.meta = meta;
@@ -28,6 +90,14 @@ public class Telecommand {
 
     public MetaCommand getMetaCommand() {
         return meta;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public void addAssignment(Argument arg, String value) {

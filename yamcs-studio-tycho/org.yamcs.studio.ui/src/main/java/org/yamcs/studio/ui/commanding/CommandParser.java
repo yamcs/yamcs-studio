@@ -2,7 +2,6 @@ package org.yamcs.studio.ui.commanding;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
@@ -14,9 +13,6 @@ import org.yamcs.studio.core.YamcsPlugin;
  * in one MetaCommand xtce
  */
 public class CommandParser {
-
-    // Reset for every application restart
-    private static AtomicInteger cmdClientId = new AtomicInteger(1);
 
     public static RestCommandType toCommand(String commandString) {
         if (commandString == null)
@@ -31,7 +27,7 @@ public class CommandParser {
         commandId.setNamespace(YamcsPlugin.getDefault().getMdbNamespace());
         commandId.setName(commandName);
         cmd.setId(commandId);
-        cmd.setSequenceNumber(cmdClientId.getAndIncrement());
+        cmd.setSequenceNumber(YamcsPlugin.getNextCommandClientId());
 
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         String[] args = argString.split(",");
