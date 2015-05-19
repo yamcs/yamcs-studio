@@ -25,6 +25,8 @@ public class CommandStack {
 
     public void addCommand(StackedCommand command) {
         commands.add(command);
+        if (nextCommand == null)
+            nextCommand = command;
     }
 
     public List<StackedCommand> getCommands() {
@@ -64,5 +66,9 @@ public class CommandStack {
                 nextCommand = null;
         }
         return nextCommand;
+    }
+
+    public boolean hasRemaining() {
+        return nextCommand != null && commands.size() > commands.indexOf(nextCommand);
     }
 }

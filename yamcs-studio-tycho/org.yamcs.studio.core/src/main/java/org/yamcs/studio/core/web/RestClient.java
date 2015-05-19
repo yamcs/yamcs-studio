@@ -39,6 +39,7 @@ import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestSendCommandResponse;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
@@ -70,7 +71,7 @@ public class RestClient {
     }
 
     public void validateCommand(RestValidateCommandRequest request, ResponseHandler responseHandler) {
-        post("/api/commanding/validator", request, null, responseHandler);
+        post("/api/commanding/validator", request, RestValidateCommandResponse.newBuilder(), responseHandler);
     }
 
     public void sendCommand(RestSendCommandRequest request, ResponseHandler responseHandler) {

@@ -37,9 +37,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.protobuf.Commanding.CommandSignificance;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
@@ -213,13 +215,17 @@ public class CommandStackView extends ViewPart {
         armToggle.addListener(SWT.Selection, evt -> {
             StackedCommand command = CommandStack.getInstance().getNextCommand();
             if (armToggle.getSelection()) {
-                nextCommandState.setText("validating...");
+                nextCommandState.setText("checking...");
                 armCommand(command);
             } else {
                 command.setState(State.UNARMED);
                 nextCommandState.setText(command.getState().getText());
                 goButton.setEnabled(false);
             }
+        });
+        goButton.addListener(SWT.Selection, evt -> {
+            StackedCommand command = CommandStack.getInstance().getNextCommand();
+            fireCommand(command);
         });
 
         section.setClient(sectionClient);
@@ -242,12 +248,39 @@ public class CommandStackView extends ViewPart {
                         MessageDialog.openError(Display.getDefault().getActiveShell(),
                                 "Could not arm command", exc.getMsg());
                     } else {
-                        System.out.println("Got back req");
-                        log.fine(String.format("Command armed", req));
-                        command.setState(State.ARMED);
-                        goButton.setEnabled(true);
-                        nextCommandState.setText(command.getState().getText());
-                        armToggle.setEnabled(true);
+                        RestValidateCommandResponse validateResponse = (RestValidateCommandResponse) response;
+
+                        boolean doArm = false;
+                        if (validateResponse.getCommandsSignificanceCount() > 0) {
+                            CommandSignificance significance = validateResponse.getCommandsSignificance(0);
+                            switch (significance.getConsequenceLevel()) {
+                            case watch:
+                            case warning:
+                            case distress:
+                            case critical:
+                            case severe:
+                                String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
+                                        + significance.getConsequenceLevel().toString().substring(1);
+                                if (MessageDialog.openConfirm(armToggle.getDisplay().getActiveShell(), "Confirm",
+                                        level + ": " +
+                                                "Are you sure you want to arm this command?\n" +
+                                                "    " + command.toStyledString(CommandStackView.this).getString() + "\n\n" +
+                                                significance.getReasonForWarning())) {
+                                    doArm = true;
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        } else {
+                            doArm = true;
+                        }
+
+                        if (doArm) {
+                            doArm(command);
+                        } else {
+                            refreshState();
+                        }
                     }
                 });
             }
@@ -265,6 +298,17 @@ public class CommandStackView extends ViewPart {
                 });
             }
         });
+    }
+
+    /**
+     * Arming is a client thing only
+     */
+    private void doArm(StackedCommand command) {
+        log.fine(String.format("Command armed %s", command));
+        command.setState(State.ARMED);
+        goButton.setEnabled(true);
+        nextCommandState.setText(command.getState().getText());
+        armToggle.setEnabled(true);
     }
 
     // TODO move this to a handler
@@ -372,7 +416,7 @@ public class CommandStackView extends ViewPart {
         nextCommandLabel.setStyleRanges(new StyleRange[] {});
         if (!errorMessages.isEmpty()) {
             nextCommandLabel.setText("Fix SPTV checks first ");
-        } else if (stack.getCommands().isEmpty()) {
+        } else if (!stack.hasRemaining()) {
             nextCommandLabel.setText("Empty Stack");
         } else {
             StackedCommand cmd = stack.getNextCommand();
@@ -381,7 +425,7 @@ public class CommandStackView extends ViewPart {
             nextCommandLabel.setStyleRanges(str.getStyleRanges());
         }
 
-        if (errorMessages.isEmpty() && !stack.getCommands().isEmpty()) {
+        if (errorMessages.isEmpty() && stack.hasRemaining()) {
             armToggle.setSelection(false);
             armToggle.setEnabled(true);
         } else {
