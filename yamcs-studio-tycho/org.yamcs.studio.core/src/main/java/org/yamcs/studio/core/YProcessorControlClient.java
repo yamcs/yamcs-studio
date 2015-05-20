@@ -73,12 +73,6 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
     public void disconnect() {
         yconnector.disconnect();
         listeners.forEach(l -> l.clientDisconnected(null));
-        //listeners.clear();
-        //        try {
-        //            this.close();
-        //        } catch (HornetQException e) {
-        //            log.log(Level.SEVERE, "", e);
-        //        }
     }
 
     @Override
