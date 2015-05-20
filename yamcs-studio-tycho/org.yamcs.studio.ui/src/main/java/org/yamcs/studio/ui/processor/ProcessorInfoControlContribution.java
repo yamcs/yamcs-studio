@@ -126,6 +126,13 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
     @Override
     public void clientDisconnected(ClientInfo updatedInfo) {
+
+        //        Display.getDefault().asyncExec(() -> {
+        //            processorInfo = null;
+        //            if (!processor.isDisposed())
+        //                processor.redraw();
+        //        });
+
     }
 
     @Override

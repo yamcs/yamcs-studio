@@ -108,25 +108,31 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     }
 
-    private void disconnect()
+    public void disconnect()
     {
-        // Various clients (HornetQ)
-        for (StudioConnectionListener scl : studioConnectionListeners)
-        {
-            scl.disconnect();
-        }
+        log.info("Disconnecting...");
 
         // WebSocket
-        if (webSocketClient != null)
-        {
+        if (webSocketClient != null) {
             removeMdbListener(webSocketClient);
             webSocketClient.shutdown();
         }
+        webSocketClient = null;
 
         // REST
         if (restClient != null)
             restClient.shutdown();
-        //restClient = null;
+        restClient = null;
+
+        // Disconnect all studio connection listeners
+        for (StudioConnectionListener scl : studioConnectionListeners) {
+            try {
+                scl.disconnect();
+            } catch (Exception e)
+            {
+                log.log(Level.SEVERE, "Unable to disconnect listener " + scl + ".", e);
+            }
+        }
 
     }
 
@@ -147,7 +153,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     }
 
-    public RestClient getRestClient() {
+    private RestClient getRestClient() {
         return restClient;
     }
 

@@ -27,9 +27,14 @@ import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -50,17 +55,31 @@ import com.google.protobuf.MessageLite;
  * .xtext.ui.codetemplates.ui/src/org/eclipse/xtext/ui/codetemplates/ui/preferences
  */
 @SuppressWarnings("restriction")
-public class AddToStackFromScriptDialog extends TitleAreaDialog {
+public class AddToStackFromScriptDialog extends TitleAreaDialog implements StudioConnectionListener {
 
     private static final Logger log = Logger.getLogger(AddToStackFromScriptDialog.class.getName());
 
     private Collection<MetaCommand> commands;
     private StyledText text;
-    private RestClient restClient = YamcsPlugin.getDefault().getRestClient();
+    private RestClient restClient = null;
 
     public AddToStackFromScriptDialog(Shell parentShell) {
         super(parentShell);
         commands = YamcsPlugin.getDefault().getCommands();
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        this.restClient = restclient;
+    }
+
+    @Override
+    public void disconnect() {
+        if (restClient == null)
+            return;
+        restClient.shutdown();
+        restClient = null;
     }
 
     @Override
@@ -151,13 +170,29 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
         EmbeddedEditorModelAccess partialEditor = handle.createPartialEditor();
     }
 
+    private boolean checkConnected()
+    {
+        if (restClient == null)
+        {
+            Display.getDefault().asyncExec(() -> {
+                setErrorMessage("Client disconnected from Yamcs server");
+                log.log(Level.SEVERE, "Could not validate command string, client disconnected from Yamcs server");
+            });
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
+
         // Change parent layout data to fill the whole bar
         parent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         Button validateButton = createButton(parent, IDialogConstants.NO_ID, "Validate", true);
         validateButton.addListener(SWT.Selection, evt -> {
+            if (!checkConnected())
+                return;
             RestValidateCommandRequest.Builder req = RestValidateCommandRequest.newBuilder();
             req.addCommands(CommandParser.toCommand(text.getText()));
             restClient.validateCommand(req.build(), new ResponseHandler() {
@@ -195,6 +230,8 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
 
         Button okButton = createButton(parent, IDialogConstants.OK_ID, "Send", true);
         okButton.addListener(SWT.Selection, evt -> {
+            if (!checkConnected())
+                return;
             RestSendCommandRequest.Builder req = RestSendCommandRequest.newBuilder();
             req.addCommands(CommandParser.toCommand(text.getText()));
             restClient.sendCommand(req.build(), new ResponseHandler() {

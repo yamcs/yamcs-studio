@@ -25,8 +25,8 @@ public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener {
         IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(() -> {
             doUpdateGlobalProcessingState(workbench, null); // Trigger initial state
-            YamcsPlugin.getDefault().addProcessorListener(this); // Further updates (also gives us existing model)
-        });
+                YamcsPlugin.getDefault().addProcessorListener(this); // Further updates (also gives us existing model)
+            });
     }
 
     @Override
@@ -59,7 +59,7 @@ public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener {
         IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(() -> {
             ClientInfo clientInfo = YamcsPlugin.getDefault().getClientInfo();
-            if (clientInfo.getProcessorName().equals(processorInfo.getName())) {
+            if (clientInfo != null && clientInfo.getProcessorName().equals(processorInfo.getName())) {
                 doUpdateGlobalProcessingState(workbench, processorInfo);
             }
         });
@@ -69,12 +69,15 @@ public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener {
         // TODO Not sure which one of this method or the previous would trigger first, and whether that's deterministic
         // therefore, just have similar logic here.
         IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(() -> {
-            if (clientInfo.getId() == YamcsPlugin.getDefault().getClientInfo().getId()) {
-                ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(clientInfo.getProcessorName());
-                doUpdateGlobalProcessingState(workbench, processorInfo);
-            }
-        });
+        workbench.getDisplay().asyncExec(
+                () -> {
+
+                    if (YamcsPlugin.getDefault().getClientInfo() != null && clientInfo != null
+                            && clientInfo.getId() == YamcsPlugin.getDefault().getClientInfo().getId()) {
+                        ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(clientInfo.getProcessorName());
+                        doUpdateGlobalProcessingState(workbench, processorInfo);
+                    }
+                });
     }
 
     private void doUpdateGlobalProcessingState(IWorkbench workbench, ProcessorInfo processorInfo) {

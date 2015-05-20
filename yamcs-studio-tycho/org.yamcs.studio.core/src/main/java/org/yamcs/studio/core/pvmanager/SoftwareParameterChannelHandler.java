@@ -41,6 +41,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     private WebSocketRegistrar webSocketClient = null;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
+    private RestClient restClient;
 
     public SoftwareParameterChannelHandler(String channelName) {
         super(channelName);
@@ -52,6 +53,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
         log.info("processConnectionInfo called on " + getChannelName());
         this.disconnect();
         this.webSocketClient = webSocketClient;
+        this.restClient = restclient;
         connect();
     }
 
@@ -74,7 +76,13 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     @Override
     public void disconnect() { // Interpret this as an unsubscribe
         log.info("Disconnect called on " + getChannelName());
-        webSocketClient.unregister(this);
+        if (webSocketClient != null)
+            webSocketClient.unregister(this);
+        if (restClient != null)
+            restClient.shutdown();
+
+        webSocketClient = null;
+        restClient = null;
     }
 
     /**
@@ -115,14 +123,13 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
                 .setId(toNamedObjectId())
                 .setEngValue(toValue(p, (String) newValue))).build();
 
-        RestClient client = YamcsPlugin.getDefault().getRestClient();
-        if (client == null)
+        if (restClient == null)
         {
             callback.channelWritten(new Exception("Client is disconnected from Yamcs server"));
             return;
         }
 
-        client.setParameters(pdata, new ResponseHandler() {
+        restClient.setParameters(pdata, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 // Report success
