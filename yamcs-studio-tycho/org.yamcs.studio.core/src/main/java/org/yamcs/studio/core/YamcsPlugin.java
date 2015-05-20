@@ -73,24 +73,38 @@ public class YamcsPlugin extends AbstractUIPlugin {
             if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STARTED) {
                 // Bundle may have been shut down between the time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
-                    setWebConnections(currentCredentials);
+                    //  setWebConnections(currentCredentials);
                 }
             }
         };
         context.addBundleListener(bundleListener);
     }
 
+    public enum ConnectionStatus
+    {
+        Disconnected, // no clients (REST, WebSocket, HornetQ)are connected to Yamcs server
+        //PartiallyConnected,
+        Connecting,
+        Connected, // all clients are connected
+        Disconnecting
+    }
+
+    private ConnectionStatus connectionStatus;
+
+    public void setConnectionStatus(ConnectionStatus connectionStatus)
+    {
+        log.info("Current connection status: " + connectionStatus);
+        this.connectionStatus = connectionStatus;
+    }
+
+    public ConnectionStatus getConnectionSatus()
+    {
+        return connectionStatus;
+    }
+
     private void setWebConnections(YamcsCredentials yamcsCredentials)
     {
-
-        //  TODO: allow login/logout (ie connection/disconnection)
-        //   disconnect();
-        //        // check if authentication is activated
-        //        if (getPreferenceStore().getBoolean("yamcs_privileges") && currentCredentials == null)
-        //        {
-        //            log.info("User not logged in. Not establising connection to Yamcs server");
-        //            return;
-        //        }
+        setConnectionStatus(ConnectionStatus.Connecting);
 
         // common properties
         YamcsConnectionProperties webProps = getWebProperties();
@@ -111,6 +125,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public void disconnect()
     {
         log.info("Disconnecting...");
+        setConnectionStatus(ConnectionStatus.Disconnecting);
 
         // WebSocket
         if (webSocketClient != null) {
@@ -134,6 +149,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
             }
         }
 
+        setConnectionStatus(ConnectionStatus.Disconnected);
+
     }
 
     // Likely not on the swt thread
@@ -150,7 +167,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
             });
         }
-
+        setConnectionStatus(ConnectionStatus.Connected);
     }
 
     private RestClient getRestClient() {

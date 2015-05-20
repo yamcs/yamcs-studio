@@ -69,9 +69,15 @@ public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener {
         // TODO Not sure which one of this method or the previous would trigger first, and whether that's deterministic
         // therefore, just have similar logic here.
         IWorkbench workbench = PlatformUI.getWorkbench();
+
+        if (clientInfo == null)
+        {
+            int i = 0;
+            i++;
+        }
+
         workbench.getDisplay().asyncExec(
                 () -> {
-
                     if (YamcsPlugin.getDefault().getClientInfo() != null && clientInfo != null
                             && clientInfo.getId() == YamcsPlugin.getDefault().getClientInfo().getId()) {
                         ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(clientInfo.getProcessorName());

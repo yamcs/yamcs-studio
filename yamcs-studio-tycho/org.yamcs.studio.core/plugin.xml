@@ -33,5 +33,5 @@
             class="org.yamcs.studio.core.YamcsLoginModule"
             description="Authentication of username/password against the Yamcs server">
       </loginModule>
-   </extension>zz
+   </extension>
 </plugin>

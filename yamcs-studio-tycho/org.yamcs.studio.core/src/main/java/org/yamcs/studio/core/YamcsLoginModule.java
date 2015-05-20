@@ -33,10 +33,6 @@ public class YamcsLoginModule implements LoginModule {
     private String user = null;
     private char[] password = null;
 
-    public YamcsLoginModule() {
-        System.out.println("yamcs login, constructor");
-    }
-
     @Override
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
 
@@ -62,10 +58,9 @@ public class YamcsLoginModule implements LoginModule {
         else
         {
             try {
-                YamcsPlugin.getDefault().setAuthenticatedPrincipal(null);
+                YamcsPlugin.getDefault().disconnect();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.log(Level.WARNING, "", e);
             }
             throw new LoginException("wrong credentials.");
         }
@@ -105,7 +100,7 @@ public class YamcsLoginModule implements LoginModule {
      */
     private boolean authenticate(final String user, final String password)
     {
-        System.out.println("yamcs login, authenticating " + user + "/" + password);
+        log.info("yamcs login, authenticating " + user + "/" + password);
 
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
         req.addNamespaces(YamcsPlugin.getDefault().getMdbNamespace());
@@ -135,7 +130,7 @@ public class YamcsLoginModule implements LoginModule {
 
     @Override
     public boolean commit() throws LoginException {
-        System.out.println("yamcs login, commit");
+        log.info("yamcs login, commit");
         if (user == null)
             return false;
         Principal principal = new SimplePrincipal(user);
@@ -152,17 +147,19 @@ public class YamcsLoginModule implements LoginModule {
 
     @Override
     public boolean abort() throws LoginException {
-        System.out.println("yamcs login, abort");
         return true;
     }
 
+    /**
+     * never called by the org.csstudio.security plugin. So has been replaced by a new menu/handler
+     * in org.yamcs.studio.ui
+     */
     @Override
     public boolean logout() throws LoginException {
-        System.out.println("yamcs login, logout");
+        log.info("yamcs login, logout");
         try {
-            YamcsPlugin.getDefault().setAuthenticatedPrincipal(null);
+            YamcsPlugin.getDefault().disconnect();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             throw new LoginException(e.getMessage());
         }
         return true;
@@ -193,6 +190,10 @@ public class YamcsLoginModule implements LoginModule {
             authenticated = false;
         }
 
+    }
+
+    public static boolean isAuthenticationNeeded() {
+        return YamcsPlugin.getDefault().getPrivilegesEnabled();
     }
 
 }
