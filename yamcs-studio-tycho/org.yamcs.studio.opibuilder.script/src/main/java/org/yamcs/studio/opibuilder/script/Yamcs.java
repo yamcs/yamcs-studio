@@ -5,8 +5,13 @@ import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.scriptUtil.ConsoleUtil;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -20,13 +25,39 @@ import com.google.protobuf.MessageLite;
  * importPackage(Packages.org.yamcs.studio.opibuilder.script);
  * Yamcs.issueCommand('SIMULATOR_SWITCH_VOLTAGE_ON(voltage_num: 1)');
  */
-public class Yamcs {
+public class Yamcs implements StudioConnectionListener {
 
     private static final Logger log = Logger.getLogger(Yamcs.class.getName());
+    private RestClient restClient;
 
-    public static void issueCommand(String text) {
-        RestClient client = YamcsPlugin.getDefault().getRestClient();
-        if (client == null)
+    private static Yamcs instance = new Yamcs();
+
+    private Yamcs()
+    {
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    public Yamcs getInstance()
+    {
+        return instance;
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        this.restClient = restclient;
+    }
+
+    @Override
+    public void disconnect() {
+        if (restClient == null)
+            return;
+        restClient.shutdown();
+        restClient = null;
+    }
+
+    public void issueCommand(String text) {
+
+        if (restClient == null)
         {
             ConsoleUtil.writeError("Could not send command, client is disonnected from Yamcs server");
             return;
@@ -34,7 +65,7 @@ public class Yamcs {
 
         RestSendCommandRequest req = RestSendCommandRequest.newBuilder()
                 .addCommands(CommandParser.toCommand(text)).build();
-        client.sendCommand(req, new ResponseHandler() {
+        restClient.sendCommand(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 if (response instanceof RestExceptionMessage) {

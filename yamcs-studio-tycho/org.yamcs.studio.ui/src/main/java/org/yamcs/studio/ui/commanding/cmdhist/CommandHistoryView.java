@@ -31,12 +31,16 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
 import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.CommandHistoryListener;
+import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -47,7 +51,7 @@ import com.google.protobuf.MessageLite;
 /**
  * TODO show a friendly message when the thing is still loading
  */
-public class CommandHistoryView extends ViewPart {
+public class CommandHistoryView extends ViewPart implements StudioConnectionListener {
 
     private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
 
@@ -58,8 +62,8 @@ public class CommandHistoryView extends ViewPart {
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_T = "T";
 
-    private WebSocketRegistrar webSocketClient = YamcsPlugin.getDefault().getWebSocketClient();
-    private RestClient restClient = YamcsPlugin.getDefault().getRestClient();
+    private WebSocketRegistrar webSocketClient = null;
+    private RestClient restClient = null;
 
     // Prefix used in command attribute names
     private static final String ACK_PREFIX = "Acknowledge_";
@@ -110,8 +114,7 @@ public class CommandHistoryView extends ViewPart {
         tableViewerComparator = new CommandHistoryViewerComparator();
         tableViewer.setComparator(tableViewerComparator);
 
-        subscribeToUpdates();
-        fetchArchivedCommands();
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
     }
 
     private void addFixedColumns() {
@@ -303,5 +306,22 @@ public class CommandHistoryView extends ViewPart {
     public void dispose() {
         super.dispose();
         resourceManager.dispose();
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+
+        this.webSocketClient = webSocketClient;
+        this.restClient = restclient;
+        if (webSocketClient != null)
+            subscribeToUpdates();
+        if (restClient != null)
+            fetchArchivedCommands();
+    }
+
+    @Override
+    public void disconnect() {
+        // TODO Auto-generated method stub
+
     }
 }

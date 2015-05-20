@@ -3,7 +3,6 @@ package org.yamcs.studio.ui.handlers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -13,7 +12,6 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 
 import com.google.protobuf.MessageLite;
 
@@ -21,13 +19,15 @@ import com.google.protobuf.MessageLite;
  * Currently only resumes a paused replay. Should eventually also seek to the beginning and replay a
  * stopped replay. We should probably do this at the server level, rather than stitching it in here.
  */
-public class PlayHandler extends AbstractHandler {
+public class PlayHandler extends AbstractRestHandler {
 
     private static final Logger log = Logger.getLogger(PlayHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RestClient restClient = YamcsPlugin.getDefault().getRestClient();
+        if (!checkRestClient(event, "resume processing"))
+            return null;
+
         String processorName = YamcsPlugin.getDefault().getClientInfo().getProcessorName();
         ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.RESUME).build();
         restClient.createProcessorRequest(processorName, req, new ResponseHandler() {

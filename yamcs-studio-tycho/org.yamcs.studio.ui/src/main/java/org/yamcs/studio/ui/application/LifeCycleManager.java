@@ -13,7 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IEvaluationService;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.ui.ConnectHandler;
 
 @SuppressWarnings("restriction")
 public class LifeCycleManager {
@@ -36,11 +36,8 @@ public class LifeCycleManager {
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
 
-                if (YamcsPlugin.getDefault().getPrivilegesEnabled())
-                {
-                    cmd = commandService.getCommand("org.csstudio.security.login");
-                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
-                }
+                // request connection to Yamcs server
+                (new ConnectHandler()).execute(null);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

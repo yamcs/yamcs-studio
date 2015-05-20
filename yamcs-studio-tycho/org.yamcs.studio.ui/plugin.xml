@@ -371,6 +371,12 @@
             </and>
          </activeWhen>
       </handler>
+      <handler commandId="org.yamcs.studio.ui.connect"
+            class="org.yamcs.studio.ui.ConnectHandler">        
+      </handler>
+      <handler commandId="org.yamcs.studio.ui.disconnect"
+            class="org.yamcs.studio.ui.DisconnectHandler">        
+      </handler>
    </extension>
    
    <extension point="org.eclipse.ui.views">
@@ -423,7 +429,9 @@
          <hiddenToolBarItem id="org.csstudio.security.login"/>
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
          <hiddenToolBarItem id="org.csstudio.diag.pvmanager.probe.OpenProbe"/>
-         <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>
+         <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>         
+         <hiddenMenuItem id="org.csstudio.security.login"/>
+         <hiddenMenuItem id="org.csstudio.security.logout"/>
          <!-- Looks weird with the '...' in the label. Want to replace to sth in file-menu instead, like eclipse -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
          <!-- Try to avoid confusion, perspectives already will open new windows -->
@@ -546,6 +554,7 @@
       </perspectiveExtension>
    </extension>
    
+   
    <extension point="org.eclipse.ui.actionSets">
       <!-- Redefines the actionSet from the opibuilder plugin, so that we can customize it a bit -->
       <actionSet
@@ -579,11 +588,15 @@
    </extension>
    
    <extension point="org.eclipse.ui.menus">
+   
+    
+   
       <menuContribution
             allPopups="true"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
          <toolbar id="additions"/>
       </menuContribution>
+        
       
       <!-- Add direct menu to switch perspectives (because we disable the horrible
            built-in perspective-switcher-bar) -->
@@ -755,5 +768,23 @@
             <control id="studiocontributions.timeInfo" class="org.yamcs.studio.ui.processor.TimeInfoControlContribution" />
          </toolbar>
       </menuContribution>
+      
+        
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:file?before=user">           
+            <command
+                  commandId="org.yamcs.studio.ui.disconnect" 
+                  label="Disconnect">
+            </command>
+      </menuContribution> <menuContribution
+            allPopups="false"
+            locationURI="menu:file?before=user">           
+            <command
+                  commandId="org.yamcs.studio.ui.connect"
+                  label="Connect">
+            </command>
+      </menuContribution>
+      
    </extension>
 </plugin>

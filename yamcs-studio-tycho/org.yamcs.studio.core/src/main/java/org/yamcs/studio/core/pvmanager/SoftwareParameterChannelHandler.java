@@ -6,12 +6,16 @@ import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.PVConnectionInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -31,15 +35,26 @@ import com.google.protobuf.MessageLite;
 /**
  * Supports writable Software parameters
  */
-public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue> implements YamcsPVReader {
+public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
+        implements YamcsPVReader, StudioConnectionListener {
 
-    private WebSocketRegistrar webSocketClient;
+    private WebSocketRegistrar webSocketClient = null;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
+    private RestClient restClient;
 
-    public SoftwareParameterChannelHandler(String channelName, WebSocketRegistrar webSocketClient) {
+    public SoftwareParameterChannelHandler(String channelName) {
         super(channelName);
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        log.info("processConnectionInfo called on " + getChannelName());
+        this.disconnect();
         this.webSocketClient = webSocketClient;
+        this.restClient = restclient;
+        connect();
     }
 
     @Override
@@ -59,9 +74,15 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     }
 
     @Override
-    protected void disconnect() { // Interpret this as an unsubscribe
+    public void disconnect() { // Interpret this as an unsubscribe
         log.info("Disconnect called on " + getChannelName());
-        webSocketClient.unregister(this);
+        if (webSocketClient != null)
+            webSocketClient.unregister(this);
+        if (restClient != null)
+            restClient.shutdown();
+
+        webSocketClient = null;
+        restClient = null;
     }
 
     /**
@@ -102,14 +123,13 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
                 .setId(toNamedObjectId())
                 .setEngValue(toValue(p, (String) newValue))).build();
 
-        RestClient client = YamcsPlugin.getDefault().getRestClient();
-        if (client == null)
+        if (restClient == null)
         {
             callback.channelWritten(new Exception("Client is disconnected from Yamcs server"));
             return;
         }
 
-        client.setParameters(pdata, new ResponseHandler() {
+        restClient.setParameters(pdata, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 // Report success

@@ -23,6 +23,7 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.web.RestClient;
 
 /**
  * controls yprocessors in yamcs server via hornetq TODO move this to websocket instead
@@ -59,7 +60,8 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
      * Called when we get green light from YamcsPlugin
      */
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps) {
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
+            RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
     }
 
@@ -71,7 +73,7 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
     public void disconnect() {
         yconnector.disconnect();
         listeners.forEach(l -> l.clientDisconnected(null));
-        listeners.clear();
+        //listeners.clear();
         //        try {
         //            this.close();
         //        } catch (HornetQException e) {

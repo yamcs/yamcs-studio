@@ -3,7 +3,6 @@ package org.yamcs.studio.ui.handlers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -14,17 +13,19 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 
 import com.google.protobuf.MessageLite;
 
-public class GoToBeginningHandler extends AbstractHandler {
+public class GoToBeginningHandler extends AbstractRestHandler {
 
     private static final Logger log = Logger.getLogger(GoToBeginningHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RestClient restClient = YamcsPlugin.getDefault().getRestClient();
+
+        if (!checkRestClient(event, "go to beginning of replay range"))
+            return null;
+
         String processorName = YamcsPlugin.getDefault().getClientInfo().getProcessorName();
         ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(processorName);
         long seekTime = processorInfo.getReplayRequest().getStart();

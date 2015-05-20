@@ -2,7 +2,6 @@ package org.yamcs.studio.ui.archive;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,12 +39,17 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Yamcs.EndAction;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
 import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -54,7 +58,7 @@ import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;
 
-public class CreateReplayDialog extends TitleAreaDialog {
+public class CreateReplayDialog extends TitleAreaDialog implements StudioConnectionListener {
 
     private static final Logger log = Logger.getLogger(CreateReplayDialog.class.getName());
 
@@ -72,6 +76,8 @@ public class CreateReplayDialog extends TitleAreaDialog {
     private TableViewer packetsTable;
     private List<String> packetsValue;
 
+    private RestClient restClient = null;
+
     public CreateReplayDialog(Shell parentShell) {
         super(parentShell);
     }
@@ -81,6 +87,20 @@ public class CreateReplayDialog extends TitleAreaDialog {
         super.create();
         setTitle("Start a new replay");
         setMessage("Replays can be joined by other users", IMessageProvider.INFORMATION);
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        this.restClient = restclient;
+    }
+
+    @Override
+    public void disconnect() {
+        if (restClient == null)
+            return;
+        restClient.shutdown();
+        restClient = null;
     }
 
     private void validate() {
@@ -196,11 +216,18 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
+
+        if (restClient == null)
+        {
+            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay\n", ""
+                    + "Disconnected from Yamcs server");
+            return;
+        }
+
         getButton(IDialogConstants.OK_ID).setEnabled(false);
         ProcessorManagementRequest req = toProcessorManagementRequest();
         resetDisplays();
 
-        RestClient restClient = YamcsPlugin.getDefault().getRestClient();
         restClient.createProcessorManagementRequest(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {

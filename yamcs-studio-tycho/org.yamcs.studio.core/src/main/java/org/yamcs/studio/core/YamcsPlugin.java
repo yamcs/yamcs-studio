@@ -73,25 +73,38 @@ public class YamcsPlugin extends AbstractUIPlugin {
             if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STARTED) {
                 // Bundle may have been shut down between the time this event was queued and now
                 if (getBundle().getState() == Bundle.ACTIVE) {
-
-                    setWebConnections(currentCredentials);
-
+                    //  setWebConnections(currentCredentials);
                 }
             }
         };
         context.addBundleListener(bundleListener);
     }
 
+    public enum ConnectionStatus
+    {
+        Disconnected, // no clients (REST, WebSocket, HornetQ)are connected to Yamcs server
+        //PartiallyConnected,
+        Connecting,
+        Connected, // all clients are connected
+        Disconnecting
+    }
+
+    private ConnectionStatus connectionStatus;
+
+    public void setConnectionStatus(ConnectionStatus connectionStatus)
+    {
+        log.info("Current connection status: " + connectionStatus);
+        this.connectionStatus = connectionStatus;
+    }
+
+    public ConnectionStatus getConnectionSatus()
+    {
+        return connectionStatus;
+    }
+
     private void setWebConnections(YamcsCredentials yamcsCredentials)
     {
-        //  TODO: allow login/logout (ie connection/disconnection)
-        //   disconnect();
-        //        // check if authentication is activated
-        //        if (getPreferenceStore().getBoolean("yamcs_privileges") && currentCredentials == null)
-        //        {
-        //            log.info("User not logged in. Not establising connection to Yamcs server");
-        //            return;
-        //        }
+        setConnectionStatus(ConnectionStatus.Connecting);
 
         // common properties
         YamcsConnectionProperties webProps = getWebProperties();
@@ -109,25 +122,34 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     }
 
-    private void disconnect()
+    public void disconnect()
     {
-        // Various clients (HornetQ)
-        for (StudioConnectionListener scl : studioConnectionListeners)
-        {
-            scl.disconnect();
-        }
+        log.info("Disconnecting...");
+        setConnectionStatus(ConnectionStatus.Disconnecting);
 
         // WebSocket
-        if (webSocketClient != null)
-        {
+        if (webSocketClient != null) {
             removeMdbListener(webSocketClient);
             webSocketClient.shutdown();
         }
+        webSocketClient = null;
 
         // REST
         if (restClient != null)
             restClient.shutdown();
         restClient = null;
+
+        // Disconnect all studio connection listeners
+        for (StudioConnectionListener scl : studioConnectionListeners) {
+            try {
+                scl.disconnect();
+            } catch (Exception e)
+            {
+                log.log(Level.SEVERE, "Unable to disconnect listener " + scl + ".", e);
+            }
+        }
+
+        setConnectionStatus(ConnectionStatus.Disconnected);
 
     }
 
@@ -135,24 +157,24 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private void setupConnections(ClientInfo clientInfo, YamcsCredentials credentials) {
         log.fine(String.format("Got back clientInfo %s", clientInfo));
         // Need to improve this code. Currently doesn't support changing connections
-        boolean doSetup = (this.clientInfo == null);
+        //boolean doSetup = (this.clientInfo == null);
         this.clientInfo = clientInfo;
-        if (doSetup) {
+        if (true) {
             loadParameters();
             loadCommands();
 
             studioConnectionListeners.forEach(l -> {
-                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(credentials));
+                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
             });
         }
-
+        setConnectionStatus(ConnectionStatus.Connected);
     }
 
-    public RestClient getRestClient() {
+    private RestClient getRestClient() {
         return restClient;
     }
 
-    public WebSocketRegistrar getWebSocketClient() {
+    private WebSocketRegistrar getWebSocketClient() {
         return webSocketClient;
     }
 
@@ -262,8 +284,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         studioConnectionListeners.add(listener);
-        if (clientInfo != null)
-            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials));
+        if (clientInfo != null && restClient != null && webSocketClient != null)
+            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
     }
 
     public void addProcessorListener(ProcessorListener listener) {
@@ -320,8 +342,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
         currentCredentials = yamcsCredentials;
 
         // (re)establish the connections to the yamcs server
+        //  disconnect();
         setWebConnections(currentCredentials);
-
     }
 
 }

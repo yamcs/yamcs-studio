@@ -37,18 +37,24 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandSignificance;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
 
 import com.google.protobuf.MessageLite;
 
-public class CommandStackView extends ViewPart {
+public class CommandStackView extends ViewPart implements StudioConnectionListener {
 
     private static final Logger log = Logger.getLogger(CommandStackView.class.getName());
     public static final String ID = "org.yamcs.studio.ui.commanding.stack.CommandStackView";
@@ -67,6 +73,8 @@ public class CommandStackView extends ViewPart {
     private Styler argNameStyler;
     private Styler numberStyler;
     private Styler errorStyler;
+
+    private RestClient restClient = null;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -149,6 +157,21 @@ public class CommandStackView extends ViewPart {
         });
 
         sash.setWeights(new int[] { 70, 30 });
+
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+    }
+
+    @Override
+    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        this.restClient = restclient;
+    }
+
+    @Override
+    public void disconnect() {
+        if (restClient == null)
+            return;
+        restClient.shutdown();
+        restClient = null;
     }
 
     public Styler getBracketStyler() {
@@ -233,11 +256,32 @@ public class CommandStackView extends ViewPart {
         return section;
     }
 
+    private boolean checkConnected(String action)
+    {
+
+        if (restClient == null)
+        {
+            Display.getDefault().asyncExec(() -> {
+                MessageDialog.openError(Display.getDefault().getActiveShell(),
+                        "Could not " + action, "Client disconnected from Yamcs server");
+
+            });
+            return false;
+        }
+        return true;
+    }
+
     // TODO move this to a handler
     private void armCommand(StackedCommand command) {
+        if (!checkConnected("arm command"))
+        {
+            return;
+        }
+
         armToggle.setEnabled(false);
         RestValidateCommandRequest req = RestValidateCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
-        YamcsPlugin.getDefault().getRestClient().validateCommand(req, new ResponseHandler() {
+
+        restClient.validateCommand(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {
@@ -314,11 +358,18 @@ public class CommandStackView extends ViewPart {
 
     // TODO move this to a handler
     private void fireCommand(StackedCommand command) {
+
+        if (!checkConnected("fire command"))
+        {
+            return;
+        }
+
         armToggle.setEnabled(false);
         armToggle.setSelection(false);
         goButton.setEnabled(false);
         RestSendCommandRequest req = RestSendCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
-        YamcsPlugin.getDefault().getRestClient().sendCommand(req, new ResponseHandler() {
+
+        restClient.sendCommand(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {

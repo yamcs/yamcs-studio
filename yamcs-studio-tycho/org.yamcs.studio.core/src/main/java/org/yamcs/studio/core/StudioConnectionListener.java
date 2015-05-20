@@ -3,6 +3,7 @@ package org.yamcs.studio.core;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.web.RestClient;
 
 /**
  * Informs different components of new or changed connection settings.
@@ -18,7 +19,8 @@ public interface StudioConnectionListener {
     /**
      * Called when we get green light from YamcsPlugin
      */
-    void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps);
+    void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps,
+            YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient);
 
     /**
      * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
