@@ -137,7 +137,7 @@ public class YamcsLoginModule implements LoginModule {
         subject.getPrincipals().add(principal);
 
         try {
-            YamcsPlugin.getDefault().setAuthenticatedPrincipal(new YamcsCredentials(user, password));
+            YamcsPlugin.getDefault().connect(new YamcsCredentials(user, password));
         } catch (Exception e) {
             log.log(Level.SEVERE, "", e);
             throw new LoginException("Unable to establish connections to Yamcs. " + e.getMessage());

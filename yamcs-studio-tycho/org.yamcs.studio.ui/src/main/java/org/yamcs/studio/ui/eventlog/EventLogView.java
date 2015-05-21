@@ -63,7 +63,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
         tableViewerComparator = new EventLogViewerComparator();
         tableViewer.setComparator(tableViewerComparator);
 
-        yconnector = new YamcsConnector();
+        yconnector = new YamcsConnector(false);
         new YamcsEventReceiver(yconnector, this);
         YamcsPlugin.getDefault().addStudioConnectionListener(this);
     }

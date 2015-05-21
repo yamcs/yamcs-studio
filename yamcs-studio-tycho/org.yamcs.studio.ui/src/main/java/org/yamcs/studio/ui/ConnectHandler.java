@@ -25,7 +25,7 @@ public class ConnectHandler extends AbstractHandler {
             // Check if authentication is needed
             if (!YamcsLoginModule.isAuthenticationNeeded())
             {
-                YamcsPlugin.getDefault().setAuthenticatedPrincipal(null);
+                YamcsPlugin.getDefault().connect(null);
                 return null;
             }
 

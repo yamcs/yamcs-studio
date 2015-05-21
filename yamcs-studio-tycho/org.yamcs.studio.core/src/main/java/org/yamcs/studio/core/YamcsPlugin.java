@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,6 +60,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private List<RestParameter> parameters = Collections.emptyList();
     private Collection<MetaCommand> commands = Collections.emptyList();
 
+    private List<ConnectionFailureListener> connectionFailureListeners = new LinkedList<ConnectionFailureListener>();
+
     // Reset for every application restart
     private static AtomicInteger cmdClientId = new AtomicInteger(1);
 
@@ -83,15 +86,15 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public enum ConnectionStatus
     {
         Disconnected, // no clients (REST, WebSocket, HornetQ)are connected to Yamcs server
-        //PartiallyConnected,
         Connecting,
         Connected, // all clients are connected
-        Disconnecting
+        Disconnecting,
+        ConnectionFailure,
     }
 
     private ConnectionStatus connectionStatus;
 
-    public void setConnectionStatus(ConnectionStatus connectionStatus)
+    private void setConnectionStatus(ConnectionStatus connectionStatus)
     {
         log.info("Current connection status: " + connectionStatus);
         this.connectionStatus = connectionStatus;
@@ -102,9 +105,15 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return connectionStatus;
     }
 
-    private void setWebConnections(YamcsCredentials yamcsCredentials)
+    public void connect(YamcsCredentials yamcsCredentials)
     {
+        log.info("Connecting to Yamcs server, node " + getCurrentNode());
         setConnectionStatus(ConnectionStatus.Connecting);
+
+        // store the current credential
+        currentCredentials = yamcsCredentials;
+
+        // (re)establish the connections to the yamcs server
 
         // common properties
         YamcsConnectionProperties webProps = getWebProperties();
@@ -116,16 +125,22 @@ public class YamcsPlugin extends AbstractUIPlugin {
         webSocketClient = new WebSocketRegistrar(webProps, yamcsCredentials);
         addMdbListener(webSocketClient);
 
-        // we start other clients as well
+        // We start other clients as well
         webSocketClient.addClientInfoListener(clientInfo -> setupConnections(clientInfo, currentCredentials));
         webSocketClient.connect();
-
     }
 
     public void disconnect()
     {
-        log.info("Disconnecting...");
-        setConnectionStatus(ConnectionStatus.Disconnecting);
+        synchronized (this) {
+            if (connectionStatus == ConnectionStatus.Disconnected
+                    || connectionStatus == ConnectionStatus.Disconnecting)
+                return;
+
+            if (connectionStatus != ConnectionStatus.ConnectionFailure)
+                setConnectionStatus(ConnectionStatus.Disconnecting);
+        }
+        log.fine("Disconnecting...");
 
         // WebSocket
         if (webSocketClient != null) {
@@ -149,8 +164,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
             }
         }
 
-        setConnectionStatus(ConnectionStatus.Disconnected);
-
+        if (connectionStatus != ConnectionStatus.ConnectionFailure)
+            setConnectionStatus(ConnectionStatus.Disconnected);
     }
 
     // Likely not on the swt thread
@@ -168,14 +183,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
             });
         }
         setConnectionStatus(ConnectionStatus.Connected);
-    }
-
-    private RestClient getRestClient() {
-        return restClient;
-    }
-
-    private WebSocketRegistrar getWebSocketClient() {
-        return webSocketClient;
     }
 
     public ClientInfo getClientInfo() {
@@ -207,20 +214,61 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return hornetqProps;
     }
 
+    public int getNumberOfNodes()
+    {
+        return getPreferenceStore().getInt("number_of_nodes");
+    }
+
+    public int getCurrentNode()
+    {
+        return getPreferenceStore().getInt("current_node");
+    }
+
+    private void setCurrentNode(int currentNode)
+    {
+        getPreferenceStore().setValue("current_node", currentNode);
+    }
+
+    public void switchNode(int nodeNumber)
+    {
+        if (nodeNumber < 1 || nodeNumber > getNumberOfNodes())
+        {
+            log.severe("Request to switch to node " + nodeNumber + " but ony " + getNumberOfNodes() + " nodes are configured. Switching to node 1...");
+            nodeNumber = 1;
+        }
+        // if (currentNode != nodeNumber)
+        {
+            log.info("switching from node " + getCurrentNode() + " to node " + nodeNumber);
+            setCurrentNode(nodeNumber);
+            disconnect();
+            connect(currentCredentials);
+        }
+    }
+
+    public void abortSwitchNode()
+    {
+        if (connectionStatus == ConnectionStatus.ConnectionFailure)
+            connectionStatus = ConnectionStatus.Disconnected;
+    }
+
     public String getInstance() {
-        return getPreferenceStore().getString("yamcs_instance");
+        String node = "node" + getCurrentNode() + ".";
+        return getPreferenceStore().getString(node + "yamcs_instance");
     }
 
     public String getHost() {
-        return getPreferenceStore().getString("yamcs_host");
+        String node = "node" + getCurrentNode() + ".";
+        return getPreferenceStore().getString(node + "yamcs_host");
     }
 
     public int getWebPort() {
-        return getPreferenceStore().getInt("yamcs_port");
+        String node = "node" + getCurrentNode() + ".";
+        return getPreferenceStore().getInt(node + "yamcs_port");
     }
 
     public boolean getPrivilegesEnabled() {
-        return getPreferenceStore().getBoolean("yamcs_privileges");
+        String node = "node" + getCurrentNode() + ".";
+        return getPreferenceStore().getBoolean(node + "yamcs_privileges");
     }
 
     public String getMdbNamespace() {
@@ -337,13 +385,22 @@ public class YamcsPlugin extends AbstractUIPlugin {
         webSocketClient.updateClientinfo();
     }
 
-    public void setAuthenticatedPrincipal(YamcsCredentials yamcsCredentials) throws Exception {
-        // store the current credential
-        currentCredentials = yamcsCredentials;
+    public void addConnectionFailureListener(ConnectionFailureListener cfl)
+    {
+        connectionFailureListeners.add(cfl);
+    }
 
-        // (re)establish the connections to the yamcs server
-        //  disconnect();
-        setWebConnections(currentCredentials);
+    public void notifyConnectionFailure() {
+        log.info("");
+        synchronized (this) {
+            if (connectionStatus == ConnectionStatus.ConnectionFailure)
+                return;
+            this.connectionStatus = ConnectionStatus.ConnectionFailure;
+        }
+        this.disconnect();
+        int currentNode = getCurrentNode();
+        final int nextNode = currentNode + 1 > getNumberOfNodes() ? 1 : currentNode + 1;
+        connectionFailureListeners.forEach(c -> c.connectionFailure(currentNode, nextNode));
     }
 
 }

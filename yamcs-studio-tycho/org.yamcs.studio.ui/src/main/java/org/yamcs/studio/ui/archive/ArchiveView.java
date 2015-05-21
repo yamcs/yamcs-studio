@@ -46,7 +46,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
     public void createPartControl(Composite parent) {
         createActions();
 
-        yconnector = new YamcsConnector();
+        yconnector = new YamcsConnector(false);
         indexReceiver = new YamcsArchiveIndexReceiver(yconnector);
 
         Composite locationComp = new Composite(parent, SWT.EMBEDDED);

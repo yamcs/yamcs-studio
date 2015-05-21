@@ -1,5 +1,8 @@
 package org.yamcs.studio.ui.prefs;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
@@ -27,10 +30,42 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
     @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
 
-    private StringFieldEditor yamcsHost;
-    private IntegerFieldEditor yamcsPort;
-    private StringFieldEditor yamcsInstance;
-    private BooleanFieldEditor yamcsPrivileges;
+    private class YamcsNode {
+        int nodeNumber;
+        StringFieldEditor yamcsHost;
+        IntegerFieldEditor yamcsPort;
+        StringFieldEditor yamcsInstance;
+        BooleanFieldEditor yamcsPrivileges;
+
+        public boolean isSource(PropertyChangeEvent event)
+        {
+            return event.getSource() == yamcsHost
+                    || event.getSource() == yamcsPort
+                    || event.getSource() == yamcsInstance
+                    || event.getSource() == yamcsPrivileges;
+        }
+
+        public boolean hasChanged()
+        {
+            YamcsPlugin plugin = YamcsPlugin.getDefault();
+            return !yamcsHost.getStringValue().equals(plugin.getHost()) ||
+                    yamcsPort.getIntValue() != plugin.getWebPort() ||
+                    !yamcsInstance.getStringValue().equals(plugin.getInstance()) ||
+                    !mdbNamespace.getStringValue().equals(plugin.getMdbNamespace()) ||
+                    !yamcsPrivileges.getBooleanValue() == plugin.getPrivilegesEnabled();
+        }
+
+        public boolean isValid()
+        {
+            String yamcsHostText = yamcsHost.getStringValue();
+            String yamcsInstanceText = yamcsInstance.getStringValue();
+            return yamcsHostText.trim().matches("[a-zA-Z\\-\\.0-9_]+") && yamcsInstanceText.trim().matches("[a-zA-Z\\.\\-0-9_]+");
+        }
+    }
+
+    private IntegerFieldEditor currentNode;
+
+    private List<YamcsNode> nodes = new LinkedList<YamcsNode>();
     private StringFieldEditor mdbNamespace;
 
     public YamcsPreferencePage() {
@@ -46,17 +81,30 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
      */
     @Override
     public void createFieldEditors() {
-        yamcsHost = new StringFieldEditor("yamcs_host", "Host", getFieldEditorParent());
-        addField(yamcsHost);
-        yamcsPort = new IntegerFieldEditor("yamcs_port", "Port", getFieldEditorParent());
-        addField(yamcsPort);
-        yamcsInstance = new StringFieldEditor("yamcs_instance", "Instance", getFieldEditorParent());
-        addField(yamcsInstance);
 
-        yamcsPrivileges = new BooleanFieldEditor("yamcs_privileges", "Secured", getFieldEditorParent());
-        addField(yamcsPrivileges);
+        // TODO: make this preference page more dynamic to add more nodes from the menu
+        int numberOfNodes = YamcsPlugin.getDefault().getNumberOfNodes();
+        for (int i = 0; i < numberOfNodes; i++)
+        {
+            YamcsNode yamcsNode = new YamcsNode();
+            yamcsNode.nodeNumber = i + 1;
+            yamcsNode.yamcsHost = new StringFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_host", "Host", getFieldEditorParent());
+            yamcsNode.yamcsPort = new IntegerFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_port", "Port", getFieldEditorParent());
+            yamcsNode.yamcsInstance = new StringFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_instance", "Instance", getFieldEditorParent());
+            yamcsNode.yamcsPrivileges = new BooleanFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_privileges", "Secured", getFieldEditorParent());
 
+            addField(new LabelFieldEditor("Node " + yamcsNode.nodeNumber, getFieldEditorParent()));
+            addField(yamcsNode.yamcsHost);
+            addField(yamcsNode.yamcsPort);
+            addField(yamcsNode.yamcsInstance);
+            addField(yamcsNode.yamcsPrivileges);
+            addField(new SpacerFieldEditor(getFieldEditorParent()));
+        }
+
+        currentNode = new IntegerFieldEditor("current_node", "Active node", getFieldEditorParent());
+        addField(currentNode);
         addField(new SpacerFieldEditor(getFieldEditorParent()));
+
         mdbNamespace = new StringFieldEditor("mdb_namespace", "MDB Namespace", getFieldEditorParent());
         addField(mdbNamespace);
     }
@@ -70,9 +118,13 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         super.checkState();
         if (!isValid())
             return;
-        String yamcsHostText = yamcsHost.getStringValue();
-        String yamcsInstanceText = yamcsInstance.getStringValue();
-        if (!(yamcsHostText.trim().matches("[a-zA-Z\\-\\.0-9_]+")) || !(yamcsInstanceText.trim().matches("[a-zA-Z\\.\\-0-9_]+"))) {
+
+        boolean isValid = true;
+        for (YamcsNode node : nodes)
+        {
+            isValid &= node.isValid();
+        }
+        if (!isValid) {
             setErrorMessage("Not a valid host name");
             setValid(false);
         } else {
@@ -85,11 +137,13 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
     public void propertyChange(PropertyChangeEvent event) {
         super.propertyChange(event);
         if (event.getProperty().equals(FieldEditor.VALUE)) {
-            if (event.getSource() == yamcsHost
-                    || event.getSource() == yamcsPort
-                    || event.getSource() == yamcsInstance
-                    || event.getSource() == mdbNamespace
-                    || event.getSource() == yamcsPrivileges) {
+
+            // boolean checkState = nodes.map(n -> n.size()).reduce(false, (a, b) -> a || b);
+            boolean checkState = false;
+            for (YamcsNode node : nodes)
+                checkState |= node.isSource(event);
+            checkState |= event.getSource() == currentNode;
+            if (checkState) {
                 checkState();
             }
         }
@@ -99,11 +153,10 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
     public boolean performOk() {
         // Detect changes (there's probably a better way to do this)
         YamcsPlugin plugin = YamcsPlugin.getDefault();
-        boolean changed = !yamcsHost.getStringValue().equals(plugin.getHost()) ||
-                yamcsPort.getIntValue() != plugin.getWebPort() ||
-                !yamcsInstance.getStringValue().equals(plugin.getInstance()) ||
-                !mdbNamespace.getStringValue().equals(plugin.getMdbNamespace()) ||
-                !yamcsPrivileges.getBooleanValue() == plugin.getPrivilegesEnabled();
+        boolean changed = false;
+        for (YamcsNode node : nodes)
+            changed |= node.hasChanged();
+        changed |= !(currentNode.getIntValue() == plugin.getCurrentNode());
         // Save to store
         boolean ret = super.performOk();
         // Hint that user should reconnect

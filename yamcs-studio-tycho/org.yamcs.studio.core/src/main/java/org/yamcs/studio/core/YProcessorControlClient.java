@@ -43,7 +43,8 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
     private Map<Integer, ClientInfo> clientInfoById = new ConcurrentHashMap<>();
 
     public YProcessorControlClient() {
-        yconnector = new YamcsConnector();
+        boolean retryConnection = false;
+        yconnector = new YamcsConnector(retryConnection);
         yconnector.addConnectionListener(this);
         YamcsPlugin.getDefault().addStudioConnectionListener(this);
     }
@@ -71,8 +72,19 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
      */
     @Override
     public void disconnect() {
-        yconnector.disconnect();
-        listeners.forEach(l -> l.clientDisconnected(null));
+        try {
+            if (yconnector != null) {
+                yconnector.disconnect();
+                yconnector.close();
+            }
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error closing YProcessorControl", e);
+        }
+        try {
+            listeners.forEach(l -> l.clientDisconnected(null));
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error disconnecting clients", e);
+        }
     }
 
     @Override
@@ -139,11 +151,14 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
 
     @Override
     public void connectionFailed(String url, YamcsException exception) {
+        // In case the connection fails notify the YamcsPlugin
+        YamcsPlugin.getDefault().notifyConnectionFailure();
     }
 
     @Override
     public void disconnected() {
         yclient = null;
+        YamcsPlugin.getDefault().notifyConnectionFailure();
     }
 
     @Override
