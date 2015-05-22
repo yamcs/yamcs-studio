@@ -204,7 +204,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private YamcsConnectData getHornetqProperties(YamcsCredentials credentials) {
         YamcsConnectData hornetqProps = new YamcsConnectData();
         hornetqProps.host = getHost();
-        hornetqProps.port = 5445;
+        hornetqProps.port = getHornetQPort();
         hornetqProps.instance = getInstance();
         if (credentials != null) {
             hornetqProps.username = credentials.getUsername();
@@ -259,6 +259,11 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public String getHost() {
         String node = "node" + getCurrentNode() + ".";
         return getPreferenceStore().getString(node + "yamcs_host");
+    }
+
+    public int getHornetQPort() {
+        String node = "node" + getCurrentNode() + ".";
+        return getPreferenceStore().getInt(node + "yamcs_hornetqport");
     }
 
     public int getWebPort() {

@@ -34,6 +34,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         int nodeNumber;
         StringFieldEditor yamcsHost;
         IntegerFieldEditor yamcsPort;
+        IntegerFieldEditor yamcsHornetQPort;
         StringFieldEditor yamcsInstance;
         BooleanFieldEditor yamcsPrivileges;
 
@@ -41,6 +42,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         {
             return event.getSource() == yamcsHost
                     || event.getSource() == yamcsPort
+                    || event.getSource() == yamcsHornetQPort
                     || event.getSource() == yamcsInstance
                     || event.getSource() == yamcsPrivileges;
         }
@@ -50,6 +52,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
             YamcsPlugin plugin = YamcsPlugin.getDefault();
             return !yamcsHost.getStringValue().equals(plugin.getHost()) ||
                     yamcsPort.getIntValue() != plugin.getWebPort() ||
+                    yamcsHornetQPort.getIntValue() != plugin.getHornetQPort() ||
                     !yamcsInstance.getStringValue().equals(plugin.getInstance()) ||
                     !mdbNamespace.getStringValue().equals(plugin.getMdbNamespace()) ||
                     !yamcsPrivileges.getBooleanValue() == plugin.getPrivilegesEnabled();
@@ -90,12 +93,15 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
             yamcsNode.nodeNumber = i + 1;
             yamcsNode.yamcsHost = new StringFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_host", "Host", getFieldEditorParent());
             yamcsNode.yamcsPort = new IntegerFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_port", "Port", getFieldEditorParent());
+            yamcsNode.yamcsHornetQPort = new IntegerFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_hornetqport", "HornetQ Port",
+                    getFieldEditorParent());
             yamcsNode.yamcsInstance = new StringFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_instance", "Instance", getFieldEditorParent());
             yamcsNode.yamcsPrivileges = new BooleanFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_privileges", "Secured", getFieldEditorParent());
 
             addField(new LabelFieldEditor("Node " + yamcsNode.nodeNumber, getFieldEditorParent()));
             addField(yamcsNode.yamcsHost);
             addField(yamcsNode.yamcsPort);
+            addField(yamcsNode.yamcsHornetQPort);
             addField(yamcsNode.yamcsInstance);
             addField(yamcsNode.yamcsPrivileges);
             addField(new SpacerFieldEditor(getFieldEditorParent()));
