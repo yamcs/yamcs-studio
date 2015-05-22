@@ -173,9 +173,6 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
             if (tableViewer.getTable().isDisposed())
                 return;
             tableContentProvider.addEvent(event);
-            EventNotificationPopup popup = new EventNotificationPopup(tableViewer.getTable().getDisplay(), event);
-            popup.setDelayClose(2000L);
-            popup.open();
         });
     }
 
