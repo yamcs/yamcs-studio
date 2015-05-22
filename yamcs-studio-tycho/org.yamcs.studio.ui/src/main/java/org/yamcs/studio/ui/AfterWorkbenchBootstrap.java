@@ -2,8 +2,6 @@ package org.yamcs.studio.ui;
 
 import java.util.logging.Logger;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -11,7 +9,6 @@ import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.ConnectionFailureListener;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.ui.processor.ProcessingCommandState;
@@ -19,7 +16,7 @@ import org.yamcs.studio.ui.processor.ProcessingCommandState;
 /**
  * Will be activated after the workbench initialized.
  */
-public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener, ConnectionFailureListener {
+public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener {
 
     private static final Logger log = Logger.getLogger(AfterWorkbenchBootstrap.class.getName());
 
@@ -29,7 +26,6 @@ public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener, Con
         workbench.getDisplay().asyncExec(() -> {
             doUpdateGlobalProcessingState(workbench, null); // Trigger initial state
                 YamcsPlugin.getDefault().addProcessorListener(this); // Further updates (also gives us existing model)
-                YamcsPlugin.getDefault().addConnectionFailureListener(this);
             });
     }
 
@@ -100,31 +96,4 @@ public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener, Con
         state.updateState(processorInfo);
     }
 
-    @Override
-    public void connectionFailure(int currentNode, int nextNode) {
-        Display.getDefault().asyncExec(() -> {
-            askSwitchNode(currentNode, nextNode);
-        });
-    }
-
-    private static void askSwitchNode(int currentNode, int nextNode) {
-        MessageDialog dialog = new MessageDialog(null, "Connection Lost", null, "Connection to Yamcs Server node " + currentNode + " is lost.\n\n" +
-                "Would you like to switch connection to node " + nextNode + " now?",
-                MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
-        if (dialog.open() == 0)
-        {
-            Display.getDefault().asyncExec(() -> {
-                YamcsPlugin.getDefault().disconnect();
-                try {
-                    YamcsPlugin.getDefault().switchNode(nextNode);
-                    ;
-                } catch (Exception e) {
-                }
-            });
-        }
-        else
-        {
-            YamcsPlugin.getDefault().abortSwitchNode();
-        }
-    }
 }

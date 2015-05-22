@@ -62,7 +62,7 @@ public class YamcsLoginModule implements LoginModule {
             } catch (Exception e) {
                 log.log(Level.WARNING, "", e);
             }
-            throw new LoginException("wrong credentials.");
+            throw new LoginException("");
         }
     }
 
