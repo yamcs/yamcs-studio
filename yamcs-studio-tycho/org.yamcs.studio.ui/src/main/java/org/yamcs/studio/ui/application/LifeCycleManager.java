@@ -9,20 +9,26 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.workbench.UIEvents.UILifeCycle;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IEvaluationService;
+import org.yamcs.studio.core.ConnectionFailureListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.ui.ConnectHandler;
 
 @SuppressWarnings("restriction")
-public class LifeCycleManager {
+public class LifeCycleManager implements ConnectionFailureListener {
 
     private static final Logger log = Logger.getLogger(LifeCycleManager.class.getName());
 
     @PostContextCreate
     public void postContextCreate(IEventBroker broker) {
         registerAutocompleteExtensions();
+
+        YamcsPlugin.getDefault().addConnectionFailureListener(this);
 
         // This is about as hacky as it gets. Have an unknown problem with the toolbar disappearing after
         // workbench restart. Below code does a double 'toggle' on it, to make it appear again.
@@ -54,5 +60,33 @@ public class LifeCycleManager {
             msg.append(prefix + "://   ");
         }
         log.fine(msg.toString());
+    }
+
+    @Override
+    public void connectionFailure(int currentNode, int nextNode) {
+        Display.getDefault().asyncExec(() -> {
+            askSwitchNode(currentNode, nextNode);
+        });
+    }
+
+    private static void askSwitchNode(int currentNode, int nextNode) {
+        MessageDialog dialog = new MessageDialog(null, "Connection Lost", null, "Connection to Yamcs Server node " + currentNode + " is lost.\n\n" +
+                "Would you like to switch connection to node " + nextNode + " now?",
+                MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
+        if (dialog.open() == 0)
+        {
+            Display.getDefault().asyncExec(() -> {
+                YamcsPlugin.getDefault().disconnect();
+                try {
+                    YamcsPlugin.getDefault().switchNode(nextNode);
+                    ;
+                } catch (Exception e) {
+                }
+            });
+        }
+        else
+        {
+            YamcsPlugin.getDefault().abortSwitchNode();
+        }
     }
 }
