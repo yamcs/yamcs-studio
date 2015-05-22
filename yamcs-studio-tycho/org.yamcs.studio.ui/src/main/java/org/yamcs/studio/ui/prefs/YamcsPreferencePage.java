@@ -91,6 +91,7 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         {
             YamcsNode yamcsNode = new YamcsNode();
             yamcsNode.nodeNumber = i + 1;
+            addField(new LabelFieldEditor("Node " + yamcsNode.nodeNumber, getFieldEditorParent()));
             yamcsNode.yamcsHost = new StringFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_host", "Host", getFieldEditorParent());
             yamcsNode.yamcsPort = new IntegerFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_port", "Port", getFieldEditorParent());
             yamcsNode.yamcsHornetQPort = new IntegerFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_hornetqport", "HornetQ Port",
@@ -98,7 +99,6 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
             yamcsNode.yamcsInstance = new StringFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_instance", "Instance", getFieldEditorParent());
             yamcsNode.yamcsPrivileges = new BooleanFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_privileges", "Secured", getFieldEditorParent());
 
-            addField(new LabelFieldEditor("Node " + yamcsNode.nodeNumber, getFieldEditorParent()));
             addField(yamcsNode.yamcsHost);
             addField(yamcsNode.yamcsPort);
             addField(yamcsNode.yamcsHornetQPort);
