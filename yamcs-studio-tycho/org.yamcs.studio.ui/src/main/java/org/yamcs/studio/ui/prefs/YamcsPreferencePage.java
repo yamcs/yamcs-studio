@@ -50,12 +50,12 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         public boolean hasChanged()
         {
             YamcsPlugin plugin = YamcsPlugin.getDefault();
-            return !yamcsHost.getStringValue().equals(plugin.getHost()) ||
+            return !(yamcsHost.getStringValue().equals(plugin.getHost())) ||
                     yamcsPort.getIntValue() != plugin.getWebPort() ||
                     yamcsHornetQPort.getIntValue() != plugin.getHornetQPort() ||
-                    !yamcsInstance.getStringValue().equals(plugin.getInstance()) ||
-                    !mdbNamespace.getStringValue().equals(plugin.getMdbNamespace()) ||
-                    !yamcsPrivileges.getBooleanValue() == plugin.getPrivilegesEnabled();
+                    !(yamcsInstance.getStringValue().equals(plugin.getInstance())) ||
+                    !(mdbNamespace.getStringValue().equals(plugin.getMdbNamespace())) ||
+                    yamcsPrivileges.getBooleanValue() != plugin.getPrivilegesEnabled();
         }
 
         public boolean isValid()
@@ -105,6 +105,8 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
             addField(yamcsNode.yamcsInstance);
             addField(yamcsNode.yamcsPrivileges);
             addField(new SpacerFieldEditor(getFieldEditorParent()));
+
+            nodes.add(yamcsNode);
         }
 
         currentNode = new IntegerFieldEditor("current_node", "Active node", getFieldEditorParent());
@@ -160,9 +162,11 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
         // Detect changes (there's probably a better way to do this)
         YamcsPlugin plugin = YamcsPlugin.getDefault();
         boolean changed = false;
-        for (YamcsNode node : nodes)
-            changed |= node.hasChanged();
-        changed |= !(currentNode.getIntValue() == plugin.getCurrentNode());
+        for (YamcsNode node : nodes) {
+            if (node.nodeNumber == plugin.getCurrentNode())
+                changed |= node.hasChanged();
+        }
+        changed |= currentNode.getIntValue() != plugin.getCurrentNode();
         // Save to store
         boolean ret = super.performOk();
         // Hint that user should reconnect
