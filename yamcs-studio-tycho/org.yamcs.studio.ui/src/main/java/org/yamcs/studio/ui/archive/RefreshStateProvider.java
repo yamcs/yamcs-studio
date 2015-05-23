@@ -7,12 +7,12 @@ import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
 
 /**
- * Used in core-expressions define defined in plugin.xml to keep track of enabled/disabled state of
- * the zoom-in button in the ArchiveView toolbar.
+ * Used in plugin.xml core-expressions to keep track of enabled/disabled state of the
+ * refresh-archive button in the ArchiveView toolbar.
  */
-public class ZoomInCommandState extends AbstractSourceProvider {
+public class RefreshStateProvider extends AbstractSourceProvider {
 
-    public static final String STATE_KEY_ENABLED = "org.yamcs.studio.ui.archive.state.zoomInEnabled";
+    public static final String STATE_KEY_ENABLED = "org.yamcs.studio.ui.archive.state.refreshEnabled";
     private static final String[] SOURCE_NAMES = { STATE_KEY_ENABLED };
 
     private boolean enabled = false;

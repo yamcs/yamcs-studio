@@ -11,7 +11,7 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.ui.processor.ProcessingCommandState;
+import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 
 /**
  * Will be activated after the workbench initialized.
@@ -92,7 +92,7 @@ public class AfterWorkbenchBootstrap implements IStartup, ProcessorListener {
             log.warning("debug issue #1: You shouldn't see this message inside an asyncExec");
 
         ISourceProviderService service = (ISourceProviderService) workbench.getService(ISourceProviderService.class);
-        ProcessingCommandState state = (ProcessingCommandState) service.getSourceProvider(ProcessingCommandState.STATE_KEY_PROCESSING);
+        ProcessorStateProvider state = (ProcessorStateProvider) service.getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         state.updateState(processorInfo);
     }
 

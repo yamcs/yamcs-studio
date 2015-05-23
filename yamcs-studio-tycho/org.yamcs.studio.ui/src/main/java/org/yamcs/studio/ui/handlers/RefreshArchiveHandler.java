@@ -9,7 +9,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.studio.ui.archive.ArchiveView;
-import org.yamcs.studio.ui.archive.RefreshCommandState;
+import org.yamcs.studio.ui.archive.RefreshStateProvider;
 
 /**
  * Handels the refresh of the archive view. The most tricky thing here is that we need to disable
@@ -23,8 +23,8 @@ public class RefreshArchiveHandler extends AbstractHandler {
         // Retrieve our custom state variable that was declared in plugin.xml
         ISourceProviderService sourceProviderService = (ISourceProviderService) HandlerUtil
                 .getActiveWorkbenchWindow(event).getService(ISourceProviderService.class);
-        RefreshCommandState commandState = (RefreshCommandState) sourceProviderService
-                .getSourceProvider(RefreshCommandState.STATE_KEY_ENABLED);
+        RefreshStateProvider commandState = (RefreshStateProvider) sourceProviderService
+                .getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
 
         // After that intermezzo.... deactivate this command
         commandState.setEnabled(false);

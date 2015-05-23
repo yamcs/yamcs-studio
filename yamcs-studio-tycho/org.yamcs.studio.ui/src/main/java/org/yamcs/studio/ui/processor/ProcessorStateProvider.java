@@ -12,9 +12,9 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
  * Used in core-expressions define defined in plugin.xml to keep track of play/pause button state
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class ProcessingCommandState extends AbstractSourceProvider {
+public class ProcessorStateProvider extends AbstractSourceProvider {
 
-    private static final Logger log = Logger.getLogger(ProcessingCommandState.class.getName());
+    private static final Logger log = Logger.getLogger(ProcessorStateProvider.class.getName());
 
     public static final String STATE_KEY_REPLAY = "org.yamcs.studio.ui.processor.state.replay";
     public static final String STATE_KEY_PROCESSING = "org.yamcs.studio.ui.processor.state.processing";

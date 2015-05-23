@@ -165,8 +165,8 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         // Not necessarily on the SWT thread. This is a bit of a risk. Maybe we should do a blocking Display.getDefault().syncExec
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        RefreshCommandState commandState = (RefreshCommandState) service.getSourceProvider(RefreshCommandState.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(RefreshCommandState.STATE_KEY_ENABLED);
+        RefreshStateProvider commandState = (RefreshStateProvider) service.getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(RefreshStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setRefreshEnabled(boolean enabled) {
@@ -174,7 +174,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            RefreshCommandState commandState = (RefreshCommandState) service.getSourceProvider(RefreshCommandState.STATE_KEY_ENABLED);
+            RefreshStateProvider commandState = (RefreshStateProvider) service.getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -182,8 +182,8 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
     public boolean isZoomInEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ZoomInCommandState commandState = (ZoomInCommandState) service.getSourceProvider(ZoomInCommandState.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(ZoomInCommandState.STATE_KEY_ENABLED);
+        ZoomInStateProvider commandState = (ZoomInStateProvider) service.getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(ZoomInStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setZoomInEnabled(boolean enabled) {
@@ -191,7 +191,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            ZoomInCommandState commandState = (ZoomInCommandState) service.getSourceProvider(ZoomInCommandState.STATE_KEY_ENABLED);
+            ZoomInStateProvider commandState = (ZoomInStateProvider) service.getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -199,8 +199,8 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
     public boolean isZoomOutEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ZoomOutCommandState commandState = (ZoomOutCommandState) service.getSourceProvider(ZoomOutCommandState.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(ZoomOutCommandState.STATE_KEY_ENABLED);
+        ZoomOutStateProvider commandState = (ZoomOutStateProvider) service.getSourceProvider(ZoomOutStateProvider.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(ZoomOutStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setZoomOutEnabled(boolean enabled) {
@@ -208,7 +208,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            ZoomOutCommandState commandState = (ZoomOutCommandState) service.getSourceProvider(ZoomOutCommandState.STATE_KEY_ENABLED);
+            ZoomOutStateProvider commandState = (ZoomOutStateProvider) service.getSourceProvider(ZoomOutStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -216,8 +216,8 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
     public boolean isZoomClearEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ZoomClearCommandState commandState = (ZoomClearCommandState) service.getSourceProvider(ZoomClearCommandState.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(ZoomClearCommandState.STATE_KEY_ENABLED);
+        ClearZoomStateProvider commandState = (ClearZoomStateProvider) service.getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(ClearZoomStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setZoomClearEnabled(boolean enabled) {
@@ -225,7 +225,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            ZoomClearCommandState commandState = (ZoomClearCommandState) service.getSourceProvider(ZoomClearCommandState.STATE_KEY_ENABLED);
+            ClearZoomStateProvider commandState = (ClearZoomStateProvider) service.getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -233,8 +233,8 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
     public boolean isTagEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        TagCommandState commandState = (TagCommandState) service.getSourceProvider(TagCommandState.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(TagCommandState.STATE_KEY_ENABLED);
+        AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service.getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
+        return (Boolean) commandState.getCurrentState().get(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setTagEnabled(boolean enabled) {
@@ -242,7 +242,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            TagCommandState commandState = (TagCommandState) service.getSourceProvider(TagCommandState.STATE_KEY_ENABLED);
+            AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service.getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }

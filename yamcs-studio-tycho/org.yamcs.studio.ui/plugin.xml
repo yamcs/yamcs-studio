@@ -127,32 +127,32 @@
    
    <extension
          point="org.eclipse.ui.services">
-      <sourceProvider provider="org.yamcs.studio.ui.archive.RefreshCommandState">
+      <sourceProvider provider="org.yamcs.studio.ui.archive.RefreshStateProvider">
          <variable
                name="org.yamcs.studio.ui.archive.state.refreshEnabled"
                priorityLevel="workbench" />
       </sourceProvider>
-      <sourceProvider provider="org.yamcs.studio.ui.archive.ZoomInCommandState">
+      <sourceProvider provider="org.yamcs.studio.ui.archive.ZoomInStateProvider">
          <variable
                name="org.yamcs.studio.ui.archive.state.zoomInEnabled"
                priorityLevel="workbench" />
       </sourceProvider>
-      <sourceProvider provider="org.yamcs.studio.ui.archive.ZoomOutCommandState">
+      <sourceProvider provider="org.yamcs.studio.ui.archive.ZoomOutStateProvider">
          <variable
                name="org.yamcs.studio.ui.archive.state.zoomOutEnabled"
                priorityLevel="workbench" />
       </sourceProvider>
-      <sourceProvider provider="org.yamcs.studio.ui.archive.ZoomClearCommandState">
+      <sourceProvider provider="org.yamcs.studio.ui.archive.ClearZoomStateProvider">
          <variable
                name="org.yamcs.studio.ui.archive.state.zoomClearEnabled"
                priorityLevel="workbench" />
       </sourceProvider>
-      <sourceProvider provider="org.yamcs.studio.ui.archive.TagCommandState">
+      <sourceProvider provider="org.yamcs.studio.ui.archive.AnnotateRangeStateProvider">
          <variable
                name="org.yamcs.studio.ui.archive.state.tagEnabled"
                priorityLevel="workbench" />
       </sourceProvider>
-      <sourceProvider provider="org.yamcs.studio.ui.processor.ProcessingCommandState">
+      <sourceProvider provider="org.yamcs.studio.ui.processor.ProcessorStateProvider">
          <variable
                name="org.yamcs.studio.ui.processor.state.processing"
                priorityLevel="workbench" />
