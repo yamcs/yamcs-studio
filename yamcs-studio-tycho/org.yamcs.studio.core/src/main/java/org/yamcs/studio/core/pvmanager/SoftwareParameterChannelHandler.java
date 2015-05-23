@@ -2,6 +2,7 @@ package org.yamcs.studio.core.pvmanager;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.epics.pvmanager.ChannelWriteCallback;
@@ -13,6 +14,7 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
+import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
@@ -137,13 +139,19 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
         restClient.setParameters(pdata, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                // Report success
-                callback.channelWritten(null);
+                if (responseMsg instanceof RestExceptionMessage) {
+                    RestExceptionMessage exc = (RestExceptionMessage) responseMsg;
+                    log.log(Level.SEVERE, String.format("Could not write to parameter: %s. %s", exc.getType(), exc.getMsg()));
+                    callback.channelWritten(new Exception(exc.getMsg()));
+                } else {
+                    // Report success
+                    callback.channelWritten(null);
+                }
             }
 
             @Override
             public void onException(Exception e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE, "Could not write to parameter", e);
                 callback.channelWritten(e);
             }
         });
