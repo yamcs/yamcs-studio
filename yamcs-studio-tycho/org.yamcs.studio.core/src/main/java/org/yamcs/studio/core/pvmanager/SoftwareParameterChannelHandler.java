@@ -70,7 +70,8 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     @Override
     protected void connect() {
         log.info("Connect called on " + getChannelName());
-        webSocketClient.register(this);
+        if (webSocketClient != null)
+            webSocketClient.register(this);
     }
 
     @Override
