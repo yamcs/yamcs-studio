@@ -75,7 +75,6 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
         try {
             if (yconnector != null) {
                 yconnector.disconnect();
-                yconnector.close();
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error closing YProcessorControl", e);
