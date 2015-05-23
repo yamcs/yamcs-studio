@@ -36,6 +36,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
@@ -78,6 +80,8 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
     @Override
     public void createPartControl(Composite parent) {
         parent.setLayout(new FillLayout());
+        tk = new FormToolkit(parent.getDisplay());
+
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         Color errorBackgroundColor = resourceManager.createColor(new RGB(255, 221, 221));
         bracketStyler = new Styler() {
@@ -109,20 +113,84 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
             }
         };
 
-        SashForm sash = new SashForm(parent, SWT.HORIZONTAL | SWT.SMOOTH);
+        SashForm sash = new SashForm(parent, SWT.VERTICAL | SWT.SMOOTH);
         sash.setLayout(new FillLayout());
 
-        Composite tableWrapper = new Composite(sash, SWT.NONE);
+        Composite tableWithControls = new Composite(sash, SWT.NONE);
+        GridLayout gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        gl.horizontalSpacing = 0;
+        gl.numColumns = 2;
+        tableWithControls.setLayout(gl);
+        tableWithControls.setBackground(tk.getColors().getBackground());
+
+        Composite tableWrapper = new Composite(tableWithControls, SWT.NONE);
+        tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         TableColumnLayout tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
         commandTableViewer = new CommandStackTableViewer(tableWrapper, tcl, this);
+        Composite tableControls = new Composite(tableWithControls, SWT.NONE);
+        GridData gd = new GridData(GridData.FILL_VERTICAL);
+        gd.verticalAlignment = SWT.BOTTOM;
+        tableControls.setLayoutData(gd);
+        gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        tableControls.setLayout(gl);
 
-        Composite rightPane = new Composite(sash, SWT.NONE);
-        rightPane.setLayout(new FillLayout());
-        tk = new FormToolkit(rightPane.getDisplay());
-        form = tk.createScrolledForm(rightPane);
-        form.setText("Stack Status");
-        tk.decorateFormHeading(form.getForm());
+        // This wrapper is just to achieve bottom alignment compared to the table
+        Composite tableControlsButtonWrapper = new Composite(tableControls, SWT.NONE);
+        tableControlsButtonWrapper.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        gl.horizontalSpacing = 0;
+        gl.verticalSpacing = 0;
+        tableControlsButtonWrapper.setLayout(gl);
+
+        // This verbose way of creating buttons, ensures that state and handling
+        // is hooked with the command framework
+        CommandContributionItemParameter parms = new CommandContributionItemParameter(
+                getSite(),
+                "org.yamcs.studio.ui.commanding.stack.addCommand",
+                "org.yamcs.studio.ui.commanding.stack.addCommand",
+                CommandContributionItem.STYLE_PUSH);
+        parms.label = "Add...";
+        CommandContributionItem item = new CommandContributionItem(parms);
+        Composite singleBtnWrapper = new Composite(tableControlsButtonWrapper, SWT.NONE);
+        singleBtnWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        singleBtnWrapper.setLayout(new FillLayout());
+        item.fill(tableControlsButtonWrapper);
+
+        parms = new CommandContributionItemParameter(
+                getSite(),
+                "org.yamcs.studio.ui.commanding.stack.moveUpCommand",
+                "org.yamcs.studio.ui.commanding.stack.moveUpCommand",
+                CommandContributionItem.STYLE_PUSH);
+        parms.label = "Up";
+        item = new CommandContributionItem(parms);
+        singleBtnWrapper = new Composite(tableControlsButtonWrapper, SWT.NONE);
+        singleBtnWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        singleBtnWrapper.setLayout(new FillLayout());
+        item.fill(singleBtnWrapper);
+
+        parms = new CommandContributionItemParameter(
+                getSite(),
+                "org.yamcs.studio.ui.commanding.stack.moveDownCommand",
+                "org.yamcs.studio.ui.commanding.stack.moveDownCommand",
+                CommandContributionItem.STYLE_PUSH);
+        parms.label = "Down";
+        item = new CommandContributionItem(parms);
+        singleBtnWrapper = new Composite(tableControlsButtonWrapper, SWT.NONE);
+        singleBtnWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        singleBtnWrapper.setLayout(new FillLayout());
+        item.fill(tableControlsButtonWrapper);
+
+        Composite bottomPane = new Composite(sash, SWT.NONE);
+        bottomPane.setLayout(new FillLayout());
+
+        form = tk.createScrolledForm(bottomPane);
         TableWrapLayout layout = new TableWrapLayout();
         layout.leftMargin = 10;
         layout.rightMargin = 10;
@@ -131,7 +199,6 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
         layout.verticalSpacing = 20;
         form.getBody().setLayout(layout);
         createNextCommandSection();
-
         commandTableViewer.addDoubleClickListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
@@ -154,7 +221,7 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
             }
         });
 
-        sash.setWeights(new int[] { 70, 30 });
+        sash.setWeights(new int[] { 60, 40 });
 
         YamcsPlugin.getDefault().addStudioConnectionListener(this);
     }

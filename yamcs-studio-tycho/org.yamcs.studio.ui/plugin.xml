@@ -611,22 +611,6 @@
                 label="Execute Stack"
                 style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.addCommand"
-                icon="icons/add.png"
-                label="Add to Stack"
-                style="push"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.moveUpCommand"
-                icon="icons/move_up.png"
-                label="Move Command Up"
-                style="push"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.moveDownCommand"
-                icon="icons/move_down.png"
-                label="Move Command Down"
-                style="push"/>
-          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
       
       <!-- Add icons to the Archive view toolbar -->
