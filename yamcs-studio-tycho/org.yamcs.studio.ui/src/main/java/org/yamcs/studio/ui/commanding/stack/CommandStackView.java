@@ -60,7 +60,6 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
     public static final String ID = "org.yamcs.studio.ui.commanding.stack.CommandStackView";
 
     private CommandStackTableViewer commandTableViewer;
-    private Label nextCommandText;
     private Label nextCommandState;
     private StyledText nextCommandLabel;
     private Button armToggle;
@@ -131,7 +130,6 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
         layout.bottomMargin = 10;
         layout.verticalSpacing = 20;
         form.getBody().setLayout(layout);
-        createSPTVChecksSection(form.getForm());
         createNextCommandSection();
 
         commandTableViewer.addDoubleClickListener(evt -> {
@@ -188,22 +186,6 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
 
     public Styler getErrorStyler() {
         return errorStyler;
-    }
-
-    private Section createSPTVChecksSection(Form form) {
-        Section section = tk.createSection(form.getBody(), Section.TITLE_BAR);
-        TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
-        section.setLayoutData(td);
-        section.setText("SPTV Checks");
-        Composite sectionClient = tk.createComposite(section);
-        sectionClient.setLayout(new GridLayout());
-
-        nextCommandText = tk.createLabel(sectionClient, "Empty Stack");
-        GridData gd = new GridData(GridData.FILL_BOTH);
-        nextCommandText.setLayoutData(gd);
-
-        section.setClient(sectionClient);
-        return section;
     }
 
     private Section createNextCommandSection() {
@@ -438,7 +420,6 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
         commandTableViewer.refresh();
 
         CommandStack stack = CommandStack.getInstance();
-        String text = "";
         List<String> errorMessages = stack.getErrorMessages();
 
         armToggle.setSelection(false);
@@ -448,21 +429,6 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
             nextCommandState.setText(stack.getNextCommand().getState().getText());
         } else {
             nextCommandState.setText("");
-        }
-
-        if (stack.getCommands().isEmpty()) {
-            nextCommandText.setText("Empty Stack");
-        } else if (errorMessages.isEmpty()) {
-            nextCommandText.setText("\u2713 passed");
-        } else {
-            boolean first = true;
-            for (String message : errorMessages) {
-                if (!first)
-                    text += "\n";
-                first = false;
-                text += message;
-            }
-            nextCommandText.setText(text);
         }
 
         nextCommandLabel.setStyleRanges(new StyleRange[] {});

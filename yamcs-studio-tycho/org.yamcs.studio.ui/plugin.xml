@@ -589,8 +589,6 @@
    
    <extension point="org.eclipse.ui.menus">
    
-    
-   
       <menuContribution
             allPopups="true"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
@@ -607,6 +605,12 @@
       </menuContribution>
       
        <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.executeStack"
+                icon="icons/play16.png"
+                label="Execute Stack"
+                style="push"/>
+          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
           <command
                 commandId="org.yamcs.studio.ui.commanding.stack.addCommand"
                 icon="icons/add.png"
@@ -768,7 +772,6 @@
             <control id="studiocontributions.timeInfo" class="org.yamcs.studio.ui.processor.TimeInfoControlContribution" />
          </toolbar>
       </menuContribution>
-      
         
       <menuContribution
             allPopups="false"
@@ -777,7 +780,8 @@
                   commandId="org.yamcs.studio.ui.disconnect" 
                   label="Disconnect">
             </command>
-      </menuContribution> <menuContribution
+      </menuContribution>
+      <menuContribution
             allPopups="false"
             locationURI="menu:file?before=user">           
             <command
