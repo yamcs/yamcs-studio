@@ -184,7 +184,7 @@ public class YamcsLoginModule implements LoginModule {
 
         @Override
         public void onException(Exception e) {
-            log.log(Level.WARNING, "Could not fetch available yamcs parameters", e);
+            log.log(Level.WARNING, "Could not authenticate", e);
 
             resultReceived = true;
             authenticated = false;
