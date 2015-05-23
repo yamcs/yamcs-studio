@@ -1,5 +1,7 @@
 package org.yamcs.studio.core.pvmanager;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.epics.pvmanager.ChannelWriteCallback;
@@ -42,6 +44,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
     private RestClient restClient;
+    private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1");
 
     public SoftwareParameterChannelHandler(String channelName) {
         super(channelName);
@@ -112,7 +115,8 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
         } else if (ptype instanceof FloatParameterType) {
             return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(stringValue)).build();
         } else if (ptype instanceof BooleanParameterType) {
-            return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(Boolean.parseBoolean(stringValue)).build();
+            boolean booleanValue = TRUTHY.contains(stringValue.toLowerCase());
+            return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
         }
         return null;
     }
