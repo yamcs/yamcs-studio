@@ -160,6 +160,11 @@
                name="org.yamcs.studio.ui.processor.state.replay"
                priorityLevel="workbench" />
       </sourceProvider>
+      <sourceProvider provider="org.yamcs.studio.ui.ConnectionStateProvider">
+         <variable
+               name="org.yamcs.studio.ui.state.connected"
+               priorityLevel="workbench" />
+      </sourceProvider>
    </extension>
    
    <extension
@@ -170,8 +175,6 @@
       </category>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.issueTelecommandCommand"
-            name="Issue Command">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -224,20 +227,28 @@
    
    <extension point="org.eclipse.ui.handlers">
       <handler
-            class="org.yamcs.studio.ui.handlers.IssueCommandHandler"
-            commandId="org.yamcs.studio.ui.commanding.issueTelecommandCommand">
       </handler>
       <handler
             class="org.yamcs.studio.ui.handlers.AddToCommandStackHandler"
             commandId="org.yamcs.studio.ui.commanding.stack.addCommand">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
       </handler>
       <handler
             class="org.yamcs.studio.ui.handlers.RefreshArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.refreshCommand">
          <activeWhen>
-            <with variable="org.yamcs.studio.ui.archive.state.refreshEnabled">
-               <equals value="true"/>
-            </with>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.archive.state.refreshEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
          </activeWhen>
       </handler>
       <handler
@@ -276,18 +287,28 @@
             class="org.yamcs.studio.ui.handlers.AnnotateArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.createTagCommand">
          <activeWhen>
-            <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
-               <equals value="true"/>
-            </with>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
          </activeWhen>
       </handler>
       <handler
             class="org.yamcs.studio.ui.handlers.CreateReplayHandler"
             commandId="org.yamcs.studio.ui.archive.createReplayCommand">
          <activeWhen>
-            <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
-               <equals value="true"/>
-            </with>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
          </activeWhen>
       </handler>
       <handler
@@ -299,6 +320,9 @@
             commandId="org.yamcs.studio.ui.processor.goToBeginningCommand">
          <activeWhen>
             <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
                <or>
                   <with variable="org.yamcs.studio.ui.processor.state.processing">
                      <equals value="RUNNING"/>
@@ -321,6 +345,9 @@
             commandId="org.yamcs.studio.ui.processor.pauseCommand">
          <activeWhen>
             <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
                <with variable="org.yamcs.studio.ui.processor.state.processing">
                   <equals value="RUNNING"/>
                </with>
@@ -335,6 +362,9 @@
             commandId="org.yamcs.studio.ui.processor.playCommand">
          <activeWhen>
             <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
                <or>
                   <with variable="org.yamcs.studio.ui.processor.state.processing">
                      <equals value="PAUSED"/>
@@ -354,6 +384,9 @@
             commandId="org.yamcs.studio.ui.processor.goToEndCommand">
          <activeWhen>
             <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
                <or>
                   <with variable="org.yamcs.studio.ui.processor.state.processing">
                      <equals value="RUNNING"/>
@@ -372,10 +405,20 @@
          </activeWhen>
       </handler>
       <handler commandId="org.yamcs.studio.ui.connect"
-            class="org.yamcs.studio.ui.ConnectHandler">        
+            class="org.yamcs.studio.ui.ConnectHandler">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="false"/>
+            </with>
+         </activeWhen>
       </handler>
       <handler commandId="org.yamcs.studio.ui.disconnect"
-            class="org.yamcs.studio.ui.DisconnectHandler">        
+            class="org.yamcs.studio.ui.DisconnectHandler">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
       </handler>
    </extension>
    
@@ -405,7 +448,7 @@
       <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.commanding.stack.CommandStackView"
-            icon="icons/stack.png"
+            icon="icons/tc_add.png"
             id="org.yamcs.studio.ui.commanding.stack.CommandStackView"
             name="Command Stack"/>
    </extension>
@@ -609,6 +652,15 @@
                 commandId="org.yamcs.studio.ui.commanding.stack.executeStack"
                 icon="icons/play16.png"
                 label="Execute Stack"
+                style="push"/>
+          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.commands.armCommand"
+                label="Arm"
+                style="toggle"/>
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.commands.fireCommand"
+                label="Fire"
                 style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>

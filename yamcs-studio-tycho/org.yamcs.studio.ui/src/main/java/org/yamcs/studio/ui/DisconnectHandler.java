@@ -23,9 +23,4 @@ public class DisconnectHandler extends AbstractHandler {
 
         return null;
     }
-
-    @Override
-    public boolean isEnabled() {
-        return YamcsPlugin.getDefault().getConnectionSatus() == YamcsPlugin.ConnectionStatus.Connected;
-    }
 }

@@ -16,7 +16,7 @@ import org.yamcs.studio.core.YamcsLoginModule;
 import org.yamcs.studio.core.YamcsPlugin;
 
 public class ConnectHandler extends AbstractHandler {
-    private static final Logger log = Logger.getLogger(DisconnectHandler.class.getName());
+    private static final Logger log = Logger.getLogger(ConnectHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -44,10 +44,5 @@ public class ConnectHandler extends AbstractHandler {
             log.log(Level.SEVERE, "", ex);
         }
         return null;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return YamcsPlugin.getDefault().getConnectionSatus() != YamcsPlugin.ConnectionStatus.Connected;
     }
 }

@@ -341,6 +341,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
             listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
     }
 
+    public void removeStudioConnectionListener(StudioConnectionListener listener) {
+        studioConnectionListeners.remove(listener);
+    }
+
     public void addProcessorListener(ProcessorListener listener) {
         processorControlClient.addProcessorListener(listener);
     }
