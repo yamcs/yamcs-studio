@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
 import org.yamcs.api.YamcsConnectData;
@@ -45,18 +46,22 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
 
     @Override
     public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-        connected = true;
-        Map newState = getCurrentState();
-        log.fine(String.format("Fire new connection state %s", newState));
-        fireSourceChanged(ISources.WORKBENCH, newState);
+        Display.getDefault().asyncExec(() -> {
+            connected = true;
+            Map newState = getCurrentState();
+            log.fine(String.format("Fire new connection state %s", newState));
+            fireSourceChanged(ISources.WORKBENCH, newState);
+        });
     }
 
     @Override
     public void disconnect() {
-        connected = false;
-        Map newState = getCurrentState();
-        log.fine(String.format("Fire new connection state %s", newState));
-        fireSourceChanged(ISources.WORKBENCH, newState);
+        Display.getDefault().asyncExec(() -> {
+            connected = false;
+            Map newState = getCurrentState();
+            log.fine(String.format("Fire new connection state %s", newState));
+            fireSourceChanged(ISources.WORKBENCH, newState);
+        });
     }
 
     @Override

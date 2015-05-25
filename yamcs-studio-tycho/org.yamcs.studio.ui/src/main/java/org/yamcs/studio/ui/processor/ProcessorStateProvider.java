@@ -9,7 +9,7 @@ import org.eclipse.ui.ISources;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 
 /**
- * Used in core-expressions define defined in plugin.xml to keep track of play/pause button state
+ * Used in plugin.xml core-expressions to keep track of play/pause button state
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ProcessorStateProvider extends AbstractSourceProvider {

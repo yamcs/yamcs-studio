@@ -10,7 +10,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.ui.archive.ArchiveView;
 
 /**
- * Handels the enabled state for the zoom-in command
+ * Handles the enabled state for the zoom-in command
  */
 public class ZoomInHandler extends AbstractHandler {
 

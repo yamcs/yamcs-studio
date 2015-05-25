@@ -12,9 +12,15 @@ import java.util.List;
  */
 public class CommandStack {
 
+    public enum Mode {
+        EDIT,
+        EXECUTE
+    }
+
     private static final CommandStack INSTANCE = new CommandStack();
     private List<StackedCommand> commands = new ArrayList<>();
-    private StackedCommand nextCommand;
+    private StackedCommand activeCommand;
+    private Mode mode = Mode.EDIT;
 
     private CommandStack() {
     }
@@ -23,10 +29,14 @@ public class CommandStack {
         return INSTANCE;
     }
 
+    public Mode getMode() {
+        return mode;
+    }
+
     public void addCommand(StackedCommand command) {
         commands.add(command);
-        if (nextCommand == null)
-            nextCommand = command;
+        if (activeCommand == null)
+            activeCommand = command;
     }
 
     public List<StackedCommand> getCommands() {
@@ -48,27 +58,27 @@ public class CommandStack {
         return msgs;
     }
 
-    public StackedCommand getNextCommand() {
-        return nextCommand;
+    public StackedCommand getActiveCommand() {
+        return activeCommand;
     }
 
     // This looks like something we could do better
     public StackedCommand incrementAndGet() {
         if (commands.isEmpty()) {
-            nextCommand = null;
-        } else if (nextCommand == null) {
-            nextCommand = commands.get(0);
+            activeCommand = null;
+        } else if (activeCommand == null) {
+            activeCommand = commands.get(0);
         } else {
-            int idx = commands.indexOf(nextCommand);
+            int idx = commands.indexOf(activeCommand);
             if (++idx < commands.size())
-                nextCommand = commands.get(idx);
+                activeCommand = commands.get(idx);
             else
-                nextCommand = null;
+                activeCommand = null;
         }
-        return nextCommand;
+        return activeCommand;
     }
 
     public boolean hasRemaining() {
-        return nextCommand != null && commands.size() > commands.indexOf(nextCommand);
+        return activeCommand != null && commands.size() > commands.indexOf(activeCommand);
     }
 }

@@ -7,27 +7,22 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.services.ISourceProviderService;
+import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.studio.ui.archive.ArchiveView;
 import org.yamcs.studio.ui.archive.RefreshStateProvider;
 
 /**
- * Handels the refresh of the archive view. The most tricky thing here is that we need to disable
- * the refresh button until it's actually refreshed, to prevent a double click from the user, which
- * would otherwise break our hornetq client.
+ * Handles the refresh of the archive view
  */
 public class RefreshArchiveHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        // Retrieve our custom state variable that was declared in plugin.xml
-        ISourceProviderService sourceProviderService = (ISourceProviderService) HandlerUtil
-                .getActiveWorkbenchWindow(event).getService(ISourceProviderService.class);
-        RefreshStateProvider commandState = (RefreshStateProvider) sourceProviderService
-                .getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
-
-        // After that intermezzo.... deactivate this command
-        commandState.setEnabled(false);
+        // Disable refresh button, to prevent double-click from the user, which might
+        // currently break our hornetq client
+        RefreshStateProvider provider = RCPUtils.findSourceProvider(event,
+                RefreshStateProvider.STATE_KEY_ENABLED, RefreshStateProvider.class);
+        provider.setEnabled(false);
 
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
 

@@ -9,7 +9,7 @@ public class CommandSourceColumnLabelProvider extends StyledCellLabelProvider {
     private CommandStackView styleProvider;
 
     public CommandSourceColumnLabelProvider(CommandStackView styleProvider) {
-        super(NO_FOCUS | COLORS_ON_SELECTION);
+        super(NO_FOCUS);
         this.styleProvider = styleProvider;
     }
 
