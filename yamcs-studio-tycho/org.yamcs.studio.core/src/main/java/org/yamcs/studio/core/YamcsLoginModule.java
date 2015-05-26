@@ -100,7 +100,7 @@ public class YamcsLoginModule implements LoginModule {
      */
     private boolean authenticate(final String user, final String password)
     {
-        log.info("yamcs login, authenticating " + user + "/" + password);
+        log.info("yamcs login, authenticating " + user + "/****");
 
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
         req.addNamespaces(YamcsPlugin.getDefault().getMdbNamespace());
