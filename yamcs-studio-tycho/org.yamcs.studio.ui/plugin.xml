@@ -389,7 +389,8 @@
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
+                  <!-- TODO force disabled for now -->
+                  <equals value="never"/>
                </with>
                <or>
                   <with variable="org.yamcs.studio.ui.processor.state.processing">
@@ -453,7 +454,8 @@
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
+                  <!-- TODO force disabled for now -->
+                  <equals value="never"/>
                </with>
                <or>
                   <with variable="org.yamcs.studio.ui.processor.state.processing">
