@@ -32,6 +32,11 @@ public class CommandStackTableViewer extends TableViewer {
     public static final String COL_CONSTRAINTS_TIMEOUT = "T/O";
     public static final String COL_RELEASE = "Release";
     public static final String COL_STATE = "State";
+    public static final String COL_PTV = "PTV";
+
+    private Image greenBullet;
+    private Image redBullet;
+    private Image waitingImage;
 
     private CommandStackView styleProvider;
     private CommandStackTableContentProvider contentProvider;
@@ -41,6 +46,9 @@ public class CommandStackTableViewer extends TableViewer {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        greenBullet = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/ok.png"));
+        redBullet = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/nok.png"));
+        waitingImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/waiting.png"));
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -185,6 +193,17 @@ public class CommandStackTableViewer extends TableViewer {
             }
         });
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
+
+        TableViewerColumn ptvColumn = new TableViewerColumn(this, SWT.CENTER);
+        ptvColumn.getColumn().setText(COL_PTV);
+        ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
+        ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
+            @Override
+            public Image getImage(Object element) {
+                return null;
+            }
+        });
+        tcl.setColumnData(ptvColumn.getColumn(), new ColumnPixelData(50));
     }
 
     public void appendConstraint(MatchCriteria criteria, StringBuilder buf) {

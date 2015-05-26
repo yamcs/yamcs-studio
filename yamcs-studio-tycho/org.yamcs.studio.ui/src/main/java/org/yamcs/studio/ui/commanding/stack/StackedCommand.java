@@ -1,7 +1,5 @@
 package org.yamcs.studio.ui.commanding.stack;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -45,7 +44,16 @@ public class StackedCommand {
 
     private MetaCommand meta;
     private Map<Argument, String> assignments = new HashMap<>();
+
+    private final int clientId = YamcsPlugin.getNextCommandClientId();
+
+    // Execution State (should eventually probably refactor clientId into this)
     private State state = State.UNARMED;
+
+    public boolean matches(CommandId commandId) {
+        return clientId == commandId.getSequenceNumber()
+                && commandId.getOrigin().equals(YamcsPlugin.getDefault().getOrigin());
+    }
 
     public StyledString toStyledString(CommandStackView styleProvider) {
         StyledString str = new StyledString();
@@ -68,16 +76,25 @@ public class StackedCommand {
         return str;
     }
 
+    public int getClientId() {
+        return clientId;
+    }
+
     public boolean isArmed() {
         return state == State.ARMED;
     }
 
+    /**
+     * Generates a REST-representation. The sequence number is unique to this instance, and is
+     * re-used when the user reissues. A unique execution as it appears in the Command History
+     * combines the sequence number with our host.
+     */
     public RestCommandType.Builder toRestCommandType() {
         RestCommandType.Builder req = RestCommandType.newBuilder();
         req.setId(NamedObjectId.newBuilder()
                 .setNamespace(YamcsPlugin.getDefault().getMdbNamespace())
                 .setName(meta.getOpsName()));
-        req.setSequenceNumber(YamcsPlugin.getNextCommandClientId());
+        req.setSequenceNumber(clientId);
         assignments.forEach((k, v) -> {
             req.addArguments(RestArgumentType.newBuilder().setName(k.getName()).setValue(v));
         });

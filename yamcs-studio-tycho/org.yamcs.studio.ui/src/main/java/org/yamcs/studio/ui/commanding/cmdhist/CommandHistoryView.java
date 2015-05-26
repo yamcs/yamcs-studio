@@ -9,10 +9,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -29,8 +26,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
@@ -45,6 +40,8 @@ import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.ui.CenteredImageLabelProvider;
+import org.yamcs.studio.ui.YamcsUIPlugin;
 
 import com.google.protobuf.MessageLite;
 
@@ -60,6 +57,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     public static final String COL_SRC_HOST = "Src.Host";
     public static final String COL_USER = "User";
     public static final String COL_SEQ_ID = "Seq.ID";
+    public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
 
     private WebSocketRegistrar webSocketClient;
@@ -69,11 +67,18 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     private static final String ACK_PREFIX = "Acknowledge_";
 
     // Ignored for dynamic columns, most of these are actually considered fixed columns.
-    private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName", "binary", "username", "source", "Final_Sequence_Count");
+    private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName", "binary",
+            CommandHistoryRecordContentProvider.ATTR_USERNAME,
+            CommandHistoryRecordContentProvider.ATTR_SOURCE,
+            CommandHistoryRecordContentProvider.ATTR_FINAL_SEQUENCE_COUNT,
+            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS,
+            CommandHistoryRecordContentProvider.ATTR_COMMAND_FAILED);
 
     private LocalResourceManager resourceManager;
     private Image greenBubble;
     private Image redBubble;
+    private Image grayBubble;
+    private Image waitingImage;
 
     private Composite parent;
     private TableViewer tableViewer;
@@ -89,13 +94,10 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     public void createPartControl(Composite parent) {
         this.parent = parent;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-
-        // Load images
-        Bundle bundle = FrameworkUtil.getBundle(CommandHistoryView.class);
-        ImageDescriptor desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/ok.png"), null));
-        greenBubble = resourceManager.createImage(desc);
-        desc = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/nok.png"), null));
-        redBubble = resourceManager.createImage(desc);
+        greenBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/ok.png"));
+        redBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/nok.png"));
+        grayBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/undef.png"));
+        waitingImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/waiting.png"));
 
         TableColumnLayout tcl = new TableColumnLayout();
         parent.setLayout(tcl);
@@ -129,7 +131,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         });
         layoutDataByColumn.put(nameColumn.getColumn(), new ColumnWeightData(200));
 
-        TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
         seqIdColumn.getColumn().setText(COL_SRC_ID);
         seqIdColumn.getColumn().addSelectionListener(getSelectionAdapter(seqIdColumn.getColumn()));
         seqIdColumn.getColumn().setToolTipText("Client ID");
@@ -175,14 +177,50 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         });
         layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
 
-        TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        TableViewerColumn ptvColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+        ptvColumn.getColumn().setText(COL_PTV);
+        ptvColumn.getColumn().addSelectionListener(getSelectionAdapter(ptvColumn.getColumn()));
+        ptvColumn.getColumn().setToolTipText("PTV");
+        ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
+            @Override
+            public Image getImage(Object element) {
+                CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                switch (rec.getPTVInfo().getState()) {
+                case UNDEF:
+                    return null;
+                case NA:
+                case OK:
+                    return greenBubble;
+                case PENDING:
+                    return waitingImage;
+                case NOK:
+                    return redBubble;
+                default:
+                    log.warning("Unexpected PTV state " + rec.getPTVInfo().getState());
+                    return null;
+                }
+            }
+
+            @Override
+            public String getToolTipText(Object element) {
+                CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                if (rec.getPTVInfo().getFailureMessage() != null)
+                    return rec.getPTVInfo().getFailureMessage();
+                else
+                    return super.getToolTipText(element);
+            }
+        });
+        layoutDataByColumn.put(ptvColumn.getColumn(), new ColumnPixelData(50));
+
+        TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
         finalSeqColumn.getColumn().setText(COL_SEQ_ID);
         finalSeqColumn.getColumn().addSelectionListener(getSelectionAdapter(finalSeqColumn.getColumn()));
         finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
         finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return String.valueOf(((CommandHistoryRecord) element).getFinalSequenceCount());
+                CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                return (rec.getFinalSequenceCount() != null) ? String.valueOf(rec.getFinalSequenceCount()) : "-";
             }
         });
         layoutDataByColumn.put(finalSeqColumn.getColumn(), new ColumnPixelData(50));
@@ -246,13 +284,14 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
                     .replace(CommandHistoryRecord.STATUS_SUFFIX, "")
                     .replace(CommandHistoryRecord.TIME_SUFFIX, "");
             if (!dynamicColumns.contains(shortName)) {
-                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
+                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
                 column.getColumn().setText(shortName);
                 column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
                 column.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        return ((CommandHistoryRecord) element).getTextForColumn(shortName);
+                        String text = ((CommandHistoryRecord) element).getTextForColumn(shortName);
+                        return (text != null) ? text : "-";
                     }
 
                     @Override
@@ -268,7 +307,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
                         else if (CommandHistoryRecordContentProvider.RED.equals(imgLoc))
                             return redBubble;
                         else
-                            return null;
+                            return grayBubble;
                     }
                 });
                 dynamicColumns.add(shortName);
@@ -301,12 +340,6 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
 
     @Override
     public void setFocus() {
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        resourceManager.dispose();
     }
 
     @Override

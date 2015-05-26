@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.studio.ui.commanding.PTVInfo;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -38,10 +39,12 @@ public class CommandHistoryRecord {
     private String source;
     private String username = "anonymous";
     private String finalSequenceCount;
+    private PTVInfo ptvInfo;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
     public CommandHistoryRecord(CommandId id) {
         this.id = id;
+        ptvInfo = new PTVInfo();
     }
 
     public void setFinalSequenceCount(Value finalSequenceCount) {
@@ -126,6 +129,10 @@ public class CommandHistoryRecord {
 
     public String getOrigin() {
         return id.getOrigin();
+    }
+
+    public PTVInfo getPTVInfo() {
+        return ptvInfo;
     }
 
     public String getTextForColumn(String columnName) {

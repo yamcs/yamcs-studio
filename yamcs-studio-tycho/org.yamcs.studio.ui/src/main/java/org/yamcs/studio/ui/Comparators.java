@@ -28,4 +28,13 @@ public class Comparators {
             return 0;
         return o1.compareTo(o2);
     };
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static final Comparator<Comparable<?>> OBJECT_COMPARATOR = (o1, o2) -> {
+        if (o1 == null ^ o2 == null)
+            return (o1 == null) ? -1 : 1;
+        if (o1 == null && o2 == null)
+            return 0;
+        return ((Comparable) o1).compareTo(o2);
+    };
 }

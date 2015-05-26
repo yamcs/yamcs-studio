@@ -2,6 +2,7 @@ package org.yamcs.studio.ui.commanding.cmdhist;
 
 import static org.yamcs.studio.ui.Comparators.INTEGER_COMPARATOR;
 import static org.yamcs.studio.ui.Comparators.LONG_COMPARATOR;
+import static org.yamcs.studio.ui.Comparators.OBJECT_COMPARATOR;
 import static org.yamcs.studio.ui.Comparators.STRING_COMPARATOR;
 
 import org.eclipse.jface.viewers.Viewer;
@@ -55,6 +56,9 @@ public class CommandHistoryViewerComparator extends ViewerComparator {
             break;
         case CommandHistoryView.COL_T:
             rc = LONG_COMPARATOR.compare(r1.getRawGenerationTime(), r2.getRawGenerationTime());
+            break;
+        case CommandHistoryView.COL_PTV:
+            rc = OBJECT_COMPARATOR.compare(r1.getPTVInfo(), r2.getPTVInfo());
             break;
         default: // dynamic column (TODO be more clever about non-timestamp dynamic columns)
             long delta1 = r1.getAckDurationForColumn(currentColumn);
