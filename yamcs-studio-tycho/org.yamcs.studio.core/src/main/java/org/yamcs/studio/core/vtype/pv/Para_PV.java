@@ -69,11 +69,6 @@ public class Para_PV extends PV implements YamcsPVReader, StudioConnectionListen
     }
 
     @Override
-    public String getMdbNamespace() {
-        return YamcsPlugin.getDefault().getMdbNamespace();
-    }
-
-    @Override
     public String getPVName() {
         return baseName;
     }

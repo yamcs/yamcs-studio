@@ -63,11 +63,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     }
 
     @Override
-    public String getMdbNamespace() {
-        return YamcsPlugin.getDefault().getMdbNamespace();
-    }
-
-    @Override
     public String getPVName() {
         return getChannelName();
     }
