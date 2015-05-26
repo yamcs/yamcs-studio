@@ -147,6 +147,7 @@
       <sourceProvider provider="org.yamcs.studio.ui.commanding.stack.CommandStackStateProvider">
          <variable name="org.yamcs.studio.ui.commanding.stack.state.remaining" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.commanding.stack.state.armed" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.ui.commanding.stack.state.empty" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.commanding.stack.state.executionStarted" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.ui.processor.ProcessorStateProvider">
@@ -180,6 +181,11 @@
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.delete"
             name="Delete Command">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.stack.deleteAll"
+            name="Delete All Commands">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -268,6 +274,17 @@
                      <instanceof value="org.yamcs.studio.ui.commanding.stack.StackedCommand"/>
                   </iterate>
                </and>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.stack.DeleteAllHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.deleteAll">
+         <enabledWhen>
+            <with variable="org.yamcs.studio.ui.commanding.stack.state.empty">
+               <not>
+                  <equals value="true"/>
+               </not>
             </with>
          </enabledWhen>
       </handler>
@@ -710,6 +727,12 @@
                 icon="icons/elcl16/remove.png"
                 disabledIcon="icons/dlcl16/remove.png"
                 label="Delete Command"
+                style="push"/>
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.deleteAll"
+                icon="icons/elcl16/removeall.png"
+                disabledIcon="icons/dlcl16/removeall.png"
+                label="Delete All Commands"
                 style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
           <command

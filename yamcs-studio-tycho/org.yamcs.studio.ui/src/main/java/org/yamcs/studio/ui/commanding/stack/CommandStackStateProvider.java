@@ -18,8 +18,9 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
 
     public static final String STATE_KEY_REMAINING = "org.yamcs.studio.ui.commanding.stack.state.remaining";
     public static final String STATE_KEY_EXECUTION_STARTED = "org.yamcs.studio.ui.commanding.stack.state.executionStarted";
+    public static final String STATE_KEY_EMPTY = "org.yamcs.studio.ui.commanding.stack.state.empty";
     public static final String STATE_KEY_ARMED = "org.yamcs.studio.ui.commanding.stack.state.armed";
-    private static final String[] SOURCE_NAMES = { STATE_KEY_REMAINING, STATE_KEY_ARMED };
+    private static final String[] SOURCE_NAMES = { STATE_KEY_REMAINING, STATE_KEY_EXECUTION_STARTED, STATE_KEY_EMPTY, STATE_KEY_ARMED };
 
     /**
      * Whether there's any remaining commands to be armed/executed
@@ -30,6 +31,11 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
      * Whether any stacked command has already left the unarmed state
      */
     private boolean executionStarted = false;
+
+    /**
+     * Whether the stack is empty
+     */
+    private boolean empty = false;
 
     /**
      * Whether there's currently a command armed and ready to fire
@@ -43,6 +49,8 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
         } else {
             armed = false;
         }
+
+        empty = stack.isEmpty();
 
         executionStarted = false;
         for (StackedCommand cmd : stack.getCommands()) {
@@ -62,6 +70,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
         Map map = new HashMap(2);
         map.put(STATE_KEY_REMAINING, remaining);
         map.put(STATE_KEY_EXECUTION_STARTED, executionStarted);
+        map.put(STATE_KEY_EMPTY, empty);
         map.put(STATE_KEY_ARMED, armed);
         return map;
     }
