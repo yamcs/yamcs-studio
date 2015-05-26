@@ -39,7 +39,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         log.info("processConnectionInfo called on " + getChannelName());
-        this.disconnect();
         this.webSocketClient = webSocketClient;
         connect();
     }
