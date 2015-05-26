@@ -43,6 +43,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private Map<String, RestParameter> availableParametersByName = new LinkedHashMap<>();
     private List<CommandHistoryListener> cmdhistListeners = new ArrayList<>();
     private List<ClientInfoListener> clientInfoListeners = new ArrayList<>();
+    private LosTracker losTracker = new LosTracker();
 
     private WebSocketClient wsclient;
 
@@ -178,6 +179,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
             YamcsPVReader pvReader = pvReadersByName.get(pval.getId().getName());
             if (pvReader != null) {
                 log.fine(String.format("Request to update pvreader %s to %s", pvReader.getPVName(), pval.getEngValue()));
+                losTracker.updatePv(pvReader, pval);
                 pvReader.processParameterValue(pval);
             } else {
                 log.warning("No pvreader for incoming update of " + pval.getId().getName());
