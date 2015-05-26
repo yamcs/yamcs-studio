@@ -9,6 +9,7 @@ import org.epics.vtype.AlarmSeverity;
 import org.epics.vtype.Display;
 import org.epics.vtype.Time;
 import org.epics.vtype.VType;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
@@ -20,6 +21,10 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public AlarmSeverity getAlarmSeverity() {
+
+        if (pval.getAcquisitionStatus() == AcquisitionStatus.EXPIRED)
+            return AlarmSeverity.INVALID; // Workaround to display LOS in the displays, should be 'Expired'
+
         switch (pval.getMonitoringResult()) {
         case IN_LIMITS:
             return AlarmSeverity.NONE;

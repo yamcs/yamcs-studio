@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui;
+package org.yamcs.studio.ui.handlers;
 
 import java.util.HashMap;
 import java.util.logging.Level;

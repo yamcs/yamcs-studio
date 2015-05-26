@@ -18,7 +18,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.studio.core.ConnectionFailureListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.ui.ConnectHandler;
+import org.yamcs.studio.ui.handlers.ConnectHandler;
 
 @SuppressWarnings("restriction")
 public class LifeCycleManager implements ConnectionFailureListener {
