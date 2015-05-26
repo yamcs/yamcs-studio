@@ -326,6 +326,13 @@ public class CommandStackView extends ViewPart {
         refreshState();
     }
 
+    /**
+     * Clear state of the arm button TODO should probably be refactored into refreshState instead
+     */
+    public void clearArm() {
+        armButton.setSelection(false);
+    }
+
     public void refreshState() {
         commandTableViewer.refresh();
         CommandStack stack = CommandStack.getInstance();

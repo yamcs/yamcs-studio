@@ -52,7 +52,9 @@ public class ArmCommandHandler extends AbstractRestHandler {
                     if (response instanceof RestExceptionMessage) {
                         RestExceptionMessage exc = (RestExceptionMessage) response;
                         command.setState(State.REJECTED);
-                        MessageDialog.openError(activeShell, "Could not arm command", exc.getMsg());
+                        MessageDialog.openError(activeShell, "Could not arm command", "Server message:\n\t" + exc.getMsg());
+                        view.clearArm();
+                        view.refreshState();
                     } else {
                         RestValidateCommandResponse validateResponse = (RestValidateCommandResponse) response;
 
@@ -95,8 +97,9 @@ public class ArmCommandHandler extends AbstractRestHandler {
                 log.log(Level.SEVERE, "Could not arm command", e);
                 Display.getDefault().asyncExec(() -> {
                     command.setState(State.REJECTED);
-                    MessageDialog.openError(activeShell,
-                            "Could not arm command", e.getMessage());
+                    MessageDialog.openError(activeShell, "Could not arm command", e.getMessage());
+                    view.clearArm();
+                    view.refreshState();
                 });
             }
         });
