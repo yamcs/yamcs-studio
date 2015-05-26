@@ -473,7 +473,7 @@
          </activeWhen>
       </handler>
       <handler commandId="org.yamcs.studio.ui.connect"
-            class="org.yamcs.studio.ui.ConnectHandler">
+            class="org.yamcs.studio.ui.handlers.ConnectHandler">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.state.connected">
                <equals value="false"/>
@@ -481,7 +481,7 @@
          </activeWhen>
       </handler>
       <handler commandId="org.yamcs.studio.ui.disconnect"
-            class="org.yamcs.studio.ui.DisconnectHandler">
+            class="org.yamcs.studio.ui.handlers.DisconnectHandler">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.state.connected">
                <equals value="true"/>

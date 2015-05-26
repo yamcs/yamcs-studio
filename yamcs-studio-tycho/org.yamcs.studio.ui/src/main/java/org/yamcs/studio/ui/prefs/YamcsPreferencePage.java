@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.ui.ConnectHandler;
+import org.yamcs.studio.ui.handlers.ConnectHandler;
 
 /**
  * This class represents a preference page that is contributed to the Preferences dialog. By
