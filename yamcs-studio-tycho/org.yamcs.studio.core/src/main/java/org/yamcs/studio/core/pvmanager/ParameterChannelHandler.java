@@ -70,8 +70,9 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected boolean isConnected(PVConnectionInfo info) {
         return info.webSocketOpen
-                && info.parameter != null
-                && info.parameter.getDataSource() != RestDataSource.LOCAL;
+                && ((getPVName().startsWith("/yamcs")) ||
+                (info.parameter != null
+                && info.parameter.getDataSource() != RestDataSource.LOCAL));
     }
 
     @Override
