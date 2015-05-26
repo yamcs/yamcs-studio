@@ -2,6 +2,8 @@ package org.yamcs.studio.core;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -280,6 +282,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return getPreferenceStore().getString("mdb_namespace");
     }
 
+    public String getOrigin() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return "Unknown";
+        }
+    }
+
     private void loadParameters() {
         log.fine("Fetching available parameters");
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
@@ -411,5 +421,4 @@ public class YamcsPlugin extends AbstractUIPlugin {
         final int nextNode = currentNode + 1 > getNumberOfNodes() ? 1 : currentNode + 1;
         connectionFailureListeners.forEach(c -> c.connectionFailure(currentNode, nextNode));
     }
-
 }

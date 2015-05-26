@@ -81,11 +81,8 @@ public class StackedCommand {
         assignments.forEach((k, v) -> {
             req.addArguments(RestArgumentType.newBuilder().setName(k.getName()).setValue(v));
         });
-        try {
-            req.setOrigin(InetAddress.getLocalHost().getHostName());
-        } catch (UnknownHostException e) {
-            req.setOrigin("Unknown");
-        }
+        req.setOrigin(YamcsPlugin.getDefault().getOrigin());
+
         return req;
     }
 
@@ -168,7 +165,7 @@ public class StackedCommand {
     public boolean isValid(Argument arg) {
         if (!isAssigned(arg))
             return false;
-        return true; // TODO
+        return true; // TODO more local checks
     }
 
     public boolean isValid() {

@@ -62,8 +62,8 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_T = "T";
 
-    private WebSocketRegistrar webSocketClient = null;
-    private RestClient restClient = null;
+    private WebSocketRegistrar webSocketClient;
+    private RestClient restClient;
 
     // Prefix used in command attribute names
     private static final String ACK_PREFIX = "Acknowledge_";
@@ -163,18 +163,6 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         });
         layoutDataByColumn.put(userColumn.getColumn(), new ColumnWeightData(70));
 
-        TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        finalSeqColumn.getColumn().setText(COL_SEQ_ID);
-        finalSeqColumn.getColumn().addSelectionListener(getSelectionAdapter(finalSeqColumn.getColumn()));
-        finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
-        finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return String.valueOf(((CommandHistoryRecord) element).getFinalSequenceCount());
-            }
-        });
-        layoutDataByColumn.put(finalSeqColumn.getColumn(), new ColumnPixelData(50));
-
         TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         gentimeColumn.getColumn().setText(COL_T);
         gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
@@ -186,6 +174,18 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
             }
         });
         layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
+
+        TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        finalSeqColumn.getColumn().setText(COL_SEQ_ID);
+        finalSeqColumn.getColumn().addSelectionListener(getSelectionAdapter(finalSeqColumn.getColumn()));
+        finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
+        finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return String.valueOf(((CommandHistoryRecord) element).getFinalSequenceCount());
+            }
+        });
+        layoutDataByColumn.put(finalSeqColumn.getColumn(), new ColumnPixelData(50));
 
         // TODO use IMemento or something
         tableViewer.getTable().setSortColumn(gentimeColumn.getColumn());
