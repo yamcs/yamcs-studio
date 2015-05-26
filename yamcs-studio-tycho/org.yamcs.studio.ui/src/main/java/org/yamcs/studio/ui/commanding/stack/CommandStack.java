@@ -3,6 +3,8 @@ package org.yamcs.studio.ui.commanding.stack;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+
 /**
  * Client-side structure for keeping track of an ordered set of commands with various options and
  * checks.
@@ -12,15 +14,8 @@ import java.util.List;
  */
 public class CommandStack {
 
-    public enum Mode {
-        EDIT,
-        EXECUTE
-    }
-
     private static final CommandStack INSTANCE = new CommandStack();
     private List<StackedCommand> commands = new ArrayList<>();
-    private StackedCommand activeCommand;
-    private Mode mode = Mode.EDIT;
 
     private CommandStack() {
     }
@@ -29,18 +24,20 @@ public class CommandStack {
         return INSTANCE;
     }
 
-    public Mode getMode() {
-        return mode;
-    }
-
     public void addCommand(StackedCommand command) {
         commands.add(command);
-        if (activeCommand == null)
-            activeCommand = command;
     }
 
     public List<StackedCommand> getCommands() {
         return commands;
+    }
+
+    public boolean isValid() {
+        for (StackedCommand cmd : commands)
+            if (!cmd.isValid())
+                return false;
+
+        return true;
     }
 
     public void checkForErrors() {
@@ -55,30 +52,33 @@ public class CommandStack {
         for (StackedCommand cmd : commands)
             for (String msg : cmd.getMessages())
                 msgs.add(msg);
+
         return msgs;
     }
 
     public StackedCommand getActiveCommand() {
-        return activeCommand;
-    }
+        for (StackedCommand command : commands)
+            if (command.getState() != State.ISSUED && command.getState() != State.SKIPPED)
+                return command;
 
-    // This looks like something we could do better
-    public StackedCommand incrementAndGet() {
-        if (commands.isEmpty()) {
-            activeCommand = null;
-        } else if (activeCommand == null) {
-            activeCommand = commands.get(0);
-        } else {
-            int idx = commands.indexOf(activeCommand);
-            if (++idx < commands.size())
-                activeCommand = commands.get(idx);
-            else
-                activeCommand = null;
-        }
-        return activeCommand;
+        return null;
     }
 
     public boolean hasRemaining() {
-        return activeCommand != null && commands.size() > commands.indexOf(activeCommand);
+        return getActiveCommand() != null;
+    }
+
+    public void disarmArmed() {
+        for (StackedCommand command : commands)
+            if (command.isArmed())
+                command.setState(State.UNARMED);
+    }
+
+    public void resetExecutionState() {
+        commands.forEach(c -> c.setState(State.UNARMED));
+    }
+
+    public boolean isEmpty() {
+        return commands.isEmpty();
     }
 }

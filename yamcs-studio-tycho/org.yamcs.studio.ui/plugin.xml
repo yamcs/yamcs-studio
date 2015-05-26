@@ -145,9 +145,9 @@
          <variable name="org.yamcs.studio.ui.archive.state.tagEnabled" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.ui.commanding.stack.CommandStackStateProvider">
-         <variable name="org.yamcs.studio.ui.commanding.stack.state.mode" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.commanding.stack.state.remaining" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.commanding.stack.state.armed" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.ui.commanding.stack.state.executionStarted" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.ui.processor.ProcessorStateProvider">
          <variable name="org.yamcs.studio.ui.processor.state.processing" priorityLevel="workbench" />
@@ -178,13 +178,23 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.stack.delete"
+            name="Delete Command">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.stack.restart"
+            name="Clear Execution State">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.arm"
             name="Arm Command">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.fire"
-            name="Fire Command">
+            id="org.yamcs.studio.ui.commanding.stack.issue"
+            name="Issue Command">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -238,85 +248,45 @@
    <extension point="org.eclipse.ui.handlers">
       <handler
             class="org.yamcs.studio.ui.commanding.stack.AddToStackHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.toggleExecute">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.mode">
-                  <equals value="EDIT"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.remaining">
-                  <equals value="true"/>
-               </with>
-               <!-- TODO no sptv errors -->
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.AddToStackHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.abortExecute">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.mode">
-                  <equals value="EXECUTE"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.remaining">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.AddToStackHandler"
             commandId="org.yamcs.studio.ui.commanding.stack.add">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.mode">
-                  <equals value="EDIT"/>
-               </with>
             </and>
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.commanding.stack.ArmCommandHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.arm">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.remaining">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
+            class="org.yamcs.studio.ui.commanding.stack.DeleteHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.delete">
          <enabledWhen>
-            <with variable="org.yamcs.studio.ui.commanding.stack.state.armed">
+            <with variable="selection">
+               <and>
+                  <count value="1" />
+                  <iterate ifEmpty="false">
+                     <instanceof value="org.yamcs.studio.ui.commanding.stack.StackedCommand"/>
+                  </iterate>
+               </and>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.stack.RestartHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.restart">
+         <enabledWhen>
+            <with variable="org.yamcs.studio.ui.commanding.stack.state.executionStarted">
                <equals value="true"/>
             </with>
          </enabledWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.commanding.stack.FireCommandHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.fire">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.armed">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
+            class="org.yamcs.studio.ui.commanding.stack.ArmCommandHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.arm">
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.stack.IssueCommandHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.issue">
       </handler>
       <handler
             class="org.yamcs.studio.ui.handlers.RefreshArchiveHandler"
@@ -730,37 +700,24 @@
       
        <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
           <command
-                commandId="org.yamcs.studio.ui.commanding.stack.toggleExecute"
-                icon="icons/elcl16/run_exc.png"
-                disabledIcon="icons/dlcl16/run_exc.png"
-                label="Execute Stack"
-                style="push"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.abortExecute"
-                icon="icons/elcl16/terminate_co.png"
-                disabledIcon="icons/dlcl16/terminate_co.png"
-                label="Abort Execution"
-                style="push"/>
-          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-          <command
                 commandId="org.yamcs.studio.ui.commanding.stack.add"
                 icon="icons/elcl16/new_command.png"
                 disabledIcon="icons/dlcl16/new_command.png"
                 label="New Command"
                 style="push"/>
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.delete"
+                icon="icons/elcl16/remove.png"
+                disabledIcon="icons/dlcl16/remove.png"
+                label="Delete Command"
+                style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
           <command
-                commandId="org.yamcs.studio.ui.commanding.stack.arm"
-                icon="icons/elcl16/arm.png"
-                label="Arm"
-                style="toggle"
-                mode="FORCE_TEXT"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.fire"
-                icon="icons/elcl16/fire.png"
-                label="Issue"
-                style="push"
-                mode="FORCE_TEXT"/>
+                commandId="org.yamcs.studio.ui.commanding.stack.restart"
+                icon="icons/elcl16/restart_co.png"
+                disabledIcon="icons/dlcl16/restart_co.png"
+                label="Clear Execution State"
+                style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
       

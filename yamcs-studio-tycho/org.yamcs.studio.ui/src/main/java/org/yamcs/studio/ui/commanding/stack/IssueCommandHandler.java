@@ -8,6 +8,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
@@ -17,21 +18,24 @@ import org.yamcs.studio.ui.handlers.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
 
-public class FireCommandHandler extends AbstractRestHandler {
+public class IssueCommandHandler extends AbstractRestHandler {
 
-    private static final Logger log = Logger.getLogger(FireCommandHandler.class.getName());
+    private static final Logger log = Logger.getLogger(IssueCommandHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        if (!checkRestClient(event, "fire command"))
+        if (!checkRestClient(event, "issue command"))
             return null;
+
         Shell shell = HandlerUtil.getActiveShell(event);
+        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+        CommandStackView commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
         StackedCommand command = CommandStack.getInstance().getActiveCommand();
-        fireCommand(shell, command);
+        issueCommand(shell, commandStackView, command);
         return null;
     }
 
-    private void fireCommand(Shell activeShell, StackedCommand command) {
+    private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
         RestSendCommandRequest req = RestSendCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
         restClient.sendCommand(req, new ResponseHandler() {
             @Override
@@ -40,21 +44,23 @@ public class FireCommandHandler extends AbstractRestHandler {
                     if (response instanceof RestExceptionMessage) {
                         RestExceptionMessage exc = (RestExceptionMessage) response;
                         command.setState(State.REJECTED);
-                        MessageDialog.openError(activeShell, "Could not fire command", exc.getMsg());
+                        MessageDialog.openError(activeShell, "Could not issue command", exc.getMsg());
                     } else {
-                        log.fine(String.format("Command fired", req));
+                        log.info(String.format("Command issued. %s", req));
                         command.setState(State.ISSUED);
-                        CommandStack.getInstance().incrementAndGet();
+                        view.selectActiveCommand();
                     }
+                    view.refreshState();
                 });
             }
 
             @Override
             public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not fire command", e);
+                log.log(Level.SEVERE, "Could not issue command", e);
                 Display.getDefault().asyncExec(() -> {
                     command.setState(State.REJECTED);
-                    MessageDialog.openError(activeShell, "Could not fire command", e.getMessage());
+                    MessageDialog.openError(activeShell, "Could not issue command", e.getMessage());
+                    view.refreshState();
                 });
             }
         });

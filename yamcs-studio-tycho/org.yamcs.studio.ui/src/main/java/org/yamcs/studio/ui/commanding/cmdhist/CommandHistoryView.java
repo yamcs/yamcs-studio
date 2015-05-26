@@ -190,6 +190,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         // TODO use IMemento or something
         tableViewer.getTable().setSortColumn(gentimeColumn.getColumn());
         tableViewer.getTable().setSortDirection(SWT.DOWN);
+        getViewSite().setSelectionProvider(tableViewer);
     }
 
     private void applyColumnLayoutData(TableColumnLayout tcl) {

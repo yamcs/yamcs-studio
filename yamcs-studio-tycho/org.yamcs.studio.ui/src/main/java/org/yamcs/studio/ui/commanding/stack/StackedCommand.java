@@ -29,6 +29,7 @@ public class StackedCommand {
         UNARMED("Unarmed"),
         ARMED("Armed"),
         ISSUED("Issued"),
+        SKIPPED("Skipped"),
         REJECTED("Rejected");
 
         private String text;
@@ -48,23 +49,27 @@ public class StackedCommand {
 
     public StyledString toStyledString(CommandStackView styleProvider) {
         StyledString str = new StyledString();
-        str.append(meta.getOpsName());
-        str.append("(", styleProvider.getBracketStyler());
+        str.append(meta.getOpsName(), styleProvider.getIdentifierStyler(this));
+        str.append("(", styleProvider.getBracketStyler(this));
         boolean first = true;
         for (Argument arg : meta.getArgumentList()) {
             if (!first)
-                str.append(", ", styleProvider.getBracketStyler());
+                str.append(", ", styleProvider.getBracketStyler(this));
             first = false;
-            str.append(arg.getName() + ": ", styleProvider.getArgNameStyler());
+            str.append(arg.getName() + ": ", styleProvider.getArgNameStyler(this));
             String value = getAssignedStringValue(arg);
             if (value == null) {
-                str.append("??", styleProvider.getErrorStyler());
+                str.append("  ", styleProvider.getErrorStyler(this));
             } else {
-                str.append(value, isValid(arg) ? styleProvider.getNumberStyler() : styleProvider.getErrorStyler());
+                str.append(value, isValid(arg) ? styleProvider.getNumberStyler(this) : styleProvider.getErrorStyler(this));
             }
         }
-        str.append(")", styleProvider.getBracketStyler());
+        str.append(")", styleProvider.getBracketStyler(this));
         return str;
+    }
+
+    public boolean isArmed() {
+        return state == State.ARMED;
     }
 
     public RestCommandType.Builder toRestCommandType() {
@@ -147,7 +152,7 @@ public class StackedCommand {
         List<String> messages = new ArrayList<String>();
         for (Argument arg : meta.getArgumentList())
             if (!isValid(arg))
-                messages.add(String.format("#%d: Missing argument '%s'", CommandStack.getInstance().indexOf(this) + 1, arg.getName()));
+                messages.add(String.format("Missing argument '%s'", arg.getName()));
 
         return messages;
     }

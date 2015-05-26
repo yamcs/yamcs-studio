@@ -35,8 +35,10 @@ public class ArmCommandHandler extends AbstractRestHandler {
         CommandStackView commandStackView = (CommandStackView) part;
 
         Shell shell = HandlerUtil.getActiveShellChecked(event);
-        StackedCommand command = CommandStack.getInstance().getActiveCommand();
+        CommandStack stack = CommandStack.getInstance();
+        StackedCommand command = stack.getActiveCommand();
         armCommand(shell, commandStackView, command);
+
         return null;
     }
 
@@ -80,8 +82,9 @@ public class ArmCommandHandler extends AbstractRestHandler {
                         }
 
                         if (doArm) {
-                            log.fine(String.format("Command armed %s", command));
+                            log.info(String.format("Command armed %s", command));
                             command.setState(State.ARMED);
+                            view.refreshState();
                         }
                     }
                 });

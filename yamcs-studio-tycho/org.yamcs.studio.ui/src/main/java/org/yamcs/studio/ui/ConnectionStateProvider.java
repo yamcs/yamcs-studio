@@ -39,6 +39,11 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
         return map;
     }
 
+    // Utility method for easier programmatic access.
+    public boolean isConnected() {
+        return connected;
+    }
+
     @Override
     public String[] getProvidedSourceNames() {
         return SOURCE_NAMES;

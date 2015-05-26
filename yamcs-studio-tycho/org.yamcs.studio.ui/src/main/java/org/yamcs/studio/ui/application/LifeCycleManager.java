@@ -1,6 +1,7 @@
 package org.yamcs.studio.ui.application;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.autocomplete.AutoCompleteHelper;
@@ -30,14 +31,14 @@ public class LifeCycleManager implements ConnectionFailureListener {
 
         YamcsPlugin.getDefault().addConnectionFailureListener(this);
 
-        // This is about as hacky as it gets. Have an unknown problem with the toolbar disappearing after
-        // workbench restart. Below code does a double 'toggle' on it, to make it appear again.
-        // TODO Find exact reason why. In previous commit this did not appear to be a problem (?)
         broker.subscribe(UILifeCycle.APP_STARTUP_COMPLETE, evt -> {
             IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
             ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
             IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
             try {
+                // This is about as hacky as it gets. Have an unknown problem with the toolbar disappearing after
+                // workbench restart. Below code does a double 'toggle' on it, to make it appear again.
+                // TODO Find exact reason why. In previous commit this did not appear to be a problem (?)
                 Command cmd = commandService.getCommand("org.eclipse.ui.ToggleCoolbarAction");
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
@@ -45,7 +46,7 @@ public class LifeCycleManager implements ConnectionFailureListener {
                 // request connection to Yamcs server
                 (new ConnectHandler()).execute(null);
             } catch (Exception exception) {
-                exception.printStackTrace();
+                log.log(Level.SEVERE, "Could not execute command", exception);
             }
         });
     }
