@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
@@ -42,6 +43,11 @@ public class SwitchProcessorHandler extends AbstractRestHandler {
                     public void onMessage(MessageLite responseMsg) {
                         if (responseMsg instanceof RestExceptionMessage) {
                             log.log(Level.SEVERE, "Could not switch processor. " + responseMsg);
+                        } else {
+                            // Would prefer to get updates to this from the web socket client
+                            Display.getCurrent().asyncExec(() -> {
+                                YamcsPlugin.getDefault().refreshClientInfo();
+                            });
                         }
                     }
 
