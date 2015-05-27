@@ -58,7 +58,6 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
 
-    private WebSocketRegistrar webSocketClient;
     private RestClient restClient;
 
     // Prefix used in command attribute names
@@ -223,12 +222,6 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         layoutDataByColumn.forEach((k, v) -> tcl.setColumnData(k, v));
     }
 
-    private void subscribeToUpdates() {
-        webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
-            Display.getDefault().asyncExec(() -> CommandHistoryView.this.processCommandHistoryEntry(cmdhistEntry));
-        });
-    }
-
     private void fetchArchivedCommands() {
         // TODO limit to 'some' time in the past
         RestDumpArchiveRequest request = RestDumpArchiveRequest.newBuilder().setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder())
@@ -322,11 +315,12 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
 
     @Override
     public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-
-        this.webSocketClient = webSocketClient;
         this.restClient = restclient;
-        if (webSocketClient != null)
-            subscribeToUpdates();
+        if (webSocketClient != null) {
+            webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
+                Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
+            });
+        }
         if (restClient != null)
             fetchArchivedCommands();
     }

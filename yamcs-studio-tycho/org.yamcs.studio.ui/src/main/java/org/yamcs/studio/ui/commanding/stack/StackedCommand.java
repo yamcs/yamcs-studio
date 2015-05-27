@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
@@ -63,6 +65,16 @@ public class StackedCommand {
         state = StackedState.UNARMED;
         ptvInfo = new PTVInfo();
         clientId = -1;
+    }
+
+    public void updateExecutionState(CommandHistoryEntry entry) {
+        for (CommandHistoryAttribute attr : entry.getAttrList()) {
+            if (attr.getName().equals("TransmissionConstraints")) {
+                ptvInfo.setState(PTVInfo.State.fromYamcsValue(attr.getValue()));
+            } else if (attr.getName().equals("CommandFailed")) {
+                ptvInfo.setFailureMessage(attr.getValue().getStringValue());
+            }
+        }
     }
 
     public StyledString toStyledString(CommandStackView styleProvider) {

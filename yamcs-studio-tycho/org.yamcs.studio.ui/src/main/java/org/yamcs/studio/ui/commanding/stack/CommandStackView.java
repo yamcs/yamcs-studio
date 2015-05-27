@@ -29,11 +29,19 @@ import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.ConnectionStateProvider;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
-public class CommandStackView extends ViewPart {
+public class CommandStackView extends ViewPart implements StudioConnectionListener {
 
     public static final String ID = "org.yamcs.studio.ui.commanding.stack.CommandStackView";
     private static final Logger log = Logger.getLogger(CommandStackView.class.getName());
@@ -237,6 +245,8 @@ public class CommandStackView extends ViewPart {
 
         // Set initial state
         refreshState();
+
+        YamcsPlugin.getDefault().addStudioConnectionListener(this);
     }
 
     public void selectFirst() {
@@ -377,7 +387,27 @@ public class CommandStackView extends ViewPart {
     }
 
     @Override
-    public void dispose() {
-        super.dispose();
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        if (webSocketClient != null) {
+            webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
+                Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
+            });
+        }
+    }
+
+    private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
+        for (StackedCommand cmd : CommandStack.getInstance().getCommands()) {
+            if (cmd.matches(cmdhistEntry.getCommandId())) {
+                log.finer(String.format("Processing update %s ", cmdhistEntry));
+                cmd.updateExecutionState(cmdhistEntry);
+            } else {
+                log.finer(String.format("Ignoring update %s", cmdhistEntry));
+            }
+        }
+        commandTableViewer.refresh();
+    }
+
+    @Override
+    public void onStudioDisconnect() {
     }
 }
