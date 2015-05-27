@@ -214,4 +214,13 @@ public class StackedCommand {
         }
         return res;
     }
+
+    public void markSkipped() {
+        state = StackedState.SKIPPED;
+    }
+
+    @Override
+    public String toString() {
+        return meta.getOpsName();
+    }
 }

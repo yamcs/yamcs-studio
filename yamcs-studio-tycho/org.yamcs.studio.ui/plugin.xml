@@ -164,16 +164,6 @@
       </category>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.toggleExecute"
-            name="Switch to Execution Mode">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.abortExecute"
-            name="Abort Execution">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.add"
             name="New Command">
       </command>
@@ -186,6 +176,11 @@
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.deleteAll"
             name="Delete All Commands">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.stack.skip"
+            name="Skip Command">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -251,6 +246,15 @@
       </command>
    </extension>
    
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+         namespace="org.yamcs.studio.ui.commanding.stack"
+         class="org.yamcs.studio.ui.commanding.stack.StackedCommandPropertyTester"
+         id="org.yamcs.studio.ui.commanding.stack.StackedCommandPropertyTester"
+         properties="canBeSkipped"
+         type="org.yamcs.studio.ui.commanding.stack.StackedCommand" />
+   </extension>
+   
    <extension point="org.eclipse.ui.handlers">
       <handler
             class="org.yamcs.studio.ui.commanding.stack.AddToStackHandler"
@@ -295,6 +299,27 @@
             <with variable="org.yamcs.studio.ui.commanding.stack.state.executionStarted">
                <equals value="true"/>
             </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.stack.SkipHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.skip">
+         <enabledWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.commanding.stack.state.remaining">
+                  <equals value="true"/>
+               </with>
+               <with variable="selection">
+                  <and>
+                     <count value="1" />
+                     <iterate ifEmpty="false">
+                        <adapt type="org.yamcs.studio.ui.commanding.stack.StackedCommand">
+                           <test property="org.yamcs.studio.ui.commanding.stack.canBeSkipped" />
+                        </adapt>
+                     </iterate>
+                  </and>
+               </with>
+            </and>
          </enabledWhen>
       </handler>
       <handler
@@ -737,6 +762,12 @@
                 label="Delete All Commands"
                 style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.skip"
+                icon="icons/elcl16/stepover_co.png"
+                disabledIcon="icons/dlcl16/stepover_co.png"
+                label="Skip Command"
+                style="push"/>
           <command
                 commandId="org.yamcs.studio.ui.commanding.stack.restart"
                 icon="icons/elcl16/restart_co.png"
