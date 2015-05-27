@@ -76,7 +76,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
      * Called when we get green light from YamcsPlugin
      */
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
             RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
     }
@@ -86,7 +86,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
      * processConnectionInfo)
      */
     @Override
-    public void disconnect() {
+    public void onStudioDisconnect() {
         yconnector.disconnect();
     }
 
@@ -233,18 +233,21 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
     public boolean isTagEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service.getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
+        AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service
+                .getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
         return (Boolean) commandState.getCurrentState().get(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setTagEnabled(boolean enabled) {
         // Back to the SWT thread, to be sure
-        Display.getDefault().asyncExec(() -> {
-            IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-            ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service.getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
-            commandState.setEnabled(enabled);
-        });
+        Display.getDefault().asyncExec(
+                () -> {
+                    IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+                    ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+                    AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service
+                            .getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
+                    commandState.setEnabled(enabled);
+                });
     }
 
     protected void showMessage(String msg) {

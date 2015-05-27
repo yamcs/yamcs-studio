@@ -25,12 +25,12 @@ public abstract class AbstractRestHandler extends AbstractHandler implements Stu
     }
 
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         this.restClient = restclient;
     }
 
     @Override
-    public void disconnect() {
+    public void onStudioDisconnect() {
         if (restClient == null)
             return;
         restClient.shutdown();

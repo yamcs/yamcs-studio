@@ -50,7 +50,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     }
 
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         Display.getDefault().asyncExec(() -> {
             connected = true;
             Map newState = getCurrentState();
@@ -60,7 +60,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     }
 
     @Override
-    public void disconnect() {
+    public void onStudioDisconnect() {
         Display.getDefault().asyncExec(() -> {
             connected = false;
             Map newState = getCurrentState();

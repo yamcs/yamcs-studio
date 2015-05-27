@@ -54,12 +54,22 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     }
 
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         log.info("processConnectionInfo called on " + getChannelName());
         this.disconnect();
         this.webSocketClient = webSocketClient;
         this.restClient = restclient;
         connect();
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+        disconnect(); // Unregister PV
+        if (restClient != null)
+            restClient.shutdown();
+
+        webSocketClient = null;
+        restClient = null;
     }
 
     @Override
@@ -69,21 +79,16 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
     @Override
     protected void connect() {
-        log.info("Connect called on " + getChannelName());
+        log.fine("PV connect on " + getChannelName());
         if (webSocketClient != null)
             webSocketClient.register(this);
     }
 
     @Override
     public void disconnect() { // Interpret this as an unsubscribe
-        log.info("Disconnect called on " + getChannelName());
+        log.fine("PV disconnect on " + getChannelName());
         if (webSocketClient != null)
             webSocketClient.unregister(this);
-        if (restClient != null)
-            restClient.shutdown();
-
-        webSocketClient = null;
-        restClient = null;
     }
 
     /**

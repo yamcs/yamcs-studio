@@ -49,7 +49,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private ClientInfo clientInfo;
     //YamcsCredentials testcredentials = new YamcsCredentials("operator", "password");
-    YamcsCredentials currentCredentials = null;
+    private YamcsCredentials currentCredentials;
 
     private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
@@ -142,10 +142,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
             restClient.shutdown();
         restClient = null;
 
-        // Disconnect all studio connection listeners
+        // Notify all studio connection listeners of disconnect
         for (StudioConnectionListener scl : studioConnectionListeners) {
             try {
-                scl.disconnect();
+                scl.onStudioDisconnect();
             } catch (Exception e)
             {
                 log.log(Level.SEVERE, "Unable to disconnect listener " + scl + ".", e);
@@ -162,14 +162,12 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // Need to improve this code. Currently doesn't support changing connections
         //boolean doSetup = (this.clientInfo == null);
         this.clientInfo = clientInfo;
-        if (true) {
             loadParameters();
             loadCommands();
 
             studioConnectionListeners.forEach(l -> {
-                l.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
+            l.onStudioConnect(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
             });
-        }
         setConnectionStatus(ConnectionStatus.Connected);
     }
 
@@ -334,7 +332,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         studioConnectionListeners.add(listener);
         if (clientInfo != null && restClient != null && webSocketClient != null)
-            listener.processConnectionInfo(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
+            listener.onStudioConnect(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
     }
 
     public void removeStudioConnectionListener(StudioConnectionListener listener) {

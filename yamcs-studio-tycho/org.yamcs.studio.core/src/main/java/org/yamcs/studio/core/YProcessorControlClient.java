@@ -61,7 +61,7 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
      * Called when we get green light from YamcsPlugin
      */
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
             RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
     }
@@ -71,7 +71,7 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
      * processConnectionInfo)
      */
     @Override
-    public void disconnect() {
+    public void onStudioDisconnect() {
         try {
             if (yconnector != null) {
                 yconnector.disconnect();

@@ -73,17 +73,17 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
      * Called when we get green light from YamcsPlugin
      */
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps,
             RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
     }
 
     /**
      * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
-     * processConnectionInfo)
+     * onStudioConnect)
      */
     @Override
-    public void disconnect() {
+    public void onStudioDisconnect() {
         yconnector.disconnect();
     }
 

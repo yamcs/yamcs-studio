@@ -333,7 +333,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     }
 
     @Override
-    public void processConnectionInfo(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
 
         this.webSocketClient = webSocketClient;
         this.restClient = restclient;
@@ -344,8 +344,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     }
 
     @Override
-    public void disconnect() {
-        // TODO Auto-generated method stub
+    public void onStudioDisconnect() {
 
     }
 }
