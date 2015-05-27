@@ -43,6 +43,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
         processor = new Canvas(top, SWT.NONE);
         processor.setToolTipText("Subscribed Yamcs Processor");
+        processor.setCursor(parent.getDisplay().getSystemCursor(SWT.CURSOR_HAND));
 
         processor.addPaintListener(evt -> {
             GC gc = evt.gc;
