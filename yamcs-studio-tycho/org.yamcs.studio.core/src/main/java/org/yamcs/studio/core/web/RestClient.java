@@ -36,6 +36,8 @@ import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
+import org.yamcs.protobuf.Rest.RestListProcessorsRequest;
+import org.yamcs.protobuf.Rest.RestListProcessorsResponse;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestSendCommandResponse;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
@@ -96,6 +98,10 @@ public class RestClient {
 
     public void createProcessorRequest(String processorName, ProcessorRequest request, ResponseHandler responseHandler) {
         post("/api/processor/" + processorName, request, null, responseHandler);
+    }
+
+    public void listProcessors(RestListProcessorsRequest request, ResponseHandler responseHandler) {
+        get("/api/processor/list", request, RestListProcessorsResponse.newBuilder(), responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {

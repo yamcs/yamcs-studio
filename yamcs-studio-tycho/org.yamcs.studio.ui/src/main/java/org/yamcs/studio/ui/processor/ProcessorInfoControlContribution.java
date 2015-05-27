@@ -1,5 +1,11 @@
 package org.yamcs.studio.ui.processor;
 
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -11,17 +17,24 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
+import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.YamcsPlugin.ConnectionStatus;
 
 /**
  * Shows a visual indicator for the currently subscribed processor.
  */
 public class ProcessorInfoControlContribution extends WorkbenchWindowControlContribution implements ProcessorListener {
+
+    private static final Logger log = Logger.getLogger(ProcessorInfoControlContribution.class.getName());
 
     private static final int ANGLE_DELTA = 10;
     private static final int REC_WIDTH = 120;
@@ -109,6 +122,20 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         gd = new GridData();
         gd.widthHint = 40;
         spacer.setLayoutData(gd);
+
+        processor.addListener(SWT.MouseDown, evt -> {
+            if (YamcsPlugin.getDefault().getConnectionSatus() == ConnectionStatus.Connected) {
+                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+                IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
+                try {
+                    Command cmd = commandService.getCommand("org.yamcs.studio.ui.processor.switch");
+                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                } catch (Exception exception) {
+                    log.log(Level.SEVERE, "Could not execute command", exception);
+                }
+            }
+        });
 
         YamcsPlugin.getDefault().addProcessorListener(this);
         return top;

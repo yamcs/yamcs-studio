@@ -229,6 +229,11 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.switch"
+            name="Switch Processor">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.clearCommand"
             name="Clear Log View">
       </command>
@@ -399,6 +404,17 @@
                   <equals value="true"/>
                </with>
                <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.handlers.SwitchProcessorHandler"
+            commandId="org.yamcs.studio.ui.processor.switch">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
             </and>

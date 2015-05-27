@@ -378,6 +378,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return commands;
     }
 
+    /**
+     * Returns the rest client associated with the current connection. Useful for dialogs and such,
+     * that just needs this sporadically.
+     */
+    public RestClient getRestClient() {
+        return restClient;
+    }
+
     public XtceDb getMdb() {
         return mdb;
     }
