@@ -34,7 +34,6 @@ import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
 import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.studio.core.CommandHistoryListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -225,19 +224,8 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     }
 
     private void subscribeToUpdates() {
-        webSocketClient.addCommandHistoryListener(new CommandHistoryListener() {
-            @Override
-            public void signalYamcsDisconnected() {
-            }
-
-            @Override
-            public void signalYamcsConnected() {
-            }
-
-            @Override
-            public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
-                Display.getDefault().asyncExec(() -> CommandHistoryView.this.processCommandHistoryEntry(cmdhistEntry));
-            }
+        webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
+            Display.getDefault().asyncExec(() -> CommandHistoryView.this.processCommandHistoryEntry(cmdhistEntry));
         });
     }
 

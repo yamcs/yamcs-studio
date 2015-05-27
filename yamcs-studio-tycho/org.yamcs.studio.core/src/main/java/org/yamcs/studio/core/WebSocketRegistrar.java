@@ -75,7 +75,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     public void onConnect() { // When the web socket was successfully established
         log.fine("WebSocket established. Notifying listeners");
         reportConnectionState();
-        cmdhistListeners.forEach(l -> l.signalYamcsConnected());
         requestSender.start(); // Go over pending subscription requests
     }
 
@@ -156,7 +155,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     public void onDisconnect() { // When the web socket connection state changed
         log.fine("WebSocket disconnected. Notifying listeners");
         reportConnectionState();
-        cmdhistListeners.forEach(l -> l.signalYamcsDisconnected());
         YamcsPlugin plugin = YamcsPlugin.getDefault();
         if (plugin != null) // This can be null then the workbench is closing
             plugin.notifyConnectionFailure();
