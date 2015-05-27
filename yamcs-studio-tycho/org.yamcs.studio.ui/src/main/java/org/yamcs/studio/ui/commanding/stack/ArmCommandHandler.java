@@ -16,7 +16,7 @@ import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.ui.handlers.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
@@ -51,7 +51,7 @@ public class ArmCommandHandler extends AbstractRestHandler {
                 Display.getDefault().asyncExec(() -> {
                     if (response instanceof RestExceptionMessage) {
                         RestExceptionMessage exc = (RestExceptionMessage) response;
-                        command.setState(State.REJECTED);
+                        command.setStackedState(StackedState.REJECTED);
                         MessageDialog.openError(activeShell, "Could not arm command", "Server message:\n\t" + exc.getMsg());
                         view.clearArm();
                         view.refreshState();
@@ -85,7 +85,7 @@ public class ArmCommandHandler extends AbstractRestHandler {
 
                         if (doArm) {
                             log.info(String.format("Command armed %s", command));
-                            command.setState(State.ARMED);
+                            command.setStackedState(StackedState.ARMED);
                             view.refreshState();
                         }
                     }
@@ -96,7 +96,7 @@ public class ArmCommandHandler extends AbstractRestHandler {
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Could not arm command", e);
                 Display.getDefault().asyncExec(() -> {
-                    command.setState(State.REJECTED);
+                    command.setStackedState(StackedState.REJECTED);
                     MessageDialog.openError(activeShell, "Could not arm command", e.getMessage());
                     view.clearArm();
                     view.refreshState();

@@ -169,14 +169,14 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         TableViewerColumn ptvColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
         ptvColumn.getColumn().setText(COL_PTV);
         ptvColumn.getColumn().addSelectionListener(getSelectionAdapter(ptvColumn.getColumn()));
-        ptvColumn.getColumn().setToolTipText("PTV");
+        ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
         ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) element;
                 switch (rec.getPTVInfo().getState()) {
                 case UNDEF:
-                    return null;
+                    return grayBubble;
                 case NA:
                 case OK:
                     return greenBubble;
@@ -186,7 +186,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
                     return redBubble;
                 default:
                     log.warning("Unexpected PTV state " + rec.getPTVInfo().getState());
-                    return null;
+                    return grayBubble;
                 }
             }
 
@@ -280,7 +280,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
                     @Override
                     public String getText(Object element) {
                         String text = ((CommandHistoryRecord) element).getTextForColumn(shortName);
-                        return (text != null) ? text : "-";
+                        return (text != null) ? text : null;
                     }
 
                     @Override

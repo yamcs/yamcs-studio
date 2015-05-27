@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
 /**
  * Used in plugin.xml core-expressions to keep track of stack state
@@ -45,7 +45,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
     public void refreshState(CommandStack stack) {
         remaining = stack.hasRemaining();
         if (remaining) {
-            armed = stack.getActiveCommand().getState() == State.ARMED;
+            armed = stack.getActiveCommand().getStackedState() == StackedState.ARMED;
         } else {
             armed = false;
         }
@@ -54,7 +54,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
 
         executionStarted = false;
         for (StackedCommand cmd : stack.getCommands()) {
-            if (cmd.getState() != State.UNARMED) {
+            if (cmd.getStackedState() != StackedState.UNARMED) {
                 executionStarted = true;
                 break;
             }

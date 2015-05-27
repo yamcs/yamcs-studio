@@ -13,7 +13,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.ui.handlers.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
@@ -43,11 +43,11 @@ public class IssueCommandHandler extends AbstractRestHandler {
                 Display.getDefault().asyncExec(() -> {
                     if (response instanceof RestExceptionMessage) {
                         RestExceptionMessage exc = (RestExceptionMessage) response;
-                        command.setState(State.REJECTED);
+                        command.setStackedState(StackedState.REJECTED);
                         MessageDialog.openError(activeShell, "Could not issue command", exc.getMsg());
                     } else {
                         log.info(String.format("Command issued. %s", req));
-                        command.setState(State.ISSUED);
+                        command.setStackedState(StackedState.ISSUED);
                         view.selectActiveCommand();
                     }
                     view.refreshState();
@@ -58,7 +58,7 @@ public class IssueCommandHandler extends AbstractRestHandler {
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Could not issue command", e);
                 Display.getDefault().asyncExec(() -> {
-                    command.setState(State.REJECTED);
+                    command.setStackedState(StackedState.REJECTED);
                     MessageDialog.openError(activeShell, "Could not issue command", e.getMessage());
                     view.refreshState();
                 });

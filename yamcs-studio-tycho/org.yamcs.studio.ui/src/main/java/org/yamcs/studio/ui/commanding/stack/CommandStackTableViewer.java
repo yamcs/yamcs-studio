@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.util.logging.Logger;
+
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -16,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
-import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.xtce.Comparison;
 import org.yamcs.xtce.Comparison.OperatorType;
 import org.yamcs.xtce.ComparisonList;
@@ -25,17 +27,20 @@ import org.yamcs.xtce.TransmissionConstraint;
 
 public class CommandStackTableViewer extends TableViewer {
 
+    private static final Logger log = Logger.getLogger(CommandStackTableViewer.class.getName());
+
     public static final String COL_ROW_ID = "#";
     public static final String COL_COMMAND = "Command";
     public static final String COL_SIGNIFICANCE = "Lvl";
     public static final String COL_CONSTRAINTS = "Constraints";
     public static final String COL_CONSTRAINTS_TIMEOUT = "T/O";
     public static final String COL_RELEASE = "Release";
-    public static final String COL_STATE = "State";
+    public static final String COL_STATE = "Stack State";
     public static final String COL_PTV = "PTV";
 
-    private Image greenBullet;
-    private Image redBullet;
+    private Image greenBubble;
+    private Image redBubble;
+    private Image grayBubble;
     private Image waitingImage;
 
     private CommandStackView styleProvider;
@@ -46,8 +51,9 @@ public class CommandStackTableViewer extends TableViewer {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        greenBullet = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/ok.png"));
-        redBullet = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/nok.png"));
+        greenBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/ok.png"));
+        redBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/nok.png"));
+        grayBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/undef.png"));
         waitingImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/waiting.png"));
 
         getTable().setHeaderVisible(true);
@@ -112,7 +118,7 @@ public class CommandStackTableViewer extends TableViewer {
             public String getToolTipText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
                 if (cmd.getMetaCommand().getDefaultSignificance() == null)
-                    return null;
+                    return super.getToolTipText(element);
                 return cmd.getMetaCommand().getDefaultSignificance().getReasonForWarning();
             }
         });
@@ -128,7 +134,7 @@ public class CommandStackTableViewer extends TableViewer {
                 StringBuilder buf = new StringBuilder();
                 for (TransmissionConstraint constraint : cmd.getMetaCommand().getTransmissionConstraintList())
                     appendConstraint(constraint.getMatchCriteria(), buf);
-                return buf.toString();
+                return buf.length() != 0 ? buf.toString() : "-";
             }
         });
         tcl.setColumnData(constraintsColumn.getColumn(), new ColumnPixelData(250));
@@ -140,11 +146,11 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public String getText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                long timeout = 0;
+                long timeout = -1;
                 for (TransmissionConstraint constraint : cmd.getMetaCommand().getTransmissionConstraintList())
                     timeout = Math.max(timeout, constraint.getTimeout());
 
-                return (timeout > 0) ? Long.toString(timeout) + " ms" : null;
+                return (timeout >= 0) ? Long.toString(timeout) + " ms" : "-";
             }
         });
         tcl.setColumnData(constraintsTimeOutColumn.getColumn(), new ColumnPixelData(50));
@@ -160,6 +166,40 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(releaseColumn.getColumn(), new ColumnPixelData(80));
 
+        TableViewerColumn ptvColumn = new TableViewerColumn(this, SWT.CENTER);
+        ptvColumn.getColumn().setText(COL_PTV);
+        ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
+        ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
+            @Override
+            public Image getImage(Object element) {
+                StackedCommand cmd = (StackedCommand) element;
+                switch (cmd.getPTVInfo().getState()) {
+                case UNDEF:
+                    return grayBubble;
+                case NA:
+                case OK:
+                    return greenBubble;
+                case PENDING:
+                    return waitingImage;
+                case NOK:
+                    return redBubble;
+                default:
+                    log.warning("Unexpected PTV state " + cmd.getPTVInfo().getState());
+                    return grayBubble;
+                }
+            }
+
+            @Override
+            public String getToolTipText(Object element) {
+                StackedCommand cmd = (StackedCommand) element;
+                if (cmd.getPTVInfo().getFailureMessage() != null)
+                    return cmd.getPTVInfo().getFailureMessage();
+                else
+                    return super.getToolTipText(element);
+            }
+        });
+        tcl.setColumnData(ptvColumn.getColumn(), new ColumnPixelData(50));
+
         TableViewerColumn stateColumn = new TableViewerColumn(this, SWT.CENTER);
         stateColumn.getColumn().setText(COL_STATE);
         stateColumn.getColumn().setToolTipText("Stack State");
@@ -167,7 +207,7 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public String getText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                return cmd.getState().getText();
+                return cmd.getStackedState().getText();
             }
 
             @Override
@@ -175,9 +215,9 @@ public class CommandStackTableViewer extends TableViewer {
                 StackedCommand cmd = (StackedCommand) element;
                 if (cmd.isArmed())
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_YELLOW);
-                else if (cmd.getState() == State.ISSUED)
+                else if (cmd.getStackedState() == StackedState.ISSUED)
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_GREEN);
-                else if (cmd.getState() == State.REJECTED)
+                else if (cmd.getStackedState() == StackedState.REJECTED)
                     return styleProvider.getErrorBackgroundColor();
 
                 return super.getBackground(element);
@@ -186,24 +226,13 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public Color getForeground(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getState() == State.REJECTED)
+                if (cmd.getStackedState() == StackedState.REJECTED)
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_RED);
 
                 return super.getForeground(element);
             }
         });
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
-
-        TableViewerColumn ptvColumn = new TableViewerColumn(this, SWT.CENTER);
-        ptvColumn.getColumn().setText(COL_PTV);
-        ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
-        ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
-            @Override
-            public Image getImage(Object element) {
-                return null;
-            }
-        });
-        tcl.setColumnData(ptvColumn.getColumn(), new ColumnPixelData(50));
     }
 
     public void appendConstraint(MatchCriteria criteria, StringBuilder buf) {

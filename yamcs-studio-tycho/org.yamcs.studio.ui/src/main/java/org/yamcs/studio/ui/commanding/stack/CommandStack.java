@@ -3,7 +3,7 @@ package org.yamcs.studio.ui.commanding.stack;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
 /**
  * Client-side structure for keeping track of an ordered set of commands with various options and
@@ -40,9 +40,6 @@ public class CommandStack {
         return true;
     }
 
-    public void checkForErrors() {
-    }
-
     public int indexOf(StackedCommand command) {
         return commands.indexOf(command);
     }
@@ -58,7 +55,7 @@ public class CommandStack {
 
     public StackedCommand getActiveCommand() {
         for (StackedCommand command : commands)
-            if (command.getState() != State.ISSUED && command.getState() != State.SKIPPED)
+            if (command.getStackedState() != StackedState.ISSUED && command.getStackedState() != StackedState.SKIPPED)
                 return command;
 
         return null;
@@ -71,11 +68,11 @@ public class CommandStack {
     public void disarmArmed() {
         for (StackedCommand command : commands)
             if (command.isArmed())
-                command.setState(State.UNARMED);
+                command.setStackedState(StackedState.UNARMED);
     }
 
     public void resetExecutionState() {
-        commands.forEach(c -> c.setState(State.UNARMED));
+        commands.forEach(c -> c.resetExecutionState());
     }
 
     public boolean isEmpty() {

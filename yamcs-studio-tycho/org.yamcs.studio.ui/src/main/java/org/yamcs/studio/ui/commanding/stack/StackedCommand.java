@@ -13,6 +13,7 @@ import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.ui.commanding.PTVInfo;
 import org.yamcs.xtce.Argument;
 import org.yamcs.xtce.ArgumentAssignment;
 import org.yamcs.xtce.MetaCommand;
@@ -24,7 +25,7 @@ import org.yamcs.xtce.MetaCommand;
  */
 public class StackedCommand {
 
-    public enum State {
+    public enum StackedState {
         UNARMED("Unarmed"),
         ARMED("Armed"),
         ISSUED("Issued"),
@@ -33,7 +34,7 @@ public class StackedCommand {
 
         private String text;
 
-        private State(String text) {
+        private StackedState(String text) {
             this.text = text;
         }
 
@@ -45,14 +46,23 @@ public class StackedCommand {
     private MetaCommand meta;
     private Map<Argument, String> assignments = new HashMap<>();
 
-    private final int clientId = YamcsPlugin.getNextCommandClientId();
+    // Increases every attempt
+    private int clientId = -1;
 
-    // Execution State (should eventually probably refactor clientId into this)
-    private State state = State.UNARMED;
+    private StackedState state = StackedState.UNARMED;
+
+    private PTVInfo ptvInfo = new PTVInfo();
 
     public boolean matches(CommandId commandId) {
+        // FIXME add user too
         return clientId == commandId.getSequenceNumber()
                 && commandId.getOrigin().equals(YamcsPlugin.getDefault().getOrigin());
+    }
+
+    public void resetExecutionState() {
+        state = StackedState.UNARMED;
+        ptvInfo = new PTVInfo();
+        clientId = -1;
     }
 
     public StyledString toStyledString(CommandStackView styleProvider) {
@@ -81,15 +91,15 @@ public class StackedCommand {
     }
 
     public boolean isArmed() {
-        return state == State.ARMED;
+        return state == StackedState.ARMED;
     }
 
     /**
-     * Generates a REST-representation. The sequence number is unique to this instance, and is
-     * re-used when the user reissues. A unique execution as it appears in the Command History
-     * combines the sequence number with our host.
+     * Generates a REST-representation. The sequence number is increased everytime this method is
+     * called, and therefore represents an 'issue attempt'.
      */
     public RestCommandType.Builder toRestCommandType() {
+        clientId = YamcsPlugin.getNextCommandClientId();
         RestCommandType.Builder req = RestCommandType.newBuilder();
         req.setId(NamedObjectId.newBuilder()
                 .setNamespace(YamcsPlugin.getDefault().getMdbNamespace())
@@ -111,12 +121,16 @@ public class StackedCommand {
         return meta;
     }
 
-    public void setState(State state) {
+    public void setStackedState(StackedState state) {
         this.state = state;
     }
 
-    public State getState() {
+    public StackedState getStackedState() {
         return state;
+    }
+
+    public PTVInfo getPTVInfo() {
+        return ptvInfo;
     }
 
     public void addAssignment(Argument arg, String value) {

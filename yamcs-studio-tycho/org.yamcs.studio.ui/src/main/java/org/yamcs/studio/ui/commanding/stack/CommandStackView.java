@@ -31,7 +31,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.studio.ui.ConnectionStateProvider;
 import org.yamcs.studio.ui.RCPUtils;
-import org.yamcs.studio.ui.commanding.stack.StackedCommand.State;
+import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
 public class CommandStackView extends ViewPart {
 
@@ -119,7 +119,7 @@ public class CommandStackView extends ViewPart {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
                 StackedCommand cmd = (StackedCommand) sel.getFirstElement();
-                if (cmd.getState() != State.ISSUED && cmd.getState() != State.SKIPPED) {
+                if (cmd.getStackedState() != StackedState.ISSUED && cmd.getStackedState() != StackedState.SKIPPED) {
                     EditStackedCommandDialog dialog = new EditStackedCommandDialog(parent.getShell(), cmd);
                     if (dialog.open() == Window.OK) {
                         refreshState();
@@ -181,7 +181,7 @@ public class CommandStackView extends ViewPart {
             } else {
                 CommandStack stack = CommandStack.getInstance();
                 if (stack.getActiveCommand() != null && stack.getActiveCommand().isArmed()) {
-                    stack.getActiveCommand().setState(State.UNARMED);
+                    stack.getActiveCommand().setStackedState(StackedState.UNARMED);
                 }
             }
         });
@@ -277,45 +277,45 @@ public class CommandStackView extends ViewPart {
     }
 
     public Styler getIdentifierStyler(StackedCommand cmd) {
-        if (cmd.getState() == State.ISSUED)
+        if (cmd.getStackedState() == StackedState.ISSUED)
             return issuedStyler;
-        else if (cmd.getState() == State.SKIPPED)
+        else if (cmd.getStackedState() == StackedState.SKIPPED)
             return skippedStyler;
 
         return null;
     }
 
     public Styler getBracketStyler(StackedCommand cmd) {
-        if (cmd.getState() == State.ISSUED)
+        if (cmd.getStackedState() == StackedState.ISSUED)
             return issuedStyler;
-        else if (cmd.getState() == State.SKIPPED)
+        else if (cmd.getStackedState() == StackedState.SKIPPED)
             return skippedStyler;
 
         return bracketStyler;
     }
 
     public Styler getArgNameStyler(StackedCommand cmd) {
-        if (cmd.getState() == State.ISSUED)
+        if (cmd.getStackedState() == StackedState.ISSUED)
             return issuedStyler;
-        else if (cmd.getState() == State.SKIPPED)
+        else if (cmd.getStackedState() == StackedState.SKIPPED)
             return skippedStyler;
 
         return argNameStyler;
     }
 
     public Styler getNumberStyler(StackedCommand cmd) {
-        if (cmd.getState() == State.ISSUED)
+        if (cmd.getStackedState() == StackedState.ISSUED)
             return issuedStyler;
-        else if (cmd.getState() == State.SKIPPED)
+        else if (cmd.getStackedState() == StackedState.SKIPPED)
             return skippedStyler;
 
         return numberStyler;
     }
 
     public Styler getErrorStyler(StackedCommand cmd) {
-        if (cmd.getState() == State.ISSUED)
+        if (cmd.getStackedState() == StackedState.ISSUED)
             return issuedStyler;
-        else if (cmd.getState() == State.SKIPPED)
+        else if (cmd.getStackedState() == StackedState.SKIPPED)
             return skippedStyler;
 
         return errorStyler;
