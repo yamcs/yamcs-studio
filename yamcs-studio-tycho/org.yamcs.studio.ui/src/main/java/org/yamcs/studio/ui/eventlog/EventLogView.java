@@ -152,6 +152,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
 
     @Override
     public void setFocus() {
+        tableViewer.getTable().setFocus();
     }
 
     @Override

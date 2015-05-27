@@ -323,7 +323,7 @@ public class CommandStackView extends ViewPart {
 
     public void addTelecommand(StackedCommand command) {
         commandTableViewer.addTelecommand(command);
-        refreshState();
+        selectActiveCommand();
     }
 
     /**
@@ -373,6 +373,7 @@ public class CommandStackView extends ViewPart {
 
     @Override
     public void setFocus() {
+        commandTableViewer.getTable().setFocus();
     }
 
     @Override

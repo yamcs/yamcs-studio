@@ -329,6 +329,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
 
     @Override
     public void setFocus() {
+        tableViewer.getTable().setFocus();
     }
 
     @Override
