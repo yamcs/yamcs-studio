@@ -162,12 +162,12 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // Need to improve this code. Currently doesn't support changing connections
         //boolean doSetup = (this.clientInfo == null);
         this.clientInfo = clientInfo;
-            loadParameters();
-            loadCommands();
+        loadParameters();
+        loadCommands();
 
-            studioConnectionListeners.forEach(l -> {
+        studioConnectionListeners.forEach(l -> {
             l.onStudioConnect(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
-            });
+        });
         setConnectionStatus(ConnectionStatus.Connected);
     }
 

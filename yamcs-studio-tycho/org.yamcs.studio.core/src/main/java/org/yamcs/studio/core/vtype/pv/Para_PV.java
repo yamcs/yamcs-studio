@@ -41,13 +41,15 @@ public class Para_PV extends PV implements YamcsPVReader, StudioConnectionListen
     public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient)
     {
         this.webSocketClient = webSocketClient;
-        this.webSocketClient.register(this);
+        if (webSocketClient != null)
+            this.webSocketClient.register(this);
     }
 
     @Override
     public void onStudioDisconnect()
     {
-        webSocketClient.unregister(this);
+        if (webSocketClient != null)
+            webSocketClient.unregister(this);
     }
 
     @Override
