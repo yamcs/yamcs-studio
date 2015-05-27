@@ -130,6 +130,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         log.fine("Refreshing all pv readers");
         for (RestParameter p : parameters)
             availableParametersByName.put(p.getId().getName(), p);
+
         pvReadersByName.forEach((name, pvReader) -> {
             RestParameter parameter = availableParametersByName.get(name);
             log.finer(String.format("Signaling %s --> %s", name, parameter));

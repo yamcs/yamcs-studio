@@ -16,10 +16,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleListener;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
@@ -45,7 +42,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     // The shared instance
     private static YamcsPlugin plugin;
-    private BundleListener bundleListener;
 
     private YProcessorControlClient processorControlClient;
     private RestClient restClient;
@@ -73,16 +69,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         plugin = this;
         TimeEncoding.setUp();
         processorControlClient = new YProcessorControlClient();
-        // Only connect once bundle has been fully started
-        bundleListener = event -> {
-            if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STARTED) {
-                // Bundle may have been shut down between the time this event was queued and now
-                if (getBundle().getState() == Bundle.ACTIVE) {
-                    //  setWebConnections(currentCredentials);
-                }
-            }
-        };
-        context.addBundleListener(bundleListener);
     }
 
     public enum ConnectionStatus
@@ -370,8 +356,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         try {
-            if (bundleListener != null)
-                context.removeBundleListener(bundleListener);
             plugin = null;
             if (processorControlClient != null)
                 processorControlClient.close();
