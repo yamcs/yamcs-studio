@@ -3,11 +3,23 @@ package org.yamcs.studio.ui.handlers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.csstudio.opibuilder.runmode.IOPIRuntime;
+import org.csstudio.opibuilder.runmode.OPIView;
+import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -33,6 +45,8 @@ public class SwitchProcessorHandler extends AbstractRestHandler {
         if (dialog.open() == Window.OK) {
             ProcessorInfo info = dialog.getProcessorInfo();
             if (info != null) {
+                resetDisplays();
+
                 ProcessorManagementRequest req = ProcessorManagementRequest.newBuilder()
                         .setOperation(Operation.CONNECT_TO_PROCESSOR)
                         .setInstance(info.getInstance())
@@ -45,7 +59,7 @@ public class SwitchProcessorHandler extends AbstractRestHandler {
                             log.log(Level.SEVERE, "Could not switch processor. " + responseMsg);
                         } else {
                             // Would prefer to get updates to this from the web socket client
-                            Display.getCurrent().asyncExec(() -> {
+                            Display.getDefault().asyncExec(() -> {
                                 YamcsPlugin.getDefault().refreshClientInfo();
                             });
                         }
@@ -60,5 +74,32 @@ public class SwitchProcessorHandler extends AbstractRestHandler {
         }
 
         return null;
+    }
+
+    private void resetDisplays() {
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
+            for (IWorkbenchPage page : window.getPages()) {
+                for (IViewReference reference : page.getViewReferences()) {
+                    IViewPart viewPart = reference.getView(false);
+                    if (viewPart instanceof IOPIRuntime)
+                        refreshDisplay((IOPIRuntime) viewPart);
+                }
+                for (IEditorReference reference : page.getEditorReferences()) {
+                    IEditorPart editorPart = reference.getEditor(false);
+                    if (editorPart instanceof IOPIRuntime)
+                        refreshDisplay((IOPIRuntime) editorPart);
+                }
+            }
+        }
+    }
+
+    private void refreshDisplay(IOPIRuntime opiRuntime) {
+        try {
+            OPIView.ignoreMemento();
+            opiRuntime.setOPIInput(opiRuntime.getOPIInput());
+        } catch (PartInitException e) {
+            ErrorHandlerUtil.handleError("Failed to refresh OPI", e);
+        }
     }
 }
