@@ -54,8 +54,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
 
     public static final String COL_COMMAND = "Command";
     public static final String COL_SRC_ID = "Src.ID";
-    public static final String COL_SRC_HOST = "Src.Host";
-    public static final String COL_USER = "User";
+    public static final String COL_SRC = "Src";
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
@@ -120,6 +119,18 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     }
 
     private void addFixedColumns() {
+        TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        gentimeColumn.getColumn().setText(COL_T);
+        gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
+        gentimeColumn.getColumn().setToolTipText("Generation Time");
+        gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((CommandHistoryRecord) element).getGenerationTime();
+            }
+        });
+        layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
+
         TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
         nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
@@ -130,6 +141,18 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
             }
         });
         layoutDataByColumn.put(nameColumn.getColumn(), new ColumnWeightData(200));
+
+        TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        originColumn.getColumn().setText(COL_SRC);
+        originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
+        originColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                return rec.getUsername() + "@" + rec.getOrigin();
+            }
+        });
+        layoutDataByColumn.put(originColumn.getColumn(), new ColumnPixelData(200));
 
         TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
         seqIdColumn.getColumn().setText(COL_SRC_ID);
@@ -142,40 +165,6 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
             }
         });
         layoutDataByColumn.put(seqIdColumn.getColumn(), new ColumnPixelData(50));
-
-        TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        originColumn.getColumn().setText(COL_SRC_HOST);
-        originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
-        originColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((CommandHistoryRecord) element).getOrigin();
-            }
-        });
-        layoutDataByColumn.put(originColumn.getColumn(), new ColumnWeightData(70));
-
-        TableViewerColumn userColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        userColumn.getColumn().setText(COL_USER);
-        userColumn.getColumn().addSelectionListener(getSelectionAdapter(userColumn.getColumn()));
-        userColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((CommandHistoryRecord) element).getUsername();
-            }
-        });
-        layoutDataByColumn.put(userColumn.getColumn(), new ColumnWeightData(70));
-
-        TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        gentimeColumn.getColumn().setText(COL_T);
-        gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
-        gentimeColumn.getColumn().setToolTipText("Generation Time");
-        gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return ((CommandHistoryRecord) element).getGenerationTime();
-            }
-        });
-        layoutDataByColumn.put(gentimeColumn.getColumn(), new ColumnPixelData(150));
 
         TableViewerColumn ptvColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
         ptvColumn.getColumn().setText(COL_PTV);

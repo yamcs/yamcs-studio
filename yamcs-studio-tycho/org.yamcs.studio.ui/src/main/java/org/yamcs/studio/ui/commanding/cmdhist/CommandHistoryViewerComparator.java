@@ -45,11 +45,10 @@ public class CommandHistoryViewerComparator extends ViewerComparator {
         case CommandHistoryView.COL_SRC_ID:
             rc = INTEGER_COMPARATOR.compare(r1.getSequenceNumber(), r2.getSequenceNumber());
             break;
-        case CommandHistoryView.COL_SRC_HOST:
+        case CommandHistoryView.COL_SRC:
             rc = STRING_COMPARATOR.compare(r1.getOrigin(), r2.getOrigin());
-            break;
-        case CommandHistoryView.COL_USER:
-            rc = STRING_COMPARATOR.compare(r1.getUsername(), r2.getUsername());
+            if (rc == 0)
+                rc = STRING_COMPARATOR.compare(r1.getUsername(), r2.getUsername());
             break;
         case CommandHistoryView.COL_SEQ_ID:
             rc = STRING_COMPARATOR.compare(r1.getFinalSequenceCount(), r2.getFinalSequenceCount());
