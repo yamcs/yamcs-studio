@@ -38,7 +38,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
 
     @Override
     public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-        log.info("onStudioConnect called on " + getChannelName());
+        log.fine("onStudioConnect called on " + getChannelName());
         this.webSocketClient = webSocketClient;
         connect();
     }

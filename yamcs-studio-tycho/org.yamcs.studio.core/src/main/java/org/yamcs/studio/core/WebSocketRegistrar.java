@@ -1,9 +1,10 @@
 package org.yamcs.studio.core;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -41,8 +42,8 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
     private Map<String, YamcsPVReader> pvReadersByName = new LinkedHashMap<>();
     private Map<String, RestParameter> availableParametersByName = new LinkedHashMap<>();
-    private List<CommandHistoryListener> cmdhistListeners = new ArrayList<>();
-    private List<ClientInfoListener> clientInfoListeners = new ArrayList<>();
+    private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
+    private Set<ClientInfoListener> clientInfoListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
 
     private WebSocketClient wsclient;
@@ -69,6 +70,8 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         wsclient.connect();
         // Needs improvement. Get our assigned client-id, to use later in rest-replay calls
         pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
+        // Always have this subscription running
+        pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
     }
 
     @Override
@@ -139,7 +142,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         cmdhistListeners.add(listener);
-        pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe")); // TODO don't need to do this for every listener
     }
 
     public synchronized void addClientInfoListener(ClientInfoListener listener) {
@@ -197,6 +199,8 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onCommandHistoryData(CommandHistoryEntry cmdhistEntry) {
-        cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
+        synchronized (this) {
+            cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
+        }
     }
 }
