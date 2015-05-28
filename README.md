@@ -6,7 +6,10 @@ Yamcs Studio is a version of CS-Studio packaged and configured to suit [Yamcs â€
 * Autocompletion on parameter names
 * Browsing the Yamcs Archive
 * Viewing the Yamcs Event Log
-* Basic support for sending telecommands to Yamcs Server
+* Assembling a stack of telecommands for issuing to Yamcs Server
+* Viewing command history accross a Yamcs instance
+* Multiple-node support with automatic failover when a Yamcs instance goes down
+* LOS/AOS TM indication
 
 
 See the [online documentation](https://github.com/yamcs/yamcs-studio/wiki).
