@@ -1,6 +1,5 @@
 package org.yamcs.studio.ui.application;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,16 +7,11 @@ import java.util.logging.Logger;
 import org.csstudio.logging.LogConfigurator;
 import org.csstudio.platform.workspace.RelaunchConstants;
 import org.csstudio.startup.application.OpenDocumentEventProcessor;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.services.IEvaluationService;
 
 public class Workbench extends org.csstudio.utility.product.Workbench {
 
@@ -67,19 +61,5 @@ public class Workbench extends org.csstudio.utility.product.Workbench {
         }
         // RESTART without changes
         return IApplication.EXIT_RESTART;
-    }
-
-    private void requestLoggin() {
-        // popup login
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
-        IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
-        try {
-            Command cmd = commandService.getCommand("org.csstudio.security.login");
-            cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
     }
 }
