@@ -20,8 +20,6 @@ See http://www.yamcs.org
 openFile
       </programArgs>
       <vmArgs>-Xmx1024m
--Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
--Dorg.apache.commons.logging.simplelog.defaultlog=fatal
 -Dpython.cachedir.skip=true
 -Declipse.p2.unsignedPolicy=allow
       </vmArgs>
