@@ -65,9 +65,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     @Override
     public void onStudioDisconnect() {
         disconnect(); // Unregister PV
-        if (restClient != null)
-            restClient.shutdown();
-
         webSocketClient = null;
         restClient = null;
     }

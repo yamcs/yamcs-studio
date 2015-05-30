@@ -57,9 +57,6 @@ public class AddToStackDialog extends TitleAreaDialog implements StudioConnectio
 
     @Override
     public void onStudioDisconnect() {
-        if (restClient == null)
-            return;
-        restClient.shutdown();
         restClient = null;
     }
 

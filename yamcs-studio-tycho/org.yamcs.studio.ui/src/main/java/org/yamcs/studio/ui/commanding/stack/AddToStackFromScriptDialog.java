@@ -76,9 +76,6 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog implements Studi
 
     @Override
     public void onStudioDisconnect() {
-        if (restClient == null)
-            return;
-        restClient.shutdown();
         restClient = null;
     }
 

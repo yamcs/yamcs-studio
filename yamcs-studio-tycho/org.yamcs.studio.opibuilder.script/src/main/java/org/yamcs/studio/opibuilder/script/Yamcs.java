@@ -49,9 +49,6 @@ public class Yamcs implements StudioConnectionListener {
 
     @Override
     public void onStudioDisconnect() {
-        if (restClient == null)
-            return;
-        restClient.shutdown();
         restClient = null;
     }
 

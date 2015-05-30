@@ -31,9 +31,6 @@ public abstract class AbstractRestHandler extends AbstractHandler implements Stu
 
     @Override
     public void onStudioDisconnect() {
-        if (restClient == null)
-            return;
-        restClient.shutdown();
         restClient = null;
     }
 

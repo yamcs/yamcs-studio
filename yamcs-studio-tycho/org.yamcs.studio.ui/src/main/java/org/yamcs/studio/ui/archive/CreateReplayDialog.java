@@ -97,9 +97,6 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
 
     @Override
     public void onStudioDisconnect() {
-        if (restClient == null)
-            return;
-        restClient.shutdown();
         restClient = null;
     }
 
