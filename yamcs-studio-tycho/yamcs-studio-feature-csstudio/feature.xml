@@ -12,13 +12,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.csstudio.platform.libs.epics.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.platform.libs.jms"
          download-size="0"
          install-size="0"
@@ -160,13 +153,6 @@
 
    <plugin
          id="org.csstudio.utility.product"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.navigator.applaunch"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -432,13 +418,6 @@
          unpack="false"/>
 
    <plugin
-         id="javaewah"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.utility.file"
          download-size="0"
          install-size="0"
@@ -600,13 +579,6 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.jdom"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
          unpack="false"/>
 
    <plugin
