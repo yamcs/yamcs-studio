@@ -18,9 +18,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
@@ -40,23 +44,32 @@ public class AddToStackWizardPage1 extends WizardPage {
 
     public AddToStackWizardPage1(StackedCommand command) {
         super("Choose a command");
-        setTitle("Choose a command");
         this.command = command;
+        setTitle("Choose a command");
         setPageComplete(false);
     }
 
     @Override
     public void createControl(Composite parent) {
-        Composite tableWrapper = new Composite(parent, SWT.NONE);
-        setControl(tableWrapper);
+        Composite composite = new Composite(parent, SWT.NONE);
+        setControl(composite);
 
-        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), tableWrapper);
+        GridLayout gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        composite.setLayout(gl);
+
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), composite);
         level1Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level1s.png"));
         level2Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level2s.png"));
         level3Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level3s.png"));
         level4Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level4s.png"));
         level5Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level5s.png"));
 
+        Text searchbox = new Text(composite, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
+        searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        Composite tableWrapper = new Composite(composite, SWT.NONE);
         TableColumnLayout tcl = new TableColumnLayout();
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableWrapper.setLayout(tcl);
@@ -96,13 +109,18 @@ public class AddToStackWizardPage1 extends WizardPage {
             @Override
             public String getText(Object element) {
                 MetaCommand cmd = (MetaCommand) element;
-                return cmd.getName();
+                return cmd.getOpsName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
 
         commandsTable.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            if (sel.isEmpty()) {
+                setMessage(null);
+                return;
+            }
+
             MetaCommand cmd = (MetaCommand) sel.getFirstElement();
             Significance significance = cmd.getDefaultSignificance();
             if (significance != null) {
@@ -139,6 +157,16 @@ public class AddToStackWizardPage1 extends WizardPage {
                 MetaCommand c1 = (MetaCommand) o1;
                 MetaCommand c2 = (MetaCommand) o2;
                 return c1.getName().compareTo(c2.getName());
+            }
+        });
+
+        MetaCommandViewerFilter filter = new MetaCommandViewerFilter();
+        commandsTable.addFilter(filter);
+        searchbox.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                filter.setSearchTerm(searchbox.getText());
+                commandsTable.refresh();
             }
         });
     }
