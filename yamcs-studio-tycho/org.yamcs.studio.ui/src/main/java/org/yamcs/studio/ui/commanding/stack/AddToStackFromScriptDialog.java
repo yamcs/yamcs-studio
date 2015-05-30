@@ -101,7 +101,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog implements Studi
         commandCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         for (MetaCommand command : commands) {
             if (!command.isAbstract()) {
-                commandCombo.add(command.getOpsName());
+                commandCombo.add(command.getQualifiedName());
             }
         }
 
@@ -114,9 +114,9 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog implements Studi
         commandCombo.addListener(SWT.Selection, event -> {
             for (MetaCommand command : commands) {
                 String selected = ((Combo) event.widget).getText();
-                if (!command.isAbstract() && command.getOpsName().equals(selected)) {
+                if (!command.isAbstract() && command.getQualifiedName().equals(selected)) {
 
-                    StringBuilder buf = new StringBuilder(command.getOpsName());
+                    StringBuilder buf = new StringBuilder(command.getQualifiedName());
                     if (command.getArgumentList() != null) {
                         buf.append("(\n");
                         for (Argument arg : command.getArgumentList()) {

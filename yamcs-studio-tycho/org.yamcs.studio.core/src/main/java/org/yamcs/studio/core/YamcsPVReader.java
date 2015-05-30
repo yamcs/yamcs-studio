@@ -8,28 +8,13 @@ public interface YamcsPVReader {
 
     void reportException(Exception e);
 
-    String getPVName();
+    NamedObjectId getId();
 
     void processParameterValue(ParameterValue pval);
 
     void processConnectionInfo(PVConnectionInfo info);
 
-    default String getMdbNamespace() {
-        if (getPVName().charAt(0) == '/')
-            return null;
-        else
-            return YamcsPlugin.getDefault().getMdbNamespace();
-    }
-
     default NamedObjectList toNamedObjectList() {
-        return NamedObjectList.newBuilder().addList(toNamedObjectId()).build();
-    }
-
-    default NamedObjectId toNamedObjectId() {
-        NamedObjectId.Builder builder = NamedObjectId.newBuilder().setName(getPVName());
-        String mdbNamespace = getMdbNamespace();
-        if (mdbNamespace != null)
-            builder.setNamespace(mdbNamespace);
-        return builder.build();
+        return NamedObjectList.newBuilder().addList(getId()).build();
     }
 }

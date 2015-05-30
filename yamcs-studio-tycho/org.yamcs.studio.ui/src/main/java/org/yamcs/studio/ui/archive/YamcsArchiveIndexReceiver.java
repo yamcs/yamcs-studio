@@ -50,7 +50,7 @@ public class YamcsArchiveIndexReceiver implements ConnectionListener, ArchiveInd
                         request.setStart(interval.getStart());
                     if (interval.hasStop())
                         request.setStop(interval.getStop());
-                    request.setDefaultNamespace("MDB:OPS Name").setSendAllPp(true).setSendAllTm(true).setSendAllCmd(true);
+                    request.setSendAllPp(true).setSendAllTm(true).setSendAllCmd(true);
                     request.setSendCompletenessIndex(true);
                     //       yamcsClient.executeRpc(Protocol.getYarchIndexControlAddress(instance), "getIndex", request.build(), null);
                     yamcsClient.sendRequest(Protocol.getYarchIndexControlAddress(instance), "getIndex", request.build());

@@ -798,25 +798,25 @@ $(pv_value)</tooltip>
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace0PV("SIMULATOR_Theta")</pv>
+          <pv trig="true">loc://trace0PV("/YSS/SIMULATOR/Theta")</pv>
         </rule>
         <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace0PV("SIMULATOR_Theta")</pv>
+          <pv trig="true">loc://trace0PV("/YSS/SIMULATOR/Theta")</pv>
         </rule>
         <rule name="change trace1" prop_id="trace_1_y_pv" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace1PV("SIMULATOR_Psi")</pv>
+          <pv trig="true">loc://trace1PV("/YSS/SIMULATOR/Psi")</pv>
         </rule>
         <rule name="Update Legend1" prop_id="trace_1_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace1PV("SIMULATOR_Psi")</pv>
+          <pv trig="true">loc://trace1PV("/YSS/SIMULATOR/Psi")</pv>
         </rule>
       </rules>
       <axis_1_visible>true</axis_1_visible>
@@ -903,7 +903,7 @@ $(pv_value)</tooltip>
       </scale_options>
       <items_from_pv>false</items_from_pv>
       <visible>true</visible>
-      <pv_name>loc://trace0PV("SIMULATOR_Theta")</pv_name>
+      <pv_name>loc://trace0PV("/YSS/SIMULATOR/Theta")</pv_name>
       <border_color>
         <color red="0" green="128" blue="255" />
       </border_color>
@@ -921,9 +921,9 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>SIMULATOR_Theta</s>
-        <s>SIMULATOR_Phi</s>
-        <s>SIMULATOR_Psi</s>
+        <s>/YSS/SIMULATOR/Theta</s>
+        <s>/YSS/SIMULATOR/Phi</s>
+        <s>/YSS/SIMULATOR/Psi</s>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
       </items>
       <font>
@@ -992,7 +992,7 @@ $(pv_value)</tooltip>
       </scale_options>
       <items_from_pv>false</items_from_pv>
       <visible>true</visible>
-      <pv_name>loc://trace1PV("SIMULATOR_Psi")</pv_name>
+      <pv_name>loc://trace1PV("/YSS/SIMULATOR/Psi")</pv_name>
       <border_color>
         <color red="0" green="128" blue="255" />
       </border_color>
@@ -1010,9 +1010,9 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>SIMULATOR_Theta</s>
-        <s>SIMULATOR_Phi</s>
-        <s>SIMULATOR_Psi</s>
+        <s>/YSS/SIMULATOR/Theta</s>
+        <s>/YSS/SIMULATOR/Phi</s>
+        <s>/YSS/SIMULATOR/Psi</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -1146,12 +1146,12 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>SIMULATOR_Theta</s>
-        <s>SIMULATOR_Phi</s>
-        <s>SIMULATOR_Psi</s>
-        <s>SIMULATOR_TAS</s>
-        <s>SIMULATOR_CAS</s>
-        <s>SIMULATOR_BusVoltage</s>
+        <s>/YSS/SIMULATOR/Theta</s>
+        <s>/YSS/SIMULATOR/Phi</s>
+        <s>/YSS/SIMULATOR/Psi</s>
+        <s>/YSS/SIMULATOR/TAS</s>
+        <s>/YSS/SIMULATOR/CAS</s>
+        <s>/YSS/SIMULATOR/BusVoltage</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -1237,9 +1237,9 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>SIMULATOR_TAS</s>
-        <s>SIMULATOR_CAS</s>
-        <s>SIMULATOR_BusCurrent</s>
+        <s>/YSS/SIMULATOR/TAS</s>
+        <s>/YSS/SIMULATOR/CAS</s>
+        <s>/YSS/SIMULATOR/BusCurrent</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -2022,11 +2022,11 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>SIMULATOR_Theta</s>
-        <s>SIMULATOR_Phi</s>
-        <s>SIMULATOR_Psi</s>
+        <s>/YSS/SIMULATOR/Theta</s>
+        <s>/YSS/SIMULATOR/Phi</s>
+        <s>/YSS/SIMULATOR/Psi</s>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
-        <s>SIMULATOR_BusVoltage</s>
+        <s>/YSS/SIMULATOR/BusVoltage</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -2114,7 +2114,7 @@ $(pv_value)</tooltip>
       <items>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
         <s>sim://ramp(0,50,-0.2,1)</s>
-        <s>SIMULATOR_BusCurrent</s>
+        <s>/YSS/SIMULATOR/BusCurrent</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -2276,7 +2276,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>SIMULATOR_BusVoltage</pv_name>
+      <pv_name>/YSS/SIMULATOR/BusVoltage</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2448,7 +2448,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>SIMULATOR_BusCurrent</pv_name>
+      <pv_name>/YSS/SIMULATOR/BusCurrent</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2743,7 +2743,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>SIMULATOR_BatteryVoltage1</pv_name>
+      <pv_name>/YSS/SIMULATOR/BatteryVoltage1</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -2915,7 +2915,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>SIMULATOR_BatteryTemperature1</pv_name>
+      <pv_name>/YSS/SIMULATOR/BatteryTemperature1</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -3170,7 +3170,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>SIMULATOR_BatteryVoltage2</pv_name>
+      <pv_name>/YSS/SIMULATOR/BatteryVoltage2</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -3342,7 +3342,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <visible>true</visible>
-      <pv_name>SIMULATOR_BatteryTemperature2</pv_name>
+      <pv_name>/YSS/SIMULATOR/BatteryTemperature2</pv_name>
       <vertical_alignment>1</vertical_alignment>
       <border_color>
         <color name="Header MainColor" red="255" green="255" blue="255" />
@@ -3486,25 +3486,25 @@ $(pv_value)</tooltip>
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace6PV("SIMULATOR_BusCurrent")</pv>
+          <pv trig="true">loc://trace6PV("/YSS/SIMULATOR/BusCurrent")</pv>
         </rule>
         <rule name="Update Legend " prop_id="trace_0_name" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace6PV("SIMULATOR_BusCurrent")</pv>
+          <pv trig="true">loc://trace6PV("/YSS/SIMULATOR/BusCurrent")</pv>
         </rule>
         <rule name="x axis" prop_id="trace_0_x_pv" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace7PV("SIMULATOR_BusVoltage")</pv>
+          <pv trig="true">loc://trace7PV("/YSS/SIMULATOR/BusVoltage")</pv>
         </rule>
         <rule name="x-anxis name" prop_id="axis_0_axis_title" out_exp="true">
           <exp bool_exp="true">
             <value>pvStr0</value>
           </exp>
-          <pv trig="true">loc://trace7PV("SIMULATOR_BusVoltage")</pv>
+          <pv trig="true">loc://trace7PV("/YSS/SIMULATOR/BusVoltage")</pv>
         </rule>
       </rules>
       <axis_1_visible>true</axis_1_visible>
@@ -3574,7 +3574,7 @@ $(pv_value)</tooltip>
       </scale_options>
       <items_from_pv>false</items_from_pv>
       <visible>true</visible>
-      <pv_name>loc://trace6PV("SIMULATOR_BusCurrent")</pv_name>
+      <pv_name>loc://trace6PV("/YSS/SIMULATOR/BusCurrent")</pv_name>
       <border_color>
         <color red="0" green="128" blue="255" />
       </border_color>
@@ -3592,12 +3592,12 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>SIMULATOR_Theta</s>
-        <s>SIMULATOR_Phi</s>
-        <s>SIMULATOR_Psi</s>
+        <s>/YSS/SIMULATOR/Theta</s>
+        <s>/YSS/SIMULATOR/Phi</s>
+        <s>/YSS/SIMULATOR/Psi</s>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
-        <s>SIMULATOR_BusVoltage</s>
-        <s>SIMULATOR_BusCurrent</s>
+        <s>/YSS/SIMULATOR/BusVoltage</s>
+        <s>/YSS/SIMULATOR/BusCurrent</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -3665,7 +3665,7 @@ $(pv_value)</tooltip>
       </scale_options>
       <items_from_pv>false</items_from_pv>
       <visible>true</visible>
-      <pv_name>loc://trace7PV("SIMULATOR_BusVoltage")</pv_name>
+      <pv_name>loc://trace7PV("/YSS/SIMULATOR/BusVoltage")</pv_name>
       <border_color>
         <color red="0" green="128" blue="255" />
       </border_color>
@@ -3685,8 +3685,8 @@ $(pv_value)</tooltip>
       <items>
         <s>sim://ramp(0,40,0.1,1.2)</s>
         <s>sim://ramp(0,50,0.2,1)</s>
-        <s>SIMULATOR_BusCurrent</s>
-        <s>SIMULATOR_BusVoltage</s>
+        <s>/YSS/SIMULATOR/BusCurrent</s>
+        <s>/YSS/SIMULATOR/BusVoltage</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -4047,12 +4047,12 @@ $(pv_value)</tooltip>
       </foreground_color>
       <actions hook="false" hook_all="false" />
       <items>
-        <s>SIMULATOR_Theta</s>
-        <s>SIMULATOR_Phi</s>
-        <s>SIMULATOR_Psi</s>
+        <s>/YSS/SIMULATOR/Theta</s>
+        <s>/YSS/SIMULATOR/Phi</s>
+        <s>/YSS/SIMULATOR/Psi</s>
         <s>sim://ramp(0,40,-0.1,1.2)</s>
-        <s>SIMULATOR_BusVoltage</s>
-        <s>SIMULATOR_BusCurrent</s>
+        <s>/YSS/SIMULATOR/BusVoltage</s>
+        <s>/YSS/SIMULATOR/BusCurrent</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />
@@ -4099,8 +4099,8 @@ $(pv_value)</tooltip>
       <items>
         <s>sim://ramp(0,40,0.1,1.2)</s>
         <s>sim://ramp(0,50,0.2,1)</s>
-        <s>SIMULATOR_BusCurrent</s>
-        <s>SIMULATOR_BusVoltage</s>
+        <s>/YSS/SIMULATOR/BusCurrent</s>
+        <s>/YSS/SIMULATOR/BusVoltage</s>
       </items>
       <font>
         <fontdata fontName="Arial" height="9" style="0" />

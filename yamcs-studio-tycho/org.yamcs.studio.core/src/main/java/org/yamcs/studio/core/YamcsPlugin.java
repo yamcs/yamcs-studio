@@ -68,6 +68,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         plugin = this;
         TimeEncoding.setUp();
         processorControlClient = new YProcessorControlClient();
+        log.info("Yamcs Studio v." + getBundle().getVersion().toString());
     }
 
     public enum ConnectionStatus
@@ -261,10 +262,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return getPreferenceStore().getBoolean(node + "yamcs_privileges");
     }
 
-    public String getMdbNamespace() {
-        return getPreferenceStore().getString("mdb_namespace");
-    }
-
     public String getOrigin() {
         try {
             return InetAddress.getLocalHost().getHostName();
@@ -276,7 +273,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private void loadParameters() {
         log.fine("Fetching available parameters");
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
-        req.addNamespaces(getMdbNamespace());
         restClient.listAvailableParameters(req.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {

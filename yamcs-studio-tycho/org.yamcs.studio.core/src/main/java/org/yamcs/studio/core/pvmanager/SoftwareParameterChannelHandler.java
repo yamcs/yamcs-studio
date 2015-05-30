@@ -14,6 +14,7 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
@@ -41,14 +42,17 @@ import com.google.protobuf.MessageLite;
 public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
         implements YamcsPVReader, StudioConnectionListener {
 
-    private WebSocketRegistrar webSocketClient = null;
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
-    private RestClient restClient;
     private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1");
+
+    private WebSocketRegistrar webSocketClient;
+    private RestClient restClient;
+    private NamedObjectId id;
 
     public SoftwareParameterChannelHandler(String channelName) {
         super(channelName);
+        id = NamedObjectId.newBuilder().setName(channelName).build();
         YamcsPlugin.getDefault().addStudioConnectionListener(this);
     }
 
@@ -69,8 +73,8 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     }
 
     @Override
-    public String getPVName() {
-        return getChannelName();
+    public NamedObjectId getId() {
+        return id;
     }
 
     @Override
@@ -100,7 +104,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
     @Override
     protected boolean isWriteConnected(PVConnectionInfo info) {
-        System.out.println("Called isWriteConnected " + info);
         return isConnected(info);
     }
 
@@ -121,9 +124,9 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
-        Parameter p = YamcsPlugin.getDefault().getMdb().getParameter(YamcsPlugin.getDefault().getMdbNamespace(), getChannelName());
+        Parameter p = YamcsPlugin.getDefault().getMdb().getParameter(getChannelName());
         ParameterData pdata = ParameterData.newBuilder().addParameter(ParameterValue.newBuilder()
-                .setId(toNamedObjectId())
+                .setId(getId())
                 .setEngValue(toValue(p, (String) newValue))).build();
 
         if (restClient == null)

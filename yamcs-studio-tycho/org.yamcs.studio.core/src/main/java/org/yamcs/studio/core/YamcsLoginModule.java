@@ -41,7 +41,6 @@ public class YamcsLoginModule implements LoginModule {
 
     @Override
     public boolean login() throws LoginException {
-        log.info("");
 
         if (callbackHandler == null)
             throw new LoginException("No CallbackHandler");
@@ -101,7 +100,6 @@ public class YamcsLoginModule implements LoginModule {
         log.info("yamcs login, authenticating " + user + "/****");
 
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
-        req.addNamespaces(YamcsPlugin.getDefault().getMdbNamespace());
 
         YamcsConnectionProperties webProps = YamcsPlugin.getDefault().getWebProperties();
         RestClient restClient = new RestClient(webProps, new YamcsCredentials(user, password));

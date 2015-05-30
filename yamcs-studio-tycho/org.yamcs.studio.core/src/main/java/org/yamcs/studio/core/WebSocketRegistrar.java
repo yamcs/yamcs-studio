@@ -40,8 +40,8 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     // Store pvreaders while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
-    private Map<String, YamcsPVReader> pvReadersByName = new LinkedHashMap<>();
-    private Map<String, RestParameter> availableParametersByName = new LinkedHashMap<>();
+    private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
+    private Map<NamedObjectId, RestParameter> availableParametersById = new LinkedHashMap<>();
     private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
     private Set<ClientInfoListener> clientInfoListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
@@ -112,9 +112,9 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     }
 
     public synchronized void register(YamcsPVReader pvReader) {
-        pvReadersByName.put(pvReader.getPVName(), pvReader);
+        pvReadersById.put(pvReader.getId(), pvReader);
         // Report current connection state
-        RestParameter p = availableParametersByName.get(pvReader.getPVName());
+        RestParameter p = availableParametersById.get(pvReader.getId());
         pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), p));
         // Register (pending) websocket request
         NamedObjectList idList = pvReader.toNamedObjectList();
@@ -122,7 +122,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     }
 
     public synchronized void unregister(YamcsPVReader pvReader) {
-        pvReadersByName.remove(pvReader);
+        pvReadersById.remove(pvReader);
         NamedObjectList idList = pvReader.toNamedObjectList();
         pendingRequests.offer(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
     }
@@ -131,11 +131,11 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     public synchronized void onParametersChanged(List<RestParameter> parameters) {
         log.fine("Refreshing all pv readers");
         for (RestParameter p : parameters)
-            availableParametersByName.put(p.getId().getName(), p);
+            availableParametersById.put(p.getId(), p);
 
-        pvReadersByName.forEach((name, pvReader) -> {
-            RestParameter parameter = availableParametersByName.get(name);
-            log.finer(String.format("Signaling %s --> %s", name, parameter));
+        pvReadersById.forEach((id, pvReader) -> {
+            RestParameter parameter = availableParametersById.get(id);
+            log.finer(String.format("Signaling %s --> %s", id, parameter));
             pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), parameter));
         });
     }
@@ -163,23 +163,23 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     }
 
     private void reportConnectionState() {
-        pvReadersByName.forEach((name, pvReader) -> {
-            RestParameter p = availableParametersByName.get(name);
+        pvReadersById.forEach((id, pvReader) -> {
+            RestParameter p = availableParametersById.get(id);
             pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), p));
         });
     }
 
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
-        pvReadersByName.get(id.getName()).reportException(new InvalidIdentification(id));
+        pvReadersById.get(id).reportException(new InvalidIdentification(id));
     }
 
     @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
-            YamcsPVReader pvReader = pvReadersByName.get(pval.getId().getName());
+            YamcsPVReader pvReader = pvReadersById.get(pval.getId());
             if (pvReader != null) {
-                log.fine(String.format("Request to update pvreader %s to %s", pvReader.getPVName(), pval.getEngValue()));
+                log.fine(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(), pval.getEngValue()));
                 losTracker.updatePv(pvReader, pval);
                 pvReader.processParameterValue(pval);
             } else {

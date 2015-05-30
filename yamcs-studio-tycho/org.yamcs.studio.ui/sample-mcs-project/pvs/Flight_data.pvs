@@ -3,85 +3,85 @@
     <pvlist>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Longitude</name>
+            <name>/YSS/SIMULATOR/Longitude</name>
             <tolerance>0.01</tolerance>
             <saved_value>-60.584</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Latitude</name>
+            <name>/YSS/SIMULATOR/Latitude</name>
             <tolerance>0.01</tolerance>
             <saved_value>53.235</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Altitude</name>
+            <name>/YSS/SIMULATOR/Altitude</name>
             <tolerance>0.01</tolerance>
             <saved_value>3689.4</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Heading</name>
+            <name>/YSS/SIMULATOR/Heading</name>
             <tolerance>0.01</tolerance>
             <saved_value>29.681</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Alpha</name>
+            <name>/YSS/SIMULATOR/Alpha</name>
             <tolerance>0.01</tolerance>
             <saved_value>2.1749</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Beta</name>
+            <name>/YSS/SIMULATOR/Beta</name>
             <tolerance>0.01</tolerance>
             <saved_value>0.39993</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_TAS</name>
+            <name>/YSS/SIMULATOR/TAS</name>
             <tolerance>0.01</tolerance>
             <saved_value>110.5</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_CAS</name>
+            <name>/YSS/SIMULATOR/CAS</name>
             <tolerance>0.01</tolerance>
             <saved_value>110.5</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Mach_Number</name>
+            <name>/YSS/SIMULATOR/Mach_Number</name>
             <tolerance>0.01</tolerance>
             <saved_value>0.33915</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Load_factor</name>
+            <name>/YSS/SIMULATOR/Load_factor</name>
             <tolerance>0.01</tolerance>
             <saved_value>0.80011</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_SinkRate</name>
+            <name>/YSS/SIMULATOR/SinkRate</name>
             <tolerance>0.01</tolerance>
             <saved_value>39.793</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Phi</name>
+            <name>/YSS/SIMULATOR/Phi</name>
             <tolerance>0.01</tolerance>
             <saved_value>7.6746</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Theta</name>
+            <name>/YSS/SIMULATOR/Theta</name>
             <tolerance>0.01</tolerance>
             <saved_value>-20.686</saved_value>
         </pv>
         <pv>
             <selected>true</selected>
-            <name>SIMULATOR_Psi</name>
+            <name>/YSS/SIMULATOR/Psi</name>
             <tolerance>0.01</tolerance>
             <saved_value>29.681</saved_value>
         </pv>

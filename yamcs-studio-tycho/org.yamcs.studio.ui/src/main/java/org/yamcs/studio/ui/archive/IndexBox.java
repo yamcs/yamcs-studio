@@ -11,8 +11,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -55,7 +53,7 @@ public class IndexBox extends Box implements MouseListener {
     JLabel popupLabelItem;
     JSeparator popupLabelSeparator;
     JPopupMenu packetPopup;
-    JMenuItem removePacketMenuItem, removeExceptPacketMenuItem, removePayloadMenuItem, copyOpsnameMenuItem;
+    JMenuItem removePacketMenuItem, removeExceptPacketMenuItem, removePayloadMenuItem;
     IndexLineSpec selectedPacket;
     static final int tmRowHeight = 20;
 
@@ -181,23 +179,6 @@ public class IndexBox extends Box implements MouseListener {
             });
             packetPopup.add(removePayloadMenuItem);
 
-            copyOpsnameMenuItem = new JMenuItem("Copy Ops-Name to Clipboard");
-            copyOpsnameMenuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (selectedPacket != null) {
-                        StringSelection strsel = new StringSelection(selectedPacket.lineName);
-                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(strsel, strsel);
-                    }
-                }
-            });
-            packetPopup.add(copyOpsnameMenuItem);
-
-            //populateMenuItem = new JMenuItem("Populate From Current Channel");
-            //populateMenuItem.addActionListener(this);
-            //populateMenuItem.setActionCommand("populate-from-current-channel");
-            //packetPopup.add(populateMenuItem);
-
             JMenuItem menuItem;
             final String[] plkeys = groups.keySet().toArray(new String[0]);
             Arrays.sort(plkeys);
@@ -287,7 +268,6 @@ public class IndexBox extends Box implements MouseListener {
                 removePayloadMenuItem.setVisible(true);
                 removeExceptPacketMenuItem.setVisible(true);
                 removePacketMenuItem.setVisible(true);
-                copyOpsnameMenuItem.setVisible(true);
 
                 popupLabelItem.setText(selectedPacket.lineName);
                 removePacketMenuItem.setText(String.format("Hide %s Packet", selectedPacket.lineName));
@@ -298,7 +278,6 @@ public class IndexBox extends Box implements MouseListener {
                 removePayloadMenuItem.setVisible(false);
                 removePacketMenuItem.setVisible(false);
                 removeExceptPacketMenuItem.setVisible(false);
-                copyOpsnameMenuItem.setVisible(false);
             }
             packetPopup.validate();
             packetPopup.show(e.getComponent(), e.getX(), e.getY());

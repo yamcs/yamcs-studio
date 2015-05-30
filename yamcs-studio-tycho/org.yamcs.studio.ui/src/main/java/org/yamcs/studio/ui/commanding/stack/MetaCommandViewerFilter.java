@@ -18,6 +18,6 @@ public class MetaCommandViewerFilter extends ViewerFilter {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         MetaCommand cmd = (MetaCommand) element;
-        return cmd.getOpsName().matches(regex);
+        return cmd.getQualifiedName().matches(regex);
     }
 }

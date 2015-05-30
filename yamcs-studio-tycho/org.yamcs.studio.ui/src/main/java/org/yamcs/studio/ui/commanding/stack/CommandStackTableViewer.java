@@ -244,7 +244,7 @@ public class CommandStackTableViewer extends TableViewer {
             }
         } else {
             Comparison comparison = (Comparison) criteria;
-            buf.append(comparison.getParameter().getOpsName());
+            buf.append(comparison.getParameter().getName());
             if (comparison.getComparisonOperator() == OperatorType.EQUALITY)
                 buf.append("="); // I don't like the ==. should be same as in spreadsheet
             else

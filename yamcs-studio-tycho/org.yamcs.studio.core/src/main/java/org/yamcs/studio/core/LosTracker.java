@@ -70,7 +70,7 @@ public class LosTracker {
         private final Runnable displayLos = new Runnable() {
             @Override
             public void run() {
-                log.fine("LOS for parameter " + pvReader.getPVName());
+                log.fine("LOS for parameter " + pvReader.getId().getName());
                 pvReader.processParameterValue(ParameterValue.newBuilder(lastKnownValue).setAcquisitionStatus(AcquisitionStatus.EXPIRED).build());
             }
         };

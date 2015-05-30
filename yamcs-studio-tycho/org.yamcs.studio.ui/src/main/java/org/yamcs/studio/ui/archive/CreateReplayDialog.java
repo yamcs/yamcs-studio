@@ -288,7 +288,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
         PacketReplayRequest.Builder prr = PacketReplayRequest.newBuilder();
         for (TableItem item : packetsTable.getTable().getItems())
             if (item.getChecked())
-                prr.addNameFilter(NamedObjectId.newBuilder().setNamespace("MDB:OPS Name").setName(item.getText()));
+                prr.addNameFilter(NamedObjectId.newBuilder().setName(item.getText()));
 
         ReplayRequest.Builder rr = ReplayRequest.newBuilder()
                 .setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)))

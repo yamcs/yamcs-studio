@@ -54,7 +54,6 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
                     yamcsPort.getIntValue() != plugin.getWebPort() ||
                     yamcsHornetQPort.getIntValue() != plugin.getHornetQPort() ||
                     !(yamcsInstance.getStringValue().equals(plugin.getInstance())) ||
-                    !(mdbNamespace.getStringValue().equals(plugin.getMdbNamespace())) ||
                     yamcsPrivileges.getBooleanValue() != plugin.getPrivilegesEnabled();
         }
 
@@ -69,7 +68,6 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
     private IntegerFieldEditor currentNode;
 
     private List<YamcsNode> nodes = new LinkedList<YamcsNode>();
-    private StringFieldEditor mdbNamespace;
 
     public YamcsPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
@@ -112,10 +110,6 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
 
         currentNode = new IntegerFieldEditor("current_node", "Active node", getFieldEditorParent());
         addField(currentNode);
-        addField(new SpacerFieldEditor(getFieldEditorParent()));
-
-        mdbNamespace = new StringFieldEditor("mdb_namespace", "MDB Namespace", getFieldEditorParent());
-        addField(mdbNamespace);
     }
 
     @Override

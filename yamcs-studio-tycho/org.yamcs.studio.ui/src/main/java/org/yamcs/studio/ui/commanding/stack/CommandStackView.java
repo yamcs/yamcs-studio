@@ -398,7 +398,7 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
     private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
         for (StackedCommand cmd : CommandStack.getInstance().getCommands()) {
             if (cmd.matches(cmdhistEntry.getCommandId())) {
-                log.finer(String.format("Processing update %s ", cmdhistEntry));
+                log.finer(String.format("Processing update %s", cmdhistEntry));
                 cmd.updateExecutionState(cmdhistEntry);
             } else {
                 log.finer(String.format("Ignoring update %s", cmdhistEntry));
