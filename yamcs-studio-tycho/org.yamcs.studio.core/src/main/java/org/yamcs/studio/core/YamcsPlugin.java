@@ -21,7 +21,6 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestParameter;
@@ -281,15 +280,11 @@ public class YamcsPlugin extends AbstractUIPlugin {
         restClient.listAvailableParameters(req.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                if (responseMsg instanceof RestExceptionMessage) {
-                    log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
-                } else {
-                    RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
-                    Display.getDefault().asyncExec(() -> {
-                        parameters = response.getParametersList();
-                        mdbListeners.forEach(l -> l.onParametersChanged(parameters));
-                    });
-                }
+                RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
+                Display.getDefault().asyncExec(() -> {
+                    parameters = response.getParametersList();
+                    mdbListeners.forEach(l -> l.onParametersChanged(parameters));
+                });
             }
 
             @Override
@@ -305,20 +300,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
         restClient.dumpRawMdb(dumpRequest.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                if (responseMsg instanceof RestExceptionMessage) {
-                    log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
-                } else {
-                    RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
-                    try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
-                        XtceDb newMdb = (XtceDb) oin.readObject();
-                        Display.getDefault().asyncExec(() -> {
-                            mdb = newMdb;
-                            commands = mdb.getMetaCommands();
-                            mdbListeners.forEach(l -> l.onCommandsChanged(commands));
-                        });
-                    } catch (IOException | ClassNotFoundException e) {
-                        log.log(Level.SEVERE, "Could not deserialize mdb", e);
-                    }
+                RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
+                try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
+                    XtceDb newMdb = (XtceDb) oin.readObject();
+                    Display.getDefault().asyncExec(() -> {
+                        mdb = newMdb;
+                        commands = mdb.getMetaCommands();
+                        mdbListeners.forEach(l -> l.onCommandsChanged(commands));
+                    });
+                } catch (IOException | ClassNotFoundException e) {
+                    log.log(Level.SEVERE, "Could not deserialize mdb", e);
                 }
             }
 
@@ -390,6 +381,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return mdb;
     }
 
+    /**
+     * Would prefer to get updates to this from the web socket client, instead of needing this
+     * method
+     */
     public void refreshClientInfo() {
         webSocketClient.updateClientinfo();
     }

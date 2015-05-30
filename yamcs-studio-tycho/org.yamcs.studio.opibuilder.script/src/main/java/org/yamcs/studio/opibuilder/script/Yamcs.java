@@ -7,7 +7,6 @@ import org.csstudio.opibuilder.scriptUtil.ConsoleUtil;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
@@ -65,19 +64,15 @@ public class Yamcs implements StudioConnectionListener {
         restClient.sendCommand(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
-                if (response instanceof RestExceptionMessage) {
-                    Display.getDefault().asyncExec(() -> {
-                        RestExceptionMessage exc = (RestExceptionMessage) response;
-                        ConsoleUtil.writeError("[" + exc.getType() + "] " + exc.getMsg());
-                    });
-                }
                 log.fine(String.format("Sent command %s", req));
             }
 
             @Override
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Could not send command", e);
-                ConsoleUtil.writeError("Could not send command");
+                Display.getDefault().asyncExec(() -> {
+                    ConsoleUtil.writeError("Could not send command " + e.getMessage());
+                });
             }
         });
     }

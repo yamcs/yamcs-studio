@@ -29,7 +29,6 @@ import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
@@ -195,15 +194,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog implements Studi
             restClient.validateCommand(req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
-                    if (response instanceof RestExceptionMessage) {
-                        Display.getDefault().asyncExec(() -> {
-                            RestExceptionMessage exc = (RestExceptionMessage) response;
-                            setErrorMessage("[" + exc.getType() + "] " + exc.getMsg());
-                        });
-                    } else {
-                        Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
-                        System.out.println("GOT response " + response);
-                    }
+                    Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
                 }
 
                 @Override
@@ -234,14 +225,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog implements Studi
             restClient.sendCommand(req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
-                    if (response instanceof RestExceptionMessage) {
-                        Display.getDefault().asyncExec(() -> {
-                            RestExceptionMessage exc = (RestExceptionMessage) response;
-                            setErrorMessage("[" + exc.getType() + "] " + exc.getMsg());
-                        });
-                    }
                     Display.getDefault().asyncExec(() -> close());
-                    System.out.println("GOT response " + response);
                 }
 
                 @Override

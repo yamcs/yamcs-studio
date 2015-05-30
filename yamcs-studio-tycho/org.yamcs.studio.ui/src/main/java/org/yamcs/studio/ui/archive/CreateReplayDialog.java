@@ -41,7 +41,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Yamcs.EndAction;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
@@ -229,17 +228,8 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {
-                    if (responseMsg instanceof RestExceptionMessage) {
-                        log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
-                        String type = ((RestExceptionMessage) responseMsg).getType();
-                        String msg = ((RestExceptionMessage) responseMsg).getMsg();
-                        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay", type + "\n" + msg);
-                        getButton(IDialogConstants.OK_ID).setEnabled(true);
-                    } else {
-                        CreateReplayDialog.super.okPressed();
-                        // Would prefer to get updates to this from the web socket client
-                        YamcsPlugin.getDefault().refreshClientInfo();
-                    }
+                    CreateReplayDialog.super.okPressed();
+                    YamcsPlugin.getDefault().refreshClientInfo();
                 });
             }
 

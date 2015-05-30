@@ -14,9 +14,7 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 
@@ -173,11 +171,6 @@ public class YamcsLoginModule implements LoginModule {
 
         @Override
         public void onMessage(MessageLite responseMsg) {
-            if (responseMsg instanceof RestExceptionMessage) {
-                log.log(Level.WARNING, "Exception returned by server: " + responseMsg);
-            } else {
-                RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
-            }
             resultReceived = true;
             authenticated = true;
         }

@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
@@ -34,16 +34,14 @@ public class GoToBeginningHandler extends AbstractRestHandler {
         restClient.createProcessorRequest(processorName, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                if (responseMsg instanceof RestExceptionMessage) {
-                    log.severe("Could not go to beginning of replay range: " + responseMsg);
-                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Seek Error",
-                            ((RestExceptionMessage) responseMsg).getMsg());
-                }
             }
 
             @Override
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Could not go to beginning of replay range", e);
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Seek Error", e.getMessage());
+                });
             }
         });
         return null;

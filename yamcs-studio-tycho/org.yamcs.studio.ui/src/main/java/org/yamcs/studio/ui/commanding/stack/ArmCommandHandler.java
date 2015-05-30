@@ -12,7 +12,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Commanding.CommandSignificance;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -49,45 +48,37 @@ public class ArmCommandHandler extends AbstractRestHandler {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {
-                    if (response instanceof RestExceptionMessage) {
-                        RestExceptionMessage exc = (RestExceptionMessage) response;
-                        command.setStackedState(StackedState.REJECTED);
-                        MessageDialog.openError(activeShell, "Could not arm command", "Server message:\n\t" + exc.getMsg());
-                        view.clearArm();
-                        view.refreshState();
-                    } else {
-                        RestValidateCommandResponse validateResponse = (RestValidateCommandResponse) response;
+                    RestValidateCommandResponse validateResponse = (RestValidateCommandResponse) response;
 
-                        boolean doArm = false;
-                        if (validateResponse.getCommandsSignificanceCount() > 0) {
-                            CommandSignificance significance = validateResponse.getCommandsSignificance(0);
-                            switch (significance.getConsequenceLevel()) {
-                            case watch:
-                            case warning:
-                            case distress:
-                            case critical:
-                            case severe:
-                                String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
-                                        + significance.getConsequenceLevel().toString().substring(1);
-                                if (MessageDialog.openConfirm(activeShell, "Confirm",
-                                        level + ": Are you sure you want to arm this command?\n" +
-                                                "    " + command.toStyledString(view).getString() + "\n\n" +
-                                                significance.getReasonForWarning())) {
-                                    doArm = true;
-                                }
-                                break;
-                            default:
-                                break;
+                    boolean doArm = false;
+                    if (validateResponse.getCommandsSignificanceCount() > 0) {
+                        CommandSignificance significance = validateResponse.getCommandsSignificance(0);
+                        switch (significance.getConsequenceLevel()) {
+                        case watch:
+                        case warning:
+                        case distress:
+                        case critical:
+                        case severe:
+                            String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
+                                    + significance.getConsequenceLevel().toString().substring(1);
+                            if (MessageDialog.openConfirm(activeShell, "Confirm",
+                                    level + ": Are you sure you want to arm this command?\n" +
+                                            "    " + command.toStyledString(view).getString() + "\n\n" +
+                                            significance.getReasonForWarning())) {
+                                doArm = true;
                             }
-                        } else {
-                            doArm = true;
+                            break;
+                        default:
+                            break;
                         }
+                    } else {
+                        doArm = true;
+                    }
 
-                        if (doArm) {
-                            log.info(String.format("Command armed %s", command));
-                            command.setStackedState(StackedState.ARMED);
-                            view.refreshState();
-                        }
+                    if (doArm) {
+                        log.info(String.format("Command armed %s", command));
+                        command.setStackedState(StackedState.ARMED);
+                        view.refreshState();
                     }
                 });
             }

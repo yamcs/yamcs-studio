@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterData;
@@ -55,12 +57,13 @@ import com.google.protobuf.MessageLite;
  */
 public class RestClient {
 
+    private static final Logger log = Logger.getLogger(RestClient.class.getName());
     private static final String BINARY_MIME_TYPE = "application/octet-stream";
 
     private YamcsConnectionProperties yprops;
     private EventLoopGroup group = new NioEventLoopGroup(1);
 
-    YamcsCredentials credentials;
+    private YamcsCredentials credentials;
 
     public RestClient(YamcsConnectionProperties yprops, YamcsCredentials yamcsCredentials) {
         this.yprops = yprops;
@@ -136,7 +139,7 @@ public class RestClient {
                                         InputStream in = new ByteBufInputStream(response.content());
                                         RestExceptionMessage msg = RestExceptionMessage.newBuilder().mergeFrom(in).build();
                                         ctx.close();
-                                        handler.onMessage(msg);
+                                        handler.onException(new RestException(msg));
                                     }
                                 }
 
@@ -177,7 +180,7 @@ public class RestClient {
             ch.writeAndFlush(request);
             ch.closeFuture().sync();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Could not execute REST call", e);
             handler.onException(e);
         }
     }

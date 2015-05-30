@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestListProcessorsRequest;
 import org.yamcs.protobuf.Rest.RestListProcessorsResponse;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -93,15 +92,10 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         YamcsPlugin.getDefault().getRestClient().listProcessors(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                if (responseMsg instanceof RestExceptionMessage) {
-                    RestExceptionMessage msg = (RestExceptionMessage) responseMsg;
-                    log.log(Level.SEVERE, "Could not list processors" + msg.getMsg());
-                } else {
-                    Display.getDefault().asyncExec(() -> {
-                        RestListProcessorsResponse response = (RestListProcessorsResponse) responseMsg;
-                        processorsTable.setInput(response.getProcessorList());
-                    });
-                }
+                Display.getDefault().asyncExec(() -> {
+                    RestListProcessorsResponse response = (RestListProcessorsResponse) responseMsg;
+                    processorsTable.setInput(response.getProcessorList());
+                });
             }
 
             @Override

@@ -21,7 +21,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
@@ -55,14 +54,9 @@ public class SwitchProcessorHandler extends AbstractRestHandler {
                 restClient.createProcessorManagementRequest(req, new ResponseHandler() {
                     @Override
                     public void onMessage(MessageLite responseMsg) {
-                        if (responseMsg instanceof RestExceptionMessage) {
-                            log.log(Level.SEVERE, "Could not switch processor. " + responseMsg);
-                        } else {
-                            // Would prefer to get updates to this from the web socket client
-                            Display.getDefault().asyncExec(() -> {
-                                YamcsPlugin.getDefault().refreshClientInfo();
-                            });
-                        }
+                        Display.getDefault().asyncExec(() -> {
+                            YamcsPlugin.getDefault().refreshClientInfo();
+                        });
                     }
 
                     @Override

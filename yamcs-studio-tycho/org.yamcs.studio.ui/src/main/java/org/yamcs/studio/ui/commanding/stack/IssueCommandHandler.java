@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
@@ -41,15 +40,9 @@ public class IssueCommandHandler extends AbstractRestHandler {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {
-                    if (response instanceof RestExceptionMessage) {
-                        RestExceptionMessage exc = (RestExceptionMessage) response;
-                        command.setStackedState(StackedState.REJECTED);
-                        MessageDialog.openError(activeShell, "Could not issue command", exc.getMsg());
-                    } else {
-                        log.info(String.format("Command issued. %s", req));
-                        command.setStackedState(StackedState.ISSUED);
-                        view.selectActiveCommand();
-                    }
+                    log.info(String.format("Command issued. %s", req));
+                    command.setStackedState(StackedState.ISSUED);
+                    view.selectActiveCommand();
                     view.refreshState();
                 });
             }
