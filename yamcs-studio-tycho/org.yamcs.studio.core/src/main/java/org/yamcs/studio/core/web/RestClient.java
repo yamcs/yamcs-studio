@@ -178,7 +178,6 @@ public class RestClient {
                 request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
             }
             ch.writeAndFlush(request);
-            ch.closeFuture().sync();
         } catch (IOException | InterruptedException e) {
             log.log(Level.SEVERE, "Could not execute REST call", e);
             handler.onException(e);
