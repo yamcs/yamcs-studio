@@ -637,13 +637,6 @@
                closeable="true"
                id="org.csstudio.diag.pvmanager.probe">
          </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.csstudio.utility.sysmon.SysMonView">
-         </view>
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
@@ -651,7 +644,6 @@
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.diag.pvmanager.probe"/>
-         <viewShortcut id="org.csstudio.utility.sysmon.SysMonView"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
