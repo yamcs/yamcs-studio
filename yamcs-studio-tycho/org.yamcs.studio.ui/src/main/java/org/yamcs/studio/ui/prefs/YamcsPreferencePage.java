@@ -97,7 +97,8 @@ public class YamcsPreferencePage extends FieldEditorPreferencePage implements IW
             yamcsNode.yamcsHornetQPort = new IntegerFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_hornetqport", "HornetQ Port",
                     getFieldEditorParent());
             yamcsNode.yamcsInstance = new StringFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_instance", "Instance", getFieldEditorParent());
-            yamcsNode.yamcsPrivileges = new BooleanFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_privileges", "Secured", getFieldEditorParent());
+            yamcsNode.yamcsPrivileges = new BooleanFieldEditor("node" + yamcsNode.nodeNumber + ".yamcs_privileges", "Enable password authentication",
+                    getFieldEditorParent());
 
             addField(yamcsNode.yamcsHost);
             addField(yamcsNode.yamcsPort);
