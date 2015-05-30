@@ -1,9 +1,11 @@
 package org.yamcs.studio.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
@@ -26,14 +28,21 @@ import org.yamcs.studio.ui.application.IDs;
 public class OpenWindowsCompoundContributionItem extends CompoundContributionItem {
 
     public static final String OPEN_PERSPECTIVE_COMMAND = "org.yamcs.studio.ui.commands.openPerspectiveCommand";
-    private static final List<String> SUPPORTED_PERSPECTIVES = Arrays.asList(IDs.OPI_EDITOR_PERSPECTIVE, IDs.OPI_RUNTIME_PERSPECTIVE);
+
+    private static final Logger log = Logger.getLogger(OpenWindowsCompoundContributionItem.class.getName());
+
+    private static final Map<String, String> SUPPORTED_PERSPECTIVES = new HashMap<>();
+    static {
+        SUPPORTED_PERSPECTIVES.put(IDs.OPI_EDITOR_PERSPECTIVE, "Yamcs Studio Editor");
+        SUPPORTED_PERSPECTIVES.put(IDs.OPI_RUNTIME_PERSPECTIVE, "Yamcs Studio Runtime");
+    }
 
     @Override
     public IContributionItem[] getContributionItems() {
         IWorkbench workbench = PlatformUI.getWorkbench();
         List<IContributionItem> items = new ArrayList<>();
         for (IPerspectiveDescriptor perspective : workbench.getPerspectiveRegistry().getPerspectives()) {
-            if (SUPPORTED_PERSPECTIVES.contains(perspective.getId())) {
+            if (SUPPORTED_PERSPECTIVES.containsKey(perspective.getId())) {
                 CommandContributionItem item = createProfileItem(perspective);
                 items.add(item);
             }
@@ -52,7 +61,7 @@ public class OpenWindowsCompoundContributionItem extends CompoundContributionIte
         HashMap<String, String> params = new HashMap<String, String>();
         params.put(RadioState.PARAMETER_ID, perspective.getId());
 
-        itemParameter.label = perspective.getLabel();
+        itemParameter.label = SUPPORTED_PERSPECTIVES.get(perspective.getId());
         itemParameter.parameters = params;
 
         return new CommandContributionItem(itemParameter);
@@ -66,7 +75,7 @@ public class OpenWindowsCompoundContributionItem extends CompoundContributionIte
             IPerspectiveDescriptor perspective = getActivePerspective(workbench);
             HandlerUtil.updateRadioState(command, perspective.getId());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Could not update radio state", e);
         }
     }
 

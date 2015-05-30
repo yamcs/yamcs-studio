@@ -49,7 +49,7 @@ public class OpenPerspectiveHandler extends AbstractHandler implements IElementU
 
     /*
      * Workaround to allow checking radio items in a dynamic contribution
-     * 
+     *
      * https://bugs.eclipse.org/bugs/show_bug.cgi?id=398647
      */
     @Override

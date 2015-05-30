@@ -9,6 +9,7 @@ import org.csstudio.utility.product.ApplicationWorkbenchWindowAdvisor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -27,7 +28,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
         configurer.setInitialSize(new Point(1920, 1200));
         configurer.setShowPerspectiveBar(false);
         configurer.setShowStatusLine(false);
-        setTitle("anonymous", "Yamcs Studio");
+        setTitle("anonymous");
     }
 
     @Override
@@ -52,14 +53,25 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
             if (subject != null)
                 subjectName = SecuritySupport.getSubjectName(subject);
 
-            IPerspectiveDescriptor perspective = getWindowConfigurer().getWindow().getActivePage().getPerspective();
-            setTitle(subjectName, perspective.getLabel());
+            setTitle(subjectName);
         });
     }
 
-    private void setTitle(String subject, String label) {
+    private void setTitle(String subject) {
         String host = YamcsPlugin.getDefault().getHost();
         String instance = YamcsPlugin.getDefault().getInstance();
+
+        IWorkbenchPage page = getWindowConfigurer().getWindow().getActivePage();
+        String label = "Yamcs Studio";
+        if (page != null && page.getPerspective() != null) {
+            IPerspectiveDescriptor perspective = getWindowConfigurer().getWindow().getActivePage().getPerspective();
+            if (perspective.getId().equals(IDs.OPI_EDITOR_PERSPECTIVE))
+                label = "Yamcs Studio Editor";
+            else if (perspective.getId().equals(IDs.OPI_RUNTIME_PERSPECTIVE))
+                label = "Yamcs Studio Runtime";
+            else
+                label = perspective.getLabel();
+        }
         getWindowConfigurer().setTitle(String.format("%s (%s@%s/%s)", label, subject, host, instance));
     }
 }
