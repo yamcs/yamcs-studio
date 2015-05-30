@@ -576,7 +576,6 @@
          <!-- Already in menu which seems enough for this type of stuff -->
          <hiddenToolBarItem id="org.csstudio.security.login"/>
          <hiddenToolBarItem id="org.csstudio.security.logout"/>
-         <hiddenToolBarItem id="org.csstudio.diag.pvmanager.probe.OpenProbe"/>
          <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>         
          <hiddenMenuItem id="org.csstudio.security.login"/>
          <hiddenMenuItem id="org.csstudio.security.logout"/>
@@ -630,20 +629,10 @@
                closeable="true"
                id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
          </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.csstudio.diag.pvmanager.probe">
-         </view>
-         <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
-         <!-- CS-Studio -->
-         <viewShortcut id="org.csstudio.diag.pvmanager.probe"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
