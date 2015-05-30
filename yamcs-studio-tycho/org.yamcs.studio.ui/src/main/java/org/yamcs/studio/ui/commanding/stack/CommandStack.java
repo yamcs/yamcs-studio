@@ -68,7 +68,7 @@ public class CommandStack {
     public void disarmArmed() {
         for (StackedCommand command : commands)
             if (command.isArmed())
-                command.setStackedState(StackedState.UNARMED);
+                command.setStackedState(StackedState.DISARMED);
     }
 
     public void resetExecutionState() {

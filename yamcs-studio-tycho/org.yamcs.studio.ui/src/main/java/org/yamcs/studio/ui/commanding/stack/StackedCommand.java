@@ -28,7 +28,7 @@ import org.yamcs.xtce.MetaCommand;
 public class StackedCommand {
 
     public enum StackedState {
-        UNARMED("Unarmed"),
+        DISARMED("Disarmed"),
         ARMED("Armed"),
         ISSUED("Issued"),
         SKIPPED("Skipped"),
@@ -51,7 +51,7 @@ public class StackedCommand {
     // Increases every attempt
     private int clientId = -1;
 
-    private StackedState state = StackedState.UNARMED;
+    private StackedState state = StackedState.DISARMED;
 
     private PTVInfo ptvInfo = new PTVInfo();
 
@@ -62,7 +62,7 @@ public class StackedCommand {
     }
 
     public void resetExecutionState() {
-        state = StackedState.UNARMED;
+        state = StackedState.DISARMED;
         ptvInfo = new PTVInfo();
         clientId = -1;
     }

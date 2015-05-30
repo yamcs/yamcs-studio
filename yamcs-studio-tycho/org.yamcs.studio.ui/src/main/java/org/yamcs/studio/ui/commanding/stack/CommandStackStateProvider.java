@@ -54,7 +54,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
 
         executionStarted = false;
         for (StackedCommand cmd : stack.getCommands()) {
-            if (cmd.getStackedState() != StackedState.UNARMED) {
+            if (cmd.getStackedState() != StackedState.DISARMED) {
                 executionStarted = true;
                 break;
             }

@@ -189,7 +189,7 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
             } else {
                 CommandStack stack = CommandStack.getInstance();
                 if (stack.getActiveCommand() != null && stack.getActiveCommand().isArmed()) {
-                    stack.getActiveCommand().setStackedState(StackedState.UNARMED);
+                    stack.getActiveCommand().setStackedState(StackedState.DISARMED);
                 }
             }
         });
