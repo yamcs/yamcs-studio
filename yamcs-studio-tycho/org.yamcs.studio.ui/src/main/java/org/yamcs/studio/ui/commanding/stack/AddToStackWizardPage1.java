@@ -109,7 +109,7 @@ public class AddToStackWizardPage1 extends WizardPage {
             @Override
             public String getText(Object element) {
                 MetaCommand cmd = (MetaCommand) element;
-                return cmd.getOpsName();
+                return cmd.getQualifiedName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));

@@ -1,8 +1,5 @@
 package org.yamcs.studio.ui.commanding;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -24,10 +21,10 @@ public class CommandParser {
 
         String commandName = commandString.substring(0, lparen);
         NamedObjectId.Builder commandId = NamedObjectId.newBuilder();
-        commandId.setNamespace(YamcsPlugin.getDefault().getMdbNamespace());
-        commandId.setName(commandName);
+        commandId.setName(commandName.trim());
         cmd.setId(commandId);
         cmd.setSequenceNumber(YamcsPlugin.getNextCommandClientId());
+        cmd.setOrigin(YamcsPlugin.getDefault().getOrigin());
 
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         String[] args = argString.split(",");
@@ -36,22 +33,6 @@ public class CommandParser {
             cmd.addArguments(RestArgumentType.newBuilder().setName(kvp[0]).setValue(kvp[1]));
         }
 
-        try {
-            cmd.setOrigin(InetAddress.getLocalHost().getHostName());
-        } catch (UnknownHostException e) {
-            cmd.setOrigin("Unknown");
-        }
         return cmd.build();
-    }
-
-    public static void main(String... args) {
-        String cmdString = "SWITCH_VOLTAGE_ON(voltage_num:5)";
-        RestCommandType mc = toCommand(cmdString);
-
-        System.out.println("======");
-        System.out.println("" + mc.getId());
-        for (RestArgumentType arg : mc.getArgumentsList()) {
-            System.out.println(" - " + arg.getName() + ":" + arg.getValue());
-        }
     }
 }

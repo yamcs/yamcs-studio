@@ -9,3 +9,4 @@ Fragment-Host: org.csstudio.opibuilder
 Require-Bundle: org.yamcs.studio.core,
  org.yamcs.studio.ui,
  org.yamcs.osgiclient
+Export-Package: org.yamcs.studio.opibuilder.script

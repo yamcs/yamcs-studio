@@ -3,14 +3,10 @@ package org.yamcs.studio.opibuilder.script;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.opibuilder.scriptUtil.ConsoleUtil;
+import org.csstudio.opibuilder.util.DisplayUtils;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -22,40 +18,17 @@ import com.google.protobuf.MessageLite;
  * Sample use:
  *
  * importPackage(Packages.org.yamcs.studio.opibuilder.script);
- * Yamcs.issueCommand('SIMULATOR_SWITCH_VOLTAGE_ON(voltage_num: 1)');
+ * Yamcs.issueCommand('/YSS/SIMULATOR/SWITCH_VOLTAGE_ON(voltage_num: 1)');
  */
-public class Yamcs implements StudioConnectionListener {
+public class Yamcs {
 
     private static final Logger log = Logger.getLogger(Yamcs.class.getName());
-    private RestClient restClient;
 
-    private static Yamcs instance = new Yamcs();
-
-    private Yamcs()
-    {
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
-    }
-
-    public Yamcs getInstance()
-    {
-        return instance;
-    }
-
-    @Override
-    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-        this.restClient = restclient;
-    }
-
-    @Override
-    public void onStudioDisconnect() {
-        restClient = null;
-    }
-
-    public void issueCommand(String text) {
-
+    public static void issueCommand(String text) {
+        RestClient restClient = YamcsPlugin.getDefault().getRestClient();
         if (restClient == null)
         {
-            ConsoleUtil.writeError("Could not send command, client is disonnected from Yamcs server");
+            showErrorDialog("Could not issue command, client is disconnected from Yamcs server");
             return;
         }
 
@@ -71,9 +44,13 @@ public class Yamcs implements StudioConnectionListener {
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Could not send command", e);
                 Display.getDefault().asyncExec(() -> {
-                    ConsoleUtil.writeError("Could not send command " + e.getMessage());
+                    showErrorDialog(e.getMessage());
                 });
             }
         });
+    }
+
+    private static void showErrorDialog(String message) {
+        MessageDialog.openError(DisplayUtils.getDefaultShell(), "Could not issue command", message);
     }
 }

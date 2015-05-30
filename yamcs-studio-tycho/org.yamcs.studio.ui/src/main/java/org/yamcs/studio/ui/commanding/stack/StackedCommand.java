@@ -79,7 +79,7 @@ public class StackedCommand {
 
     public StyledString toStyledString(CommandStackView styleProvider) {
         StyledString str = new StyledString();
-        str.append(meta.getOpsName(), styleProvider.getIdentifierStyler(this));
+        str.append(meta.getQualifiedName(), styleProvider.getIdentifierStyler(this));
         str.append("(", styleProvider.getBracketStyler(this));
         boolean first = true;
         for (Argument arg : meta.getArgumentList()) {
@@ -113,9 +113,7 @@ public class StackedCommand {
     public RestCommandType.Builder toRestCommandType() {
         clientId = YamcsPlugin.getNextCommandClientId();
         RestCommandType.Builder req = RestCommandType.newBuilder();
-        req.setId(NamedObjectId.newBuilder()
-                .setNamespace(YamcsPlugin.getDefault().getMdbNamespace())
-                .setName(meta.getOpsName()));
+        req.setId(NamedObjectId.newBuilder().setName(meta.getQualifiedName()));
         req.setSequenceNumber(clientId);
         assignments.forEach((k, v) -> {
             req.addArguments(RestArgumentType.newBuilder().setName(k.getName()).setValue(v));
@@ -233,6 +231,6 @@ public class StackedCommand {
 
     @Override
     public String toString() {
-        return meta.getOpsName();
+        return meta.getQualifiedName();
     }
 }
