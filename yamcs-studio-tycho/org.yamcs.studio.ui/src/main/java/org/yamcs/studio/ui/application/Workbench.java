@@ -7,15 +7,44 @@ import java.util.logging.Logger;
 import org.csstudio.logging.LogConfigurator;
 import org.csstudio.platform.workspace.RelaunchConstants;
 import org.csstudio.startup.application.OpenDocumentEventProcessor;
+import org.csstudio.startup.module.WorkbenchExtPoint;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
-public class Workbench extends org.csstudio.utility.product.Workbench {
+/**
+ * Forked from org.csstudio.utility.product.Workbench
+ * <p>
+ * If StartupParameters#SHARE_LINK_PARAM and ProjectExtPoint#PROJECTS parameters are provided, a
+ * link to that shared folder will be created.
+ * <p>
+ * Uses LoginExtPoint#USERNAME and LoginExtPoint#PASSWORD to attempt authentication.
+ * <p>
+ * Runs workbench using the {@link ApplicationWorkbenchAdvisor}.
+ *
+ * @see StartupParameters for startup parameters as well as class loader notes.
+ */
+public class Workbench implements WorkbenchExtPoint {
 
     @Override
+    public Object afterWorkbenchCreation(Display display, IApplicationContext context, Map<String, Object> parameters) {
+        return null;
+    }
+
+    @Override
+    public Object beforeWorkbenchCreation(Display display, IApplicationContext context, Map<String, Object> parameters) {
+        return null;
+    }
+
+    /**
+     * Creates a workbench advisor to be used by the created workbench.
+     *
+     * @param parameters
+     *            the parameters that may give hints on how to create the advisor
+     * @return a new advisor instance
+     */
     protected WorkbenchAdvisor createWorkbenchAdvisor(final Map<String, Object> parameters) {
         OpenDocumentEventProcessor openDocProcessor =
                 (OpenDocumentEventProcessor) parameters.get(OpenDocumentEventProcessor.OPEN_DOC_PROCESSOR);

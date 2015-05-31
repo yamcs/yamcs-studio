@@ -21,6 +21,8 @@ import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.eclipse.ui.part.CoolItemGroupMarker;
 
 /**
+ * Forked from org.csstudio.utility.product.ApplicationActionBarAdvisor
+ * <p>
  * {@link ActionBarAdvisor} that can be called by CSS application startup code to create the menu
  * and tool bar.
  * <p>
@@ -31,12 +33,6 @@ import org.eclipse.ui.part.CoolItemGroupMarker;
  * <p>
  * Some actions are created for Eclipse command names in the help menu that have no default
  * implementation.
- *
- * @author Kay Kasemir
- * @author Xihui Chen
- * @author mfurseman Remove Eclipse menu items that don't apply
- * @author fqqb Forked from ApplicationActionBarAdvisor for yamcs-studio in order to better position
- *         custom coolbar items with CSS-ones.
  */
 @SuppressWarnings("restriction")
 public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
@@ -102,7 +98,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         // we replace it here with another one (shorter) version
         IMenuManager helpMenu = new MenuManager("Help", "help-2");
         menubar.add(helpMenu);
-        helpMenu.add(helpContentsAction);
+        //helpMenu.add(helpContentsAction);
         helpMenu.add(aboutAction);
     }
 

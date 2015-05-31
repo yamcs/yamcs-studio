@@ -78,8 +78,8 @@
         triggers initialization of the workspace
      -->
    <extension point="org.csstudio.startup.module">
-      <startupParameters class="org.csstudio.utility.product.StartupParameters"/>
-      <workspace class="org.csstudio.utility.product.WorkspacePrompt"/>
+      <startupParameters class="org.yamcs.studio.ui.application.StartupParameters"/>
+      <workspace class="org.yamcs.studio.ui.application.WorkspacePrompt"/>
       <workbench class="org.yamcs.studio.ui.application.Workbench"/>
       <project class="org.yamcs.studio.ui.application.DefaultYamcsStudioProject"/>
    </extension>
