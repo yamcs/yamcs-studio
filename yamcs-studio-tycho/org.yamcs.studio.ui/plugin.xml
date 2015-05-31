@@ -535,25 +535,25 @@
       <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.archive.ArchiveView"
-            icon="icons/archive.png"
+            icon="icons/eview16/archive.png"
             id="org.yamcs.studio.ui.archive.ArchiveView"
             name="Archive"/>
       <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.eventlog.EventLogView"
-            icon="icons/event_log.png"
+            icon="icons/eview16/event_log.png"
             id="org.yamcs.studio.ui.eventlog.EventLogView"
             name="Event Log"/>
       <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"
-            icon="icons/tc.png"
+            icon="icons/eview16/tc.png"
             id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"
             name="Command History"/>
       <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.commanding.stack.CommandStackView"
-            icon="icons/tc_add.png"
+            icon="icons/eview16/tc_add.png"
             id="org.yamcs.studio.ui.commanding.stack.CommandStackView"
             name="Command Stack"/>
    </extension>
@@ -779,28 +779,28 @@
          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.archive.zoomInCommand"
-               icon="icons/zoom_in.png"
+               icon="icons/elcl16/zoom_in.png"
                label="Zoom In"
                style="push"/>
          <command
                commandId="org.yamcs.studio.ui.archive.zoomOutCommand"
-               icon="icons/zoom_out.png"
+               icon="icons/elcl16/zoom_out.png"
                label="Zoom Out"
                style="push"/>
          <command
                commandId="org.yamcs.studio.ui.archive.zoomClearCommand"
-               icon="icons/zoom_clear.png"
+               icon="icons/elcl16/zoom_clear.png"
                label="Zoom Out Completely"
                style="push"/>
          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.archive.createTagCommand"
-               icon="icons/tag.gif"
+               icon="icons/elcl16/tag.gif"
                label="Annotate Selected Range"
                style="push"/>
          <command
                commandId="org.yamcs.studio.ui.archive.createReplayCommand"
-               icon="icons/replay.png"
+               icon="icons/elcl16/replay.png"
                label="Replay Selected Range"
                style="push"/>
       </menuContribution>
@@ -916,20 +916,15 @@
         
       <menuContribution
             allPopups="false"
-            locationURI="menu:file?before=user">           
+            locationURI="menu:file?before=user">
+            <command
+                  commandId="org.yamcs.studio.ui.connect"
+                  label="Connect">
+            </command>
             <command
                   commandId="org.yamcs.studio.ui.disconnect" 
                   label="Disconnect">
             </command>
       </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:file?before=user">           
-            <command
-                  commandId="org.yamcs.studio.ui.connect"
-                  label="Connect">
-            </command>
-      </menuContribution>
-      
    </extension>
 </plugin>
