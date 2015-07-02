@@ -54,6 +54,10 @@ public class LosTracker {
             if (this.losHandle != null)
                 this.losHandle.cancel(false);
             this.lastKnownValue = lastKnownValue;
+
+            if (lastKnownValue.getExpirationTime() == 0)
+                return;
+
             Date now = new Date();
             Date generationTime = new Date(TimeEncoding.toUnixTime(lastKnownValue
                     .getGenerationTime()));
