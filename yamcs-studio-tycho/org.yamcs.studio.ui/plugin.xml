@@ -38,9 +38,6 @@
                name="startupProgressRect"
                value="20,215,560,15"/>
          <property
-               name="preferenceCustomization"
-               value="plugin_customization.ini"/>
-         <property
             name="introTitle"
             value="Yamcs Studio"/>
          <property
@@ -49,6 +46,10 @@
          <property
             name="introBrandingImageText"
             value="Yamcs Studio"/>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
       </product>
    </extension>
    
