@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set available memory for java in maven builds
-export MAVEN_OPTS="-Xmx1024M -Xss128M -XX:+CMSClassUnloadingEnabled"
+export MAVEN_OPTS="-Xmx2048m -Xss128M -XX:+CMSClassUnloadingEnabled"
 
 # Builds CSS from the sources using a local p2 repository as described
 # in their documentation.
