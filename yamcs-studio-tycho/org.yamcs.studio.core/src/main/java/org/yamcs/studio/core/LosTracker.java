@@ -55,7 +55,7 @@ public class LosTracker {
                 this.losHandle.cancel(false);
             this.lastKnownValue = lastKnownValue;
 
-            if (lastKnownValue.getExpirationTime() == 0)
+            if (!lastKnownValue.hasExpirationTime())
                 return;
 
             Date now = new Date();
