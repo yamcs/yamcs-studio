@@ -59,7 +59,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-p2-extras-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-extras.version}</version>
 				<executions>
 					<execution>
 						<id>mirror-build-to-central-repository</id>
@@ -100,7 +100,7 @@
 					<plugin>
 						<groupId>org.eclipse.tycho.extras</groupId>
 						<artifactId>tycho-p2-extras-plugin</artifactId>
-						<version>${tycho.version}</version>
+						<version>${tycho-extras.version}</version>
 						<executions>
 							<execution>
 								<id>mirror-build-to-local-repository</id>

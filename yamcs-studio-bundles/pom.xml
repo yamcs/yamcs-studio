@@ -13,7 +13,7 @@
 	</prerequisites>
 
 	<properties>
-		<tycho.version>0.23.0</tycho.version>
+        <tycho-extras.version>0.23.0</tycho-extras.version>
 		<yamcs.version>0.28.0</yamcs.version>
 	</properties>
 

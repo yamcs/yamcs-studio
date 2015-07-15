@@ -20,8 +20,8 @@
 
 	<properties>
 		<csstudio.pvmanager.version>2.9.1-SNAPSHOT</csstudio.pvmanager.version>
-		<tycho.version>0.23.0</tycho.version>
-		<tycho-extras.version>0.23.0</tycho-extras.version>
+		<tycho.version>0.23.1</tycho.version>
+		<tycho-extras.version>0.23.1</tycho-extras.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -199,6 +199,14 @@
 			<url>http://epics.sourceforge.net/maven2/</url>
 		</repository>
 	</repositories>
+
+    <!-- Temporary to be able to use 0.23.1 which fixes a high-memory consumption bug -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>tycho-staged</id>
+            <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1022/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 	<profiles>
 		<!-- If a local repository is specified, use that. -->
