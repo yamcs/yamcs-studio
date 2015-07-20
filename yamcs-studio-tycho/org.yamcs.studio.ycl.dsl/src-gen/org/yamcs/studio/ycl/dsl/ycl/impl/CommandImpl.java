@@ -29,11 +29,11 @@ import org.yamcs.studio.ycl.dsl.ycl.YclPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.yamcs.studio.ycl.dsl.ycl.impl.CommandImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.yamcs.studio.ycl.dsl.ycl.impl.CommandImpl#getAssignments <em>Assignments</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

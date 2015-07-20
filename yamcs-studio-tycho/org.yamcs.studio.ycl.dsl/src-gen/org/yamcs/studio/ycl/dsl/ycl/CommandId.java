@@ -11,10 +11,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.yamcs.studio.ycl.dsl.ycl.CommandId#getId <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.yamcs.studio.ycl.dsl.ycl.YclPackage#getCommandId()
  * @model

@@ -18,10 +18,10 @@ import org.yamcs.studio.ycl.dsl.ycl.YclPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.yamcs.studio.ycl.dsl.ycl.impl.CommandIdImpl#getId <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -18,11 +18,11 @@ import org.yamcs.studio.ycl.dsl.ycl.YclPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.yamcs.studio.ycl.dsl.ycl.impl.ArgumentAssignmentImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.yamcs.studio.ycl.dsl.ycl.impl.ArgumentAssignmentImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
