@@ -557,6 +557,13 @@
             icon="icons/eview16/tc_add.png"
             id="org.yamcs.studio.ui.commanding.stack.CommandStackView"
             name="Command Stack"/>
+      <view
+            category="org.yamcs.studio.server"
+            class="org.yamcs.studio.ui.commanding.queue.CommandQueueView"
+            icon="icons/eview16/tc_queue.png"
+            id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"
+            name="Command Queues"/>            
+            
    </extension>
 
    <extension
@@ -622,6 +629,13 @@
                visible="true"
                closeable="true"
                id="org.yamcs.studio.ui.commanding.stack.CommandStackView">
+         </view>        
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -629,10 +643,11 @@
                visible="true"
                closeable="true"
                id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
-         </view>
+         </view> 
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
       </perspectiveExtension>
       
@@ -664,6 +679,11 @@
                relationship="stack"
                visible="false"
                id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
+        <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -678,6 +698,7 @@
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>

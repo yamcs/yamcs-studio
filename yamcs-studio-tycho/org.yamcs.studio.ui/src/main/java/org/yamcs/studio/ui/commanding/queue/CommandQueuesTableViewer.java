@@ -1,0 +1,203 @@
+package org.yamcs.studio.ui.commanding.queue;
+
+import java.util.ArrayList;
+import java.util.logging.Logger;
+
+import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
+import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.yamcs.protobuf.Commanding;
+import org.yamcs.protobuf.Commanding.CommandQueueEntry;
+import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.studio.ui.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
+import org.yamcs.utils.TimeEncoding;
+
+public class CommandQueuesTableViewer extends TableViewer {
+
+    private static final Logger log = Logger.getLogger(CommandQueuesTableViewer.class.getName());
+
+    public static final String COL_QUEUE = "Queue";
+    public static final String COL_STATE = "State";
+    public static final String COL_COMMANDS = "Commands";
+
+    private CommandQueuesTableContentProvider contentProvider;
+    private CommandQueueView commandQueueView;
+
+    Composite parent;
+
+    public CommandQueuesTableViewer(CommandQueueView commandQueueView, Composite parent, TableColumnLayout tcl) {
+        super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
+        //   this.styleProvider = styleProvider;
+
+        this.commandQueueView = commandQueueView;
+        this.parent = parent;
+
+        getTable().setHeaderVisible(true);
+        getTable().setLinesVisible(true);
+        addFixedColumns(tcl);
+
+        setLabelProvider(new ModelLabelProvider());
+
+    }
+
+    private void addFixedColumns(TableColumnLayout tcl) {
+
+        TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
+        nameColumn.getColumn().setText(COL_QUEUE);
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(200));
+
+        TableViewerColumn stateColumn = new TableViewerColumn(this, SWT.CENTER);
+        stateColumn.getColumn().setText(COL_STATE);
+        stateColumn.getColumn().setWidth(250);
+        stateColumn.setEditingSupport(new StateEditingSupport(stateColumn.getViewer()));
+        tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(50));
+
+        TableViewerColumn commandsColumn = new TableViewerColumn(this, SWT.LEFT);
+        commandsColumn.getColumn().setText(COL_COMMANDS);
+        tcl.setColumnData(commandsColumn.getColumn(), new ColumnPixelData(250));
+
+    }
+
+    class StateEditingSupport extends EditingSupport
+    {
+        private ComboBoxViewerCellEditor cellEditor = null;
+
+        private StateEditingSupport(ColumnViewer viewer) {
+            super(viewer);
+            cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY);
+            cellEditor.setLabelProvider(new LabelProvider());
+            cellEditor.setContenProvider(new ArrayContentProvider());
+            cellEditor.setInput(Commanding.QueueState.values());
+        }
+
+        @Override
+        protected CellEditor getCellEditor(Object element) {
+            return cellEditor;
+        }
+
+        @Override
+        protected boolean canEdit(Object element) {
+            return true;
+        }
+
+        @Override
+        protected Object getValue(Object element) {
+            if (element instanceof CommandQueue) {
+                CommandQueue data = (CommandQueue) element;
+                return data.getState();
+            }
+            return null;
+        }
+
+        @Override
+        protected void setValue(Object element, Object value) {
+            if (element instanceof CommandQueue && value instanceof Commanding.QueueState) {
+                CommandQueue data = (CommandQueue) element;
+                Commanding.QueueState newValue = (Commanding.QueueState) value;
+                /* only set new value if it differs from old one */
+                if (!data.getState().equals(newValue)) {
+                    data.setState(newValue);
+
+                    try {
+                        CommandQueueInfo q = null;
+                        for (RowCommandQueueInfo rcqi : commandQueueView.currentQueuesModel.queues)
+                        {
+                            if (rcqi.cq == element)
+                                q = rcqi.commandQueueInfo;
+                        }
+                        //CommandQueueInfo q = queues.get(row);
+                        if (value.equals(Commanding.QueueState.BLOCKED)) {
+                            commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.BLOCKED)
+                                    .build(), false);
+                        } else if (value.equals(Commanding.QueueState.DISABLED)) {
+                            commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q)
+                                    .setState(Commanding.QueueState.DISABLED).build(), false);
+                        } else if (value.equals(Commanding.QueueState.ENABLED)) {
+                            boolean oldcommandsfound = false;
+                            ArrayList<CommandQueueEntry> cmds = commandQueueView.currentQueuesModel.commands.get(q.getName());
+                            if (cmds != null) {
+                                for (CommandQueueEntry cqe : cmds) {
+                                    if (TimeEncoding.currentInstant() - cqe.getGenerationTime() > CommandQueueView.oldCommandWarningTime * 1000L) {
+                                        oldcommandsfound = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (oldcommandsfound) {
+                                int result = CommandFateDialog.showDialog2(parent.getShell());
+                                switch (result) {
+                                case -1://cancel
+                                    return;
+                                case 0: //send with updated times
+                                    commandQueueView.commandQueueControl.setQueueState(
+                                            CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), true);
+                                    break;
+                                case 1://send with old times
+                                    commandQueueView.commandQueueControl.setQueueState(
+                                            CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), false);
+                                    break;
+                                }
+                            } else {
+                                commandQueueView.commandQueueControl.setQueueState(
+                                        CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(),
+                                        false);
+                            }
+                        }
+                    } catch (Exception e) {
+                        log.severe(e.getMessage());
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
+    class ModelLabelProvider extends LabelProvider implements
+            ITableLabelProvider {
+
+        @Override
+        public Image getColumnImage(Object element, int columnIndex) {
+            // no image to show
+            return null;
+        }
+
+        @Override
+        public String getColumnText(Object element, int columnIndex) {
+            // each element comes from the ContentProvider.getElements(Object)
+            if (!(element instanceof CommandQueue)) {
+                return "";
+            }
+            CommandQueue model = (CommandQueue) element;
+            switch (columnIndex) {
+            case 0:
+                return model.getQueue();
+            case 1:
+                return model.getState().name();
+            case 2:
+                if (model.getCommands() == null)
+                    return 0 + "";
+                return model.getCommands().size() + "";
+            default:
+                break;
+            }
+            return "";
+        }
+    }
+
+}
