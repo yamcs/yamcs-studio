@@ -97,13 +97,13 @@ public class DataViewer extends JPanel implements ActionListener {
             archivePanel.archiveView.setTagEnabled(false);
         } else if (cmd.equalsIgnoreCase("insert-tag")) {
             TagEvent te = (TagEvent) e;
-            indexReceiver.insertTag(archivePanel.archiveView.getInstance(), te.newTag);
+            indexReceiver.insertTag(te.newTag);
         } else if (cmd.equalsIgnoreCase("update-tag")) {
             TagEvent te = (TagEvent) e;
-            indexReceiver.updateTag(archivePanel.archiveView.getInstance(), te.oldTag, te.newTag);
+            indexReceiver.updateTag(te.oldTag, te.newTag);
         } else if (cmd.equalsIgnoreCase("delete-tag")) {
             TagEvent te = (TagEvent) e;
-            indexReceiver.deleteTag(archivePanel.archiveView.getInstance(), te.oldTag);
+            indexReceiver.deleteTag(te.oldTag);
         }
     }
 

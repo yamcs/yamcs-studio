@@ -9,6 +9,10 @@ import java.util.logging.Logger;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Rest.GetTagsRequest;
+import org.yamcs.protobuf.Rest.GetTagsResponse;
+import org.yamcs.protobuf.Rest.InsertTagRequest;
+import org.yamcs.protobuf.Rest.InsertTagResponse;
 import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
 import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
@@ -22,6 +26,7 @@ import org.yamcs.protobuf.Rest.RestListProcessorsResponse;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
+import org.yamcs.protobuf.Rest.UpdateTagRequest;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
@@ -115,12 +120,36 @@ public class RestClient {
         get("/api/authorization/list", null, RestListAuthorisationsResponse.newBuilder(), responseHandler);
     }
 
+    public void insertTag(InsertTagRequest request, ResponseHandler responseHandler) {
+        post("/api/archive/tags", request, InsertTagResponse.newBuilder(), responseHandler);
+    }
+
+    public void updateTag(long tagTime, int tagId, UpdateTagRequest request, ResponseHandler responseHandler) {
+        put("/api/archive/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
+    }
+
+    public void deleteTag(long tagTime, int tagId, ResponseHandler responseHandler) {
+        delete("/api/archive/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
+    }
+
+    public void getTags(GetTagsRequest request, ResponseHandler responseHandler) {
+        get("/api/archive/tags", request, GetTagsResponse.newBuilder(), responseHandler);
+    }
+
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
         doRequest(HttpMethod.GET, uri, msg, target, handler);
     }
 
     public void post(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
         doRequest(HttpMethod.POST, uri, msg, target, handler);
+    }
+
+    public void put(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
+        doRequest(HttpMethod.PUT, uri, msg, target, handler);
+    }
+
+    public void delete(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
+        doRequest(HttpMethod.DELETE, uri, msg, target, handler);
     }
 
     private <S extends MessageLite> void doRequest(HttpMethod method, String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {

@@ -6,12 +6,18 @@ import org.yamcs.api.ConnectionListener;
 import org.yamcs.api.Protocol;
 import org.yamcs.api.YamcsClient;
 import org.yamcs.api.YamcsConnector;
+import org.yamcs.protobuf.Rest.GetTagsRequest;
+import org.yamcs.protobuf.Rest.GetTagsResponse;
+import org.yamcs.protobuf.Rest.InsertTagRequest;
+import org.yamcs.protobuf.Rest.InsertTagResponse;
+import org.yamcs.protobuf.Rest.UpdateTagRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.protobuf.Yamcs.DeleteTagRequest;
 import org.yamcs.protobuf.Yamcs.IndexRequest;
 import org.yamcs.protobuf.Yamcs.IndexResult;
-import org.yamcs.protobuf.Yamcs.TagResult;
-import org.yamcs.protobuf.Yamcs.UpsertTagRequest;
+import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.web.ResponseHandler;
+
+import com.google.protobuf.MessageLite;
 
 public class ArchiveIndexReceiver implements ConnectionListener {
     private ArchiveView archiveView;
@@ -72,72 +78,100 @@ public class ArchiveIndexReceiver implements ConnectionListener {
         receivingThread.start();
     }
 
-    public void getTag(final String instance, final TimeInterval interval) {
-        //System.out.println("receiving tags for "+instance);
+    public void getTag(TimeInterval interval) {
         if (receiving) {
             archiveView.log("already receiving data");
             return;
         }
-        Thread receivingThread = new Thread() {
+        GetTagsRequest.Builder requestb = GetTagsRequest.newBuilder();
+        if (interval.hasStart())
+            requestb.setStart(interval.getStart());
+        if (interval.hasStop())
+            requestb.setStop(interval.getStop());
+        ConnectionManager.getInstance().getRestClient().getTags(requestb.build(), new ResponseHandler() {
             @Override
-            public void run() {
-                try {
-                    IndexRequest.Builder request = IndexRequest.newBuilder().setInstance(instance);
-                    if (interval.hasStart())
-                        request.setStart(interval.getStart());
-                    if (interval.hasStop())
-                        request.setStop(interval.getStop());
-                    yamcsClient.sendRequest(Protocol.getYarchIndexControlAddress(instance), "getTag", request.build());
-                    while (true) {
-                        TagResult tr = (TagResult) yamcsClient.receiveData(TagResult.newBuilder());
-                        if (tr == null) {
-                            archiveView.receiveTagsFinished();
-                            break;
-                        }
-                        archiveView.receiveTags(tr.getTagList());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    archiveView.receiveArchiveRecordsError(e.getMessage());
-                } finally {
-                    receiving = false;
-                }
-            };
-        };
-        receivingThread.start();
+            public void onMessage(MessageLite responseMsg) {
+                GetTagsResponse response = (GetTagsResponse) responseMsg;
+                archiveView.receiveTags(response.getTagsList());
+                archiveView.receiveTagsFinished();
+                receiving = false;
+            }
+
+            @Override
+            public void onException(Exception e) {
+                archiveView.log("Failed to retreive tags: " + e.getMessage());
+                receiving = false;
+            }
+        });
     }
 
-    public void insertTag(String instance, ArchiveTag tag) {
-        UpsertTagRequest utr = UpsertTagRequest.newBuilder().setNewTag(tag).build();
-        try {
-            ArchiveTag ntag = (ArchiveTag) yamcsClient.executeRpc((Protocol.getYarchIndexControlAddress(instance)), "upsertTag", utr,
-                    ArchiveTag.newBuilder());
-            archiveView.tagAdded(ntag);
-        } catch (Exception e) {
-            archiveView.log("Failed to insert tag: " + e.getMessage());
-        }
+    public void insertTag(ArchiveTag tag) {
+        InsertTagRequest.Builder requestb = InsertTagRequest.newBuilder();
+        if (tag.hasName())
+            requestb.setName(tag.getName());
+        if (tag.hasColor())
+            requestb.setColor(tag.getColor());
+        if (tag.hasDescription())
+            requestb.setDescription(tag.getDescription());
+        if (tag.hasStart())
+            requestb.setStart(tag.getStart());
+        if (tag.hasStop())
+            requestb.setStop(tag.getStop());
+        ConnectionManager.getInstance().getRestClient().insertTag(requestb.build(), new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                InsertTagResponse response = (InsertTagResponse) responseMsg;
+                archiveView.tagAdded(response.getTag());
+            }
+
+            @Override
+            public void onException(Exception e) {
+                archiveView.log("Failed to insert tag: " + e.getMessage());
+            }
+        });
     }
 
-    public void updateTag(String instance, ArchiveTag oldTag, ArchiveTag newTag) {
-        UpsertTagRequest utr = UpsertTagRequest.newBuilder().setOldTag(oldTag).setNewTag(newTag).build();
-        try {
-            ArchiveTag ntag = (ArchiveTag) yamcsClient.executeRpc((Protocol.getYarchIndexControlAddress(instance)), "upsertTag", utr,
-                    ArchiveTag.newBuilder());
-            archiveView.tagChanged(oldTag, ntag);
-        } catch (Exception e) {
-            archiveView.log("Failed to insert tag: " + e.getMessage());
-        }
+    public void updateTag(ArchiveTag oldTag, ArchiveTag newTag) {
+        UpdateTagRequest.Builder requestb = UpdateTagRequest.newBuilder();
+        if (newTag.hasName())
+            requestb.setName(newTag.getName());
+        if (newTag.hasColor())
+            requestb.setColor(newTag.getColor());
+        if (newTag.hasDescription())
+            requestb.setDescription(newTag.getDescription());
+        if (newTag.hasStart())
+            requestb.setStart(newTag.getStart());
+        if (newTag.hasStop())
+            requestb.setStop(newTag.getStop());
+        long tagTime = oldTag.hasStart() ? oldTag.getStart() : 0;
+        int tagId = oldTag.getId();
+        ConnectionManager.getInstance().getRestClient().updateTag(tagTime, tagId, requestb.build(), new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                archiveView.tagChanged(oldTag, newTag);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                archiveView.log("Failed to insert tag: " + e.getMessage());
+            }
+        });
     }
 
-    public void deleteTag(String instance, ArchiveTag tag) {
-        DeleteTagRequest dtr = DeleteTagRequest.newBuilder().setTag(tag).build();
-        try {
-            ArchiveTag rtag = (ArchiveTag) yamcsClient.executeRpc((Protocol.getYarchIndexControlAddress(instance)), "deleteTag", dtr,
-                    ArchiveTag.newBuilder());
-            archiveView.tagRemoved(rtag);
-        } catch (Exception e) {
-            archiveView.log("Failed to remove tag: " + e.getMessage());
-        }
+    public void deleteTag(ArchiveTag tag) {
+        long tagTime = tag.hasStart() ? tag.getStart() : 0;
+        int tagId = tag.getId();
+        ConnectionManager.getInstance().getRestClient().updateTag(tagTime, tagId, null, new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                archiveView.tagRemoved(tag);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                archiveView.log("Failed to remove tag: " + e.getMessage());
+            }
+        });
     }
 
     public boolean supportsTags() {

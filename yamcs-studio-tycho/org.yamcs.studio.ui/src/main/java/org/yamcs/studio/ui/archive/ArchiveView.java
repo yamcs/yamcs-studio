@@ -65,6 +65,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
         frame.add(archivePanel);
 
         indexReceiver.setIndexListener(this);
+        yconnector.addConnectionListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
 
         // Listen to processing updates in order to move vertical locator bar
@@ -312,7 +313,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
     public void receiveArchiveRecordsFinished() {
         if (indexReceiver.supportsTags()) {
             TimeInterval interval = archivePanel.getRequestedDataInterval();
-            indexReceiver.getTag(instance, interval);
+            indexReceiver.getTag(interval);
         } else {
             archivePanel.archiveLoadFinished();
         }
