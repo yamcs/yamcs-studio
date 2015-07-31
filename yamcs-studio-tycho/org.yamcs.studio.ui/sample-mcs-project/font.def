@@ -7,7 +7,7 @@ MCSlabeltextshort = Arial-bold-10
 
 MCSTOPBAR = Arial-regular-11
 
-//Title Font for Linux GTK 
+//Title Font for Linux GTK
 Example Title(linux_gtk) = Sans-bold-18
 
 //Title Font for MacOS
@@ -18,4 +18,3 @@ Example Text = SystemDefault-regular-10
 Example LinkText = SystemDefault-italic-10
 
 Group title bold = Arial-bold-12
-

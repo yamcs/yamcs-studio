@@ -13,21 +13,20 @@ light green = 144,238,144
 Black = 0,0,0
 MCS Dark Gray = 10,10,10
 
-Label Background = 255,255,212
+Label Background = 0,0,0
 
 Red = 255, 0, 0
-Green = 0,255,0
-Blue = 0,0,255
-Yellow = 255,255,0
-Purple = 128,0,255
+Green = 114,201,144
+Blue = 56,117,237
+Yellow = 226,192,141
+Purple = 198,121,194
+Orange = 210,155,103
 
 MCS_Text = 255,255,0
-Background_main1 = 86,100,122
-Background_main = 146,230,239
+Background_main1 = 39,43,51
+Background_main = 32,36,42
 Background_TMlist= 192,192,192
-Background_text box=255,255,255
-TM_Text=0,0,0
-TM_label_text=0,0,0
-TM_header_background=255,255,255
-
-
+Background_text box=39,43,51
+TM_Text=255,255,255
+TM_label_text=197,211,236
+TM_header_background=32,36,42
