@@ -35,7 +35,7 @@ import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
-public class ArchiveView extends ViewPart implements StudioConnectionListener, ArchiveIndexListener, ConnectionListener {
+public class ArchiveView extends ViewPart implements StudioConnectionListener, ConnectionListener {
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
@@ -47,7 +47,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         createActions();
 
         yconnector = new YamcsConnector(false);
-        indexReceiver = new YamcsArchiveIndexReceiver(yconnector);
+        indexReceiver = new ArchiveIndexReceiver(yconnector);
 
         Composite locationComp = new Composite(parent, SWT.EMBEDDED);
         java.awt.Frame frame = SWT_AWT.new_Frame(locationComp);
@@ -65,9 +65,9 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         frame.add(archivePanel);
 
         indexReceiver.setIndexListener(this);
-        yconnector.addConnectionListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
 
+        // Listen to processing updates in order to move vertical locator bar
         ArchiveProcessorListener processorListener = new ArchiveProcessorListener(parent.getDisplay(), archivePanel.getDataViewer());
         ManagementCatalogue.getInstance().addProcessorListener(processorListener);
     }
@@ -301,17 +301,14 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         showMessage(text);
     }
 
-    @Override
     public void receiveArchiveRecords(IndexResult ir) {
         archivePanel.receiveArchiveRecords(ir);
     }
 
-    @Override
     public void receiveArchiveRecordsError(String errorMessage) {
         archivePanel.receiveArchiveRecordsError(errorMessage);
     }
 
-    @Override
     public void receiveArchiveRecordsFinished() {
         if (indexReceiver.supportsTags()) {
             TimeInterval interval = archivePanel.getRequestedDataInterval();
@@ -321,7 +318,6 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         }
     }
 
-    @Override
     public void receiveTagsFinished() {
         archivePanel.archiveLoadFinished();
     }
@@ -332,22 +328,18 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         indexReceiver.getIndex(instance, interval);
     }
 
-    @Override
     public void receiveTags(final List<ArchiveTag> tagList) {
         SwingUtilities.invokeLater(() -> archivePanel.tagsAdded(tagList));
     }
 
-    @Override
     public void tagAdded(final ArchiveTag ntag) {
         SwingUtilities.invokeLater(() -> archivePanel.tagAdded(ntag));
     }
 
-    @Override
     public void tagRemoved(final ArchiveTag rtag) {
         SwingUtilities.invokeLater(() -> archivePanel.tagRemoved(rtag));
     }
 
-    @Override
     public void tagChanged(final ArchiveTag oldTag, final ArchiveTag newTag) {
         SwingUtilities.invokeLater(() -> archivePanel.tagChanged(oldTag, newTag));
     }
@@ -370,5 +362,4 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         if (yconnector != null)
             yconnector.disconnect();
     }
-
 }
