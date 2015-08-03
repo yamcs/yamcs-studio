@@ -32,17 +32,21 @@ public class QueuesTableModel implements IStructuredContentProvider {
     }
 
     void updateQueue(CommandQueueInfo cqi) {
-        boolean found = updateQueueRow(cqi.getName());
 
-        if (!found) {
-            ArrayList<CommandQueueEntry> cmds = commands.get(cqi.getName());
-            if (cmds == null) {
-                cmds = new ArrayList<CommandQueueEntry>();
-                commands.put(cqi.getName(), cmds);
-            }
-            CommandQueue cq = new CommandQueue(cqi.getName(), cqi.getState(), cmds);
-            queues.add(new RowCommandQueueInfo(cq, cqi));
-            queuesTableViewer.add(cq);
+        ArrayList<CommandQueueEntry> cmds = commands.get(cqi.getName());
+        if (cmds == null) {
+            cmds = new ArrayList<CommandQueueEntry>();
+            commands.put(cqi.getName(), cmds);
+        }
+        CommandQueue newCq = new CommandQueue(cqi.getName(), cqi.getState(), cmds);
+
+        boolean found = updateQueueProperties(cqi.getName(), newCq);
+
+        if (!found)
+        {
+
+            queues.add(new RowCommandQueueInfo(newCq, cqi));
+            queuesTableViewer.add(newCq);
         }
     }
 
@@ -54,14 +58,21 @@ public class QueuesTableModel implements IStructuredContentProvider {
         }
         cmds.add(cqe);
         reloadCommandsTable(currentSelection);
-        updateQueueRow(cqe.getQueueName());
+        // update command count number
+        updateQueueProperties(cqe.getQueueName(), null);
     }
 
-    boolean updateQueueRow(String queueName)
+    boolean updateQueueProperties(String queueName, CommandQueue newCq)
     {
         for (int i = 0; i < queues.size(); i++) {
             RowCommandQueueInfo rq = queues.get(i);
             if (rq.commandQueueInfo.getName().equals(queueName)) {
+                if (newCq != null)
+                {
+                    rq.cq.setQueue(newCq.getQueue());
+                    rq.cq.setState(newCq.getState());
+                    rq.cq.setCommands(newCq.getCommands());
+                }
                 queuesTableViewer.update(rq.cq, null);
                 return true;
             }
@@ -81,7 +92,7 @@ public class QueuesTableModel implements IStructuredContentProvider {
                 break;
             }
         }
-        updateQueueRow(cqe.getQueueName());
+        updateQueueProperties(cqe.getQueueName(), null);
     }
 
     /**
