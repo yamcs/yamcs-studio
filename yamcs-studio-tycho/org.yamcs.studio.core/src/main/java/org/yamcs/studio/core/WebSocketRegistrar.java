@@ -22,6 +22,7 @@ import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.protobuf.YamcsManagement.Statistics;
 
 /**
  * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient. Combines state accross the
@@ -202,5 +203,11 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         synchronized (this) {
             cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
         }
+    }
+
+    @Override
+    public void onStatisticsData(Statistics arg0) {
+        // TODO Auto-generated method stub
+
     }
 }

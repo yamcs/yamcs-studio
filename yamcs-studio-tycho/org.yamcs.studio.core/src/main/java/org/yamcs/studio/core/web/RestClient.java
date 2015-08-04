@@ -36,6 +36,8 @@ import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Rest.RestListAuthorisationsRequest;
+import org.yamcs.protobuf.Rest.RestListAuthorisationsResponse;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestListProcessorsRequest;
@@ -105,6 +107,10 @@ public class RestClient {
 
     public void listProcessors(RestListProcessorsRequest request, ResponseHandler responseHandler) {
         get("/api/processor/list", request, RestListProcessorsResponse.newBuilder(), responseHandler);
+    }
+
+    public void listAuthorizations(RestListAuthorisationsRequest request, ResponseHandler responseHandler) {
+        get("/api/authorization/list", request, RestListAuthorisationsResponse.newBuilder(), responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {

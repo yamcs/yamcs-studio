@@ -162,6 +162,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // Need to improve this code. Currently doesn't support changing connections
         //boolean doSetup = (this.clientInfo == null);
         this.clientInfo = clientInfo;
+        YamcsAuthorizations.getInstance().getAuthorizations();
         loadParameters();
         loadCommands();
 

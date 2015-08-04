@@ -35,6 +35,8 @@ import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.YamcsAuthorizations;
+import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.ConnectionStateProvider;
@@ -219,7 +221,7 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
                 armButton.setEnabled(false);
                 issueButton.setEnabled(false);
             } else if (stack.hasRemaining()) {
-                armButton.setEnabled(true);
+                setButtonEnable(armButton, true);
             }
 
             refreshState();
@@ -353,32 +355,41 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
             StackedCommand selectedCommand = (StackedCommand) sel.getFirstElement();
             if (selectedCommand == stack.getActiveCommand()) {
                 if (selectedCommand.isArmed()) {
-                    armButton.setEnabled(true);
-                    issueButton.setEnabled(armButton.getSelection());
+                    setButtonEnable(armButton, true);
+                    setButtonEnable(issueButton, armButton.getSelection());
                 } else if (stack.isValid()) {
-                    armButton.setEnabled(true);
-                    issueButton.setEnabled(false);
+                    setButtonEnable(armButton, true);
+                    setButtonEnable(issueButton, false);
                 } else {
-                    armButton.setEnabled(false);
-                    issueButton.setEnabled(false);
+                    setButtonEnable(armButton, false);
+                    setButtonEnable(issueButton, false);
                 }
             } else {
                 stack.disarmArmed();
-                armButton.setEnabled(false);
-                armButton.setSelection(false);
-                issueButton.setEnabled(false);
+                setButtonEnable(armButton, false);
+                setButtonEnable(armButton, false);
+                setButtonEnable(issueButton, false);
             }
         } else {
             stack.disarmArmed();
-            armButton.setEnabled(false);
-            armButton.setSelection(false);
-            issueButton.setEnabled(false);
+            setButtonEnable(armButton, false);
+            setButtonEnable(armButton, false);
+            setButtonEnable(issueButton, false);
         }
 
         // State for plugin.xml handlers
         CommandStackStateProvider executionStateProvider = RCPUtils.findSourceProvider(
                 getSite(), CommandStackStateProvider.STATE_KEY_ARMED, CommandStackStateProvider.class);
         executionStateProvider.refreshState(CommandStack.getInstance());
+    }
+
+    // Enable the buttons if user is authorized to command payload
+    private void setButtonEnable(Button button, boolean isEnabled)
+    {
+        if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayCommandPayload))
+            button.setEnabled(isEnabled);
+        else
+            button.setEnabled(false);
     }
 
     @Override

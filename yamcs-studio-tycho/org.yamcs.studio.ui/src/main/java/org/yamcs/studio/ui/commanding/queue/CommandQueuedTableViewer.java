@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
+import org.yamcs.studio.core.YamcsAuthorizations;
+import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuedTableViewer extends TableViewer {
@@ -121,7 +123,14 @@ public class CommandQueuedTableViewer extends TableViewer {
             public void handleEvent(Event event) {
                 TableItem[] selection = getTable().getSelection();
                 if (selection.length != 0 && (event.button == 3)) {
-                    contextMenu.setVisible(true);
+                    if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayControlCommandQueue))
+                    {
+                        contextMenu.setVisible(true);
+                    }
+                    else
+                    {
+                        contextMenu.setVisible(false);
+                    }
                 }
             }
 
