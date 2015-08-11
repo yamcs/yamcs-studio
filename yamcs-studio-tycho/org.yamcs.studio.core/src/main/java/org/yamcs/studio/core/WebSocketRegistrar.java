@@ -14,6 +14,7 @@ import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallbackListener;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Alarms.AlarmNotice;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
@@ -214,6 +215,12 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onStreamData(StreamData arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onAlarmNotice(AlarmNotice arg0) {
         // TODO Auto-generated method stub
 
     }
