@@ -38,7 +38,7 @@ public class QueuesTableModel implements IStructuredContentProvider {
             cmds = new ArrayList<CommandQueueEntry>();
             commands.put(cqi.getName(), cmds);
         }
-        CommandQueue newCq = new CommandQueue(cqi.getName(), cqi.getState(), cmds);
+        CommandQueue newCq = new CommandQueue(cqi, cmds);
 
         boolean found = updateQueueProperties(cqi.getName(), newCq);
 
@@ -72,6 +72,8 @@ public class QueuesTableModel implements IStructuredContentProvider {
                     rq.cq.setQueue(newCq.getQueue());
                     rq.cq.setState(newCq.getState());
                     rq.cq.setCommands(newCq.getCommands());
+                    rq.cq.setNbRejectedCommands(newCq.getNbRejectedCommands());
+                    rq.cq.setNbSentCommands(newCq.getNbSentCommands());
                 }
                 queuesTableViewer.update(rq.cq, null);
                 return true;
@@ -145,49 +147,6 @@ public class QueuesTableModel implements IStructuredContentProvider {
 
     public boolean isCellEditable(int row, int col) {
         return col == 1;
-    }
-
-    public void setValueAt(Object value, int row, int col) {
-        //        super.setValueAt(value, row, col);
-        //        System.out.println(String.format("setvalue %d/%d to %s", row, col, value));
-        //        try {
-        //            CommandQueueInfo q = queues.get(row);
-        //            if (value.equals(queueStateItems[0])) {
-        //                commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(QueueState.BLOCKED).build(), false);
-        //            } else if (value.equals(queueStateItems[1])) {
-        //                commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(QueueState.DISABLED).build(), false);
-        //            } else if (value.equals(queueStateItems[2])) {
-        //                boolean oldcommandsfound = false;
-        //                ArrayList<CommandQueueEntry> cmds = commands.get(q.getName());
-        //                if (cmds != null) {
-        //                    for (CommandQueueEntry cqe : cmds) {
-        //                        if (TimeEncoding.currentInstant() - cqe.getGenerationTime() > oldCommandWarningTime * 1000L) {
-        //                            oldcommandsfound = true;
-        //                            break;
-        //                        }
-        //                    }
-        //                }
-        //
-        //                if (oldcommandsfound) {
-        //                    int result = CommandFateDialog.showDialog2(frame);
-        //                    switch (result) {
-        //                    case -1://cancel
-        //                        return;
-        //                    case 0: //send with updated times
-        //                        commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(QueueState.ENABLED).build(), true);
-        //                        break;
-        //                    case 1://send with old times
-        //                        commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(QueueState.ENABLED).build(), false);
-        //                        break;
-        //                    }
-        //                } else {
-        //                    commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(QueueState.ENABLED).build(), false);
-        //                }
-        //            }
-        //        } catch (Exception e) {
-        //            e.printStackTrace();
-        //            YamcsMonitor.theApp.showMessage(e.toString());
-        //        }
     }
 
     @Override

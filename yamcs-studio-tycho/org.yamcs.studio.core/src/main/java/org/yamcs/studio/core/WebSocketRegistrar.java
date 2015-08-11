@@ -20,6 +20,7 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.protobuf.Yamcs.StreamData;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -207,6 +208,12 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onStatisticsData(Statistics arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStreamData(StreamData arg0) {
         // TODO Auto-generated method stub
 
     }

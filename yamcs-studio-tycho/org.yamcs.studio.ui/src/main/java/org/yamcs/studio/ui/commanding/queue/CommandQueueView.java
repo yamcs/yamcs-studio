@@ -140,8 +140,6 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
 
     @Override
     public void updateQueue(CommandQueueInfo cqi) {
-        if (!selectedInstance.equals(cqi.getInstance()))
-            return;
 
         Display.getDefault().asyncExec(() ->
         {
@@ -158,8 +156,6 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
 
     @Override
     public void commandAdded(CommandQueueEntry cqe) {
-        if (!selectedInstance.equals(cqe.getInstance()))
-            return;
         Display.getDefault().asyncExec(() -> {
             QueuesTableModel model = queuesModels.get(cqe.getInstance() + "." + cqe.getProcessorName());
             model.commandAdded(cqe);
@@ -168,8 +164,6 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
 
     @Override
     public void commandRejected(CommandQueueEntry cqe) {
-        if (!selectedInstance.equals(cqe.getInstance()))
-            return;
         Display.getDefault().asyncExec(() -> {
             QueuesTableModel model = queuesModels.get(cqe.getInstance() + "." + cqe.getProcessorName());
             model.removeCommandFromQueue(cqe);
@@ -178,8 +172,6 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
 
     @Override
     public void commandSent(CommandQueueEntry cqe) {
-        if (!selectedInstance.equals(cqe.getInstance()))
-            return;
         Display.getDefault().asyncExec(() -> {
             QueuesTableModel model = queuesModels.get(cqe.getInstance() + "." + cqe.getProcessorName());
             model.removeCommandFromQueue(cqe);

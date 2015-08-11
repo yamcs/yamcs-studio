@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
@@ -33,6 +32,8 @@ public class CommandQueuesTableViewer extends TableViewer {
     public static final String COL_QUEUE = "Queue";
     public static final String COL_STATE = "State";
     public static final String COL_COMMANDS = "Commands";
+    public static final String COL_SENT = "Sent";
+    public static final String COL_REJECTED = "Rejected";
 
     private CommandQueuesTableContentProvider contentProvider;
     private CommandQueueView commandQueueView;
@@ -58,17 +59,25 @@ public class CommandQueuesTableViewer extends TableViewer {
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_QUEUE);
-        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(200));
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(40));
 
         TableViewerColumn stateColumn = new TableViewerColumn(this, SWT.CENTER);
         stateColumn.getColumn().setText(COL_STATE);
         stateColumn.getColumn().setWidth(250);
         stateColumn.setEditingSupport(new StateEditingSupport(stateColumn.getViewer()));
-        tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(50));
+        tcl.setColumnData(stateColumn.getColumn(), new ColumnWeightData(30));
 
         TableViewerColumn commandsColumn = new TableViewerColumn(this, SWT.LEFT);
         commandsColumn.getColumn().setText(COL_COMMANDS);
-        tcl.setColumnData(commandsColumn.getColumn(), new ColumnPixelData(250));
+        tcl.setColumnData(commandsColumn.getColumn(), new ColumnWeightData(10));
+
+        TableViewerColumn sentColumn = new TableViewerColumn(this, SWT.LEFT);
+        sentColumn.getColumn().setText(COL_SENT);
+        tcl.setColumnData(sentColumn.getColumn(), new ColumnWeightData(10));
+
+        TableViewerColumn rejectedColumn = new TableViewerColumn(this, SWT.LEFT);
+        rejectedColumn.getColumn().setText(COL_REJECTED);
+        tcl.setColumnData(rejectedColumn.getColumn(), new ColumnWeightData(10));
 
     }
 
@@ -194,6 +203,10 @@ public class CommandQueuesTableViewer extends TableViewer {
                 if (model.getCommands() == null)
                     return 0 + "";
                 return model.getCommands().size() + "";
+            case 3:
+                return model.getNbSentCommands() + "";
+            case 4:
+                return model.getNbRejectedCommands() + "";
             default:
                 break;
             }

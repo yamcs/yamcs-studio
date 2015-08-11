@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
+import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 
 public class CommandQueue {
 
@@ -12,11 +13,15 @@ public class CommandQueue {
     //  private int commands;
 
     ArrayList<CommandQueueEntry> commands;
+    private int nbSentCommands;
+    private int nbRejectedCommands;
 
-    public CommandQueue(String queue, Commanding.QueueState state, ArrayList<CommandQueueEntry> commands)
+    public CommandQueue(CommandQueueInfo cqi, ArrayList<CommandQueueEntry> commands)
     {
-        this.queue = queue;
-        this.state = state;
+        this.queue = cqi.getName();
+        this.state = cqi.getState();
+        this.setNbRejectedCommands(cqi.getNbRejectedCommands());
+        this.setNbSentCommands(cqi.getNbSentCommands());
         this.commands = commands;
     }
 
@@ -48,6 +53,22 @@ public class CommandQueue {
     public void setCommands(ArrayList<CommandQueueEntry> commands)
     {
         this.commands = commands;
+    }
+
+    public int getNbSentCommands() {
+        return nbSentCommands;
+    }
+
+    public void setNbSentCommands(int nbSentCommands) {
+        this.nbSentCommands = nbSentCommands;
+    }
+
+    public int getNbRejectedCommands() {
+        return nbRejectedCommands;
+    }
+
+    public void setNbRejectedCommands(int nbRejectedCommands) {
+        this.nbRejectedCommands = nbRejectedCommands;
     }
 
 }
