@@ -34,7 +34,6 @@ public class LinksTableViewer extends TableViewer {
     public static final String COL_STATUS = "Status";
     public static final String COL_DATACOUNT = "Data Count";
 
-    private LinkContentProvider contentProvider;
     private LinksView linksView;
     Composite parent;
 

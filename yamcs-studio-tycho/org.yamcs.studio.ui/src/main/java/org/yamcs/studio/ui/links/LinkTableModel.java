@@ -6,27 +6,21 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 
-class LinkTableModel implements IStructuredContentProvider {
+class LinkTableModel {
     private ArrayList<LinkInfo> links = new ArrayList<LinkInfo>();
     private ArrayList<Long> lastDataCountIncrease = new ArrayList<Long>();
     private ArrayList<ScheduledFuture<?>> schduledFutures = new ArrayList<ScheduledFuture<?>>();
 
-    private LinksView linksView;
     private LinksTableViewer linksTableViewer;
-    String instance;
 
     ScheduledThreadPoolExecutor timer;
     private static final Logger log = Logger.getLogger(LinkTableModel.class.getName());
 
-    public LinkTableModel(ScheduledThreadPoolExecutor timer, LinksView linksView, LinksTableViewer linksTableViewer, String instance) {
-        this.linksView = linksView;
+    public LinkTableModel(ScheduledThreadPoolExecutor timer, LinksTableViewer linksTableViewer) {
         this.linksTableViewer = linksTableViewer;
-        this.instance = instance;
         this.timer = timer;
     }
 
@@ -93,16 +87,4 @@ class LinkTableModel implements IStructuredContentProvider {
 
     }
 
-    @Override
-    public void dispose() {
-    }
-
-    @Override
-    public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
-    }
-
-    @Override
-    public Object[] getElements(Object arg0) {
-        return links.toArray();
-    }
 }

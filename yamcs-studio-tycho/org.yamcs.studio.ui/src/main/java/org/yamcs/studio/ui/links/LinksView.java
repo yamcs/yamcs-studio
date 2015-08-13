@@ -73,7 +73,7 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
 
     public void addLinkModel(String instance)
     {
-        LinkTableModel model = new LinkTableModel(timer, this, linksTableViewer, instance);
+        LinkTableModel model = new LinkTableModel(timer, linksTableViewer);
         linkModels.put(instance, model);
         if (currentLinkModel == null)
             currentLinkModel = model;

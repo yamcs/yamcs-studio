@@ -575,7 +575,13 @@
             class="org.yamcs.studio.ui.links.LinksView"
             icon="icons/eview16/datalinks.png"
             id="org.yamcs.studio.ui.links.LinksView"
-            name="Data Links"/>            
+            name="Data Links"/>     
+       <view
+            category="org.yamcs.studio.server"
+            class="org.yamcs.studio.ui.clients.ClientsView"
+            icon="icons/eview16/clients.png"
+            id="org.yamcs.studio.ui.clients.ClientsView"
+            name="Connected Clients"/>            
             
    </extension>
 
@@ -664,12 +670,20 @@
                closeable="true"
                id="org.yamcs.studio.ui.links.LinksView">
          </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.clients.ClientsView">
+         </view>
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
@@ -720,6 +734,11 @@
                relationship="stack"
                visible="false"
                id="org.yamcs.studio.ui.links.LinksView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.clients.ClientsView"/>
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
@@ -727,6 +746,7 @@
          <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
