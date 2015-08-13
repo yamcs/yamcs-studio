@@ -145,10 +145,6 @@ public class QueuesTableModel implements IStructuredContentProvider {
         return cmds.get(index);
     }
 
-    public boolean isCellEditable(int row, int col) {
-        return col == 1;
-    }
-
     @Override
     public void dispose() {
     }

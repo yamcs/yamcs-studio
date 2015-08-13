@@ -130,7 +130,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
     }
 
     public void setProcessor(String instance, String channelName) {
-        System.out.println("setting channel : " + instance + " cn: " + channelName);
+        log.fine("setting channel : " + instance + " cn: " + channelName);
         currentQueuesModel = channelName == null ? null : queuesModels.get(instance + "." + channelName);
         if (currentQueuesModel == null)
             return;
@@ -143,7 +143,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
 
         Display.getDefault().asyncExec(() ->
         {
-            System.out.println("processing updateQueue " + cqi);
+            log.fine("processing updateQueue " + cqi);
             String modelName = cqi.getInstance() + "." + cqi.getProcessorName();
             if (!queuesModels.containsKey(modelName))
             {
