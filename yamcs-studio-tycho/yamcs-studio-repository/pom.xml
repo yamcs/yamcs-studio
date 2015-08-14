@@ -15,8 +15,8 @@
 	<build>
 		<plugins>
 			<!-- Icons are in ../org.yamcs.studio.ui/icons, but Tycho wants them in
-				../yamcs-studio-repository/target/products/yamcs-studio/icons
-				(Copied from SNS-product build)
+				../yamcs-studio-repository/org.yamcs.studio.ui/icons
+				(Adapted from SNS-product build)
 			  -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -27,9 +27,9 @@
 						<configuration>
 							<failOnError>true</failOnError>
 							<target>
-								<echo message="Copying icons into tycho target directory ${project.build.directory}" />
-								<copy todir="${project.build.directory}/products/yamcs-studio" verbose="false">
-									<fileset dir="${project.build.directory}/../..">
+								<echo message="Copying icons into tycho-preferred directory ${project.basedir}" />
+								<copy overwrite="true" todir="${project.basedir}" verbose="false">
+									<fileset dir="${project.basedir}/..">
 										<include name="org.yamcs.studio.ui/icons/**" />
 									</fileset>
 								</copy>
