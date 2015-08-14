@@ -648,13 +648,6 @@
                visible="true"
                closeable="true"
                id="org.yamcs.studio.ui.commanding.stack.CommandStackView">
-         </view>        
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="true"
-               closeable="true"
-               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -662,20 +655,27 @@
                visible="true"
                closeable="true"
                id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
-         </view> 
+         </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
+               relationship="right"
                visible="true"
                closeable="true"
                id="org.yamcs.studio.ui.links.LinksView">
          </view>
          <view
-               relative="org.eclipse.ui.console.ConsoleView"
+               relative="org.yamcs.studio.ui.links.LinksView"
                relationship="stack"
                visible="true"
                closeable="true"
                id="org.yamcs.studio.ui.clients.ClientsView">
+         </view> 
+         <view
+               relative="org.yamcs.studio.ui.clients.ClientsView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
          </view>
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
