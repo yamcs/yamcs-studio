@@ -1,3 +1,0 @@
-# This is here due to the maven-antrun-plugin that copies it over from the org.yamcs.studio.ui
-# But we should really rethink how we package the product
-org.yamcs.studio.ui/
