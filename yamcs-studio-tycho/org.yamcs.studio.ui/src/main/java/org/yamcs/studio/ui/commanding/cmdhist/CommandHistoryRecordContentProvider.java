@@ -16,6 +16,8 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
     public static final String GREEN = "icons/obj16/ok.png";
     public static final String RED = "icons/obj16/nok.png";
 
+    private static final String VERIFIER_COMPLETE = "CommandComplete";
+    private static final String VERIFIER_PREFIX = "Verifier_";
     private static final String ACKNOWLEDGE_PREFIX = "Acknowledge_";
     private static final String STATUS_SUFFIX = "_Status";
     private static final String TIME_SUFFIX = "_Time";
@@ -63,10 +65,13 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         // Autoprocess attributes for additional columns
         for (CommandHistoryAttribute attr : entry.getAttrList()) {
             String shortName = attr.getName()
+                    //  .replace(VERIFIER_PREFIX, "")
                     .replace(ACKNOWLEDGE_PREFIX, "")
                     .replace(STATUS_SUFFIX, "")
                     .replace(TIME_SUFFIX, "");
-            if (attr.getName().endsWith(STATUS_SUFFIX)) {
+            if (attr.getName().endsWith(STATUS_SUFFIX)
+                    || attr.getName().startsWith(VERIFIER_PREFIX)
+                    || attr.getName().equals(VERIFIER_COMPLETE)) {
                 if (attr.getValue().getStringValue().contains("OK"))
                     rec.addCellImage(shortName, GREEN);
                 else
