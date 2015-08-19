@@ -15,7 +15,7 @@ install:
   - sed "s#REPLACE_WITH_LOCAL_P2_REPO#"`pwd`/css/local_p2_repository"#" css/settings_template.xml >css/settings.xml
 
 script:
-  - mvn verify -f yamcs-studio-bundles/pom.xml -s css/settings.xml -Pcss-for-yamcs,travis
+  - mvn verify -f yamcs-studio-osgi/pom.xml -s css/settings.xml -Pcss-for-yamcs,travis
   - mvn verify -f yamcs-studio-tycho/pom.xml -s css/settings.xml -Pcss-for-yamcs,travis
 
 deploy:

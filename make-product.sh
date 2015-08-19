@@ -25,7 +25,7 @@ then
 fi
 
 set -e
-mvn -f $PRGDIR/yamcs-studio-bundles/pom.xml clean verify
+mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify
 mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify
 set +e
 

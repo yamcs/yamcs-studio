@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.yamcs.studio</groupId>
-		<artifactId>yamcs-studio-bundles</artifactId>
+		<artifactId>yamcs-studio-osgi</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>yamcs-studio-bundles-repository</artifactId>
+	<artifactId>org.yamcs.studio.osgi.repository</artifactId>
 
 	<build>
 		<plugins>
