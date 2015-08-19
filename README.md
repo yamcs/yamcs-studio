@@ -4,10 +4,10 @@ Yamcs Studio [![Build Status](https://travis-ci.org/yamcs/yamcs-studio.svg?branc
 Yamcs Studio is a version of CS-Studio packaged and configured to suit [Yamcs – the open source Mission Control System](https://github.com/yamcs/yamcs). Integration so far includes:
 * Data source definition for connecting to the Yamcs Mission Control System. This enables subscribing to realtime or replayed telemetry data
 * Autocompletion on parameter names
-* Browsing the Yamcs Archive
-* Viewing the Yamcs Event Log
+* Operational views on Yamcs concepts: *Event Log*, *Command History*
+* Monitoring views for general Yamcs status: *Data Links* and *Connected Clients*
+* A summary view on the archive built up by Yamcs
 * Assembling a stack of telecommands for manual issuing to Yamcs
-* Viewing Command History accross a Yamcs instance
 * Multiple-node support with automatic failover when a Yamcs instance goes down
 * LOS/AOS TM indication
 
