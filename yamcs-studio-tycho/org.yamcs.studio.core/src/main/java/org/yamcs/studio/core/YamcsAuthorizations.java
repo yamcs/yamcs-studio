@@ -4,7 +4,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.Rest.RestListAuthorisationsRequest;
 import org.yamcs.protobuf.Rest.RestListAuthorisationsResponse;
 import org.yamcs.protobuf.Rest.UserAuthorizationsInfo;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -34,8 +33,7 @@ public class YamcsAuthorizations {
 
     public void getAuthorizations()
     {
-        RestListAuthorisationsRequest req = RestListAuthorisationsRequest.newBuilder().build();
-        YamcsPlugin.getDefault().getRestClient().listAuthorizations(req, new ResponseHandler() {
+        YamcsPlugin.getDefault().getRestClient().listAuthorizations(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {

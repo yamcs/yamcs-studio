@@ -1,5 +1,32 @@
 package org.yamcs.studio.core.web;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
+import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
+import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
+import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Rest.RestListAuthorisationsResponse;
+import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
+import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
+import org.yamcs.protobuf.Rest.RestListProcessorsResponse;
+import org.yamcs.protobuf.Rest.RestSendCommandRequest;
+import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
+import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
+import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
+import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
+import org.yamcs.studio.core.YamcsCredentials;
+
+import com.google.protobuf.MessageLite;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
@@ -21,37 +48,6 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
-import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
-import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
-import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
-import org.yamcs.protobuf.Rest.RestListAuthorisationsRequest;
-import org.yamcs.protobuf.Rest.RestListAuthorisationsResponse;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
-import org.yamcs.protobuf.Rest.RestListProcessorsRequest;
-import org.yamcs.protobuf.Rest.RestListProcessorsResponse;
-import org.yamcs.protobuf.Rest.RestSendCommandRequest;
-import org.yamcs.protobuf.Rest.RestSendCommandResponse;
-import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
-import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
-import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
-import org.yamcs.studio.core.YamcsCredentials;
-
-import com.google.protobuf.MessageLite;
 
 /**
  * Implements the client-side API of the rest web api. Sequences outgoing requests on a single
@@ -82,14 +78,14 @@ public class RestClient {
     }
 
     public void sendCommand(RestSendCommandRequest request, ResponseHandler responseHandler) {
-        post("/api/commanding/queue", request, RestSendCommandResponse.newBuilder(), responseHandler);
+        post("/api/commanding/queue", request, null, responseHandler);
     }
 
     public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler responseHandler) {
         get("/api/mdb/parameters", request, RestListAvailableParametersResponse.newBuilder(), responseHandler);
     }
 
-    public void dumpRawMdb(RestDumpRawMdbRequest request, ResponseHandler responseHandler) {
+    public void dumpRawMdb(ResponseHandler responseHandler) {
         get("/api/mdb/dump", null, RestDumpRawMdbResponse.newBuilder(), responseHandler);
     }
 
@@ -105,12 +101,12 @@ public class RestClient {
         post("/api/processor/" + processorName, request, null, responseHandler);
     }
 
-    public void listProcessors(RestListProcessorsRequest request, ResponseHandler responseHandler) {
-        get("/api/processor/list", request, RestListProcessorsResponse.newBuilder(), responseHandler);
+    public void listProcessors(ResponseHandler responseHandler) {
+        get("/api/processor/list", null, RestListProcessorsResponse.newBuilder(), responseHandler);
     }
 
-    public void listAuthorizations(RestListAuthorisationsRequest request, ResponseHandler responseHandler) {
-        get("/api/authorization/list", request, RestListAuthorisationsResponse.newBuilder(), responseHandler);
+    public void listAuthorizations(ResponseHandler responseHandler) {
+        get("/api/authorization/list", null, RestListAuthorisationsResponse.newBuilder(), responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {

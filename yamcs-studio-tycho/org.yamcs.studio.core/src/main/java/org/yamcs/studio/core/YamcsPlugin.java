@@ -20,7 +20,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Rest.RestDumpRawMdbRequest;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
@@ -294,8 +293,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private void loadCommands() {
         log.fine("Fetching available commands");
-        RestDumpRawMdbRequest.Builder dumpRequest = RestDumpRawMdbRequest.newBuilder();
-        restClient.dumpRawMdb(dumpRequest.build(), new ResponseHandler() {
+        restClient.dumpRawMdb(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
