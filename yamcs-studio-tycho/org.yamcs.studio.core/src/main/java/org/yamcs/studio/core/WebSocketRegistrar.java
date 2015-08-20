@@ -15,7 +15,6 @@ import org.yamcs.api.ws.WebSocketClientCallbackListener;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Alarms.Alarm;
-import org.yamcs.protobuf.Alarms.AlarmNotice;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
@@ -48,6 +47,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private Map<NamedObjectId, RestParameter> availableParametersById = new LinkedHashMap<>();
     private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
     private Set<ClientInfoListener> clientInfoListeners = new HashSet<>();
+    private Set<AlarmListener> alarmListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
 
     private WebSocketClient wsclient;
@@ -74,8 +74,9 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         wsclient.connect();
         // Needs improvement. Get our assigned client-id, to use later in rest-replay calls
         pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
-        // Always have this subscription running
+        // Always have these subscriptions running
         pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
+        pendingRequests.offer(new WebSocketRequest("alarms", "subscribe"));
     }
 
     @Override
@@ -144,6 +145,10 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         });
     }
 
+    public synchronized void addAlarmListener(AlarmListener listener) {
+        alarmListeners.add(listener);
+    }
+
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         cmdhistListeners.add(listener);
     }
@@ -194,7 +199,9 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onClientInfoData(ClientInfo clientInfo) {
-        clientInfoListeners.forEach(l -> l.processClientInfo(clientInfo));
+        synchronized (this) {
+            clientInfoListeners.forEach(l -> l.processClientInfo(clientInfo));
+        }
     }
 
     @Override
@@ -221,14 +228,9 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     }
 
     @Override
-    public void onAlarmNotice(AlarmNotice arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onAlarm(Alarm arg0) {
-        // TODO Auto-generated method stub
-
+    public void onAlarm(Alarm alarm) {
+        synchronized (this) {
+            alarmListeners.forEach(l -> l.processAlarm(alarm));
+        }
     }
 }
