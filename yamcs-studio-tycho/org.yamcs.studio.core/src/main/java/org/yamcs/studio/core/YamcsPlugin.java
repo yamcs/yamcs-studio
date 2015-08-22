@@ -57,7 +57,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private List<RestParameter> parameters = Collections.emptyList();
     private Collection<MetaCommand> commands = Collections.emptyList();
 
-    private List<ConnectionFailureListener> connectionFailureListeners = new LinkedList<ConnectionFailureListener>();
+    private List<ConnectionFailureListener> connectionFailureListeners = new LinkedList<>();
 
     // Reset for every application restart
     private static AtomicInteger cmdClientId = new AtomicInteger(1);
@@ -71,8 +71,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         log.info("Yamcs Studio v." + getBundle().getVersion().toString());
     }
 
-    public enum ConnectionStatus
-    {
+    public enum ConnectionStatus {
         Disconnected, // no clients (REST, WebSocket, HornetQ)are connected to Yamcs server
         Connecting,
         Connected, // all clients are connected
@@ -82,19 +81,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private ConnectionStatus connectionStatus;
 
-    private void setConnectionStatus(ConnectionStatus connectionStatus)
-    {
+    private void setConnectionStatus(ConnectionStatus connectionStatus) {
         log.info("Current connection status: " + connectionStatus);
         this.connectionStatus = connectionStatus;
     }
 
-    public ConnectionStatus getConnectionSatus()
-    {
+    public ConnectionStatus getConnectionSatus() {
         return connectionStatus;
     }
 
-    public void connect(YamcsCredentials yamcsCredentials)
-    {
+    public void connect(YamcsCredentials yamcsCredentials) {
         log.info("Connecting to Yamcs server, node " + getCurrentNode());
         setConnectionStatus(ConnectionStatus.Connecting);
 
@@ -115,11 +111,15 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
         // We start other clients as well
         webSocketClient.addClientInfoListener(clientInfo -> setupConnections(clientInfo, currentCredentials));
-        webSocketClient.connect();
+        new Thread() {
+            @Override
+            public void run() {
+                webSocketClient.connect();
+            }
+        }.start();
     }
 
-    public void disconnect()
-    {
+    public void disconnect() {
         synchronized (this) {
             if (connectionStatus == ConnectionStatus.Disconnected
                     || connectionStatus == ConnectionStatus.Disconnecting)
@@ -146,8 +146,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         for (StudioConnectionListener scl : studioConnectionListeners) {
             try {
                 scl.onStudioDisconnect();
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 log.log(Level.SEVERE, "Unable to disconnect listener " + scl + ".", e);
             }
         }
@@ -201,26 +200,22 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return hornetqProps;
     }
 
-    public int getNumberOfNodes()
-    {
+    public int getNumberOfNodes() {
         return getPreferenceStore().getInt("number_of_nodes");
     }
 
-    public int getCurrentNode()
-    {
+    public int getCurrentNode() {
         return getPreferenceStore().getInt("current_node");
     }
 
-    private void setCurrentNode(int currentNode)
-    {
+    private void setCurrentNode(int currentNode) {
         getPreferenceStore().setValue("current_node", currentNode);
     }
 
-    public void switchNode(int nodeNumber)
-    {
-        if (nodeNumber < 1 || nodeNumber > getNumberOfNodes())
-        {
-            log.severe("Request to switch to node " + nodeNumber + " but ony " + getNumberOfNodes() + " nodes are configured. Switching to node 1...");
+    public void switchNode(int nodeNumber) {
+        if (nodeNumber < 1 || nodeNumber > getNumberOfNodes()) {
+            log.severe(
+                    "Request to switch to node " + nodeNumber + " but ony " + getNumberOfNodes() + " nodes are configured. Switching to node 1...");
             nodeNumber = 1;
         }
         // if (currentNode != nodeNumber)
@@ -232,8 +227,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         }
     }
 
-    public void abortSwitchNode()
-    {
+    public void abortSwitchNode() {
         if (connectionStatus == ConnectionStatus.ConnectionFailure)
             connectionStatus = ConnectionStatus.Disconnected;
     }
@@ -391,8 +385,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         webSocketClient.updateClientinfo();
     }
 
-    public void addConnectionFailureListener(ConnectionFailureListener cfl)
-    {
+    public void addConnectionFailureListener(ConnectionFailureListener cfl) {
         connectionFailureListeners.add(cfl);
     }
 

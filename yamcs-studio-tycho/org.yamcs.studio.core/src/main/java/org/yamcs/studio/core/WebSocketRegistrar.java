@@ -73,7 +73,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     }
 
     public void connect() {
-        wsclient.connect();
+        wsclient.connect(); // FIXME this currently blocks. It should have a callback api instead
         // Needs improvement. Get our assigned client-id, to use later in rest-replay calls
         pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
         // Always have these subscriptions running
