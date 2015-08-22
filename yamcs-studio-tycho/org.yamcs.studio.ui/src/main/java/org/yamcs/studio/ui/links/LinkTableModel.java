@@ -59,30 +59,27 @@ class LinkTableModel {
     }
 
     public void updateLink(LinkInfo uli) {
-        try {
-            boolean found = false;
-            for (int i = 0; i < links.size(); ++i) {
-                LinkInfo li = links.get(i);
-                if (li.getName().equals(uli.getName())) {
-                    if (uli.getDataCount() > li.getDataCount()) {
-                        lastDataCountIncrease.set(i, System.currentTimeMillis());
-                        scheduleFireTableRowsUpdated(i);
-                    }
-                    links.set(i, uli);
-                    linksTableViewer.replace(uli, i);
-                    found = true;
-                    break;
+        boolean found = false;
+        for (int i = 0; i < links.size(); ++i) {
+            LinkInfo li = links.get(i);
+            if (li.getName().equals(uli.getName())) {
+                if (uli.getDataCount() > li.getDataCount()) {
+                    lastDataCountIncrease.set(i, System.currentTimeMillis());
+                    scheduleFireTableRowsUpdated(i);
                 }
+                links.set(i, uli);
+                if (linksTableViewer.getTable().isDisposed())
+                    return;
+                linksTableViewer.replace(uli, i);
+                found = true;
+                break;
             }
-            if (!found) {
-                links.add(uli);
-                lastDataCountIncrease.add(0L);
-                schduledFutures.add(null);
-                linksTableViewer.add(uli);
-            }
-        } catch (Exception e)
-        {
-            log.severe(e.toString());
+        }
+        if (!found) {
+            links.add(uli);
+            lastDataCountIncrease.add(0L);
+            schduledFutures.add(null);
+            linksTableViewer.add(uli);
         }
 
     }

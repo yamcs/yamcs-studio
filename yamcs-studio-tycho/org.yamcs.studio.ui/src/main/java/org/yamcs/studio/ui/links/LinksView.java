@@ -44,31 +44,27 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
 
     @Override
     public void updateLink(LinkInfo li) {
-        try {
-            if (!li.getInstance().equals(selectedInstance))
-                return;
+        if (!li.getInstance().equals(selectedInstance))
+            return;
 
-            Display.getDefault().asyncExec(() ->
-            {
-                try {
-                    log.fine("processing updateLink " + li);
-                    String modelName = li.getInstance();
-                    if (!linkModels.containsKey(modelName))
-                    {
-                        addLinkModel(li.getInstance());
-                    }
-                    LinkTableModel model = linkModels.get(modelName);
-                    model.updateLink(li);
-                }
-                    catch (Exception e)
-                    {
-                        log.severe(e.toString());
-                    }
-                });
-        } catch (Exception e)
+        if (linksTableViewer.getTable().isDisposed())
+            return;
+        
+        Display display = linksTableViewer.getTable().getDisplay();
+        display.asyncExec(() ->
         {
-            log.severe(e.toString());
-        }
+            if (display.isDisposed())
+                return;
+            
+            log.fine("processing updateLink " + li);
+            String modelName = li.getInstance();
+            if (!linkModels.containsKey(modelName))
+            {
+                addLinkModel(li.getInstance());
+            }
+            LinkTableModel model = linkModels.get(modelName);
+            model.updateLink(li);
+        });
     }
 
     public void addLinkModel(String instance)
