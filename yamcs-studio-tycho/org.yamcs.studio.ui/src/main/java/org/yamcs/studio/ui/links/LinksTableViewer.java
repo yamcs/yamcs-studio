@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.links;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -123,17 +125,19 @@ public class LinksTableViewer extends TableViewer {
         streamColumn.getColumn().setText(COL_STREAM);
         tcl.setColumnData(streamColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn statusColumn = new TableViewerColumn(this, SWT.LEFT);
+        TableViewerColumn statusColumn = new TableViewerColumn(this, SWT.CENTER);
         statusColumn.getColumn().setText(COL_STATUS);
         tcl.setColumnData(statusColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn datacount = new TableViewerColumn(this, SWT.LEFT);
+        TableViewerColumn datacount = new TableViewerColumn(this, SWT.RIGHT);
         datacount.getColumn().setText(COL_DATACOUNT);
         tcl.setColumnData(datacount.getColumn(), new ColumnWeightData(10));
     }
 
     class LinkLabelProvider extends LabelProvider implements
             ITableLabelProvider, IColorProvider {
+        
+        private final NumberFormat numberFormatter = NumberFormat.getInstance(Locale.US);
 
         @Override
         public Image getColumnImage(Object arg0, int arg1) {
@@ -160,7 +164,7 @@ public class LinksTableViewer extends TableViewer {
             case 4:
                 return model.getStatus();
             case 5:
-                return model.getDataCount() + "";
+                return numberFormatter.format(model.getDataCount());
             default:
                 break;
             }
