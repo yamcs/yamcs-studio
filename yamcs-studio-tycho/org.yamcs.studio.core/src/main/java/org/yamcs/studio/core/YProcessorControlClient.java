@@ -81,6 +81,8 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
         }
         try {
             listeners.forEach(l -> l.clientDisconnected(null));
+            processorInfoByName.clear();
+            clientInfoById.clear();
         } catch (Exception e) {
             log.log(Level.SEVERE, "Error disconnecting clients", e);
         }
