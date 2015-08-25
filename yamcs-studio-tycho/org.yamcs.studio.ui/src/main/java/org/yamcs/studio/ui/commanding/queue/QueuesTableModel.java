@@ -71,6 +71,7 @@ public class QueuesTableModel implements IStructuredContentProvider {
                 {
                     rq.cq.setQueue(newCq.getQueue());
                     rq.cq.setState(newCq.getState());
+                    rq.cq.setStateExpirationTimeS(newCq.getStateExpirationTimeS());
                     rq.cq.setCommands(newCq.getCommands());
                     rq.cq.setNbRejectedCommands(newCq.getNbRejectedCommands());
                     rq.cq.setNbSentCommands(newCq.getNbSentCommands());

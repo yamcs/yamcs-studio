@@ -1,6 +1,7 @@
 package org.yamcs.studio.ui.commanding.queue;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -198,7 +199,12 @@ public class CommandQueuesTableViewer extends TableViewer {
             case 0:
                 return model.getQueue();
             case 1:
-                return model.getState().name();
+                String state = model.getState().name();
+                if (model.getStateExpirationTimeS() > 0)
+                {
+                    state += " (" + toDayHourMinuteSecond(model.getStateExpirationTimeS()) + ")";
+                }
+                return state;
             case 2:
                 if (model.getCommands() == null)
                     return 0 + "";
@@ -214,4 +220,31 @@ public class CommandQueuesTableViewer extends TableViewer {
         }
     }
 
+    static public String toDayHourMinuteSecond(int totalSeconds)
+    {
+        String result = "";
+        int days = (int) TimeUnit.SECONDS.toDays(totalSeconds);
+        long hours = TimeUnit.SECONDS.toHours(totalSeconds) - (days * 24);
+        long minutes = TimeUnit.SECONDS.toMinutes(totalSeconds) - (TimeUnit.SECONDS.toHours(totalSeconds) * 60);
+        long seconds = TimeUnit.SECONDS.toSeconds(totalSeconds) - (TimeUnit.SECONDS.toMinutes(totalSeconds) * 60);
+
+        result = hours + ":" + minutes + ":" + seconds;
+        if (days > 0)
+            result = days + "d " + result;
+
+        return result;
+    }
+
+    public static void main(String arg[])
+    {
+        int nbSeconds = 5; // 00:00:05
+        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+        nbSeconds = 65; // 00:01:05
+        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+        nbSeconds = 3665; // 01:01:05
+        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+        nbSeconds = 90065; //1d 01:01:05
+        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+
+    }
 }

@@ -10,6 +10,7 @@ public class CommandQueue {
 
     private String queue;
     private Commanding.QueueState state;
+    private int stateExpirationTimeS;
     //  private int commands;
 
     ArrayList<CommandQueueEntry> commands;
@@ -20,6 +21,7 @@ public class CommandQueue {
     {
         this.queue = cqi.getName();
         this.state = cqi.getState();
+        this.setStateExpirationTimeS(cqi.getStateExpirationTimeS());
         this.setNbRejectedCommands(cqi.getNbRejectedCommands());
         this.setNbSentCommands(cqi.getNbSentCommands());
         this.commands = commands;
@@ -43,6 +45,16 @@ public class CommandQueue {
     public void setState(Commanding.QueueState state)
     {
         this.state = state;
+    }
+
+    public int getStateExpirationTimeS()
+    {
+        return stateExpirationTimeS;
+    }
+
+    public void setStateExpirationTimeS(int stateExpirationTimeS)
+    {
+        this.stateExpirationTimeS = stateExpirationTimeS;
     }
 
     public ArrayList<CommandQueueEntry> getCommands()
