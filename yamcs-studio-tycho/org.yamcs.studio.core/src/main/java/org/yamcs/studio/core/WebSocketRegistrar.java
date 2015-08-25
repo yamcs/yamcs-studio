@@ -49,6 +49,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
     private Set<ClientInfoListener> clientInfoListeners = new HashSet<>();
     private Set<AlarmListener> alarmListeners = new HashSet<>();
+    private Set<TimeListener> timeListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
 
     private WebSocketClient wsclient;
@@ -76,6 +77,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         // Needs improvement. Get our assigned client-id, to use later in rest-replay calls
         pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
         // Always have these subscriptions running
+        pendingRequests.offer(new WebSocketRequest("time", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("alarms", "subscribe"));
     }
@@ -150,6 +152,10 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         alarmListeners.add(listener);
     }
 
+    public synchronized void addTimeListener(TimeListener listener) {
+        timeListeners.add(listener);
+    }
+
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         cmdhistListeners.add(listener);
     }
@@ -182,6 +188,13 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
         pvReadersById.get(id).reportException(new InvalidIdentification(id));
+    }
+
+    @Override
+    public void onTimeInfo(TimeInfo timeInfo) {
+        synchronized (this) {
+            timeListeners.forEach(l -> l.processTime(timeInfo));
+        }
     }
 
     @Override
@@ -234,11 +247,4 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
             alarmListeners.forEach(l -> l.processAlarm(alarm));
         }
     }
-
-    @Override
-    public void onTimeInfo(TimeInfo arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
 }
