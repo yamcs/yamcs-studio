@@ -22,6 +22,7 @@ import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.StreamData;
+import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -232,6 +233,12 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         synchronized (this) {
             alarmListeners.forEach(l -> l.processAlarm(alarm));
         }
+    }
+
+    @Override
+    public void onTimeInfo(TimeInfo arg0) {
+        // TODO Auto-generated method stub
+
     }
 
 }
