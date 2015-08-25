@@ -175,7 +175,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         reportConnectionState();
         YamcsPlugin plugin = YamcsPlugin.getDefault();
         if (plugin != null) // This can be null then the workbench is closing
-            plugin.notifyConnectionFailure();
+            plugin.notifyConnectionFailure(null);
     }
 
     private void reportConnectionState() {

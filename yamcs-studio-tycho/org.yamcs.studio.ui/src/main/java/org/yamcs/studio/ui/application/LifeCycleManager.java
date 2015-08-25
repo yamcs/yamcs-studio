@@ -99,15 +99,26 @@ public class LifeCycleManager implements ConnectionFailureListener {
     }
 
     @Override
-    public void connectionFailure(int currentNode, int nextNode) {
+    public void connectionFailure(int currentNode, int nextNode, String errorMessage) {
         Display.getDefault().asyncExec(() -> {
-            askSwitchNode(currentNode, nextNode);
+            askSwitchNode(currentNode, nextNode, errorMessage);
         });
     }
 
-    private static void askSwitchNode(int currentNode, int nextNode) {
-        MessageDialog dialog = new MessageDialog(null, "Connection Lost", null, "Connection to Yamcs Server node " + currentNode + " is lost.\n\n" +
-                "Would you like to switch connection to node " + nextNode + " now?",
+    @Override
+    public void unauthorized()
+    {
+        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Connect", "Unauthorized");
+    }
+
+    private static void askSwitchNode(int currentNode, int nextNode, String errorMessage) {
+        String message = "Connection error with Yamcs Server node " + currentNode + ".";
+        if (errorMessage != null && errorMessage != "")
+        {
+            message += "\nDetails:" + errorMessage;
+        }
+        message += "\n\n" + "Would you like to switch connection to node " + nextNode + " now?";
+        MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message,
                 MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
         if (dialog.open() == 0)
         {
@@ -117,6 +128,7 @@ public class LifeCycleManager implements ConnectionFailureListener {
                     YamcsPlugin.getDefault().switchNode(nextNode);
                 } catch (Exception e) {
                     log.log(Level.SEVERE, "Could not switch node", e);
+                    YamcsPlugin.getDefault().notifyConnectionFailure(e.getMessage());
                 }
             });
         }
@@ -156,4 +168,5 @@ public class LifeCycleManager implements ConnectionFailureListener {
         ProcessorStateProvider state = (ProcessorStateProvider) service.getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         state.updateState(processorInfo);
     }
+
 }

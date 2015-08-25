@@ -55,7 +55,7 @@ public class YamcsLoginModule implements LoginModule {
         else
         {
             try {
-                YamcsPlugin.getDefault().disconnect();
+                YamcsPlugin.getDefault().notifyUnauthorized();
             } catch (Exception e) {
                 log.log(Level.WARNING, "", e);
             }

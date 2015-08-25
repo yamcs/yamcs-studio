@@ -152,14 +152,21 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
 
     @Override
     public void connectionFailed(String url, YamcsException exception) {
-        // In case the connection fails notify the YamcsPlugin
-        YamcsPlugin.getDefault().notifyConnectionFailure();
+        notifyConnectionLost(exception.getMessage());
     }
 
     @Override
     public void disconnected() {
         yclient = null;
-        YamcsPlugin.getDefault().notifyConnectionFailure();
+        notifyConnectionLost("Disconnected");
+    }
+
+    private void notifyConnectionLost(String errorMessage)
+    {
+        YamcsPlugin plugin = YamcsPlugin.getDefault();
+        if (plugin != null)
+            plugin.notifyConnectionFailure(errorMessage);
+
     }
 
     @Override

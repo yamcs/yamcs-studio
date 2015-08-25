@@ -396,16 +396,20 @@ public class YamcsPlugin extends AbstractUIPlugin {
         connectionFailureListeners.add(cfl);
     }
 
-    public void notifyConnectionFailure() {
+    public void notifyConnectionFailure(String errorMessage) {
         log.info("");
         synchronized (this) {
-            if (connectionStatus == ConnectionStatus.ConnectionFailure)
+            if (connectionStatus != ConnectionStatus.Connected && connectionStatus != ConnectionStatus.Connecting)
                 return;
             this.connectionStatus = ConnectionStatus.ConnectionFailure;
         }
         this.disconnect();
         int currentNode = getCurrentNode();
         final int nextNode = currentNode + 1 > getNumberOfNodes() ? 1 : currentNode + 1;
-        connectionFailureListeners.forEach(c -> c.connectionFailure(currentNode, nextNode));
+        connectionFailureListeners.forEach(c -> c.connectionFailure(currentNode, nextNode, errorMessage));
+    }
+
+    public void notifyUnauthorized() {
+        connectionFailureListeners.forEach(c -> c.unauthorized());
     }
 }

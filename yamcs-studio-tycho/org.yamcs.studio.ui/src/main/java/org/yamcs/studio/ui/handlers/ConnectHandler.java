@@ -8,6 +8,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -42,6 +44,8 @@ public class ConnectHandler extends AbstractHandler {
         } catch (Exception ex)
         {
             log.log(Level.SEVERE, "", ex);
+            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Connect",
+                    "Unable to connect to the Yamcs server.\nDetails: " + ex.getMessage());
         }
         return null;
     }
