@@ -93,8 +93,14 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
         // All done, make changes visible
         if (create)
+        {
             tableViewer.add(rec);
-        else
+            tableViewer.reveal(rec);
+        }
+        else {
             tableViewer.update(rec, null); // Null, means all properties
+            tableViewer.reveal(rec);
+
+        }
     }
 }

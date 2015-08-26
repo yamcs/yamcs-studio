@@ -42,6 +42,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         } else {
             tableViewer.add(event);
             eventsBySequenceNumber.put(event.getSeqNumber(), event);
+            tableViewer.reveal(event);
         }
     }
 
@@ -56,6 +57,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
         events.removeAll(needsUpdating);
         tableViewer.add(events.toArray());
+        tableViewer.reveal(events.get(events.size() - 1));
     }
 
     public void clearAll() {
