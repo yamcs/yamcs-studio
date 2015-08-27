@@ -22,9 +22,11 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.startup,
  org.csstudio.apputil.ui,
  org.csstudio.ui.menu.app,
+ org.epics.vtype,
  org.csstudio.startup.helper,
  org.csstudio.security,
  org.csstudio.security.ui,
+ org.csstudio.simplepv,
  org.eclipse.e4.core.services,
  org.eclipse.e4.core.contexts,
  org.eclipse.e4.ui.workbench,
@@ -38,7 +40,8 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.opibuilder,
  org.eclipse.xtext.ui,
  org.yamcs.studio.ycl.ui,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ org.eclipse.gef
 Import-Package: org.epics.pvmanager,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.ui.commanding

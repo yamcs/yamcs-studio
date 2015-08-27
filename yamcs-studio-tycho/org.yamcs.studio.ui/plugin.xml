@@ -91,6 +91,15 @@
    </extension>
    
    <!--
+    This hides the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.
+    We have our own richer modal for that.
+   -->
+   <extension point="org.eclipse.ui.activities">
+      <activity id="yamcsstudio.hideShowPVInfo" name="Hide Show PV Info"/>
+      <activityPatternBinding activityId="yamcsstudio.hideShowPVInfo" pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
+   </extension>
+   
+   <!--
    	This extension point is actually considered deprecated now, in favor of the
    	"common navigator framework". We'll use this one until we have time to figure
    	out the other one.
@@ -752,7 +761,6 @@
       </perspectiveExtension>
    </extension>
    
-   
    <extension point="org.eclipse.ui.actionSets">
       <!-- Redefines the actionSet from the opibuilder plugin, so that we can customize it a bit -->
       <actionSet
@@ -785,14 +793,39 @@
       </actionSet>
    </extension>
    
-   <extension point="org.eclipse.ui.menus">
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.yamcs.studio.showPVInfo"
+            objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
+         <action
+               class="org.yamcs.studio.ui.actions.ShowPVInfoAction"
+               enablesFor="1"
+               id="org.yamcs.studio.showPVInfoAction"
+               label="Show PV Info"
+               tooltip="Show details of PVs on this widget">
+         </action>
+         <visibility>
+            <and>
+               <objectState
+                     name="executionMode"
+                     value="RUN_MODE">
+               </objectState>
+               <objectState
+                     name="hasPVs"
+                     value="true">
+               </objectState>
+            </and>
+         </visibility>
+      </objectContribution>
+   </extension>
    
+   <extension point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="true"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
          <toolbar id="additions"/>
       </menuContribution>
-        
       
       <!-- Add direct menu to switch perspectives (because we disable the horrible
            built-in perspective-switcher-bar) -->

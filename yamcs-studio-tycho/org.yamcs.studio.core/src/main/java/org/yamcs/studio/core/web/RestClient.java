@@ -13,6 +13,8 @@ import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
 import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Rest.RestGetParameterInfoRequest;
+import org.yamcs.protobuf.Rest.RestGetParameterInfoResponse;
 import org.yamcs.protobuf.Rest.RestListAuthorisationsResponse;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
@@ -87,6 +89,10 @@ public class RestClient {
 
     public void dumpRawMdb(ResponseHandler responseHandler) {
         get("/api/mdb/dump", null, RestDumpRawMdbResponse.newBuilder(), responseHandler);
+    }
+
+    public void getParameterInfo(RestGetParameterInfoRequest request, ResponseHandler responseHandler) {
+        get("/api/mdb/parameterInfo", request, RestGetParameterInfoResponse.newBuilder(), responseHandler);
     }
 
     public void setParameters(ParameterData request, ResponseHandler responseHandler) {
