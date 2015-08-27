@@ -1,11 +1,13 @@
 package org.yamcs.studio.ui.actions;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.csstudio.simplepv.IPV;
 import org.csstudio.simplepv.VTypeHelper;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Rectangle;
@@ -17,6 +19,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.epics.vtype.Display;
+import org.yamcs.protobuf.Rest.RestAlarmInfo;
+import org.yamcs.protobuf.Rest.RestAlarmRange;
 import org.yamcs.protobuf.Rest.RestNameDescription;
 import org.yamcs.protobuf.Rest.RestParameterInfo;
 import org.yamcs.protobuf.Rest.RestParameterType;
@@ -110,7 +114,7 @@ public class PVInfoDialog extends Dialog {
         pvWrapper.setLayout(gl);
 
         if (pvInfo.getParameterInfo() != null) {
-            createKeyValueTextPair(pvWrapper, "PV Type", "Yamcs Parameter");
+            createKeyValueTextPair(pvWrapper, "PV Type", pvInfo.getPVType());
             createSeparator(pvWrapper);
             createYamcsProperties(pvWrapper, pvInfo.getParameterInfo());
         } else if (pvInfo.getParameterInfoException() != null) {
@@ -120,14 +124,14 @@ public class PVInfoDialog extends Dialog {
         } else {
             createKeyValueTextPair(pvWrapper, "PV Type", "PV");
             createSeparator(pvWrapper);
-            createPVProperties(pvWrapper, pvInfo.getPV());
+            createPVProperties(pvWrapper, pvInfo);
         }
 
         return pvWrapper;
     }
 
     private void createYamcsProperties(Composite parent, RestParameterInfo pinfo) {
-        createKeyValueTextPair(parent, "Data Source", capitalize(pinfo.getDataSource()));
+        createKeyValueTextPair(parent, "Yamcs Data Source", capitalize(pinfo.getDataSource()));
         RestNameDescription desc = pinfo.getDescription();
         createKeyValueTextPair(parent, "Qualified Name", desc.getQualifiedName());
         for (int i = 0; i < desc.getAliasesCount(); i++) {
@@ -152,9 +156,36 @@ public class PVInfoDialog extends Dialog {
             }
             createKeyValueTextPair(parent, "Units", units);
         }
+
+        if (type.getDefaultAlarm() != null) {
+            createSeparator(parent);
+            createHeader(parent, "Default Alarm");
+            RestAlarmInfo defaultAlarm = type.getDefaultAlarm();
+            createKeyValueTextPair(parent, "Min. Violations", "" + defaultAlarm.getMinViolations());
+
+            // Backwards for lower limits
+            for (int i = defaultAlarm.getStaticAlarmRangesCount() - 1; i >= 0; i--) {
+                RestAlarmRange range = defaultAlarm.getStaticAlarmRanges(i);
+                if (range.hasMinInclusive()) {
+                    String label = capitalize(range.getLevel().toString()) + " Low";
+                    String limit = new DecimalFormat("#.############").format(range.getMinInclusive());
+                    createKeyValueTextPair(parent, label, limit);
+                }
+            }
+
+            // Now forwards for upper limits
+            for (RestAlarmRange range : defaultAlarm.getStaticAlarmRangesList()) {
+                if (range.hasMinInclusive()) {
+                    String label = capitalize(range.getLevel().toString()) + " High";
+                    String limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
+                    createKeyValueTextPair(parent, label, limit);
+                }
+            }
+        }
     }
 
-    private void createPVProperties(Composite parent, IPV pv) {
+    private void createPVProperties(Composite parent, PVInfo pvInfo) {
+        IPV pv = pvInfo.getPV();
         StringBuilder stateInfo = new StringBuilder();
         if (!pv.isStarted())
             stateInfo.append("Not started");
@@ -190,7 +221,7 @@ public class PVInfoDialog extends Dialog {
     private void createKeyValueTextPair(Composite parent, String key, String value) {
         Label lbl = new Label(parent, SWT.NONE);
         if (key != null)
-            lbl.setText(key + ": ");
+            lbl.setText(key + ":");
         GridData gd = new GridData();
         gd.horizontalAlignment = SWT.END;
         gd.verticalAlignment = SWT.BEGINNING;
@@ -211,6 +242,15 @@ public class PVInfoDialog extends Dialog {
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         divider.setLayoutData(gd);
+    }
+
+    private void createHeader(Composite parent, String title) {
+        Label header = new Label(parent, SWT.NONE);
+        header.setText(title);
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        header.setLayoutData(gd);
+        header.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
     }
 
     private static String capitalize(String string) {

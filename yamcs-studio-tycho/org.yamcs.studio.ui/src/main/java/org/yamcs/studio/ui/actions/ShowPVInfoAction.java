@@ -63,13 +63,6 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
      * bit on yamcs server, so we avoid the use of a latch.
      */
     private void loadParameterInfoAndShowDialog(List<PVInfo> pvInfos) {
-        RestClient restClient = YamcsPlugin.getDefault().getRestClient();
-        if (restClient == null) {
-            // TODO get rid of this, and add check to enabledWhen state instead
-            MessageDialog.openWarning(null, "Not Connected", "You are not currently connected to Yamcs");
-            return;
-        }
-
         List<PVInfo> yamcsPvs = new ArrayList<>();
         for (PVInfo pvInfo : pvInfos)
             if (pvInfo.isYamcsParameter())
@@ -90,8 +83,15 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                         continue;
                     }
 
+                    RestClient restClient = YamcsPlugin.getDefault().getRestClient();
+                    if (restClient == null) {
+                        pvInfo.setParameterInfoException("Not connected to Yamcs");
+                        latch.countDown();
+                        continue;
+                    }
+
                     RestGetParameterInfoRequest.Builder requestb = RestGetParameterInfoRequest.newBuilder();
-                    requestb.addList(NamedObjectId.newBuilder().setName(pvInfo.getDisplayName()));
+                    requestb.addList(NamedObjectId.newBuilder().setName(pvInfo.getYamcsQualifiedName()));
                     restClient.getParameterInfo(requestb.build(), new ResponseHandler() {
                         @Override
                         public void onMessage(MessageLite responseMsg) {
@@ -106,7 +106,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
                         @Override
                         public void onException(Exception e) {
-                            log.log(Level.WARNING, "Could not fetch yamcs parameter info", e);
+                            log.log(Level.WARNING, "Could not fetch Yamcs parameter info", e);
                             pvInfo.setParameterInfoException(e.getMessage());
                             latch.countDown();
                         }
@@ -118,7 +118,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                     targetPart.getSite().getShell().getDisplay().asyncExec(() -> showDialog(pvInfos));
                 } catch (InterruptedException e) {
                     targetPart.getSite().getShell().getDisplay().asyncExec(() -> {
-                        log.log(Level.SEVERE, "Could not fetch yamcs parameter info", e);
+                        log.log(Level.SEVERE, "Could not fetch Yamcs parameter info", e);
                         MessageDialog.openError(null, "Could Not Fetch Yamcs Parameter Info", "Interrupted while fetching yamcs parameter info");
                     });
                 }

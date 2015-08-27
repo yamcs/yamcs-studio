@@ -21,6 +21,25 @@ public class PVInfo implements Comparable<PVInfo> {
         return parameterInfo;
     }
 
+    public String getPVType() {
+        if (displayName.startsWith("sw://"))
+            return "Yamcs Software Parameter";
+        else if (displayName.startsWith("para://"))
+            return "Yamcs Parameter";
+        else if (displayName.startsWith("loc://"))
+            return "Local PV";
+        else if (displayName.startsWith("sim://"))
+            return "Locally Simulated PV";
+        else if (displayName.startsWith("sys://"))
+            return "Local System Indicator";
+        else if (displayName.startsWith("="))
+            return "Formula";
+        else if (isYamcsParameter())
+            return "Yamcs Parameter";
+        else
+            return "Unknown";
+    }
+
     public void setParameterInfo(RestParameterInfo restParameterInfo) {
         this.parameterInfo = restParameterInfo;
     }
@@ -42,12 +61,25 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public boolean isYamcsParameter() {
-        return !displayName.contains("://");
+        return !displayName.contains("://")
+                || displayName.startsWith("sw://")
+                || displayName.startsWith("para://");
     }
 
     @Override
     public int compareTo(PVInfo other) {
-        // TODO yamcs should be first
         return displayName.compareTo(other.displayName);
+    }
+
+    public String getYamcsQualifiedName() {
+        if (!isYamcsParameter())
+            throw new UnsupportedOperationException();
+
+        if (displayName.startsWith("sw://"))
+            return displayName.substring(5);
+        else if (displayName.startsWith("para://"))
+            return displayName.substring(7);
+        else
+            return displayName;
     }
 }
