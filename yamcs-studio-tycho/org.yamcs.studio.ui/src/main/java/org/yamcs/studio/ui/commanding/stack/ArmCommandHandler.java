@@ -15,8 +15,8 @@ import org.yamcs.protobuf.Commanding.CommandSignificance;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.ui.AbstractRestHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.studio.ui.handlers.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
 

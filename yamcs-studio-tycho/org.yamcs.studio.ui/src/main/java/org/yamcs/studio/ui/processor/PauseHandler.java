@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.handlers;
+package org.yamcs.studio.ui.processor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,24 +12,22 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.ui.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
 
-/**
- * Currently only resumes a paused replay. Should eventually also seek to the beginning and replay a
- * stopped replay. We should probably do this at the server level, rather than stitching it in here.
- */
-public class PlayHandler extends AbstractRestHandler {
+public class PauseHandler extends AbstractRestHandler {
 
-    private static final Logger log = Logger.getLogger(PlayHandler.class.getName());
+    private static final Logger log = Logger.getLogger(PauseHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        if (!checkRestClient(event, "resume processing"))
+
+        if (!checkRestClient(event, "pause processing"))
             return null;
 
         String processorName = YamcsPlugin.getDefault().getClientInfo().getProcessorName();
-        ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.RESUME).build();
+        ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.PAUSE).build();
         restClient.createProcessorRequest(processorName, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
@@ -37,9 +35,9 @@ public class PlayHandler extends AbstractRestHandler {
 
             @Override
             public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not resume processing", e);
+                log.log(Level.SEVERE, "Could not pause processing", e);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not resume processing", e.getMessage());
+                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not pause processing", e.getMessage());
                 });
             }
         });

@@ -12,8 +12,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.ui.AbstractRestHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.studio.ui.handlers.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
 

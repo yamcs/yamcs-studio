@@ -16,6 +16,7 @@ import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 
 /**
  * Used in plugin.xml core-expressions to keep track of connection state

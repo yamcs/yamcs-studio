@@ -39,9 +39,9 @@ import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.ConnectionStateProvider;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
+import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 
 public class CommandStackView extends ViewPart implements StudioConnectionListener {
 

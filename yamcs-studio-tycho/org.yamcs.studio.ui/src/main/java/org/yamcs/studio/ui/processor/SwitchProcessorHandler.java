@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.handlers;
+package org.yamcs.studio.ui.processor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +26,7 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.ui.processor.SwitchProcessorDialog;
+import org.yamcs.studio.ui.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
 

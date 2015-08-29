@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.handlers;
+package org.yamcs.studio.ui.archive;
 
 import javax.swing.SwingUtilities;
 
@@ -7,19 +7,18 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.studio.ui.archive.ArchiveView;
 
 /**
- * Handles the enabled state for the zoom-in command
+ * Handels the enabled state for the tag command
  */
-public class ZoomInHandler extends AbstractHandler {
+public class AnnotateArchiveHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
         SwingUtilities.invokeLater(() -> {
             ArchiveView view = (ArchiveView) part;
-            view.archivePanel.getDataViewer().zoomIn();
+            view.archivePanel.getDataViewer().tagSelectedRange();
         });
 
         return null;

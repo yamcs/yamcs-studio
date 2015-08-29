@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.handlers;
+package org.yamcs.studio.ui.archive;
 
 import javax.swing.SwingUtilities;
 
@@ -8,8 +8,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.ui.RCPUtils;
-import org.yamcs.studio.ui.archive.ArchiveView;
-import org.yamcs.studio.ui.archive.RefreshStateProvider;
 
 /**
  * Handles the refresh of the archive view

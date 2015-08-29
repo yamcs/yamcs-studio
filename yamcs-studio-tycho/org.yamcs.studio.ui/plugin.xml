@@ -130,7 +130,7 @@
       <sourceProvider provider="org.yamcs.studio.ui.AuthorizationStateProvider">
          <variable name="org.yamcs.studio.ui.authorization.mayCommandPayload" priorityLevel="workbench" />
       </sourceProvider>
-      <sourceProvider provider="org.yamcs.studio.ui.ConnectionStateProvider">
+      <sourceProvider provider="org.yamcs.studio.ui.connections.ConnectionStateProvider">
          <variable name="org.yamcs.studio.ui.state.connected" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.ui.archive.RefreshStateProvider">
@@ -252,7 +252,7 @@
             name="Clear Log View">
       </command>
       <command
-            defaultHandler="org.yamcs.studio.ui.handlers.OpenPerspectiveHandler"
+            defaultHandler="org.yamcs.studio.ui.OpenPerspectiveHandler"
             id="org.yamcs.studio.ui.commands.openPerspectiveCommand"
             name="Open Perspective">
          <commandParameter
@@ -356,10 +356,9 @@
       <handler
             class="org.yamcs.studio.ui.commanding.stack.ExportCommandStackHandler"
             commandId="org.yamcs.studio.ui.commanding.stack.export">
-             <activeWhen>
-           
+         <activeWhen>
             <and>
-            <with variable="org.yamcs.studio.ui.state.connected">
+               <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
                <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
@@ -384,7 +383,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.RefreshArchiveHandler"
+            class="org.yamcs.studio.ui.archive.RefreshArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.refreshCommand">
          <activeWhen>
             <and>
@@ -398,7 +397,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.ZoomInHandler"
+            class="org.yamcs.studio.ui.archive.ZoomInHandler"
             commandId="org.yamcs.studio.ui.archive.zoomInCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.zoomInEnabled">
@@ -407,7 +406,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.ZoomOutHandler"
+            class="org.yamcs.studio.ui.archive.ZoomOutHandler"
             commandId="org.yamcs.studio.ui.archive.zoomOutCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.archive.state.zoomOutEnabled">
@@ -416,7 +415,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.ZoomClearHandler"
+            class="org.yamcs.studio.ui.archive.ZoomClearHandler"
             commandId="org.yamcs.studio.ui.archive.zoomClearCommand">
          <activeWhen>
             <and>
@@ -430,7 +429,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.AnnotateArchiveHandler"
+            class="org.yamcs.studio.ui.archive.AnnotateArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.createTagCommand">
          <activeWhen>
             <and>
@@ -444,7 +443,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.CreateReplayHandler"
+            class="org.yamcs.studio.ui.archive.CreateReplayHandler"
             commandId="org.yamcs.studio.ui.archive.createReplayCommand">
          <activeWhen>
             <and>
@@ -458,7 +457,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.SwitchProcessorHandler"
+            class="org.yamcs.studio.ui.processor.SwitchProcessorHandler"
             commandId="org.yamcs.studio.ui.processor.switch">
          <activeWhen>
             <and>
@@ -469,11 +468,11 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.ClearEventLogHandler"
+            class="org.yamcs.studio.ui.eventlog.ClearEventLogHandler"
             commandId="org.yamcs.studio.ui.eventlog.clearCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.GoToBeginningHandler"
+            class="org.yamcs.studio.ui.processor.GoToBeginningHandler"
             commandId="org.yamcs.studio.ui.processor.goToBeginningCommand">
          <activeWhen>
             <and>
@@ -498,7 +497,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.PauseHandler"
+            class="org.yamcs.studio.ui.processor.PauseHandler"
             commandId="org.yamcs.studio.ui.processor.pauseCommand">
          <activeWhen>
             <and>
@@ -515,7 +514,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.PlayHandler"
+            class="org.yamcs.studio.ui.processor.PlayHandler"
             commandId="org.yamcs.studio.ui.processor.playCommand">
          <activeWhen>
             <and>
@@ -537,7 +536,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.handlers.GoToEndHandler"
+            class="org.yamcs.studio.ui.processor.GoToEndHandler"
             commandId="org.yamcs.studio.ui.processor.goToEndCommand">
          <activeWhen>
             <and>

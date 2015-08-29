@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.handlers;
+package org.yamcs.studio.ui.processor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,22 +13,22 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.ui.AbstractRestHandler;
 
 import com.google.protobuf.MessageLite;
 
-public class GoToBeginningHandler extends AbstractRestHandler {
+public class GoToEndHandler extends AbstractRestHandler {
 
-    private static final Logger log = Logger.getLogger(GoToBeginningHandler.class.getName());
+    private static final Logger log = Logger.getLogger(GoToEndHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-
-        if (!checkRestClient(event, "go to beginning of replay range"))
+        if (!checkRestClient(event, "go to end of replay range"))
             return null;
 
         String processorName = YamcsPlugin.getDefault().getClientInfo().getProcessorName();
         ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(processorName);
-        long seekTime = processorInfo.getReplayRequest().getStart();
+        long seekTime = processorInfo.getReplayRequest().getStop();
 
         ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.SEEK).setSeekTime(seekTime).build();
         restClient.createProcessorRequest(processorName, req, new ResponseHandler() {
@@ -38,7 +38,7 @@ public class GoToBeginningHandler extends AbstractRestHandler {
 
             @Override
             public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not go to beginning of replay range", e);
+                log.log(Level.SEVERE, "Could not go to end of replay range", e);
                 Display.getDefault().asyncExec(() -> {
                     MessageDialog.openError(HandlerUtil.getActiveShell(event), "Seek Error", e.getMessage());
                 });

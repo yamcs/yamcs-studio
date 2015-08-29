@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.handlers;
+package org.yamcs.studio.ui.archive;
 
 import java.util.List;
 
@@ -10,10 +10,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.studio.ui.archive.ArchiveView;
-import org.yamcs.studio.ui.archive.CreateReplayDialog;
-import org.yamcs.studio.ui.archive.Selection;
-import org.yamcs.studio.ui.archive.TimeInterval;
 
 public class CreateReplayHandler extends AbstractHandler {
 

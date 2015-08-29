@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.handlers;
+package org.yamcs.studio.ui;
 
 import java.util.Map;
 
@@ -17,7 +17,6 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
-import org.yamcs.studio.ui.OpenWindowsCompoundContributionItem;
 
 public class OpenPerspectiveHandler extends AbstractHandler implements IElementUpdater {
 
