@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -137,7 +138,9 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
                 }
             } else {
                 ConnectionsDialog dialog = new ConnectionsDialog(processor.getShell());
-                dialog.open();
+                if (dialog.open() == Dialog.OK) {
+
+                }
             }
         });
 

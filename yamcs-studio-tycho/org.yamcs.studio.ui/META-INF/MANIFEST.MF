@@ -41,7 +41,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.xtext.ui,
  org.yamcs.studio.ycl.ui,
  org.eclipse.ui.forms,
- org.eclipse.gef
+ org.eclipse.gef,
+ com.google.gson
 Import-Package: org.epics.pvmanager,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.ui.commanding
