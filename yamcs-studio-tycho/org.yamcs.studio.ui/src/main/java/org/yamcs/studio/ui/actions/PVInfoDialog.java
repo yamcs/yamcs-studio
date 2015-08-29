@@ -31,7 +31,7 @@ public class PVInfoDialog extends Dialog {
 
     private List<PVInfo> pvInfos;
 
-    public PVInfoDialog(Shell parentShell, String dialogTitle, List<PVInfo> pvInfos) {
+    public PVInfoDialog(Shell parentShell, List<PVInfo> pvInfos) {
         super(parentShell);
         this.pvInfos = pvInfos;
         setShellStyle(SWT.CLOSE | SWT.MODELESS | SWT.BORDER);

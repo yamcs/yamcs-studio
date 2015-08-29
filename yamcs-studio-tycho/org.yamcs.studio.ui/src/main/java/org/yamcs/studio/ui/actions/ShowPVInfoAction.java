@@ -127,8 +127,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
     }
 
     private void showDialog(List<PVInfo> pvInfos) {
-        PVInfoDialog dialog = new PVInfoDialog(
-                targetPart.getSite().getShell(), "PV Info", pvInfos);
+        PVInfoDialog dialog = new PVInfoDialog(targetPart.getSite().getShell(), pvInfos);
         dialog.open();
     }
 

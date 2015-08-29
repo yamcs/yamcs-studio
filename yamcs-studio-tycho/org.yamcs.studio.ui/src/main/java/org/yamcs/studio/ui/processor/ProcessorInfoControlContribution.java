@@ -28,6 +28,7 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.YamcsPlugin.ConnectionStatus;
+import org.yamcs.studio.ui.connections.ConnectionsDialog;
 
 /**
  * Shows a visual indicator for the currently subscribed processor.
@@ -134,6 +135,9 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
                 } catch (Exception exception) {
                     log.log(Level.SEVERE, "Could not execute command", exception);
                 }
+            } else {
+                ConnectionsDialog dialog = new ConnectionsDialog(processor.getShell());
+                dialog.open();
             }
         });
 
