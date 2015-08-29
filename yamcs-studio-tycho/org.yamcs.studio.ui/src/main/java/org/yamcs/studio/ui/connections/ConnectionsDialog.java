@@ -2,6 +2,7 @@ package org.yamcs.studio.ui.connections;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -9,6 +10,8 @@ import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -26,7 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.studio.core.YamcsConnectionConfiguration;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 
 /**
@@ -42,6 +45,22 @@ import org.yamcs.studio.ui.YamcsUIPlugin;
  * (so inside the home directory). This makes it easier to migrate from one Yamcs Studio to another.
  */
 public class ConnectionsDialog extends Dialog {
+
+    private TableViewer connViewer;
+    private Composite detailPanel;
+
+    private ToolItem addServerButton;
+    private ToolItem removeServerButton;
+
+    private Text yamcsInstanceText;
+    private Text yamcsUserText;
+    private Text yamcsPasswordText;
+    private Text yamcsPrimaryHostText;
+    private Text yamcsPrimaryPortText;
+    private Text yamcsFailoverHostText;
+    private Text yamcsFailoverPortText;
+    private Text nameText;
+    private Button savePasswordButton;
 
     public ConnectionsDialog(Shell parentShell) {
         super(parentShell);
@@ -59,41 +78,96 @@ public class ConnectionsDialog extends Dialog {
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), contentArea);
 
         ToolBar editBar = new ToolBar(contentArea, SWT.NO_FOCUS);
-        ToolItem item = new ToolItem(editBar, SWT.NONE);
-        item.setImage(resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server_add.png")));
-        item.setToolTipText("Add Connection");
-        item = new ToolItem(editBar, SWT.NONE);
-        item.setImage(resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server_remove.png")));
-        item.setToolTipText("Delete Connection");
+        addServerButton = new ToolItem(editBar, SWT.NONE);
+        addServerButton.setImage(resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server_add.png")));
+        addServerButton.setToolTipText("Add Connection");
+        addServerButton.addListener(SWT.Selection, evt -> {
+            addServer();
+            updateState();
+        });
+
+        removeServerButton = new ToolItem(editBar, SWT.NONE);
+        removeServerButton.setImage(resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server_remove.png")));
+        removeServerButton.setToolTipText("Delete Connection");
+        removeServerButton.addListener(SWT.Selection, evt -> {
+            removeSelectedServer();
+            updateState();
+        });
         editBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         SashForm sash = new SashForm(contentArea, SWT.HORIZONTAL);
         sash.setLayoutData(new GridData(GridData.FILL_BOTH));
         sash.setLayout(new FillLayout());
         createServerPanel(sash, resourceManager);
-        createDetailPanel(sash, resourceManager);
+
+        // Create right side, but wrap it in another composite to force dimensions
+        // even when invisible
+        Composite detailPanelWrapper = new Composite(sash, SWT.NONE);
+        gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        detailPanelWrapper.setLayout(gl);
+        createDetailPanel(detailPanelWrapper, resourceManager);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.widthHint = 250;
+        detailPanel.setLayoutData(gd);
+
         sash.setWeights(new int[] { 60, 40 });
+
+        // TODO should really select the last used connection
+        selectFirstServer();
+        updateState();
 
         return contentArea;
     }
 
+    private void updateState() {
+        IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
+        Button ok = getButton(IDialogConstants.OK_ID);
+        if (sel.isEmpty()) {
+            detailPanel.setVisible(false);
+            removeServerButton.setEnabled(false);
+            if (ok != null) // It's null during initial creation
+                ok.setText("Save"); // Give opportunity to user to quit dialog without connecting and saving changes
+        } else {
+            detailPanel.setVisible(true);
+            removeServerButton.setEnabled(true);
+            if (ok != null) // It's null during initial creation
+                ok.setText("Connect");
+        }
+    }
+
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
-        // Change parent layout data to fill the whole bar
-        parent.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        super.createButtonsForButtonBar(parent);
 
-        Button sampleButton = createButton(parent, IDialogConstants.NO_ID, "Sample", true);
+        Button ok = getButton(IDialogConstants.OK_ID);
+        ok.setText("Connect");
+        setButtonLayoutData(ok);
+    }
 
-        Label spacer = new Label(parent, SWT.NONE);
-        spacer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+    private void selectFirstServer() {
+        if (connViewer.getTable().getItemCount() > 0) {
+            connViewer.setSelection(new StructuredSelection(connViewer.getElementAt(0)), true);
+        }
+    }
 
-        // Update layout of the parent composite to count the spacer
-        GridLayout layout = (GridLayout) parent.getLayout();
-        layout.numColumns++;
-        layout.makeColumnsEqualWidth = false;
+    private void addServer() {
+        YamcsConnectionConfiguration conf = new YamcsConnectionConfiguration("Untitled", "", 8090, "");
+        connViewer.add(conf);
+        connViewer.setSelection(new StructuredSelection(conf), true);
+        yamcsInstanceText.setFocus();
+    }
 
-        createButton(parent, IDialogConstants.OK_ID, "Connect", false);
-        createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
+    private void removeSelectedServer() {
+        IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
+        YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) sel.getFirstElement();
+        boolean confirmed = MessageDialog.openConfirm(connViewer.getTable().getShell(), "",
+                "Do you really want to remove the server configuration '" + conf.getName() + "'");
+        if (confirmed) {
+            connViewer.remove(conf);
+            selectFirstServer();
+        }
     }
 
     private Composite createServerPanel(Composite parent, ResourceManager resourceManager) {
@@ -105,11 +179,11 @@ public class ConnectionsDialog extends Dialog {
 
         Image serverImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server.gif"));
 
-        TableViewer tableViewer = new TableViewer(serverPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-        tableViewer.getTable().setHeaderVisible(true);
-        tableViewer.getTable().setLinesVisible(false);
+        connViewer = new TableViewer(serverPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+        connViewer.getTable().setHeaderVisible(true);
+        connViewer.getTable().setLinesVisible(false);
 
-        TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+        TableViewerColumn nameColumn = new TableViewerColumn(connViewer, SWT.NONE);
         nameColumn.getColumn().setText("Name");
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -119,20 +193,49 @@ public class ConnectionsDialog extends Dialog {
 
             @Override
             public String getText(Object element) {
-                YamcsConnectionProperties props = (YamcsConnectionProperties) element;
-                return props.webResourceURI("").toString();
+                YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) element;
+                return conf.getName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(400));
 
-        tableViewer.setContentProvider(new ArrayContentProvider());
-        tableViewer.setInput(new YamcsConnectionConfiguration().getConnectionPropertiesList());
+        connViewer.setContentProvider(new ArrayContentProvider());
+        connViewer.add(new YamcsConnectionConfiguration("Local yamcs", "localhost", 8090, "simulator"));
+        connViewer.add(new YamcsConnectionConfiguration("Yet another yamcs", "yayamcs", 8090, "tst"));
+
+        connViewer.addSelectionChangedListener(evt -> {
+            IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
+            if (sel.getFirstElement() != null) {
+                YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) sel.getFirstElement();
+                yamcsInstanceText.setText(forceString(conf.getInstance()));
+                if (conf.getYamcsCredentials() != null) {
+                    yamcsUserText.setText(forceString(conf.getYamcsCredentials().getUsername()));
+                    yamcsPasswordText.setText(forceString(conf.getYamcsCredentials().getPasswordS()));
+                    savePasswordButton.setSelection(conf.getYamcsCredentials().getPasswordS() != null);
+                } else {
+                    yamcsUserText.setText("");
+                    yamcsPasswordText.setText("");
+                    savePasswordButton.setSelection(false);
+                }
+                yamcsPrimaryHostText.setText(forceString(conf.getPrimaryHost()));
+                yamcsPrimaryPortText.setText(forceString(conf.getPrimaryPort()));
+                yamcsFailoverHostText.setText(forceString(conf.getFailoverHost()));
+                yamcsFailoverPortText.setText(forceString(conf.getFailoverPort()));
+                nameText.setText(forceString(conf.getName()));
+
+                updateState();
+            }
+        });
 
         return serverPanel;
     }
 
+    private static String forceString(Object obj) {
+        return (obj != null) ? obj.toString() : "";
+    }
+
     private Composite createDetailPanel(Composite parent, ResourceManager resourceManager) {
-        Composite detailPanel = new Composite(parent, SWT.NONE);
+        detailPanel = new Composite(parent, SWT.NONE);
         GridLayout gl = new GridLayout(2, false);
         gl.marginWidth = 0;
         gl.horizontalSpacing = 0;
@@ -140,19 +243,19 @@ public class ConnectionsDialog extends Dialog {
 
         Label lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Yamcs Instance:");
-        Text yamcsInstanceText = new Text(detailPanel, SWT.BORDER);
+        yamcsInstanceText = new Text(detailPanel, SWT.BORDER);
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         yamcsInstanceText.setLayoutData(gd);
 
         lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("User:");
-        Text yamcsUserText = new Text(detailPanel, SWT.BORDER);
+        yamcsUserText = new Text(detailPanel, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         yamcsUserText.setLayoutData(gd);
 
-        lbl = new Label(detailPanel, SWT.PASSWORD);
+        lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Password:");
-        Text yamcsPasswordText = new Text(detailPanel, SWT.BORDER);
+        yamcsPasswordText = new Text(detailPanel, SWT.BORDER | SWT.PASSWORD);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         yamcsPasswordText.setLayoutData(gd);
 
@@ -160,7 +263,6 @@ public class ConnectionsDialog extends Dialog {
         lbl = new Label(detailPanel, SWT.NONE);
         gd = new GridData();
         gd.horizontalSpan = 2;
-        gd.widthHint = 200; // ! this influences the width of the whole dialog
         lbl.setLayoutData(gd);
 
         Group detailsGroup = new Group(detailPanel, SWT.NONE);
@@ -179,13 +281,13 @@ public class ConnectionsDialog extends Dialog {
 
         lbl = new Label(detailsGroup, SWT.NONE);
         lbl.setText("Host:");
-        Text yamcsHostText = new Text(detailsGroup, SWT.BORDER);
+        yamcsPrimaryHostText = new Text(detailsGroup, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        yamcsHostText.setLayoutData(gd);
+        yamcsPrimaryHostText.setLayoutData(gd);
 
         lbl = new Label(detailsGroup, SWT.NONE);
         lbl.setText("Port:");
-        Text yamcsPortText = new Text(detailsGroup, SWT.BORDER);
+        yamcsPrimaryPortText = new Text(detailsGroup, SWT.BORDER);
 
         lbl = new Label(detailsGroup, SWT.HORIZONTAL | SWT.SEPARATOR);
         gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -200,13 +302,13 @@ public class ConnectionsDialog extends Dialog {
 
         lbl = new Label(detailsGroup, SWT.NONE);
         lbl.setText("Host:");
-        Text yamcsFailoverHostText = new Text(detailsGroup, SWT.BORDER);
+        yamcsFailoverHostText = new Text(detailsGroup, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         yamcsFailoverHostText.setLayoutData(gd);
 
         lbl = new Label(detailsGroup, SWT.NONE);
         lbl.setText("Port:");
-        Text yamcsFailoverPortText = new Text(detailsGroup, SWT.BORDER);
+        yamcsFailoverPortText = new Text(detailsGroup, SWT.BORDER);
 
         // Spacer
         lbl = new Label(detailPanel, SWT.NONE);
@@ -220,12 +322,19 @@ public class ConnectionsDialog extends Dialog {
         gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
 
-        Text nameText = new Text(detailPanel, SWT.BORDER);
+        nameText = new Text(detailPanel, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         nameText.setLayoutData(gd);
+        // Update the label in the left panel too
+        nameText.addListener(SWT.KeyUp, evt -> {
+            IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
+            YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) sel.getFirstElement();
+            conf.setName(nameText.getText());
+            connViewer.update(conf, null);
+        });
 
-        Button savePasswordButton = new Button(detailPanel, SWT.CHECK);
+        savePasswordButton = new Button(detailPanel, SWT.CHECK);
         savePasswordButton.setText("Save Password");
         gd = new GridData();
         gd.horizontalSpan = 2;
