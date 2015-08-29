@@ -3,11 +3,9 @@ package org.yamcs.studio.ui.connections;
 import static org.yamcs.studio.ui.TextUtils.forceString;
 import static org.yamcs.studio.ui.TextUtils.isBlank;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -41,9 +39,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.yamcs.studio.core.YamcsCredentials;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-
 /**
  * A modal dialog for managing connection to Yamcs servers. Extracted out of preferences, because
  * these kind of settings are a lot more variable and depending on the user configuration.
@@ -66,8 +61,9 @@ public class ConnectionsDialog extends Dialog {
     private ToolItem addServerButton;
     private ToolItem removeServerButton;
 
-    private YamcsConnectionConfiguration selectedConfiguration;
+    private YamcsConfiguration selectedConfiguration;
 
+    private Button autoConnect;
     private Text yamcsInstanceText;
     private Text yamcsUserText;
     private Text yamcsPasswordText;
@@ -77,6 +73,9 @@ public class ConnectionsDialog extends Dialog {
     private Text yamcsFailoverPortText;
     private Text nameText;
     private Button savePasswordButton;
+
+    private YamcsConfiguration chosenConfiguration;
+    private YamcsCredentials chosenCredentials;
 
     public ConnectionsDialog(Shell parentShell) {
         super(parentShell);
@@ -130,26 +129,15 @@ public class ConnectionsDialog extends Dialog {
 
         sash.setWeights(new int[] { 55, 45 });
 
-        loadDataFromPreferences();
+        ConnectionPreferences.getConfigurations().forEach(conf -> {
+            connViewer.add(conf);
+        });
 
         // TODO should really select the last used connection
         selectFirstServer();
         updateState();
 
         return contentArea;
-    }
-
-    @SuppressWarnings("serial")
-    private void loadDataFromPreferences() {
-        Preferences prefs = Preferences.userNodeForPackage(ConnectionsDialog.class);
-        String confsString = prefs.get("confs", null);
-        if (confsString != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<List<YamcsConnectionConfiguration>>() {
-            }.getType();
-            List<YamcsConnectionConfiguration> confs = gson.fromJson(confsString, type);
-            confs.forEach(conf -> connViewer.add(conf));
-        }
     }
 
     private void updateState() {
@@ -162,7 +150,7 @@ public class ConnectionsDialog extends Dialog {
             if (ok != null) // It's null during initial creation
                 ok.setText("Save"); // Give opportunity to user to quit dialog without connecting and saving changes
         } else {
-            selectedConfiguration = (YamcsConnectionConfiguration) sel.getFirstElement();
+            selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
             removeServerButton.setEnabled(true);
             if (ok != null) // It's null during initial creation
@@ -173,32 +161,36 @@ public class ConnectionsDialog extends Dialog {
     @Override
     protected void okPressed() {
         if (selectedConfiguration != null) {
-            YamcsCredentials yamcsCredentials = selectedConfiguration.getYamcsCredentials();
+            chosenConfiguration = selectedConfiguration;
+            chosenCredentials = selectedConfiguration.getYamcsCredentials();
         }
-        saveDataToPreferences();
-        super.okPressed();
-    }
-
-    private void saveDataToPreferences() {
-        Preferences prefs = Preferences.userNodeForPackage(ConnectionsDialog.class);
-
-        List<YamcsConnectionConfiguration> confs = new ArrayList<>();
+        ConnectionPreferences.setAutoConnect(autoConnect.getSelection());
+        List<YamcsConfiguration> confs = new ArrayList<>();
         Object el;
         int i = 0;
         while ((el = connViewer.getElementAt(i++)) != null) {
-            YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) el;
+            YamcsConfiguration conf = (YamcsConfiguration) el;
             if (!conf.isSavePassword())
                 conf.setPassword(null);
             confs.add(conf);
         }
-
-        String confsString = new Gson().toJson(confs);
-        log.info(String.format("Storing %s", confsString));
-        prefs.put("confs", confsString);
+        ConnectionPreferences.setConfigurations(confs);
+        super.okPressed();
     }
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
+        parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        autoConnect = new Button(parent, SWT.CHECK);
+        autoConnect.setText("Connect on startup");
+        autoConnect.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        autoConnect.setSelection(ConnectionPreferences.isAutoConnect());
+
+        GridLayout layout = (GridLayout) parent.getLayout();
+        layout.numColumns++;
+        layout.makeColumnsEqualWidth = false;
+
         super.createButtonsForButtonBar(parent);
 
         Button ok = getButton(IDialogConstants.OK_ID);
@@ -213,7 +205,7 @@ public class ConnectionsDialog extends Dialog {
     }
 
     private void addServer() {
-        YamcsConnectionConfiguration conf = new YamcsConnectionConfiguration();
+        YamcsConfiguration conf = new YamcsConfiguration();
         conf.setName("Untitled");
         conf.setPrimaryPort(8090);
         connViewer.add(conf);
@@ -223,7 +215,7 @@ public class ConnectionsDialog extends Dialog {
 
     private void removeSelectedServer() {
         IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
-        YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) sel.getFirstElement();
+        YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
         boolean confirmed = MessageDialog.openConfirm(connViewer.getTable().getShell(), "",
                 "Do you really want to remove the server configuration '" + conf.getName() + "'");
         if (confirmed) {
@@ -255,7 +247,7 @@ public class ConnectionsDialog extends Dialog {
 
             @Override
             public String getText(Object element) {
-                YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) element;
+                YamcsConfiguration conf = (YamcsConfiguration) element;
                 return conf.getName();
             }
         });
@@ -265,7 +257,7 @@ public class ConnectionsDialog extends Dialog {
         connViewer.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
-                YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) sel.getFirstElement();
+                YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
                 yamcsInstanceText.setText(forceString(conf.getInstance()));
                 yamcsUserText.setText(forceString(conf.getUser()));
                 yamcsPasswordText.setText(forceString(conf.getPassword()));
@@ -446,7 +438,7 @@ public class ConnectionsDialog extends Dialog {
         // Update the label in the left panel too
         nameText.addListener(SWT.KeyUp, evt -> {
             IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
-            YamcsConnectionConfiguration conf = (YamcsConnectionConfiguration) sel.getFirstElement();
+            YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
             conf.setName(nameText.getText());
             connViewer.update(conf, null);
 
@@ -468,5 +460,14 @@ public class ConnectionsDialog extends Dialog {
         });
 
         return detailPanel;
+    }
+
+    public YamcsConfiguration getChosenConfiguration() {
+        // Add our credentials back in (they could have been removed during serialization)
+        if (chosenConfiguration != null && chosenCredentials != null) {
+            chosenConfiguration.setUser(chosenCredentials.getUsername());
+            chosenConfiguration.setPassword(chosenCredentials.getPasswordS());
+        }
+        return chosenConfiguration;
     }
 }

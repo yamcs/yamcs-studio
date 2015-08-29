@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -29,7 +28,6 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.YamcsPlugin.ConnectionStatus;
-import org.yamcs.studio.ui.connections.ConnectionsDialog;
 
 /**
  * Shows a visual indicator for the currently subscribed processor.
@@ -126,21 +124,19 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         spacer.setLayoutData(gd);
 
         processor.addListener(SWT.MouseDown, evt -> {
-            if (YamcsPlugin.getDefault().getConnectionSatus() == ConnectionStatus.Connected) {
-                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
-                IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
-                try {
-                    Command cmd = commandService.getCommand("org.yamcs.studio.ui.processor.switch");
-                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
-                } catch (Exception exception) {
-                    log.log(Level.SEVERE, "Could not execute command", exception);
+            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+            IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
+            try {
+                Command cmd;
+                if (YamcsPlugin.getDefault().getConnectionSatus() == ConnectionStatus.Connected) {
+                    cmd = commandService.getCommand("org.yamcs.studio.ui.processor.switch");
+                } else {
+                    cmd = commandService.getCommand("org.yamcs.studio.ui.connect");
                 }
-            } else {
-                ConnectionsDialog dialog = new ConnectionsDialog(processor.getShell());
-                if (dialog.open() == Dialog.OK) {
-
-                }
+                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+            } catch (Exception exception) {
+                log.log(Level.SEVERE, "Could not execute command", exception);
             }
         });
 

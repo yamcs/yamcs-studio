@@ -5,7 +5,7 @@ import org.yamcs.studio.core.YamcsCredentials;
 /**
  * UI class. Used to maintain state of a server in the connection manager dialog
  */
-public class YamcsConnectionConfiguration {
+public class YamcsConfiguration {
     private String name;
     private String instance;
     private String user;

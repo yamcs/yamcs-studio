@@ -124,11 +124,6 @@
             id="org.yamcs.studio.opibuilder.preferences.opiruntime"
             name="OPI Runtime">
       </page>
-      <page
-            class="org.yamcs.studio.ui.prefs.YamcsPreferencePage"
-            id="org.yamcs.studio.ui.prefs.YamcsPreferencePage"
-            name="Yamcs Server">
-      </page>
    </extension>
    
    <extension point="org.eclipse.ui.services">   
@@ -566,16 +561,15 @@
             </and>
          </activeWhen>
       </handler>
-      <handler commandId="org.yamcs.studio.ui.connect"
-            class="org.yamcs.studio.ui.handlers.ConnectHandler">
-         <activeWhen>
-            <with variable="org.yamcs.studio.ui.state.connected">
-               <equals value="false"/>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler commandId="org.yamcs.studio.ui.disconnect"
-            class="org.yamcs.studio.ui.handlers.DisconnectHandler">
+      <handler 
+            commandId="org.yamcs.studio.ui.autoconnect" 
+            class="org.yamcs.studio.ui.connections.AutoConnectHandler"/>
+      <handler
+            commandId="org.yamcs.studio.ui.connect"
+            class="org.yamcs.studio.ui.connections.ConnectHandler"/>
+      <handler
+            commandId="org.yamcs.studio.ui.disconnect"
+            class="org.yamcs.studio.ui.connections.DisconnectHandler">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.state.connected">
                <equals value="true"/>
@@ -1074,7 +1068,7 @@
             locationURI="menu:file?before=user">
             <command
                   commandId="org.yamcs.studio.ui.connect"
-                  label="Connect">
+                  label="Connect...">
             </command>
             <command
                   commandId="org.yamcs.studio.ui.disconnect" 

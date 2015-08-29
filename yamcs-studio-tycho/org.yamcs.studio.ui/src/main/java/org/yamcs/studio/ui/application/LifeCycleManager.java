@@ -24,7 +24,8 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionFailureListener;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.ui.handlers.ConnectHandler;
+import org.yamcs.studio.ui.connections.AutoConnectHandler;
+import org.yamcs.studio.ui.connections.ConnectionPreferences;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 
 @SuppressWarnings("restriction")
@@ -79,7 +80,9 @@ public class LifeCycleManager implements ConnectionFailureListener {
                 });
 
                 // request connection to Yamcs server
-                (new ConnectHandler()).execute(null);
+                if (ConnectionPreferences.isAutoConnect()) {
+                    (new AutoConnectHandler()).execute(null);
+                }
             } catch (Exception exception) {
                 log.log(Level.SEVERE, "Could not execute command", exception);
             }
@@ -106,22 +109,19 @@ public class LifeCycleManager implements ConnectionFailureListener {
     }
 
     @Override
-    public void unauthorized()
-    {
+    public void unauthorized() {
         MessageDialog.openError(Display.getCurrent().getActiveShell(), "Connect", "Unauthorized");
     }
 
     private static void askSwitchNode(int currentNode, int nextNode, String errorMessage) {
         String message = "Connection error with Yamcs Server node " + currentNode + ".";
-        if (errorMessage != null && errorMessage != "")
-        {
+        if (errorMessage != null && errorMessage != "") {
             message += "\nDetails:" + errorMessage;
         }
         message += "\n\n" + "Would you like to switch connection to node " + nextNode + " now?";
         MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message,
                 MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
-        if (dialog.open() == 0)
-        {
+        if (dialog.open() == 0) {
             Display.getDefault().asyncExec(() -> {
                 YamcsPlugin.getDefault().disconnect();
                 try {
@@ -131,9 +131,7 @@ public class LifeCycleManager implements ConnectionFailureListener {
                     YamcsPlugin.getDefault().notifyConnectionFailure(e.getMessage());
                 }
             });
-        }
-        else
-        {
+        } else {
             YamcsPlugin.getDefault().abortSwitchNode();
         }
     }
