@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.actions;
+package org.yamcs.studio.ui.opibuilder;
 
 import org.csstudio.opibuilder.actions.OpenTopOPIsAction;
 import org.eclipse.jface.action.IAction;

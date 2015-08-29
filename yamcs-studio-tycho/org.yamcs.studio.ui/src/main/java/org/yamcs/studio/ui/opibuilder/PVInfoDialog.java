@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.actions;
+package org.yamcs.studio.ui.opibuilder;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

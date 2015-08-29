@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.actions;
+package org.yamcs.studio.ui.opibuilder;
 
 import org.csstudio.simplepv.IPV;
 import org.yamcs.protobuf.Rest.RestParameterInfo;

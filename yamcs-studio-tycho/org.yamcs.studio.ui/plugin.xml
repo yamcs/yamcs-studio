@@ -801,7 +801,7 @@
             label="Bookmark Actions"
             visible="true">
          <action
-               class="org.yamcs.studio.ui.actions.OpenFavouritesAction"
+               class="org.yamcs.studio.ui.opibuilder.OpenFavouritesAction"
                id="org.csstudio.opibuilder.openTopFileAction"
                label="&#9733; Bookmarks"
                pulldown="true"
@@ -832,7 +832,7 @@
             id="org.yamcs.studio.showPVInfo"
             objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
          <action
-               class="org.yamcs.studio.ui.actions.ShowPVInfoAction"
+               class="org.yamcs.studio.ui.opibuilder.ShowPVInfoAction"
                enablesFor="1"
                id="org.yamcs.studio.showPVInfoAction"
                label="Show PV Info"
