@@ -208,6 +208,16 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.stack.export"
+            name="Export Stack">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.stack.import"
+            name="Import a Stack">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.archive.refreshCommand"
             name="Refresh">
       </command>
@@ -347,6 +357,36 @@
       <handler
             class="org.yamcs.studio.ui.commanding.stack.IssueCommandHandler"
             commandId="org.yamcs.studio.ui.commanding.stack.issue">
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.stack.ExportCommandStackHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.export">
+             <activeWhen>
+           
+            <and>
+            <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.stack.ImportCommandStackHandler"
+            commandId="org.yamcs.studio.ui.commanding.stack.import">
+             <activeWhen>
+           
+            <and>
+            <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
       </handler>
       <handler
             class="org.yamcs.studio.ui.handlers.RefreshArchiveHandler"
@@ -866,6 +906,19 @@
                 icon="icons/elcl16/restart_co.png"
                 disabledIcon="icons/dlcl16/restart_co.png"
                 label="Clear Execution State"
+                style="push"/>
+          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.export"
+                icon="icons/elcl16/export.gif"
+                disabledIcon="icons/dlcl16/export.png"
+                label="Export stack"
+                style="push"/>
+          <command
+                commandId="org.yamcs.studio.ui.commanding.stack.import"
+                icon="icons/elcl16/import_wiz.gif"
+                disabledIcon="icons/dlcl16/import.png"
+                label="Import a stack"
                 style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
