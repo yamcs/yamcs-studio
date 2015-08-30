@@ -22,14 +22,6 @@ public class ConnectionManager {
 
     private static final Logger log = Logger.getLogger(ConnectionManager.class.getName());
 
-    public enum ConnectionStatus {
-        Disconnected, // no clients (WebSocket, HornetQ) are connected to Yamcs server
-        Connecting,
-        Connected, // all clients are connected
-        Disconnecting,
-        ConnectionFailure,
-    }
-
     private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
 
     private YamcsCredentials creds;
@@ -89,7 +81,7 @@ public class ConnectionManager {
         YamcsPlugin.getDefault().addMdbListener(webSocketClient);
 
         // We start other clients as well
-        log.info("Connecting web socket");
+        log.info("Connecting WebSocket");
         new Thread() {
             @Override
             public void run() {

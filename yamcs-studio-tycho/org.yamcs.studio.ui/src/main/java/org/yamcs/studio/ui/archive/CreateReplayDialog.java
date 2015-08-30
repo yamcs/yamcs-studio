@@ -12,12 +12,9 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,6 +41,7 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.EndAction;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
+import org.yamcs.protobuf.Yamcs.PpReplayRequest;
 import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
@@ -75,6 +73,9 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
 
     private TableViewer packetsTable;
     private List<String> packetsValue;
+
+    private TableViewer ppTable;
+    private List<String> ppValue;
 
     private RestClient restClient = null;
 
@@ -124,13 +125,13 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
         container.setLayout(layout);
 
         Label lbl = new Label(container, SWT.NONE);
-        lbl.setText("Name");
+        lbl.setText("Name:");
         name = new Text(container, SWT.BORDER);
         name.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         name.setText(nameValue);
 
         lbl = new Label(container, SWT.NONE);
-        lbl.setText("Start");
+        lbl.setText("Start:");
         Composite startComposite = new Composite(container, SWT.NONE);
         RowLayout rl = new RowLayout();
         rl.marginLeft = 0;
@@ -148,7 +149,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
         }
 
         lbl = new Label(container, SWT.NONE);
-        lbl.setText("Stop");
+        lbl.setText("Stop:");
         Composite stopComposite = new Composite(container, SWT.NONE);
         rl = new RowLayout();
         rl.marginLeft = 0;
@@ -166,36 +167,55 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
             stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE), stopTimeValue.get(Calendar.SECOND));
         }
 
+        /*
+         * PACKET TABLE
+         */
         lbl = new Label(container, SWT.NONE);
-        lbl.setText("Packets");
+        lbl.setText("Packets:");
         GridData gd = new GridData();
         gd.verticalAlignment = SWT.TOP;
         lbl.setLayoutData(gd);
 
         Composite tableWrapper = new Composite(container, SWT.NONE);
-        TableColumnLayout tcl = new TableColumnLayout();
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        tableWrapper.setLayout(tcl);
+        GridLayout gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        tableWrapper.setLayout(gl);
 
-        packetsTable = new TableViewer(tableWrapper, SWT.CHECK | SWT.V_SCROLL | SWT.SINGLE | SWT.BORDER);
-        packetsTable.getTable().setHeaderVisible(false);
-        packetsTable.getTable().setLinesVisible(true);
-
-        TableViewerColumn nameColumn = new TableViewerColumn(packetsTable, SWT.NONE);
-        nameColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                return (String) element;
-            }
-        });
-        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
-
+        packetsTable = CheckboxTableViewer.newCheckList(tableWrapper, SWT.V_SCROLL | SWT.BORDER);
         packetsTable.setContentProvider(ArrayContentProvider.getInstance());
-        gd = new GridData();
+        gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.heightHint = 5 * packetsTable.getTable().getItemHeight();
         packetsTable.getTable().setLayoutData(gd);
         packetsTable.setInput(packetsValue);
         for (TableItem item : packetsTable.getTable().getItems())
+            item.setChecked(true);
+
+        /*
+         * PP Table
+         */
+        lbl = new Label(container, SWT.NONE);
+        lbl.setText("PPs:");
+        lbl.setToolTipText("Processed Parameters");
+        gd = new GridData();
+        gd.verticalAlignment = SWT.TOP;
+        lbl.setLayoutData(gd);
+
+        tableWrapper = new Composite(container, SWT.NONE);
+        tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        tableWrapper.setLayout(gl);
+
+        ppTable = CheckboxTableViewer.newCheckList(tableWrapper, SWT.V_SCROLL | SWT.BORDER);
+        ppTable.setContentProvider(ArrayContentProvider.getInstance());
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.heightHint = 5 * ppTable.getTable().getItemHeight();
+        ppTable.getTable().setLayoutData(gd);
+        ppTable.setInput(ppValue);
+        for (TableItem item : ppTable.getTable().getItems())
             item.setChecked(true);
 
         return container;
@@ -213,7 +233,6 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
 
     @Override
     protected void okPressed() {
-
         if (restClient == null) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay\n", ""
                     + "Disconnected from Yamcs server");
@@ -274,13 +293,14 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
         return nameValue;
     }
 
-    public void initialize(TimeInterval interval, List<String> packets) {
+    public void initialize(TimeInterval interval, List<String> packets, List<String> ppGroups) {
         startTimeValue = TimeEncoding.toCalendar(interval.calculateStart());
         startTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
         stopTimeValue = TimeEncoding.toCalendar(interval.calculateStop());
         stopTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
 
         packetsValue = packets;
+        ppValue = ppGroups;
     }
 
     public ProcessorManagementRequest toProcessorManagementRequest() {
@@ -289,12 +309,22 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
             if (item.getChecked())
                 prr.addNameFilter(NamedObjectId.newBuilder().setName(item.getText()));
 
+        PpReplayRequest.Builder pprr = PpReplayRequest.newBuilder();
+        for (TableItem item : ppTable.getTable().getItems())
+            if (item.getChecked())
+                pprr.addGroupNameFilter(item.getText());
+
         ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
         ReplayRequest.Builder rr = ReplayRequest.newBuilder()
                 .setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)))
                 .setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)))
-                .setEndAction(EndAction.STOP)
-                .setPacketRequest(prr);
+                .setEndAction(EndAction.STOP);
+
+        if (prr.getNameFilterCount() > 0)
+            rr.setPacketRequest(prr);
+        if (pprr.getGroupNameFilterCount() > 0)
+            rr.setPpRequest(pprr);
+
         return ProcessorManagementRequest.newBuilder()
                 .setOperation(ProcessorManagementRequest.Operation.CREATE_PROCESSOR)
                 .setInstance(ConnectionManager.getInstance().getWebProperties().getInstance())

@@ -257,7 +257,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     // TODO only used by selector. Rework maybe in custom replay launcher
     public List<String> getSelectedPackets(String tableName) {
         if (dataViewer.getDataView().indexBoxes.containsKey(tableName))
-            return dataViewer.getDataView().getSelectedPackets("tm");
+            return dataViewer.getDataView().getSelectedPackets(tableName);
         return Collections.emptyList();
     }
 

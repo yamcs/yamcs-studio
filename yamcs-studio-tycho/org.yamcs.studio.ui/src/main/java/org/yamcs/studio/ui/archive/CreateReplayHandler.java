@@ -21,9 +21,10 @@ public class CreateReplayHandler extends AbstractHandler {
             Selection sel = view.archivePanel.getDataViewer().getDataView().getSelection();
             TimeInterval interval = new TimeInterval(sel.getStartInstant(), sel.getStopInstant());
             List<String> packets = view.archivePanel.getSelectedPackets("tm");
+            List<String> pps = view.archivePanel.getSelectedPackets("pp");
             Display.getDefault().asyncExec(() -> {
                 CreateReplayDialog dialog = new CreateReplayDialog(Display.getCurrent().getActiveShell());
-                dialog.initialize(interval, packets);
+                dialog.initialize(interval, packets, pps);
                 dialog.open();
             });
         });
