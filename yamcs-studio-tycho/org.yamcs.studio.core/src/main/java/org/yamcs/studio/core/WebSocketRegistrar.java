@@ -39,7 +39,7 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
  */
 public class WebSocketRegistrar extends MDBContextListener implements WebSocketClientCallbackListener {
 
-    private static final String USER_AGENT = "yamcs-studio/" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
+    private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
     private ManagementCatalogue managementCatalogue = YamcsPlugin.getDefault().getManagementCatalogue();
