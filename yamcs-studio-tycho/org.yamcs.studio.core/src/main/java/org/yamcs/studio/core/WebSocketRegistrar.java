@@ -80,10 +80,11 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     public void connect(Runnable onConnectCallback) {
         this.onConnectCallback = onConnectCallback;
         wsclient.connect(); // FIXME this currently blocks. It should have a callback api instead
-        // Always have these subscriptions running
+        // FIXME Always have these subscriptions running
         pendingRequests.offer(new WebSocketRequest("time", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("alarms", "subscribe"));
+        pendingRequests.offer(new WebSocketRequest("events", "subscribe"));
     }
 
     public void subscribeToManagementInfo() {
@@ -156,6 +157,10 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     public synchronized void addAlarmListener(AlarmListener listener) {
         alarmListeners.add(listener);
+    }
+
+    public synchronized void addEventListener(EventListener listener) {
+        eventListeners.add(listener);
     }
 
     public synchronized void addTimeListener(TimeListener listener) {

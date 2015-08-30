@@ -19,16 +19,16 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.YamcsConnector;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
-public class EventLogView extends ViewPart implements StudioConnectionListener {
+public class EventLogView extends ViewPart implements StudioConnectionListener, EventListener {
 
     public static final String COL_SOURCE = "Source";
     public static final String COL_RECEIVED = "Received";
@@ -43,8 +43,6 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
     private TableColumnLayout tcl;
 
     private EventLogContentProvider tableContentProvider;
-
-    private YamcsConnector yconnector;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -63,26 +61,25 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
         tableViewer.setComparator(tableViewerComparator);
         getViewSite().setSelectionProvider(tableViewer);
 
-        yconnector = new YamcsConnector(false);
-        new YamcsEventReceiver(yconnector, this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
-    /**
-     * Called when we get green light from YamcsPlugin
-     */
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
-        yconnector.connect(hornetqProps);
+        if (webSocketClient != null) {
+            webSocketClient.addEventListener(this);
+        }
     }
 
-    /**
-     * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
-     * onStudioConnect)
-     */
+    @Override
+    public void processEvent(Event event) {
+        if (tableViewer.getTable().isDisposed())
+            return;
+        Display.getDefault().asyncExec(() -> addEvent(event));
+    }
+
     @Override
     public void onStudioDisconnect() {
-        yconnector.disconnect();
     }
 
     public void clear() {
@@ -156,8 +153,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
     @Override
     public void dispose() {
         super.dispose();
-        if (yconnector != null)
-            yconnector.disconnect();
+        // TODO remove EventListener
     }
 
     public void addEvents(List<Event> events) {
@@ -169,11 +165,9 @@ public class EventLogView extends ViewPart implements StudioConnectionListener {
     }
 
     public void addEvent(Event event) {
-        Display.getDefault().asyncExec(() -> {
-            if (tableViewer.getTable().isDisposed())
-                return;
-            tableContentProvider.addEvent(event);
-        });
+        if (tableViewer.getTable().isDisposed())
+            return;
+        tableContentProvider.addEvent(event);
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {
