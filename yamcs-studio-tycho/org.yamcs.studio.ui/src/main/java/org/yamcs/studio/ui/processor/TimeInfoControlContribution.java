@@ -98,6 +98,13 @@ public class TimeInfoControlContribution extends WorkbenchWindowControlContribut
 
     @Override
     public void onStudioDisconnect() {
-        processorTime = TimeEncoding.INVALID_INSTANT;
+        if (canvas.isDisposed())
+            return;
+        canvas.getDisplay().asyncExec(() -> {
+            if (canvas.isDisposed())
+                return;
+            processorTime = TimeEncoding.INVALID_INSTANT;
+            canvas.redraw();
+        });
     }
 }

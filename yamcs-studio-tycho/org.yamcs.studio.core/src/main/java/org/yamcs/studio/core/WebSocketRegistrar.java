@@ -172,7 +172,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onDisconnect() { // When the web socket connection state changed
-        log.fine("WebSocket disconnected. Notifying listeners");
+        log.info("WebSocket disconnected. Notifying listeners");
         reportConnectionState();
         YamcsPlugin plugin = YamcsPlugin.getDefault();
         if (plugin != null) // This can be null when the workbench is closing

@@ -22,17 +22,23 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.eclipse.ui.services.IEvaluationService;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.RestClient;
 
 /**
  * Shows a visual indicator for the currently subscribed processor.
  */
-public class ProcessorInfoControlContribution extends WorkbenchWindowControlContribution implements ProcessorListener {
+public class ProcessorInfoControlContribution extends WorkbenchWindowControlContribution
+        implements StudioConnectionListener, ProcessorListener {
 
     private static final Logger log = Logger.getLogger(ProcessorInfoControlContribution.class.getName());
 
@@ -141,7 +147,12 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         });
 
         ManagementCatalogue.getInstance().addProcessorListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
         return top;
+    }
+
+    @Override
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
     }
 
     @Override
@@ -182,5 +193,14 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
     @Override
     public void statisticsUpdated(Statistics stats) {
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+        Display.getDefault().asyncExec(() -> {
+            processorInfo = null;
+            if (!processor.isDisposed())
+                processor.redraw();
+        });
     }
 }

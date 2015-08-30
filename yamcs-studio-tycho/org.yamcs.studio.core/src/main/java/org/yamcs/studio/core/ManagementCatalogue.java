@@ -43,9 +43,8 @@ public class ManagementCatalogue implements StudioConnectionListener {
     public void onStudioDisconnect() {
         // Clear everything, we'll get a fresh set upon connect
         clientInfoById.clear();
-        // TODO notify listeners
         processorInfoByName.clear();
-        // TODO notify listeners
+        currentClientId = -1;
     }
 
     public void addProcessorListener(ProcessorListener listener) {

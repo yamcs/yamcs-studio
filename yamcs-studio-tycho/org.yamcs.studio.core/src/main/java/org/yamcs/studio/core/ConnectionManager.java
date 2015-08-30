@@ -109,6 +109,7 @@ public class ConnectionManager {
     }
 
     public void disconnect() {
+        log.info("Start disconnect procedure");
         synchronized (this) {
             if (connectionStatus == ConnectionStatus.Disconnected
                     || connectionStatus == ConnectionStatus.Disconnecting)
@@ -118,20 +119,21 @@ public class ConnectionManager {
                 setConnectionStatus(ConnectionStatus.Disconnecting);
         }
 
-        // WebSocket
+        log.info("Shutting down WebSocket client");
         if (webSocketClient != null) {
             YamcsPlugin.getDefault().removeMdbListener(webSocketClient);
             webSocketClient.shutdown();
         }
         webSocketClient = null;
 
-        // REST
+        log.info("Shutting down REST client");
         if (restClient != null)
             restClient.shutdown();
         restClient = null;
 
-        // Notify all studio connection listeners of disconnect
+        log.info("Notify downstream components of Studio disconnect");
         for (StudioConnectionListener scl : studioConnectionListeners) {
+            log.info(String.format(" -> Inform %s", scl.getClass().getSimpleName()));
             try {
                 scl.onStudioDisconnect();
             } catch (Exception e) {
@@ -165,26 +167,32 @@ public class ConnectionManager {
     }
 
     private void askSwitchNode(String errorMessage) {
-        String message = "Connection error with " + mode.getPrettyName() + " Yamcs Server.";
+        String message = "Connection error with " + mode.getPrettyName().toLowerCase() + " Yamcs server.";
         if (errorMessage != null && errorMessage != "") {
             message += "\nDetails:" + errorMessage;
         }
         ConnectionMode nextMode = (mode == ConnectionMode.PRIMARY) ? ConnectionMode.FAILOVER : ConnectionMode.PRIMARY;
-        message += "\n\n" + "Would you like to switch connection to the " + nextMode.getPrettyName() + " Yamcs Server now?";
-        MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message,
-                MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
-        if (dialog.open() == Dialog.OK) {
-            Display.getDefault().asyncExec(() -> {
-                disconnect();
-                try {
-                    switchNode();
-                } catch (Exception e) {
-                    log.log(Level.SEVERE, "Could not switch node", e);
-                    notifyConnectionFailure(e.getMessage());
-                }
-            });
+        if (connectionInfo.getConnection(nextMode) != null) {
+            message += "\n\n" + "Do you want to switch to the " + nextMode.getPrettyName().toLowerCase() + " server?";
+            MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message,
+                    MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
+            if (dialog.open() == Dialog.OK) {
+                Display.getDefault().asyncExec(() -> {
+                    disconnect();
+                    try {
+                        switchNode();
+                    } catch (Exception e) {
+                        log.log(Level.SEVERE, "Could not switch node", e);
+                        notifyConnectionFailure(e.getMessage());
+                    }
+                });
+            } else {
+                abortSwitchNode();
+            }
         } else {
-            abortSwitchNode();
+            String connectionString = connectionInfo.getConnection(mode).getYamcsConnectionString();
+            setConnectionStatus(ConnectionStatus.Disconnected);
+            MessageDialog.openWarning(null, connectionString, "You are no longer connected to Yamcs");
         }
     }
 
@@ -202,6 +210,7 @@ public class ConnectionManager {
     }
 
     public void notifyConnectionFailure(String errorMessage) {
+        log.info(String.format("Got word of failure. Detail: %s", errorMessage));
         synchronized (this) {
             if (connectionStatus != ConnectionStatus.Connected && connectionStatus != ConnectionStatus.Connecting)
                 return;

@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.archive;
 
+import java.util.logging.Logger;
+
 import org.hornetq.api.core.HornetQException;
 import org.yamcs.YamcsException;
 import org.yamcs.api.ConnectionListener;
@@ -20,6 +22,8 @@ import org.yamcs.studio.core.web.ResponseHandler;
 import com.google.protobuf.MessageLite;
 
 public class ArchiveIndexReceiver implements ConnectionListener {
+
+    private static final Logger log = Logger.getLogger(ArchiveIndexReceiver.class.getName());
     private ArchiveView archiveView;
 
     volatile private boolean receiving = false;
@@ -59,12 +63,14 @@ public class ArchiveIndexReceiver implements ConnectionListener {
                     //       yamcsClient.executeRpc(Protocol.getYarchIndexControlAddress(instance), "getIndex", request.build(), null);
                     yamcsClient.sendRequest(Protocol.getYarchIndexControlAddress(instance), "getIndex", request.build());
                     while (true) {
+                        log.info("Ready to receive another archive chunk");
                         IndexResult ir = (IndexResult) yamcsClient.receiveData(IndexResult.newBuilder());
-                        //    System.out.println("Received ")
                         if (ir == null) {
+                            log.info("Done receiving archive records.");
                             archiveView.receiveArchiveRecordsFinished();
                             break;
                         }
+                        log.info(String.format("Received %d archive records", ir.getRecordsCount()));
                         archiveView.receiveArchiveRecords(ir);
                     }
                 } catch (Exception e) {
