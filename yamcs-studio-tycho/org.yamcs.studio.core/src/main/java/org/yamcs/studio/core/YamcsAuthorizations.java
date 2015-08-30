@@ -60,7 +60,7 @@ public class YamcsAuthorizations {
 
     private boolean isAuthorizationEnabled()
     {
-        return YamcsPlugin.getDefault().getPrivilegesEnabled();
+        return ConnectionManager.getInstance().isPrivilegesEnabled();
     }
 
 }

@@ -16,7 +16,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.ConnectionManager;
 
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor implements SecurityListener {
@@ -98,9 +98,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor im
     }
 
     private void setTitle(String subject) {
-        String host = YamcsPlugin.getDefault().getHost();
-        String instance = YamcsPlugin.getDefault().getInstance();
-
         IWorkbenchPage page = getWindowConfigurer().getWindow().getActivePage();
         String label = "Yamcs Studio";
         if (page != null && page.getPerspective() != null) {
@@ -112,6 +109,14 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor im
             else
                 label = perspective.getLabel();
         }
-        getWindowConfigurer().setTitle(String.format("%s (%s@%s/%s)", label, subject, host, instance));
+
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        if (connectionManager.isConnected()) {
+            String host = connectionManager.getWebProperties().getHost();
+            String instance = connectionManager.getWebProperties().getInstance();
+            getWindowConfigurer().setTitle(String.format("%s (%s@%s/%s)", label, subject, host, instance));
+        } else {
+            getWindowConfigurer().setTitle(label);
+        }
     }
 }

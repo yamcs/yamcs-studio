@@ -26,7 +26,6 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ConnectionManager.ConnectionStatus;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
 
@@ -130,7 +129,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
             try {
                 Command cmd;
-                if (ConnectionManager.getInstance().getConnectionSatus() == ConnectionStatus.Connected) {
+                if (ConnectionManager.getInstance().isConnected()) {
                     cmd = commandService.getCommand("org.yamcs.studio.ui.processor.switch");
                 } else {
                     cmd = commandService.getCommand("org.yamcs.studio.ui.connect");

@@ -51,7 +51,6 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.YamcsUIPlugin;
@@ -298,7 +297,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
                 .setPacketRequest(prr);
         return ProcessorManagementRequest.newBuilder()
                 .setOperation(ProcessorManagementRequest.Operation.CREATE_PROCESSOR)
-                .setInstance(YamcsPlugin.getDefault().getInstance())
+                .setInstance(ConnectionManager.getInstance().getWebProperties().getInstance())
                 .setName(name.getText())
                 .setType("Archive")
                 .setReplaySpec(rr)

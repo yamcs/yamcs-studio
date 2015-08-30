@@ -96,9 +96,4 @@ public class YamcsConfiguration {
     public void setSavePassword(boolean savePassword) {
         this.savePassword = savePassword;
     }
-
-    @Deprecated
-    public int getHornetQPort() {
-        return 5445;
-    }
 }

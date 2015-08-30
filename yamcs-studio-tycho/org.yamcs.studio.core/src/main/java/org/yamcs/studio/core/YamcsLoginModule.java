@@ -46,14 +46,11 @@ public class YamcsLoginModule implements LoginModule {
             throw new LoginException("No CallbackHandler");
 
         final String user_pw[] = getUserPassword();
-        if (authenticate(user_pw[0], user_pw[1]))
-        {
+        if (authenticate(user_pw[0], user_pw[1])) {
             user = user_pw[0];
             password = user_pw[1].toCharArray();
             return true;
-        }
-        else
-        {
+        } else {
             try {
                 YamcsPlugin.getDefault().getConnectionManager().notifyUnauthorized();
             } catch (Exception e) {
@@ -70,20 +67,16 @@ public class YamcsLoginModule implements LoginModule {
      * @throws LoginException
      *             on error
      */
-    private String[] getUserPassword() throws LoginException
-    {
+    private String[] getUserPassword() throws LoginException {
         final NameCallback name = new NameCallback("User Name:");
         final PasswordCallback password = new PasswordCallback("Password :", false);
-        try
-        {
+        try {
             callbackHandler.handle(new Callback[] { name, password });
-        } catch (Throwable ex)
-        {
+        } catch (Throwable ex) {
             ex.printStackTrace();
             throw new LoginException("Cannot get user/password");
         }
-        final String result[] = new String[]
-        {
+        final String result[] = new String[] {
                 name.getName(),
                 new String(password.getPassword())
         };
@@ -95,26 +88,23 @@ public class YamcsLoginModule implements LoginModule {
      * authenticate() This is a method to test if authorization is allowed via the REST Api. It
      * could be attempted on any service of the API, the actual data returned is not used.
      */
-    private boolean authenticate(final String user, final String password)
-    {
+    private boolean authenticate(final String user, final String password) {
         log.info("yamcs login, authenticating " + user + "/****");
 
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
 
-        YamcsConnectionProperties webProps = YamcsPlugin.getDefault().getWebProperties();
+        YamcsConnectionProperties webProps = ConnectionManager.getInstance().getWebProperties();
         RestClient restClient = new RestClient(webProps, new YamcsCredentials(user, password));
 
         AuthReponseHandler arh = new AuthReponseHandler();
 
         try {
             restClient.listAvailableParameters(req.build(), arh);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return false;
         }
 
-        while (!arh.resultReceived)
-        {
+        while (!arh.resultReceived) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -133,7 +123,7 @@ public class YamcsLoginModule implements LoginModule {
         subject.getPrincipals().add(principal);
 
         try {
-            YamcsPlugin.getDefault().getConnectionManager().connect(new YamcsCredentials(user, password));
+            ConnectionManager.getInstance().setYamcsCredentials(new YamcsCredentials(user, password));
         } catch (Exception e) {
             log.log(Level.SEVERE, "", e);
             throw new LoginException("Unable to establish connections to Yamcs. " + e.getMessage());
@@ -161,8 +151,7 @@ public class YamcsLoginModule implements LoginModule {
         return true;
     }
 
-    private class AuthReponseHandler implements ResponseHandler
-    {
+    private class AuthReponseHandler implements ResponseHandler {
 
         public boolean resultReceived = false;
         public boolean authenticated = false;
