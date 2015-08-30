@@ -9,4 +9,8 @@ public class TextUtils {
     public static String forceString(Object obj) {
         return (obj != null) ? obj.toString() : "";
     }
+
+    public static String nvl(String str, String replacement) {
+        return isBlank(str) ? replacement : str;
+    }
 }

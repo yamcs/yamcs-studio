@@ -96,4 +96,8 @@ public class YamcsConfiguration {
     public void setSavePassword(boolean savePassword) {
         this.savePassword = savePassword;
     }
+
+    public String getPrimaryConnectionUrl() {
+        return "yamcs://" + primaryHost + ":" + primaryPort + "/" + instance;
+    }
 }

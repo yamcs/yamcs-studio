@@ -21,7 +21,6 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
-import org.yamcs.studio.ui.connections.AutoConnectHandler;
 import org.yamcs.studio.ui.connections.ConnectionPreferences;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 
@@ -45,40 +44,46 @@ public class LifeCycleManager {
                 Command cmd = commandService.getCommand("org.eclipse.ui.ToggleCoolbarAction");
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
-
-                // Listen to processing-info updates
-                doUpdateGlobalProcessingState(PlatformUI.getWorkbench(), null); // Trigger initial state
-                ManagementCatalogue.getInstance().addProcessorListener(new ProcessorListener() {
-                    @Override
-                    public void processorUpdated(ProcessorInfo processorInfo) {
-                        updateGlobalProcessingState(processorInfo);
-                    }
-
-                    @Override
-                    public void processorClosed(ProcessorInfo processorInfo) {
-                        updateGlobalProcessingState(processorInfo);
-                    }
-
-                    @Override
-                    public void statisticsUpdated(Statistics stats) {
-                    }
-
-                    @Override
-                    public void clientUpdated(ClientInfo clientInfo) {
-                        updateGlobalProcessingState(clientInfo);
-                    }
-
-                    @Override
-                    public void clientDisconnected(ClientInfo clientInfo) {
-                        updateGlobalProcessingState(clientInfo);
-                    }
-                });
-
-                // request connection to Yamcs server
-                if (ConnectionPreferences.isAutoConnect())
-                    new AutoConnectHandler().execute(null);
             } catch (Exception exception) {
                 log.log(Level.SEVERE, "Could not execute command", exception);
+            }
+
+            // Listen to processing-info updates
+            doUpdateGlobalProcessingState(PlatformUI.getWorkbench(), null); // Trigger initial state
+            ManagementCatalogue.getInstance().addProcessorListener(new ProcessorListener() {
+                @Override
+                public void processorUpdated(ProcessorInfo processorInfo) {
+                    updateGlobalProcessingState(processorInfo);
+                }
+
+                @Override
+                public void processorClosed(ProcessorInfo processorInfo) {
+                    updateGlobalProcessingState(processorInfo);
+                }
+
+                @Override
+                public void statisticsUpdated(Statistics stats) {
+                }
+
+                @Override
+                public void clientUpdated(ClientInfo clientInfo) {
+                    updateGlobalProcessingState(clientInfo);
+                }
+
+                @Override
+                public void clientDisconnected(ClientInfo clientInfo) {
+                    updateGlobalProcessingState(clientInfo);
+                }
+            });
+
+            // request connection to Yamcs server
+            if (ConnectionPreferences.isAutoConnect()) {
+                try {
+                    Command cmd = commandService.getCommand("org.yamcs.studio.ui.autoconnect");
+                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Could not execute login command", e);
+                }
             }
         });
     }

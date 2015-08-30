@@ -168,6 +168,11 @@
       </category>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.autoconnect"
+            name="AutoConnect">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.add"
             name="New Command">
       </command>
