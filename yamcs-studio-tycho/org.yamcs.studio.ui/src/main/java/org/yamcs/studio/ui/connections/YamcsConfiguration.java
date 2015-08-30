@@ -124,7 +124,7 @@ public class YamcsConfiguration {
     }
 
     public YamcsCredentials toYamcsCredentials() {
-        return (user != null) ? new YamcsCredentials(user, password) : null;
+        return (isAnonymous()) ? null : new YamcsCredentials(user, password);
     }
 
     @Override

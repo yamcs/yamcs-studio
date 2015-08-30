@@ -18,6 +18,8 @@ import org.yamcs.studio.core.ConnectionManager;
  * <p>
  * If there is no last-used configuration, yet this method was called, it pops up the richer
  * connection manager dialog.
+ *
+ * TODO we're not playing nice with the JAAS stuff when reusing a password
  */
 public class AutoConnectHandler extends AbstractHandler {
     private static final Logger log = Logger.getLogger(AutoConnectHandler.class.getName());

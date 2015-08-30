@@ -19,6 +19,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestParameter;
+import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.StreamData;
@@ -49,6 +50,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
     private Map<NamedObjectId, RestParameter> availableParametersById = new LinkedHashMap<>();
     private Set<AlarmListener> alarmListeners = new HashSet<>();
+    private Set<EventListener> eventListeners = new HashSet<>();
     private Set<TimeListener> timeListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
 
@@ -238,6 +240,13 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onStreamData(StreamData streamData) {
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        synchronized (this) {
+            eventListeners.forEach(l -> l.processEvent(event));
+        }
     }
 
     @Override
