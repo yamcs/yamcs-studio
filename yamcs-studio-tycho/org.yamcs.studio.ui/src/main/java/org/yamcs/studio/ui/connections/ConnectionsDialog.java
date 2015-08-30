@@ -133,8 +133,11 @@ public class ConnectionsDialog extends Dialog {
             connViewer.add(conf);
         });
 
-        // TODO should really select the last used connection
-        selectFirstServer();
+        YamcsConfiguration lastConf = ConnectionPreferences.getLastUsedConfiguration();
+        if (lastConf != null)
+            selectServer(lastConf);
+        else
+            selectFirstServer();
         updateState();
 
         return contentArea;
@@ -196,6 +199,10 @@ public class ConnectionsDialog extends Dialog {
         Button ok = getButton(IDialogConstants.OK_ID);
         ok.setText("Connect");
         setButtonLayoutData(ok);
+    }
+
+    private void selectServer(YamcsConfiguration conf) {
+        connViewer.setSelection(new StructuredSelection(conf), true);
     }
 
     private void selectFirstServer() {

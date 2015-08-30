@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.connections;
 
+import java.util.Objects;
+
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionInfo;
 import org.yamcs.studio.core.YamcsCredentials;
@@ -123,5 +125,16 @@ public class YamcsConfiguration {
 
     public YamcsCredentials toYamcsCredentials() {
         return (user != null) ? new YamcsCredentials(user, password) : null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // TODO This is not exactly true, since we don't currently check for duplicates.
+        // We do need an equals-method though, as it is used to compare the last-used configuration
+        // with the list of all configurations.
+        if (obj == null)
+            return false;
+        YamcsConfiguration other = (YamcsConfiguration) obj;
+        return Objects.equals(name, other.name);
     }
 }
