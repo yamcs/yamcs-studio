@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.connections;
 
+import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.studio.core.ConnectionInfo;
 import org.yamcs.studio.core.YamcsCredentials;
 
 /**
@@ -18,12 +20,6 @@ public class YamcsConfiguration {
     private Integer failoverPort;
 
     private boolean savePassword;
-
-    public YamcsCredentials getYamcsCredentials() {
-        if (user != null && password != null)
-            return new YamcsCredentials(user, password);
-        return null;
-    }
 
     public String getInstance() {
         return instance;
@@ -47,6 +43,10 @@ public class YamcsConfiguration {
 
     public String getUser() {
         return user;
+    }
+
+    public boolean isAnonymous() {
+        return getUser() == null;
     }
 
     public void setPassword(String password) {
@@ -89,6 +89,10 @@ public class YamcsConfiguration {
         return failoverPort;
     }
 
+    public boolean isFailoverConfigured() {
+        return failoverHost != null;
+    }
+
     public boolean isSavePassword() {
         return savePassword;
     }
@@ -97,7 +101,27 @@ public class YamcsConfiguration {
         this.savePassword = savePassword;
     }
 
-    public String getPrimaryConnectionUrl() {
+    public String getPrimaryConnectionString() {
         return "yamcs://" + primaryHost + ":" + primaryPort + "/" + instance;
+    }
+
+    public String getFailoverConnectionString() {
+        if (isFailoverConfigured())
+            return "yamcs://" + failoverHost + ":" + failoverPort + "/" + instance;
+        else
+            return null;
+    }
+
+    public ConnectionInfo toConnectionInfo() {
+        YamcsConnectionProperties primaryProps = new YamcsConnectionProperties(primaryHost, primaryPort, instance);
+        YamcsConnectionProperties failoverProps = null;
+        if (failoverHost != null) {
+            failoverProps = new YamcsConnectionProperties(failoverHost, failoverPort, instance);
+        }
+        return new ConnectionInfo(primaryProps, failoverProps);
+    }
+
+    public YamcsCredentials toYamcsCredentials() {
+        return (user != null) ? new YamcsCredentials(user, password) : null;
     }
 }

@@ -162,7 +162,7 @@ public class ConnectionsDialog extends Dialog {
     protected void okPressed() {
         if (selectedConfiguration != null) {
             chosenConfiguration = selectedConfiguration;
-            chosenCredentials = selectedConfiguration.getYamcsCredentials();
+            chosenCredentials = selectedConfiguration.toYamcsCredentials();
         }
         ConnectionPreferences.setAutoConnect(autoConnect.getSelection());
         List<YamcsConfiguration> confs = new ArrayList<>();

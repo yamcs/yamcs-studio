@@ -22,11 +22,6 @@ public class ConnectionManager {
 
     private static final Logger log = Logger.getLogger(ConnectionManager.class.getName());
 
-    public enum Mode {
-        PRIMARY,
-        FAILOVER
-    }
-
     public enum ConnectionStatus {
         Disconnected, // no clients (WebSocket, HornetQ) are connected to Yamcs server
         Connecting,
@@ -38,10 +33,8 @@ public class ConnectionManager {
     private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
 
     private YamcsCredentials creds;
-    private YamcsConnectionProperties primaryProps;
-    private YamcsConnectionProperties failoverProps;
-
-    private Mode mode;
+    private ConnectionInfo connectionInfo;
+    private ConnectionMode mode;
     private ConnectionStatus connectionStatus;
 
     private RestClient restClient;
@@ -66,22 +59,19 @@ public class ConnectionManager {
         studioConnectionListeners.remove(listener);
     }
 
-    /**
-     * Updates the current connection info, without actually (re)connecting.
-     */
-    public void setConnectionInfo(YamcsConnectionProperties primaryConnection, YamcsConnectionProperties failoverConnection, YamcsCredentials creds) {
-        this.primaryProps = primaryConnection;
-        this.failoverProps = failoverConnection;
-        this.creds = creds;
-        mode = Mode.PRIMARY;
-    }
-
     public void setYamcsCredentials(YamcsCredentials creds) {
         this.creds = creds;
     }
 
-    public void connect() {
-        log.info("Connecting to " + mode + " Yamcs server");
+    public void connect(ConnectionInfo connectionInfo, YamcsCredentials creds) {
+        connect(connectionInfo, creds, ConnectionMode.PRIMARY);
+    }
+
+    public void connect(ConnectionInfo connectionInfo, YamcsCredentials creds, ConnectionMode mode) {
+        this.connectionInfo = connectionInfo;
+        this.creds = creds;
+        this.mode = mode;
+
         setConnectionStatus(ConnectionStatus.Connecting);
 
         // (re)establish the connections to the yamcs server
@@ -99,10 +89,21 @@ public class ConnectionManager {
         YamcsPlugin.getDefault().addMdbListener(webSocketClient);
 
         // We start other clients as well
+        log.info("Connecting web socket");
         new Thread() {
             @Override
             public void run() {
-                webSocketClient.connect(() -> setupConnections());
+                try {
+                    webSocketClient.connect(() -> setupConnections());
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Could not connect", e);
+                    Display.getDefault().asyncExec(() -> {
+                        String detail = (e.getMessage() != null) ? e.getMessage() : e.getClass().getSimpleName();
+                        MessageDialog.openError(Display.getDefault().getActiveShell(),
+                                webProps.getYamcsConnectionString(), "Could not connect. " + detail);
+                        // TODO attempt failover
+                    });
+                }
             }
         }.start();
     }
@@ -116,7 +117,6 @@ public class ConnectionManager {
             if (connectionStatus != ConnectionStatus.ConnectionFailure)
                 setConnectionStatus(ConnectionStatus.Disconnecting);
         }
-        log.fine("Disconnecting...");
 
         // WebSocket
         if (webSocketClient != null) {
@@ -145,6 +145,7 @@ public class ConnectionManager {
 
     // Likely not on the swt thread
     void setupConnections() {
+        log.fine("WebSocket connected");
         // Need to improve this code. Currently doesn't support changing connections
         //boolean doSetup = (this.clientInfo == null);
         YamcsAuthorizations.getInstance().getAuthorizations();
@@ -164,12 +165,12 @@ public class ConnectionManager {
     }
 
     private void askSwitchNode(String errorMessage) {
-        String message = "Connection error with " + mode + " Yamcs Server.";
+        String message = "Connection error with " + mode.getPrettyName() + " Yamcs Server.";
         if (errorMessage != null && errorMessage != "") {
             message += "\nDetails:" + errorMessage;
         }
-        Mode nextMode = (mode == Mode.PRIMARY) ? Mode.FAILOVER : Mode.PRIMARY;
-        message += "\n\n" + "Would you like to switch connection to the " + nextMode + " Yamcs Server now?";
+        ConnectionMode nextMode = (mode == ConnectionMode.PRIMARY) ? ConnectionMode.FAILOVER : ConnectionMode.PRIMARY;
+        message += "\n\n" + "Would you like to switch connection to the " + nextMode.getPrettyName() + " Yamcs Server now?";
         MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message,
                 MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
         if (dialog.open() == Dialog.OK) {
@@ -188,16 +189,16 @@ public class ConnectionManager {
     }
 
     public void switchNode() {
-        if (mode == Mode.PRIMARY) {
+        if (mode == ConnectionMode.PRIMARY) {
             log.info("Switching to failover server");
-            mode = Mode.FAILOVER;
+            mode = ConnectionMode.FAILOVER;
         } else {
             log.info("Switching back to primary server");
-            mode = Mode.PRIMARY;
+            mode = ConnectionMode.PRIMARY;
         }
 
         disconnect();
-        connect();
+        connect(connectionInfo, creds, mode);
     }
 
     public void notifyConnectionFailure(String errorMessage) {
@@ -212,11 +213,6 @@ public class ConnectionManager {
 
     public void notifyUnauthorized() {
         MessageDialog.openError(Display.getCurrent().getActiveShell(), "Connect", "Unauthorized");
-    }
-
-    private void setConnectionStatus(ConnectionStatus connectionStatus) {
-        log.info("Current connection status: " + connectionStatus);
-        this.connectionStatus = connectionStatus;
     }
 
     public boolean isPrivilegesEnabled() {
@@ -236,11 +232,7 @@ public class ConnectionManager {
     }
 
     public YamcsConnectionProperties getWebProperties() {
-        if (mode == Mode.PRIMARY) {
-            return primaryProps;
-        } else {
-            return failoverProps;
-        }
+        return connectionInfo.getConnection(mode);
     }
 
     private YamcsConnectData getHornetqProperties() {
@@ -259,7 +251,12 @@ public class ConnectionManager {
 
     private void abortSwitchNode() {
         if (connectionStatus == ConnectionStatus.ConnectionFailure)
-            connectionStatus = ConnectionStatus.Disconnected;
+            setConnectionStatus(ConnectionStatus.Disconnected);
+    }
+
+    private void setConnectionStatus(ConnectionStatus connectionStatus) {
+        log.info(String.format("[%s] %s", mode, connectionStatus));
+        this.connectionStatus = connectionStatus;
     }
 
     public void shutdown() {

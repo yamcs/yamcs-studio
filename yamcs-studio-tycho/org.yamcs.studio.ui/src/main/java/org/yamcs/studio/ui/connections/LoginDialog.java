@@ -47,7 +47,7 @@ public class LoginDialog extends TitleAreaDialog {
     @Override
     public void create() {
         super.create();
-        setTitle("Connect to " + nvl(conf.getName(), conf.getPrimaryConnectionUrl()));
+        setTitle("Connect to " + nvl(conf.getName(), conf.getPrimaryConnectionString()));
         setMessage("Please provide your credentials");
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), getShell());
         Image titleImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/yamcs_banner.png"));
@@ -57,7 +57,7 @@ public class LoginDialog extends TitleAreaDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(conf.getPrimaryConnectionUrl());
+        newShell.setText(conf.getPrimaryConnectionString());
     }
 
     @Override

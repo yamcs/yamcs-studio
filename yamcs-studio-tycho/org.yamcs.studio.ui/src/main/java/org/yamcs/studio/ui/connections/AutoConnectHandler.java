@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.core.ConnectionManager;
 
 /**
  * Does a connection on the last-used configuration, with potential UI interactions if a password is
@@ -49,12 +50,16 @@ public class AutoConnectHandler extends AbstractHandler {
         ConnectionPreferences.setLastUsedConfiguration(conf);
 
         // Check if authentication is needed
-        if (conf.isSavePassword() || noPasswordPopup) {
-            log.info("Will connect to " + conf.getName());
-            // TODO this should instead pass the primary connection information to YamcsPlugin.
-            //YamcsPlugin.getDefault().connect(null);
+        String connectionString = conf.getPrimaryConnectionString();
+        if (conf.isAnonymous()) {
+            log.info("Will connect anonymously to " + connectionString);
+            ConnectionManager.getInstance().connect(conf.toConnectionInfo(), null);
+        } else if (conf.isSavePassword() || noPasswordPopup) {
+            log.info("Will connect as user '" + conf.getUser() + "' to " + connectionString);
+            ConnectionManager.getInstance().connect(conf.toConnectionInfo(), conf.toYamcsCredentials());
         } else {
-            log.info("Want to connect to '" + conf.getName() + "' but credentials are needed (not saved and not in dialog). Show password dialog");
+            log.info("Want to connect to '" + connectionString
+                    + "' but credentials are needed (not saved and not in dialog). Show password dialog");
             new LoginDialog(shell, conf).open();
         }
     }
