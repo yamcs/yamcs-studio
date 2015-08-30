@@ -1,13 +1,20 @@
 package org.yamcs.studio.core;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.web.RestClient;
@@ -51,8 +58,8 @@ public class ConnectionManager {
         studioConnectionListeners.remove(listener);
     }
 
-    public void setYamcsCredentials(YamcsCredentials creds) {
-        this.creds = creds;
+    public void connectWithNewCredentials(YamcsCredentials creds) {
+        connect(connectionInfo, creds, mode);
     }
 
     public void connect(ConnectionInfo connectionInfo, YamcsCredentials creds) {
@@ -184,7 +191,9 @@ public class ConnectionManager {
         } else {
             String connectionString = connectionInfo.getConnection(mode).getYamcsConnectionString();
             setConnectionStatus(ConnectionStatus.Disconnected);
-            MessageDialog.openWarning(null, connectionString, "You are no longer connected to Yamcs");
+            // Commented out until we fix the semantics between disconnection and connection failure
+            // (the problem lies in the websocketclient)
+            //MessageDialog.openWarning(null, connectionString, "You are no longer connected to Yamcs");
         }
     }
 
@@ -201,8 +210,25 @@ public class ConnectionManager {
         connect(connectionInfo, creds, mode);
     }
 
+    public void notifyException(Throwable t) {
+        Display.getDefault().asyncExec(() -> {
+            if (t.getMessage().contains("401")) {
+                // Show Login Pane. Yes this should all really be moved to UI
+                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+                IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
+                try {
+                    Command cmd = commandService.getCommand("org.yamcs.studio.ui.login");
+                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                } catch (Exception exception) {
+                    log.log(Level.SEVERE, "Could not execute command", exception);
+                }
+            }
+        });
+    }
+
     public void notifyConnectionFailure(String errorMessage) {
-        log.info(String.format("Got word of failure. Detail: %s", errorMessage));
+        log.info(String.format("Got word of failure. Current state is %s. Detail: %s", connectionStatus, errorMessage));
         synchronized (this) {
             if (connectionStatus != ConnectionStatus.Connected && connectionStatus != ConnectionStatus.Connecting)
                 return;
@@ -210,10 +236,6 @@ public class ConnectionManager {
         }
         disconnect();
         connectionFailure(errorMessage);
-    }
-
-    public void notifyUnauthorized() {
-        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Connect", "Unauthorized");
     }
 
     public boolean isPrivilegesEnabled() {

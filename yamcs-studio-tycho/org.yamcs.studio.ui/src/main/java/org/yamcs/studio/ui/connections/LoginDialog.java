@@ -105,7 +105,9 @@ public class LoginDialog extends TitleAreaDialog {
     }
 
     private void displayError(String error) {
-        setErrorMessage(error);
+        // Fix weird punctuation. Unsure where it comes from.
+        String msg = (error != null) ? error = error.replace(".:", ".") : null;
+        setErrorMessage(msg);
     }
 
     @Override

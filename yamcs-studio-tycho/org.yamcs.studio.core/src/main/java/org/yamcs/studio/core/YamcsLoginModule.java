@@ -51,12 +51,7 @@ public class YamcsLoginModule implements LoginModule {
             password = user_pw[1].toCharArray();
             return true;
         } else {
-            try {
-                YamcsPlugin.getDefault().getConnectionManager().notifyUnauthorized();
-            } catch (Exception e) {
-                log.log(Level.WARNING, "", e);
-            }
-            throw new LoginException("");
+            throw new LoginException("Invalid user or password. Please try again");
         }
     }
 
@@ -122,12 +117,8 @@ public class YamcsLoginModule implements LoginModule {
         Principal principal = new SimplePrincipal(user);
         subject.getPrincipals().add(principal);
 
-        try {
-            ConnectionManager.getInstance().setYamcsCredentials(new YamcsCredentials(user, password));
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "", e);
-            throw new LoginException("Unable to establish connections to Yamcs. " + e.getMessage());
-        }
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        connectionManager.connectWithNewCredentials(new YamcsCredentials(user, password));
         return true;
     }
 
