@@ -1,5 +1,6 @@
 package org.yamcs.studio.ui.archive;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -8,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -245,7 +247,7 @@ public class DataView extends JScrollPane {
             int x = (int) ((currentZoom.viewLocation - currentZoom.startInstant) / currentZoom.pixelRatio);
             vp.setViewPosition(new Point(x, vp.getViewPosition().y));
             //debugLog("zoom out, view width " + vp.getView().getSize().width + " location " + x + " = " + currentZoom.viewLocation);
-            });
+        });
     }
 
     public void archiveLoadFinished() {
@@ -672,8 +674,12 @@ public class DataView extends JScrollPane {
                         x = zoom.convertInstantToPixel(currentLocator);
                         //debugLog("currentLocator (" + x + "," + y + ") box width " + getSize().width);
                         if ((x >= 0) && (x < xmax)) {
-                            g.setColor(GRAY);
-                            g.drawLine(x, 0, x, h - 1);
+                            g.setColor(Color.RED);
+                            Stroke oldStroke = g2d.getStroke();
+                            Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
+                            g2d.setStroke(dashed);
+                            g2d.drawLine(x, 0, x, h - 1);
+                            g2d.setStroke(oldStroke);
                         }
                     }
 

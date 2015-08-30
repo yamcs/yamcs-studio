@@ -3,18 +3,25 @@ package org.yamcs.studio.ui.archive;
 import javax.swing.SwingUtilities;
 
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.TmStatistics;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.TimeListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.RestClient;
 
 /**
  * Listens to processing updates in order to draw the vertical locator bars
  */
-public class ArchiveProcessorListener implements ProcessorListener {
+public class ArchiveProcessorListener implements StudioConnectionListener, ProcessorListener, TimeListener {
 
     private Display display;
     private DataViewer dataViewer;
@@ -22,6 +29,27 @@ public class ArchiveProcessorListener implements ProcessorListener {
     public ArchiveProcessorListener(Display display, DataViewer dataViewer) {
         this.display = display;
         this.dataViewer = dataViewer;
+    }
+
+    @Override
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        if (webSocketClient != null) {
+            webSocketClient.addTimeListener(this);
+        }
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+        SwingUtilities.invokeLater(() -> {
+            dataViewer.getDataView().setCurrentLocator(dataViewer.getDataView().DO_NOT_DRAW);
+        });
+    }
+
+    @Override
+    public void processTime(TimeInfo timeInfo) {
+        SwingUtilities.invokeLater(() -> {
+            dataViewer.getDataView().setCurrentLocator(timeInfo.getCurrentTime());
+        });
     }
 
     @Override
@@ -35,14 +63,12 @@ public class ArchiveProcessorListener implements ProcessorListener {
                     && processorInfo.getInstance().equals(clientInfo.getInstance())) {
                 SwingUtilities.invokeLater(() -> {
                     if (processorInfo.hasReplayRequest()) {
-                        dataViewer.getDataView().setCurrentLocator(dataViewer.getDataView().DO_NOT_DRAW);
                         ReplayRequest rr = processorInfo.getReplayRequest();
                         dataViewer.getDataView().setStartLocator(rr.getStart());
                         dataViewer.getDataView().setStopLocator(rr.getStop());
                     } else {
                         dataViewer.getDataView().setStartLocator(dataViewer.getDataView().DO_NOT_DRAW);
                         dataViewer.getDataView().setStopLocator(dataViewer.getDataView().DO_NOT_DRAW);
-                        dataViewer.getDataView().setCurrentLocator(dataViewer.getDataView().DO_NOT_DRAW);
                     }
                 });
             }
