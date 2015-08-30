@@ -9,7 +9,6 @@ import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -21,10 +20,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.AbstractRestHandler;
 
@@ -46,17 +46,15 @@ public class SwitchProcessorHandler extends AbstractRestHandler {
             if (info != null) {
                 resetDisplays();
 
+                ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
                 ProcessorManagementRequest req = ProcessorManagementRequest.newBuilder()
                         .setOperation(Operation.CONNECT_TO_PROCESSOR)
                         .setInstance(info.getInstance())
                         .setName(info.getName())
-                        .addClientId(YamcsPlugin.getDefault().getClientInfo().getId()).build();
+                        .addClientId(clientInfo.getId()).build();
                 restClient.createProcessorManagementRequest(req, new ResponseHandler() {
                     @Override
                     public void onMessage(MessageLite responseMsg) {
-                        Display.getDefault().asyncExec(() -> {
-                            YamcsPlugin.getDefault().refreshClientInfo();
-                        });
                     }
 
                     @Override

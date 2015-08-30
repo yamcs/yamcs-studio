@@ -32,7 +32,6 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
@@ -397,7 +396,7 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
     }
 
     @Override
-    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         if (webSocketClient != null) {
             webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
                 Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));

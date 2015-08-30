@@ -9,7 +9,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.web.RestClient;
 
 /**
@@ -44,7 +43,6 @@ public class ConnectionManager {
     private Mode mode;
     private ConnectionStatus connectionStatus;
 
-    private YProcessorControlClient processorControlClient;
     private RestClient restClient;
     private WebSocketRegistrar webSocketClient;
 
@@ -54,8 +52,9 @@ public class ConnectionManager {
 
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         studioConnectionListeners.add(listener);
-        if (clientInfo != null && restClient != null && webSocketClient != null)
-            listener.onStudioConnect(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
+        // TODO this if should probably include 'whether we are currently connected'. ConnectionStatus ?
+        if (restClient != null && webSocketClient != null)
+            listener.onStudioConnect(getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
     }
 
     public void removeStudioConnectionListener(StudioConnectionListener listener) {
@@ -70,10 +69,6 @@ public class ConnectionManager {
         this.primaryConnection = primaryConnection;
         this.failoverConnection = failoverConnection;
         mode = Mode.PRIMARY;
-    }
-
-    public void createClients() {
-        processorControlClient = new YProcessorControlClient();
     }
 
     public void connect(YamcsCredentials yamcsCredentials) {
@@ -96,11 +91,10 @@ public class ConnectionManager {
         YamcsPlugin.getDefault().addMdbListener(webSocketClient);
 
         // We start other clients as well
-        webSocketClient.addClientInfoListener(clientInfo -> setupConnections(clientInfo, currentCredentials));
         new Thread() {
             @Override
             public void run() {
-                webSocketClient.connect();
+                webSocketClient.connect(() -> setupConnections(currentCredentials));
             }
         }.start();
     }
@@ -142,17 +136,15 @@ public class ConnectionManager {
     }
 
     // Likely not on the swt thread
-    private void setupConnections(ClientInfo clientInfo, YamcsCredentials credentials) {
-        log.fine(String.format("Got back clientInfo %s", clientInfo));
+    void setupConnections(YamcsCredentials credentials) {
         // Need to improve this code. Currently doesn't support changing connections
         //boolean doSetup = (this.clientInfo == null);
-        this.clientInfo = clientInfo;
         YamcsAuthorizations.getInstance().getAuthorizations();
         loadParameters();
         loadCommands();
 
         studioConnectionListeners.forEach(l -> {
-            l.onStudioConnect(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
+            l.onStudioConnect(getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
         });
         setConnectionStatus(ConnectionStatus.Connected);
     }
@@ -240,8 +232,6 @@ public class ConnectionManager {
     }
 
     public void shutdown() {
-        if (processorControlClient != null)
-            processorControlClient.close();
         if (restClient != null)
             restClient.shutdown();
         if (webSocketClient != null)

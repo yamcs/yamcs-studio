@@ -18,12 +18,12 @@ public interface ProcessorListener {
     /**
      * Called when *any* processor is closed
      */
-    public void yProcessorClosed(ProcessorInfo processorInfo);
+    public void processorClosed(ProcessorInfo processorInfo);
 
     /**
      * Called when *any* processor's statistics are updated. Includes current time of the replay.
      */
-    public void updateStatistics(Statistics stats);
+    public void statisticsUpdated(Statistics stats);
 
     /**
      * Called when *any* client's ClientInfo was updated. Includes things like the subscribed

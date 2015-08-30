@@ -27,11 +27,10 @@ import org.yamcs.api.YamcsConnector;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
@@ -70,14 +69,14 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, A
         ConnectionManager.getInstance().addStudioConnectionListener(this);
 
         ArchiveProcessorListener processorListener = new ArchiveProcessorListener(parent.getDisplay(), archivePanel.getDataViewer());
-        YamcsPlugin.getDefault().addProcessorListener(processorListener);
+        ManagementCatalogue.getInstance().addProcessorListener(processorListener);
     }
 
     /**
      * Called when we get green light from YamcsPlugin
      */
     @Override
-    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
     }
 

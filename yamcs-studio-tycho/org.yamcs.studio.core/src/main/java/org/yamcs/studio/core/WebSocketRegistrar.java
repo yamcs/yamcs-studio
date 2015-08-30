@@ -42,17 +42,20 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private static final String USER_AGENT = "yamcs-studio/" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
+    private ManagementCatalogue managementCatalogue = YamcsPlugin.getDefault().getManagementCatalogue();
+
     // Store pvreaders while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
     private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
     private Map<NamedObjectId, RestParameter> availableParametersById = new LinkedHashMap<>();
-    private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
-    private Set<ClientInfoListener> clientInfoListeners = new HashSet<>();
     private Set<AlarmListener> alarmListeners = new HashSet<>();
     private Set<TimeListener> timeListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
 
+    private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
+
     private WebSocketClient wsclient;
+    private Runnable onConnectCallback; // FIXME ugly
 
     // Order all subscribe/unsubscribe events
     private final BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
@@ -72,19 +75,24 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         });
     }
 
-    public void connect() {
+    public void connect(Runnable onConnectCallback) {
+        this.onConnectCallback = onConnectCallback;
         wsclient.connect(); // FIXME this currently blocks. It should have a callback api instead
-        // Needs improvement. Get our assigned client-id, to use later in rest-replay calls
-        pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
         // Always have these subscriptions running
         pendingRequests.offer(new WebSocketRequest("time", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("alarms", "subscribe"));
     }
 
+    public void subscribeToManagementInfo() {
+        // Always have this subscription running FIXME
+        pendingRequests.offer(new WebSocketRequest("management", "subscribe"));
+    }
+
     @Override
     public void onConnect() { // When the web socket was successfully established
         log.fine("WebSocket established. Notifying listeners");
+        onConnectCallback.run(); // FIXME ugly hack
         reportConnectionState();
         requestSender.start(); // Go over pending subscription requests
     }
@@ -113,10 +121,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
             log.fine(String.format("Sending request %s", evt));
             wsclient.sendRequest(evt);
         }
-    }
-
-    public void updateClientinfo() { // Would prefer if this became a subscription
-        pendingRequests.offer(new WebSocketRequest("management", "getClientInfo"));
     }
 
     public synchronized void register(YamcsPVReader pvReader) {
@@ -156,12 +160,9 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         timeListeners.add(listener);
     }
 
+    // TODO we should probably move this somewhere else. This class is too bloated
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         cmdhistListeners.add(listener);
-    }
-
-    public synchronized void addClientInfoListener(ClientInfoListener listener) {
-        clientInfoListeners.add(listener);
     }
 
     public void shutdown() {
@@ -174,7 +175,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         log.fine("WebSocket disconnected. Notifying listeners");
         reportConnectionState();
         YamcsPlugin plugin = YamcsPlugin.getDefault();
-        if (plugin != null) // This can be null then the workbench is closing
+        if (plugin != null) // This can be null when the workbench is closing
             plugin.getConnectionManager().notifyConnectionFailure(null);
     }
 
@@ -214,12 +215,13 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     @Override
     public void onClientInfoData(ClientInfo clientInfo) {
         synchronized (this) {
-            clientInfoListeners.forEach(l -> l.processClientInfo(clientInfo));
+            managementCatalogue.processClientInfo(clientInfo);
         }
     }
 
     @Override
     public void onProcessorInfoData(ProcessorInfo processorInfo) {
+        managementCatalogue.processProcessorInfo(processorInfo);
     }
 
     @Override
@@ -230,15 +232,12 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     }
 
     @Override
-    public void onStatisticsData(Statistics arg0) {
-        // TODO Auto-generated method stub
-
+    public void onStatisticsData(Statistics statistics) {
+        managementCatalogue.processStatistics(statistics);
     }
 
     @Override
-    public void onStreamData(StreamData arg0) {
-        // TODO Auto-generated method stub
-
+    public void onStreamData(StreamData streamData) {
     }
 
     @Override

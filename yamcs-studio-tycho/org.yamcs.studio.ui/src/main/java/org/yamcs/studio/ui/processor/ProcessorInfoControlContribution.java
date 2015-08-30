@@ -27,8 +27,8 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ConnectionManager.ConnectionStatus;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
-import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Shows a visual indicator for the currently subscribed processor.
@@ -141,15 +141,16 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             }
         });
 
-        YamcsPlugin.getDefault().addProcessorListener(this);
+        ManagementCatalogue.getInstance().addProcessorListener(this);
         return top;
     }
 
     @Override
     public void clientUpdated(ClientInfo updatedInfo) {
         Display.getDefault().asyncExec(() -> {
-            if (updatedInfo.getId() == YamcsPlugin.getDefault().getClientInfo().getId()) {
-                processorInfo = YamcsPlugin.getDefault().getProcessorInfo(updatedInfo.getProcessorName());
+            if (updatedInfo.getCurrentClient()) {
+                ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+                processorInfo = catalogue.getProcessorInfo(updatedInfo.getProcessorName());
                 if (!processor.isDisposed())
                     processor.redraw();
             }
@@ -177,10 +178,10 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
     }
 
     @Override
-    public void yProcessorClosed(ProcessorInfo updatedInfo) {
+    public void processorClosed(ProcessorInfo updatedInfo) {
     }
 
     @Override
-    public void updateStatistics(Statistics stats) {
+    public void statisticsUpdated(Statistics stats) {
     }
 }

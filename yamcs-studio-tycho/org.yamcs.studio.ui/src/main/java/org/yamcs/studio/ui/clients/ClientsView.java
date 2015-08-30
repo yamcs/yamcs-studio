@@ -1,7 +1,5 @@
 package org.yamcs.studio.ui.clients;
 
-import java.util.logging.Logger;
-
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -15,22 +13,20 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 
 public class ClientsView extends ViewPart implements StudioConnectionListener, ProcessorListener {
 
-    private static final Logger log = Logger.getLogger(ClientsView.class.getName());
     ClientsTableViewer clientsTableViewer;
     ClientsContentProvider clientsContentProvider;
     ClientsTableModel currentClientsModel;
 
     @Override
-    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-        YamcsPlugin.getDefault().addProcessorListener(this);
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
     }
 
     @Override
@@ -64,6 +60,8 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, P
 
         // Set initial state
         clientsTableViewer.refresh();
+        
+        ManagementCatalogue.getInstance().addProcessorListener(this);
 
         // Connection to Yamcs server
         ConnectionManager.getInstance().addStudioConnectionListener(this);
@@ -79,11 +77,11 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, P
     }
 
     @Override
-    public void yProcessorClosed(ProcessorInfo processorInfo) {
+    public void processorClosed(ProcessorInfo processorInfo) {
     }
 
     @Override
-    public void updateStatistics(Statistics stats) {
+    public void statisticsUpdated(Statistics stats) {
     }
 
     @Override

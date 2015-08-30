@@ -23,8 +23,6 @@ import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestParameter;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
 import org.yamcs.xtce.MetaCommand;
@@ -38,10 +36,13 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());
 
     private static YamcsPlugin plugin;
+    private static ManagementCatalogue managementCatalogue;
+
+    // Reset for every application restart
+    private static AtomicInteger cmdClientId = new AtomicInteger(1);
 
     private ConnectionManager connectionManager;
 
-    private ClientInfo clientInfo;
     //YamcsCredentials testcredentials = new YamcsCredentials("operator", "password");
     private YamcsCredentials currentCredentials;
 
@@ -51,20 +52,15 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private List<RestParameter> parameters = Collections.emptyList();
     private Collection<MetaCommand> commands = Collections.emptyList();
 
-    // Reset for every application restart
-    private static AtomicInteger cmdClientId = new AtomicInteger(1);
-
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
+        log.info("Yamcs Studio v." + getBundle().getVersion().toString());
         TimeEncoding.setUp();
         connectionManager = new ConnectionManager();
-        log.info("Yamcs Studio v." + getBundle().getVersion().toString());
-    }
-
-    public ClientInfo getClientInfo() {
-        return clientInfo;
+        managementCatalogue = new ManagementCatalogue();
+        connectionManager.addStudioConnectionListener(managementCatalogue);
     }
 
     public static int getNextCommandClientId() {
@@ -75,8 +71,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return connectionManager;
     }
 
-    public ProcessorInfo getProcessorInfo(String processorName) {
-        return processorControlClient.getProcessorInfo(processorName);
+    public ManagementCatalogue getManagementCatalogue() {
+        return managementCatalogue;
     }
 
     public YamcsConnectionProperties getWebProperties() {
@@ -192,10 +188,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         });
     }
 
-    public void addProcessorListener(ProcessorListener listener) {
-        processorControlClient.addProcessorListener(listener);
-    }
-
     public void addMdbListener(MDBContextListener listener) {
         mdbListeners.add(listener);
     }
@@ -228,13 +220,5 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public XtceDb getMdb() {
         return mdb;
-    }
-
-    /**
-     * Would prefer to get updates to this from the web socket client, instead of needing this
-     * method
-     */
-    public void refreshClientInfo() {
-        webSocketClient.updateClientinfo();
     }
 }

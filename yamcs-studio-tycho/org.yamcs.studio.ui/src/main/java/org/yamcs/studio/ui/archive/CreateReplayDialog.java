@@ -48,6 +48,7 @@ import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -91,7 +92,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
     }
 
     @Override
-    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         this.restClient = restclient;
     }
 
@@ -229,7 +230,6 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {
                     CreateReplayDialog.super.okPressed();
-                    YamcsPlugin.getDefault().refreshClientInfo();
                 });
             }
 
@@ -290,6 +290,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
             if (item.getChecked())
                 prr.addNameFilter(NamedObjectId.newBuilder().setName(item.getText()));
 
+        ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
         ReplayRequest.Builder rr = ReplayRequest.newBuilder()
                 .setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)))
                 .setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)))
@@ -301,7 +302,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
                 .setName(name.getText())
                 .setType("Archive")
                 .setReplaySpec(rr)
-                .addClientId(YamcsPlugin.getDefault().getClientInfo().getId())
+                .addClientId(ci.getId())
                 .build();
     }
 

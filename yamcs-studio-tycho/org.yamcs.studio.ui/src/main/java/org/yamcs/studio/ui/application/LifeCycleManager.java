@@ -19,8 +19,8 @@ import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.ui.connections.AutoConnectHandler;
 import org.yamcs.studio.ui.connections.ConnectionPreferences;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
@@ -48,19 +48,19 @@ public class LifeCycleManager {
 
                 // Listen to processing-info updates
                 doUpdateGlobalProcessingState(PlatformUI.getWorkbench(), null); // Trigger initial state
-                YamcsPlugin.getDefault().addProcessorListener(new ProcessorListener() {
+                ManagementCatalogue.getInstance().addProcessorListener(new ProcessorListener() {
                     @Override
                     public void processorUpdated(ProcessorInfo processorInfo) {
                         updateGlobalProcessingState(processorInfo);
                     }
 
                     @Override
-                    public void yProcessorClosed(ProcessorInfo processorInfo) {
+                    public void processorClosed(ProcessorInfo processorInfo) {
                         updateGlobalProcessingState(processorInfo);
                     }
 
                     @Override
-                    public void updateStatistics(Statistics stats) {
+                    public void statisticsUpdated(Statistics stats) {
                     }
 
                     @Override
@@ -100,7 +100,7 @@ public class LifeCycleManager {
         // (TODO sometimes clientInfo has not been updated yet, that's whey we have the next method too)
         IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(() -> {
-            ClientInfo clientInfo = YamcsPlugin.getDefault().getClientInfo();
+            ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
             if (clientInfo != null && clientInfo.getProcessorName().equals(processorInfo.getName())) {
                 doUpdateGlobalProcessingState(workbench, processorInfo);
             }
@@ -112,9 +112,9 @@ public class LifeCycleManager {
         // therefore, just have similar logic here.
         IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(() -> {
-            if (YamcsPlugin.getDefault().getClientInfo() != null && clientInfo != null
-                    && clientInfo.getId() == YamcsPlugin.getDefault().getClientInfo().getId()) {
-                ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(clientInfo.getProcessorName());
+            if (clientInfo.getCurrentClient()) {
+                ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+                ProcessorInfo processorInfo = catalogue.getProcessorInfo(clientInfo.getProcessorName());
                 doUpdateGlobalProcessingState(workbench, processorInfo);
             }
         });

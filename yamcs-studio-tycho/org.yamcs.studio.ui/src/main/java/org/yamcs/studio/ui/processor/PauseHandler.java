@@ -8,9 +8,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.AbstractRestHandler;
 
@@ -26,9 +27,9 @@ public class PauseHandler extends AbstractRestHandler {
         if (!checkRestClient(event, "pause processing"))
             return null;
 
-        String processorName = YamcsPlugin.getDefault().getClientInfo().getProcessorName();
+        ProcessorInfo processorInfo = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
         ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.PAUSE).build();
-        restClient.createProcessorRequest(processorName, req, new ResponseHandler() {
+        restClient.createProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
             }

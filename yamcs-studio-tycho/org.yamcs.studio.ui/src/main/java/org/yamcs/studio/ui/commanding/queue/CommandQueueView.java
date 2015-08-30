@@ -18,7 +18,6 @@ import org.yamcs.api.YamcsConnector;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
@@ -44,7 +43,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
     private volatile String selectedInstance;
 
     @Override
-    public void onStudioConnect(ClientInfo clientInfo, YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
         setSelectedInstance(hornetqProps.instance);
     }
@@ -213,7 +212,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
         hornetqProps.instance = "obcp";
         hornetqProps.username = "operator";
         hornetqProps.password = "password";
-        cqv.onStudioConnect(null, null, hornetqProps, null, null);
+        cqv.onStudioConnect(null, hornetqProps, null, null);
 
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {

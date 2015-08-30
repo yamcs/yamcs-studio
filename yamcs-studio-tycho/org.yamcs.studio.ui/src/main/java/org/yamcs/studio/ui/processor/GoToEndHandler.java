@@ -11,7 +11,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.AbstractRestHandler;
 
@@ -26,12 +26,11 @@ public class GoToEndHandler extends AbstractRestHandler {
         if (!checkRestClient(event, "go to end of replay range"))
             return null;
 
-        String processorName = YamcsPlugin.getDefault().getClientInfo().getProcessorName();
-        ProcessorInfo processorInfo = YamcsPlugin.getDefault().getProcessorInfo(processorName);
+        ProcessorInfo processorInfo = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
         long seekTime = processorInfo.getReplayRequest().getStop();
 
         ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.SEEK).setSeekTime(seekTime).build();
-        restClient.createProcessorRequest(processorName, req, new ResponseHandler() {
+        restClient.createProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
             }

@@ -8,8 +8,8 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.TmStatistics;
+import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
-import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Listens to processing updates in order to draw the vertical locator bars
@@ -29,7 +29,7 @@ public class ArchiveProcessorListener implements ProcessorListener {
         if (display.isDisposed())
             return;
         display.asyncExec(() -> {
-            ClientInfo clientInfo = YamcsPlugin.getDefault().getClientInfo();
+            ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
             if (clientInfo != null
                     && processorInfo.getName().equals(clientInfo.getProcessorName())
                     && processorInfo.getInstance().equals(clientInfo.getInstance())) {
@@ -50,7 +50,7 @@ public class ArchiveProcessorListener implements ProcessorListener {
     }
 
     @Override
-    public void yProcessorClosed(ProcessorInfo ci) {
+    public void processorClosed(ProcessorInfo ci) {
     }
 
     @Override
@@ -62,16 +62,17 @@ public class ArchiveProcessorListener implements ProcessorListener {
     }
 
     @Override
-    public void updateStatistics(Statistics stats) {
+    public void statisticsUpdated(Statistics stats) {
         if (display.isDisposed())
             return;
         display.asyncExec(() -> {
             if (display.isDisposed())
                 return;
-            ClientInfo clientInfo = YamcsPlugin.getDefault().getClientInfo();
+            ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
             if (clientInfo != null
                     && stats.getYProcessorName().equals(clientInfo.getProcessorName())
                     && stats.getInstance().equals(clientInfo.getInstance())) {
+
                 // find the timestamp of the most recent packet received
                 SwingUtilities.invokeLater(() -> {
                     long pos = 0;
