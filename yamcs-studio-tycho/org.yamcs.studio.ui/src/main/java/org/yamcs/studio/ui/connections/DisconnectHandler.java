@@ -15,7 +15,7 @@ public class DisconnectHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         try
         {
-            YamcsPlugin.getDefault().disconnect();
+            YamcsPlugin.getDefault().getConnectionManager().disconnect();
         } catch (Exception ex)
         {
             log.log(Level.SEVERE, "", ex);

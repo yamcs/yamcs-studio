@@ -23,7 +23,7 @@ public interface StudioConnectionListener {
             YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient);
 
     /**
-     * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
+     * Called when YamcsPlugin wants this connection to stop (might be resumed later with
      * processConnectionInfo)
      */
     void onStudioDisconnect();

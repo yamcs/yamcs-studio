@@ -10,9 +10,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 
 public abstract class AbstractRestHandler extends AbstractHandler implements StudioConnectionListener {
@@ -21,7 +21,7 @@ public abstract class AbstractRestHandler extends AbstractHandler implements Stu
 
     public AbstractRestHandler()
     {
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override

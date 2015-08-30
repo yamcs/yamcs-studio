@@ -33,11 +33,11 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
@@ -248,7 +248,7 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
         // Set initial state
         refreshState();
 
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     public void selectFirst() {
@@ -384,8 +384,7 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
     }
 
     // Enable the buttons if user is authorized to command payload
-    private void setButtonEnable(Button button, boolean isEnabled)
-    {
+    private void setButtonEnable(Button button, boolean isEnabled) {
         if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayCommandPayload))
             button.setEnabled(isEnabled);
         else

@@ -47,6 +47,7 @@ import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
 import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -86,7 +87,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
         super.create();
         setTitle("Start a new replay");
         setMessage("Replays can be joined by other users", IMessageProvider.INFORMATION);
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override
@@ -213,8 +214,7 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
     @Override
     protected void okPressed() {
 
-        if (restClient == null)
-        {
+        if (restClient == null) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay\n", ""
                     + "Disconnected from Yamcs server");
             return;

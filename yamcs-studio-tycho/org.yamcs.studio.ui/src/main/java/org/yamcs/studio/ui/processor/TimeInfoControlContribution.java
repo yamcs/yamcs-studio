@@ -16,10 +16,10 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.TimeListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
@@ -61,7 +61,7 @@ public class TimeInfoControlContribution extends WorkbenchWindowControlContribut
                 canvas.redraw();
         });
 
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
         return top;
     }
 

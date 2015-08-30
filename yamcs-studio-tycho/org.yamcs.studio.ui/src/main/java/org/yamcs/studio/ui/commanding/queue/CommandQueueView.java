@@ -19,9 +19,9 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
@@ -101,8 +101,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
         // Connection to Yamcs server
         yconnector = new YamcsConnector(false);
         commandQueueControl = new CommandQueueControlClient(yconnector);
-        if (YamcsPlugin.getDefault() != null)
-            YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
         commandQueueControl.addCommandQueueListener(this);
     }
 

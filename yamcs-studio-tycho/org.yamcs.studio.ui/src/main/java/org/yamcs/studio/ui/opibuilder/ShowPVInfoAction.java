@@ -18,7 +18,7 @@ import org.yamcs.protobuf.Rest.RestGetParameterInfoRequest;
 import org.yamcs.protobuf.Rest.RestGetParameterInfoResponse;
 import org.yamcs.protobuf.Rest.RestParameterInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 
@@ -83,7 +83,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                         continue;
                     }
 
-                    RestClient restClient = YamcsPlugin.getDefault().getRestClient();
+                    RestClient restClient = ConnectionManager.getInstance().getRestClient();
                     if (restClient == null) {
                         pvInfo.setParameterInfoException("Not connected to Yamcs");
                         latch.countDown();

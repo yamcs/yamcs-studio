@@ -46,7 +46,7 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
         boolean retryConnection = false;
         yconnector = new YamcsConnector(retryConnection);
         yconnector.addConnectionListener(this);
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     public void addProcessorListener(ProcessorListener l) {
@@ -165,7 +165,7 @@ public class YProcessorControlClient implements StudioConnectionListener, Connec
     {
         YamcsPlugin plugin = YamcsPlugin.getDefault();
         if (plugin != null)
-            plugin.notifyConnectionFailure(errorMessage);
+            plugin.getConnectionManager().notifyConnectionFailure(errorMessage);
 
     }
 

@@ -33,7 +33,7 @@ public class YamcsAuthorizations {
 
     public void getAuthorizations()
     {
-        YamcsPlugin.getDefault().getRestClient().listAuthorizations(new ResponseHandler() {
+        ConnectionManager.getInstance().getRestClient().listAuthorizations(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {

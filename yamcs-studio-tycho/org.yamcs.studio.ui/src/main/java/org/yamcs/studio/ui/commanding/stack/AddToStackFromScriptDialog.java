@@ -32,6 +32,7 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -65,7 +66,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog implements Studi
     public AddToStackFromScriptDialog(Shell parentShell) {
         super(parentShell);
         commands = YamcsPlugin.getDefault().getCommands();
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override
@@ -166,10 +167,8 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog implements Studi
         EmbeddedEditorModelAccess partialEditor = handle.createPartialEditor();
     }
 
-    private boolean checkConnected()
-    {
-        if (restClient == null)
-        {
+    private boolean checkConnected() {
+        if (restClient == null) {
             Display.getDefault().asyncExec(() -> {
                 setErrorMessage("Client disconnected from Yamcs server");
                 log.log(Level.SEVERE, "Could not validate command string, client disconnected from Yamcs server");

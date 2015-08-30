@@ -10,8 +10,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.workbench.UIEvents.UILifeCycle;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -21,7 +19,6 @@ import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.ConnectionFailureListener;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.ui.connections.AutoConnectHandler;
@@ -29,15 +26,13 @@ import org.yamcs.studio.ui.connections.ConnectionPreferences;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 
 @SuppressWarnings("restriction")
-public class LifeCycleManager implements ConnectionFailureListener {
+public class LifeCycleManager {
 
     private static final Logger log = Logger.getLogger(LifeCycleManager.class.getName());
 
     @PostContextCreate
     public void postContextCreate(IEventBroker broker) {
         registerAutocompleteExtensions();
-
-        YamcsPlugin.getDefault().addConnectionFailureListener(this);
 
         broker.subscribe(UILifeCycle.APP_STARTUP_COMPLETE, evt -> {
             IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -80,9 +75,8 @@ public class LifeCycleManager implements ConnectionFailureListener {
                 });
 
                 // request connection to Yamcs server
-                if (ConnectionPreferences.isAutoConnect()) {
-                    (new AutoConnectHandler()).execute(null);
-                }
+                if (ConnectionPreferences.isAutoConnect())
+                    new AutoConnectHandler().execute(null);
             } catch (Exception exception) {
                 log.log(Level.SEVERE, "Could not execute command", exception);
             }
@@ -99,41 +93,6 @@ public class LifeCycleManager implements ConnectionFailureListener {
             msg.append(prefix + "://   ");
         }
         log.fine(msg.toString());
-    }
-
-    @Override
-    public void connectionFailure(int currentNode, int nextNode, String errorMessage) {
-        Display.getDefault().asyncExec(() -> {
-            askSwitchNode(currentNode, nextNode, errorMessage);
-        });
-    }
-
-    @Override
-    public void unauthorized() {
-        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Connect", "Unauthorized");
-    }
-
-    private static void askSwitchNode(int currentNode, int nextNode, String errorMessage) {
-        String message = "Connection error with Yamcs Server node " + currentNode + ".";
-        if (errorMessage != null && errorMessage != "") {
-            message += "\nDetails:" + errorMessage;
-        }
-        message += "\n\n" + "Would you like to switch connection to node " + nextNode + " now?";
-        MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message,
-                MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
-        if (dialog.open() == 0) {
-            Display.getDefault().asyncExec(() -> {
-                YamcsPlugin.getDefault().disconnect();
-                try {
-                    YamcsPlugin.getDefault().switchNode(nextNode);
-                } catch (Exception e) {
-                    log.log(Level.SEVERE, "Could not switch node", e);
-                    YamcsPlugin.getDefault().notifyConnectionFailure(e.getMessage());
-                }
-            });
-        } else {
-            YamcsPlugin.getDefault().abortSwitchNode();
-        }
     }
 
     private void updateGlobalProcessingState(ProcessorInfo processorInfo) {
@@ -166,5 +125,4 @@ public class LifeCycleManager implements ConnectionFailureListener {
         ProcessorStateProvider state = (ProcessorStateProvider) service.getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         state.updateState(processorInfo);
     }
-
 }

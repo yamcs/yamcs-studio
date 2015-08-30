@@ -10,11 +10,11 @@ import org.eclipse.ui.ISources;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 
@@ -30,7 +30,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     private static final String[] SOURCE_NAMES = { STATE_KEY_MAY_COMMAND_PAYLOAD };
 
     public AuthorizationStateProvider() {
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override
@@ -65,6 +65,6 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
 
     @Override
     public void dispose() {
-        YamcsPlugin.getDefault().removeStudioConnectionListener(this);
+        ConnectionManager.getInstance().removeStudioConnectionListener(this);
     }
 }

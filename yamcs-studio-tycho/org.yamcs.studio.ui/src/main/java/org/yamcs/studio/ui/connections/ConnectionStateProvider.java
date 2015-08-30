@@ -10,9 +10,9 @@ import org.eclipse.ui.ISources;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 
 /**
@@ -29,7 +29,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     private boolean connected = false;
 
     public ConnectionStateProvider() {
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override
@@ -71,6 +71,6 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
 
     @Override
     public void dispose() {
-        YamcsPlugin.getDefault().removeStudioConnectionListener(this);
+        ConnectionManager.getInstance().removeStudioConnectionListener(this);
     }
 }

@@ -25,9 +25,10 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.ConnectionManager.ConnectionStatus;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.YamcsPlugin.ConnectionStatus;
 
 /**
  * Shows a visual indicator for the currently subscribed processor.
@@ -129,7 +130,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
             try {
                 Command cmd;
-                if (YamcsPlugin.getDefault().getConnectionSatus() == ConnectionStatus.Connected) {
+                if (ConnectionManager.getInstance().getConnectionSatus() == ConnectionStatus.Connected) {
                     cmd = commandService.getCommand("org.yamcs.studio.ui.processor.switch");
                 } else {
                     cmd = commandService.getCommand("org.yamcs.studio.ui.connect");

@@ -7,7 +7,7 @@ import org.csstudio.opibuilder.util.DisplayUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.CommandParser;
@@ -25,9 +25,8 @@ public class Yamcs {
     private static final Logger log = Logger.getLogger(Yamcs.class.getName());
 
     public static void issueCommand(String text) {
-        RestClient restClient = YamcsPlugin.getDefault().getRestClient();
-        if (restClient == null)
-        {
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        if (restClient == null) {
             showErrorDialog("Could not issue command, client is disconnected from Yamcs server");
             return;
         }

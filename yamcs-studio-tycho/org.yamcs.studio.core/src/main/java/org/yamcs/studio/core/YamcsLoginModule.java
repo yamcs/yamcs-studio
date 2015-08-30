@@ -55,7 +55,7 @@ public class YamcsLoginModule implements LoginModule {
         else
         {
             try {
-                YamcsPlugin.getDefault().notifyUnauthorized();
+                YamcsPlugin.getDefault().getConnectionManager().notifyUnauthorized();
             } catch (Exception e) {
                 log.log(Level.WARNING, "", e);
             }
@@ -133,7 +133,7 @@ public class YamcsLoginModule implements LoginModule {
         subject.getPrincipals().add(principal);
 
         try {
-            YamcsPlugin.getDefault().connect(new YamcsCredentials(user, password));
+            YamcsPlugin.getDefault().getConnectionManager().connect(new YamcsCredentials(user, password));
         } catch (Exception e) {
             log.log(Level.SEVERE, "", e);
             throw new LoginException("Unable to establish connections to Yamcs. " + e.getMessage());
@@ -154,7 +154,7 @@ public class YamcsLoginModule implements LoginModule {
     public boolean logout() throws LoginException {
         log.info("yamcs login, logout");
         try {
-            YamcsPlugin.getDefault().disconnect();
+            YamcsPlugin.getDefault().getConnectionManager().disconnect();
         } catch (Exception e) {
             throw new LoginException(e.getMessage());
         }
@@ -182,9 +182,4 @@ public class YamcsLoginModule implements LoginModule {
         }
 
     }
-
-    public static boolean isAuthenticationNeeded() {
-        return YamcsPlugin.getDefault().getPrivilegesEnabled();
-    }
-
 }

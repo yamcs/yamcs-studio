@@ -12,11 +12,11 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.PVConnectionInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.RestClient;
 
@@ -36,7 +36,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     public ParameterChannelHandler(String channelName) {
         super(channelName);
         id = NamedObjectId.newBuilder().setName(channelName).build();
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     protected boolean isConnected(PVConnectionInfo info) {
         return info.webSocketOpen &&
                 ((getId().getName().startsWith("/yamcs")) ||
-                (info.parameter != null && info.parameter.getDataSource() != RestDataSource.LOCAL));
+                        (info.parameter != null && info.parameter.getDataSource() != RestDataSource.LOCAL));
     }
 
     @Override

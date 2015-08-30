@@ -14,6 +14,7 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
@@ -65,8 +66,7 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, P
         clientsTableViewer.refresh();
 
         // Connection to Yamcs server
-        if (YamcsPlugin.getDefault() != null)
-            YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override

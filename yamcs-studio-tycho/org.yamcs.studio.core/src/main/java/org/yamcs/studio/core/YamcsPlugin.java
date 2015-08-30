@@ -7,7 +7,6 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,7 +26,6 @@ import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.XtceDb;
@@ -39,25 +37,19 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public static final String PLUGIN_ID = "org.yamcs.studio.core";
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());
 
-    // The shared instance
     private static YamcsPlugin plugin;
 
-    private YProcessorControlClient processorControlClient;
-    private RestClient restClient;
-    private WebSocketRegistrar webSocketClient;
+    private ConnectionManager connectionManager;
 
     private ClientInfo clientInfo;
     //YamcsCredentials testcredentials = new YamcsCredentials("operator", "password");
     private YamcsCredentials currentCredentials;
 
-    private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
     private XtceDb mdb;
     private List<RestParameter> parameters = Collections.emptyList();
     private Collection<MetaCommand> commands = Collections.emptyList();
-
-    private List<ConnectionFailureListener> connectionFailureListeners = new LinkedList<>();
 
     // Reset for every application restart
     private static AtomicInteger cmdClientId = new AtomicInteger(1);
@@ -67,108 +59,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
         TimeEncoding.setUp();
-        processorControlClient = new YProcessorControlClient();
+        connectionManager = new ConnectionManager();
         log.info("Yamcs Studio v." + getBundle().getVersion().toString());
-    }
-
-    public enum ConnectionStatus {
-        Disconnected, // no clients (REST, WebSocket, HornetQ)are connected to Yamcs server
-        Connecting,
-        Connected, // all clients are connected
-        Disconnecting,
-        ConnectionFailure,
-    }
-
-    private ConnectionStatus connectionStatus;
-
-    private void setConnectionStatus(ConnectionStatus connectionStatus) {
-        log.info("Current connection status: " + connectionStatus);
-        this.connectionStatus = connectionStatus;
-    }
-
-    public ConnectionStatus getConnectionSatus() {
-        return connectionStatus;
-    }
-
-    public void connect(YamcsCredentials yamcsCredentials) {
-        log.info("Connecting to Yamcs server, node " + getCurrentNode());
-        setConnectionStatus(ConnectionStatus.Connecting);
-
-        // store the current credential
-        currentCredentials = yamcsCredentials;
-
-        // (re)establish the connections to the yamcs server
-
-        // common properties
-        YamcsConnectionProperties webProps = getWebProperties();
-
-        // REST
-        restClient = new RestClient(webProps, yamcsCredentials);
-
-        // WebSocket
-        webSocketClient = new WebSocketRegistrar(webProps, yamcsCredentials);
-        addMdbListener(webSocketClient);
-
-        // We start other clients as well
-        webSocketClient.addClientInfoListener(clientInfo -> setupConnections(clientInfo, currentCredentials));
-        new Thread() {
-            @Override
-            public void run() {
-                webSocketClient.connect();
-            }
-        }.start();
-    }
-
-    public void disconnect() {
-        synchronized (this) {
-            if (connectionStatus == ConnectionStatus.Disconnected
-                    || connectionStatus == ConnectionStatus.Disconnecting)
-                return;
-
-            if (connectionStatus != ConnectionStatus.ConnectionFailure)
-                setConnectionStatus(ConnectionStatus.Disconnecting);
-        }
-        log.fine("Disconnecting...");
-
-        // WebSocket
-        if (webSocketClient != null) {
-            removeMdbListener(webSocketClient);
-            webSocketClient.shutdown();
-        }
-        webSocketClient = null;
-
-        // REST
-        if (restClient != null)
-            restClient.shutdown();
-        restClient = null;
-
-        // Notify all studio connection listeners of disconnect
-        for (StudioConnectionListener scl : studioConnectionListeners) {
-            try {
-                scl.onStudioDisconnect();
-            } catch (Exception e) {
-                log.log(Level.SEVERE, "Unable to disconnect listener " + scl + ".", e);
-            }
-        }
-
-        if (connectionStatus != ConnectionStatus.ConnectionFailure)
-            setConnectionStatus(ConnectionStatus.Disconnected);
-    }
-
-    // Likely not on the swt thread
-    private void setupConnections(ClientInfo clientInfo, YamcsCredentials credentials) {
-        log.fine(String.format("Got back clientInfo %s", clientInfo));
-        // Need to improve this code. Currently doesn't support changing connections
-        //boolean doSetup = (this.clientInfo == null);
-        this.clientInfo = clientInfo;
-        YamcsAuthorizations.getInstance().getAuthorizations();
-        loadParameters();
-        loadCommands();
-
-        studioConnectionListeners.forEach(l -> {
-            l.onStudioConnect(clientInfo, getWebProperties(), getHornetqProperties(credentials), restClient, webSocketClient);
-        });
-        setConnectionStatus(ConnectionStatus.Connected);
     }
 
     public ClientInfo getClientInfo() {
@@ -177,6 +69,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public static int getNextCommandClientId() {
         return cmdClientId.incrementAndGet();
+    }
+
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
     }
 
     public ProcessorInfo getProcessorInfo(String processorName) {
@@ -210,26 +106,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private void setCurrentNode(int currentNode) {
         getPreferenceStore().setValue("current_node", currentNode);
-    }
-
-    public void switchNode(int nodeNumber) {
-        if (nodeNumber < 1 || nodeNumber > getNumberOfNodes()) {
-            log.severe(
-                    "Request to switch to node " + nodeNumber + " but ony " + getNumberOfNodes() + " nodes are configured. Switching to node 1...");
-            nodeNumber = 1;
-        }
-        // if (currentNode != nodeNumber)
-        {
-            log.info("switching from node " + getCurrentNode() + " to node " + nodeNumber);
-            setCurrentNode(nodeNumber);
-            disconnect();
-            connect(currentCredentials);
-        }
-    }
-
-    public void abortSwitchNode() {
-        if (connectionStatus == ConnectionStatus.ConnectionFailure)
-            connectionStatus = ConnectionStatus.Disconnected;
     }
 
     public String getInstance() {
@@ -268,7 +144,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private void loadParameters() {
         log.fine("Fetching available parameters");
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
-        restClient.listAvailableParameters(req.build(), new ResponseHandler() {
+        connectionManager.getRestClient().listAvailableParameters(req.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
@@ -287,7 +163,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private void loadCommands() {
         log.fine("Fetching available commands");
-        restClient.dumpRawMdb(new ResponseHandler() {
+        connectionManager.getRestClient().dumpRawMdb(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
@@ -303,7 +179,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                     Display.getDefault().asyncExec(() -> {
                         MessageDialog.openError(Display.getDefault().getActiveShell(),
                                 "Incompatible Yamcs Server", "Could not interpret Mission Database. "
-                                        + "This usually happens when Yamcs Studio is not, or no longer "
+                                        + "This usually happens when Yamcs Studio is not, or no longer, "
                                         + "compatible with Yamcs Server.");
                     });
                 }
@@ -314,16 +190,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 log.log(Level.SEVERE, "Could not fetch available yamcs commands", e);
             }
         });
-    }
-
-    public void addStudioConnectionListener(StudioConnectionListener listener) {
-        studioConnectionListeners.add(listener);
-        if (clientInfo != null && restClient != null && webSocketClient != null)
-            listener.onStudioConnect(clientInfo, getWebProperties(), getHornetqProperties(currentCredentials), restClient, webSocketClient);
-    }
-
-    public void removeStudioConnectionListener(StudioConnectionListener listener) {
-        studioConnectionListeners.remove(listener);
     }
 
     public void addProcessorListener(ProcessorListener listener) {
@@ -342,12 +208,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         try {
             plugin = null;
-            if (processorControlClient != null)
-                processorControlClient.close();
-            if (restClient != null)
-                restClient.shutdown();
-            if (webSocketClient != null)
-                webSocketClient.shutdown();
+            connectionManager.shutdown();
         } finally {
             super.stop(context);
         }
@@ -365,14 +226,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return commands;
     }
 
-    /**
-     * Returns the rest client associated with the current connection. Useful for dialogs and such,
-     * that just needs this sporadically.
-     */
-    public RestClient getRestClient() {
-        return restClient;
-    }
-
     public XtceDb getMdb() {
         return mdb;
     }
@@ -383,26 +236,5 @@ public class YamcsPlugin extends AbstractUIPlugin {
      */
     public void refreshClientInfo() {
         webSocketClient.updateClientinfo();
-    }
-
-    public void addConnectionFailureListener(ConnectionFailureListener cfl) {
-        connectionFailureListeners.add(cfl);
-    }
-
-    public void notifyConnectionFailure(String errorMessage) {
-        log.info("");
-        synchronized (this) {
-            if (connectionStatus != ConnectionStatus.Connected && connectionStatus != ConnectionStatus.Connecting)
-                return;
-            this.connectionStatus = ConnectionStatus.ConnectionFailure;
-        }
-        this.disconnect();
-        int currentNode = getCurrentNode();
-        final int nextNode = currentNode + 1 > getNumberOfNodes() ? 1 : currentNode + 1;
-        connectionFailureListeners.forEach(c -> c.connectionFailure(currentNode, nextNode, errorMessage));
-    }
-
-    public void notifyUnauthorized() {
-        connectionFailureListeners.forEach(c -> c.unauthorized());
     }
 }

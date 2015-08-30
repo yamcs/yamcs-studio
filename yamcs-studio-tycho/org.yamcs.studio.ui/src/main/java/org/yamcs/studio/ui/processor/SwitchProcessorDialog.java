@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Rest.RestListProcessorsResponse;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
 
 import com.google.protobuf.MessageLite;
@@ -87,7 +87,7 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         processorsTable.setContentProvider(ArrayContentProvider.getInstance());
         processorsTable.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        YamcsPlugin.getDefault().getRestClient().listProcessors(new ResponseHandler() {
+        ConnectionManager.getInstance().getRestClient().listProcessors(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {

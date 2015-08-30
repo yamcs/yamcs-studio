@@ -18,6 +18,7 @@ import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.PVConnectionInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
@@ -53,7 +54,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     public SoftwareParameterChannelHandler(String channelName) {
         super(channelName);
         id = NamedObjectId.newBuilder().setName(channelName).build();
-        YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override
@@ -129,8 +130,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
                 .setId(getId())
                 .setEngValue(toValue(p, (String) newValue))).build();
 
-        if (restClient == null)
-        {
+        if (restClient == null) {
             callback.channelWritten(new Exception("Client is disconnected from Yamcs server"));
             return;
         }

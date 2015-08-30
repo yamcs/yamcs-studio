@@ -17,9 +17,9 @@ import org.yamcs.api.YamcsConnector;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
@@ -49,17 +49,15 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
 
         if (linksTableViewer.getTable().isDisposed())
             return;
-        
+
         Display display = linksTableViewer.getTable().getDisplay();
-        display.asyncExec(() ->
-        {
+        display.asyncExec(() -> {
             if (display.isDisposed())
                 return;
-            
+
             log.fine("processing updateLink " + li);
             String modelName = li.getInstance();
-            if (!linkModels.containsKey(modelName))
-            {
+            if (!linkModels.containsKey(modelName)) {
                 addLinkModel(li.getInstance());
             }
             LinkTableModel model = linkModels.get(modelName);
@@ -67,8 +65,7 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
         });
     }
 
-    public void addLinkModel(String instance)
-    {
+    public void addLinkModel(String instance) {
         LinkTableModel model = new LinkTableModel(timer, linksTableViewer);
         linkModels.put(instance, model);
         if (currentLinkModel == null)
@@ -84,8 +81,7 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
 
     @Override
     public void onStudioDisconnect() {
-        Display.getDefault().asyncExec(() ->
-        {
+        Display.getDefault().asyncExec(() -> {
             this.linksTableViewer.getTable().removeAll();
             this.currentLinkModel = null;
             this.linkModels.clear();
@@ -123,8 +119,8 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
         // Connection to Yamcs server
         yconnector = new YamcsConnector(false);
         linkControlClient = new LinkControlClient(yconnector);
-        if (YamcsPlugin.getDefault() != null)
-            YamcsPlugin.getDefault().addStudioConnectionListener(this);
+        if (ConnectionManager.getInstance() != null)
+            ConnectionManager.getInstance().addStudioConnectionListener(this);
         linkControlClient.setLinkListener(this);
 
     }
@@ -140,8 +136,7 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
         this.selectedInstance = newInstance;
     }
 
-    public static void main(String[] arg)
-    {
+    public static void main(String[] arg) {
         TimeEncoding.setUp();
         Display display = new Display();
         Shell shell = new Shell();
