@@ -3,6 +3,7 @@ package org.yamcs.studio.ui.clients;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -53,7 +54,7 @@ public class ClientsTableViewer extends TableViewer {
 
         TableViewerColumn aColumn = new TableViewerColumn(this, SWT.CENTER);
         aColumn.getColumn().setText(COL_ID);
-        tcl.setColumnData(aColumn.getColumn(), new ColumnWeightData(8));
+        tcl.setColumnData(aColumn.getColumn(), new ColumnPixelData(50));
 
         TableViewerColumn bColumn = new TableViewerColumn(this, SWT.LEFT);
         bColumn.getColumn().setText(COL_USER);

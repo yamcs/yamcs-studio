@@ -115,6 +115,10 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
+    public void enableScrollLock(boolean enabled) {
+        tableContentProvider.enableScrollLock(enabled);
+    }
+
     private void addFixedColumns() {
         TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         gentimeColumn.getColumn().setText(COL_T);

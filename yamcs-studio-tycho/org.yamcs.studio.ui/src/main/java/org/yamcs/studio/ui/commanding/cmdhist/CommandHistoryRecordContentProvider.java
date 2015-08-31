@@ -4,6 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
@@ -30,6 +32,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
     private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
     private TableViewer tableViewer;
+    private boolean scrollLock;
 
     public CommandHistoryRecordContentProvider(TableViewer tableViewer) {
         this.tableViewer = tableViewer;
@@ -92,15 +95,24 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         }
 
         // All done, make changes visible
-        if (create)
-        {
+        if (create) {
             tableViewer.add(rec);
-            tableViewer.reveal(rec);
-        }
-        else {
+            maybeSelectAndReveal(rec);
+        } else {
             tableViewer.update(rec, null); // Null, means all properties
-            tableViewer.reveal(rec);
+            maybeSelectAndReveal(rec);
 
         }
+    }
+
+    public void maybeSelectAndReveal(CommandHistoryRecord rec) {
+        if (!scrollLock) {
+            IStructuredSelection sel = new StructuredSelection(rec);
+            tableViewer.setSelection(sel, true);
+        }
+    }
+
+    public void enableScrollLock(boolean enabled) {
+        scrollLock = enabled;
     }
 }

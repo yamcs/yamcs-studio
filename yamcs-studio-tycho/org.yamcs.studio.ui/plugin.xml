@@ -213,6 +213,14 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.cmdhistory.scrollLockCommand" 
+            name="Scroll Lock">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState" />
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.archive.refreshCommand"
             name="Refresh">
       </command>
@@ -394,6 +402,10 @@
                </with>
             </and>
          </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.cmdhistory.ScrollLockEventLogHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhistory.scrollLockCommand">
       </handler>
       <handler
             class="org.yamcs.studio.ui.archive.RefreshArchiveHandler"
