@@ -68,15 +68,15 @@ public class CommandQueuesTableViewer extends TableViewer {
         stateColumn.setEditingSupport(new StateEditingSupport(stateColumn.getViewer()));
         tcl.setColumnData(stateColumn.getColumn(), new ColumnWeightData(30));
 
-        TableViewerColumn commandsColumn = new TableViewerColumn(this, SWT.LEFT);
+        TableViewerColumn commandsColumn = new TableViewerColumn(this, SWT.CENTER);
         commandsColumn.getColumn().setText(COL_COMMANDS);
         tcl.setColumnData(commandsColumn.getColumn(), new ColumnWeightData(10));
 
-        TableViewerColumn sentColumn = new TableViewerColumn(this, SWT.LEFT);
+        TableViewerColumn sentColumn = new TableViewerColumn(this, SWT.CENTER);
         sentColumn.getColumn().setText(COL_SENT);
         tcl.setColumnData(sentColumn.getColumn(), new ColumnWeightData(10));
 
-        TableViewerColumn rejectedColumn = new TableViewerColumn(this, SWT.LEFT);
+        TableViewerColumn rejectedColumn = new TableViewerColumn(this, SWT.CENTER);
         rejectedColumn.getColumn().setText(COL_REJECTED);
         tcl.setColumnData(rejectedColumn.getColumn(), new ColumnWeightData(10));
 
@@ -90,7 +90,7 @@ public class CommandQueuesTableViewer extends TableViewer {
             super(viewer);
             cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY);
             cellEditor.setLabelProvider(new LabelProvider());
-            cellEditor.setContenProvider(new ArrayContentProvider());
+            cellEditor.setContentProvider(new ArrayContentProvider());
             cellEditor.setInput(Commanding.QueueState.values());
         }
 

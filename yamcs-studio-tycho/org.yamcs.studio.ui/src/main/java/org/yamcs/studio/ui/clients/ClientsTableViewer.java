@@ -51,7 +51,7 @@ public class ClientsTableViewer extends TableViewer {
 
     private void addFixedColumns(TableColumnLayout tcl) {
 
-        TableViewerColumn aColumn = new TableViewerColumn(this, SWT.LEFT);
+        TableViewerColumn aColumn = new TableViewerColumn(this, SWT.CENTER);
         aColumn.getColumn().setText(COL_ID);
         tcl.setColumnData(aColumn.getColumn(), new ColumnWeightData(8));
 
