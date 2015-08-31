@@ -115,6 +115,10 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
+    public void clear() {
+        tableContentProvider.clearAll();
+    }
+
     public void enableScrollLock(boolean enabled) {
         tableContentProvider.enableScrollLock(enabled);
     }

@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.eventlog;
+package org.yamcs.studio.ui.commanding.cmdhist;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
@@ -9,15 +9,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-public class ScrollLockEventLogHandler extends AbstractHandler {
+public class ScrollLockHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
-        EventLogView view = (EventLogView) part;
+        CommandHistoryView view = (CommandHistoryView) part;
 
         ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command command = service.getCommand("org.yamcs.studio.ui.eventlog.scrollLockCommand");
+        Command command = service.getCommand("org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand");
         boolean oldState = HandlerUtil.toggleCommandState(command);
         view.enableScrollLock(!oldState);
         return null;

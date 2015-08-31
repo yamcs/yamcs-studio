@@ -168,6 +168,21 @@
       </category>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.autoconnect"
+            name="Autoconnect">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.connect"
+            name="Connect">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.disconnect"
+            name="Disconnect">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.add"
             name="New Command">
       </command>
@@ -213,7 +228,12 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.cmdhistory.scrollLockCommand" 
+            id="org.yamcs.studio.ui.commanding.cmdhist.clearCommand" 
+            name="Clear View">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand" 
             name="Scroll Lock">
          <state
                class="org.eclipse.ui.handlers.RegistryToggleState:false"
@@ -257,7 +277,7 @@
       <command
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.clearCommand"
-            name="Clear Log View">
+            name="Clear View">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -379,7 +399,7 @@
             commandId="org.yamcs.studio.ui.commanding.stack.export">
          <activeWhen>
             <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
+               <with variable="org.yamcs.studio.ui.commanding.stack.state.remaining">
                   <equals value="true"/>
                </with>
                <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
@@ -391,10 +411,9 @@
       <handler
             class="org.yamcs.studio.ui.commanding.stack.ImportCommandStackHandler"
             commandId="org.yamcs.studio.ui.commanding.stack.import">
-             <activeWhen>
-           
+         <activeWhen>
             <and>
-            <with variable="org.yamcs.studio.ui.state.connected">
+               <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
                <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
@@ -404,8 +423,12 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.commanding.cmdhistory.ScrollLockEventLogHandler"
-            commandId="org.yamcs.studio.ui.commanding.cmdhistory.scrollLockCommand">
+            class="org.yamcs.studio.ui.commanding.cmdhist.ClearCommandHistoryHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhist.clearCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.cmdhist.ScrollLockHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand">
       </handler>
       <handler
             class="org.yamcs.studio.ui.archive.RefreshArchiveHandler"
@@ -506,7 +529,7 @@
             commandId="org.yamcs.studio.ui.eventlog.clearCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.ui.eventlog.ScrollLockEventLogHandler"
+            class="org.yamcs.studio.ui.eventlog.ScrollLockHandler"
             commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand">
       </handler>
       <handler
@@ -941,15 +964,15 @@
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
           <command
                 commandId="org.yamcs.studio.ui.commanding.stack.export"
-                icon="icons/elcl16/export.gif"
-                disabledIcon="icons/dlcl16/export.png"
-                label="Export stack"
+                icon="icons/elcl16/export_wiz.png"
+                disabledIcon="icons/dlcl16/export_wiz.png"
+                label="Export Stack"
                 style="push"/>
           <command
                 commandId="org.yamcs.studio.ui.commanding.stack.import"
                 icon="icons/elcl16/import_wiz.gif"
-                disabledIcon="icons/dlcl16/import.png"
-                label="Import a stack"
+                disabledIcon="icons/dlcl16/import_wiz.gif"
+                label="Import a Stack"
                 style="push"/>
           <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
@@ -997,7 +1020,7 @@
                commandId="org.yamcs.studio.ui.eventlog.clearCommand"
                icon="icons/elcl16/clear.png"
                disabledIcon="icons/dlcl16/clear.png"
-               label="Clear Log View"
+               label="Clear View"
                style="push"/>
          <command
                commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand"
@@ -1012,6 +1035,23 @@
                disabledIcon="icons/dlcl16/import_wiz.gif"
                label="Import Events"
                style="push"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+      </menuContribution>
+      
+      <!-- Add icons to the Command History view toolbar -->
+      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
+         <command
+               commandId="org.yamcs.studio.ui.commanding.cmdhist.clearCommand"
+               icon="icons/elcl16/clear.png"
+               disabledIcon="icons/dlcl16/clear.png"
+               label="Clear View"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand"
+               icon="icons/elcl16/lock_co.png"
+               disabledIcon="icons/dlcl16/lock_co.png"
+               label="Scroll Lock"
+               style="toggle"/>
          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
       

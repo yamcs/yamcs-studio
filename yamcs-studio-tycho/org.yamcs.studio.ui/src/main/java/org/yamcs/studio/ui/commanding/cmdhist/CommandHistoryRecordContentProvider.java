@@ -1,5 +1,6 @@
 package org.yamcs.studio.ui.commanding.cmdhist;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
@@ -114,5 +116,16 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
     public void enableScrollLock(boolean enabled) {
         scrollLock = enabled;
+    }
+
+    public void clearAll() {
+        // TODO not sure if this is the recommended way to delete all. Need to verify
+        BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
+            tableViewer.getTable().setRedraw(false);
+            Collection<CommandHistoryRecord> recs = recordsByCommandId.values();
+            tableViewer.remove(recs.toArray());
+            recordsByCommandId.clear();
+            tableViewer.getTable().setRedraw(true);
+        });
     }
 }
