@@ -156,7 +156,7 @@ public class AddToStackWizardPage1 extends WizardPage {
             public int compare(Viewer viewer, Object o1, Object o2) {
                 MetaCommand c1 = (MetaCommand) o1;
                 MetaCommand c2 = (MetaCommand) o2;
-                return c1.getName().compareTo(c2.getName());
+                return c1.getQualifiedName().compareTo(c2.getQualifiedName());
             }
         });
 

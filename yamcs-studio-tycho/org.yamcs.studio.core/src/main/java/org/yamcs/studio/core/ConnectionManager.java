@@ -69,6 +69,8 @@ public class ConnectionManager {
     }
 
     public void connect(YamcsCredentials creds, ConnectionMode mode) {
+        disconnectIfConnected();
+
         this.creds = creds;
         this.mode = mode;
 
@@ -106,6 +108,15 @@ public class ConnectionManager {
                 }
             }
         }.start();
+    }
+
+    public void disconnectIfConnected() {
+        boolean doDisconnect = false;
+        synchronized (this) {
+            doDisconnect = (connectionStatus != ConnectionStatus.Disconnected);
+        }
+        if (doDisconnect)
+            disconnect();
     }
 
     public void disconnect() {
