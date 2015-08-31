@@ -1,6 +1,8 @@
 package org.yamcs.studio.ui.eventlog;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -25,10 +27,15 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
+import com.google.protobuf.MessageLite;
+
 public class EventLogView extends ViewPart implements StudioConnectionListener, EventListener {
+
+    private static final Logger log = Logger.getLogger(EventLogView.class.getName());
 
     public static final String COL_SOURCE = "Source";
     public static final String COL_RECEIVED = "Received";
@@ -68,6 +75,20 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
         if (webSocketClient != null) {
             webSocketClient.addEventListener(this);
+        }
+        if (restClient != null) {
+            restClient.getEvents(null, new ResponseHandler() {
+
+                @Override
+                public void onMessage(MessageLite responseMsg) {
+                    Display.getDefault().asyncExec(() -> addEvent((Event) responseMsg));
+                }
+
+                @Override
+                public void onException(Exception e) {
+                    log.log(Level.SEVERE, "Could not fetch initial set of events", e);
+                }
+            });
         }
     }
 
