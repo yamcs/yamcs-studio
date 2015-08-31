@@ -10,7 +10,6 @@ import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.protobuf.YamcsManagement.TmStatistics;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
@@ -89,24 +88,5 @@ public class ArchiveProcessorListener implements StudioConnectionListener, Proce
 
     @Override
     public void statisticsUpdated(Statistics stats) {
-        if (display.isDisposed())
-            return;
-        display.asyncExec(() -> {
-            if (display.isDisposed())
-                return;
-            ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
-            if (clientInfo != null
-                    && stats.getYProcessorName().equals(clientInfo.getProcessorName())
-                    && stats.getInstance().equals(clientInfo.getInstance())) {
-
-                // find the timestamp of the most recent packet received
-                SwingUtilities.invokeLater(() -> {
-                    long pos = 0;
-                    for (TmStatistics ts : stats.getTmstatsList())
-                        pos = Math.max(pos, ts.getLastPacketTime());
-                    dataViewer.getDataView().setCurrentLocator(pos);
-                });
-            }
-        });
     }
 }
