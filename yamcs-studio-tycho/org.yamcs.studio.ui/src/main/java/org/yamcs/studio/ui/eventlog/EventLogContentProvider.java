@@ -56,8 +56,10 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         tableViewer.update(needsUpdating.toArray(), null);
 
         events.removeAll(needsUpdating);
-        tableViewer.add(events.toArray());
-        tableViewer.reveal(events.get(events.size() - 1));
+        if (!events.isEmpty()) {
+            tableViewer.add(events.toArray());
+            tableViewer.reveal(events.get(events.size() - 1));
+        }
     }
 
     public void clearAll() {

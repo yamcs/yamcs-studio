@@ -1,5 +1,6 @@
 package org.yamcs.studio.ui.eventlog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,10 +79,22 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         }
         if (restClient != null) {
             restClient.getEvents(null, new ResponseHandler() {
+                private List<Event> events = new ArrayList<>();
 
                 @Override
                 public void onMessage(MessageLite responseMsg) {
-                    Display.getDefault().asyncExec(() -> addEvent((Event) responseMsg));
+                    if (responseMsg != null) {
+                        events.add((Event) responseMsg);
+                        if (events.size() == 500) {
+                            log.info("** chunk of " + events.size());
+                            List<Event> chunk = new ArrayList<>(events);
+                            Display.getDefault().asyncExec(() -> addEvents(chunk));
+                            events.clear();
+                        }
+                    } else if (!events.isEmpty()) {
+                        log.info("** last " + events.size());
+                        Display.getDefault().asyncExec(() -> addEvents(events));
+                    }
                 }
 
                 @Override
@@ -178,11 +191,10 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     }
 
     public void addEvents(List<Event> events) {
-        Display.getDefault().asyncExec(() -> {
-            if (tableViewer.getTable().isDisposed())
-                return;
-            tableContentProvider.addEvents(events);
-        });
+        log.info("add chunk of " + events.size());
+        if (tableViewer.getTable().isDisposed())
+            return;
+        tableContentProvider.addEvents(events);
     }
 
     public void addEvent(Event event) {

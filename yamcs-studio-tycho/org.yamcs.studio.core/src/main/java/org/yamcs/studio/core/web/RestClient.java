@@ -37,6 +37,8 @@ import com.google.protobuf.MessageLite;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -169,6 +171,8 @@ public class RestClient {
     }
 
     private <S extends MessageLite> void doRequestWithDelimitedResponse(HttpMethod method, String uri, MessageLite requestBody, BuilderGenerator builderGenerator, ResponseHandler handler) {
+        // Currently doesn't correctly interpret RestExceptionMessage. Should probably
+        // add a pipeline handler for HttpResponse for that
         URI resource = yprops.webResourceURI(uri);
         try {
             Bootstrap b = new Bootstrap();
@@ -187,14 +191,29 @@ public class RestClient {
                     });
                 }
             });
-            initializeChannel(b, resource, method, requestBody);
+            // A very verbose way of signaling the end of the stream...
+            // (UI components that bulk up data rely on this)
+            ChannelFuture channelFuture = initializeChannel(b, resource, method, requestBody);
+            channelFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        future.channel().closeFuture().addListener(new ChannelFutureListener() {
+                            @Override
+                            public void operationComplete(ChannelFuture future) throws Exception {
+                                handler.onMessage(null);
+                            }
+                        });
+                    }
+                }
+            });
         } catch (IOException | InterruptedException e) {
             log.log(Level.SEVERE, "Could not execute REST call", e);
             handler.onException(e);
         }
     }
 
-    private void initializeChannel(Bootstrap b, URI resource, HttpMethod method, MessageLite requestBody) throws IOException, InterruptedException {
+    private ChannelFuture initializeChannel(Bootstrap b, URI resource, HttpMethod method, MessageLite requestBody) throws IOException, InterruptedException {
         // FIXME no sync on call thread
         Channel ch = b.connect(resource.getHost(), resource.getPort()).sync().channel();
         FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, resource.getRawPath());
@@ -216,7 +235,7 @@ public class RestClient {
             request.headers().set(HttpHeaders.Names.CONTENT_TYPE, BINARY_MIME_TYPE);
             request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
         }
-        ch.writeAndFlush(request);
+        return ch.writeAndFlush(request);
     }
 
     /**
