@@ -302,6 +302,7 @@ public class IndexBox extends Box implements MouseListener {
             updatePrefsVisiblePackets();
             dataView.refreshDisplay();
         }
+        titleLabel.setText(name + " " + getPacketsStatus());
     }
 
     void enableTMPacket(IndexLineSpec pkt) {
@@ -312,6 +313,7 @@ public class IndexBox extends Box implements MouseListener {
         pkt.enabled = true;
         dataView.refreshDisplay();
         updatePrefsVisiblePackets();
+        titleLabel.setText(name + " " + getPacketsStatus());
     }
 
     void removeSelectedPacket() {
@@ -327,6 +329,7 @@ public class IndexBox extends Box implements MouseListener {
 
         dataView.refreshDisplay();
         dataView.setNormalPointer();
+        titleLabel.setText(name + " " + getPacketsStatus());
     }
 
     void removeGroupLines() {
@@ -350,6 +353,7 @@ public class IndexBox extends Box implements MouseListener {
             dataView.refreshDisplay();
             dataView.setNormalPointer();
         }
+        titleLabel.setText(name + " " + getPacketsStatus());
     }
 
     void removeAllButThisLine() {
@@ -371,6 +375,7 @@ public class IndexBox extends Box implements MouseListener {
         updatePrefsVisiblePackets();
         dataView.refreshDisplay();
         dataView.setNormalPointer();
+        titleLabel.setText(name + " " + getPacketsStatus());
     }
 
     public String getPacketsStatus() {
@@ -381,7 +386,9 @@ public class IndexBox extends Box implements MouseListener {
         for (String plname : groups.keySet()) {
             final ArrayList<IndexLineSpec> plvec = groups.get(plname);
             int count = 0;
+            System.out.println("-------");
             for (IndexLineSpec pkt : plvec) {
+                System.out.println("pkt " + pkt.lineName + ", " + pkt.enabled);
                 if (pkt.enabled)
                     ++count;
             }
@@ -519,11 +526,13 @@ public class IndexBox extends Box implements MouseListener {
         for (String linename : visibleLines) {
             IndexLineSpec pkt = allPackets.get(linename);
             if (pkt != null) {
+                System.out.println("Enabling " + linename);
                 pkt.enabled = true;
             } else {
                 ArchivePanel.debugLog("could not enable packet '" + linename + "', removing line from view");
             }
         }
+        titleLabel.setText(name + " " + getPacketsStatus());
     }
 
     void redrawTmPanel(IndexLineSpec pkt) {
