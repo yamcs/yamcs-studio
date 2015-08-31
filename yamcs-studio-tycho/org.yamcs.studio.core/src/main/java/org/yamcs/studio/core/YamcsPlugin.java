@@ -38,6 +38,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     // Reset for every application restart
     private static AtomicInteger cmdClientId = new AtomicInteger(1);
 
+    private TimeCatalogue timeCatalogue;
     private ManagementCatalogue managementCatalogue;
     private ConnectionManager connectionManager;
 
@@ -54,6 +55,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
         log.info("Yamcs Studio v." + getBundle().getVersion().toString());
         TimeEncoding.setUp();
         connectionManager = new ConnectionManager();
+
+        timeCatalogue = new TimeCatalogue();
+        connectionManager.addStudioConnectionListener(timeCatalogue);
+
         managementCatalogue = new ManagementCatalogue();
         connectionManager.addStudioConnectionListener(managementCatalogue);
     }
@@ -68,6 +73,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public ManagementCatalogue getManagementCatalogue() {
         return managementCatalogue;
+    }
+
+    public TimeCatalogue getTimeCatalogue() {
+        return timeCatalogue;
     }
 
     public String getOrigin() {

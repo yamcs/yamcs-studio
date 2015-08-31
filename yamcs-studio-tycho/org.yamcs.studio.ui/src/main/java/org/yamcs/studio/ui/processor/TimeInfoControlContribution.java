@@ -17,10 +17,10 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.TimeListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 public class TimeInfoControlContribution extends WorkbenchWindowControlContribution
@@ -70,7 +70,7 @@ public class TimeInfoControlContribution extends WorkbenchWindowControlContribut
         } else {
             // TODO Improve this. Don't use Date
             Calendar cal = TimeEncoding.toCalendar(processorTime);
-            cal.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+            cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
             format.setTimeZone(cal.getTimeZone());
             return format.format(cal.getTime());
         }

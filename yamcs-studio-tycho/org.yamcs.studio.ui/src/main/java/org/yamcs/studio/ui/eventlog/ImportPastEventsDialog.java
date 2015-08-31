@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Events.GetEventsRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.studio.ui.archive.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
@@ -112,7 +112,7 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
     }
 
     private static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
+        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
         cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
         cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
         cal.set(Calendar.MINUTE, timeWidget.getMinutes());
@@ -164,9 +164,9 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     public void initialize(TimeInterval interval, List<String> packets, List<String> ppGroups) {
         startTimeValue = TimeEncoding.toCalendar(interval.calculateStart());
-        startTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+        startTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
         stopTimeValue = TimeEncoding.toCalendar(interval.calculateStop());
-        stopTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+        stopTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
     }
 
     @Override

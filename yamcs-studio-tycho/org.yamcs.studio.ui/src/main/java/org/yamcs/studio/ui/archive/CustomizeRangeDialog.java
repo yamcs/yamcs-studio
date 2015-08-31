@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.studio.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
 public class CustomizeRangeDialog extends TitleAreaDialog {
@@ -141,7 +141,7 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
     }
 
     private static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
+        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
         cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
         cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
         cal.set(Calendar.MINUTE, timeWidget.getMinutes());
@@ -172,13 +172,13 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
     private void setStartTime(long startTime) {
         startTimeValue = TimeEncoding.toCalendar(startTime);
         if (startTimeValue != null)
-            startTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+            startTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
     }
 
     private void setStopTime(long stopTime) {
         stopTimeValue = TimeEncoding.toCalendar(stopTime);
         if (stopTimeValue != null)
-            stopTimeValue.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+            stopTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
     }
 
     public boolean hasStartTime() {

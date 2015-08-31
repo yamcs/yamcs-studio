@@ -4,13 +4,12 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
 
-import org.yamcs.studio.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
 /**
- * time interval where both ends can be open
- *
- **/
+ * Time interval where both ends can be open
+ */
 public class TimeInterval implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -66,7 +65,7 @@ public class TimeInterval implements Serializable {
         if (hasStart)
             return start;
         else {
-            Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
+            Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
@@ -79,7 +78,7 @@ public class TimeInterval implements Serializable {
         if (hasStop)
             return stop;
         else {
-            Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
+            Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
             cal.add(Calendar.DAY_OF_MONTH, 1);
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);

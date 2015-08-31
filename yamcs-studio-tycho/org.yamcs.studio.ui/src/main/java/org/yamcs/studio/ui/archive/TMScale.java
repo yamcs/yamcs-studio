@@ -18,7 +18,7 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import org.yamcs.studio.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.utils.TaiUtcConverter.DateTimeComponents;
 import org.yamcs.utils.TimeEncoding;
 
@@ -40,7 +40,7 @@ public class TMScale extends JSlider {
 
     static SimpleDateFormat sdfFactory(String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+        sdf.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
         return sdf;
     }
 
@@ -249,7 +249,7 @@ public class TMScale extends JSlider {
         cal.set(dtc.year, dtc.month - 1, dtc.day, dtc.hour, dtc.minute, 0);
 
         // Now switch to tz of UI representation
-        cal.setTimeZone(YamcsUIPlugin.getDefault().getTimeZone());
+        cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
         cal.set(Calendar.MILLISECOND, 0);
         cal.setFirstDayOfWeek(Calendar.MONDAY);
         return cal;

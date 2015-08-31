@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
-import org.yamcs.utils.TimeEncoding;
+import org.yamcs.studio.core.TimeCatalogue;
 
 public class Prefs {
 
@@ -21,7 +21,8 @@ public class Prefs {
         TimeInterval range = (TimeInterval) getObject(prefs, "range");
         if (range == null) {
             range = new TimeInterval();
-            range.setStart(TimeEncoding.currentInstant() - 30 * 24 * 3600);
+            long missionTime = TimeCatalogue.getInstance().getMissionTime();
+            range.setStart(missionTime - 30 * 24 * 3600);
         }
         return range;
     }

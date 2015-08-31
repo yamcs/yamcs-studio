@@ -30,9 +30,9 @@ import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart implements StudioConnectionListener, ConnectionListener {
@@ -82,7 +82,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
     }
 
     /**
-     * Called when YamcsPlugin wants this connection to stop (might be resumed latter with
+     * Called when YamcsPlugin wants this connection to stop (might be resumed later with
      * processConnectionInfo)
      */
     @Override
@@ -97,7 +97,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
+                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
                     cal.add(Calendar.MONTH, -1);
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
@@ -111,7 +111,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
+                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
                     cal.add(Calendar.MONTH, -3);
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
@@ -125,7 +125,7 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = Calendar.getInstance(YamcsUIPlugin.getDefault().getTimeZone());
+                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
                     cal.add(Calendar.MONTH, -12);
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
@@ -240,14 +240,13 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
 
     public void setTagEnabled(boolean enabled) {
         // Back to the SWT thread, to be sure
-        Display.getDefault().asyncExec(
-                () -> {
-                    IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-                    ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-                    AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service
-                            .getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
-                    commandState.setEnabled(enabled);
-                });
+        Display.getDefault().asyncExec(() -> {
+            IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+            ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
+            AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service
+                    .getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
+            commandState.setEnabled(enabled);
+        });
     }
 
     protected void showMessage(String msg) {

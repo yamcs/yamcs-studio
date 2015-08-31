@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.utils.TimeEncoding;
@@ -64,7 +65,8 @@ public class CommandQueuedTableViewer extends TableViewer {
                 if (cqe == null)
                     return;
                 try {
-                    long timeinthequeue = TimeEncoding.currentInstant() - cqe.getGenerationTime();
+                    long missionTime = TimeCatalogue.getInstance().getMissionTime();
+                    long timeinthequeue = missionTime - cqe.getGenerationTime();
                     if (timeinthequeue > CommandQueueView.oldCommandWarningTime * 1000L) {
                         int res = CommandFateDialog.showDialog(parent.getShell(), cqe.getCmdId());
                         switch (res) {

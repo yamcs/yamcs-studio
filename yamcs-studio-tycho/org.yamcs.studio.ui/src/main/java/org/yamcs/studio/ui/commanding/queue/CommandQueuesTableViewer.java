@@ -2,6 +2,7 @@ package org.yamcs.studio.ui.commanding.queue;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.ui.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 import org.yamcs.utils.TimeEncoding;
@@ -141,7 +143,8 @@ public class CommandQueuesTableViewer extends TableViewer {
                             ArrayList<CommandQueueEntry> cmds = commandQueueView.currentQueuesModel.commands.get(q.getName());
                             if (cmds != null) {
                                 for (CommandQueueEntry cqe : cmds) {
-                                    if (TimeEncoding.currentInstant() - cqe.getGenerationTime() > CommandQueueView.oldCommandWarningTime * 1000L) {
+                                    long missionTime = TimeCatalogue.getInstance().getMissionTime();
+                                    if (missionTime - cqe.getGenerationTime() > CommandQueueView.oldCommandWarningTime * 1000L) {
                                         oldcommandsfound = true;
                                         break;
                                     }
@@ -169,7 +172,8 @@ public class CommandQueuesTableViewer extends TableViewer {
                             }
                         }
                     } catch (Exception e) {
-                        log.severe(e.getMessage());
+                        // FIXME we shouldn't hide exceptions
+                        log.log(Level.SEVERE, e.getMessage(), e);
                     }
 
                 }
