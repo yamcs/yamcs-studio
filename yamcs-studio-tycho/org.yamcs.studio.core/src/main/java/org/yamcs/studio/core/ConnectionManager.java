@@ -113,14 +113,15 @@ public class ConnectionManager {
     public void disconnectIfConnected() {
         boolean doDisconnect = false;
         synchronized (this) {
-            doDisconnect = (connectionStatus != ConnectionStatus.Disconnected);
+            doDisconnect = (connectionStatus != null)
+                    && (connectionStatus != ConnectionStatus.Disconnected);
         }
         if (doDisconnect)
             disconnect();
     }
 
     public void disconnect() {
-        log.info("Start disconnect procedure");
+        log.info("Start disconnect procedure (current state: " + connectionStatus + ")");
         synchronized (this) {
             if (connectionStatus == ConnectionStatus.Disconnected
                     || connectionStatus == ConnectionStatus.Disconnecting)

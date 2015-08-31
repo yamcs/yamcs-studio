@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.application;
 
+import static org.yamcs.studio.ui.TextUtils.isBlank;
+
 import javax.security.auth.Subject;
 
 import org.csstudio.security.SecurityListener;
@@ -16,10 +18,19 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
+import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.RestClient;
 
 @SuppressWarnings("restriction")
-public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor implements SecurityListener {
+public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
+        implements StudioConnectionListener, SecurityListener {
+
+    private YamcsConnectionProperties yprops;
+    private String subjectName;
 
     public YamcsStudioWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -57,6 +68,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor im
         changedSecurity(SecuritySupport.getSubject(), SecuritySupport.isCurrentUser(), SecuritySupport.getAuthorizations());
 
         // Listen for changes
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
         SecuritySupport.addListener(this);
     }
 
@@ -93,11 +105,31 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor im
             if (subject != null)
                 subjectName = SecuritySupport.getSubjectName(subject);
 
-            setTitle(subjectName);
+            this.subjectName = subjectName;
+            updateTitle();
         });
     }
 
-    private void setTitle(String subject) {
+    @Override
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+        yprops = webProps;
+        subjectName = hornetqProps.username;
+        Display.getDefault().asyncExec(() -> updateTitle());
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+        yprops = null;
+        Display display = Display.getDefault();
+        if (display.isDisposed())
+            return;
+
+        display.asyncExec(() -> {
+            updateTitle();
+        });
+    }
+
+    private void updateTitle() {
         IWorkbenchPage page = getWindowConfigurer().getWindow().getActivePage();
         String label = "Yamcs Studio";
         if (page != null && page.getPerspective() != null) {
@@ -110,13 +142,14 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor im
                 label = perspective.getLabel();
         }
 
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        if (connectionManager.isConnected()) {
-            String host = connectionManager.getWebProperties().getHost();
-            String instance = connectionManager.getWebProperties().getInstance();
-            getWindowConfigurer().setTitle(String.format("%s (%s@%s/%s)", label, subject, host, instance));
-        } else {
-            getWindowConfigurer().setTitle(label);
+        if (yprops != null) {
+            String host = yprops.getHost();
+            String instance = yprops.getInstance();
+            if (isBlank(subjectName))
+                label = String.format("%s (anonymous@%s/%s)", label, host, instance);
+            else
+                label = String.format("%s (%s@%s/%s)", label, subjectName, host, instance);
         }
+        getWindowConfigurer().setTitle(label);
     }
 }
