@@ -2,6 +2,7 @@ package org.yamcs.studio.ui.archive;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,8 +61,11 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
 
     private static final Logger log = Logger.getLogger(CreateReplayDialog.class.getName());
 
+    // TODO look instead at current list of processors, and find something new
+    private static AtomicInteger replayCounter = new AtomicInteger();
+
     private Text name;
-    private String nameValue = "replay";
+    private String nameValue = "replay" + replayCounter.incrementAndGet();
 
     private DateTime startDate;
     private DateTime startTime;

@@ -1,8 +1,6 @@
 package org.yamcs.studio.ui.eventlog;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -28,11 +26,8 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.MessageLite;
 
 public class EventLogView extends ViewPart implements StudioConnectionListener, EventListener {
 
@@ -76,32 +71,6 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
         if (webSocketClient != null) {
             webSocketClient.addEventListener(this);
-        }
-        if (restClient != null) {
-            restClient.getEvents(null, new ResponseHandler() {
-                private List<Event> events = new ArrayList<>();
-
-                @Override
-                public void onMessage(MessageLite responseMsg) {
-                    if (responseMsg != null) {
-                        events.add((Event) responseMsg);
-                        if (events.size() == 500) {
-                            log.info("** chunk of " + events.size());
-                            List<Event> chunk = new ArrayList<>(events);
-                            Display.getDefault().asyncExec(() -> addEvents(chunk));
-                            events.clear();
-                        }
-                    } else if (!events.isEmpty()) {
-                        log.info("** last " + events.size());
-                        Display.getDefault().asyncExec(() -> addEvents(events));
-                    }
-                }
-
-                @Override
-                public void onException(Exception e) {
-                    log.log(Level.SEVERE, "Could not fetch initial set of events", e);
-                }
-            });
         }
     }
 

@@ -168,26 +168,6 @@
       </category>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.login"
-            name="Login">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.connect"
-            name="Connect">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.autoconnect"
-            name="AutoConnect">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.disconnect"
-            name="Disconnect">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.add"
             name="New Command">
       </command>
@@ -272,6 +252,11 @@
             name="Clear Log View">
       </command>
       <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.importCommand"
+            name="Import Events">
+      </command>
+      <command
             defaultHandler="org.yamcs.studio.ui.OpenPerspectiveHandler"
             id="org.yamcs.studio.ui.commands.openPerspectiveCommand"
             name="Open Perspective">
@@ -295,24 +280,6 @@
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
-      <handler
-            commandId="org.yamcs.studio.ui.autoconnect" 
-            class="org.yamcs.studio.ui.connections.AutoConnectHandler"/>
-      <handler
-            commandId="org.yamcs.studio.ui.connect"
-            class="org.yamcs.studio.ui.connections.ConnectHandler"/>
-      <handler
-            commandId="org.yamcs.studio.ui.login"
-            class="org.yamcs.studio.ui.connections.LoginHandler"/>
-      <handler
-            commandId="org.yamcs.studio.ui.disconnect"
-            class="org.yamcs.studio.ui.connections.DisconnectHandler">
-         <activeWhen>
-            <with variable="org.yamcs.studio.ui.state.connected">
-               <equals value="true"/>
-            </with>
-         </activeWhen>
-      </handler>
       <handler
             class="org.yamcs.studio.ui.commanding.stack.AddToStackHandler"
             commandId="org.yamcs.studio.ui.commanding.stack.add">
@@ -506,6 +473,15 @@
          </activeWhen>
       </handler>
       <handler
+            class="org.yamcs.studio.ui.eventlog.ImportEventsHandler"
+            commandId="org.yamcs.studio.ui.eventlog.importCommand">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
             class="org.yamcs.studio.ui.eventlog.ClearEventLogHandler"
             commandId="org.yamcs.studio.ui.eventlog.clearCommand">
       </handler>
@@ -596,6 +572,21 @@
                   <equals value="true"/>
                </with>
             </and>
+         </activeWhen>
+      </handler>
+      <handler 
+            commandId="org.yamcs.studio.ui.autoconnect" 
+            class="org.yamcs.studio.ui.connections.AutoConnectHandler"/>
+      <handler
+            commandId="org.yamcs.studio.ui.connect"
+            class="org.yamcs.studio.ui.connections.ConnectHandler"/>
+      <handler
+            commandId="org.yamcs.studio.ui.disconnect"
+            class="org.yamcs.studio.ui.connections.DisconnectHandler">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
          </activeWhen>
       </handler>
    </extension>
@@ -978,6 +969,12 @@
 
       <!-- Add icons to the Event Log view toolbar -->
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.eventlog.EventLogView">
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.importCommand"
+               icon="icons/elcl16/import_wiz.gif"
+               disabledIcon="icons/dlcl16/import_wiz.gif"
+               label="Import Events"
+               style="push"/>
          <command
                commandId="org.yamcs.studio.ui.eventlog.clearCommand"
                icon="icons/elcl16/clear.png"
