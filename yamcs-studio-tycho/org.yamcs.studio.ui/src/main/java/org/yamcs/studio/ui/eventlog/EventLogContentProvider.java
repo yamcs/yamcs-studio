@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -16,6 +18,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     private Map<Integer, Event> eventsBySequenceNumber = new LinkedHashMap<>();
     private TableViewer tableViewer;
+    private boolean scrollLock;
 
     public EventLogContentProvider(TableViewer tableViewer) {
         this.tableViewer = tableViewer;
@@ -42,7 +45,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         } else {
             tableViewer.add(event);
             eventsBySequenceNumber.put(event.getSeqNumber(), event);
-            tableViewer.reveal(event);
+            maybeSelectAndReveal(event);
         }
     }
 
@@ -58,7 +61,14 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         events.removeAll(needsUpdating);
         if (!events.isEmpty()) {
             tableViewer.add(events.toArray());
-            tableViewer.reveal(events.get(events.size() - 1));
+            maybeSelectAndReveal(events.get(events.size() - 1));
+        }
+    }
+
+    private void maybeSelectAndReveal(Event event) {
+        if (!scrollLock) {
+            IStructuredSelection sel = new StructuredSelection(event);
+            tableViewer.setSelection(sel, true);
         }
     }
 
@@ -71,5 +81,9 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             eventsBySequenceNumber.clear();
             tableViewer.getTable().setRedraw(true);
         });
+    }
+
+    public void enableScrollLock(boolean enabled) {
+        scrollLock = enabled;
     }
 }

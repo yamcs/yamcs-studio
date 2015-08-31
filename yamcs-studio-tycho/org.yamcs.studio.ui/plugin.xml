@@ -253,6 +253,14 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.scrollLockCommand" 
+            name="Scroll Lock">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState" />
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.importCommand"
             name="Import Events">
       </command>
@@ -484,6 +492,10 @@
       <handler
             class="org.yamcs.studio.ui.eventlog.ClearEventLogHandler"
             commandId="org.yamcs.studio.ui.eventlog.clearCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.ScrollLockEventLogHandler"
+            commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand">
       </handler>
       <handler
             class="org.yamcs.studio.ui.processor.GoToBeginningHandler"
@@ -970,16 +982,23 @@
       <!-- Add icons to the Event Log view toolbar -->
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.eventlog.EventLogView">
          <command
-               commandId="org.yamcs.studio.ui.eventlog.importCommand"
-               icon="icons/elcl16/import_wiz.gif"
-               disabledIcon="icons/dlcl16/import_wiz.gif"
-               label="Import Events"
-               style="push"/>
-         <command
                commandId="org.yamcs.studio.ui.eventlog.clearCommand"
                icon="icons/elcl16/clear.png"
                disabledIcon="icons/dlcl16/clear.png"
                label="Clear Log View"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand"
+               icon="icons/elcl16/lock_co.png"
+               disabledIcon="icons/dlcl16/lock_co.png"
+               label="Scroll Lock"
+               style="toggle"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.importCommand"
+               icon="icons/elcl16/import_wiz.gif"
+               disabledIcon="icons/dlcl16/import_wiz.gif"
+               label="Import Events"
                style="push"/>
          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>

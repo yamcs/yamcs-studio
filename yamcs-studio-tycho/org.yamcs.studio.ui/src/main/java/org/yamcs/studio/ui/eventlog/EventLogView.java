@@ -89,6 +89,10 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         tableContentProvider.clearAll();
     }
 
+    public void enableScrollLock(boolean enabled) {
+        tableContentProvider.enableScrollLock(enabled);
+    }
+
     private void addFixedColumns() {
         TableViewerColumn descriptionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         descriptionColumn.getColumn().setText(COL_DESCRIPTION);
