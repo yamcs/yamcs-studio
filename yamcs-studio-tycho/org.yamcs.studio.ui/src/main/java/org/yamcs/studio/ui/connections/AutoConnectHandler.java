@@ -50,15 +50,16 @@ public class AutoConnectHandler extends AbstractHandler {
     private void doConnect(Shell shell, YamcsConfiguration conf, boolean noPasswordPopup) {
         // FIXME get the password out before doing this
         ConnectionPreferences.setLastUsedConfiguration(conf);
+        ConnectionManager.getInstance().setConnectionInfo(conf.toConnectionInfo());
 
         // Check if authentication is needed
         String connectionString = conf.getPrimaryConnectionString();
         if (conf.isAnonymous()) {
             log.info("Will connect anonymously to " + connectionString);
-            ConnectionManager.getInstance().connect(conf.toConnectionInfo(), null);
+            ConnectionManager.getInstance().connect(null);
         } else if (conf.isSavePassword() || noPasswordPopup) {
             log.info("Will connect as user '" + conf.getUser() + "' to " + connectionString);
-            ConnectionManager.getInstance().connect(conf.toConnectionInfo(), conf.toYamcsCredentials());
+            ConnectionManager.getInstance().connect(conf.toYamcsCredentials());
         } else {
             log.info("Want to connect to '" + connectionString
                     + "' but credentials are needed (not saved and not in dialog). Show password dialog");

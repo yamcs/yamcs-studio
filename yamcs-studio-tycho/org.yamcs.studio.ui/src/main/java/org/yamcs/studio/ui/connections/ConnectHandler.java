@@ -36,14 +36,15 @@ public class ConnectHandler extends AbstractHandler {
     private void doConnect(Shell shell, YamcsConfiguration conf) {
         // FIXME get the password out before doing this
         ConnectionPreferences.setLastUsedConfiguration(conf);
+        ConnectionManager.getInstance().setConnectionInfo(conf.toConnectionInfo());
 
         String connectionString = conf.getPrimaryConnectionString();
         if (conf.isAnonymous()) {
             log.info("Will connect anonymously to " + connectionString);
-            ConnectionManager.getInstance().connect(conf.toConnectionInfo(), null);
+            ConnectionManager.getInstance().connect(null);
         } else {
             log.info("Will connect as user '" + conf.getUser() + "' to " + connectionString);
-            ConnectionManager.getInstance().connect(conf.toConnectionInfo(), conf.toYamcsCredentials());
+            ConnectionManager.getInstance().connect(conf.toYamcsCredentials());
         }
     }
 }

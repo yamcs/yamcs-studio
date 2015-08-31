@@ -88,14 +88,15 @@ public class YamcsLoginModule implements LoginModule {
 
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
 
-        YamcsConnectionProperties webProps = ConnectionManager.getInstance().getWebProperties();
-        RestClient restClient = new RestClient(webProps, new YamcsCredentials(user, password));
+        YamcsConnectionProperties yprops = ConnectionManager.getInstance().getWebProperties();
+        RestClient restClient = new RestClient(yprops, new YamcsCredentials(user, password));
 
         AuthReponseHandler arh = new AuthReponseHandler();
 
         try {
             restClient.listAvailableParameters(req.build(), arh);
         } catch (Exception e) {
+            log.log(Level.SEVERE, "Could not authenticate", e);
             return false;
         }
 
@@ -103,9 +104,12 @@ public class YamcsLoginModule implements LoginModule {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
+                log.warning("Timeout, assuming unauthenticated");
+                restClient.shutdown();
                 return false;
             }
         }
+        restClient.shutdown();
         return arh.authenticated;
     }
 
@@ -118,7 +122,7 @@ public class YamcsLoginModule implements LoginModule {
         subject.getPrincipals().add(principal);
 
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        connectionManager.connectWithNewCredentials(new YamcsCredentials(user, password));
+        connectionManager.connect(new YamcsCredentials(user, password));
         return true;
     }
 

@@ -58,16 +58,17 @@ public class ConnectionManager {
         studioConnectionListeners.remove(listener);
     }
 
-    public void connectWithNewCredentials(YamcsCredentials creds) {
-        connect(connectionInfo, creds, mode);
-    }
-
-    public void connect(ConnectionInfo connectionInfo, YamcsCredentials creds) {
-        connect(connectionInfo, creds, ConnectionMode.PRIMARY);
-    }
-
-    public void connect(ConnectionInfo connectionInfo, YamcsCredentials creds, ConnectionMode mode) {
+    public void setConnectionInfo(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
+        if (mode == null)
+            mode = ConnectionMode.PRIMARY;
+    }
+
+    public void connect(YamcsCredentials creds) {
+        connect(creds, mode);
+    }
+
+    public void connect(YamcsCredentials creds, ConnectionMode mode) {
         this.creds = creds;
         this.mode = mode;
 
@@ -207,7 +208,7 @@ public class ConnectionManager {
         }
 
         disconnect();
-        connect(connectionInfo, creds, mode);
+        connect(creds, mode);
     }
 
     public void notifyException(Throwable t) {
