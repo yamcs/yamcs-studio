@@ -183,6 +183,36 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.goToBeginningCommand"
+            name="Go to Beginning">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.reverseCommand"
+            name="Step to Previous Update">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.pauseCommand"
+            name="Pause">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.playCommand"
+            name="Play">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.forwardCommand"
+            name="Step to Next Update">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.goToEndCommand"
+            name="Go to End">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.stack.add"
             name="New Command">
       </command>
