@@ -233,7 +233,7 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.archive.tagCommand"
+            id="org.yamcs.studio.ui.archive.createTagCommand"
             name="Annotate the selected range">
       </command>
       <command
