@@ -10,6 +10,7 @@ import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
@@ -28,6 +29,7 @@ public class ArchiveProcessorListener implements StudioConnectionListener, Proce
     public ArchiveProcessorListener(Display display, DataViewer dataViewer) {
         this.display = display;
         this.dataViewer = dataViewer;
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
     @Override
