@@ -585,6 +585,23 @@
          </activeWhen>
       </handler>
       <handler
+            class="org.yamcs.studio.ui.processor.ReverseHandler"
+            commandId="org.yamcs.studio.ui.processor.reverseCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.processor.state.processing">
+                  <equals value="RUNNING"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.processor.state.replay">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="org.yamcs.studio.ui.processor.PauseHandler"
             commandId="org.yamcs.studio.ui.processor.pauseCommand">
          <activeWhen>
@@ -617,6 +634,23 @@
                      <equals value="STOPPED"/>
                   </with>
                </or>
+               <with variable="org.yamcs.studio.ui.processor.state.replay">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.processor.ForwardHandler"
+            commandId="org.yamcs.studio.ui.processor.forwardCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.processor.state.processing">
+                  <equals value="RUNNING"/>
+               </with>
                <with variable="org.yamcs.studio.ui.processor.state.replay">
                   <equals value="true"/>
                </with>
