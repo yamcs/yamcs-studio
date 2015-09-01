@@ -528,9 +528,6 @@
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
-               <with variable="org.yamcs.studio.ui.archive.state.tagEnabled">
-                  <equals value="true"/>
-               </with>
             </and>
          </activeWhen>
       </handler>
