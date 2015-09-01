@@ -59,7 +59,7 @@ public class DataView extends JScrollPane {
     float previewLocatorAlpha;
     int dragButton, previewLocatorX, mouseLocatorX;
     SelectionImpl currentSelection;
-    long startLocator, stopLocator, currentLocator, previewLocator, seekLocator;
+    long currentLocator, previewLocator, seekLocator;
 
     final long DO_NOT_DRAW = Long.MIN_VALUE;
     final int handleWidth = 6;
@@ -89,7 +89,7 @@ public class DataView extends JScrollPane {
 
         getColumnHeader().setOpaque(false);
 
-        startLocator = stopLocator = currentLocator = DO_NOT_DRAW;
+        currentLocator = DO_NOT_DRAW;
         drawPreviewLocator = false;
 
         resetSelection();
@@ -396,14 +396,6 @@ public class DataView extends JScrollPane {
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
-    void setStartLocator(long position) {
-        startLocator = position;
-    }
-
-    void setStopLocator(long position) {
-        stopLocator = position;
-    }
-
     void setCurrentLocator(long position) {
         currentLocator = position;
         repaint();
@@ -636,38 +628,9 @@ public class DataView extends JScrollPane {
                     }
                 }
 
-                if ((startLocator != DO_NOT_DRAW) || (stopLocator != DO_NOT_DRAW) || (currentLocator != DO_NOT_DRAW) ||
-                        drawPreviewLocator) {
+                if (currentLocator != DO_NOT_DRAW || drawPreviewLocator) {
 
                     int xmax = getSize().width - handleWidth;
-
-                    if (startLocator != DO_NOT_DRAW) {
-                        x = zoom.convertInstantToPixel(startLocator);
-                        //debugLog("startLocator (" + x + "," + y + ") box width " + getSize().width);
-                        if ((x >= 0) && (x < xmax)) {
-                            final int[] px = { x, x + handleWidth, x };
-                            final int[] py = { handleHeight, handleHeight / 2, 0 };
-                            g.setColor(handleFill);
-                            g.fillPolygon(px, py, px.length);
-                            g.setColor(Color.DARK_GRAY);
-                            g.drawPolygon(px, py, px.length);
-                            g.drawLine(x, 0, x, h - 1);
-                        }
-                    }
-
-                    if (stopLocator != DO_NOT_DRAW) {
-                        x = zoom.convertInstantToPixel(stopLocator);
-                        //debugLog("stopLocator (" + x + "," + y + ") box width " + getSize().width);
-                        if ((x >= 0) && (x < xmax)) {
-                            final int[] px = { x, x - handleWidth, x };
-                            final int[] py = { handleHeight, handleHeight / 2, 0 };
-                            g.setColor(handleFill);
-                            g.fillPolygon(px, py, px.length);
-                            g.setColor(Color.DARK_GRAY);
-                            g.drawPolygon(px, py, px.length);
-                            g.drawLine(x, 0, x, 0 + h - 1);
-                        }
-                    }
 
                     // draw the current position
                     if (currentLocator != DO_NOT_DRAW) {

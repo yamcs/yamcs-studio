@@ -27,15 +27,16 @@ import org.yamcs.api.YamcsConnector;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
+import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.TimeListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
-public class ArchiveView extends ViewPart implements StudioConnectionListener, ConnectionListener {
+public class ArchiveView extends ViewPart implements StudioConnectionListener, TimeListener, ConnectionListener {
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
@@ -67,10 +68,6 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
         indexReceiver.setIndexListener(this);
         yconnector.addConnectionListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
-
-        // Listen to processing updates in order to move vertical locator bar
-        ArchiveProcessorListener processorListener = new ArchiveProcessorListener(parent.getDisplay(), archivePanel.getDataViewer());
-        ManagementCatalogue.getInstance().addProcessorListener(processorListener);
     }
 
     /**
@@ -79,6 +76,9 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
+        if (webSocketClient != null) {
+            webSocketClient.addTimeListener(this);
+        }
     }
 
     /**
@@ -88,6 +88,17 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, C
     @Override
     public void onStudioDisconnect() {
         yconnector.disconnect();
+        SwingUtilities.invokeLater(() -> {
+            archivePanel.getDataViewer().getDataView()
+                    .setCurrentLocator(archivePanel.getDataViewer().getDataView().DO_NOT_DRAW);
+        });
+    }
+
+    @Override
+    public void processTime(TimeInfo timeInfo) {
+        SwingUtilities.invokeLater(() -> {
+            archivePanel.getDataViewer().getDataView().setCurrentLocator(timeInfo.getCurrentTime());
+        });
     }
 
     private void createActions() {
