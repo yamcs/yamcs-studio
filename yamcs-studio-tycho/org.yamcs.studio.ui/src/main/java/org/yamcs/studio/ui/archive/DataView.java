@@ -328,6 +328,7 @@ public class DataView extends JScrollPane {
     public void doMouseMoved(MouseEvent e) {
         headerPanel.doMouseMoved(e);
         setPointer(e);
+        repaint(); // Otherwise we only get updated to ant-speed
     }
 
     public void doMousePressed(MouseEvent e) {
@@ -640,6 +641,19 @@ public class DataView extends JScrollPane {
                             g.setColor(Color.RED);
                             Stroke oldStroke = g2d.getStroke();
                             Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
+                            g2d.setStroke(dashed);
+                            g2d.drawLine(x, 0, x, h - 1);
+                            g2d.setStroke(oldStroke);
+                        }
+                    }
+
+                    // draw the mouse locator
+                    if (mouseLocatorX > 0) {
+                        x = mouseLocatorX;
+                        if ((x >= 0) && (x < xmax)) {
+                            g.setColor(Color.LIGHT_GRAY);
+                            Stroke oldStroke = g2d.getStroke();
+                            Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
                             g2d.setStroke(dashed);
                             g2d.drawLine(x, 0, x, h - 1);
                             g2d.setStroke(oldStroke);

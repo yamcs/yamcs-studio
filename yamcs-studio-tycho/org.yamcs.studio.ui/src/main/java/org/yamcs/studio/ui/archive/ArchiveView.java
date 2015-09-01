@@ -70,9 +70,6 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, T
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
-    /**
-     * Called when we get green light from YamcsPlugin
-     */
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
@@ -81,10 +78,6 @@ public class ArchiveView extends ViewPart implements StudioConnectionListener, T
         }
     }
 
-    /**
-     * Called when YamcsPlugin wants this connection to stop (might be resumed later with
-     * processConnectionInfo)
-     */
     @Override
     public void onStudioDisconnect() {
         yconnector.disconnect();

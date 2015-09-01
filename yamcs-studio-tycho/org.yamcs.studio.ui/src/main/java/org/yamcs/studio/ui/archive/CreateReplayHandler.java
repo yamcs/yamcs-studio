@@ -10,6 +10,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.core.TimeCatalogue;
 
 public class CreateReplayHandler extends AbstractHandler {
 
@@ -18,8 +19,8 @@ public class CreateReplayHandler extends AbstractHandler {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
         SwingUtilities.invokeLater(() -> {
             ArchiveView view = (ArchiveView) part;
-            Selection sel = view.archivePanel.getDataViewer().getDataView().getSelection();
-            TimeInterval interval = new TimeInterval(sel.getStartInstant(), sel.getStopInstant());
+            long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+            TimeInterval interval = TimeInterval.starting(missionTime);
             List<String> packets = view.archivePanel.getSelectedPackets("tm");
             List<String> pps = view.archivePanel.getSelectedPackets("pp");
             Display.getDefault().asyncExec(() -> {
