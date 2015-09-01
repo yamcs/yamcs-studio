@@ -21,6 +21,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
@@ -224,7 +226,7 @@ public class ConnectionsDialog extends Dialog {
         IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
         YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
         boolean confirmed = MessageDialog.openConfirm(connViewer.getTable().getShell(), "",
-                "Do you really want to remove the server configuration '" + conf.getName() + "'");
+                "Do you really want to remove the server configuration '" + conf.getName() + "'?");
         if (confirmed) {
             connViewer.remove(conf);
             selectFirstServer();
@@ -279,8 +281,19 @@ public class ConnectionsDialog extends Dialog {
             }
         });
 
-        return serverPanel;
+        connViewer.setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object o1, Object o2) {
+                YamcsConfiguration c1 = (YamcsConfiguration) o1;
+                YamcsConfiguration c2 = (YamcsConfiguration) o2;
+                if (c1.getName() != null && c2.getName() != null)
+                    return c1.getName().compareTo(c2.getName());
+                else
+                    return 0;
+            }
+        });
 
+        return serverPanel;
     }
 
     private Composite createDetailPanel(Composite parent, ResourceManager resourceManager) {
