@@ -40,7 +40,6 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     public static final String COOL_GROUP_PROCESSOR_INFO = "processorinfo";
     public static final String COOL_GROUP_BOOKMARK_SHORTCUTS = "bookmarkshortcuts";
     public static final String COOL_GROUP_PROCESSOR_CONTROLS = "processorcontrols";
-    public static final String COOL_GROUP_PROCESSOR_POSITION = "processorposition";
     private static final String TOOLBAR_USER = "user";
 
     final private IWorkbenchWindow window;
@@ -111,7 +110,6 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         studioBar.add(new CoolItemGroupMarker(COOL_GROUP_PROCESSOR_INFO));
         studioBar.add(new CoolItemGroupMarker(COOL_GROUP_BOOKMARK_SHORTCUTS));
         studioBar.add(new CoolItemGroupMarker(COOL_GROUP_PROCESSOR_CONTROLS));
-        studioBar.add(new CoolItemGroupMarker(COOL_GROUP_PROCESSOR_POSITION));
         coolbar.add(new ToolBarContributionItem(studioBar, "studiocoolbar"));
 
         // 'File' section of the cool bar

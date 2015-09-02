@@ -1,6 +1,8 @@
 package org.yamcs.studio.core;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.yamcs.api.YamcsConnectData;
@@ -16,6 +18,7 @@ import org.yamcs.utils.TimeEncoding;
 public class TimeCatalogue implements StudioConnectionListener, TimeListener {
 
     private volatile long currentTime = TimeEncoding.INVALID_INSTANT;
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     public static TimeCatalogue getInstance() {
         return YamcsPlugin.getDefault().getTimeCatalogue();
@@ -52,6 +55,15 @@ public class TimeCatalogue implements StudioConnectionListener, TimeListener {
         // At least for now, it should stay consistent with the workbench
         // TODO Research modifications to SWT xychart and then make this controllable from user prefs
         return TimeZone.getDefault();
+    }
+
+    // must be called on the swt thread due to the dateformatter being reused
+    public String toString(long instant) {
+        // TODO Improve this. Don't use Date
+        Calendar cal = TimeEncoding.toCalendar(instant);
+        cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+        format.setTimeZone(cal.getTimeZone());
+        return format.format(cal.getTime());
     }
 
     @Override

@@ -861,7 +861,6 @@
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.goToEndProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.spacer40x32"/>
          <hiddenToolBarItem id="studiocontributions.processorInfo"/>
-         <hiddenToolBarItem id="studiocontributions.timeInfo"/>
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -1139,7 +1138,7 @@
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
          <!-- Commands inside toolbar so that they don't stretch -->
          <toolbar id="controls.processorcontrols">
-            <command
+            <!--command
                   commandId="org.yamcs.studio.ui.processor.goToBeginningCommand"
                   icon="icons/first.png"
                   id="org.yamcs.studio.toolbar.goToBeginningProcessor"
@@ -1203,14 +1202,13 @@
                   icon="icons/last.png"
                   id="org.yamcs.studio.toolbar.goToEndProcessor"
                   tooltip="Step to Last Update">
-            </command>
+            </command-->
             <command
                   commandId="org.yamcs.studio.ui.processor.spacer"
                   icon="icons/spacer40x32.png"
                   tooltip=""
                   id="org.yamcs.studio.toolbar.spacer40x32">
             </command>
-            <control id="studiocontributions.timeInfo" class="org.yamcs.studio.ui.processor.TimeInfoControlContribution" />
          </toolbar>
       </menuContribution>
         

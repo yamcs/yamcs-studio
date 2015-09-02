@@ -514,9 +514,9 @@ public class DataView extends JScrollPane {
             super.paint(g);
             if (mouseLocatorX > 0) {
                 // follow mouse for better timeline positioning
-                g.setColor(Color.DARK_GRAY);
-                int tagBoxHeight = tagBox.getHeight();
-                g.drawLine(mouseLocatorX, tagBoxHeight, mouseLocatorX, getHeight());
+                g.setColor(Color.LIGHT_GRAY);
+                //int tagBoxHeight = tagBox.getHeight();
+                g.drawLine(mouseLocatorX, getHeight() - 8, mouseLocatorX, getHeight());
             }
         }
     }

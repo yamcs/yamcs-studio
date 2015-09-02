@@ -113,32 +113,10 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
         layout.verticalSpacing = 2;
         container.setLayout(layout);
 
-        Label lbl = new Label(container, SWT.NONE);
-        lbl.setText("Name:");
-        name = new Text(container, SWT.BORDER);
-        name.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        name.setText(nameValue);
-
-        lbl = new Label(container, SWT.NONE);
-        lbl.setText("Start:");
-        Composite startComposite = new Composite(container, SWT.NONE);
-        RowLayout rl = new RowLayout();
-        rl.marginLeft = 0;
-        rl.marginTop = 0;
-        rl.marginBottom = 0;
-        rl.center = true;
-        startComposite.setLayout(rl);
-        startDate = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
-        startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
-        if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
-        }
-
         /*
          * PACKET TABLE
          */
-        lbl = new Label(container, SWT.NONE);
+        Label lbl = new Label(container, SWT.NONE);
         lbl.setText("Packets:");
         GridData gd = new GridData();
         gd.verticalAlignment = SWT.TOP;
@@ -185,6 +163,28 @@ public class CreateReplayDialog extends TitleAreaDialog implements StudioConnect
         ppTable.setInput(ppValue);
         for (TableItem item : ppTable.getTable().getItems())
             item.setChecked(true);
+
+        lbl = new Label(container, SWT.NONE);
+        lbl.setText("Start At:");
+        Composite startComposite = new Composite(container, SWT.NONE);
+        RowLayout rl = new RowLayout();
+        rl.marginLeft = 0;
+        rl.marginTop = 0;
+        rl.marginBottom = 0;
+        rl.center = true;
+        startComposite.setLayout(rl);
+        startDate = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
+        startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
+        if (startTimeValue != null) {
+            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
+            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
+        }
+
+        lbl = new Label(container, SWT.NONE);
+        lbl.setText("Name:");
+        name = new Text(container, SWT.BORDER);
+        name.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        name.setText(nameValue);
 
         return container;
     }
