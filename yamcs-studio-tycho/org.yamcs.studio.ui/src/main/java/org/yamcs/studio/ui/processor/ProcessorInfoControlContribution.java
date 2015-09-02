@@ -1,11 +1,5 @@
 package org.yamcs.studio.ui.processor;
 
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -22,11 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
-import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
@@ -41,6 +31,7 @@ import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.TimeListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -48,8 +39,6 @@ import org.yamcs.utils.TimeEncoding;
  */
 public class ProcessorInfoControlContribution extends WorkbenchWindowControlContribution
         implements StudioConnectionListener, ProcessorListener, TimeListener {
-
-    private static final Logger log = Logger.getLogger(ProcessorInfoControlContribution.class.getName());
 
     private static final int ANGLE_DELTA = 10;
     private static final int REC_WIDTH = 120;
@@ -90,19 +79,10 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         spacer.setLayoutData(gd);
 
         canvas.addListener(SWT.MouseDown, evt -> {
-            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-            ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
-            IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
-            try {
-                Command cmd;
-                if (ConnectionManager.getInstance().isConnected()) {
-                    cmd = commandService.getCommand("org.yamcs.studio.ui.processor.switch");
-                } else {
-                    cmd = commandService.getCommand("org.yamcs.studio.ui.connect");
-                }
-                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
-            } catch (Exception exception) {
-                log.log(Level.SEVERE, "Could not execute command", exception);
+            if (ConnectionManager.getInstance().isConnected()) {
+                RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
+            } else {
+                RCPUtils.runCommand("org.yamcs.studio.ui.connect");
             }
         });
 

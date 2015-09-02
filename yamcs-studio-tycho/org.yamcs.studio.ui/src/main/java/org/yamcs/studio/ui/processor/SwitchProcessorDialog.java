@@ -29,6 +29,7 @@ import org.yamcs.studio.core.web.ResponseHandler;
 
 import com.google.protobuf.MessageLite;
 
+// TODO Refactor to use ProcessorCatalogue instead of direct rest
 public class SwitchProcessorDialog extends TitleAreaDialog {
 
     private static final Logger log = Logger.getLogger(SwitchProcessorDialog.class.getName());

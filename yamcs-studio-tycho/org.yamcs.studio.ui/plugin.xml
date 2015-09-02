@@ -301,8 +301,20 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.choose"
+            name="Switch Processor">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.processor.switch"
             name="Switch Processor">
+         <commandParameter
+               id="org.eclipse.ui.commands.radioStateParameter"
+               name="Processor Parameter"
+               optional="false"/>
+         <state
+               class="org.eclipse.ui.handlers.RadioState:realtime"
+               id="org.eclipse.ui.commands.radioState"/>
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -528,6 +540,17 @@
       <handler
             class="org.yamcs.studio.ui.archive.CreateReplayHandler"
             commandId="org.yamcs.studio.ui.archive.createReplayCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.processor.ChooseProcessorDialogHandler"
+            commandId="org.yamcs.studio.ui.processor.choose">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
@@ -1084,10 +1107,19 @@
                label="Annotate Selected Range"
                style="push"/>
          <command
+               id="org.yamcs.studio.ui.archive.toolbar.createReplay.dropdown"
                commandId="org.yamcs.studio.ui.archive.createReplayCommand"
                icon="icons/elcl16/replay.png"
                label="Replay Selected Range"
-               style="push"/>
+               style="pulldown"/>
+      </menuContribution>
+      
+      <!-- Processor List Pop-up menu -->
+      <menuContribution
+            locationURI="menu:org.yamcs.studio.ui.archive.toolbar.createReplay.dropdown">
+         <dynamic
+               id="org.yamcs.studio.ui.processor.menu.switchProcessor"
+               class="org.yamcs.studio.ui.processor.SwitchProcessorCompoundContributionItem"/>
       </menuContribution>
 
       <!-- Add icons to the Event Log view toolbar -->

@@ -1,5 +1,7 @@
 package org.yamcs.studio.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -98,5 +100,13 @@ public class ManagementCatalogue implements StudioConnectionListener {
     public ProcessorInfo getCurrentProcessorInfo() {
         ClientInfo ci = clientInfoById.get(currentClientId);
         return (ci != null) ? processorInfoByName.get(ci.getProcessorName()) : null;
+    }
+
+    public List<ProcessorInfo> getProcessors() {
+        return new ArrayList<>(processorInfoByName.values());
+    }
+
+    public List<ClientInfo> getClients() {
+        return new ArrayList<>(clientInfoById.values());
     }
 }
