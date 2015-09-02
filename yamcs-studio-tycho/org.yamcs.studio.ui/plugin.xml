@@ -157,6 +157,7 @@
       <sourceProvider provider="org.yamcs.studio.ui.processor.ProcessorStateProvider">
          <variable name="org.yamcs.studio.ui.processor.state.processing" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.processor.state.replay" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.ui.processor.state.speed" priorityLevel="workbench" />
       </sourceProvider>
    </extension>
    
@@ -183,16 +184,6 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.processor.goToBeginningCommand"
-            name="Go to Beginning">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.processor.reverseCommand"
-            name="Step to Previous Update">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.processor.pauseCommand"
             name="Pause">
       </command>
@@ -205,11 +196,6 @@
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.processor.forwardCommand"
             name="Step to Next Update">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.processor.goToEndCommand"
-            name="Go to End">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -599,48 +585,6 @@
             commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand">
       </handler>
       <handler
-            class="org.yamcs.studio.ui.processor.GoToBeginningHandler"
-            commandId="org.yamcs.studio.ui.processor.goToBeginningCommand">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <or>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="RUNNING"/>
-                  </with>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="PAUSED"/>
-                  </with>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="STOPPED"/>
-                  </with>
-               </or>
-               <with variable="org.yamcs.studio.ui.processor.state.replay">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.processor.ReverseHandler"
-            commandId="org.yamcs.studio.ui.processor.reverseCommand">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.processor.state.processing">
-                  <equals value="RUNNING"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.processor.state.replay">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
             class="org.yamcs.studio.ui.processor.PauseHandler"
             commandId="org.yamcs.studio.ui.processor.pauseCommand">
          <activeWhen>
@@ -690,31 +634,6 @@
                <with variable="org.yamcs.studio.ui.processor.state.processing">
                   <equals value="RUNNING"/>
                </with>
-               <with variable="org.yamcs.studio.ui.processor.state.replay">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.processor.GoToEndHandler"
-            commandId="org.yamcs.studio.ui.processor.goToEndCommand">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <or>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="RUNNING"/>
-                  </with>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="PAUSED"/>
-                  </with>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="STOPPED"/>
-                  </with>
-               </or>
                <with variable="org.yamcs.studio.ui.processor.state.replay">
                   <equals value="true"/>
                </with>
@@ -893,11 +812,8 @@
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
          <!-- Not very useful with the navigator already there -->
          <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.goToBeginningProcessor"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.reverseProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.pauseProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.forwardProcessor"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.goToEndProcessor"/>
          <hiddenToolBarItem id="org.yamcs.studio.toolbar.spacer40x32"/>
          <hiddenToolBarItem id="studiocontributions.processorInfo"/>
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->

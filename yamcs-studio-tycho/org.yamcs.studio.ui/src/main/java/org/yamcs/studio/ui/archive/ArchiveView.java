@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
@@ -58,6 +59,8 @@ import org.yamcs.utils.TimeEncoding;
 public class ArchiveView extends ViewPart
         implements StudioConnectionListener, TimeListener, ISourceProviderListener, ConnectionListener {
 
+    private static final Logger log = Logger.getLogger(ArchiveView.class.getName());
+
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
     YamcsConnector yconnector;
@@ -68,11 +71,8 @@ public class ArchiveView extends ViewPart
     private Composite replayComposite;
     private GridData replayCompositeGridData;
 
-    private Image reverseImage;
-    private Image jumpLeftImage;
     private Image playImage;
     private Image pauseImage;
-    private Image jumpRightImage;
     private Image forwardImage;
     private Image forward2xImage;
     private Image forward4xImage;
@@ -80,14 +80,9 @@ public class ArchiveView extends ViewPart
     private Image forward16xImage;
     private Image leaveReplayImage;
 
-    private Button reverseButton;
-    private Button jumpLeftButton;
     private Button playButton;
-    private Button jumpRightButton;
     private Button forwardButton;
     private Button leaveReplayButton;
-
-    private int currentForwardSpeed = 1;
 
     @SuppressWarnings("rawtypes")
     private Map combinedState = new HashMap();
@@ -95,11 +90,8 @@ public class ArchiveView extends ViewPart
     @Override
     public void createPartControl(Composite parent) {
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        reverseImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/reverse.png"));
-        jumpLeftImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/first.png"));
         playImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/play.png"));
         pauseImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/pause.png"));
-        jumpRightImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/last.png"));
         forwardImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward.png"));
         forward2xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward2x.png"));
         forward4xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward4x.png"));
@@ -169,21 +161,6 @@ public class ArchiveView extends ViewPart
         gl.horizontalSpacing = 0;
         controlsComposite.setLayout(gl);
 
-        reverseButton = new Button(controlsComposite, SWT.PUSH);
-        reverseButton.setImage(reverseImage);
-        reverseButton.setEnabled(false);
-        reverseButton.setToolTipText("Reverse");
-        reverseButton.addListener(SWT.Selection, evt -> {
-            RCPUtils.runCommand("org.yamcs.studio.ui.processor.reverseCommand");
-        });
-
-        jumpLeftButton = new Button(controlsComposite, SWT.PUSH);
-        jumpLeftButton.setImage(jumpLeftImage);
-        jumpLeftButton.setToolTipText("Jump Left");
-        jumpLeftButton.addListener(SWT.Selection, evt -> {
-            RCPUtils.runCommand("org.yamcs.studio.ui.processor.jumpLeftCommand");
-        });
-
         playButton = new Button(controlsComposite, SWT.PUSH);
         playButton.setImage(playImage);
         playButton.setToolTipText("Play");
@@ -192,13 +169,6 @@ public class ArchiveView extends ViewPart
                 RCPUtils.runCommand("org.yamcs.studio.ui.processor.playCommand");
             else
                 RCPUtils.runCommand("org.yamcs.studio.ui.processor.pauseCommand");
-        });
-
-        jumpRightButton = new Button(controlsComposite, SWT.PUSH);
-        jumpRightButton.setImage(jumpRightImage);
-        jumpRightButton.setToolTipText("Jump Right");
-        jumpRightButton.addListener(SWT.Selection, evt -> {
-            RCPUtils.runCommand("org.yamcs.studio.ui.processor.jumpRightCommand");
         });
 
         forwardButton = new Button(controlsComposite, SWT.PUSH);
@@ -611,7 +581,8 @@ public class ArchiveView extends ViewPart
         Boolean connected = (Boolean) combinedState.get(ConnectionStateProvider.STATE_KEY_CONNECTED);
         String processing = (String) combinedState.get(ProcessorStateProvider.STATE_KEY_PROCESSING);
         Boolean replay = (Boolean) combinedState.get(ProcessorStateProvider.STATE_KEY_REPLAY);
-        if (connected == null || processing == null || replay == null)
+        Float replaySpeed = (Float) combinedState.get(ProcessorStateProvider.STATE_KEY_REPLAY_SPEED);
+        if (connected == null || processing == null || replay == null || replaySpeed == null)
             return;
 
         toggleReplayComposite(replay);
@@ -643,10 +614,7 @@ public class ArchiveView extends ViewPart
 
         boolean leaveReplayEnabled = (Boolean.TRUE.equals(connected));
 
-        reverseButton.setEnabled(reverseEnabled);
-        jumpLeftButton.setEnabled(jumpLeftEnabled);
         playButton.setEnabled(playEnabled || pauseEnabled);
-        jumpRightButton.setEnabled(jumpRightEnabled);
         forwardButton.setEnabled(forwardEnabled);
         leaveReplayButton.setEnabled(leaveReplayEnabled);
 
@@ -663,22 +631,24 @@ public class ArchiveView extends ViewPart
             playButton.setToolTipText("Pause Processing");
         }
 
-        switch (currentForwardSpeed) {
-        case 1:
+        if (floatEquals(replaySpeed, 1)) {
             forwardButton.setImage(forwardImage);
-            break;
-        case 2:
+        } else if (floatEquals(replaySpeed, 2)) {
             forwardButton.setImage(forward2xImage);
-            break;
-        case 4:
+        } else if (floatEquals(replaySpeed, 4)) {
             forwardButton.setImage(forward4xImage);
-            break;
-        case 8:
+        } else if (floatEquals(replaySpeed, 8)) {
             forwardButton.setImage(forward8xImage);
-            break;
-        case 16:
+        } else if (floatEquals(replaySpeed, 16)) {
             forwardButton.setImage(forward16xImage);
-            break;
+        } else {
+            // TODO should draw the speed on top of the button
+            log.warning("Unsupported speed");
+            forwardButton.setImage(forwardImage);
         }
+    }
+
+    private static boolean floatEquals(float f1, float f2) {
+        return (f1 == f2) ? true : Math.abs(f1 - f2) < 0.00001;
     }
 }

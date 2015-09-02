@@ -3,6 +3,7 @@ package org.yamcs.studio.ui.processor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Display;
@@ -13,12 +14,11 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.AbstractRestHandler;
 import org.yamcs.studio.ui.opibuilder.OPIUtils;
 
 import com.google.protobuf.MessageLite;
 
-public class LeaveReplayHandler extends AbstractRestHandler {
+public class LeaveReplayHandler extends AbstractHandler {
 
     private static final Logger log = Logger.getLogger(LeaveReplayHandler.class.getName());
 
