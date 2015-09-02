@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -44,24 +43,20 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ManagementCatalogue;
-import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.TimeListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart
-        implements StudioConnectionListener, TimeListener, ProcessorListener, ISourceProviderListener, ConnectionListener {
+        implements StudioConnectionListener, TimeListener, ISourceProviderListener, ConnectionListener {
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
@@ -83,14 +78,16 @@ public class ArchiveView extends ViewPart
     private Image forward4xImage;
     private Image forward8xImage;
     private Image forward16xImage;
+    private Image leaveReplayImage;
 
     private Button reverseButton;
     private Button jumpLeftButton;
     private Button playButton;
     private Button jumpRightButton;
     private Button forwardButton;
+    private Button leaveReplayButton;
 
-    private ProcessorInfo processorInfo;
+    private int currentForwardSpeed = 1;
 
     @SuppressWarnings("rawtypes")
     private Map combinedState = new HashMap();
@@ -108,6 +105,7 @@ public class ArchiveView extends ViewPart
         forward4xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward4x.png"));
         forward8xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward8x.png"));
         forward16xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward16x.png"));
+        leaveReplayImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/redo.png"));
 
         createActions();
 
@@ -143,7 +141,7 @@ public class ArchiveView extends ViewPart
         replayComposite = new Composite(contentArea, SWT.NONE);
         replayCompositeGridData = new GridData(GridData.FILL_HORIZONTAL);
         replayComposite.setLayoutData(replayCompositeGridData);
-        gl = new GridLayout(3, true);
+        gl = new GridLayout(3, false);
         gl.marginHeight = 0;
         gl.verticalSpacing = 0;
         gl.horizontalSpacing = 0;
@@ -156,12 +154,13 @@ public class ArchiveView extends ViewPart
         replayTimeLabel.setText("                             "); // ugh...
         GridData gd = new GridData();
         gd.horizontalAlignment = SWT.LEFT;
-        gd.grabExcessHorizontalSpace = true;
+        gd.widthHint = 140;
         replayTimeLabel.setLayoutData(gd);
 
         Composite controlsComposite = new Composite(replayComposite, SWT.NONE);
         gd = new GridData();
         gd.horizontalAlignment = SWT.CENTER;
+        gd.grabExcessHorizontalSpace = true;
         controlsComposite.setLayoutData(gd);
         gl = new GridLayout(5, false);
         gl.marginHeight = 0;
@@ -174,31 +173,63 @@ public class ArchiveView extends ViewPart
         reverseButton.setImage(reverseImage);
         reverseButton.setEnabled(false);
         reverseButton.setToolTipText("Reverse");
+        reverseButton.addListener(SWT.Selection, evt -> {
+            RCPUtils.runCommand("org.yamcs.studio.ui.processor.reverseCommand");
+        });
 
         jumpLeftButton = new Button(controlsComposite, SWT.PUSH);
         jumpLeftButton.setImage(jumpLeftImage);
         jumpLeftButton.setToolTipText("Jump Left");
+        jumpLeftButton.addListener(SWT.Selection, evt -> {
+            RCPUtils.runCommand("org.yamcs.studio.ui.processor.jumpLeftCommand");
+        });
 
         playButton = new Button(controlsComposite, SWT.PUSH);
         playButton.setImage(playImage);
         playButton.setToolTipText("Play");
+        playButton.addListener(SWT.Selection, evt -> {
+            if (playButton.getImage().equals(playImage))
+                RCPUtils.runCommand("org.yamcs.studio.ui.processor.playCommand");
+            else
+                RCPUtils.runCommand("org.yamcs.studio.ui.processor.pauseCommand");
+        });
 
         jumpRightButton = new Button(controlsComposite, SWT.PUSH);
         jumpRightButton.setImage(jumpRightImage);
         jumpRightButton.setToolTipText("Jump Right");
+        jumpRightButton.addListener(SWT.Selection, evt -> {
+            RCPUtils.runCommand("org.yamcs.studio.ui.processor.jumpRightCommand");
+        });
 
         forwardButton = new Button(controlsComposite, SWT.PUSH);
         forwardButton.setImage(forwardImage);
         forwardButton.setToolTipText("Forward");
+        forwardButton.addListener(SWT.Selection, evt -> {
+            RCPUtils.runCommand("org.yamcs.studio.ui.processor.forwardCommand");
+        });
 
-        Link link = new Link(replayComposite, SWT.NONE);
-        //link.setText("<a>Return to realtime</a>");
-        link.addListener(SWT.Selection, evt -> {
-            System.out.println("Selection: " + evt.text);
+        Composite buttonWrapper = new Composite(replayComposite, SWT.NONE);
+        gd = new GridData();
+        gd.horizontalAlignment = SWT.RIGHT;
+        gd.widthHint = 140;
+        buttonWrapper.setLayoutData(gd);
+
+        gl = new GridLayout();
+        gl.horizontalSpacing = 0;
+        gl.verticalSpacing = 0;
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        buttonWrapper.setLayout(gl);
+
+        leaveReplayButton = new Button(buttonWrapper, SWT.PUSH);
+        leaveReplayButton.setImage(leaveReplayImage);
+        leaveReplayButton.setToolTipText("Back to Realtime");
+        leaveReplayButton.addListener(SWT.Selection, evt -> {
+            RCPUtils.runCommand("org.yamcs.studio.ui.processor.leaveReplay");
         });
         gd = new GridData();
-        gd.horizontalAlignment = SWT.CENTER;
-        link.setLayoutData(gd);
+        gd.horizontalAlignment = SWT.RIGHT;
+        buttonWrapper.setLayoutData(gd);
 
         toggleReplayComposite(false);
 
@@ -210,7 +241,6 @@ public class ArchiveView extends ViewPart
 
         indexReceiver.setIndexListener(this);
         yconnector.addConnectionListener(this);
-        //ManagementCatalogue.getInstance().addProcessorListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
@@ -559,45 +589,6 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    public void clientUpdated(ClientInfo updatedInfo) {
-        Display.getDefault().asyncExec(() -> {
-            if (updatedInfo.getCurrentClient()) {
-                ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-                processorInfo = catalogue.getProcessorInfo(updatedInfo.getProcessorName());
-                boolean showReplayControls = !processorInfo.getName().equals("realtime");
-                toggleReplayComposite(showReplayControls);
-            }
-        });
-    }
-
-    @Override
-    public void clientDisconnected(ClientInfo updatedInfo) {
-        Display.getDefault().asyncExec(() -> {
-            if (updatedInfo.getCurrentClient()) {
-                processorInfo = null;
-                toggleReplayComposite(false);
-            }
-        });
-    }
-
-    @Override
-    public void processorUpdated(ProcessorInfo updatedInfo) {
-        Display.getDefault().asyncExec(() -> {
-            if (processorInfo != null && updatedInfo.getName().equals(processorInfo.getName())) {
-                processorInfo = updatedInfo;
-            }
-        });
-    }
-
-    @Override
-    public void statisticsUpdated(Statistics stats) {
-    }
-
-    @Override
-    public void processorClosed(ProcessorInfo processorInfo) {
-    }
-
-    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void sourceChanged(int sourcePriority, Map sourceValuesByName) {
         for (Object entry : sourceValuesByName.entrySet()) {
@@ -650,11 +641,14 @@ public class ArchiveView extends ViewPart
         forwardEnabled &= ("RUNNING".equals(processing));
         forwardEnabled &= (Boolean.TRUE.equals(replay));
 
+        boolean leaveReplayEnabled = (Boolean.TRUE.equals(connected));
+
         reverseButton.setEnabled(reverseEnabled);
         jumpLeftButton.setEnabled(jumpLeftEnabled);
         playButton.setEnabled(playEnabled || pauseEnabled);
         jumpRightButton.setEnabled(jumpRightEnabled);
         forwardButton.setEnabled(forwardEnabled);
+        leaveReplayButton.setEnabled(leaveReplayEnabled);
 
         boolean playVisible = ("STOPPED".equals(processing));
         playVisible |= ("ERROR".equals(processing));
@@ -667,6 +661,24 @@ public class ArchiveView extends ViewPart
         } else {
             playButton.setImage(pauseImage);
             playButton.setToolTipText("Pause Processing");
+        }
+
+        switch (currentForwardSpeed) {
+        case 1:
+            forwardButton.setImage(forwardImage);
+            break;
+        case 2:
+            forwardButton.setImage(forward2xImage);
+            break;
+        case 4:
+            forwardButton.setImage(forward4xImage);
+            break;
+        case 8:
+            forwardButton.setImage(forward8xImage);
+            break;
+        case 16:
+            forwardButton.setImage(forward16xImage);
+            break;
         }
     }
 }
