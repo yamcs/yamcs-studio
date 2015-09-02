@@ -306,6 +306,11 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.processor.leaveReplay"
+            name="Leave Replay">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.clearCommand"
             name="Clear View">
       </command>
@@ -534,6 +539,17 @@
       <handler
             class="org.yamcs.studio.ui.processor.SwitchProcessorHandler"
             commandId="org.yamcs.studio.ui.processor.switch">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.processor.LeaveReplayHandler"
+            commandId="org.yamcs.studio.ui.processor.leaveReplay">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
