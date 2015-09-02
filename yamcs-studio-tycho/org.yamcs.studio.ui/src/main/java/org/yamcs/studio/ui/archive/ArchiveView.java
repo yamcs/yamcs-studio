@@ -587,26 +587,13 @@ public class ArchiveView extends ViewPart
 
         toggleReplayComposite(replay);
 
-        boolean reverseEnabled = false;
-        //boolean reverseEnabled = (Boolean.TRUE.equals(connected));
-        //reverseEnabled &= ("RUNNING".equals(processing));
-        //reverseEnabled &= (Boolean.TRUE.equals(replay));
-
-        boolean jumpLeftEnabled = (Boolean.TRUE.equals(connected));
-        jumpLeftEnabled &= ("RUNNING".equals(processing));
-        jumpLeftEnabled &= (Boolean.TRUE.equals(replay));
-
         boolean playEnabled = (Boolean.TRUE.equals(connected));
-        playEnabled &= ("PAUSED".equals(processing) | "STOPPED".equals(processing));
+        playEnabled &= ("PAUSED".equals(processing));
         playEnabled &= (Boolean.TRUE.equals(replay));
 
         boolean pauseEnabled = (Boolean.TRUE.equals(connected));
         pauseEnabled &= ("RUNNING".equals(processing));
         pauseEnabled &= (Boolean.TRUE.equals(replay));
-
-        boolean jumpRightEnabled = (Boolean.TRUE.equals(connected));
-        jumpRightEnabled &= ("RUNNING".equals(processing));
-        jumpRightEnabled &= (Boolean.TRUE.equals(replay));
 
         boolean forwardEnabled = (Boolean.TRUE.equals(connected));
         forwardEnabled &= ("RUNNING".equals(processing));
@@ -643,7 +630,7 @@ public class ArchiveView extends ViewPart
             forwardButton.setImage(forward16xImage);
         } else {
             // TODO should draw the speed on top of the button
-            log.warning("Unsupported speed");
+            log.warning("Unsupported speed " + replaySpeed);
             forwardButton.setImage(forwardImage);
         }
     }
