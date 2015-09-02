@@ -37,7 +37,7 @@ public class ZoomSpec {
         return (int) Math.round((ms - startInstant) / pixelRatio);
     }
 
-    long convertPixelToInstant(int x) {
+    long convertPixelToInstant(long x) {
         return (long) (x * pixelRatio) + startInstant;
     }
 

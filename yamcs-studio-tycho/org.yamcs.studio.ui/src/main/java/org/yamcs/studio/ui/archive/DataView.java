@@ -538,6 +538,7 @@ public class DataView extends JScrollPane {
                     drawPreviewLocator = true;
                     previewLocatorAlpha = 0.8f;
                     previewLocatorX = e.getX();
+                    previewLocator = getMouseInstant(e);
                     archivePanel.seekReplay(previewLocator);
                     repaint();
                 } else {
@@ -583,6 +584,8 @@ public class DataView extends JScrollPane {
                     stopX = e.getX() - deltaX;
                     if (startX == -1)
                         startX = stopX;
+                    if (Math.abs(stopX - startX) < 20 /* snap */)
+                        return;
                     if (currentSelection == null) {
                         currentSelection = new SelectionImpl(startX, stopX);
                     } else {
@@ -658,20 +661,6 @@ public class DataView extends JScrollPane {
                             g2d.drawLine(x, 0, x, h - 1);
                             g2d.setStroke(oldStroke);
                         }
-                    }
-
-                    // draw the preview replay position line
-                    if (drawPreviewLocator) {
-                        final int[] px = { previewLocatorX - handleWidth2 / 2, previewLocatorX, previewLocatorX + handleWidth2 / 2 };
-                        final int[] py = { handleHeight, 0, handleHeight };
-
-                        float[] c = currentFill.getRGBColorComponents(null);
-                        g.setColor(new Color(c[0], c[1], c[2], previewLocatorAlpha));
-                        g.fillPolygon(px, py, px.length);
-
-                        c = GRAY.getRGBColorComponents(c);
-                        g.setColor(new Color(c[0], c[1], c[2], previewLocatorAlpha));
-                        g.drawLine(previewLocatorX, 0, previewLocatorX, h - 1);
                     }
                 }
             }

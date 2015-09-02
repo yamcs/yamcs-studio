@@ -31,7 +31,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.border.Border;
 
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
@@ -51,7 +50,6 @@ public class IndexBox extends Box implements MouseListener {
     DataView dataView;
 
     JLabel popupLabelItem;
-    JSeparator popupLabelSeparator;
     JPopupMenu packetPopup;
     JMenuItem removePacketMenuItem, removeExceptPacketMenuItem, removePayloadMenuItem;
     IndexLineSpec selectedPacket;
@@ -138,6 +136,22 @@ public class IndexBox extends Box implements MouseListener {
         } else {
             packetPopup = new JPopupMenu();
 
+            JMenuItem replayFromHere = new JMenuItem("New Replay From Here...");
+            replayFromHere.addActionListener(e -> {
+                /*
+                 * Point mousePosition = packetPopup.getMousePosition(); int popupX =
+                 * mousePosition.x; System.out.println("x is " + popupX);
+                 *
+                 * long mouseTime; if (!dataView.zoomStack.isEmpty()) { mouseTime =
+                 * dataView.zoomStack.peek().convertPixelToInstant(popupX); } else { mouseTime =
+                 * TimeEncoding.INVALID_INSTANT; } Display.getDefault().asyncExec(() -> {
+                 * System.out.println("time is " + mouseTime + " " +
+                 * TimeEncoding.toString(mouseTime)); });
+                 */
+            });
+            //packetPopup.add(replayFromHere);
+            //packetPopup.add(new JSeparator());
+
             popupLabelItem = new JLabel();
             popupLabelItem.setEnabled(false);
             Box hbox = Box.createHorizontalBox();
@@ -145,9 +159,6 @@ public class IndexBox extends Box implements MouseListener {
             hbox.add(popupLabelItem);
             hbox.add(Box.createHorizontalGlue());
             packetPopup.insert(hbox, 0);
-
-            popupLabelSeparator = new JSeparator();
-            packetPopup.add(popupLabelSeparator);
 
             JMenu packetmenu = new JMenu("Add Packets");
             packetPopup.add(packetmenu);
@@ -264,7 +275,6 @@ public class IndexBox extends Box implements MouseListener {
         if (packetPopup != null) {
             if (selectedPacket != null) {
                 popupLabelItem.setVisible(true);
-                popupLabelSeparator.setVisible(true);
                 removePayloadMenuItem.setVisible(true);
                 removeExceptPacketMenuItem.setVisible(true);
                 removePacketMenuItem.setVisible(true);
@@ -274,7 +284,6 @@ public class IndexBox extends Box implements MouseListener {
                 removePayloadMenuItem.setText(String.format("Hide All %s Packets", selectedPacket.grpName));
             } else {
                 popupLabelItem.setVisible(false);
-                popupLabelSeparator.setVisible(false);
                 removePayloadMenuItem.setVisible(false);
                 removePacketMenuItem.setVisible(false);
                 removeExceptPacketMenuItem.setVisible(false);

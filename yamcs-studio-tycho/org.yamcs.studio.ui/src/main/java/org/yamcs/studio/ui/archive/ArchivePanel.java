@@ -14,6 +14,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -22,10 +24,22 @@ import javax.swing.JScrollBar;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
+import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
+import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
+import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.ManagementCatalogue;
+import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.ui.opibuilder.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.MessageLite;
 
 /**
  * Main panel of the ArchiveBrowser
@@ -35,6 +49,7 @@ import org.yamcs.utils.TimeEncoding;
  */
 public class ArchivePanel extends JPanel implements PropertyChangeListener {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(ArchivePanel.class.getName());
 
     ProgressMonitor progressMonitor;
 
@@ -218,8 +233,35 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     void seekReplay(long newPosition) {
-        // TODO through rest
-        // replayPanel.seekReplay(newPosition);
+        if (newPosition == TimeEncoding.INVALID_INSTANT)
+            return;
+
+        Display.getDefault().asyncExec(() -> {
+            ProcessorInfo processor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
+            if (processor == null || processor.getName().equals("realtime"))
+                return;
+
+            ProcessorRequest req = ProcessorRequest.newBuilder()
+                    .setOperation(Operation.SEEK)
+                    .setSeekTime(newPosition).build();
+            RestClient restClient = ConnectionManager.getInstance().getRestClient();
+            restClient.createProcessorRequest(processor.getName(), req, new ResponseHandler() {
+                @Override
+                public void onMessage(MessageLite responseMsg) {
+                    Display.getDefault().asyncExec(() -> {
+                        OPIUtils.resetDisplays();
+                    });
+                }
+
+                @Override
+                public void onException(Exception e) {
+                    log.log(Level.SEVERE, "Could not seek", e);
+                    Display.getDefault().asyncExec(() -> {
+                        MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", e.getMessage());
+                    });
+                }
+            });
+        });
     }
 
     public synchronized void archiveLoadFinished() {
