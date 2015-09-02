@@ -12,6 +12,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -86,6 +88,17 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
 
         processorsTable.setContentProvider(ArrayContentProvider.getInstance());
         processorsTable.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
+        processorsTable.setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                if (e1 == null || e2 == null)
+                    return 0;
+                ProcessorInfo p1 = (ProcessorInfo) e1;
+                ProcessorInfo p2 = (ProcessorInfo) e2;
+                int c = p1.getInstance().compareTo(p2.getInstance());
+                return (c != 0) ? c : p1.getName().compareTo(p2.getName());
+            }
+        });
 
         ConnectionManager.getInstance().getRestClient().listProcessors(new ResponseHandler() {
             @Override
