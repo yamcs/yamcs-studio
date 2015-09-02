@@ -20,6 +20,7 @@ public class CreateReplayHandler extends AbstractHandler {
         SwingUtilities.invokeLater(() -> {
             ArchiveView view = (ArchiveView) part;
             long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+            missionTime -= 30 * 1000;
             TimeInterval interval = TimeInterval.starting(missionTime);
             List<String> packets = view.archivePanel.getSelectedPackets("tm");
             List<String> pps = view.archivePanel.getSelectedPackets("pp");
