@@ -203,7 +203,7 @@ public class ArchiveView extends ViewPart
 
         toggleReplayComposite(false);
 
-        ISourceProviderService service = getSite().getService(ISourceProviderService.class);
+        ISourceProviderService service = (ISourceProviderService) getSite().getService(ISourceProviderService.class);
         ProcessorStateProvider processorState = (ProcessorStateProvider) service.getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         processorState.addSourceProviderListener(this);
         ConnectionStateProvider connectionState = (ConnectionStateProvider) service.getSourceProvider(ConnectionStateProvider.STATE_KEY_CONNECTED);
