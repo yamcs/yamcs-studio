@@ -61,6 +61,8 @@ public class ManagementCatalogue implements StudioConnectionListener {
         if (clientInfo.getState() == ClientState.DISCONNECTED) {
             clientInfoById.remove(clientInfo.getId());
 
+            processorListeners.forEach(l -> l.clientDisconnected(clientInfo));
+
             if (clientInfo.getCurrentClient())
                 currentClientId = -1;
         } else {
@@ -68,8 +70,8 @@ public class ManagementCatalogue implements StudioConnectionListener {
 
             if (clientInfo.getCurrentClient())
                 currentClientId = clientInfo.getId();
+            processorListeners.forEach(l -> l.clientUpdated(clientInfo));
         }
-        processorListeners.forEach(l -> l.clientUpdated(clientInfo));
     }
 
     public void processProcessorInfo(ProcessorInfo processorInfo) {
