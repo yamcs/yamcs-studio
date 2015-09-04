@@ -6,12 +6,6 @@
       provider-name="Space Applications Services">
 
    <plugin
-         id="org.csstudio.platform.libs.epics"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.csstudio.platform.libs.jms"
          download-size="0"
          install-size="0"
@@ -257,20 +251,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.autocomplete.pvmanager.sys"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.utility.pvmanager.sys"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="javax.activation"
          download-size="0"
          install-size="0"
@@ -376,20 +356,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.epics.pvdata"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.epics.pvaccess"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.email"
          download-size="0"
          install-size="0"
@@ -426,13 +392,6 @@
 
    <plugin
          id="org.csstudio.utility.pvmanager.loc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.epics.caj"
          download-size="0"
          install-size="0"
          version="0.0.0"
