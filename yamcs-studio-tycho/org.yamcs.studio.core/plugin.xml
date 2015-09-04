@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>   
-   <!-- 
-   		vtype.pv datasource (for pvtable)
-   		(only para:// at this moment, sw:// is pending)
-   		
-   		DEPRECATED We can probably remove this now that we no longer bundle pvtable
-    -->
-   <extension point="org.csstudio.vtype.pv.pvfactory">
-      <PVFactory name="Yamcs" class="org.yamcs.studio.core.vtype.pv.Para_PVFactory"/>
-   </extension>
-   
    <!--
    		pvmanager datasource
    	-->
