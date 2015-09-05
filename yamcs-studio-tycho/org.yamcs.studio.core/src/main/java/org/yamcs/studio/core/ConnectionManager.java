@@ -72,44 +72,31 @@ public class ConnectionManager {
 
     public void connect(YamcsCredentials creds, ConnectionMode mode) {
         disconnectIfConnected();
-
         this.creds = creds;
         this.mode = mode;
 
         setConnectionStatus(ConnectionStatus.Connecting);
 
-        // (re)establish the connections to the yamcs server
-
-        // common properties
-        YamcsConnectionProperties webProps = getWebProperties();
-
-        // Create a new REST Client. This doesn't make a connection, but it does
-        // start a new thread pool. We could improve this in the future so that
-        // we stick to just one instance while updating its conn. properties.
-        restClient = new RestClient(webProps, creds);
-
-        // WebSocket
-        webSocketClient = new WebSocketRegistrar(webProps, creds);
-        YamcsPlugin.getDefault().addMdbListener(webSocketClient);
+        // (re)establish the connections to yamcs
+        YamcsConnectionProperties yrops = getWebProperties();
+        restClient = new RestClient(yrops, creds);
+        webSocketClient = new WebSocketRegistrar(yrops, creds);
 
         // We start other clients as well
         log.info("Connecting WebSocket");
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    webSocketClient.connect(() -> setupConnections());
-                } catch (Exception e) {
-                    log.log(Level.SEVERE, "Could not connect", e);
-                    Display.getDefault().asyncExec(() -> {
-                        String detail = (e.getMessage() != null) ? e.getMessage() : e.getClass().getSimpleName();
-                        MessageDialog.openError(Display.getDefault().getActiveShell(),
-                                webProps.getYamcsConnectionString(), "Could not connect. " + detail);
-                        // TODO attempt failover
-                    });
-                }
+        new Thread(() -> {
+            try {
+                webSocketClient.connect(() -> setupConnections());
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Could not connect", e);
+                Display.getDefault().asyncExec(() -> {
+                    String detail = (e.getMessage() != null) ? e.getMessage() : e.getClass().getSimpleName();
+                    MessageDialog.openError(Display.getDefault().getActiveShell(),
+                            yrops.getYamcsConnectionString(), "Could not connect. " + detail);
+                    // TODO attempt failover
+                });
             }
-        }.start();
+        }).start();
     }
 
     public void disconnectIfConnected() {
@@ -134,15 +121,15 @@ public class ConnectionManager {
         }
 
         log.info("Shutting down WebSocket client");
-        if (webSocketClient != null) {
-            YamcsPlugin.getDefault().removeMdbListener(webSocketClient);
+        if (webSocketClient != null)
             webSocketClient.shutdown();
-        }
+
         webSocketClient = null;
 
         log.info("Shutting down REST client");
         if (restClient != null)
             restClient.shutdown();
+
         restClient = null;
 
         log.info("Notify downstream components of Studio disconnect");
@@ -163,7 +150,6 @@ public class ConnectionManager {
     void setupConnections() {
         log.fine("WebSocket connected");
         YamcsAuthorizations.getInstance().getAuthorizations();
-        YamcsPlugin.getDefault().loadParameters();
 
         studioConnectionListeners.forEach(l -> {
             l.onStudioConnect(getWebProperties(), getHornetqProperties(), webSocketClient);
@@ -178,7 +164,7 @@ public class ConnectionManager {
     }
 
     private void askSwitchNode(String errorMessage) {
-        String message = "Connection error with " + mode.getPrettyName().toLowerCase() + " Yamcs server.";
+        String message = "Connection error with " + mode.getPrettyName().toLowerCase() + " Yamcs.";
         if (errorMessage != null && errorMessage != "") {
             message += "\nDetails:" + errorMessage;
         }

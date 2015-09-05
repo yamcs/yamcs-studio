@@ -8,21 +8,21 @@ import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
-import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
-public class TimeCatalogue implements StudioConnectionListener {
+public class TimeCatalogue implements Catalogue {
 
     private volatile long currentTime = TimeEncoding.INVALID_INSTANT;
     private Set<TimeListener> timeListeners = new CopyOnWriteArraySet<>();
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     public static TimeCatalogue getInstance() {
-        return YamcsPlugin.getDefault().getTimeCatalogue();
+        return YamcsPlugin.getDefault().getCatalogue(TimeCatalogue.class);
     }
 
     public void addTimeListener(TimeListener listener) {
@@ -76,7 +76,7 @@ public class TimeCatalogue implements StudioConnectionListener {
 
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.subscribeToTimeInfo();
+        webSocketClient.sendMessage(new WebSocketRequest("time", "subscribe"));
         currentTime = TimeEncoding.INVALID_INSTANT;
     }
 

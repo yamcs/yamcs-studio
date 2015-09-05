@@ -12,11 +12,11 @@ import java.util.logging.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
@@ -25,7 +25,7 @@ import org.yamcs.xtce.XtceDb;
 
 import com.google.protobuf.MessageLite;
 
-public class CommandingCatalogue implements StudioConnectionListener {
+public class CommandingCatalogue implements Catalogue {
 
     private static final Logger log = Logger.getLogger(CommandingCatalogue.class.getName());
 
@@ -35,7 +35,7 @@ public class CommandingCatalogue implements StudioConnectionListener {
     private Set<CommandHistoryListener> cmdhistListeners = new CopyOnWriteArraySet<>();
 
     public static CommandingCatalogue getInstance() {
-        return YamcsPlugin.getDefault().getCommandingCatalogue();
+        return YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class);
     }
 
     public void addCommandHistoryListener(CommandHistoryListener listener) {
@@ -44,7 +44,7 @@ public class CommandingCatalogue implements StudioConnectionListener {
 
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.subscribeToCommandHistoryInfo();
+        webSocketClient.sendMessage(new WebSocketRequest("management", "cmdhistory"));
         loadMetaCommands();
     }
 

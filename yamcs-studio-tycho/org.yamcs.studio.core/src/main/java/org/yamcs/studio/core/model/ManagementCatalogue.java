@@ -8,13 +8,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.YamcsConnectData;
+import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
@@ -25,7 +25,7 @@ import org.yamcs.studio.core.web.WebSocketRegistrar;
  * application (same lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining
  * correct state accross connection-reconnects, so listeners only need to register once.
  */
-public class ManagementCatalogue implements StudioConnectionListener {
+public class ManagementCatalogue implements Catalogue {
 
     private Set<ManagementListener> managementListeners = new CopyOnWriteArraySet<>();
     private Map<String, ProcessorInfo> processorInfoByName = new ConcurrentHashMap<>();
@@ -35,12 +35,12 @@ public class ManagementCatalogue implements StudioConnectionListener {
     private int currentClientId = -1;
 
     public static ManagementCatalogue getInstance() {
-        return YamcsPlugin.getDefault().getManagementCatalogue();
+        return YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class);
     }
 
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.subscribeToManagementInfo();
+        webSocketClient.sendMessage(new WebSocketRequest("management", "subscribe"));
     }
 
     @Override

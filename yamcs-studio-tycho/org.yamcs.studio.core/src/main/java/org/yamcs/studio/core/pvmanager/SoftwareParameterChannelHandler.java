@@ -20,6 +20,7 @@ import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -75,15 +76,13 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     @Override
     protected void connect() {
         log.fine("PV connect on " + getChannelName());
-        if (webSocketClient != null)
-            webSocketClient.register(this);
+        ParameterCatalogue.getInstance().register(this);
     }
 
     @Override
     public void disconnect() { // Interpret this as an unsubscribe
         log.fine("PV disconnect on " + getChannelName());
-        if (webSocketClient != null)
-            webSocketClient.unregister(this);
+        ParameterCatalogue.getInstance().unregister(this);
     }
 
     /**
@@ -92,7 +91,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
      */
     @Override
     protected boolean isConnected(PVConnectionInfo info) {
-        return info.webSocketOpen
+        return info.connected
                 && info.parameter != null
                 && info.parameter.getDataSource() == RestDataSource.LOCAL;
     }

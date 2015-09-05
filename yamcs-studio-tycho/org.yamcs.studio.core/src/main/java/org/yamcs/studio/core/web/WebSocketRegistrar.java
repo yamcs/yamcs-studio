@@ -1,9 +1,6 @@
 package org.yamcs.studio.core.web;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,11 +14,8 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Alarms.Alarm;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.StreamData;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
@@ -30,36 +24,23 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.AlarmListener;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.EventListener;
-import org.yamcs.studio.core.InvalidIdentification;
-import org.yamcs.studio.core.MDBContextListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.pvmanager.LosTracker;
-import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
-import org.yamcs.studio.core.pvmanager.YamcsPVReader;
+import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsCredentials;
 
 /**
- * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient. Combines state accross the
- * many-to-one relation from yamcs datasources.
- * <p>
- * Now also handles live subscription of command history. Maybe should clean up a bit here to
- * extract out all the pvreader logic, because it's starting to do a bit too much.
- * <p>
- * All methods are asynchronous, with any responses or incoming data being sent to the provided
- * callback listener.
+ * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient.
  */
-public class WebSocketRegistrar implements MDBContextListener, WebSocketClientCallbackListener {
+public class WebSocketRegistrar implements WebSocketClientCallbackListener {
 
     private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
-    // Store pvreaders while connection is not established
-    // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
-    private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
-    private Map<NamedObjectId, RestParameter> availableParametersById = new LinkedHashMap<>();
     private Set<AlarmListener> alarmListeners = new HashSet<>();
     private Set<EventListener> eventListeners = new HashSet<>();
-    private LosTracker losTracker = new LosTracker();
 
     private WebSocketClient wsclient;
     private Runnable onConnectCallback; // FIXME ugly
@@ -91,26 +72,14 @@ public class WebSocketRegistrar implements MDBContextListener, WebSocketClientCa
         pendingRequests.offer(new WebSocketRequest("events", "subscribe"));
     }
 
-    public void subscribeToManagementInfo() {
-        // Always have this subscription running FIXME
-        pendingRequests.offer(new WebSocketRequest("management", "subscribe"));
-    }
-
-    public void subscribeToTimeInfo() {
-        // Always have this subscription running FIXME
-        pendingRequests.offer(new WebSocketRequest("time", "subscribe"));
-    }
-
-    public void subscribeToCommandHistoryInfo() {
-        // Always have this subscription running FIXME
-        pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
+    public void sendMessage(WebSocketRequest req) {
+        pendingRequests.offer(req);
     }
 
     @Override
     public void onConnect() { // When the web socket was successfully established
         log.fine("WebSocket established. Notifying listeners");
         onConnectCallback.run(); // FIXME ugly hack
-        reportConnectionState();
         requestSender.start(); // Go over pending subscription requests
     }
 
@@ -140,35 +109,6 @@ public class WebSocketRegistrar implements MDBContextListener, WebSocketClientCa
         }
     }
 
-    public synchronized void register(YamcsPVReader pvReader) {
-        pvReadersById.put(pvReader.getId(), pvReader);
-        // Report current connection state
-        RestParameter p = availableParametersById.get(pvReader.getId());
-        pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), p));
-        // Register (pending) websocket request
-        NamedObjectList idList = pvReader.toNamedObjectList();
-        pendingRequests.offer(new MergeableWebSocketRequest("parameter", "subscribe", idList));
-    }
-
-    public synchronized void unregister(YamcsPVReader pvReader) {
-        pvReadersById.remove(pvReader);
-        NamedObjectList idList = pvReader.toNamedObjectList();
-        pendingRequests.offer(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
-    }
-
-    @Override
-    public synchronized void onParametersChanged(List<RestParameter> parameters) {
-        log.fine("Refreshing all pv readers");
-        for (RestParameter p : parameters)
-            availableParametersById.put(p.getId(), p);
-
-        pvReadersById.forEach((id, pvReader) -> {
-            RestParameter parameter = availableParametersById.get(id);
-            log.finer(String.format("Signaling %s --> %s", id, parameter));
-            pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), parameter));
-        });
-    }
-
     public synchronized void addAlarmListener(AlarmListener listener) {
         alarmListeners.add(listener);
     }
@@ -180,7 +120,6 @@ public class WebSocketRegistrar implements MDBContextListener, WebSocketClientCa
     public void shutdown() {
         disconnect();
         wsclient.shutdown();
-        losTracker.shutdown();
     }
 
     @Override
@@ -191,61 +130,44 @@ public class WebSocketRegistrar implements MDBContextListener, WebSocketClientCa
     @Override
     public void onDisconnect() { // When the web socket connection state changed
         log.info("WebSocket disconnected. Notifying listeners");
-        reportConnectionState();
         YamcsPlugin plugin = YamcsPlugin.getDefault();
         if (plugin != null) // This can be null when the workbench is closing
             plugin.getConnectionManager().notifyConnectionFailure(null);
     }
 
-    private void reportConnectionState() {
-        pvReadersById.forEach((id, pvReader) -> {
-            RestParameter p = availableParametersById.get(id);
-            pvReader.processConnectionInfo(new PVConnectionInfo(wsclient.isConnected(), p));
-        });
-    }
-
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
-        pvReadersById.get(id).reportException(new InvalidIdentification(id));
+        YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class).processInvalidIdentification(id);
     }
 
     @Override
     public void onTimeInfo(TimeInfo timeInfo) {
-        YamcsPlugin.getDefault().getTimeCatalogue().processTimeInfo(timeInfo);
+        YamcsPlugin.getDefault().getCatalogue(TimeCatalogue.class).processTimeInfo(timeInfo);
     }
 
     @Override
     public void onParameterData(ParameterData pdata) {
-        for (ParameterValue pval : pdata.getParameterList()) {
-            YamcsPVReader pvReader = pvReadersById.get(pval.getId());
-            if (pvReader != null) {
-                log.fine(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(), pval.getEngValue()));
-                losTracker.updatePv(pvReader, pval);
-                pvReader.processParameterValue(pval);
-            } else {
-                log.warning("No pvreader for incoming update of " + pval.getId().getName());
-            }
-        }
+        YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class).processParameterData(pdata);
     }
 
     @Override
     public void onClientInfoData(ClientInfo clientInfo) {
-        YamcsPlugin.getDefault().getManagementCatalogue().processClientInfo(clientInfo);
+        YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processClientInfo(clientInfo);
     }
 
     @Override
     public void onProcessorInfoData(ProcessorInfo processorInfo) {
-        YamcsPlugin.getDefault().getManagementCatalogue().processProcessorInfo(processorInfo);
+        YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processProcessorInfo(processorInfo);
     }
 
     @Override
     public void onCommandHistoryData(CommandHistoryEntry cmdhistEntry) {
-        YamcsPlugin.getDefault().getCommandingCatalogue().processCommandHistoryEntry(cmdhistEntry);
+        YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandHistoryEntry(cmdhistEntry);
     }
 
     @Override
     public void onStatisticsData(Statistics statistics) {
-        YamcsPlugin.getDefault().getManagementCatalogue().processStatistics(statistics);
+        YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processStatistics(statistics);
     }
 
     @Override

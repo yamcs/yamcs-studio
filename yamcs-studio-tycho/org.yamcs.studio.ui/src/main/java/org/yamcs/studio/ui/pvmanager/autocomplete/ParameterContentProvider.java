@@ -1,10 +1,5 @@
 package org.yamcs.studio.ui.pvmanager.autocomplete;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,8 +12,7 @@ import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Rest.RestParameter;
-import org.yamcs.studio.core.MDBContextListener;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 
 /**
  * PV Name lookup for Yamcs Parameters
@@ -35,36 +29,6 @@ import org.yamcs.studio.core.YamcsPlugin;
  */
 public class ParameterContentProvider implements IAutoCompleteProvider {
 
-    private static final Logger log = Logger.getLogger(ParameterContentProvider.class.getName());
-
-    // Available parameters by their lowercase representation
-    private Map<String, String> haystack = new ConcurrentHashMap<>();
-
-    public ParameterContentProvider() {
-        // Get initial list of parameters
-        loadParameterNames(YamcsPlugin.getDefault().getParameters());
-
-        // Subscribe to future updates
-        YamcsPlugin.getDefault().addMdbListener(new MDBContextListener() {
-            @Override
-            public void onParametersChanged(List<RestParameter> parameters) {
-                loadParameterNames(parameters);
-            }
-        });
-    }
-
-    /**
-     * Builds an index of all available parameter names
-     */
-    private void loadParameterNames(List<RestParameter> parameters) {
-        for (RestParameter p : parameters) {
-            // TODO should also exclude sysparams, but yamcs server doesn't do it either right now
-            if (p.getDataSource() != RestDataSource.LOCAL) {
-                haystack.put(p.getId().getName().toLowerCase(), p.getId().getName());
-            }
-        }
-    }
-
     @Override
     public boolean accept(ContentType type) {
         return type == ContentType.PVName;
@@ -77,23 +41,22 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
             content = content.substring(ParameterContentParser.PARA_SOURCE.length());
         }
 
-        if (haystack == null) {
-            log.info("Not matching pattern " + desc.getValue() + " since there's nothing to match with yet");
-        }
-
         content = AutoCompleteHelper.trimWildcards(content);
         Pattern namePattern = AutoCompleteHelper.convertToPattern(content);
         namePattern = Pattern.compile(namePattern.pattern(), Pattern.CASE_INSENSITIVE);
 
         AutoCompleteResult pvs = new AutoCompleteResult();
         int matchCount = 0;
-        for (Entry<String, String> hay : haystack.entrySet()) {
-            Matcher m = namePattern.matcher(hay.getValue());
-            if (m.find()) {
-                Proposal p = new Proposal(hay.getValue(), false);
-                p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
-                pvs.addProposal(p);
-                matchCount++;
+        for (RestParameter para : ParameterCatalogue.getInstance().getMetaParameters()) {
+            // TODO should also exclude sysparams, but yamcs server doesn't do it either right now
+            if (para.getDataSource() != RestDataSource.LOCAL) {
+                Matcher m = namePattern.matcher(para.getId().getName());
+                if (m.find()) {
+                    Proposal p = new Proposal(para.getId().getName(), false);
+                    p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
+                    pvs.addProposal(p);
+                    matchCount++;
+                }
             }
         }
         pvs.setCount(matchCount);

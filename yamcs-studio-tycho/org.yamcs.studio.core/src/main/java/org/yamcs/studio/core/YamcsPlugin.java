@@ -2,27 +2,21 @@ package org.yamcs.studio.core;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
-import org.yamcs.protobuf.Rest.RestParameter;
+import org.yamcs.studio.core.model.Catalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.MessageLite;
 
 public class YamcsPlugin extends AbstractUIPlugin {
 
@@ -34,14 +28,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
     // Reset for every application restart
     private static AtomicInteger cmdClientId = new AtomicInteger(1);
 
-    private TimeCatalogue timeCatalogue;
-    private ManagementCatalogue managementCatalogue;
-    private CommandingCatalogue commandingCatalogue;
     private ConnectionManager connectionManager;
+    private Map<Class<? extends Catalogue>, Catalogue> catalogues = new HashMap<>();
 
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
-
-    private List<RestParameter> parameters = Collections.emptyList();
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -49,16 +39,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
         plugin = this;
         log.info("Yamcs Studio v." + getBundle().getVersion().toString());
         TimeEncoding.setUp();
+
+        catalogues.put(TimeCatalogue.class, new TimeCatalogue());
+        catalogues.put(ParameterCatalogue.class, new ParameterCatalogue());
+        catalogues.put(ManagementCatalogue.class, new ManagementCatalogue());
+        catalogues.put(CommandingCatalogue.class, new CommandingCatalogue());
+
         connectionManager = new ConnectionManager();
-
-        timeCatalogue = new TimeCatalogue();
-        connectionManager.addStudioConnectionListener(timeCatalogue);
-
-        managementCatalogue = new ManagementCatalogue();
-        connectionManager.addStudioConnectionListener(managementCatalogue);
-
-        commandingCatalogue = new CommandingCatalogue();
-        connectionManager.addStudioConnectionListener(commandingCatalogue);
+        catalogues.values().forEach(c -> connectionManager.addStudioConnectionListener(c));
     }
 
     public static int getNextCommandClientId() {
@@ -69,16 +57,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return connectionManager;
     }
 
-    public ManagementCatalogue getManagementCatalogue() {
-        return managementCatalogue;
-    }
-
-    public TimeCatalogue getTimeCatalogue() {
-        return timeCatalogue;
-    }
-
-    public CommandingCatalogue getCommandingCatalogue() {
-        return commandingCatalogue;
+    @SuppressWarnings("unchecked")
+    public <T extends Catalogue> T getCatalogue(Class<T> clazz) {
+        return (T) catalogues.get(clazz);
     }
 
     public String getOrigin() {
@@ -102,6 +83,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         try {
             plugin = null;
             connectionManager.shutdown();
+            catalogues.values().forEach(c -> c.shutdown());
         } finally {
             super.stop(context);
         }
@@ -109,29 +91,5 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public static YamcsPlugin getDefault() {
         return plugin;
-    }
-
-    public List<RestParameter> getParameters() {
-        return parameters;
-    }
-
-    void loadParameters() {
-        log.fine("Fetching available parameters");
-        RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
-        connectionManager.getRestClient().listAvailableParameters(req.build(), new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
-                Display.getDefault().asyncExec(() -> {
-                    parameters = response.getParametersList();
-                    mdbListeners.forEach(l -> l.onParametersChanged(parameters));
-                });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
-            }
-        });
     }
 }

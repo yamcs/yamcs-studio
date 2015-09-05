@@ -13,6 +13,7 @@ import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
@@ -26,7 +27,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
-    private WebSocketRegistrar webSocketClient;
     private NamedObjectId id;
 
     public ParameterChannelHandler(String channelName) {
@@ -38,7 +38,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         log.fine("onStudioConnect called on " + getChannelName());
-        this.webSocketClient = webSocketClient;
         connect();
     }
 
@@ -55,15 +54,13 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected void connect() {
         log.fine("PV connect on " + getChannelName());
-        if (webSocketClient != null)
-            webSocketClient.register(this);
+        ParameterCatalogue.getInstance().register(this);
     }
 
     @Override
     protected void disconnect() { // Interpret this as an unsubscribe
         log.fine("PV disconnect on " + getChannelName());
-        if (webSocketClient != null)
-            webSocketClient.unregister(this);
+        ParameterCatalogue.getInstance().unregister(this);
     }
 
     /**
@@ -72,9 +69,9 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
      */
     @Override
     protected boolean isConnected(PVConnectionInfo info) {
-        return info.webSocketOpen &&
-                ((getId().getName().startsWith("/yamcs")) ||
-                        (info.parameter != null && info.parameter.getDataSource() != RestDataSource.LOCAL));
+        boolean sysParam = getId().getName().startsWith("/yamcs"); // These are always valid in yamcs world
+        boolean nonLocal = info.parameter != null && info.parameter.getDataSource() != RestDataSource.LOCAL;
+        return info.connected && (sysParam || nonLocal);
     }
 
     @Override
