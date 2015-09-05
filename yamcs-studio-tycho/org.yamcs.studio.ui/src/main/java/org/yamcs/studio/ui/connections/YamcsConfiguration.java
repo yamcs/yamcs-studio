@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionInfo;
-import org.yamcs.studio.core.YamcsCredentials;
+import org.yamcs.studio.core.security.YamcsCredentials;
 
 /**
  * UI class. Used to maintain state of a server in the connection manager dialog

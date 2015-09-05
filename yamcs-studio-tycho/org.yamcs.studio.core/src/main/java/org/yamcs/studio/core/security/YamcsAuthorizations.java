@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.security;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Rest.RestListAuthorisationsResponse;
 import org.yamcs.protobuf.Rest.UserAuthorizationsInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
 
 import com.google.protobuf.MessageLite;

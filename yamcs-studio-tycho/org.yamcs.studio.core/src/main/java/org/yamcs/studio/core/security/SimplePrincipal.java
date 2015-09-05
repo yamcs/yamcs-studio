@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.security;
 
 import java.security.Principal;
 

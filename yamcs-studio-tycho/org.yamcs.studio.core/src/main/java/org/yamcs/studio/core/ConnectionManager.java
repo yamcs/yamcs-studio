@@ -17,6 +17,8 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.studio.core.security.YamcsAuthorizations;
+import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 

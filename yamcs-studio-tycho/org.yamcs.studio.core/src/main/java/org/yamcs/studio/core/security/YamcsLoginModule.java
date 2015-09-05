@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.security;
 
 import java.security.Principal;
 import java.util.Map;
@@ -15,6 +15,8 @@ import javax.security.auth.spi.LoginModule;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
+import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 

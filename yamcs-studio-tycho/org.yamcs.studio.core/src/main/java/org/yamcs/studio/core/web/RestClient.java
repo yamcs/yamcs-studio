@@ -29,7 +29,7 @@ import org.yamcs.protobuf.Rest.UpdateTagRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
-import org.yamcs.studio.core.YamcsCredentials;
+import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.ProtobufHandler.BuilderGenerator;
 
 import com.google.protobuf.MessageLite;

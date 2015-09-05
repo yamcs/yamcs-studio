@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.pvmanager;
 
 import java.util.Date;
 import java.util.HashMap;

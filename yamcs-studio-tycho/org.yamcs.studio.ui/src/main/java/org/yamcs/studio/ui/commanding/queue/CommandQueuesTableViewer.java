@@ -24,7 +24,7 @@ import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.YamcsAuthorizations;
+import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.ui.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 
 public class CommandQueuesTableViewer extends TableViewer {

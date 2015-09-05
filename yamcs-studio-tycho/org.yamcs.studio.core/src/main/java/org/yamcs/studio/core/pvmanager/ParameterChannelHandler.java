@@ -12,9 +12,7 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.PVConnectionInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 

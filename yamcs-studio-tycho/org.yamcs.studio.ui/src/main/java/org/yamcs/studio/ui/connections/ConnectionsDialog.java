@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.yamcs.studio.core.YamcsCredentials;
+import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 
 /**

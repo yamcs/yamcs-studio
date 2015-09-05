@@ -1,6 +1,7 @@
 package org.yamcs.studio.ui.pvmanager.autocomplete;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
     private static final Logger log = Logger.getLogger(ParameterContentProvider.class.getName());
 
     // Available parameters by their lowercase representation
-    private ConcurrentHashMap<String, String> haystack = new ConcurrentHashMap<>();
+    private Map<String, String> haystack = new ConcurrentHashMap<>();
 
     public ParameterContentProvider() {
         // Get initial list of parameters

@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.pvmanager;
 
 import org.yamcs.protobuf.Rest.RestParameter;
 

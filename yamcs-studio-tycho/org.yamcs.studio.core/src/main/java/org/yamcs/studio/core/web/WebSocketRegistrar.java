@@ -31,13 +31,12 @@ import org.yamcs.studio.core.AlarmListener;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.InvalidIdentification;
-import org.yamcs.studio.core.LosTracker;
 import org.yamcs.studio.core.MDBContextListener;
-import org.yamcs.studio.core.MergeableWebSocketRequest;
-import org.yamcs.studio.core.PVConnectionInfo;
-import org.yamcs.studio.core.YamcsCredentials;
-import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.pvmanager.LosTracker;
+import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
+import org.yamcs.studio.core.pvmanager.YamcsPVReader;
+import org.yamcs.studio.core.security.YamcsCredentials;
 
 /**
  * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient. Combines state accross the
@@ -49,7 +48,7 @@ import org.yamcs.studio.core.YamcsPlugin;
  * All methods are asynchronous, with any responses or incoming data being sent to the provided
  * callback listener.
  */
-public class WebSocketRegistrar extends MDBContextListener implements WebSocketClientCallbackListener {
+public class WebSocketRegistrar implements MDBContextListener, WebSocketClientCallbackListener {
 
     private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
