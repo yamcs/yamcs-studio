@@ -257,6 +257,11 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
+            name="Import Commands">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.archive.refreshCommand"
             name="Refresh">
       </command>
@@ -462,6 +467,15 @@
       <handler
             class="org.yamcs.studio.ui.commanding.cmdhist.ScrollLockHandler"
             commandId="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.cmdhist.ImportCommandsHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
       </handler>
       <handler
             class="org.yamcs.studio.ui.archive.RefreshArchiveHandler"
@@ -1076,6 +1090,13 @@
                disabledIcon="icons/dlcl16/lock_co.png"
                label="Scroll Lock"
                style="toggle"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
+               icon="icons/elcl16/import_wiz.gif"
+               disabledIcon="icons/dlcl16/import_wiz.gif"
+               label="Import Commands"
+               style="push"/>
          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
       

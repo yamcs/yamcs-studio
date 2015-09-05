@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -30,18 +29,12 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
-import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
-import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
-
-import com.google.protobuf.MessageLite;
 
 /**
  * TODO show a friendly message when the thing is still loading
@@ -56,8 +49,6 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
-
-    private RestClient restClient;
 
     // Prefix used in command attribute names
     private static final String ACK_PREFIX = "Acknowledge_";
@@ -229,28 +220,7 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         layoutDataByColumn.forEach((k, v) -> tcl.setColumnData(k, v));
     }
 
-    private void fetchArchivedCommands() {
-        // TODO limit to 'some' time in the past
-        RestDumpArchiveRequest request = RestDumpArchiveRequest.newBuilder().setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder())
-                .build();
-        restClient.dumpArchive(request, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                RestDumpArchiveResponse response = (RestDumpArchiveResponse) responseMsg;
-                Display.getDefault().asyncExec(() -> {
-                    for (CommandHistoryEntry cmdhistEntry : response.getCommandList())
-                        CommandHistoryView.this.processCommandHistoryEntry(cmdhistEntry);
-                });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Error while fetching archived telecommands", e);
-            }
-        });
-    }
-
-    private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
+    public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
         // Maybe we need to update structure
         for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
             if (IGNORED_ATTRIBUTES.contains(attr.getName()))
@@ -322,18 +292,14 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
 
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-        this.restClient = restclient;
         if (webSocketClient != null) {
             webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
                 Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
             });
         }
-        if (restClient != null)
-            fetchArchivedCommands();
     }
 
     @Override
     public void onStudioDisconnect() {
-
     }
 }
