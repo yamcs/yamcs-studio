@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
-import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 
 public class Prefs {
 

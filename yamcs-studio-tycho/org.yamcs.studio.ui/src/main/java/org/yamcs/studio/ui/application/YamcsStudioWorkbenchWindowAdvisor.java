@@ -22,7 +22,7 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor

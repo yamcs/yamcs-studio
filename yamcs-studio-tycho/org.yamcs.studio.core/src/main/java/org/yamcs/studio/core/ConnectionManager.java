@@ -18,6 +18,7 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Handles external connections and its related state. This logic was originally in YamcsPlugin, but

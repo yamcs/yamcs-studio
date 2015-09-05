@@ -14,9 +14,9 @@ import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.PVConnectionInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Supports read-only PVs. Would be good if one day CSS added support for this at the PV-level,

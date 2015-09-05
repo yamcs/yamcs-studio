@@ -11,7 +11,7 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Used in plugin.xml core-expressions to keep track of connection state

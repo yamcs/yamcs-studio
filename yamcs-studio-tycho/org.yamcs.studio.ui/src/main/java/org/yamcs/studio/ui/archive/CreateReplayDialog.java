@@ -34,7 +34,7 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
-import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.opibuilder.OPIUtils;

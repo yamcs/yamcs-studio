@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.model;
 
 /**
  * Reports on time as indicated by the studio-wide processor

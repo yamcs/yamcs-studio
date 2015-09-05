@@ -26,9 +26,9 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.TimeCatalogue;
-import org.yamcs.studio.core.TimeListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeListener;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 

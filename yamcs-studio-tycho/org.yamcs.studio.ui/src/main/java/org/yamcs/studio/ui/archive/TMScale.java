@@ -18,7 +18,7 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.utils.TaiUtcConverter.DateTimeComponents;
 import org.yamcs.utils.TimeEncoding;
 

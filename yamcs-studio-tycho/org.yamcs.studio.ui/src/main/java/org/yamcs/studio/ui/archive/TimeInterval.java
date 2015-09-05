@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
 
-import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
 /**

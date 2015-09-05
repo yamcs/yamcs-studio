@@ -23,10 +23,9 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
-import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.ui.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
-import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuesTableViewer extends TableViewer {
 

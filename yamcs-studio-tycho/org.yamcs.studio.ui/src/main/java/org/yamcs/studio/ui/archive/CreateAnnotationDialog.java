@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
 public class CreateAnnotationDialog extends TitleAreaDialog {

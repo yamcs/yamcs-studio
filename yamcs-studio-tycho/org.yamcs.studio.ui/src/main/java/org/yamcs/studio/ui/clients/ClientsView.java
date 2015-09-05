@@ -16,7 +16,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 public class ClientsView extends ViewPart implements StudioConnectionListener, ProcessorListener {
 

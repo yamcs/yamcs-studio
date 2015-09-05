@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
-import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuedTableViewer extends TableViewer {
@@ -88,9 +88,7 @@ public class CommandQueuedTableViewer extends TableViewer {
                         log.info("sending command: " + cqe.getSource());
                         commandQueueView.commandQueueControl.sendCommand(cqe, false);
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     log.severe("Unable to send command: " + e.getMessage());
                 }
             }
@@ -125,12 +123,9 @@ public class CommandQueuedTableViewer extends TableViewer {
             public void handleEvent(Event event) {
                 TableItem[] selection = getTable().getSelection();
                 if (selection.length != 0 && (event.button == 3)) {
-                    if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayControlCommandQueue))
-                    {
+                    if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayControlCommandQueue)) {
                         contextMenu.setVisible(true);
-                    }
-                    else
-                    {
+                    } else {
                         contextMenu.setVisible(false);
                     }
                 }

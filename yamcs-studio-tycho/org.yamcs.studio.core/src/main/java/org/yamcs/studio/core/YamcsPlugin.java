@@ -21,6 +21,7 @@ import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestParameter;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
 import org.yamcs.xtce.MetaCommand;

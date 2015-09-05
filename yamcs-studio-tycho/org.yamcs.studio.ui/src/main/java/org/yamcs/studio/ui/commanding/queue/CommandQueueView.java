@@ -20,7 +20,7 @@ import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueueView extends ViewPart implements StudioConnectionListener, CommandQueueListener {

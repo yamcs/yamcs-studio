@@ -18,7 +18,7 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
 public class LinksView extends ViewPart implements StudioConnectionListener, LinkListener {

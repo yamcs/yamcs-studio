@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Events.GetEventsRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.archive.TimeInterval;

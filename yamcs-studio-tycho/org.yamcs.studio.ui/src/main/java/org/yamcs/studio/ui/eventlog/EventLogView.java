@@ -25,7 +25,7 @@ import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.WebSocketRegistrar;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
 public class EventLogView extends ViewPart implements StudioConnectionListener, EventListener {

@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,6 +10,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
 public class TimeCatalogue implements StudioConnectionListener {

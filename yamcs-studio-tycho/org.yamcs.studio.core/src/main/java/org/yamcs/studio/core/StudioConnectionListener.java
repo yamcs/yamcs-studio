@@ -2,6 +2,7 @@ package org.yamcs.studio.core;
 
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Informs different components of new or changed connection settings.

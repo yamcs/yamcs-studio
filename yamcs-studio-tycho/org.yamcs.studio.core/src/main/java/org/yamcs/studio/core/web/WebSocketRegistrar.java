@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.web;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -27,6 +27,18 @@ import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.AlarmListener;
+import org.yamcs.studio.core.CommandHistoryListener;
+import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.EventListener;
+import org.yamcs.studio.core.InvalidIdentification;
+import org.yamcs.studio.core.LosTracker;
+import org.yamcs.studio.core.MDBContextListener;
+import org.yamcs.studio.core.MergeableWebSocketRequest;
+import org.yamcs.studio.core.PVConnectionInfo;
+import org.yamcs.studio.core.YamcsCredentials;
+import org.yamcs.studio.core.YamcsPVReader;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient. Combines state accross the
@@ -42,9 +54,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
-
-    private TimeCatalogue timeCatalogue = YamcsPlugin.getDefault().getTimeCatalogue();
-    private ManagementCatalogue managementCatalogue = YamcsPlugin.getDefault().getManagementCatalogue();
 
     // Store pvreaders while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
@@ -81,7 +90,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         this.onConnectCallback = onConnectCallback;
         wsclient.connect(); // FIXME this currently blocks. It should have a callback api instead
         // FIXME Always have these subscriptions running
-        pendingRequests.offer(new WebSocketRequest("time", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("alarms", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("events", "subscribe"));
@@ -206,7 +214,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onTimeInfo(TimeInfo timeInfo) {
-        timeCatalogue.processTimeInfo(timeInfo);
+        YamcsPlugin.getDefault().getTimeCatalogue().processTimeInfo(timeInfo);
     }
 
     @Override
@@ -225,12 +233,12 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onClientInfoData(ClientInfo clientInfo) {
-        managementCatalogue.processClientInfo(clientInfo);
+        YamcsPlugin.getDefault().getManagementCatalogue().processClientInfo(clientInfo);
     }
 
     @Override
     public void onProcessorInfoData(ProcessorInfo processorInfo) {
-        managementCatalogue.processProcessorInfo(processorInfo);
+        YamcsPlugin.getDefault().getManagementCatalogue().processProcessorInfo(processorInfo);
     }
 
     @Override
@@ -242,7 +250,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onStatisticsData(Statistics statistics) {
-        managementCatalogue.processStatistics(statistics);
+        YamcsPlugin.getDefault().getManagementCatalogue().processStatistics(statistics);
     }
 
     @Override
