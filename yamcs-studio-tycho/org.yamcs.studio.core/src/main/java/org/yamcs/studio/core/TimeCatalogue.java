@@ -3,24 +3,30 @@ package org.yamcs.studio.core;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.utils.TimeEncoding;
 
-/**
- * It would be cool if we could just use E4 annotations to pass this information around instead of
- * needing this class.
- */
-public class TimeCatalogue implements StudioConnectionListener, TimeListener {
+public class TimeCatalogue implements StudioConnectionListener {
 
     private volatile long currentTime = TimeEncoding.INVALID_INSTANT;
+    private Set<TimeListener> timeListeners = new CopyOnWriteArraySet<>();
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     public static TimeCatalogue getInstance() {
         return YamcsPlugin.getDefault().getTimeCatalogue();
+    }
+
+    public void addTimeListener(TimeListener listener) {
+        timeListeners.add(listener);
+
+        // Inform listeners of the current model
+        listener.processTime(currentTime);
     }
 
     public long getMissionTime() {
@@ -67,13 +73,13 @@ public class TimeCatalogue implements StudioConnectionListener, TimeListener {
 
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.addTimeListener(this);
+        webSocketClient.subscribeToTimeInfo();
         currentTime = TimeEncoding.INVALID_INSTANT;
     }
 
-    @Override
-    public void processTime(TimeInfo timeInfo) {
+    public void processTimeInfo(TimeInfo timeInfo) {
         currentTime = timeInfo.getCurrentTime();
+        timeListeners.forEach(l -> l.processTime(timeInfo.getCurrentTime()));
     }
 
     @Override

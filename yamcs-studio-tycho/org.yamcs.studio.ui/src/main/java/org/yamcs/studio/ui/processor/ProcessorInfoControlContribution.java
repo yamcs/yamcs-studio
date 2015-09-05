@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -90,13 +89,13 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         timeFont = new Font(parent.getDisplay(), textFont[0]);
 
         ManagementCatalogue.getInstance().addProcessorListener(this);
+        TimeCatalogue.getInstance().addTimeListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
         return top;
     }
 
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.addTimeListener(this);
     }
 
     @Override
@@ -134,13 +133,15 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
     }
 
     @Override
-    public void processTime(TimeInfo timeInfo) {
+    public void processTime(long missionTime) {
         if (canvas.isDisposed())
             return;
+
         canvas.getDisplay().asyncExec(() -> {
             if (canvas.isDisposed())
                 return;
-            missionTime = timeInfo.getCurrentTime();
+
+            this.missionTime = missionTime;
             canvas.redraw();
         });
     }

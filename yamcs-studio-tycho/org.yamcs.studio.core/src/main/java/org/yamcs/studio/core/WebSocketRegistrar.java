@@ -43,6 +43,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
+    private TimeCatalogue timeCatalogue = YamcsPlugin.getDefault().getTimeCatalogue();
     private ManagementCatalogue managementCatalogue = YamcsPlugin.getDefault().getManagementCatalogue();
 
     // Store pvreaders while connection is not established
@@ -51,7 +52,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private Map<NamedObjectId, RestParameter> availableParametersById = new LinkedHashMap<>();
     private Set<AlarmListener> alarmListeners = new HashSet<>();
     private Set<EventListener> eventListeners = new HashSet<>();
-    private Set<TimeListener> timeListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
 
     private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
@@ -90,6 +90,11 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     public void subscribeToManagementInfo() {
         // Always have this subscription running FIXME
         pendingRequests.offer(new WebSocketRequest("management", "subscribe"));
+    }
+
+    public void subscribeToTimeInfo() {
+        // Always have this subscription running FIXME
+        pendingRequests.offer(new WebSocketRequest("time", "subscribe"));
     }
 
     @Override
@@ -163,10 +168,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         eventListeners.add(listener);
     }
 
-    public synchronized void addTimeListener(TimeListener listener) {
-        timeListeners.add(listener);
-    }
-
     // TODO we should probably move this somewhere else. This class is too bloated
     public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
         cmdhistListeners.add(listener);
@@ -205,9 +206,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onTimeInfo(TimeInfo timeInfo) {
-        synchronized (this) {
-            timeListeners.forEach(l -> l.processTime(timeInfo));
-        }
+        timeCatalogue.processTimeInfo(timeInfo);
     }
 
     @Override
@@ -226,9 +225,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onClientInfoData(ClientInfo clientInfo) {
-        synchronized (this) {
-            managementCatalogue.processClientInfo(clientInfo);
-        }
+        managementCatalogue.processClientInfo(clientInfo);
     }
 
     @Override

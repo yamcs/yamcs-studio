@@ -43,7 +43,6 @@ import org.yamcs.api.YamcsConnector;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
-import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.TimeCatalogue;
@@ -210,6 +209,7 @@ public class ArchiveView extends ViewPart
 
         indexReceiver.setIndexListener(this);
         yconnector.addConnectionListener(this);
+        TimeCatalogue.getInstance().addTimeListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
 
@@ -224,7 +224,6 @@ public class ArchiveView extends ViewPart
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         yconnector.connect(hornetqProps);
-        webSocketClient.addTimeListener(this);
     }
 
     @Override
@@ -237,18 +236,18 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    public void processTime(TimeInfo timeInfo) {
+    public void processTime(long missionTime) {
         SwingUtilities.invokeLater(() -> {
-            archivePanel.getDataViewer().getDataView().setCurrentLocator(timeInfo.getCurrentTime());
+            archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime);
         });
         Display.getDefault().asyncExec(() -> {
             if (replayTimeLabel.isDisposed())
                 return;
-            long missionTime = timeInfo.getCurrentTime();
+
             if (missionTime == TimeEncoding.INVALID_INSTANT || missionTime == 0) {
                 replayTimeLabel.setText("");
             } else {
-                String prettyTime = TimeCatalogue.getInstance().toString(timeInfo.getCurrentTime());
+                String prettyTime = TimeCatalogue.getInstance().toString(missionTime);
                 replayTimeLabel.setText(prettyTime);
             }
         });
