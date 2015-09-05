@@ -1,15 +1,11 @@
 package org.yamcs.studio.ycl.dsl.ui.contentassist;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
-import org.yamcs.studio.core.MDBContextListener;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.xtce.MetaCommand;
 
 /**
@@ -18,21 +14,9 @@ import org.yamcs.xtce.MetaCommand;
  */
 public class YCLProposalProvider extends AbstractYCLProposalProvider {
 
-    private Collection<MetaCommand> commands = Collections.emptyList();
-
-    public YCLProposalProvider() {
-        YamcsPlugin.getDefault().addMdbListener(new MDBContextListener() {
-            @Override
-            public void onCommandsChanged(Collection<MetaCommand> commandIds) {
-                commands = commandIds;
-            }
-        });
-
-    }
-
     @Override
     public void complete_CommandId(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-        for (MetaCommand cmd : commands) {
+        for (MetaCommand cmd : CommandingCatalogue.getInstance().getMetaCommands()) {
             if (!cmd.isAbstract()) {
                 ICompletionProposal proposal = createCompletionProposal(cmd.getName() + "()", cmd.getName(), null, context);
                 acceptor.accept(proposal);

@@ -33,7 +33,7 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.opibuilder.OPIUtils;

@@ -13,7 +13,7 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
-import org.yamcs.studio.core.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.AbstractRestHandler;

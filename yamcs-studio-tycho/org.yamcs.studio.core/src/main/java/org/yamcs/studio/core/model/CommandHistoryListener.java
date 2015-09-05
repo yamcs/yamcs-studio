@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.model;
 
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 

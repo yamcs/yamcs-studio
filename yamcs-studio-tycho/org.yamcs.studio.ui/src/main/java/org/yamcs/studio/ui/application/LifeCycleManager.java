@@ -19,8 +19,8 @@ import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.ManagementCatalogue;
-import org.yamcs.studio.core.ProcessorListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.ui.connections.ConnectionPreferences;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 
@@ -50,7 +50,7 @@ public class LifeCycleManager {
 
             // Listen to processing-info updates
             doUpdateGlobalProcessingState(PlatformUI.getWorkbench(), null); // Trigger initial state
-            ManagementCatalogue.getInstance().addProcessorListener(new ProcessorListener() {
+            ManagementCatalogue.getInstance().addManagementListener(new ManagementListener() {
                 @Override
                 public void processorUpdated(ProcessorInfo processorInfo) {
                     updateGlobalProcessingState(processorInfo);

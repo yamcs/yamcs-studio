@@ -1,10 +1,7 @@
 package org.yamcs.studio.core;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -13,19 +10,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
 import org.yamcs.protobuf.Rest.RestParameter;
+import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
-import org.yamcs.xtce.MetaCommand;
-import org.yamcs.xtce.XtceDb;
 
 import com.google.protobuf.MessageLite;
 
@@ -41,13 +36,12 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private TimeCatalogue timeCatalogue;
     private ManagementCatalogue managementCatalogue;
+    private CommandingCatalogue commandingCatalogue;
     private ConnectionManager connectionManager;
 
     private Set<MDBContextListener> mdbListeners = new HashSet<>();
 
-    private XtceDb mdb;
     private List<RestParameter> parameters = Collections.emptyList();
-    private Collection<MetaCommand> commands = Collections.emptyList();
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -62,6 +56,9 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
         managementCatalogue = new ManagementCatalogue();
         connectionManager.addStudioConnectionListener(managementCatalogue);
+
+        commandingCatalogue = new CommandingCatalogue();
+        connectionManager.addStudioConnectionListener(commandingCatalogue);
     }
 
     public static int getNextCommandClientId() {
@@ -78,6 +75,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public TimeCatalogue getTimeCatalogue() {
         return timeCatalogue;
+    }
+
+    public CommandingCatalogue getCommandingCatalogue() {
+        return commandingCatalogue;
     }
 
     public String getOrigin() {
@@ -114,14 +115,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return parameters;
     }
 
-    public Collection<MetaCommand> getCommands() {
-        return commands;
-    }
-
-    public XtceDb getMdb() {
-        return mdb;
-    }
-
     void loadParameters() {
         log.fine("Fetching available parameters");
         RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
@@ -138,37 +131,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
             @Override
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
-            }
-        });
-    }
-
-    void loadCommands() {
-        log.fine("Fetching available commands");
-        connectionManager.getRestClient().dumpRawMdb(new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
-                try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
-                    XtceDb newMdb = (XtceDb) oin.readObject();
-                    Display.getDefault().asyncExec(() -> {
-                        mdb = newMdb;
-                        commands = mdb.getMetaCommands();
-                        mdbListeners.forEach(l -> l.onCommandsChanged(commands));
-                    });
-                } catch (IOException | ClassNotFoundException e) {
-                    log.log(Level.SEVERE, "Could not deserialize mdb", e);
-                    Display.getDefault().asyncExec(() -> {
-                        MessageDialog.openError(Display.getDefault().getActiveShell(),
-                                "Incompatible Yamcs Server", "Could not interpret Mission Database. "
-                                        + "This usually happens when Yamcs Studio is not, or no longer, "
-                                        + "compatible with Yamcs Server.");
-                    });
-                }
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not fetch available yamcs commands", e);
             }
         });
     }

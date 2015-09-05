@@ -28,7 +28,6 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.AlarmListener;
-import org.yamcs.studio.core.CommandHistoryListener;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.InvalidIdentification;
@@ -63,8 +62,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private Set<EventListener> eventListeners = new HashSet<>();
     private LosTracker losTracker = new LosTracker();
 
-    private Set<CommandHistoryListener> cmdhistListeners = new HashSet<>();
-
     private WebSocketClient wsclient;
     private Runnable onConnectCallback; // FIXME ugly
 
@@ -74,8 +71,9 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     private final Thread requestSender;
 
     public WebSocketRegistrar(YamcsConnectionProperties yprops, YamcsCredentials credentials) {
-        wsclient = new WebSocketClient(yprops, this, credentials != null ? credentials.getUsername() : null,
-                credentials != null ? credentials.getPasswordS() : null);
+        String user = credentials != null ? credentials.getUsername() : null;
+        String pass = credentials != null ? credentials.getPasswordS() : null;
+        wsclient = new WebSocketClient(yprops, this, user, pass);
         wsclient.setUserAgent(USER_AGENT);
         requestSender = new Thread(() -> {
             try {
@@ -90,7 +88,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         this.onConnectCallback = onConnectCallback;
         wsclient.connect(); // FIXME this currently blocks. It should have a callback api instead
         // FIXME Always have these subscriptions running
-        pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("alarms", "subscribe"));
         pendingRequests.offer(new WebSocketRequest("events", "subscribe"));
     }
@@ -103,6 +100,11 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
     public void subscribeToTimeInfo() {
         // Always have this subscription running FIXME
         pendingRequests.offer(new WebSocketRequest("time", "subscribe"));
+    }
+
+    public void subscribeToCommandHistoryInfo() {
+        // Always have this subscription running FIXME
+        pendingRequests.offer(new WebSocketRequest("cmdhistory", "subscribe"));
     }
 
     @Override
@@ -176,11 +178,6 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
         eventListeners.add(listener);
     }
 
-    // TODO we should probably move this somewhere else. This class is too bloated
-    public synchronized void addCommandHistoryListener(CommandHistoryListener listener) {
-        cmdhistListeners.add(listener);
-    }
-
     public void shutdown() {
         disconnect();
         wsclient.shutdown();
@@ -243,9 +240,7 @@ public class WebSocketRegistrar extends MDBContextListener implements WebSocketC
 
     @Override
     public void onCommandHistoryData(CommandHistoryEntry cmdhistEntry) {
-        synchronized (this) {
-            cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
-        }
+        YamcsPlugin.getDefault().getCommandingCatalogue().processCommandHistoryEntry(cmdhistEntry);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,12 @@ import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Provides access to aggregated state on yamcs management-type information.
@@ -25,7 +27,7 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
  */
 public class ManagementCatalogue implements StudioConnectionListener {
 
-    private Set<ProcessorListener> processorListeners = new CopyOnWriteArraySet<>();
+    private Set<ManagementListener> managementListeners = new CopyOnWriteArraySet<>();
     private Map<String, ProcessorInfo> processorInfoByName = new ConcurrentHashMap<>();
     private Map<Integer, ClientInfo> clientInfoById = new ConcurrentHashMap<>();
 
@@ -49,8 +51,8 @@ public class ManagementCatalogue implements StudioConnectionListener {
         currentClientId = -1;
     }
 
-    public void addProcessorListener(ProcessorListener listener) {
-        processorListeners.add(listener);
+    public void addManagementListener(ManagementListener listener) {
+        managementListeners.add(listener);
 
         // Inform listeners of the current model
         processorInfoByName.forEach((k, v) -> listener.processorUpdated(v));
@@ -63,13 +65,13 @@ public class ManagementCatalogue implements StudioConnectionListener {
             if (clientInfo.getCurrentClient())
                 currentClientId = -1;
 
-            processorListeners.forEach(l -> l.clientDisconnected(clientInfo));
+            managementListeners.forEach(l -> l.clientDisconnected(clientInfo));
         } else {
             clientInfoById.put(clientInfo.getId(), clientInfo);
             if (clientInfo.getCurrentClient())
                 currentClientId = clientInfo.getId();
 
-            processorListeners.forEach(l -> l.clientUpdated(clientInfo));
+            managementListeners.forEach(l -> l.clientUpdated(clientInfo));
         }
     }
 
@@ -79,11 +81,11 @@ public class ManagementCatalogue implements StudioConnectionListener {
         else
             processorInfoByName.put(processorInfo.getName(), processorInfo);
 
-        processorListeners.forEach(l -> l.processorUpdated(processorInfo));
+        managementListeners.forEach(l -> l.processorUpdated(processorInfo));
     }
 
     public void processStatistics(Statistics stats) {
-        processorListeners.forEach(l -> l.statisticsUpdated(stats));
+        managementListeners.forEach(l -> l.statisticsUpdated(stats));
     }
 
     public ProcessorInfo getProcessorInfo(String processorName) {

@@ -160,11 +160,8 @@ public class ConnectionManager {
     // Likely not on the swt thread
     void setupConnections() {
         log.fine("WebSocket connected");
-        // Need to improve this code. Currently doesn't support changing connections
-        //boolean doSetup = (this.clientInfo == null);
         YamcsAuthorizations.getInstance().getAuthorizations();
         YamcsPlugin.getDefault().loadParameters();
-        YamcsPlugin.getDefault().loadCommands();
 
         studioConnectionListeners.forEach(l -> {
             l.onStudioConnect(getWebProperties(), getHornetqProperties(), webSocketClient);

@@ -23,9 +23,9 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ManagementCatalogue;
-import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
@@ -36,7 +36,7 @@ import org.yamcs.utils.TimeEncoding;
  * Shows a visual indicator for the currently subscribed processor.
  */
 public class ProcessorInfoControlContribution extends WorkbenchWindowControlContribution
-        implements StudioConnectionListener, ProcessorListener, TimeListener {
+        implements StudioConnectionListener, ManagementListener, TimeListener {
 
     private static final int ANGLE_DELTA = 10;
     private static final int REC_WIDTH = 120;
@@ -88,7 +88,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         textFont[0].setHeight(textFont[0].getHeight() - 2);
         timeFont = new Font(parent.getDisplay(), textFont[0]);
 
-        ManagementCatalogue.getInstance().addProcessorListener(this);
+        ManagementCatalogue.getInstance().addManagementListener(this);
         TimeCatalogue.getInstance().addTimeListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
         return top;

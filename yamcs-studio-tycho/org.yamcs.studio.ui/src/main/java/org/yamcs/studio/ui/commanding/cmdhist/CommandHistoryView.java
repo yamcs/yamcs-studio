@@ -25,17 +25,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 
-public class CommandHistoryView extends ViewPart implements StudioConnectionListener {
+public class CommandHistoryView extends ViewPart {
 
     private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
 
@@ -99,7 +95,9 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
         tableViewerComparator = new CommandHistoryViewerComparator();
         tableViewer.setComparator(tableViewerComparator);
 
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
+            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
+        });
     }
 
     public void clear() {
@@ -284,16 +282,5 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     @Override
     public void setFocus() {
         tableViewer.getTable().setFocus();
-    }
-
-    @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
-            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
-        });
-    }
-
-    @Override
-    public void onStudioDisconnect() {
     }
 }

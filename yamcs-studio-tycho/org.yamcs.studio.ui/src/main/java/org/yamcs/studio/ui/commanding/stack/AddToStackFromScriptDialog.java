@@ -30,7 +30,7 @@ import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.CommandParser;
@@ -59,7 +59,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
 
     public AddToStackFromScriptDialog(Shell parentShell) {
         super(parentShell);
-        commands = YamcsPlugin.getDefault().getCommands();
+        commands = CommandingCatalogue.getInstance().getMetaCommands();
     }
 
     @Override

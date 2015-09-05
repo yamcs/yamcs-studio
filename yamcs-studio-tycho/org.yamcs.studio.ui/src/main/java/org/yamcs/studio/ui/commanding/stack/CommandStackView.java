@@ -29,19 +29,15 @@ import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 
-public class CommandStackView extends ViewPart implements StudioConnectionListener {
+public class CommandStackView extends ViewPart {
 
     public static final String ID = "org.yamcs.studio.ui.commanding.stack.CommandStackView";
     private static final Logger log = Logger.getLogger(CommandStackView.class.getName());
@@ -246,7 +242,9 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
         // Set initial state
         refreshState();
 
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
+            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
+        });
     }
 
     public void selectFirst() {
@@ -394,13 +392,6 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
         commandTableViewer.getTable().setFocus();
     }
 
-    @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
-            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
-        });
-    }
-
     private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
         for (StackedCommand cmd : CommandStack.getInstance().getCommands()) {
             if (cmd.matches(cmdhistEntry.getCommandId())) {
@@ -411,9 +402,5 @@ public class CommandStackView extends ViewPart implements StudioConnectionListen
             }
         }
         commandTableViewer.refresh();
-    }
-
-    @Override
-    public void onStudioDisconnect() {
     }
 }

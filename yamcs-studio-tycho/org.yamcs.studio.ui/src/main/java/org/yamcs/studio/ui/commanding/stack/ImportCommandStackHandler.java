@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.commanding.stack.xml.CommandStack;
 import org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command.CommandArgument;
 import org.yamcs.xtce.Argument;
@@ -76,7 +76,6 @@ public class ImportCommandStackHandler extends AbstractHandler {
             {
                 StackedCommand sc = new StackedCommand();
 
-                Collection<MetaCommand> mcs = YamcsPlugin.getDefault().getCommands();
                 MetaCommand mc = getMetaCommandFromYamcs(c.getCommandName());
                 if (mc == null)
                 {
@@ -123,7 +122,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
     }
 
     private MetaCommand getMetaCommandFromYamcs(String commandName) {
-        Collection<MetaCommand> mcs = YamcsPlugin.getDefault().getCommands();
+        Collection<MetaCommand> mcs = CommandingCatalogue.getInstance().getMetaCommands();
         for (MetaCommand mc : mcs)
         {
             if (mc.getQualifiedName().equals(commandName))

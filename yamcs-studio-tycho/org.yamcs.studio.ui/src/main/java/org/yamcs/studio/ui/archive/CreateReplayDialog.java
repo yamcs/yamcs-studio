@@ -33,7 +33,7 @@ import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;

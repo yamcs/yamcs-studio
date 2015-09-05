@@ -13,12 +13,12 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ManagementCatalogue;
-import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
-public class ClientsView extends ViewPart implements StudioConnectionListener, ProcessorListener {
+public class ClientsView extends ViewPart implements StudioConnectionListener, ManagementListener {
 
     ClientsTableViewer clientsTableViewer;
     ClientsContentProvider clientsContentProvider;
@@ -60,7 +60,7 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, P
         // Set initial state
         clientsTableViewer.refresh();
         
-        ManagementCatalogue.getInstance().addProcessorListener(this);
+        ManagementCatalogue.getInstance().addManagementListener(this);
 
         // Connection to Yamcs server
         ConnectionManager.getInstance().addStudioConnectionListener(this);

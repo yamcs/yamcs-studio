@@ -20,7 +20,7 @@ import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 
 /**
  * A dynamic menu for showing the processors and joining them when selected

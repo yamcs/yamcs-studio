@@ -25,7 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.xtce.MetaCommand;
@@ -145,7 +145,7 @@ public class AddToStackWizardPage1 extends WizardPage {
         commandsTable.setContentProvider(ArrayContentProvider.getInstance());
 
         Collection<MetaCommand> nonAbstract = new ArrayList<>();
-        YamcsPlugin.getDefault().getCommands().forEach(cmd -> {
+        CommandingCatalogue.getInstance().getMetaCommands().forEach(cmd -> {
             if (!cmd.isAbstract())
                 nonAbstract.add(cmd);
         });

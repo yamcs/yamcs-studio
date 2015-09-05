@@ -21,7 +21,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.PVConnectionInfo;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPVReader;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -121,7 +121,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
-        Parameter p = YamcsPlugin.getDefault().getMdb().getParameter(getChannelName());
+        Parameter p = CommandingCatalogue.getInstance().getMdb().getParameter(getChannelName());
         ParameterData pdata = ParameterData.newBuilder().addParameter(ParameterValue.newBuilder()
                 .setId(getId())
                 .setEngValue(toValue(p, (String) newValue))).build();
