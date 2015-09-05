@@ -3,7 +3,7 @@ package org.yamcs.studio.ui.commanding;
 import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 
 /**
  * Hand-written ugly command parser. Follows some very simple logic: - removes all whitespace - puts
@@ -23,8 +23,8 @@ public class CommandParser {
         NamedObjectId.Builder commandId = NamedObjectId.newBuilder();
         commandId.setName(commandName.trim());
         cmd.setId(commandId);
-        cmd.setSequenceNumber(YamcsPlugin.getNextCommandClientId());
-        cmd.setOrigin(YamcsPlugin.getDefault().getOrigin());
+        cmd.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
+        cmd.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
 
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         String[] args = argString.split(",");

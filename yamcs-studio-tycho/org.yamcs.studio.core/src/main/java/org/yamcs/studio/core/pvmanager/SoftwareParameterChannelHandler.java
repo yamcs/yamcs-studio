@@ -45,7 +45,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
     private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1");
 
-    private WebSocketRegistrar webSocketClient;
     private NamedObjectId id;
 
     public SoftwareParameterChannelHandler(String channelName) {
@@ -57,15 +56,13 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     @Override
     public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         log.info("processConnectionInfo called on " + getChannelName());
-        this.disconnect();
-        this.webSocketClient = webSocketClient;
+        disconnect();
         connect();
     }
 
     @Override
     public void onStudioDisconnect() {
         disconnect(); // Unregister PV
-        webSocketClient = null;
     }
 
     @Override

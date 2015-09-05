@@ -19,16 +19,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.EventListener;
-import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.model.EventCatalogue;
+import org.yamcs.studio.core.model.EventListener;
 import org.yamcs.utils.TimeEncoding;
 
-public class EventLogView extends ViewPart implements StudioConnectionListener, EventListener {
+public class EventLogView extends ViewPart implements EventListener {
 
     private static final Logger log = Logger.getLogger(EventLogView.class.getName());
 
@@ -63,12 +59,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         tableViewer.setComparator(tableViewerComparator);
         getViewSite().setSelectionProvider(tableViewer);
 
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
-    }
-
-    @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        webSocketClient.addEventListener(this);
+        EventCatalogue.getInstance().addEventListener(this);
     }
 
     @Override
@@ -76,10 +67,6 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         if (tableViewer.getTable().isDisposed())
             return;
         Display.getDefault().asyncExec(() -> addEvent(event));
-    }
-
-    @Override
-    public void onStudioDisconnect() {
     }
 
     public void clear() {

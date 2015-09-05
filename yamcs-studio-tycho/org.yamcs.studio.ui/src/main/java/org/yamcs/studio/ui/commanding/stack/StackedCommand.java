@@ -14,7 +14,7 @@ import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Rest.RestArgumentType;
 import org.yamcs.protobuf.Rest.RestCommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.commanding.PTVInfo;
 import org.yamcs.xtce.Argument;
 import org.yamcs.xtce.ArgumentAssignment;
@@ -57,8 +57,8 @@ public class StackedCommand {
 
     public boolean matches(CommandId commandId) {
         // FIXME add user too
-        return clientId == commandId.getSequenceNumber()
-                && commandId.getOrigin().equals(YamcsPlugin.getDefault().getOrigin());
+        String ourOrigin = CommandingCatalogue.getInstance().getCommandOrigin();
+        return clientId == commandId.getSequenceNumber() && commandId.getOrigin().equals(ourOrigin);
     }
 
     public void resetExecutionState() {
@@ -111,14 +111,13 @@ public class StackedCommand {
      * called, and therefore represents an 'issue attempt'.
      */
     public RestCommandType.Builder toRestCommandType() {
-        clientId = YamcsPlugin.getNextCommandClientId();
         RestCommandType.Builder req = RestCommandType.newBuilder();
         req.setId(NamedObjectId.newBuilder().setName(meta.getQualifiedName()));
-        req.setSequenceNumber(clientId);
+        req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
+        req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         assignments.forEach((k, v) -> {
             req.addArguments(RestArgumentType.newBuilder().setName(k.getName()).setValue(v));
         });
-        req.setOrigin(YamcsPlugin.getDefault().getOrigin());
 
         return req;
     }

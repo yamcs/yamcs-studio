@@ -2,10 +2,13 @@ package org.yamcs.studio.core.model;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +32,8 @@ public class CommandingCatalogue implements Catalogue {
 
     private static final Logger log = Logger.getLogger(CommandingCatalogue.class.getName());
 
+    private AtomicInteger cmdClientId = new AtomicInteger(1);
+
     @Deprecated
     private XtceDb mdb;
     private Collection<MetaCommand> metaCommands = Collections.emptyList();
@@ -36,6 +41,10 @@ public class CommandingCatalogue implements Catalogue {
 
     public static CommandingCatalogue getInstance() {
         return YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class);
+    }
+
+    public int getNextCommandClientId() {
+        return cmdClientId.incrementAndGet();
     }
 
     public void addCommandHistoryListener(CommandHistoryListener listener) {
@@ -94,5 +103,13 @@ public class CommandingCatalogue implements Catalogue {
     @Deprecated
     public XtceDb getMdb() {
         return mdb;
+    }
+
+    public String getCommandOrigin() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return "Unknown";
+        }
     }
 }

@@ -1,4 +1,4 @@
-package org.yamcs.studio.core;
+package org.yamcs.studio.core.model;
 
 import org.yamcs.protobuf.Alarms.Alarm;
 
@@ -7,6 +7,5 @@ import org.yamcs.protobuf.Alarms.Alarm;
  */
 public interface AlarmListener {
 
-    public void processAlarm(Alarm alarm);
-
+    void processAlarm(Alarm alarm);
 }

@@ -1,7 +1,5 @@
 package org.yamcs.studio.core.web;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -21,11 +19,11 @@ import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.AlarmListener;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -38,9 +36,6 @@ public class WebSocketRegistrar implements WebSocketClientCallbackListener {
 
     private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
-
-    private Set<AlarmListener> alarmListeners = new HashSet<>();
-    private Set<EventListener> eventListeners = new HashSet<>();
 
     private WebSocketClient wsclient;
     private Runnable onConnectCallback; // FIXME ugly
@@ -67,9 +62,6 @@ public class WebSocketRegistrar implements WebSocketClientCallbackListener {
     public void connect(Runnable onConnectCallback) {
         this.onConnectCallback = onConnectCallback;
         wsclient.connect(); // FIXME this currently blocks. It should have a callback api instead
-        // FIXME Always have these subscriptions running
-        pendingRequests.offer(new WebSocketRequest("alarms", "subscribe"));
-        pendingRequests.offer(new WebSocketRequest("events", "subscribe"));
     }
 
     public void sendMessage(WebSocketRequest req) {
@@ -107,14 +99,6 @@ public class WebSocketRegistrar implements WebSocketClientCallbackListener {
             log.fine(String.format("Sending request %s", evt));
             wsclient.sendRequest(evt);
         }
-    }
-
-    public synchronized void addAlarmListener(AlarmListener listener) {
-        alarmListeners.add(listener);
-    }
-
-    public synchronized void addEventListener(EventListener listener) {
-        eventListeners.add(listener);
     }
 
     public void shutdown() {
@@ -176,15 +160,11 @@ public class WebSocketRegistrar implements WebSocketClientCallbackListener {
 
     @Override
     public void onEvent(Event event) {
-        synchronized (this) {
-            eventListeners.forEach(l -> l.processEvent(event));
-        }
+        YamcsPlugin.getDefault().getCatalogue(EventCatalogue.class).processEvent(event);
     }
 
     @Override
     public void onAlarm(Alarm alarm) {
-        synchronized (this) {
-            alarmListeners.forEach(l -> l.processAlarm(alarm));
-        }
+        YamcsPlugin.getDefault().getCatalogue(AlarmCatalogue.class).processAlarm(alarm);
     }
 }
