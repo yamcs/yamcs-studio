@@ -26,7 +26,6 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.EventListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class EventLogView extends ViewPart implements StudioConnectionListener, EventListener {
@@ -68,10 +67,8 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restClient, WebSocketRegistrar webSocketClient) {
-        if (webSocketClient != null) {
-            webSocketClient.addEventListener(this);
-        }
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+        webSocketClient.addEventListener(this);
     }
 
     @Override

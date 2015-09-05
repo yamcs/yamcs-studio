@@ -14,7 +14,6 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.web.RestClient;
 
 /**
  * Provides access to aggregated state on yamcs management-type information.
@@ -37,7 +36,7 @@ public class ManagementCatalogue implements StudioConnectionListener {
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         webSocketClient.subscribeToManagementInfo();
     }
 

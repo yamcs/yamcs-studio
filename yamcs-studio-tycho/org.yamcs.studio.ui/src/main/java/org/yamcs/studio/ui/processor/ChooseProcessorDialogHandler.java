@@ -15,6 +15,7 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
 import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.AbstractRestHandler;
 import org.yamcs.studio.ui.opibuilder.OPIUtils;
 
@@ -26,7 +27,8 @@ public class ChooseProcessorDialogHandler extends AbstractRestHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        if (!checkRestClient(event, "switch processor"))
+        RestClient restClient = checkRestClient(HandlerUtil.getActiveShell(event), "switch processor");
+        if (restClient == null)
             return null;
 
         Shell shell = HandlerUtil.getActiveShellChecked(event);

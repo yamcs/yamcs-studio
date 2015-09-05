@@ -12,6 +12,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.RestSendCommandRequest;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.AbstractRestHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
@@ -23,9 +24,6 @@ public class IssueCommandHandler extends AbstractRestHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        if (!checkRestClient(event, "issue command"))
-            return null;
-
         Shell shell = HandlerUtil.getActiveShell(event);
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         CommandStackView commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
@@ -35,6 +33,10 @@ public class IssueCommandHandler extends AbstractRestHandler {
     }
 
     private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
+        RestClient restClient = checkRestClient(activeShell, "issue command");
+        if (restClient == null)
+            return;
+
         RestSendCommandRequest req = RestSendCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
         restClient.sendCommand(req, new ResponseHandler() {
             @Override

@@ -32,13 +32,9 @@ import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.CenteredImageLabelProvider;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 
-/**
- * TODO show a friendly message when the thing is still loading
- */
 public class CommandHistoryView extends ViewPart implements StudioConnectionListener {
 
     private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
@@ -291,12 +287,10 @@ public class CommandHistoryView extends ViewPart implements StudioConnectionList
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-        if (webSocketClient != null) {
-            webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
-                Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
-            });
-        }
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+        webSocketClient.addCommandHistoryListener(cmdhistEntry -> {
+            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
+        });
     }
 
     @Override

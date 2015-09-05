@@ -30,7 +30,6 @@ import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.TimeCatalogue;
 import org.yamcs.studio.core.TimeListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
@@ -96,10 +95,8 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
-        if (webSocketClient != null) {
-            webSocketClient.addTimeListener(this);
-        }
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+        webSocketClient.addTimeListener(this);
     }
 
     @Override

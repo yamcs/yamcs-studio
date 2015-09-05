@@ -8,7 +8,6 @@ import java.util.TimeZone;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -67,7 +66,7 @@ public class TimeCatalogue implements StudioConnectionListener, TimeListener {
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         webSocketClient.addTimeListener(this);
         currentTime = TimeEncoding.INVALID_INSTANT;
     }

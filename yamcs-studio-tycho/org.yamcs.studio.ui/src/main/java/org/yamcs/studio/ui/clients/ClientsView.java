@@ -17,7 +17,6 @@ import org.yamcs.studio.core.ManagementCatalogue;
 import org.yamcs.studio.core.ProcessorListener;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.RestClient;
 
 public class ClientsView extends ViewPart implements StudioConnectionListener, ProcessorListener {
 
@@ -26,7 +25,7 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, P
     ClientsTableModel currentClientsModel;
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
     }
 
     @Override

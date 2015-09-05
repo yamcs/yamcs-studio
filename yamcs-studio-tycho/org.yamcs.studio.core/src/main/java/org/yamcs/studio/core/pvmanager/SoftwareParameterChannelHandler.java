@@ -47,7 +47,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1");
 
     private WebSocketRegistrar webSocketClient;
-    private RestClient restClient;
     private NamedObjectId id;
 
     public SoftwareParameterChannelHandler(String channelName) {
@@ -57,11 +56,10 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         log.info("processConnectionInfo called on " + getChannelName());
         this.disconnect();
         this.webSocketClient = webSocketClient;
-        this.restClient = restclient;
         connect();
     }
 
@@ -69,7 +67,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     public void onStudioDisconnect() {
         disconnect(); // Unregister PV
         webSocketClient = null;
-        restClient = null;
     }
 
     @Override
@@ -129,6 +126,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
                 .setId(getId())
                 .setEngValue(toValue(p, (String) newValue))).build();
 
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
         if (restClient == null) {
             callback.channelWritten(new Exception("Client is disconnected from Yamcs server"));
             return;

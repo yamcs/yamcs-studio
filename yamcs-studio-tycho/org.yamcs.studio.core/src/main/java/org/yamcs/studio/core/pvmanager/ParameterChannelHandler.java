@@ -17,7 +17,6 @@ import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsPVReader;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
-import org.yamcs.studio.core.web.RestClient;
 
 /**
  * Supports read-only PVs. Would be good if one day CSS added support for this at the PV-level,
@@ -39,7 +38,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         log.fine("onStudioConnect called on " + getChannelName());
         this.webSocketClient = webSocketClient;
         connect();

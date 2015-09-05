@@ -49,9 +49,8 @@ public class ConnectionManager {
 
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         studioConnectionListeners.add(listener);
-        // TODO this if should probably include 'whether we are currently connected'. ConnectionStatus ?
-        if (restClient != null && webSocketClient != null)
-            listener.onStudioConnect(getWebProperties(), getHornetqProperties(), restClient, webSocketClient);
+        if (isConnected())
+            listener.onStudioConnect(getWebProperties(), getHornetqProperties(), webSocketClient);
     }
 
     public void removeStudioConnectionListener(StudioConnectionListener listener) {
@@ -167,7 +166,7 @@ public class ConnectionManager {
         YamcsPlugin.getDefault().loadCommands();
 
         studioConnectionListeners.forEach(l -> {
-            l.onStudioConnect(getWebProperties(), getHornetqProperties(), restClient, webSocketClient);
+            l.onStudioConnect(getWebProperties(), getHornetqProperties(), webSocketClient);
         });
         setConnectionStatus(ConnectionStatus.Connected);
     }

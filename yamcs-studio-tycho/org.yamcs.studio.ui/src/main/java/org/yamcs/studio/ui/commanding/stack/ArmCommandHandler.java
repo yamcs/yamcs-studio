@@ -15,6 +15,7 @@ import org.yamcs.protobuf.Commanding.CommandSignificance;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.AbstractRestHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
@@ -26,9 +27,6 @@ public class ArmCommandHandler extends AbstractRestHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        if (!checkRestClient(event, "arm command"))
-            return null;
-
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
         CommandStackView commandStackView = (CommandStackView) part;
@@ -43,6 +41,10 @@ public class ArmCommandHandler extends AbstractRestHandler {
 
     private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
         RestValidateCommandRequest req = RestValidateCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
+
+        RestClient restClient = checkRestClient(activeShell, "arm command");
+        if (restClient == null)
+            return;
 
         restClient.validateCommand(req, new ResponseHandler() {
             @Override

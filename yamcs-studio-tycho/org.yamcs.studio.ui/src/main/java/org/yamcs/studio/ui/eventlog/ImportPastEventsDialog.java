@@ -2,6 +2,8 @@ package org.yamcs.studio.ui.eventlog;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,6 +28,8 @@ import org.yamcs.studio.ui.archive.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
+
+    private static final Logger log = Logger.getLogger(ImportPastEventsDialog.class.getName());
 
     private EventLogView eventLogView;
 
@@ -155,6 +159,7 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
             @Override
             public void onException(Exception e) {
                 Display.getDefault().asyncExec(() -> {
+                    log.log(Level.SEVERE, "Could not import events", e);
                     MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import events", e.getMessage());
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 });

@@ -12,7 +12,6 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.RestClient;
 
 /**
  * Used in plugin.xml core-expressions to keep track of connection state
@@ -49,7 +48,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         Display.getDefault().asyncExec(() -> {
             connected = true;
             Map newState = getCurrentState();

@@ -23,7 +23,6 @@ import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
-import org.yamcs.studio.core.web.RestClient;
 
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
@@ -111,7 +110,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         yprops = webProps;
         subjectName = hornetqProps.username;
         Display.getDefault().asyncExec(() -> updateTitle());

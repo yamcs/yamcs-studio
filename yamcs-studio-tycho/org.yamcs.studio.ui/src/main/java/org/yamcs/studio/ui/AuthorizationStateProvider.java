@@ -14,7 +14,6 @@ import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.WebSocketRegistrar;
 import org.yamcs.studio.core.YamcsAuthorizations;
 import org.yamcs.studio.core.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 
 /**
@@ -45,10 +44,10 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, RestClient restclient, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
         Display.getDefault().asyncExec(() -> {
             Map newState = getCurrentState();
-            log.fine(String.format("Fire new connection state %s", newState));
+            log.fine(String.format("Fire new authz state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });
     }
@@ -57,7 +56,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     public void onStudioDisconnect() {
         Display.getDefault().asyncExec(() -> {
             Map newState = getCurrentState();
-            log.fine(String.format("Fire new connection state %s", newState));
+            log.fine(String.format("Fire new authz state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
         });
     }
