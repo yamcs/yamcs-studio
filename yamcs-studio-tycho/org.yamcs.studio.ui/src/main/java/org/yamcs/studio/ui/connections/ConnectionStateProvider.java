@@ -7,11 +7,8 @@ import java.util.logging.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Used in plugin.xml core-expressions to keep track of connection state
@@ -48,7 +45,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
         Display.getDefault().asyncExec(() -> {
             connected = true;
             Map newState = getCurrentState();

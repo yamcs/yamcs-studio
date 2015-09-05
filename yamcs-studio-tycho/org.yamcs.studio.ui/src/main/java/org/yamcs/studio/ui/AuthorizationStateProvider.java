@@ -7,13 +7,10 @@ import java.util.logging.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 
 /**
@@ -44,7 +41,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
         Display.getDefault().asyncExec(() -> {
             Map newState = getCurrentState();
             log.fine(String.format("Fire new authz state %s", newState));

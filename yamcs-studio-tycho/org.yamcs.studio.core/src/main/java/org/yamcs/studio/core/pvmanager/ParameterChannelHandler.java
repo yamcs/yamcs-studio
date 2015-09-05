@@ -6,8 +6,6 @@ import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -15,7 +13,6 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Supports read-only PVs. Would be good if one day CSS added support for this at the PV-level,
@@ -36,7 +33,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
         log.fine("onStudioConnect called on " + getChannelName());
         connect();
     }

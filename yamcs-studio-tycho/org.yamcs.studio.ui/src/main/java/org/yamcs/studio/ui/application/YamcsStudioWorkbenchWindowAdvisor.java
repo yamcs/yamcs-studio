@@ -18,11 +18,9 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
-import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
@@ -110,9 +108,9 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        yprops = webProps;
-        subjectName = hornetqProps.username;
+    public void onStudioConnect() {
+        yprops = ConnectionManager.getInstance().getWebProperties();
+        subjectName = ConnectionManager.getInstance().getHornetqProperties().username;
         Display.getDefault().asyncExec(() -> updateTitle());
     }
 

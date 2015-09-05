@@ -14,11 +14,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.YamcsConnector;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
 public class LinksView extends ViewPart implements StudioConnectionListener, LinkListener {
@@ -71,7 +69,8 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
+        YamcsConnectData hornetqProps = ConnectionManager.getInstance().getHornetqProperties();
         yconnector.connect(hornetqProps);
         setSelectedInstance(hornetqProps.instance);
     }
@@ -149,7 +148,7 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
         hornetqProps.instance = "obcp";
         hornetqProps.username = "operator";
         hornetqProps.password = "password";
-        lv.onStudioConnect(null, hornetqProps, null);
+        lv.onStudioConnect();
 
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {

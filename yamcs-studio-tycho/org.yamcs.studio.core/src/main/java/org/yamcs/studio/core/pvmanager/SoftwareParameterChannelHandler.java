@@ -9,8 +9,6 @@ import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.RestDataSource;
@@ -24,7 +22,6 @@ import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.xtce.BooleanParameterType;
 import org.yamcs.xtce.EnumeratedParameterType;
 import org.yamcs.xtce.FloatParameterType;
@@ -54,7 +51,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
         log.info("processConnectionInfo called on " + getChannelName());
         disconnect();
         connect();

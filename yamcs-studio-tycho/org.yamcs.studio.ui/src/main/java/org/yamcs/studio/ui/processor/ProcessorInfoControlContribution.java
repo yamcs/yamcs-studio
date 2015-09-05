@@ -17,8 +17,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -28,7 +26,6 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
@@ -95,7 +92,17 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+        Display.getDefault().asyncExec(() -> {
+            processorInfo = null;
+            missionTime = TimeEncoding.INVALID_INSTANT;
+            if (!canvas.isDisposed())
+                canvas.redraw();
+        });
     }
 
     @Override
@@ -152,16 +159,6 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
     @Override
     public void statisticsUpdated(Statistics stats) {
-    }
-
-    @Override
-    public void onStudioDisconnect() {
-        Display.getDefault().asyncExec(() -> {
-            processorInfo = null;
-            missionTime = TimeEncoding.INVALID_INSTANT;
-            if (!canvas.isDisposed())
-                canvas.redraw();
-        });
     }
 
     @Override

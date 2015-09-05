@@ -15,12 +15,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.YamcsConnector;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueueView extends ViewPart implements StudioConnectionListener, CommandQueueListener {
@@ -42,7 +40,8 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
     private volatile String selectedInstance;
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
+        YamcsConnectData hornetqProps = ConnectionManager.getInstance().getHornetqProperties();
         yconnector.connect(hornetqProps);
         setSelectedInstance(hornetqProps.instance);
     }
@@ -211,7 +210,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
         hornetqProps.instance = "obcp";
         hornetqProps.username = "operator";
         hornetqProps.password = "password";
-        cqv.onStudioConnect(null, hornetqProps, null);
+        cqv.onStudioConnect();
 
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {

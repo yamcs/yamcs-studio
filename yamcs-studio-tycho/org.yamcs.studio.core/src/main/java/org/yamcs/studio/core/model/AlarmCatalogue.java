@@ -3,10 +3,9 @@ package org.yamcs.studio.core.model;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Alarms.Alarm;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
@@ -23,7 +22,8 @@ public class AlarmCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
+        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
         webSocketClient.sendMessage(new WebSocketRequest("alarms", "subscribe"));
     }
 

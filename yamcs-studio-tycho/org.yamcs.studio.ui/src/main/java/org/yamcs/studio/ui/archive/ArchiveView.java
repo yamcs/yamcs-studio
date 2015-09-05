@@ -38,16 +38,13 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.YamcsException;
 import org.yamcs.api.ConnectionListener;
-import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.YamcsConnector;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.ui.RCPUtils;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.studio.ui.connections.ConnectionStateProvider;
@@ -222,8 +219,8 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
-        yconnector.connect(hornetqProps);
+    public void onStudioConnect() {
+        yconnector.connect(ConnectionManager.getInstance().getHornetqProperties());
     }
 
     @Override

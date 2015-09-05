@@ -7,8 +7,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -16,7 +14,6 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 public class ClientsView extends ViewPart implements StudioConnectionListener, ManagementListener {
 
@@ -25,7 +22,7 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, M
     ClientsTableModel currentClientsModel;
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
     }
 
     @Override

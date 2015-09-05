@@ -7,14 +7,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
@@ -39,7 +38,8 @@ public class ManagementCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
+        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
         webSocketClient.sendMessage(new WebSocketRequest("management", "subscribe"));
     }
 

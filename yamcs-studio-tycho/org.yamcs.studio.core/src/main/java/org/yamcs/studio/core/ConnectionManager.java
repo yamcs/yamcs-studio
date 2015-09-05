@@ -53,7 +53,7 @@ public class ConnectionManager {
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         studioConnectionListeners.add(listener);
         if (isConnected())
-            listener.onStudioConnect(getWebProperties(), getHornetqProperties(), webSocketClient);
+            listener.onStudioConnect();
     }
 
     public void removeStudioConnectionListener(StudioConnectionListener listener) {
@@ -151,9 +151,7 @@ public class ConnectionManager {
         log.fine("WebSocket connected");
         YamcsAuthorizations.getInstance().getAuthorizations();
 
-        studioConnectionListeners.forEach(l -> {
-            l.onStudioConnect(getWebProperties(), getHornetqProperties(), webSocketClient);
-        });
+        studioConnectionListeners.forEach(l -> l.onStudioConnect());
         setConnectionStatus(ConnectionStatus.Connected);
     }
 
@@ -256,7 +254,8 @@ public class ConnectionManager {
         return connectionInfo.getConnection(mode);
     }
 
-    private YamcsConnectData getHornetqProperties() {
+    @Deprecated
+    public YamcsConnectData getHornetqProperties() {
         YamcsConnectionProperties yprops = getWebProperties();
         YamcsConnectData hornetqProps = new YamcsConnectData();
         hornetqProps.host = yprops.getHost();

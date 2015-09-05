@@ -14,9 +14,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
 import org.yamcs.studio.core.ConnectionManager;
@@ -52,7 +50,8 @@ public class CommandingCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioConnect(YamcsConnectionProperties webProps, YamcsConnectData hornetqProps, WebSocketRegistrar webSocketClient) {
+    public void onStudioConnect() {
+        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
         webSocketClient.sendMessage(new WebSocketRequest("management", "cmdhistory"));
         loadMetaCommands();
     }
