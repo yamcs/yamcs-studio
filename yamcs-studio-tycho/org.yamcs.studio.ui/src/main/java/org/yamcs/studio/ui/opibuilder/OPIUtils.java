@@ -1,8 +1,9 @@
 package org.yamcs.studio.ui.opibuilder;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.csstudio.opibuilder.runmode.IOPIRuntime;
-import org.csstudio.opibuilder.runmode.OPIView;
-import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
@@ -14,6 +15,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public class OPIUtils {
+
+    private static final Logger log = Logger.getLogger(OPIUtils.class.getName());
 
     public static void resetDisplays() {
         IWorkbench workbench = PlatformUI.getWorkbench();
@@ -35,10 +38,9 @@ public class OPIUtils {
 
     private static void refreshDisplay(IOPIRuntime opiRuntime) {
         try {
-            OPIView.ignoreMemento();
             opiRuntime.setOPIInput(opiRuntime.getOPIInput());
         } catch (PartInitException e) {
-            ErrorHandlerUtil.handleError("Failed to refresh OPI", e);
+            log.log(Level.SEVERE, "Failed to refresh OPI", e);
         }
     }
 }
