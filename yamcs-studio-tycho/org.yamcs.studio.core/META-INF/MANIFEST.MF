@@ -26,6 +26,7 @@ Import-Package: io.netty.handler.codec,
  org.epics.pvmanager.vtype
 Export-Package: org.yamcs.studio.core,
  org.yamcs.studio.core.model,
+ org.yamcs.studio.core.security,
  org.yamcs.studio.core.vtype,
  org.yamcs.studio.core.web,
  org.yamcs.studio.core.pvmanager

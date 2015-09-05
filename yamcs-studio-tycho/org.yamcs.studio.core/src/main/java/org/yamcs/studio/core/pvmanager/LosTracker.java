@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.pvmanager;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -23,7 +23,7 @@ import org.yamcs.utils.TimeEncoding;
 public class LosTracker {
     private static final Logger log = Logger.getLogger(LosTracker.class.getName());
 
-    Map<YamcsPVReader, PvExpiration> pvs = new HashMap<YamcsPVReader, LosTracker.PvExpiration>();
+    Map<YamcsPVReader, PvExpiration> pvs = new HashMap<>();
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
 
@@ -58,15 +58,10 @@ public class LosTracker {
             if (!lastKnownValue.hasExpirationTime())
                 return;
 
-            Date now = new Date();
-            Date generationTime = new Date(TimeEncoding.toUnixTime(lastKnownValue
-                    .getGenerationTime()));
-            Date acquisitionTime = new Date(TimeEncoding.toUnixTime(lastKnownValue
-                    .getAcquisitionTime()));
-            Date expirationTime = new Date(TimeEncoding.toUnixTime(lastKnownValue
-                    .getExpirationTime()));
+            Calendar now = Calendar.getInstance();
+            Calendar expirationTime = TimeEncoding.toCalendar(lastKnownValue.getExpirationTime());
 
-            long expirationDelayMs = expirationTime.getTime() - now.getTime();
+            long expirationDelayMs = expirationTime.getTimeInMillis() - now.getTimeInMillis();
 
             losHandle = scheduler.schedule(displayLos, expirationDelayMs, TimeUnit.MILLISECONDS);
         }
