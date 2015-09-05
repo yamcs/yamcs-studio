@@ -12,8 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
@@ -52,7 +50,7 @@ public class CommandingCatalogue implements Catalogue {
     @Override
     public void onStudioConnect() {
         WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("management", "cmdhistory"));
+        webSocketClient.sendMessage(new WebSocketRequest("cmdhistory", "subscribe"));
         loadMetaCommands();
     }
 
@@ -77,18 +75,10 @@ public class CommandingCatalogue implements Catalogue {
                 RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
                 try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
                     XtceDb newMdb = (XtceDb) oin.readObject();
-                    Display.getDefault().asyncExec(() -> {
-                        mdb = newMdb;
-                        metaCommands = mdb.getMetaCommands();
-                    });
+                    mdb = newMdb;
+                    metaCommands = mdb.getMetaCommands();
                 } catch (IOException | ClassNotFoundException e) {
                     log.log(Level.SEVERE, "Could not deserialize mdb", e);
-                    Display.getDefault().asyncExec(() -> {
-                        MessageDialog.openError(Display.getDefault().getActiveShell(),
-                                "Incompatible Yamcs Server", "Could not interpret Mission Database. "
-                                        + "This usually happens when Yamcs Studio is not, or no longer, "
-                                        + "compatible with Yamcs Server.");
-                    });
                 }
             }
 

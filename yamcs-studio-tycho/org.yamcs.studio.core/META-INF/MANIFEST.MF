@@ -10,16 +10,16 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.epics.vtype,
  org.epics.util,
- org.eclipse.ui,
  org.eclipse.core.runtime,
  org.yamcs.osgiclient,
  org.csstudio.utility.pvmanager,
  org.eclipse.core.resources,
+ org.eclipse.core.runtime,
  org.eclipse.core.expressions,
+ org.eclipse.equinox.security,
  org.eclipse.osgi.services,
  org.eclipse.platform,
- javax.inject,
- org.eclipse.equinox.security
+ javax.inject
 Import-Package: io.netty.handler.codec,
  io.netty.handler.codec.protobuf,
  org.epics.pvmanager,

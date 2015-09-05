@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.Catalogue;
@@ -15,7 +15,7 @@ import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
-public class YamcsPlugin extends AbstractUIPlugin {
+public class YamcsPlugin extends Plugin {
 
     public static final String PLUGIN_ID = "org.yamcs.studio.core";
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());

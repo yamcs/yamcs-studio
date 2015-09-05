@@ -1,20 +1,10 @@
 package org.yamcs.studio.core;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
@@ -23,10 +13,7 @@ import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
- * Handles external connections and its related state. This logic was originally in YamcsPlugin, but
- * in an attempt to improve readability, they were bundled up here.
- *
- * TODO this should eventually move into UI, or the UI-parts should be filtered out of it.
+ * Handles external connections and its related state.
  */
 public class ConnectionManager {
 
@@ -43,7 +30,8 @@ public class ConnectionManager {
     private WebSocketRegistrar webSocketClient;
 
     public static ConnectionManager getInstance() {
-        return YamcsPlugin.getDefault().getConnectionManager();
+        YamcsPlugin plugin = YamcsPlugin.getDefault(); // null when workbench is closing
+        return (plugin != null) ? plugin.getConnectionManager() : null;
     }
 
     public boolean isConnected() {
@@ -66,6 +54,14 @@ public class ConnectionManager {
             mode = ConnectionMode.PRIMARY;
     }
 
+    public ConnectionInfo getConnectionInfo() {
+        return connectionInfo;
+    }
+
+    public ConnectionMode getConnectionMode() {
+        return mode;
+    }
+
     public void connect(YamcsCredentials creds) {
         connect(creds, mode);
     }
@@ -77,26 +73,13 @@ public class ConnectionManager {
 
         setConnectionStatus(ConnectionStatus.Connecting);
 
-        // (re)establish the connections to yamcs
         YamcsConnectionProperties yrops = getWebProperties();
         restClient = new RestClient(yrops, creds);
-        webSocketClient = new WebSocketRegistrar(yrops, creds);
 
-        // We start other clients as well
+        // (re)establish the connection to yamcs
         log.info("Connecting WebSocket");
-        new Thread(() -> {
-            try {
-                webSocketClient.connect(() -> setupConnections());
-            } catch (Exception e) {
-                log.log(Level.SEVERE, "Could not connect", e);
-                Display.getDefault().asyncExec(() -> {
-                    String detail = (e.getMessage() != null) ? e.getMessage() : e.getClass().getSimpleName();
-                    MessageDialog.openError(Display.getDefault().getActiveShell(),
-                            yrops.getYamcsConnectionString(), "Could not connect. " + detail);
-                    // TODO attempt failover
-                });
-            }
-        }).start();
+        webSocketClient = new WebSocketRegistrar(yrops, creds);
+        webSocketClient.connect();
     }
 
     public void disconnectIfConnected() {
@@ -146,51 +129,20 @@ public class ConnectionManager {
             setConnectionStatus(ConnectionStatus.Disconnected);
     }
 
-    // Likely not on the swt thread
-    void setupConnections() {
+    public void onWebSocketConnected() {
         log.fine("WebSocket connected");
         YamcsAuthorizations.getInstance().getAuthorizations();
 
-        studioConnectionListeners.forEach(l -> l.onStudioConnect());
         setConnectionStatus(ConnectionStatus.Connected);
+        studioConnectionListeners.forEach(l -> l.onStudioConnect());
     }
 
-    public void connectionFailure(String errorMessage) {
-        Display.getDefault().asyncExec(() -> {
-            askSwitchNode(errorMessage);
-        });
-    }
-
-    private void askSwitchNode(String errorMessage) {
-        String message = "Connection error with " + mode.getPrettyName().toLowerCase() + " Yamcs.";
-        if (errorMessage != null && errorMessage != "") {
-            message += "\nDetails:" + errorMessage;
+    public void onWebSocketConnectionFailed(Throwable t) {
+        log.log(Level.SEVERE, "Could not connect", t);
+        synchronized (this) {
+            setConnectionStatus(ConnectionStatus.ConnectionFailure);
         }
-        ConnectionMode nextMode = (mode == ConnectionMode.PRIMARY) ? ConnectionMode.FAILOVER : ConnectionMode.PRIMARY;
-        if (connectionInfo.getConnection(nextMode) != null) {
-            message += "\n\n" + "Do you want to switch to the " + nextMode.getPrettyName().toLowerCase() + " server?";
-            MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message,
-                    MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
-            if (dialog.open() == Dialog.OK) {
-                Display.getDefault().asyncExec(() -> {
-                    disconnect();
-                    try {
-                        switchNode();
-                    } catch (Exception e) {
-                        log.log(Level.SEVERE, "Could not switch node", e);
-                        notifyConnectionFailure(e.getMessage());
-                    }
-                });
-            } else {
-                abortSwitchNode();
-            }
-        } else {
-            String connectionString = connectionInfo.getConnection(mode).getYamcsConnectionString();
-            setConnectionStatus(ConnectionStatus.Disconnected);
-            // Commented out until we fix the semantics between disconnection and connection failure
-            // (the problem lies in the websocketclient)
-            //MessageDialog.openWarning(null, connectionString, "You are no longer connected to Yamcs");
-        }
+        studioConnectionListeners.forEach(l -> l.onStudioConnectionFailure(t));
     }
 
     public void switchNode() {
@@ -206,32 +158,8 @@ public class ConnectionManager {
         connect(creds, mode);
     }
 
-    public void notifyException(Throwable t) {
-        Display.getDefault().asyncExec(() -> {
-            if (t.getMessage().contains("401")) {
-                // Show Login Pane. Yes this should all really be moved to UI
-                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
-                IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
-                try {
-                    Command cmd = commandService.getCommand("org.yamcs.studio.ui.login");
-                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
-                } catch (Exception exception) {
-                    log.log(Level.SEVERE, "Could not execute command", exception);
-                }
-            }
-        });
-    }
-
-    public void notifyConnectionFailure(String errorMessage) {
-        log.info(String.format("Got word of failure. Current state is %s. Detail: %s", connectionStatus, errorMessage));
-        synchronized (this) {
-            if (connectionStatus != ConnectionStatus.Connected && connectionStatus != ConnectionStatus.Connecting)
-                return;
-            setConnectionStatus(ConnectionStatus.ConnectionFailure);
-        }
+    public void onWebSocketDisconnected() {
         disconnect();
-        connectionFailure(errorMessage);
     }
 
     public boolean isPrivilegesEnabled() {
@@ -267,11 +195,6 @@ public class ConnectionManager {
             hornetqProps.ssl = true;
         }
         return hornetqProps;
-    }
-
-    private void abortSwitchNode() {
-        if (connectionStatus == ConnectionStatus.ConnectionFailure)
-            setConnectionStatus(ConnectionStatus.Disconnected);
     }
 
     private void setConnectionStatus(ConnectionStatus connectionStatus) {

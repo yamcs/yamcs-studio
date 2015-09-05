@@ -6,15 +6,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.yamcs.api.ws.WebSocketClient;
-import org.yamcs.api.ws.WebSocketClientCallbackListener;
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Alarms.Alarm;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Websocket.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.protobuf.Yamcs.StreamData;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -32,13 +32,12 @@ import org.yamcs.studio.core.security.YamcsCredentials;
 /**
  * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient.
  */
-public class WebSocketRegistrar implements WebSocketClientCallbackListener {
+public class WebSocketRegistrar implements WebSocketClientCallback {
 
     private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
     private WebSocketClient wsclient;
-    private Runnable onConnectCallback; // FIXME ugly
 
     // Order all subscribe/unsubscribe events
     private final BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
@@ -59,24 +58,37 @@ public class WebSocketRegistrar implements WebSocketClientCallbackListener {
         });
     }
 
-    public void connect(Runnable onConnectCallback) {
-        this.onConnectCallback = onConnectCallback;
-        wsclient.connect(); // FIXME this currently blocks. It should have a callback api instead
-    }
-
-    public void sendMessage(WebSocketRequest req) {
-        pendingRequests.offer(req);
+    public void connect() {
+        wsclient.connect();
     }
 
     @Override
-    public void onConnect() { // When the web socket was successfully established
+    public void connectionFailed(Throwable t) {
+        log.fine("Connection Failed. " + t.getMessage());
+        ConnectionManager.getInstance().onWebSocketConnectionFailed(t);
+    }
+
+    @Override
+    public void connected() {
         log.fine("WebSocket established. Notifying listeners");
-        onConnectCallback.run(); // FIXME ugly hack
+        ConnectionManager.getInstance().onWebSocketConnected();
         requestSender.start(); // Go over pending subscription requests
     }
 
     public void disconnect() {
         wsclient.disconnect();
+    }
+
+    @Override
+    public void disconnected() {
+        log.info("WebSocket disconnected. Inform ConnectionManager");
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        if (connectionManager != null) // null when workbench is closing
+            connectionManager.onWebSocketDisconnected();
+    }
+
+    public void sendMessage(WebSocketRequest req) {
+        pendingRequests.offer(req);
     }
 
     private void sendMergedRequests() throws InterruptedException {
@@ -107,64 +119,47 @@ public class WebSocketRegistrar implements WebSocketClientCallbackListener {
     }
 
     @Override
-    public void onException(Throwable t) {
-        ConnectionManager.getInstance().notifyException(t);
-    }
-
-    @Override
-    public void onDisconnect() { // When the web socket connection state changed
-        log.info("WebSocket disconnected. Notifying listeners");
-        YamcsPlugin plugin = YamcsPlugin.getDefault();
-        if (plugin != null) // This can be null when the workbench is closing
-            plugin.getConnectionManager().notifyConnectionFailure(null);
-    }
-
-    @Override
     public void onInvalidIdentification(NamedObjectId id) {
         YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class).processInvalidIdentification(id);
     }
 
     @Override
-    public void onTimeInfo(TimeInfo timeInfo) {
-        YamcsPlugin.getDefault().getCatalogue(TimeCatalogue.class).processTimeInfo(timeInfo);
-    }
-
-    @Override
-    public void onParameterData(ParameterData pdata) {
-        YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class).processParameterData(pdata);
-    }
-
-    @Override
-    public void onClientInfoData(ClientInfo clientInfo) {
-        YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processClientInfo(clientInfo);
-    }
-
-    @Override
-    public void onProcessorInfoData(ProcessorInfo processorInfo) {
-        YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processProcessorInfo(processorInfo);
-    }
-
-    @Override
-    public void onCommandHistoryData(CommandHistoryEntry cmdhistEntry) {
-        YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandHistoryEntry(cmdhistEntry);
-    }
-
-    @Override
-    public void onStatisticsData(Statistics statistics) {
-        YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processStatistics(statistics);
-    }
-
-    @Override
-    public void onStreamData(StreamData streamData) {
-    }
-
-    @Override
-    public void onEvent(Event event) {
-        YamcsPlugin.getDefault().getCatalogue(EventCatalogue.class).processEvent(event);
-    }
-
-    @Override
-    public void onAlarm(Alarm alarm) {
-        YamcsPlugin.getDefault().getCatalogue(AlarmCatalogue.class).processAlarm(alarm);
+    public void onMessage(WebSocketSubscriptionData data) {
+        switch (data.getType()) {
+        case TIME_INFO:
+            TimeInfo timeInfo = data.getTimeInfo();
+            YamcsPlugin.getDefault().getCatalogue(TimeCatalogue.class).processTimeInfo(timeInfo);
+            break;
+        case PARAMETER:
+            ParameterData pdata = data.getParameterData();
+            YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class).processParameterData(pdata);
+            break;
+        case CLIENT_INFO:
+            ClientInfo clientInfo = data.getClientInfo();
+            YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processClientInfo(clientInfo);
+            break;
+        case PROCESSOR_INFO:
+            ProcessorInfo processorInfo = data.getProcessorInfo();
+            YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processProcessorInfo(processorInfo);
+            break;
+        case CMD_HISTORY:
+            CommandHistoryEntry cmdhistEntry = data.getCommand();
+            YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandHistoryEntry(cmdhistEntry);
+            break;
+        case PROCESSING_STATISTICS:
+            Statistics statistics = data.getStatistics();
+            YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processStatistics(statistics);
+            break;
+        case EVENT:
+            Event event = data.getEvent();
+            YamcsPlugin.getDefault().getCatalogue(EventCatalogue.class).processEvent(event);
+            break;
+        case ALARM:
+            Alarm alarm = data.getAlarm();
+            YamcsPlugin.getDefault().getCatalogue(AlarmCatalogue.class).processAlarm(alarm);
+            break;
+        default:
+            throw new IllegalArgumentException("Unexpected data type " + data.getType());
+        }
     }
 }

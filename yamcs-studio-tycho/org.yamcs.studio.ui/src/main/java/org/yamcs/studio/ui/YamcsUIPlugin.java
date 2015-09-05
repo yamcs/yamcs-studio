@@ -13,7 +13,6 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "org.yamcs.studio.ui";
 
-    // The shared instance
     private static YamcsUIPlugin plugin;
 
     @Override
@@ -21,6 +20,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
         TimeEncoding.setUp();
+        ConnectionUIHelper.getInstance();
     }
 
     @Override
