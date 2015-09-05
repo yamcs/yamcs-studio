@@ -37,6 +37,10 @@ public class LosTracker {
         PvExpiration pvExpiration = pvs.get(pvReader);
         pvExpiration.updateLosHandle(pval);
     }
+    
+    public void shutdown() {
+        scheduler.shutdown();
+    }
 
     class PvExpiration
     {

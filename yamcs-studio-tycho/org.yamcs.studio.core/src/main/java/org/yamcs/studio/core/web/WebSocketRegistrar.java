@@ -180,6 +180,7 @@ public class WebSocketRegistrar implements MDBContextListener, WebSocketClientCa
     public void shutdown() {
         disconnect();
         wsclient.shutdown();
+        losTracker.shutdown();
     }
 
     @Override
