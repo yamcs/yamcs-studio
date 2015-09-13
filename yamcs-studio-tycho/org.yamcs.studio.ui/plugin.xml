@@ -717,7 +717,7 @@
             class="org.yamcs.studio.ui.clients.ClientsView"
             icon="icons/eview16/clients.png"
             id="org.yamcs.studio.ui.clients.ClientsView"
-            name="Connected Clients"/>            
+            name="Yamcs Clients"/>            
             
    </extension>
 
