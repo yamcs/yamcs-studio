@@ -75,10 +75,6 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         requestSender.start(); // Go over pending subscription requests
     }
 
-    public void disconnect() {
-        wsclient.disconnect();
-    }
-
     @Override
     public void disconnected() {
         log.info("WebSocket disconnected. Inform ConnectionManager");
@@ -114,7 +110,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
     }
 
     public void shutdown() {
-        disconnect();
+        //wsclient.disconnect();
         wsclient.shutdown();
     }
 
