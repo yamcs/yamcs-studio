@@ -9,7 +9,6 @@ import org.csstudio.security.SecuritySupport;
 import org.csstudio.security.authorization.Authorizations;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -43,7 +42,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
         configurer.setShowCoolBar(true);
         configurer.setShowFastViewBars(true);
         configurer.setShowProgressIndicator(true);
-        configurer.setShowPerspectiveBar(false);
+        configurer.setShowPerspectiveBar(true);
         configurer.setShowStatusLine(false);
         configurer.setTitle("Yamcs Studio");
 
@@ -127,25 +126,14 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
     }
 
     private void updateTitle() {
-        IWorkbenchPage page = getWindowConfigurer().getWindow().getActivePage();
         String label = "Yamcs Studio";
-        if (page != null && page.getPerspective() != null) {
-            IPerspectiveDescriptor perspective = getWindowConfigurer().getWindow().getActivePage().getPerspective();
-            if (perspective.getId().equals(IDs.OPI_EDITOR_PERSPECTIVE))
-                label = "Yamcs Studio Editor";
-            else if (perspective.getId().equals(IDs.OPI_RUNTIME_PERSPECTIVE))
-                label = "Yamcs Studio Runtime";
-            else
-                label = perspective.getLabel();
-        }
-
         if (yprops != null) {
             String host = yprops.getHost();
             String instance = yprops.getInstance();
             if (isBlank(subjectName))
-                label = String.format("%s (anonymous@%s/%s)", label, host, instance);
+                label = String.format("Yamcs Studio (anonymous@%s/%s)", host, instance);
             else
-                label = String.format("%s (%s@%s/%s)", label, subjectName, host, instance);
+                label = String.format("Yamcs Studio (%s@%s/%s)", subjectName, host, instance);
         }
         getWindowConfigurer().setTitle(label);
     }

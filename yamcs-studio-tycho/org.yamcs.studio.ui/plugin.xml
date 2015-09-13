@@ -12,7 +12,7 @@
                value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png,icons/css256.png"/>
          <property
                name="aboutText"
-               value="CS-Studio customized to suit Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
          <property
                name="aboutImage"
                value="icons/aboutSide.png"/>
@@ -329,18 +329,6 @@
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.importCommand"
             name="Import Events">
-      </command>
-      <command
-            defaultHandler="org.yamcs.studio.ui.OpenPerspectiveHandler"
-            id="org.yamcs.studio.ui.commands.openPerspectiveCommand"
-            name="Open Perspective">
-         <commandParameter
-               id="org.eclipse.ui.commands.radioStateParameter"
-               name="Perspective Parameter"
-               optional="false"/>
-         <state
-               class="org.eclipse.ui.handlers.RadioState:org.csstudio.opibuilder.OPIRuntime.perspective"
-               id="org.eclipse.ui.commands.radioState"/>
       </command>
    </extension>
    
@@ -744,8 +732,6 @@
          <hiddenMenuItem id="org.csstudio.security.logout"/>
          <!-- Looks weird with the '...' in the label. Want to replace to sth in file-menu instead, like eclipse -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
-         <!-- Try to avoid confusion, perspectives already will open new windows -->
-         <hiddenMenuItem id="org.eclipse.ui.window.newWindow"/>
          <!-- Hide this loaded help menu, with something simpler defined in action bar advisor -->
          <hiddenMenuItem id="help"/>
       </perspectiveExtension>
@@ -950,60 +936,52 @@
          <toolbar id="additions"/>
       </menuContribution>
       
-      <!-- Add direct menu to switch perspectives (because we disable the horrible
-           built-in perspective-switcher-bar) -->
-      <menuContribution locationURI="menu:window?after=additions">
-       	 <separator name="start-of-perspectives" visible="true"/>
-       	 <dynamic id="org.yamcs.studio.ui.menu.perspectiveItems" class="org.yamcs.studio.ui.OpenWindowsCompoundContributionItem"/>
-       	 <separator name="end-of-perspectives" visible="true"/>
-      </menuContribution>
-      
-       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.add"
-                icon="icons/elcl16/new_command.png"
-                disabledIcon="icons/dlcl16/new_command.png"
-                label="New Command"
-                style="push"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.delete"
-                icon="icons/elcl16/remove.png"
-                disabledIcon="icons/dlcl16/remove.png"
-                label="Delete Command"
-                style="push"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.deleteAll"
-                icon="icons/elcl16/removeall.png"
-                disabledIcon="icons/dlcl16/removeall.png"
-                label="Delete All Commands"
-                style="push"/>
-          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.skip"
-                icon="icons/elcl16/stepover_co.png"
-                disabledIcon="icons/dlcl16/stepover_co.png"
-                label="Skip Command"
-                style="push"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.restart"
-                icon="icons/elcl16/restart_co.png"
-                disabledIcon="icons/dlcl16/restart_co.png"
-                label="Clear Execution State"
-                style="push"/>
-          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.export"
-                icon="icons/elcl16/export_wiz.png"
-                disabledIcon="icons/dlcl16/export_wiz.png"
-                label="Export Stack"
-                style="push"/>
-          <command
-                commandId="org.yamcs.studio.ui.commanding.stack.import"
-                icon="icons/elcl16/import_wiz.gif"
-                disabledIcon="icons/dlcl16/import_wiz.gif"
-                label="Import a Stack"
-                style="push"/>
-          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.add"
+               icon="icons/elcl16/new_command.png"
+               disabledIcon="icons/dlcl16/new_command.png"
+               label="New Command"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.delete"
+               icon="icons/elcl16/remove.png"
+               disabledIcon="icons/dlcl16/remove.png"
+               label="Delete Command"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.deleteAll"
+               icon="icons/elcl16/removeall.png"
+               disabledIcon="icons/dlcl16/removeall.png"
+               label="Delete All Commands"
+               style="push"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.skip"
+               icon="icons/elcl16/stepover_co.png"
+               disabledIcon="icons/dlcl16/stepover_co.png"
+               label="Skip Command"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.restart"
+               icon="icons/elcl16/restart_co.png"
+               disabledIcon="icons/dlcl16/restart_co.png"
+               label="Clear Execution State"
+               style="push"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.export"
+               icon="icons/elcl16/export_wiz.png"
+               disabledIcon="icons/dlcl16/export_wiz.png"
+               label="Export Stack"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.import"
+               icon="icons/elcl16/import_wiz.gif"
+               disabledIcon="icons/dlcl16/import_wiz.gif"
+               label="Import a Stack"
+               style="push"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
       
       <!-- Add icons to the Archive view toolbar -->
@@ -1104,97 +1082,6 @@
             allPopups="false"
             locationURI="toolbar:studiocoolbar?after=processorinfo">
          <control id="studiocontributions.processorInfo" class="org.yamcs.studio.ui.processor.ProcessorInfoControlContribution"/>
-      </menuContribution>
-      
-      <!--menuContribution
-            allPopups="false"
-            locationURI="toolbar:studiocoolbar?after=processorcontrols">
-         <!- - Must be outside of toolbar, to trigger the height - ->
-         <command
-               commandId="org.yamcs.studio.ui.processor.spacer"
-               icon="icons/spacer40x32.png"
-               tooltip=""
-               id="org.yamcs.studio.toolbar.spacer40x32">
-         </command>
-      </menuContribution-->
-      
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:org.eclipse.ui.main.toolbar">
-         <!-- Commands inside toolbar so that they don't stretch -->
-         <toolbar id="controls.processorcontrols">
-            <!--command
-                  commandId="org.yamcs.studio.ui.processor.goToBeginningCommand"
-                  icon="icons/first.png"
-                  id="org.yamcs.studio.toolbar.goToBeginningProcessor"
-                  tooltip="Step to First Update">
-            </command>
-            <command
-                  commandId="org.yamcs.studio.ui.processor.reverseCommand"
-                  icon="icons/reverse.png"
-                  id="org.yamcs.studio.toolbar.reverseProcessor"
-                  tooltip="Step to Previous Update">
-            </command>
-            <command
-                  commandId="org.yamcs.studio.ui.processor.pauseCommand"
-                  icon="icons/pause.png"
-                  id="org.yamcs.studio.toolbar.pauseProcessor"
-                  tooltip="Pause Processing">
-            <visibleWhen>
-               <or>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value=""/>
-                  </with>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="INITIALIZATION"/>
-                  </with>
-                  <with variable="org.yamcs.studio.ui.processor.state.processing">
-                     <equals value="RUNNING"/>
-                  </with>
-               </or>
-            </visibleWhen>
-            </command>
-            <command
-                  commandId="org.yamcs.studio.ui.processor.playCommand"
-                  icon="icons/play.png"
-                  id="org.yamcs.studio.toolbar.playProcessor"
-                  tooltip="Resume Processing">
-               <visibleWhen>
-                  <or>
-                     <with variable="org.yamcs.studio.ui.processor.state.processing">
-                        <equals value="STOPPED"/>
-                     </with>
-                     <with variable="org.yamcs.studio.ui.processor.state.processing">
-                        <equals value="ERROR"/>
-                     </with>
-                     <with variable="org.yamcs.studio.ui.processor.state.processing">
-                        <equals value="PAUSED"/>
-                     </with>
-                     <with variable="org.yamcs.studio.ui.processor.state.processing">
-                        <equals value="CLOSED"/>
-                     </with>
-                  </or>
-  	         </visibleWhen>
-            </command>
-            <command
-                  commandId="org.yamcs.studio.ui.processor.forwardCommand"
-                  icon="icons/forward.png"
-                  id="org.yamcs.studio.toolbar.forwardProcessor"
-                  tooltip="Step to Next Update">
-            </command>
-            <command
-                  commandId="org.yamcs.studio.ui.processor.goToEndCommand"
-                  icon="icons/last.png"
-                  id="org.yamcs.studio.toolbar.goToEndProcessor"
-                  tooltip="Step to Last Update">
-            </command-->
-            <command
-                  commandId="org.yamcs.studio.ui.processor.spacer"
-                  icon="icons/spacer40x32.png"
-                  tooltip=""
-                  id="org.yamcs.studio.toolbar.spacer40x32">
-            </command>
-         </toolbar>
       </menuContribution>
         
       <menuContribution
