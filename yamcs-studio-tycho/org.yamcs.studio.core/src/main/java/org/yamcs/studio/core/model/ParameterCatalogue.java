@@ -64,15 +64,19 @@ public class ParameterCatalogue implements Catalogue {
         pvReader.processConnectionInfo(new PVConnectionInfo(p));
         // Register (pending) websocket request
         NamedObjectList idList = pvReader.toNamedObjectList();
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new MergeableWebSocketRequest("parameter", "subscribe", idList));
+        if (ConnectionManager.getInstance().isConnected()) {
+            WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
+            webSocketClient.sendMessage(new MergeableWebSocketRequest("parameter", "subscribe", idList));
+        }
     }
 
     public synchronized void unregister(YamcsPVReader pvReader) {
         pvReadersById.remove(pvReader);
         NamedObjectList idList = pvReader.toNamedObjectList();
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
+        if (ConnectionManager.getInstance().isConnected()) {
+            WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
+            webSocketClient.sendMessage(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
+        }
     }
 
     public synchronized void processMetaParameters(List<RestParameter> metaParameters) {
