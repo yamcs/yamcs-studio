@@ -24,9 +24,9 @@ import org.osgi.framework.Bundle;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 
 /**
- * Creates a project called 'Sample MCS', but unlike the CSS DefaultProject, it will only do so if
- * there are no other projects in the workspace. So if the user wants to remove it, it will not be
- * recreated.
+ * Creates a project called 'YSS' -- or Yamcs Simulation System, but unlike the CSS DefaultProject,
+ * it will only do so if there are no other projects in the workspace. So if the user wants to
+ * remove it, it will not be recreated.
  */
 public class DefaultYamcsStudioProject extends DefaultProject {
 
@@ -37,7 +37,7 @@ public class DefaultYamcsStudioProject extends DefaultProject {
             return null;
 
         // Create a default project
-        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("Sample MCS");
+        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("YSS");
         try {
             project.create(new NullProgressMonitor());
         } catch (CoreException ex) {
@@ -64,7 +64,7 @@ public class DefaultYamcsStudioProject extends DefaultProject {
         Bundle bundle = YamcsUIPlugin.getDefault().getBundle();
         try {
             URL location = FileLocator.toFileURL(bundle.getEntry("/"));
-            File templateRoot = new File(location.getPath(), "sample-mcs-project");
+            File templateRoot = new File(location.getPath(), "sample-yss-project");
             RelativeFileSystemStructureProvider structureProvider = new RelativeFileSystemStructureProvider(templateRoot);
             ImportOperation operation = new ImportOperation(projectHandle.getFullPath(), templateRoot, structureProvider,
                     new IOverwriteQuery() {
