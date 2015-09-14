@@ -98,7 +98,11 @@
         We have our own richer modal for that. -->
       <activityPatternBinding
             activityId="yamcsstudio.disableextensions"
-            pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>  
+            pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
+      <!-- Hide CS-Studio perspective from perspective switcher and friends -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern=".*/org\.csstudio\.utility\.product\.CSStudioPerspective"/>
    </extension>   
    
    <!--
