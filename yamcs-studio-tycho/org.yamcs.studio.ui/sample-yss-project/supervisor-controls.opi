@@ -10,7 +10,7 @@
   <macros>
     <include_parent_macros>true</include_parent_macros>
   </macros>
-  <boy_version>4.0.103.201504151109</boy_version>
+  <boy_version>4.0.104.201509041836</boy_version>
   <show_edit_range>true</show_edit_range>
   <widget_type>Display</widget_type>
   <auto_scale_widgets>
@@ -19,7 +19,7 @@
     <min_height>-1</min_height>
   </auto_scale_widgets>
   <background_color>
-    <color name="Background_main1" red="86" green="100" blue="122" />
+    <color name="Background_main1" red="39" green="43" blue="51" />
   </background_color>
   <width>800</width>
   <x>-1</x>
@@ -58,7 +58,7 @@
     </border_color>
     <widget_type>Linking Container</widget_type>
     <background_color>
-      <color name="Background_main1" red="86" green="100" blue="122" />
+      <color name="Background_main1" red="39" green="43" blue="51" />
     </background_color>
     <width>930</width>
     <x>3</x>
@@ -69,7 +69,7 @@
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.BoolButton" version="1.0.0">
@@ -144,7 +144,7 @@ $(pv_value)</tooltip>
     </actions>
     <show_boolean_label>true</show_boolean_label>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
     <off_label>No</off_label>
   </widget>
@@ -169,23 +169,23 @@ $(pv_value)</tooltip>
     <visible>true</visible>
     <vertical_alignment>1</vertical_alignment>
     <border_color>
-      <color name="TM_label_text" red="0" green="0" blue="0" />
+      <color name="TM_label_text" red="197" green="211" blue="236" />
     </border_color>
     <widget_type>Label</widget_type>
     <wrap_words>false</wrap_words>
     <background_color>
-      <color name="Background_main1" red="86" green="100" blue="122" />
+      <color name="Background_main1" red="39" green="43" blue="51" />
     </background_color>
     <width>201</width>
     <x>9</x>
     <name>Battery Box 1</name>
     <y>97</y>
     <foreground_color>
-      <color name="TM_label_text" red="0" green="0" blue="0" />
+      <color name="TM_label_text" red="197" green="211" blue="236" />
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -221,11 +221,11 @@ $(pv_value)</tooltip>
     <name>Label_10</name>
     <y>162</y>
     <foreground_color>
-      <color name="TM_label_text" red="0" green="0" blue="0" />
+      <color name="TM_label_text" red="197" green="211" blue="236" />
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -261,7 +261,7 @@ $(pv_value)</tooltip>
     <name>Label_67</name>
     <y>368</y>
     <foreground_color>
-      <color name="TM_label_text" red="0" green="0" blue="0" />
+      <color name="TM_label_text" red="197" green="211" blue="236" />
     </foreground_color>
     <actions hook="true" hook_all="false">
       <action type="OPEN_DISPLAY">
@@ -269,7 +269,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <replace>1</replace>
+        <mode>0</mode>
         <description></description>
       </action>
     </actions>
@@ -305,7 +305,7 @@ $(pv_value)</tooltip>
     <widget_type>Image</widget_type>
     <flip_horizontal>false</flip_horizontal>
     <background_color>
-      <color red="240" green="240" blue="240" />
+      <color name="Background_main1" red="39" green="43" blue="51" />
     </background_color>
     <permutation_matrix>
       <row>
@@ -330,7 +330,7 @@ $(pv_value)</tooltip>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
-        <replace>1</replace>
+        <mode>0</mode>
         <description></description>
       </action>
     </actions>
@@ -339,7 +339,7 @@ $(pv_value)</tooltip>
     <stretch_to_fit>true</stretch_to_fit>
     <flip_vertical>false</flip_vertical>
     <font>
-      <opifont.name fontName="Sans" height="10" style="0">Default</opifont.name>
+      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
 </display>
