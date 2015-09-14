@@ -9,7 +9,7 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>org.yamcs.studio.opibuilder.script</artifactId>
+	<artifactId>org.yamcs.studio.script</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<description>
 		Fragment plug-in to bind yamcs script utils to opibuilder scripts

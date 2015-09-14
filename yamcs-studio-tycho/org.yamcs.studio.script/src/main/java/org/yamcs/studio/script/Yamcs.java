@@ -1,4 +1,4 @@
-package org.yamcs.studio.opibuilder.script;
+package org.yamcs.studio.script;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +17,7 @@ import com.google.protobuf.MessageLite;
 /**
  * Sample use:
  *
- * importPackage(Packages.org.yamcs.studio.opibuilder.script);
+ * importPackage(Packages.org.yamcs.studio.script);
  * Yamcs.issueCommand('/YSS/SIMULATOR/SWITCH_VOLTAGE_ON(voltage_num: 1)');
  */
 public class Yamcs {
