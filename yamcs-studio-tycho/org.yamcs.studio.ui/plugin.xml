@@ -86,18 +86,20 @@
    </extension>
    
    <extension point="org.eclipse.ui.activities">
-      <activity id="yamcsstudio.disablextensions" name="Hidden activities"/>
-      <activityPatternBinding activityId="yamcsstudio.disablextensions" pattern="org.eclipse.team.*"/>
-   </extension>
-   
-   <!--
-    This hides the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.
-    We have our own richer modal for that.
-   -->
-   <extension point="org.eclipse.ui.activities">
-      <activity id="yamcsstudio.hideShowPVInfo" name="Hide Show PV Info"/>
-      <activityPatternBinding activityId="yamcsstudio.hideShowPVInfo" pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
-   </extension>
+      <activity id="yamcsstudio.disableextensions" name="Hidden activities"/>
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern="org.eclipse.team.*"/>
+      <!-- Hide Edit OPI in popup menu, because it opens an editor stack in runtime as well as in editor... -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern=".*/org\.csstudio\.opibuilder\.commands\.editopi"/>
+      <!-- Hide the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.
+        We have our own richer modal for that. -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>  
+   </extension>   
    
    <!--
    	This extension point is actually considered deprecated now, in favor of the
