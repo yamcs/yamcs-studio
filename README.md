@@ -12,7 +12,7 @@ Yamcs Studio is a version of CS-Studio packaged and configured to suit [Yamcs â€
 * LOS/AOS TM indication
 
 
-See the [online documentation](https://github.com/yamcs/yamcs-studio/wiki).
+#### User documentation is available at: [http://www.yamcs.org/docs/](http://www.yamcs.org/docs/).
 
 #### License
 The use and distribution terms for this software are covered by the Eclipse Public License 1.0, which can be found in the file epl-v10.html at the root of this distribution. By using this software in any fashion, you are agreeing to be bound by the terms of this license. You must not remove this notice, or any other, from this software.
