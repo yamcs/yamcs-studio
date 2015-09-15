@@ -6,7 +6,7 @@
    <aboutInfo>
       <image path="/org.yamcs.studio.ui/icons/aboutSide.png"/>
       <text>
-         CS-Studio customized to suit Yamcs - The Open Source Mission Control System
+         Rich desktop client for Yamcs - The Open Source Mission Control System
 
 See http://www.yamcs.org
       </text>

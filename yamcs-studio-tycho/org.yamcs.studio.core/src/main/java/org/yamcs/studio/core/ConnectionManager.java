@@ -96,11 +96,11 @@ public class ConnectionManager {
         log.info("Start disconnect procedure (current state: " + connectionStatus + ")");
         synchronized (this) {
             if (connectionStatus == ConnectionStatus.Disconnected
-                    || connectionStatus == ConnectionStatus.Disconnecting)
+                    || connectionStatus == ConnectionStatus.Disconnecting
+                    || connectionStatus == ConnectionStatus.ConnectionFailure)
                 return;
 
-            if (connectionStatus != ConnectionStatus.ConnectionFailure)
-                setConnectionStatus(ConnectionStatus.Disconnecting);
+            setConnectionStatus(ConnectionStatus.Disconnecting);
         }
 
         log.info("Shutting down WebSocket client");
@@ -125,8 +125,7 @@ public class ConnectionManager {
             }
         }
 
-        if (connectionStatus != ConnectionStatus.ConnectionFailure)
-            setConnectionStatus(ConnectionStatus.Disconnected);
+        setConnectionStatus(ConnectionStatus.Disconnected);
     }
 
     public void onWebSocketConnected() {
