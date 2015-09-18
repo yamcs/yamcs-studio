@@ -136,10 +136,12 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
 
     @Override
     public void updateQueue(CommandQueueInfo cqi) {
-
-        Display.getDefault().asyncExec(() ->
-        {
-            log.fine("processing updateQueue " + cqi);
+        if (commandQueuesTableViewer.getTable().isDisposed())
+            return;
+        commandQueuesTableViewer.getTable().getDisplay().asyncExec(() -> {
+            if (commandQueuesTableViewer.getTable().isDisposed())
+                return;
+            log.fine(String.format("processing updateQueue %s", cqi));
             String modelName = cqi.getInstance() + "." + cqi.getProcessorName();
             if (!queuesModels.containsKey(modelName))
             {
