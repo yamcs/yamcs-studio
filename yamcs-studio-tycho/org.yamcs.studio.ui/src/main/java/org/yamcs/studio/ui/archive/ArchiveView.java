@@ -237,7 +237,9 @@ public class ArchiveView extends ViewPart
         SwingUtilities.invokeLater(() -> {
             archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime);
         });
-        Display.getDefault().asyncExec(() -> {
+        if (replayTimeLabel.isDisposed())
+            return;
+        replayTimeLabel.getDisplay().asyncExec(() -> {
             if (replayTimeLabel.isDisposed())
                 return;
 
