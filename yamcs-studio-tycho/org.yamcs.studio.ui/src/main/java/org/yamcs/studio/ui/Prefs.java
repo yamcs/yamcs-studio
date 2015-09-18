@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.archive;
+package org.yamcs.studio.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,22 +8,23 @@ import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.ui.TimeInterval;
 
+/**
+ * TODO use gson for better migrations, or use eclipse prefs
+ */
 public class Prefs {
 
-    private Preferences prefs = Preferences.userNodeForPackage(ArchivePanel.class);
+    private Preferences prefs = Preferences.userNodeForPackage(Prefs.class);
 
     public void saveRange(TimeInterval range) {
-        putObject(prefs, "range", range);
+        putObject(prefs, "archiveRange", range);
     }
 
     public TimeInterval getInterval() {
-        TimeInterval range = (TimeInterval) getObject(prefs, "range");
+        TimeInterval range = (TimeInterval) getObject(prefs, "archiveRange");
         if (range == null) {
-            range = new TimeInterval();
-            long missionTime = TimeCatalogue.getInstance().getMissionTime();
-            range.setStart(missionTime - 30 * 24 * 3600);
+            long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+            range = TimeInterval.starting(missionTime - 30 * 24 * 3600);
         }
         return range;
     }

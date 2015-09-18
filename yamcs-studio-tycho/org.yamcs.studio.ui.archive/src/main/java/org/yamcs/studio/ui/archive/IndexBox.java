@@ -35,6 +35,7 @@ import javax.swing.border.Border;
 
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.studio.ui.Prefs;
 import org.yamcs.studio.ui.archive.ArchivePanel.IndexChunkSpec;
 
 /**

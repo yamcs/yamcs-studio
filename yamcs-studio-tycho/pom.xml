@@ -29,6 +29,7 @@
 		<module>org.yamcs.studio.core</module>
 		<module>org.yamcs.studio.script</module>
 		<module>org.yamcs.studio.ui</module>
+		<module>org.yamcs.studio.ui.archive</module>
 		<module>org.yamcs.studio.ui.commanding</module>
 		<module>org.yamcs.studio.ycl.dsl</module>
 		<module>org.yamcs.studio.ycl.ui</module>
