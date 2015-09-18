@@ -1,7 +1,6 @@
 package org.yamcs.studio.core.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class ParameterCatalogue implements Catalogue {
 
     private static final Logger log = Logger.getLogger(ParameterCatalogue.class.getName());
 
-    private List<RestParameter> metaParameters = Collections.emptyList();
+    private List<RestParameter> metaParameters = new ArrayList<>();
 
     // Store pvreaders while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
