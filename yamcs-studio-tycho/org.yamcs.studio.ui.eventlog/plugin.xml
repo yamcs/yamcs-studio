@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.yamcs.studio"
+            name="Yamcs">
+      </category>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.clearCommand"
+            name="Clear View">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.scrollLockCommand" 
+            name="Scroll Lock">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState:false"
+               id="org.eclipse.ui.commands.toggleState" />
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.importCommand"
+            name="Import Events">
+      </command>
+   </extension>
+   
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+            class="org.yamcs.studio.ui.eventlog.ImportEventsHandler"
+            commandId="org.yamcs.studio.ui.eventlog.importCommand">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.ClearEventLogHandler"
+            commandId="org.yamcs.studio.ui.eventlog.clearCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.ScrollLockHandler"
+            commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand">
+      </handler>
+   </extension>
+   
+   <extension point="org.eclipse.ui.views">
+      <category
+      		name="Yamcs Server"
+      		id="org.yamcs.studio.server">
+      </category>
+      <view
+            category="org.yamcs.studio.server"
+            class="org.yamcs.studio.ui.eventlog.EventLogView"
+            icon="icons/eview16/event_log.png"
+            id="org.yamcs.studio.ui.eventlog.EventLogView"
+            name="Event Log"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.eventlog.EventLogView">
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.clearCommand"
+               icon="icons/elcl16/clear.png"
+               disabledIcon="icons/dlcl16/clear.png"
+               label="Clear View"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand"
+               icon="icons/elcl16/lock_co.png"
+               disabledIcon="icons/dlcl16/lock_co.png"
+               label="Scroll Lock"
+               style="toggle"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.importCommand"
+               icon="icons/elcl16/import_wiz.gif"
+               disabledIcon="icons/dlcl16/import_wiz.gif"
+               label="Import Events"
+               style="push"/>
+         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+      </menuContribution>
+   </extension>
+</plugin>
