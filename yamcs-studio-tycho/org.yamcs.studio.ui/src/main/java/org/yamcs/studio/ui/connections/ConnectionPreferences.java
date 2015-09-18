@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Access point for UI preferences related to yamcs connections
@@ -41,7 +41,6 @@ public class ConnectionPreferences {
         prefs.put(KEY_LAST_USED_CONFIGURATION, new Gson().toJson(conf));
     }
 
-    @SuppressWarnings("serial")
     public static List<YamcsConfiguration> getConfigurations() {
         Preferences prefs = Preferences.userNodeForPackage(ConnectionPreferences.class);
         String confsString = prefs.get(KEY_CONFIGURATIONS, null);

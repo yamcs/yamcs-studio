@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.yamcs.studio.ui.YamcsUIPlugin
-Bundle-Description: Yamcs Studio UI
+Bundle-Description: Yamcs Studio Commanding
 Bundle-ManifestVersion: 2
-Bundle-Name: Yamcs Studio UI
-Bundle-SymbolicName: org.yamcs.studio.ui;singleton:=true
+Bundle-Name: Yamcs Studio Commanding
+Bundle-SymbolicName: org.yamcs.studio.ui.commanding;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.0.qualifier
@@ -12,7 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.eclipse.core.runtime,
  org.yamcs.osgiclient,
- org.csstudio.autocomplete,
  org.eclipse.core.resources,
  org.eclipse.core.expressions,
  org.eclipse.equinox.security,
@@ -38,12 +36,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.platform,
  javax.inject,
  org.csstudio.opibuilder,
+ org.eclipse.xtext.ui,
+ org.yamcs.studio.ycl.ui,
  org.eclipse.ui.forms,
  org.eclipse.gef,
- com.google.gson
-Import-Package: org.epics.pvmanager,
- org.epics.pvmanager.vtype
-Export-Package: org.yamcs.studio.ui,
- org.yamcs.studio.ui.connections
-Service-Component: OSGI-INF/*.xml
+ com.google.gson,
+ org.yamcs.studio.ui
+Export-Package: org.yamcs.studio.ui.commanding
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

@@ -154,12 +154,6 @@
       <sourceProvider provider="org.yamcs.studio.ui.archive.AnnotateRangeStateProvider">
          <variable name="org.yamcs.studio.ui.archive.state.tagEnabled" priorityLevel="workbench" />
       </sourceProvider>
-      <sourceProvider provider="org.yamcs.studio.ui.commanding.stack.CommandStackStateProvider">
-         <variable name="org.yamcs.studio.ui.commanding.stack.state.remaining" priorityLevel="workbench" />
-         <variable name="org.yamcs.studio.ui.commanding.stack.state.armed" priorityLevel="workbench" />
-         <variable name="org.yamcs.studio.ui.commanding.stack.state.empty" priorityLevel="workbench" />
-         <variable name="org.yamcs.studio.ui.commanding.stack.state.executionStarted" priorityLevel="workbench" />
-      </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.ui.processor.ProcessorStateProvider">
          <variable name="org.yamcs.studio.ui.processor.state.processing" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.processor.state.replay" priorityLevel="workbench" />
@@ -202,69 +196,6 @@
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.processor.forwardCommand"
             name="Step to Next Update">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.add"
-            name="New Command">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.delete"
-            name="Delete Command">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.deleteAll"
-            name="Delete All Commands">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.skip"
-            name="Skip Command">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.restart"
-            name="Clear Execution State">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.arm"
-            name="Arm Command">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.issue"
-            name="Issue Command">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.export"
-            name="Export Stack">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.stack.import"
-            name="Import a Stack">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.cmdhist.clearCommand" 
-            name="Clear View">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand" 
-            name="Scroll Lock">
-         <state
-               class="org.eclipse.ui.handlers.RegistryToggleState:false"
-               id="org.eclipse.ui.commands.toggleState" />
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
-            name="Import Commands">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -338,139 +269,7 @@
       </command>
    </extension>
    
-   <extension point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-         namespace="org.yamcs.studio.ui.commanding.stack"
-         class="org.yamcs.studio.ui.commanding.stack.StackedCommandPropertyTester"
-         id="org.yamcs.studio.ui.commanding.stack.StackedCommandPropertyTester"
-         properties="canBeSkipped"
-         type="org.yamcs.studio.ui.commanding.stack.StackedCommand" />
-   </extension>
-   
    <extension point="org.eclipse.ui.handlers">
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.AddToStackHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.add">
-         <activeWhen>
-           
-            <and>
-            <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.DeleteHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.delete">
-         <enabledWhen>
-            <with variable="selection">
-               <and>
-                  <count value="1" />
-                  <iterate ifEmpty="false">
-                     <instanceof value="org.yamcs.studio.ui.commanding.stack.StackedCommand"/>
-                  </iterate>
-               </and>
-            </with>
-         </enabledWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.DeleteAllHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.deleteAll">
-         <enabledWhen>
-            <with variable="org.yamcs.studio.ui.commanding.stack.state.empty">
-               <not>
-                  <equals value="true"/>
-               </not>
-            </with>
-         </enabledWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.RestartHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.restart">
-         <enabledWhen>
-            <with variable="org.yamcs.studio.ui.commanding.stack.state.executionStarted">
-               <equals value="true"/>
-            </with>
-         </enabledWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.SkipHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.skip">
-         <enabledWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.remaining">
-                  <equals value="true"/>
-               </with>
-               <with variable="selection">
-                  <and>
-                     <count value="1" />
-                     <iterate ifEmpty="false">
-                        <adapt type="org.yamcs.studio.ui.commanding.stack.StackedCommand">
-                           <test property="org.yamcs.studio.ui.commanding.stack.canBeSkipped" />
-                        </adapt>
-                     </iterate>
-                  </and>
-               </with>
-            </and>
-         </enabledWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.ArmCommandHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.arm">
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.IssueCommandHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.issue">
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.ExportCommandStackHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.export">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.commanding.stack.state.remaining">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.stack.ImportCommandStackHandler"
-            commandId="org.yamcs.studio.ui.commanding.stack.import">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.cmdhist.ClearCommandHistoryHandler"
-            commandId="org.yamcs.studio.ui.commanding.cmdhist.clearCommand">
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.cmdhist.ScrollLockHandler"
-            commandId="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand">
-      </handler>
-      <handler
-            class="org.yamcs.studio.ui.commanding.cmdhist.ImportCommandsHandler"
-            commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand">
-         <activeWhen>
-            <with variable="org.yamcs.studio.ui.state.connected">
-               <equals value="true"/>
-            </with>
-         </activeWhen>
-      </handler>
       <handler
             class="org.yamcs.studio.ui.archive.RefreshArchiveHandler"
             commandId="org.yamcs.studio.ui.archive.refreshCommand">
@@ -682,24 +481,6 @@
             icon="icons/eview16/event_log.png"
             id="org.yamcs.studio.ui.eventlog.EventLogView"
             name="Event Log"/>
-      <view
-            category="org.yamcs.studio.server"
-            class="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"
-            icon="icons/eview16/tc.png"
-            id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"
-            name="Command History"/>
-      <view
-            category="org.yamcs.studio.server"
-            class="org.yamcs.studio.ui.commanding.stack.CommandStackView"
-            icon="icons/eview16/tc_add.png"
-            id="org.yamcs.studio.ui.commanding.stack.CommandStackView"
-            name="Command Stack"/>
-      <view
-            category="org.yamcs.studio.server"
-            class="org.yamcs.studio.ui.commanding.queue.CommandQueueView"
-            icon="icons/eview16/tc_queue.png"
-            id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"
-            name="Command Queues"/>   
        <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.links.LinksView"
@@ -942,54 +723,6 @@
          <toolbar id="additions"/>
       </menuContribution>
       
-      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.add"
-               icon="icons/elcl16/new_command.png"
-               disabledIcon="icons/dlcl16/new_command.png"
-               label="New Command"
-               style="push"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.delete"
-               icon="icons/elcl16/remove.png"
-               disabledIcon="icons/dlcl16/remove.png"
-               label="Delete Command"
-               style="push"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.deleteAll"
-               icon="icons/elcl16/removeall.png"
-               disabledIcon="icons/dlcl16/removeall.png"
-               label="Delete All Commands"
-               style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.skip"
-               icon="icons/elcl16/stepover_co.png"
-               disabledIcon="icons/dlcl16/stepover_co.png"
-               label="Skip Command"
-               style="push"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.restart"
-               icon="icons/elcl16/restart_co.png"
-               disabledIcon="icons/dlcl16/restart_co.png"
-               label="Clear Execution State"
-               style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.export"
-               icon="icons/elcl16/export_wiz.png"
-               disabledIcon="icons/dlcl16/export_wiz.png"
-               label="Export Stack"
-               style="push"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.import"
-               icon="icons/elcl16/import_wiz.gif"
-               disabledIcon="icons/dlcl16/import_wiz.gif"
-               label="Import a Stack"
-               style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-      </menuContribution>
-      
       <!-- Add icons to the Archive view toolbar -->
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.archive.ArchiveView">
          <command
@@ -1056,30 +789,6 @@
                icon="icons/elcl16/import_wiz.gif"
                disabledIcon="icons/dlcl16/import_wiz.gif"
                label="Import Events"
-               style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-      </menuContribution>
-      
-      <!-- Add icons to the Command History view toolbar -->
-      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
-         <command
-               commandId="org.yamcs.studio.ui.commanding.cmdhist.clearCommand"
-               icon="icons/elcl16/clear.png"
-               disabledIcon="icons/dlcl16/clear.png"
-               label="Clear View"
-               style="push"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand"
-               icon="icons/elcl16/lock_co.png"
-               disabledIcon="icons/dlcl16/lock_co.png"
-               label="Scroll Lock"
-               style="toggle"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
-               icon="icons/elcl16/import_wiz.gif"
-               disabledIcon="icons/dlcl16/import_wiz.gif"
-               label="Import Commands"
                style="push"/>
          <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
       </menuContribution>
