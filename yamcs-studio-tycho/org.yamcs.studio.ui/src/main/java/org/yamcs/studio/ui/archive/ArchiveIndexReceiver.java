@@ -18,6 +18,7 @@ import org.yamcs.protobuf.Yamcs.IndexRequest;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.ui.TimeInterval;
 
 import com.google.protobuf.MessageLite;
 
@@ -40,7 +41,7 @@ public class ArchiveIndexReceiver implements ConnectionListener {
         this.archiveView = archiveView;
     }
 
-    public void getIndex(final String instance, final TimeInterval interval) {
+    public void getIndex(String instance, TimeInterval interval) {
         if (receiving) {
             archiveView.log("already receiving data");
             return;

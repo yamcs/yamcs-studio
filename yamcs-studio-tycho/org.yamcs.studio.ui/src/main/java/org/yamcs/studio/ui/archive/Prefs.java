@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.ui.TimeInterval;
 
 public class Prefs {
 

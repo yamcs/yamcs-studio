@@ -24,7 +24,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.archive.TimeInterval;
+import org.yamcs.studio.ui.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {

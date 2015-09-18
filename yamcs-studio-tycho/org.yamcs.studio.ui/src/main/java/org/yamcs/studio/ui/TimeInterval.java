@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.archive;
+package org.yamcs.studio.ui;
 
 import java.io.Serializable;
 import java.util.Calendar;

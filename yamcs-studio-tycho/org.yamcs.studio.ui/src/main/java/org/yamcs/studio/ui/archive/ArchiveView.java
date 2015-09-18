@@ -46,6 +46,7 @@ import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.ui.RCPUtils;
+import org.yamcs.studio.ui.TimeInterval;
 import org.yamcs.studio.ui.YamcsUIPlugin;
 import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;

@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.ui.TimeInterval;
 
 public class CreateReplayHandler extends AbstractHandler {
 
