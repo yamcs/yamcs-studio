@@ -31,6 +31,7 @@
 		<module>org.yamcs.studio.ui</module>
 		<module>org.yamcs.studio.ui.archive</module>
 		<module>org.yamcs.studio.ui.commanding</module>
+		<module>org.yamcs.studio.ui.monitoring</module>
 		<module>org.yamcs.studio.ycl.dsl</module>
 		<module>org.yamcs.studio.ycl.ui</module>
 		<module>yamcs-studio-feature</module>

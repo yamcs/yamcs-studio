@@ -38,25 +38,24 @@
                name="startupProgressRect"
                value="20,215,560,15"/>
          <property
-            name="introTitle"
-            value="Yamcs Studio"/>
+               name="introTitle"
+               value="Yamcs Studio"/>
          <property
-            name="introBrandingImage"
-            value="product:icons/css64.png"/>
+               name="introBrandingImage"
+               value="product:icons/css64.png"/>
          <property
-            name="introBrandingImageText"
-            value="Yamcs Studio"/>
+               name="introBrandingImageText"
+               value="Yamcs Studio"/>
          <property
                name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
+               value="plugin_customization.ini"/>
       </product>
    </extension>
    
    <extension
          point="org.eclipse.core.runtime.applications"
          id="application"
-		 name="Yamcs Studio">
+         name="Yamcs Studio">
       <application>
          <run
                class="org.csstudio.startup.application.Application">
@@ -359,19 +358,6 @@
             icon="icons/eview16/event_log.png"
             id="org.yamcs.studio.ui.eventlog.EventLogView"
             name="Event Log"/>
-       <view
-            category="org.yamcs.studio.server"
-            class="org.yamcs.studio.ui.links.LinksView"
-            icon="icons/eview16/datalinks.png"
-            id="org.yamcs.studio.ui.links.LinksView"
-            name="Data Links"/>     
-       <view
-            category="org.yamcs.studio.server"
-            class="org.yamcs.studio.ui.clients.ClientsView"
-            icon="icons/eview16/clients.png"
-            id="org.yamcs.studio.ui.clients.ClientsView"
-            name="Yamcs Clients"/>            
-            
    </extension>
 
    <extension
