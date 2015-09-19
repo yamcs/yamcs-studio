@@ -39,19 +39,21 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.yamcs.studio.core.security.YamcsCredentials;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
- * A modal dialog for managing connection to Yamcs servers. Extracted out of preferences, because
- * these kind of settings are a lot more variable and depending on the user configuration.
+ * A modal dialog for managing connection to Yamcs servers. Extracted out of
+ * preferences, because these kind of settings are a lot more variable and
+ * depending on the user configuration.
  * <p>
- * The idea is that when you start Yamcs Studio for the very first time, it does not attempt any
- * connection. Auto-connect is an option.
+ * The idea is that when you start Yamcs Studio for the very first time, it does
+ * not attempt any connection. Auto-connect is an option.
  * <p>
- * Another thing we want to address with this dialog is to make it easy to manage different yamcs
- * servers. Especially as yamcs developers, we often have to switch from one server to another.
- * Through this dialog these settings can be managed and stored. The settings are stored using java
- * (so inside the home directory). This makes it easier to migrate from one Yamcs Studio to another.
+ * Another thing we want to address with this dialog is to make it easy to
+ * manage different yamcs servers. Especially as yamcs developers, we often have
+ * to switch from one server to another. Through this dialog these settings can
+ * be managed and stored. The settings are stored using java (so inside the home
+ * directory). This makes it easier to migrate from one Yamcs Studio to another.
  */
 public class ConnectionsDialog extends Dialog {
 
@@ -96,7 +98,8 @@ public class ConnectionsDialog extends Dialog {
 
         ToolBar editBar = new ToolBar(contentArea, SWT.NO_FOCUS);
         addServerButton = new ToolItem(editBar, SWT.NONE);
-        addServerButton.setImage(resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server_add.png")));
+        addServerButton.setImage(resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_add.png")));
         addServerButton.setToolTipText("Add Connection");
         addServerButton.addListener(SWT.Selection, evt -> {
             addServer();
@@ -104,7 +107,8 @@ public class ConnectionsDialog extends Dialog {
         });
 
         removeServerButton = new ToolItem(editBar, SWT.NONE);
-        removeServerButton.setImage(resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server_remove.png")));
+        removeServerButton.setImage(resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_remove.png")));
         removeServerButton.setToolTipText("Delete Connection");
         removeServerButton.addListener(SWT.Selection, evt -> {
             removeSelectedServer();
@@ -117,7 +121,8 @@ public class ConnectionsDialog extends Dialog {
         sash.setLayout(new FillLayout());
         createServerPanel(sash, resourceManager);
 
-        // Create right side, but wrap it in another composite to force dimensions
+        // Create right side, but wrap it in another composite to force
+        // dimensions
         // even when invisible
         Composite detailPanelWrapper = new Composite(sash, SWT.NONE);
         gl = new GridLayout();
@@ -153,7 +158,8 @@ public class ConnectionsDialog extends Dialog {
             detailPanel.setVisible(false);
             removeServerButton.setEnabled(false);
             if (ok != null) // It's null during initial creation
-                ok.setText("Save"); // Give opportunity to user to quit dialog without connecting and saving changes
+                ok.setText("Save"); // Give opportunity to user to quit dialog
+                                    // without connecting and saving changes
         } else {
             selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
@@ -240,7 +246,8 @@ public class ConnectionsDialog extends Dialog {
         TableColumnLayout tcl = new TableColumnLayout();
         serverPanel.setLayout(tcl);
 
-        Image serverImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/server.gif"));
+        Image serverImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server.gif"));
 
         connViewer = new TableViewer(serverPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
         connViewer.getTable().setHeaderVisible(true);
@@ -483,7 +490,8 @@ public class ConnectionsDialog extends Dialog {
     }
 
     public YamcsConfiguration getChosenConfiguration() {
-        // Add our credentials back in (they could have been removed during serialization)
+        // Add our credentials back in (they could have been removed during
+        // serialization)
         if (chosenConfiguration != null && chosenCredentials != null) {
             chosenConfiguration.setUser(chosenCredentials.getUsername());
             chosenConfiguration.setPassword(chosenCredentials.getPasswordS());

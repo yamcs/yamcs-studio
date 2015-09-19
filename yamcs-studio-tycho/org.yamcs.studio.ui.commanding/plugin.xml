@@ -260,7 +260,7 @@
                disabledIcon="icons/dlcl16/removeall.png"
                label="Delete All Commands"
                style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.stack.skip"
                icon="icons/elcl16/stepover_co.png"
@@ -273,7 +273,7 @@
                disabledIcon="icons/dlcl16/restart_co.png"
                label="Clear Execution State"
                style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.stack.export"
                icon="icons/elcl16/export_wiz.png"
@@ -286,7 +286,7 @@
                disabledIcon="icons/dlcl16/import_wiz.gif"
                label="Import a Stack"
                style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
@@ -302,14 +302,14 @@
                disabledIcon="icons/dlcl16/lock_co.png"
                label="Scroll Lock"
                style="toggle"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
                icon="icons/elcl16/import_wiz.gif"
                disabledIcon="icons/dlcl16/import_wiz.gif"
                label="Import Commands"
                style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
       </menuContribution>
    </extension>
 </plugin>

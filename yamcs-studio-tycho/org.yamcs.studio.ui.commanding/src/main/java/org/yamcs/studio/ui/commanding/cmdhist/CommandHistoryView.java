@@ -28,8 +28,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class CommandHistoryView extends ViewPart {
 
@@ -73,10 +73,10 @@ public class CommandHistoryView extends ViewPart {
     public void createPartControl(Composite parent) {
         this.parent = parent;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        greenBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/ok.png"));
-        redBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/nok.png"));
-        grayBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/undef.png"));
-        waitingImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/waiting.png"));
+        greenBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/ok.png"));
+        redBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/nok.png"));
+        grayBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/undef.png"));
+        waitingImage = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/waiting.png"));
 
         TableColumnLayout tcl = new TableColumnLayout();
         parent.setLayout(tcl);

@@ -24,11 +24,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
- * Uses Eclipse {@link ILoginContext} to perform a JAAS-based login. This dialog stays open until
- * the user either succesfully connects, or the dialog is cancelled.
+ * Uses Eclipse {@link ILoginContext} to perform a JAAS-based login. This dialog
+ * stays open until the user either succesfully connects, or the dialog is
+ * cancelled.
  */
 public class LoginDialog extends TitleAreaDialog {
 
@@ -50,7 +51,8 @@ public class LoginDialog extends TitleAreaDialog {
         setTitle("Connect to " + nvl(conf.getName(), conf.getPrimaryConnectionString()));
         setMessage("Please provide your credentials");
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), getShell());
-        Image titleImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/yamcs_banner.png"));
+        Image titleImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(LoginDialog.class, "icons/yamcs_banner.png"));
         setTitleImage(titleImage);
     }
 
@@ -125,8 +127,8 @@ public class LoginDialog extends TitleAreaDialog {
     }
 
     /**
-     * JAAS {@link CallbackHandler} that fetches name, password from dialog and displays errors in
-     * dialog as well.
+     * JAAS {@link CallbackHandler} that fetches name, password from dialog and
+     * displays errors in dialog as well.
      */
     class DialogCallbackHandler extends UnattendedCallbackHandler {
         public DialogCallbackHandler() {
@@ -141,8 +143,7 @@ public class LoginDialog extends TitleAreaDialog {
             user.getDisplay().syncExec(() -> {
                 if (user.isDisposed())
                     return;
-                if (text.getMessageType() == TextOutputCallback.INFORMATION &&
-                        "OK".equals(text.getMessage())) {
+                if (text.getMessageType() == TextOutputCallback.INFORMATION && "OK".equals(text.getMessage())) {
                     // Close dialog
                     setReturnCode(OK);
                     close();

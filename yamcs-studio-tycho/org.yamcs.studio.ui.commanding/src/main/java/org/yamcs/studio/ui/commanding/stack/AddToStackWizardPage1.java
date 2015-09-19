@@ -26,8 +26,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.xtce.MetaCommand;
 import org.yamcs.xtce.Significance;
 import org.yamcs.xtce.Significance.Levels;
@@ -60,11 +60,11 @@ public class AddToStackWizardPage1 extends WizardPage {
         composite.setLayout(gl);
 
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), composite);
-        level1Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level1s.png"));
-        level2Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level2s.png"));
-        level3Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level3s.png"));
-        level4Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level4s.png"));
-        level5Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level5s.png"));
+        level1Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level1s.png"));
+        level2Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level2s.png"));
+        level3Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level3s.png"));
+        level4Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level4s.png"));
+        level5Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level5s.png"));
 
         Text searchbox = new Text(composite, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

@@ -16,8 +16,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.xtce.Comparison;
 import org.yamcs.xtce.Comparison.OperatorType;
@@ -51,10 +51,10 @@ public class CommandStackTableViewer extends TableViewer {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        greenBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/ok.png"));
-        redBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/nok.png"));
-        grayBubble = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/undef.png"));
-        waitingImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/obj16/waiting.png"));
+        greenBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/ok.png"));
+        redBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/nok.png"));
+        grayBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/undef.png"));
+        waitingImage = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/waiting.png"));
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -66,11 +66,11 @@ public class CommandStackTableViewer extends TableViewer {
     }
 
     private void addFixedColumns(TableColumnLayout tcl) {
-        Image level1Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level1s.png"));
-        Image level2Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level2s.png"));
-        Image level3Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level3s.png"));
-        Image level4Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level4s.png"));
-        Image level5Image = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/level5s.png"));
+        Image level1Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
+        Image level2Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
+        Image level3Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
+        Image level4Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
+        Image level5Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
 
         TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
         rowIdColumn.getColumn().setText(COL_ROW_ID);

@@ -45,7 +45,6 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.TimeInterval;
@@ -86,14 +85,14 @@ public class ArchiveView extends ViewPart
     @Override
     public void createPartControl(Composite parent) {
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        playImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/play.png"));
-        pauseImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/pause.png"));
-        forwardImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward.png"));
-        forward2xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward2x.png"));
-        forward4xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward4x.png"));
-        forward8xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward8x.png"));
-        forward16xImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/forward16x.png"));
-        leaveReplayImage = resourceManager.createImage(YamcsUIPlugin.getImageDescriptor("icons/redo.png"));
+        playImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/play.png"));
+        pauseImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/pause.png"));
+        forwardImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward.png"));
+        forward2xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward2x.png"));
+        forward4xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward4x.png"));
+        forward8xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward8x.png"));
+        forward16xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward16x.png"));
+        leaveReplayImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/redo.png"));
 
         createActions();
 

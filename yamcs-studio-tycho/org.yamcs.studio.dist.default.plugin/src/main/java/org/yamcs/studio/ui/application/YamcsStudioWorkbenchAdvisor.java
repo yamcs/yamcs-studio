@@ -21,7 +21,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
  * Forked from org.csstudio.utility.product.ApplicationWorkbenchAdvisor to clear dependency on
@@ -53,9 +53,9 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         // Declares all IDE-specific workbench images. This includes both "shared"
         // images (named in {@link IDE.SharedImages}) and internal images.
         configurer.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT,
-                YamcsUIPlugin.getImageDescriptor("icons/project_open.png"), true);
+                RCPUtils.getImageDescriptor(YamcsStudioWorkbenchAdvisor.class, "icons/project_open.png"), true);
         configurer.declareImage(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED,
-                YamcsUIPlugin.getImageDescriptor("icons/project_close.png"), true);
+                RCPUtils.getImageDescriptor(YamcsStudioWorkbenchAdvisor.class, "icons/project_close.png"), true);
 
         declareWorkbenchImages();
     }
