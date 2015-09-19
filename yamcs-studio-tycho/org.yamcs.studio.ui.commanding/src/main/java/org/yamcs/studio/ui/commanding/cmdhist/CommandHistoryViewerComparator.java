@@ -1,9 +1,9 @@
 package org.yamcs.studio.ui.commanding.cmdhist;
 
-import static org.yamcs.studio.ui.Comparators.INTEGER_COMPARATOR;
-import static org.yamcs.studio.ui.Comparators.LONG_COMPARATOR;
-import static org.yamcs.studio.ui.Comparators.OBJECT_COMPARATOR;
-import static org.yamcs.studio.ui.Comparators.STRING_COMPARATOR;
+import static org.yamcs.studio.core.ui.utils.Comparators.INTEGER_COMPARATOR;
+import static org.yamcs.studio.core.ui.utils.Comparators.LONG_COMPARATOR;
+import static org.yamcs.studio.core.ui.utils.Comparators.OBJECT_COMPARATOR;
+import static org.yamcs.studio.core.ui.utils.Comparators.STRING_COMPARATOR;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;

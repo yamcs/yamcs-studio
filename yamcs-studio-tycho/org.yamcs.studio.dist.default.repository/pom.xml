@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yamcs.studio</groupId>
+		<artifactId>yamcs-studio</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>org.yamcs.studio.dist.default.repository</artifactId>
+	<packaging>eclipse-repository</packaging>
+
+	<build>
+		<plugins>
+			<!-- Icons are in ../org.yamcs.studio.ui/icons, but Tycho wants them in
+				../org.yamcs.studio.dist.default.repository/target/products/yamcs-studio/icons
+				(Copied from SNS-product build)
+			  -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<configuration>
+							<failOnError>true</failOnError>
+							<target>
+								<echo message="Copying icons into tycho target directory ${project.build.directory}" />
+								<copy todir="${project.build.directory}/products/yamcs-studio" verbose="false">
+									<fileset dir="${project.build.directory}/../..">
+										<include name="org.yamcs.studio.dist.default.plugin/icons/**" />
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<dependency-resolution>
+						<optionalDependencies>ignore</optionalDependencies>
+					</dependency-resolution>
+					<filters>
+						<!-- Filter out a bunch of dependencies that are not needed in the final 
+							product. These come from the ycl xtext projects, but really are only needed 
+							for code generation. The JDT is the important one here that we really don't 
+							want, because otherwise you would be able to create java projects in the 
+							product, which is a bit out of scope... Also remark that these filters are 
+							defined at the *repository* level. NOT in the parent pom, because then they 
+							would also impact the xtext projects and then tycho would not be able to 
+							satisfy dependencies there. -->
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.debug.core</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.debug.ui</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.annotation</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.core</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.debug</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.launching</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.jdt.ui</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe.core</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe.utils</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.language</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.launch</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.lib</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.mwe2.runtime</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.codegen</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.emf.codegen.ecore</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.xtext.generator</id>
+							<removeAll />
+						</filter>
+					</filters>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<products>
+						<product>
+							<id>yamcs-studio</id> <!-- 'uid' in the *.product -->
+							<rootFolder>yamcs-studio-${project.version}</rootFolder>
+							<archiveFileName>yamcs-studio-${project.version}</archiveFileName>
+						</product>
+					</products>
+					<formats>
+						<linux>tar.gz</linux>
+					</formats>
+				</configuration>
+				<executions>
+					<execution>
+						<id>create-distribution</id>
+						<goals>
+							<goal>materialize-products</goal>
+							<goal>archive-products</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+					<repositoryName>Yamcs Studio</repositoryName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- As a result of the director plugin run configured above, products will
+		be generated under yamcs-studio-repository/target/products/*, and a P2
+		repo for installing additional features under yamcs-studio-repository/target/repository.
+		If a local repository is specified, mirror the build repository to that local
+		repository -->
+	<profiles>
+		<profile>
+			<id>csstudio-local-repo-mirror</id>
+			<activation>
+				<property>
+					<name>csstudio.local.repo</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho.extras</groupId>
+						<artifactId>tycho-p2-extras-plugin</artifactId>
+						<version>${tycho-extras.version}</version>
+						<executions>
+							<execution>
+								<id>mirror-build-to-local-repository</id>
+								<phase>package</phase>
+								<goals>
+									<goal>mirror</goal>
+								</goals>
+								<configuration>
+									<!-- Details: https://www.eclipse.org/tycho/sitedocs-extras/tycho-p2-extras-plugin/mirror-mojo.html -->
+									<source>
+										<repository>
+											<url>${project.baseUri}/target/repository</url>
+											<layout>p2</layout>
+										</repository>
+									</source>
+									<append>true</append>
+									<compress>true</compress>
+									<mirrorMetadataOnly>false</mirrorMetadataOnly>
+									<destination>${csstudio.local.repo}</destination>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

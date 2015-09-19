@@ -24,9 +24,9 @@ import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;

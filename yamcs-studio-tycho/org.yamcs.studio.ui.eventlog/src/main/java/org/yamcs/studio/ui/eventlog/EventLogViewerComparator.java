@@ -1,7 +1,7 @@
 package org.yamcs.studio.ui.eventlog;
 
-import static org.yamcs.studio.ui.Comparators.LONG_COMPARATOR;
-import static org.yamcs.studio.ui.Comparators.STRING_COMPARATOR;
+import static org.yamcs.studio.core.ui.utils.Comparators.LONG_COMPARATOR;
+import static org.yamcs.studio.core.ui.utils.Comparators.STRING_COMPARATOR;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;

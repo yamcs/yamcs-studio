@@ -4,7 +4,7 @@
       label="Yamcs Studio Components"
       version="1.0.0.qualifier"
       provider-name="Space Applications Services"
-      plugin="org.yamcs.studio.ui">
+      plugin="org.yamcs.studio.product.default">
 
    <copyright>
       Copyright (c) 2015 Space Applications Services
@@ -59,13 +59,6 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.yamcs.studio.ui.commanding"
          download-size="0"
          install-size="0"
@@ -88,6 +81,34 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="org.yamcs.studio.ui.eventlog"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.core.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.ui.processor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.ui.css"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.dist.default.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"

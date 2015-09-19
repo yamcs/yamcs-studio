@@ -2,7 +2,6 @@ package org.yamcs.studio.ui.links;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -23,11 +22,9 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
-import org.yamcs.studio.ui.UiColors;
+import org.yamcs.studio.core.ui.utils.UiColors;
 
 public class LinksTableViewer extends TableViewer {
-
-    private static final Logger log = Logger.getLogger(LinksTableViewer.class.getName());
 
     public static final String COL_NAME = "Name";
     public static final String COL_TYPE = "Type";
@@ -98,8 +95,7 @@ public class LinksTableViewer extends TableViewer {
     }
 
     private void showMessage(Shell shell, String string) {
-        MessageBox dialog =
-                new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+        MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
         dialog.setText("Error");
         dialog.setMessage(string);
 
@@ -134,9 +130,8 @@ public class LinksTableViewer extends TableViewer {
         tcl.setColumnData(datacount.getColumn(), new ColumnWeightData(10));
     }
 
-    class LinkLabelProvider extends LabelProvider implements
-            ITableLabelProvider, IColorProvider {
-        
+    class LinkLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
+
         private final NumberFormat numberFormatter = NumberFormat.getInstance(Locale.US);
 
         @Override
@@ -192,13 +187,11 @@ public class LinksTableViewer extends TableViewer {
                     } else {
                         return UiColors.ERROR_FAINT_FG;
                     }
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     return null;
                 }
 
-            }
-            else
+            } else
                 return null;
         }
 
@@ -232,13 +225,11 @@ public class LinksTableViewer extends TableViewer {
                     } else {
                         return UiColors.ERROR_FAINT_BG;
                     }
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     return null;
                 }
 
-            }
-            else
+            } else
                 return null;
         }
     }

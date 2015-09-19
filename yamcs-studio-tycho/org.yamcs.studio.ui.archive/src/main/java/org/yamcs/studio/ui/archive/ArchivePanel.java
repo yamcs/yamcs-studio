@@ -34,11 +34,11 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.ui.utils.Prefs;
+import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.Prefs;
-import org.yamcs.studio.ui.TimeInterval;
-import org.yamcs.studio.ui.opibuilder.OPIUtils;
+import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;

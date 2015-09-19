@@ -28,8 +28,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.ui.CenteredImageLabelProvider;
-import org.yamcs.studio.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 
 public class CommandHistoryView extends ViewPart {
 

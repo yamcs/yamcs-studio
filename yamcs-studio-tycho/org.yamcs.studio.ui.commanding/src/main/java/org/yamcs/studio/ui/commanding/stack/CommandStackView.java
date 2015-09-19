@@ -33,9 +33,9 @@ import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.studio.ui.RCPUtils;
+import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.studio.ui.connections.ConnectionStateProvider;
 
 public class CommandStackView extends ViewPart {
 

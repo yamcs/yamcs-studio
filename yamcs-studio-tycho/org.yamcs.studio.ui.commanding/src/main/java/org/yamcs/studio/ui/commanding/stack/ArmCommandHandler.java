@@ -14,9 +14,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Commanding.CommandSignificance;
 import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
 import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
+import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.AbstractRestHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
 import com.google.protobuf.MessageLite;

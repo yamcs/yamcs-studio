@@ -28,7 +28,7 @@ import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.studio.ui.TimeInterval;
+import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
 /**

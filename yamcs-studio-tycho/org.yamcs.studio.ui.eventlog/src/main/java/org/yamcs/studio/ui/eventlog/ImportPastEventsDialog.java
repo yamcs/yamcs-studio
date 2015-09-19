@@ -22,9 +22,9 @@ import org.yamcs.protobuf.Events.GetEventsRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.studio.ui.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
@@ -89,8 +89,10 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         startTime.addListener(SWT.Selection, e -> validate());
         if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
+            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH),
+                    startTimeValue.get(Calendar.DAY_OF_MONTH));
+            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE),
+                    startTimeValue.get(Calendar.SECOND));
         }
 
         lbl = new Label(container, SWT.NONE);
@@ -108,8 +110,10 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
         stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         stopTime.addListener(SWT.Selection, e -> validate());
         if (stopTimeValue != null) {
-            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH), stopTimeValue.get(Calendar.DAY_OF_MONTH));
-            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE), stopTimeValue.get(Calendar.SECOND));
+            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH),
+                    stopTimeValue.get(Calendar.DAY_OF_MONTH));
+            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE),
+                    stopTimeValue.get(Calendar.SECOND));
         }
 
         return container;
@@ -129,8 +133,8 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
     protected void okPressed() {
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
         if (restClient == null) {
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import events\n", ""
-                    + "Disconnected from Yamcs");
+            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import events\n",
+                    "" + "Disconnected from Yamcs");
             return;
         }
 
@@ -160,7 +164,8 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
             public void onException(Exception e) {
                 Display.getDefault().asyncExec(() -> {
                     log.log(Level.SEVERE, "Could not import events", e);
-                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import events", e.getMessage());
+                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import events",
+                            e.getMessage());
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 });
             }

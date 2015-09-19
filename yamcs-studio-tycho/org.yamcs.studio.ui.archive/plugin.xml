@@ -152,7 +152,7 @@
                disabledIcon="icons/dlcl16/refresh.png"
                label="Refresh"
                style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.archive.zoomInCommand"
                icon="icons/elcl16/zoom_in.png"
@@ -168,7 +168,7 @@
                icon="icons/elcl16/zoom_clear.png"
                label="Zoom Out Completely"
                style="push"/>
-         <control class="org.yamcs.studio.ui.ToolbarSpacer"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.archive.createTagCommand"
                icon="icons/elcl16/tag.gif"
