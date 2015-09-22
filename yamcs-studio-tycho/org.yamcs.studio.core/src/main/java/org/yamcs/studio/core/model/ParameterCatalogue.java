@@ -80,10 +80,13 @@ public class ParameterCatalogue implements Catalogue {
     }
 
     public synchronized void processMetaParameters(List<RestParameter> metaParameters) {
-        this.metaParameters = metaParameters;
+        this.metaParameters = new ArrayList<>(metaParameters);
+        this.metaParameters.sort((p1, p2) -> {
+            return p1.getId().getName().compareTo(p2.getId().getName());
+        });
 
         log.fine("Refreshing all pv readers");
-        for (RestParameter p : metaParameters)
+        for (RestParameter p : this.metaParameters)
             availableParametersById.put(p.getId(), p);
 
         pvReadersById.forEach((id, pvReader) -> {
