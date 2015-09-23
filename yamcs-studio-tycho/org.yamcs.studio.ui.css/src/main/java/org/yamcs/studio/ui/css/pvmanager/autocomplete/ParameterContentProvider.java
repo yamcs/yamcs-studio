@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.ui.pvmanager.autocomplete;
+package org.yamcs.studio.ui.css.pvmanager.autocomplete;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
