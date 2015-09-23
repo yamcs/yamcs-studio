@@ -7,6 +7,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -46,6 +47,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction save;
     private IWorkbenchAction helpContentsAction;
+    private IWorkbenchAction onlineHelpAction;
     private IWorkbenchAction aboutAction;
 
     public YamcsStudioActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -79,6 +81,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         if (window.getWorkbench().getIntroManager().hasIntro())
             register(ActionFactory.INTRO.create(window));
 
+        onlineHelpAction = new OnlineHelpAction();
+        register(onlineHelpAction);
+
         helpContentsAction = ActionFactory.HELP_CONTENTS.create(window);
         register(helpContentsAction);
         aboutAction = ActionFactory.ABOUT.create(window);
@@ -97,7 +102,8 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         // we replace it here with another one (shorter) version
         IMenuManager helpMenu = new MenuManager("Help", "help-2");
         menubar.add(helpMenu);
-        //helpMenu.add(helpContentsAction);
+        helpMenu.add(onlineHelpAction);
+        helpMenu.add(new Separator());
         helpMenu.add(aboutAction);
     }
 
