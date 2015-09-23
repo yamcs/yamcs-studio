@@ -14,7 +14,7 @@
 
 	<properties>
         <tycho-extras.version>0.23.0</tycho-extras.version>
-		<yamcs.version>0.28.0</yamcs.version>
+		<yamcs.version>0.28.1</yamcs.version>
 	</properties>
 
 	<modules>
