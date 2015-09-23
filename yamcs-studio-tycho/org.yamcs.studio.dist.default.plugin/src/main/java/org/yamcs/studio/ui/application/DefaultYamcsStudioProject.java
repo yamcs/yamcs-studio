@@ -3,6 +3,8 @@ package org.yamcs.studio.ui.application;
 import java.io.File;
 import java.net.URL;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.csstudio.startup.module.defaults.DefaultProject;
 import org.csstudio.startup.module.defaults.Messages;
@@ -24,11 +26,11 @@ import org.osgi.framework.Bundle;
 import org.yamcs.studio.product.ProductPlugin;
 
 /**
- * Creates a project called 'YSS' -- or Yamcs Simulation System, but unlike the CSS DefaultProject,
- * it will only do so if there are no other projects in the workspace. So if the user wants to
- * remove it, it will not be recreated.
+ * Creates default projects. We should instead do this only through a menu option though
  */
 public class DefaultYamcsStudioProject extends DefaultProject {
+
+    private static final Logger log = Logger.getLogger(DefaultYamcsStudioProject.class.getTypeName());
 
     @Override
     public Object openProjects(Display display, IApplicationContext context, Map<String, Object> parameters) {
@@ -36,35 +38,40 @@ public class DefaultYamcsStudioProject extends DefaultProject {
         if (allProjects != null && allProjects.length > 0)
             return null;
 
-        // Create a default project
-        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("YSS");
+        try {
+            IProject landingProject = createProject("YSS Landing");
+            landingProject.open(new NullProgressMonitor());
+            importIntoProject(landingProject, "YSS Landing");
+
+            IProject leoSpacecraftProject = createProject("YSS LEO Spacecraft");
+            leoSpacecraftProject.open(new NullProgressMonitor());
+            importIntoProject(leoSpacecraftProject, "YSS LEO Spacecraft");
+            // put project into parameters map as requested by API to make it available to other extension points
+            parameters.put(PROJECTS, new IProject[] { landingProject, leoSpacecraftProject });
+            return null;
+        } catch (CoreException e) {
+            log.log(Level.SEVERE, "Could not create default projects", e);
+        }
+        return null;
+    }
+
+    private IProject createProject(String name) {
+        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
         try {
             project.create(new NullProgressMonitor());
+            return project;
         } catch (CoreException ex) {
             MessageDialog.openError(null, Messages.Error,
                     NLS.bind(Messages.CreateProjectErrorFmt, project.getName(), ex.getMessage()));
             return null;
         }
-
-        // We created a new project, so open it now
-        try {
-            project.open(new NullProgressMonitor());
-            importSampleMCS(project);
-            // put project into parameters map as requested by API to make it available to other extension points
-            parameters.put(PROJECTS, new IProject[] { project });
-            return null;
-        } catch (CoreException ex) {
-            MessageDialog.openError(null, Messages.Error,
-                    NLS.bind(Messages.OpenProjectErrorFmt, project.getName(), ex.getMessage()));
-        }
-        return null;
     }
 
-    private void importSampleMCS(IProject projectHandle) throws CoreException {
+    private void importIntoProject(IProject projectHandle, String sourceFolder) throws CoreException {
         Bundle bundle = ProductPlugin.getDefault().getBundle();
         try {
             URL location = FileLocator.toFileURL(bundle.getEntry("/"));
-            File templateRoot = new File(location.getPath(), "sample-yss-project");
+            File templateRoot = new File(location.getPath(), sourceFolder);
             RelativeFileSystemStructureProvider structureProvider = new RelativeFileSystemStructureProvider(templateRoot);
             ImportOperation operation = new ImportOperation(projectHandle.getFullPath(), templateRoot, structureProvider,
                     new IOverwriteQuery() {
