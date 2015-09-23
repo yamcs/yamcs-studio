@@ -215,6 +215,7 @@
          <!-- Trying to keep this perspective editor-free -->
          <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
          <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
+         <hiddenToolBarItem id="org.eclipse.ui.file.saveAll"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -297,7 +298,7 @@
                relationship="stack"
                visible="false"
                id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
-        <view
+         <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"

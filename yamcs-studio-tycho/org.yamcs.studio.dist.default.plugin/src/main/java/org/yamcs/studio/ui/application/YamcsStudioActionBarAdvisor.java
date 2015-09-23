@@ -46,6 +46,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     final private IWorkbenchWindow window;
 
     private IWorkbenchAction save;
+    private IWorkbenchAction saveAll;
     private IWorkbenchAction helpContentsAction;
     private IWorkbenchAction onlineHelpAction;
     private IWorkbenchAction aboutAction;
@@ -75,6 +76,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     protected void makeActions(final IWorkbenchWindow window) {
         save = ActionFactory.SAVE.create(window);
         register(save);
+
+        saveAll = ActionFactory.SAVE_ALL.create(window);
+        register(saveAll);
 
         register(ActionFactory.SAVE_AS.create(window));
 
@@ -119,12 +123,13 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         coolbar.add(new ToolBarContributionItem(studioBar, "studiocoolbar"));
 
         // 'File' section of the cool bar
-        final IToolBarManager file_bar = new ToolBarManager();
+        IToolBarManager fileBar = new ToolBarManager();
         // File 'new' and 'save' actions
-        file_bar.add(ActionFactory.NEW.create(window));
-        file_bar.add(save);
-        file_bar.add(new CoolItemGroupMarker(IWorkbenchActionConstants.FILE_END));
-        coolbar.add(new ToolBarContributionItem(file_bar, IWorkbenchActionConstants.M_FILE));
+        fileBar.add(ActionFactory.NEW.create(window));
+        fileBar.add(save);
+        fileBar.add(saveAll);
+        fileBar.add(new CoolItemGroupMarker(IWorkbenchActionConstants.FILE_END));
+        coolbar.add(new ToolBarContributionItem(fileBar, IWorkbenchActionConstants.M_FILE));
 
         // 'User' section of the cool bar
         final IToolBarManager user_bar = new ToolBarManager();
