@@ -30,6 +30,6 @@ mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify
 set +e
 
 echo
-echo 'All done. These are the generated products:'
-find `cd $PRGDIR; pwd`/yamcs-studio-tycho/yamcs-studio-repository/target/products -maxdepth 1 -type f -exec echo "{}" \;
+echo 'All done. These are your generated Yamcs Studio products:'
+find `cd $PRGDIR; pwd`/yamcs-studio-tycho/org.yamcs.studio.dist.default.repository/target/products -maxdepth 1 -type f -exec echo "{}" \;
 
