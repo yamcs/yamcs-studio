@@ -1,8 +1,8 @@
-### End-User documentation is available at: [http://www.yamcs.org/docs/](http://www.yamcs.org/docs/).
+### End-User documentation is available at: [http://www.yamcs.org/docs/](http://www.yamcs.org/docs/)
 
 <p>&nbsp;</p>
 
-For contributors, see [Contributing](/notes/Contributing.md)<br>
+For contributions, see [Contributing](/notes/Contributing.md)<br>
 [![Build Status](https://travis-ci.org/yamcs/yamcs-studio.svg?branch=master)](https://travis-ci.org/yamcs/yamcs-studio)
 
 ===
