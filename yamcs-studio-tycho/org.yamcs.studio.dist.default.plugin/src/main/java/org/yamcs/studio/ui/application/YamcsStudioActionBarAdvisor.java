@@ -47,6 +47,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction save;
     private IWorkbenchAction saveAll;
+    private IWorkbenchAction resetPerspectiveAction;
     private IWorkbenchAction helpContentsAction;
     private IWorkbenchAction onlineHelpAction;
     private IWorkbenchAction aboutAction;
@@ -88,6 +89,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         onlineHelpAction = new OnlineHelpAction();
         register(onlineHelpAction);
 
+        resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(window);
+        register(resetPerspectiveAction);
+
         helpContentsAction = ActionFactory.HELP_CONTENTS.create(window);
         register(helpContentsAction);
         aboutAction = ActionFactory.ABOUT.create(window);
@@ -100,6 +104,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
         IMenuManager windowMenu = new MenuManager("Window", "window");
         menubar.add(windowMenu);
+        windowMenu.add(resetPerspectiveAction);
 
         // plugin.xml in css menu.app defines a non-brandable icon.
         // through plugin.xml in this bundle, that help menu is hidden, and
