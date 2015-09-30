@@ -43,9 +43,9 @@ public class AddToStackWizardPage1 extends WizardPage {
     private StackedCommand command;
 
     public AddToStackWizardPage1(StackedCommand command) {
-        super("Choose a command");
+        super("Choose a Command");
         this.command = command;
-        setTitle("Choose a command");
+        setTitle("Choose a Command");
         setPageComplete(false);
     }
 
