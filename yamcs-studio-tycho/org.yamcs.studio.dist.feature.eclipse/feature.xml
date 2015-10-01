@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.yamcs.studio.dist.feature.eclipse"
-      label="Eclipse Components"
+      label="Yamcs Eclipse Components"
       version="1.0.0.qualifier"
       provider-name="Space Applications Services">
 
@@ -601,6 +601,27 @@
 
    <plugin
          id="org.eclipse.ui.intro.universal"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.ui.sdk.scheduler"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.p2.updatechecker"
          download-size="0"
          install-size="0"
          version="0.0.0"

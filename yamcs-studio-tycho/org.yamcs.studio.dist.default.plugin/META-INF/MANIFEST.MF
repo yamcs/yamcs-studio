@@ -40,5 +40,8 @@ Require-Bundle: org.eclipse.ui,
  javax.inject,
  org.csstudio.opibuilder,
  org.eclipse.ui.forms,
- org.eclipse.gef
+ org.eclipse.gef,
+ org.eclipse.equinox.p2.ui,
+ org.eclipse.equinox.p2.ui.sdk.scheduler,
+ org.eclipse.equinox.p2.updatechecker
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
