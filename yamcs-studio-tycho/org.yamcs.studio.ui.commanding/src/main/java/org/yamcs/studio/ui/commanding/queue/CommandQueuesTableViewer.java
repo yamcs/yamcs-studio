@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -12,6 +14,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -19,10 +22,14 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
+import org.yamcs.YamcsException;
+import org.yamcs.api.YamcsApiException;
 import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.protobuf.Commanding.QueueState;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.ui.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
@@ -52,6 +59,7 @@ public class CommandQueuesTableViewer extends TableViewer {
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
         addFixedColumns(tcl);
+        createContextMenu();
 
         setLabelProvider(new ModelLabelProvider());
 
@@ -83,8 +91,44 @@ public class CommandQueuesTableViewer extends TableViewer {
 
     }
 
-    class StateEditingSupport extends EditingSupport
-    {
+    private void createContextMenu() {
+        MenuManager popupManager = new MenuManager();
+        popupManager.add(new Action("Block Queue") {
+            @Override
+            public void run() {
+                IStructuredSelection sel = (IStructuredSelection) getSelection();
+                if (!sel.isEmpty()) {
+                    CommandQueue commandQueue = (CommandQueue) sel.getFirstElement();
+                    updateCommandQueueState(commandQueue, QueueState.BLOCKED);
+                }
+            }
+        });
+        popupManager.add(new Action("Disable Queue") {
+            @Override
+            public void run() {
+                IStructuredSelection sel = (IStructuredSelection) getSelection();
+                if (!sel.isEmpty()) {
+                    CommandQueue commandQueue = (CommandQueue) sel.getFirstElement();
+                    updateCommandQueueState(commandQueue, QueueState.DISABLED);
+                }
+            }
+        });
+        popupManager.add(new Action("Enable Queue") {
+            @Override
+            public void run() {
+                IStructuredSelection sel = (IStructuredSelection) getSelection();
+                if (!sel.isEmpty()) {
+                    CommandQueue commandQueue = (CommandQueue) sel.getFirstElement();
+                    updateCommandQueueState(commandQueue, QueueState.ENABLED);
+                }
+            }
+        });
+
+        Menu popup = popupManager.createContextMenu(getTable());
+        getTable().setMenu(popup);
+    }
+
+    class StateEditingSupport extends EditingSupport {
         private ComboBoxViewerCellEditor cellEditor = null;
 
         private StateEditingSupport(ColumnViewer viewer) {
@@ -118,68 +162,79 @@ public class CommandQueuesTableViewer extends TableViewer {
         protected void setValue(Object element, Object value) {
             if (element instanceof CommandQueue && value instanceof Commanding.QueueState) {
                 CommandQueue data = (CommandQueue) element;
-                Commanding.QueueState newValue = (Commanding.QueueState) value;
-                /* only set new value if it differs from old one */
-                if (!data.getState().equals(newValue)) {
-                    data.setState(newValue);
+                QueueState newValue = (QueueState) value;
+                updateCommandQueueState(data, newValue);
+            }
+        }
+    }
 
-                    try {
-                        CommandQueueInfo q = null;
-                        for (RowCommandQueueInfo rcqi : commandQueueView.currentQueuesModel.queues)
-                        {
-                            if (rcqi.cq == element)
-                                q = rcqi.commandQueueInfo;
-                        }
-                        //CommandQueueInfo q = queues.get(row);
-                        if (value.equals(Commanding.QueueState.BLOCKED)) {
-                            commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.BLOCKED)
-                                    .build(), false);
-                        } else if (value.equals(Commanding.QueueState.DISABLED)) {
-                            commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q)
-                                    .setState(Commanding.QueueState.DISABLED).build(), false);
-                        } else if (value.equals(Commanding.QueueState.ENABLED)) {
-                            boolean oldcommandsfound = false;
-                            ArrayList<CommandQueueEntry> cmds = commandQueueView.currentQueuesModel.commands.get(q.getName());
-                            if (cmds != null) {
-                                for (CommandQueueEntry cqe : cmds) {
-                                    long missionTime = TimeCatalogue.getInstance().getMissionTime();
-                                    if (missionTime - cqe.getGenerationTime() > CommandQueueView.oldCommandWarningTime * 1000L) {
-                                        oldcommandsfound = true;
-                                        break;
-                                    }
-                                }
-                            }
+    private void updateCommandQueueState(CommandQueue commandQueue, QueueState newState) {
+        /* only set new value if it differs from old one */
+        if (!commandQueue.getState().equals(newState)) {
+            commandQueue.setState(newState);
 
-                            if (oldcommandsfound) {
-                                int result = CommandFateDialog.showDialog2(parent.getShell());
-                                switch (result) {
-                                case -1://cancel
-                                    return;
-                                case 0: //send with updated times
-                                    commandQueueView.commandQueueControl.setQueueState(
-                                            CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), true);
-                                    break;
-                                case 1://send with old times
-                                    commandQueueView.commandQueueControl.setQueueState(
-                                            CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), false);
-                                    break;
-                                }
-                            } else {
-                                commandQueueView.commandQueueControl.setQueueState(
-                                        CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(),
-                                        false);
-                            }
-                        }
-                    } catch (Exception e) {
-                        // FIXME we shouldn't hide exceptions
-                        log.log(Level.SEVERE, e.getMessage(), e);
-                    }
+            try {
+                CommandQueueInfo q = null;
+                for (RowCommandQueueInfo rcqi : commandQueueView.currentQueuesModel.queues) {
+                    if (rcqi.cq == commandQueue)
+                        q = rcqi.commandQueueInfo;
+                }
+                //CommandQueueInfo q = queues.get(row);
+                if (newState == QueueState.BLOCKED) {
+                    blockQueue(q);
+                } else if (newState == QueueState.DISABLED) {
+                    disableQueue(q);
+                } else if (newState == QueueState.ENABLED) {
+                    enableQueue(q);
+                }
+            } catch (YamcsApiException | YamcsException e) {
+                log.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+    }
 
+    private void blockQueue(CommandQueueInfo q) throws YamcsApiException, YamcsException {
+        commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.BLOCKED)
+                .build(), false);
+    }
+
+    private void disableQueue(CommandQueueInfo q) throws YamcsApiException, YamcsException {
+        commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q)
+                .setState(Commanding.QueueState.DISABLED).build(), false);
+    }
+
+    private void enableQueue(CommandQueueInfo q) throws YamcsApiException, YamcsException {
+        boolean oldcommandsfound = false;
+        ArrayList<CommandQueueEntry> cmds = commandQueueView.currentQueuesModel.commands.get(q.getName());
+        if (cmds != null) {
+            for (CommandQueueEntry cqe : cmds) {
+                long missionTime = TimeCatalogue.getInstance().getMissionTime();
+                if (missionTime - cqe.getGenerationTime() > CommandQueueView.oldCommandWarningTime * 1000L) {
+                    oldcommandsfound = true;
+                    break;
                 }
             }
-
         }
 
+        if (oldcommandsfound) {
+            int result = CommandFateDialog.showDialog2(parent.getShell());
+            switch (result) {
+            case -1://cancel
+                return;
+            case 0: //send with updated times
+                commandQueueView.commandQueueControl.setQueueState(
+                        CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), true);
+                break;
+            case 1://send with old times
+                commandQueueView.commandQueueControl.setQueueState(
+                        CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), false);
+                break;
+            }
+        } else {
+            commandQueueView.commandQueueControl.setQueueState(
+                    CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(),
+                    false);
+        }
     }
 
     class ModelLabelProvider extends LabelProvider implements
