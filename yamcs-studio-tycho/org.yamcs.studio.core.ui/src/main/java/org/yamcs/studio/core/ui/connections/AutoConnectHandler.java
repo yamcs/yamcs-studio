@@ -13,11 +13,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.core.ConnectionManager;
 
 /**
- * Does a connection on the last-used configuration, with potential UI interactions if a password is
- * required and this password was not saved to disk.
+ * Does a connection on the last-used configuration, with potential UI
+ * interactions if a password is required and this password was not saved to
+ * disk.
  * <p>
- * If there is no last-used configuration, yet this method was called, it pops up the richer
- * connection manager dialog.
+ * If there is no last-used configuration, yet this method was called, it pops
+ * up the richer connection manager dialog.
  *
  * TODO we're not playing nice with the JAAS stuff when reusing a password
  */

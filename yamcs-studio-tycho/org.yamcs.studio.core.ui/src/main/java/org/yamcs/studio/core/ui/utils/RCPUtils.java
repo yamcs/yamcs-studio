@@ -54,7 +54,7 @@ public class RCPUtils {
             cmd.executeWithChecks(
                     new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
         } catch (Exception exception) {
-            log.log(Level.SEVERE, "Could not execute command", exception);
+            log.log(Level.SEVERE, "Could not execute command " + commandId, exception);
         }
     }
 
