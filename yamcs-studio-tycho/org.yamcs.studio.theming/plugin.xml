@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.yamcs.studio.theming.StyleEditor"
+            extensions="def"
+            default="true"
+            icon="icons/theme.png"
+            id="org.yamcs.studio.theming.styleeditor"
+            name="Style Editor">
+      </editor>
+   </extension>
+</plugin>
