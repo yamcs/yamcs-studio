@@ -53,6 +53,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction preferencesAction;
     private IWorkbenchAction helpContentsAction;
     private IWorkbenchAction onlineHelpAction;
+    private IWorkbenchAction raiseIssueAction;
     private IWorkbenchAction aboutAction;
 
     public YamcsStudioActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -91,6 +92,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
         onlineHelpAction = new OnlineHelpAction();
         register(onlineHelpAction);
+
+        raiseIssueAction = new RaiseIssueAction();
+        register(raiseIssueAction);
 
         // Not using this, because we hide that default action id. CSS's advisor puts
         // it under Edit menu, which is quite confusing.
@@ -134,6 +138,8 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         menubar.add(helpMenu);
         helpMenu.add(onlineHelpAction);
         helpMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        helpMenu.add(new Separator());
+        helpMenu.add(raiseIssueAction);
         helpMenu.add(new Separator());
         helpMenu.add(aboutAction);
     }
