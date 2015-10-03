@@ -27,7 +27,7 @@ With that out of the way, we're now ready to generate the actual Yamcs Studio pr
 ./make-product.sh
 ```
 
-The generated products can be found in `yamcs-studio-repository/target/products/`. There are 64-bit versions for Mac, Linux and Windows.
+The generated products can be found in `org.yamcs.studio.dist.default.repository/target/products/`. There are 64-bit versions for Mac, Linux and Windows.
 
 ### Next up, Eclipse
 
@@ -43,9 +43,7 @@ With the previous steps all successfully completed, we now continue with getting
 
 - Import the Yamcs Studio maven projects under `yamcs-studio-tycho` into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.
 
-- You can come back to this dialog when you want to checkout the source code of any of the hundreds of CS-Studio projects that are included under `css`.
-
-- Open `yamcs-studio-repository/yamcs-studio.product`
+- Open `org.yamcs.studio.dist.default.repository/yamcs-studio.product`
 ![Product Testing](images/product-testing.png)
 
 - Click `Launch an Eclipse Application`
