@@ -157,7 +157,8 @@
          <!-- Looks weird with the '...' in the label. Want to replace to sth in file-menu instead, like eclipse -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
          <!-- Hide this loaded help menu, with something simpler defined in action bar advisor -->
-         <!--hiddenMenuItem id="help"/-->
+         <hiddenMenuItem id="help"/>
+         <hiddenMenuItem id="org.eclipse.ui.window.preferences"/>
       </perspectiveExtension>
       
       <!-- OPI Runtime Perspective -->

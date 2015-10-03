@@ -11,11 +11,13 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.internal.OpenPreferencesAction;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
@@ -48,6 +50,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction save;
     private IWorkbenchAction saveAll;
     private IWorkbenchAction resetPerspectiveAction;
+    private IWorkbenchAction preferencesAction;
     private IWorkbenchAction helpContentsAction;
     private IWorkbenchAction onlineHelpAction;
     private IWorkbenchAction aboutAction;
@@ -89,6 +92,22 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         onlineHelpAction = new OnlineHelpAction();
         register(onlineHelpAction);
 
+        // Not using this, because we hide that default action id. CSS's advisor puts
+        // it under Edit menu, which is quite confusing.
+        // preferencesAction = ActionFactory.PREFERENCES.create(window);
+        preferencesAction = (new ActionFactory("preferences-2", IWorkbenchCommandConstants.WINDOW_PREFERENCES) {
+            @Override
+            public IWorkbenchAction create(IWorkbenchWindow window) {
+                if (window == null)
+                    throw new IllegalArgumentException();
+
+                IWorkbenchAction action = new OpenPreferencesAction(window);
+                action.setId(getId());
+                return action;
+            }
+        }).create(window);
+        register(preferencesAction);
+
         resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(window);
         register(resetPerspectiveAction);
 
@@ -101,10 +120,12 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     @Override
     protected void fillMenuBar(final IMenuManager menubar) {
         menubar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-
-        IMenuManager windowMenu = new MenuManager("Window", "window");
+        IMenuManager windowMenu = new MenuManager("Window", IWorkbenchActionConstants.M_WINDOW);
         menubar.add(windowMenu);
         windowMenu.add(resetPerspectiveAction);
+        windowMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        windowMenu.add(new Separator());
+        windowMenu.add(preferencesAction);
 
         // plugin.xml in css menu.app defines a non-brandable icon.
         // through plugin.xml in this bundle, that help menu is hidden, and
@@ -112,6 +133,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         IMenuManager helpMenu = new MenuManager("Help", "help-2");
         menubar.add(helpMenu);
         helpMenu.add(onlineHelpAction);
+        helpMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         helpMenu.add(new Separator());
         helpMenu.add(aboutAction);
     }

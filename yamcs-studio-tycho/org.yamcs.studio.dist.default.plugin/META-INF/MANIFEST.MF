@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.yamcs.studio.core.ui,
  org.yamcs.studio.ui.processor,
+ org.yamcs.studio.p2,
  org.eclipse.core.runtime,
  org.yamcs.osgiclient,
  org.yamcs.studio.ui.css,
@@ -40,8 +41,5 @@ Require-Bundle: org.eclipse.ui,
  javax.inject,
  org.csstudio.opibuilder,
  org.eclipse.ui.forms,
- org.eclipse.gef,
- org.eclipse.equinox.p2.ui,
- org.eclipse.equinox.p2.ui.sdk.scheduler,
- org.eclipse.equinox.p2.updatechecker
+ org.eclipse.gef
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

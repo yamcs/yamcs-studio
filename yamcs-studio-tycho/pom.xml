@@ -33,6 +33,8 @@
 		<module>org.yamcs.studio.dist.feature.core</module>
 		<module>org.yamcs.studio.dist.feature.css</module>
 		<module>org.yamcs.studio.dist.feature.eclipse</module>
+		<module>org.yamcs.studio.dist.feature.p2</module>
+		<module>org.yamcs.studio.p2</module>
 		<module>org.yamcs.studio.script</module>
 		<module>org.yamcs.studio.ui.archive</module>
 		<module>org.yamcs.studio.ui.commanding</module>

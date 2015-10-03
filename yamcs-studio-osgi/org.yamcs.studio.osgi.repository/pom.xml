@@ -23,6 +23,13 @@
 						</goals>
 						<configuration>
 							<artifacts>
+							    <!-- Thirdparty OSGI-friendly -->
+							    <artifact>
+							        <!-- Tycho can't find this p2 dependency. Probably can remove this here
+							             when the build depends on a newer version of Eclipse IDE -->
+							        <id>org.tukaani:xz:1.3</id>
+							        <source>true</source>
+							    </artifact>
 								<!-- From reactor -->
                                 <artifact>
                                     <id>org.yamcs.studio:org.yamcs.osgiclient:${project.version}</id>

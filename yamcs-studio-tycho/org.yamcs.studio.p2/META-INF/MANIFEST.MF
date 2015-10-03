@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ActivationPolicy: lazy
+Bundle-Description: Yamcs Studio Core
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs Studio P2
+Bundle-SymbolicName: org.yamcs.studio.p2;singleton:=true
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.equinox.p2.ui,
+ org.eclipse.equinox.p2.metadata,
+ org.eclipse.equinox.p2.operations,
+ org.eclipse.ui
+Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

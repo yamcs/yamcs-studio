@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="Check for Updates"
+            id="org.yamcs.studio.p2.commands.update">
+      </command>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="org.yamcs.studio.p2.commands.update"
+            class="org.yamcs.studio.p2.UpdateHandler">
+         <!-- Disabled until everything works -->
+         <activeWhen>
+            <with variable="bla">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:help-2?after=additions">
+         <command
+               commandId="org.yamcs.studio.p2.commands.update"
+               id="org.yamcs.studio.menu.p2.update">
+         </command>
+      </menuContribution>
+   </extension>
+</plugin>
