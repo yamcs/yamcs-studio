@@ -1,4 +1,4 @@
-### End-User documentation is available at: [http://www.yamcs.org/docs/](http://www.yamcs.org/docs/)
+### End-User documentation is available at: [http://www.yamcs.org/docs/studio/](http://www.yamcs.org/docs/studio/)
 
 <p>&nbsp;</p>
 
