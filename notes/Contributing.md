@@ -2,7 +2,9 @@ Yamcs Studio is an Eclipse RCP project leveraging the Eclipse Workbench. The bui
 
 Yamcs Studio includes many features and plugins from CS-Studio, these dependencies are managed using git submodules. We could have also set up some central repository with all the CS-Studio binaries, but it's a lot more useful if you have the source code on your developer machine so that you can navigate the code, and make changes to it within Eclipse.
 
-In what follows we'll explain how to build a product from the command line only. When you get that to work, you should follow the next section, which will explain how you can run products from within `Eclipse for RCP and RAP developers` instead. This is what you'll want for any serious development because with this setup there's no build step anymore. Note that you do need to go through the headless build first as this sets up your environment for the Eclipse build too.
+In what follows we'll explain how to build Yamcs Studio from the command line first. When you get that to work, you can read the section on how to run products from within `Eclipse for RCP and RAP developers` instead. This is what you'll want for any serious development because with this setup there's no build step anymore. 
+
+Note that you do need to go through the headless build first as this sets up your environment for the Eclipse build too.
 
 
 ### Prerequisites
@@ -10,8 +12,18 @@ In what follows we'll explain how to build a product from the command line only.
 * Oracle JDK 8
 * Maven
 
-### Developer Setup
-Clone the repository, including the CS-Studio submodules. These are 'separate' nested git repositories. Read up on git-submodules, if this concept is new to you.
+### Build Yamcs
+Yamcs Studio depends on Yamcs API. Therefore, you must first build Yamcs API from the source code.
+
+Checkout the latest Yamcs code:
+```
+git clone https://github.com/yamcs/yamcs
+cd yamcs
+mvn clean install -DskipTests
+```
+
+### Generate Yamcs Studio Products
+Clone the Yamcs Studio repository, including the CS-Studio submodules. These are 'separate' nested git repositories. Read up on git-submodules, if this concept is new to you.
 ```
 git clone --recursive https://github.com/yamcs/yamcs-studio
 cd yamcs-studio
@@ -56,7 +68,7 @@ You'll have to do this workaround every time you click that launch button. We ha
 
 I would also recommend to tick the option `Validate plug-ins automatically prior to launching`. This will save you time.
 
-### Keeping your development copy up-to-date
+### Keep your development copy up-to-date
 In general we try to stick to a stable version of our upstream CS-Studio dependencies so that you don't need to run `make-platform.sh` all the time. Assuming that none of the submodules were updated, you typically only run `make-product.sh` to generate the Yamcs Studio product.
 
 If, however, `git status` starts outputting weird error messages, it may be time for you to update your entire CS-Studio Platform. You'll want to do something like this:
