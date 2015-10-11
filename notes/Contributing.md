@@ -14,8 +14,6 @@ Note that you do need to go through the headless build first as this sets up you
 
 ### Build Yamcs
 Yamcs Studio depends on Yamcs API. Therefore, you must first build Yamcs API from the source code.
-
-Checkout the latest Yamcs code:
 ```
 git clone https://github.com/yamcs/yamcs
 cd yamcs
