@@ -18,6 +18,7 @@ Yamcs Studio depends on Yamcs API. Therefore, you must first build Yamcs API fro
 git clone https://github.com/yamcs/yamcs
 cd yamcs
 mvn clean install -DskipTests
+cd ..
 ```
 
 ### Generate Yamcs Studio Products
