@@ -61,9 +61,12 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public boolean isYamcsParameter() {
-        return !displayName.contains("://")
-                || displayName.startsWith("sw://")
-                || displayName.startsWith("para://");
+        if (displayName.startsWith("sw://") || displayName.startsWith("para://"))
+            return true;
+        else if (displayName.startsWith("="))
+            return false;
+        else
+            return !(displayName.contains("://")); // default schema
     }
 
     @Override

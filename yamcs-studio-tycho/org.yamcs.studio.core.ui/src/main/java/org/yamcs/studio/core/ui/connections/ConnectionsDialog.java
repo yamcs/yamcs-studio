@@ -122,8 +122,7 @@ public class ConnectionsDialog extends Dialog {
         createServerPanel(sash, resourceManager);
 
         // Create right side, but wrap it in another composite to force
-        // dimensions
-        // even when invisible
+        // dimensions even when invisible
         Composite detailPanelWrapper = new Composite(sash, SWT.NONE);
         gl = new GridLayout();
         gl.marginHeight = 0;
