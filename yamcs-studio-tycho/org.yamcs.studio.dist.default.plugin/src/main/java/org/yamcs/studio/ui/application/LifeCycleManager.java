@@ -1,13 +1,20 @@
 package org.yamcs.studio.ui.application;
 
+import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.autocomplete.AutoCompleteHelper;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.workbench.UIEvents.UILifeCycle;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -27,6 +34,19 @@ public class LifeCycleManager {
         registerAutocompleteExtensions();
 
         broker.subscribe(UILifeCycle.APP_STARTUP_COMPLETE, evt -> {
+
+            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+            IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
+            try {
+                // This is a bit of a hack. Have an unknown problem with the toolbar disappearing after
+                // workbench restart. Below code does a double 'toggle' on it, to make it appear again.
+                Command cmd = commandService.getCommand("org.eclipse.ui.ToggleCoolbarAction");
+                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+            } catch (Exception exception) {
+                log.log(Level.SEVERE, "Could not execute command", exception);
+            }
 
             // Listen to processing-info updates
             doUpdateGlobalProcessingState(PlatformUI.getWorkbench(), null); // Trigger initial state
