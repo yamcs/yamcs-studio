@@ -39,6 +39,7 @@
 		<module>org.yamcs.studio.theming</module>
 		<module>org.yamcs.studio.ui.archive</module>
 		<module>org.yamcs.studio.ui.commanding</module>
+		<module>org.yamcs.studio.ui.commanding.test</module>
 		<module>org.yamcs.studio.ui.css</module>
 		<module>org.yamcs.studio.ui.eventlog</module>
 		<module>org.yamcs.studio.ui.monitoring</module>
@@ -210,13 +211,13 @@
 		</repository>
 	</repositories>
 
-    <!-- Temporary to be able to use 0.23.1 which fixes a high-memory consumption bug -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>tycho-staged</id>
-            <url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1022/</url>
-        </pluginRepository>
-    </pluginRepositories>
+	<!-- Temporary to be able to use 0.23.1 which fixes a high-memory consumption bug -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>tycho-staged</id>
+			<url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1022/</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<profiles>
 		<!-- If a local repository is specified, use that. -->
@@ -250,16 +251,15 @@
 				</repository>
 			</repositories>
 		</profile>
-                <profile>
-                        <id>travis</id>
-                        <repositories>
-                                <repository>
-                                        <id>yamcs-studio-build-deps</id>
-                                        <url>https://dl.bintray.com/fqqb/yamcs-studio-build-deps/</url>
-                                        <layout>p2</layout>
-                                </repository>
-                        </repositories>
-                </profile>
-        </profiles>
+		<profile>
+			<id>travis</id>
+			<repositories>
+				<repository>
+					<id>yamcs-studio-build-deps</id>
+					<url>https://dl.bintray.com/fqqb/yamcs-studio-build-deps/</url>
+					<layout>p2</layout>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
 </project>
-
