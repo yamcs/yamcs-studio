@@ -173,6 +173,12 @@
 			<url>http://download.eclipse.org/releases/luna</url>
 			<layout>p2</layout>
 		</repository>
+		<!-- Introduced for resolving junit/mockito dependencies -->
+		<repository>
+			<id>orbit-kepler</id>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</url>
+			<layout>p2</layout>
+		</repository>
 		<repository>
 			<id>xtext</id>
 			<layout>p2</layout>
@@ -211,7 +217,8 @@
 		</repository>
 	</repositories>
 
-	<!-- Temporary to be able to use 0.23.1 which fixes a high-memory consumption bug -->
+	<!-- Temporary to be able to use 0.23.1 which fixes a high-memory consumption 
+		bug -->
 	<pluginRepositories>
 		<pluginRepository>
 			<id>tycho-staged</id>
