@@ -13,6 +13,7 @@ import org.yamcs.protobuf.Parameters.AlarmLevel;
 import org.yamcs.protobuf.Parameters.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
     protected ParameterValue pval;
@@ -98,7 +99,9 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public String getUnits() {
-        return "";
+        ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
+        String unit = catalogue.getCombinedUnit(pval.getId());
+        return (unit == null) ? "" : unit;
     }
 
     @Override

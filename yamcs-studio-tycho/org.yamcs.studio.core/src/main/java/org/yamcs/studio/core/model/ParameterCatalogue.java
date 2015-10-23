@@ -2,6 +2,7 @@ package org.yamcs.studio.core.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,10 @@ public class ParameterCatalogue implements Catalogue {
     // Store pvreaders while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
     private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
-    private Map<NamedObjectId, ParameterInfo> availableParametersById = new LinkedHashMap<>();
+    private Map<NamedObjectId, ParameterInfo> parametersById = new LinkedHashMap<>();
+
+    // Index for faster repeated access
+    private Map<NamedObjectId, String> unitsById = new HashMap<>();
 
     private LosTracker losTracker = new LosTracker();
 
@@ -59,7 +63,7 @@ public class ParameterCatalogue implements Catalogue {
     public synchronized void register(YamcsPVReader pvReader) {
         pvReadersById.put(pvReader.getId(), pvReader);
         // Report current connection state
-        ParameterInfo p = availableParametersById.get(pvReader.getId());
+        ParameterInfo p = parametersById.get(pvReader.getId());
         pvReader.processConnectionInfo(new PVConnectionInfo(p));
         // Register (pending) websocket request
         NamedObjectList idList = pvReader.toNamedObjectList();
@@ -85,11 +89,21 @@ public class ParameterCatalogue implements Catalogue {
         });
 
         log.fine("Refreshing all pv readers");
-        for (ParameterInfo p : this.metaParameters)
-            availableParametersById.put(p.getId(), p);
+        for (ParameterInfo p : this.metaParameters) {
+            parametersById.put(p.getId(), p);
+
+            // Update unit index
+            if (p != null && p.hasType() && p.getType().getUnitSetCount() > 0) {
+                String combinedUnit = p.getType().getUnitSet(0).getUnit();
+                for (int i = 1; i < p.getType().getUnitSetCount(); i++) {
+                    combinedUnit += " " + p.getType().getUnitSet(i).getUnit();
+                }
+                unitsById.put(p.getId(), combinedUnit);
+            }
+        }
 
         pvReadersById.forEach((id, pvReader) -> {
-            ParameterInfo parameter = availableParametersById.get(id);
+            ParameterInfo parameter = parametersById.get(id);
             log.finer(String.format("Signaling %s --> %s", id, parameter));
             pvReader.processConnectionInfo(new PVConnectionInfo(parameter));
         });
@@ -114,7 +128,7 @@ public class ParameterCatalogue implements Catalogue {
 
     private void reportConnectionState() {
         pvReadersById.forEach((id, pvReader) -> {
-            ParameterInfo p = availableParametersById.get(id);
+            ParameterInfo p = parametersById.get(id);
             pvReader.processConnectionInfo(new PVConnectionInfo(p));
         });
     }
@@ -131,9 +145,17 @@ public class ParameterCatalogue implements Catalogue {
 
             @Override
             public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not fetch available yamcs parameters", e);
+                log.log(Level.SEVERE, "Could not fetch available Yamcs parameters", e);
             }
         });
+    }
+
+    public ParameterInfo getParameterInfo(NamedObjectId id) {
+        return parametersById.get(id);
+    }
+
+    public String getCombinedUnit(NamedObjectId id) {
+        return unitsById.get(id);
     }
 
     public List<ParameterInfo> getMetaParameters() {
