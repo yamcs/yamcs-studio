@@ -89,11 +89,6 @@ public class CommandingCatalogue implements Catalogue {
         });
     }
 
-    @Deprecated
-    public XtceDb getMdb() {
-        return mdb;
-    }
-
     public String getCommandOrigin() {
         try {
             return InetAddress.getLocalHost().getHostName();

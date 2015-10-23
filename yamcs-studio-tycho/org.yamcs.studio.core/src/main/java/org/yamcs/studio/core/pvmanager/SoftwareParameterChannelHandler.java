@@ -10,6 +10,8 @@ import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
 import org.yamcs.protobuf.Parameters.DataSourceType;
+import org.yamcs.protobuf.Parameters.ParameterInfo;
+import org.yamcs.protobuf.Parameters.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -17,18 +19,10 @@ import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
-import org.yamcs.xtce.BooleanParameterType;
-import org.yamcs.xtce.EnumeratedParameterType;
-import org.yamcs.xtce.FloatParameterType;
-import org.yamcs.xtce.IntegerParameterType;
-import org.yamcs.xtce.Parameter;
-import org.yamcs.xtce.ParameterType;
-import org.yamcs.xtce.StringParameterType;
 
 import com.google.protobuf.MessageLite;
 
@@ -95,26 +89,30 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
         return isConnected(info);
     }
 
-    private static Value toValue(Parameter parameter, String stringValue) {
-        ParameterType ptype = parameter.getParameterType();
-        if (ptype instanceof StringParameterType || ptype instanceof EnumeratedParameterType) {
-            return Value.newBuilder().setType(Type.STRING).setStringValue(stringValue).build();
-        } else if (ptype instanceof IntegerParameterType) {
-            return Value.newBuilder().setType(Type.UINT64).setUint64Value(Long.parseLong(stringValue)).build();
-        } else if (ptype instanceof FloatParameterType) {
-            return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(stringValue)).build();
-        } else if (ptype instanceof BooleanParameterType) {
-            boolean booleanValue = TRUTHY.contains(stringValue.toLowerCase());
-            return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
+    private static Value toValue(ParameterInfo p, String stringValue) {
+        ParameterTypeInfo ptype = p.getType();
+        if (ptype != null) {
+            switch (ptype.getEngType()) {
+            case "string":
+            case "enumeration":
+                return Value.newBuilder().setType(Type.STRING).setStringValue(stringValue).build();
+            case "integer":
+                return Value.newBuilder().setType(Type.UINT64).setUint64Value(Long.parseLong(stringValue)).build();
+            case "float":
+                return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(stringValue)).build();
+            case "boolean":
+                boolean booleanValue = TRUTHY.contains(stringValue.toLowerCase());
+                return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
+            }
         }
         return null;
     }
 
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
-        Parameter p = CommandingCatalogue.getInstance().getMdb().getParameter(getChannelName());
+        ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
         ParameterData pdata = ParameterData.newBuilder().addParameter(ParameterValue.newBuilder()
-                .setId(getId())
+                .setId(id)
                 .setEngValue(toValue(p, (String) newValue))).build();
 
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
