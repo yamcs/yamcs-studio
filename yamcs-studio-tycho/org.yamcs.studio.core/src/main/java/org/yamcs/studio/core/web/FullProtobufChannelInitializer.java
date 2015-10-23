@@ -2,7 +2,7 @@ package org.yamcs.studio.core.web;
 
 import java.io.InputStream;
 
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Web.RestExceptionMessage;
 
 import com.google.protobuf.MessageLite;
 

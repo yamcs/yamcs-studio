@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
+import org.yamcs.protobuf.Yamcs.DumpRawMdbResponse;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -72,7 +72,7 @@ public class CommandingCatalogue implements Catalogue {
         ConnectionManager.getInstance().getRestClient().dumpRawMdb(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                RestDumpRawMdbResponse response = (RestDumpRawMdbResponse) responseMsg;
+                DumpRawMdbResponse response = (DumpRawMdbResponse) responseMsg;
                 try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
                     XtceDb newMdb = (XtceDb) oin.readObject();
                     mdb = newMdb;

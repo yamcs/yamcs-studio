@@ -9,6 +9,8 @@ import org.epics.vtype.AlarmSeverity;
 import org.epics.vtype.Display;
 import org.epics.vtype.Time;
 import org.epics.vtype.VType;
+import org.yamcs.protobuf.Parameters.AlarmLevel;
+import org.yamcs.protobuf.Parameters.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
@@ -21,7 +23,6 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public AlarmSeverity getAlarmSeverity() {
-
         if (pval.getAcquisitionStatus() == AcquisitionStatus.EXPIRED)
             return AlarmSeverity.INVALID; // Workaround to display LOS in the displays, should be 'Expired'
 
@@ -110,15 +111,14 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperWarningLimit() {
-        if (pval.hasWatchHigh()) {
-            return pval.getWatchHigh();
-        } else if (pval.hasWarningHigh()) {
-            return pval.getWarningHigh();
-        } else if (pval.hasDistressHigh()) {
-            return pval.getDistressHigh();
-        } else {
-            return Double.MAX_VALUE;
+        // Assumes ordered ranges
+        for (AlarmRange range : pval.getAlarmRangeList()) {
+            if (range.getLevel() == AlarmLevel.WATCH
+                    || range.getLevel() == AlarmLevel.WARNING
+                    || range.getLevel() == AlarmLevel.DISTRESS)
+                return range.getMaxInclusive();
         }
+        return Double.MAX_VALUE;
     }
 
     /**
@@ -126,13 +126,13 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperAlarmLimit() {
-        if (pval.hasCriticalHigh()) {
-            return pval.getCriticalHigh();
-        } else if (pval.hasSevereHigh()) {
-            return pval.getSevereHigh();
-        } else {
-            return Double.MAX_VALUE;
+        // Assumes ordered ranges
+        for (AlarmRange range : pval.getAlarmRangeList()) {
+            if (range.getLevel() == AlarmLevel.CRITICAL
+                    || range.getLevel() == AlarmLevel.SEVERE)
+                return range.getMaxInclusive();
         }
+        return Double.MAX_VALUE;
     }
 
     @Override

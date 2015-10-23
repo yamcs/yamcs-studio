@@ -9,9 +9,9 @@ import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
+import org.yamcs.protobuf.Parameters.DataSourceType;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
@@ -87,7 +87,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     protected boolean isConnected(PVConnectionInfo info) {
         return info.connected
                 && info.parameter != null
-                && info.parameter.getDataSource() == RestDataSource.LOCAL;
+                && info.parameter.getDataSource() == DataSourceType.LOCAL;
     }
 
     @Override
@@ -158,7 +158,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
          * Check that it's not actually a regular parameter, because we don't want leaking between
          * the datasource schemes (the web socket client wouldn't make the distinction).
          */
-        if (info.parameter != null && info.parameter.getDataSource() != RestDataSource.LOCAL) {
+        if (info.parameter != null && info.parameter.getDataSource() != DataSourceType.LOCAL) {
             reportExceptionToAllReadersAndWriters(new IllegalArgumentException(
                     "Not a valid software parameter channel: '" + getChannelName() + "'"));
         }

@@ -1,7 +1,7 @@
 package org.yamcs.studio.ui.css;
 
 import org.csstudio.simplepv.IPV;
-import org.yamcs.protobuf.Rest.RestParameterInfo;
+import org.yamcs.protobuf.Parameters.ParameterInfo;
 
 public class PVInfo implements Comparable<PVInfo> {
 
@@ -9,7 +9,7 @@ public class PVInfo implements Comparable<PVInfo> {
     private IPV pv;
 
     // In case it's a yamcs parameter, one of these two should be filled in
-    private RestParameterInfo parameterInfo;
+    private ParameterInfo parameterInfo;
     private String parameterInfoException;
 
     public PVInfo(String displayName, IPV pv) {
@@ -17,7 +17,7 @@ public class PVInfo implements Comparable<PVInfo> {
         this.pv = pv;
     }
 
-    public RestParameterInfo getParameterInfo() {
+    public ParameterInfo getParameterInfo() {
         return parameterInfo;
     }
 
@@ -40,8 +40,8 @@ public class PVInfo implements Comparable<PVInfo> {
             return "Unknown";
     }
 
-    public void setParameterInfo(RestParameterInfo restParameterInfo) {
-        this.parameterInfo = restParameterInfo;
+    public void setParameterInfo(ParameterInfo parameterInfo) {
+        this.parameterInfo = parameterInfo;
     }
 
     public void setParameterInfoException(String message) {

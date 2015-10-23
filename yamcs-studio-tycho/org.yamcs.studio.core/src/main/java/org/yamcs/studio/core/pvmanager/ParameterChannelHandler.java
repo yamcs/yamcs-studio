@@ -6,8 +6,8 @@ import org.epics.pvmanager.ChannelWriteCallback;
 import org.epics.pvmanager.DataSourceTypeAdapter;
 import org.epics.pvmanager.MultiplexedChannelHandler;
 import org.epics.pvmanager.ValueCache;
+import org.yamcs.protobuf.Parameters.DataSourceType;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Rest.RestDataSource;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
@@ -67,7 +67,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected boolean isConnected(PVConnectionInfo info) {
         boolean sysParam = getId().getName().startsWith("/yamcs"); // These are always valid in yamcs world
-        boolean nonLocal = info.parameter != null && info.parameter.getDataSource() != RestDataSource.LOCAL;
+        boolean nonLocal = info.parameter != null && info.parameter.getDataSource() != DataSourceType.LOCAL;
         return info.connected && (sysParam || nonLocal);
     }
 
@@ -97,7 +97,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
          * Check that it's not actually a software parameter, because we don't want leaking between
          * the datasource schemes (the web socket client wouldn't make the distinction).
          */
-        if (info.parameter != null && info.parameter.getDataSource() == RestDataSource.LOCAL) {
+        if (info.parameter != null && info.parameter.getDataSource() == DataSourceType.LOCAL) {
             reportExceptionToAllReadersAndWriters(new IllegalArgumentException(
                     "Not a valid parameter channel: '" + getChannelName() + "'"));
         }

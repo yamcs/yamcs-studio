@@ -19,12 +19,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.epics.vtype.Display;
-import org.yamcs.protobuf.Rest.RestAlarmInfo;
-import org.yamcs.protobuf.Rest.RestAlarmRange;
-import org.yamcs.protobuf.Rest.RestNameDescription;
-import org.yamcs.protobuf.Rest.RestParameterInfo;
-import org.yamcs.protobuf.Rest.RestParameterType;
-import org.yamcs.protobuf.Rest.RestUnitType;
+import org.yamcs.protobuf.Parameters.AlarmInfo;
+import org.yamcs.protobuf.Parameters.AlarmRange;
+import org.yamcs.protobuf.Parameters.NameDescriptionInfo;
+import org.yamcs.protobuf.Parameters.ParameterInfo;
+import org.yamcs.protobuf.Parameters.ParameterTypeInfo;
+import org.yamcs.protobuf.Parameters.UnitInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
 public class PVInfoDialog extends Dialog {
@@ -83,20 +83,24 @@ public class PVInfoDialog extends Dialog {
                     pvComposites.get(i).setVisible(!data.exclude);
                 }
 
-                // FIXME Commented-out, because i can't get the wrap functional right now
-                //pvInfoComposite.layout();
-                //pvInfoComposite.getShell().setSize(pvInfoComposite.getShell().computeSize(400, SWT.DEFAULT));
+                // FIXME Commented-out, because i can't get the wrap functional
+                // right now
+                // pvInfoComposite.layout();
+                // pvInfoComposite.getShell().setSize(pvInfoComposite.getShell().computeSize(400,
+                // SWT.DEFAULT));
                 pvInfoComposite.getShell().pack();
             });
 
             combo.select(0);
         }
 
-        //pvInfoComposite.getShell().setSize(pvInfoComposite.getShell().computeSize(400, SWT.DEFAULT));
+        // pvInfoComposite.getShell().setSize(pvInfoComposite.getShell().computeSize(400,
+        // SWT.DEFAULT));
 
         Rectangle screenSize = pvInfoComposite.getDisplay().getPrimaryMonitor().getBounds();
         Rectangle shellSize = pvInfoComposite.getShell().getBounds();
-        pvInfoComposite.getShell().setLocation((screenSize.width - shellSize.width) / 2, (screenSize.height - shellSize.height) / 2);
+        pvInfoComposite.getShell().setLocation((screenSize.width - shellSize.width) / 2,
+                (screenSize.height - shellSize.height) / 2);
 
         return pvInfoComposite;
     }
@@ -130,9 +134,9 @@ public class PVInfoDialog extends Dialog {
         return pvWrapper;
     }
 
-    private void createYamcsProperties(Composite parent, RestParameterInfo pinfo) {
-        createKeyValueTextPair(parent, "Yamcs Data Source", capitalize(pinfo.getDataSource()));
-        RestNameDescription desc = pinfo.getDescription();
+    private void createYamcsProperties(Composite parent, ParameterInfo pinfo) {
+        createKeyValueTextPair(parent, "Yamcs Data Source", capitalize(pinfo.getDataSource().toString()));
+        NameDescriptionInfo desc = pinfo.getDescription();
         createKeyValueTextPair(parent, "Qualified Name", desc.getQualifiedName());
         for (int i = 0; i < desc.getAliasesCount(); i++) {
             NamedObjectId alias = desc.getAliases(i);
@@ -146,12 +150,12 @@ public class PVInfoDialog extends Dialog {
             createKeyValueTextPair(parent, "Long Description", desc.getLongDescription());
         createSeparator(parent);
 
-        RestParameterType type = pinfo.getType();
+        ParameterTypeInfo type = pinfo.getType();
         createKeyValueTextPair(parent, "Data Encoding", type.getDataEncoding());
         createKeyValueTextPair(parent, "Engineering Type", capitalize(type.getEngType()));
         if (type.getUnitSetCount() > 0) {
             String units = "";
-            for (RestUnitType unit : type.getUnitSetList()) {
+            for (UnitInfo unit : type.getUnitSetList()) {
                 units += unit.getUnit() + " ";
             }
             createKeyValueTextPair(parent, "Units", units);
@@ -160,12 +164,12 @@ public class PVInfoDialog extends Dialog {
         if (type.getDefaultAlarm() != null) {
             createSeparator(parent);
             createHeader(parent, "Default Alarm");
-            RestAlarmInfo defaultAlarm = type.getDefaultAlarm();
+            AlarmInfo defaultAlarm = type.getDefaultAlarm();
             createKeyValueTextPair(parent, "Min. Violations", "" + defaultAlarm.getMinViolations());
 
             // Backwards for lower limits
             for (int i = defaultAlarm.getStaticAlarmRangesCount() - 1; i >= 0; i--) {
-                RestAlarmRange range = defaultAlarm.getStaticAlarmRanges(i);
+                AlarmRange range = defaultAlarm.getStaticAlarmRanges(i);
                 if (range.hasMinInclusive()) {
                     String label = capitalize(range.getLevel().toString()) + " Low";
                     String limit = new DecimalFormat("#.############").format(range.getMinInclusive());
@@ -174,7 +178,7 @@ public class PVInfoDialog extends Dialog {
             }
 
             // Now forwards for upper limits
-            for (RestAlarmRange range : defaultAlarm.getStaticAlarmRangesList()) {
+            for (AlarmRange range : defaultAlarm.getStaticAlarmRangesList()) {
                 if (range.hasMinInclusive()) {
                     String label = capitalize(range.getLevel().toString()) + " High";
                     String limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
@@ -260,7 +264,12 @@ public class PVInfoDialog extends Dialog {
             if (!found && Character.isLetter(chars[i])) {
                 chars[i] = Character.toUpperCase(chars[i]);
                 found = true;
-            } else if (Character.isWhitespace(chars[i]) || chars[i] == '.' || chars[i] == '\'') { // You can add other chars here
+            } else if (Character.isWhitespace(chars[i]) || chars[i] == '.' || chars[i] == '\'') { // You
+                                                                                                  // can
+                                                                                                  // add
+                                                                                                  // other
+                                                                                                  // chars
+                                                                                                  // here
                 found = false;
             }
         }

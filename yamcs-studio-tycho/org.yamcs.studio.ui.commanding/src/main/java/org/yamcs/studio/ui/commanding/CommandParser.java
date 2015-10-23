@@ -1,7 +1,7 @@
 package org.yamcs.studio.ui.commanding;
 
-import org.yamcs.protobuf.Rest.RestArgumentType;
-import org.yamcs.protobuf.Rest.RestCommandType;
+import org.yamcs.protobuf.Commanding.ArgumentType;
+import org.yamcs.protobuf.Commanding.CommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 
@@ -15,19 +15,19 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
  */
 public class CommandParser {
 
-    public static RestCommandType toCommand(String commandString) {
+    public static CommandType toCommand(String commandString) {
         return toCommand(commandString, CommandingCatalogue.getInstance());
     }
 
     // Extracted out for unit tests
-    static RestCommandType toCommand(String commandString, CommandingCatalogue commandingCatalogue) {
+    static CommandType toCommand(String commandString, CommandingCatalogue commandingCatalogue) {
         if (commandString == null)
             return null;
 
         commandString = commandString.trim();
 
         int lparen = commandString.indexOf('(');
-        RestCommandType.Builder cmd = RestCommandType.newBuilder();
+        CommandType.Builder cmd = CommandType.newBuilder();
 
         String commandName = commandString.substring(0, lparen).trim();
         NamedObjectId.Builder commandId = NamedObjectId.newBuilder();
@@ -51,7 +51,7 @@ public class CommandParser {
                         value = value.replace("\\\"", "\"").replace("\\'", "'");
                     }
                 }
-                cmd.addArguments(RestArgumentType.newBuilder().setName(name).setValue(value));
+                cmd.addArguments(ArgumentType.newBuilder().setName(name).setValue(value));
             }
         }
 

@@ -7,26 +7,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.Archive.DumpArchiveRequest;
+import org.yamcs.protobuf.Archive.DumpArchiveResponse;
+import org.yamcs.protobuf.Archive.GetTagsRequest;
+import org.yamcs.protobuf.Archive.GetTagsResponse;
+import org.yamcs.protobuf.Archive.InsertTagRequest;
+import org.yamcs.protobuf.Archive.InsertTagResponse;
+import org.yamcs.protobuf.Archive.UpdateTagRequest;
+import org.yamcs.protobuf.Commanding.SendCommandRequest;
+import org.yamcs.protobuf.Commanding.ValidateCommandRequest;
+import org.yamcs.protobuf.Commanding.ValidateCommandResponse;
 import org.yamcs.protobuf.Events.GetEventsRequest;
+import org.yamcs.protobuf.Parameters.ListParametersRequest;
+import org.yamcs.protobuf.Parameters.ListParametersResponse;
+import org.yamcs.protobuf.Parameters.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Rest.GetTagsRequest;
-import org.yamcs.protobuf.Rest.GetTagsResponse;
-import org.yamcs.protobuf.Rest.InsertTagRequest;
-import org.yamcs.protobuf.Rest.InsertTagResponse;
-import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
-import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
-import org.yamcs.protobuf.Rest.RestDumpRawMdbResponse;
-import org.yamcs.protobuf.Rest.RestGetParameterInfoRequest;
-import org.yamcs.protobuf.Rest.RestGetParameterInfoResponse;
-import org.yamcs.protobuf.Rest.RestListAuthorisationsResponse;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
-import org.yamcs.protobuf.Rest.RestListProcessorsResponse;
-import org.yamcs.protobuf.Rest.RestSendCommandRequest;
-import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
-import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
-import org.yamcs.protobuf.Rest.UpdateTagRequest;
+import org.yamcs.protobuf.Yamcs.DumpRawMdbResponse;
 import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.Yamcs.ListAuthorizationsResponse;
+import org.yamcs.protobuf.YamcsManagement.ListProcessorsResponse;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.studio.core.security.YamcsCredentials;
@@ -73,68 +72,68 @@ public class RestClient {
 
     }
 
-    public void dumpArchive(RestDumpArchiveRequest request, ResponseHandler responseHandler) {
-        get("/api/archive", request, RestDumpArchiveResponse.newBuilder(), responseHandler);
+    public void dumpArchive(DumpArchiveRequest request, ResponseHandler responseHandler) {
+        get("/archive", request, DumpArchiveResponse.newBuilder(), responseHandler);
     }
 
-    public void validateCommand(RestValidateCommandRequest request, ResponseHandler responseHandler) {
-        post("/api/commanding/validator", request, RestValidateCommandResponse.newBuilder(), responseHandler);
+    public void validateCommand(ValidateCommandRequest request, ResponseHandler responseHandler) {
+        post("/commanding/validator", request, ValidateCommandResponse.newBuilder(), responseHandler);
     }
 
-    public void sendCommand(RestSendCommandRequest request, ResponseHandler responseHandler) {
-        post("/api/commanding/queue", request, null, responseHandler);
+    public void sendCommand(SendCommandRequest request, ResponseHandler responseHandler) {
+        post("/commanding/queue", request, null, responseHandler);
     }
 
-    public void listAvailableParameters(RestListAvailableParametersRequest request, ResponseHandler responseHandler) {
-        get("/api/mdb/parameters", request, RestListAvailableParametersResponse.newBuilder(), responseHandler);
+    public void listParameters(ListParametersRequest request, ResponseHandler responseHandler) {
+        get("/parameters", request, ListParametersResponse.newBuilder(), responseHandler);
+    }
+
+    public void getParameter(String qualifiedName, ResponseHandler responseHandler) {
+        get("/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
     }
 
     public void getEvents(GetEventsRequest request, ResponseHandler responseHandler) {
-        streamGet("/api/events", request, () -> Event.newBuilder(), responseHandler);
+        streamGet("/events", request, () -> Event.newBuilder(), responseHandler);
     }
 
     public void dumpRawMdb(ResponseHandler responseHandler) {
-        get("/api/mdb/dump", null, RestDumpRawMdbResponse.newBuilder(), responseHandler);
-    }
-
-    public void getParameterInfo(RestGetParameterInfoRequest request, ResponseHandler responseHandler) {
-        get("/api/mdb/parameterInfo", request, RestGetParameterInfoResponse.newBuilder(), responseHandler);
+        get("/mdb/dump", null, DumpRawMdbResponse.newBuilder(), responseHandler);
     }
 
     public void setParameters(ParameterData request, ResponseHandler responseHandler) {
-        post("/api/parameter/_set", request, null, responseHandler);
+        post("/parameter/_set", request, null, responseHandler);
     }
 
     public void createProcessorManagementRequest(ProcessorManagementRequest request, ResponseHandler responseHandler) {
-        post("/api/processor", request, null, responseHandler);
+        post("/processor", request, null, responseHandler);
     }
 
     public void createProcessorRequest(String processorName, ProcessorRequest request, ResponseHandler responseHandler) {
-        post("/api/processor/" + processorName, request, null, responseHandler);
+        post("/processor/" + processorName, request, null, responseHandler);
     }
 
     public void listProcessors(ResponseHandler responseHandler) {
-        get("/api/processor/list", null, RestListProcessorsResponse.newBuilder(), responseHandler);
+        get("/processor/list", null, ListProcessorsResponse.newBuilder(), responseHandler);
     }
 
     public void listAuthorizations(ResponseHandler responseHandler) {
-        get("/api/authorization/list", null, RestListAuthorisationsResponse.newBuilder(), responseHandler);
+        get("/authorization/list", null, ListAuthorizationsResponse.newBuilder(), responseHandler);
     }
 
     public void insertTag(InsertTagRequest request, ResponseHandler responseHandler) {
-        post("/api/archive/tags", request, InsertTagResponse.newBuilder(), responseHandler);
+        post("/archive/tags", request, InsertTagResponse.newBuilder(), responseHandler);
     }
 
     public void updateTag(long tagTime, int tagId, UpdateTagRequest request, ResponseHandler responseHandler) {
-        put("/api/archive/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
+        put("/archive/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
     }
 
     public void deleteTag(long tagTime, int tagId, ResponseHandler responseHandler) {
-        delete("/api/archive/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
+        delete("/archive/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
     }
 
     public void getTags(GetTagsRequest request, ResponseHandler responseHandler) {
-        get("/api/archive/tags", request, GetTagsResponse.newBuilder(), responseHandler);
+        get("/archive/tags", request, GetTagsResponse.newBuilder(), responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {

@@ -14,10 +14,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.yamcs.protobuf.Rest.RestGetParameterInfoRequest;
-import org.yamcs.protobuf.Rest.RestGetParameterInfoResponse;
-import org.yamcs.protobuf.Rest.RestParameterInfo;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Parameters.ParameterInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -27,8 +24,8 @@ import com.google.protobuf.MessageLite;
 /**
  * Show detailed information of a widget's PVs.
  * <p>
- * If it's a yamcs parameter, the information is enriched, otherwise show the typical CS-Studio
- * content.
+ * If it's a yamcs parameter, the information is enriched, otherwise show the
+ * typical CS-Studio content.
  */
 public class ShowPVInfoAction implements IObjectActionDelegate {
 
@@ -44,9 +41,8 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
     @Override
     public void run(IAction action) {
-        if (getSelectedWidget() == null ||
-                getSelectedWidget().getAllPVs() == null ||
-                getSelectedWidget().getAllPVs().isEmpty()) {
+        if (getSelectedWidget() == null || getSelectedWidget().getAllPVs() == null
+                || getSelectedWidget().getAllPVs().isEmpty()) {
             MessageDialog.openInformation(null, "No PV", "There are no related PVs for this widget");
             return;
         }
@@ -58,9 +54,10 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
     }
 
     /**
-     * Gets detailed information on yamcs parameters. We do this one-by-one, because otherwise we
-     * risk having one invalid parameter spoil the whole bunch. Idealy we would rewrite this API a
-     * bit on yamcs server, so we avoid the use of a latch.
+     * Gets detailed information on yamcs parameters. We do this one-by-one,
+     * because otherwise we risk having one invalid parameter spoil the whole
+     * bunch. Idealy we would rewrite this API a bit on yamcs server, so we
+     * avoid the use of a latch.
      */
     private void loadParameterInfoAndShowDialog(List<PVInfo> pvInfos) {
         List<PVInfo> yamcsPvs = new ArrayList<>();
@@ -68,7 +65,8 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
             if (pvInfo.isYamcsParameter())
                 yamcsPvs.add(pvInfo);
 
-        // Start a worker thread that will show the dialog when a response for all
+        // Start a worker thread that will show the dialog when a response for
+        // all
         // yamcs parameters arrived
         new Thread() {
 
@@ -90,17 +88,11 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                         continue;
                     }
 
-                    RestGetParameterInfoRequest.Builder requestb = RestGetParameterInfoRequest.newBuilder();
-                    requestb.addList(NamedObjectId.newBuilder().setName(pvInfo.getYamcsQualifiedName()));
-                    restClient.getParameterInfo(requestb.build(), new ResponseHandler() {
+                    restClient.getParameter(pvInfo.getYamcsQualifiedName(), new ResponseHandler() {
                         @Override
                         public void onMessage(MessageLite responseMsg) {
-                            RestGetParameterInfoResponse response = (RestGetParameterInfoResponse) responseMsg;
-                            List<RestParameterInfo> infos = response.getPinfoList();
-                            if (infos.isEmpty())
-                                pvInfo.setParameterInfoException("Not authorised");
-                            else
-                                pvInfo.setParameterInfo(infos.get(0));
+                            ParameterInfo response = (ParameterInfo) responseMsg;
+                            pvInfo.setParameterInfo(response);
                             latch.countDown();
                         }
 
@@ -119,7 +111,8 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                 } catch (InterruptedException e) {
                     targetPart.getSite().getShell().getDisplay().asyncExec(() -> {
                         log.log(Level.SEVERE, "Could not fetch Yamcs parameter info", e);
-                        MessageDialog.openError(null, "Could Not Fetch Yamcs Parameter Info", "Interrupted while fetching yamcs parameter info");
+                        MessageDialog.openError(null, "Could Not Fetch Yamcs Parameter Info",
+                                "Interrupted while fetching yamcs parameter info");
                     });
                 }
             }

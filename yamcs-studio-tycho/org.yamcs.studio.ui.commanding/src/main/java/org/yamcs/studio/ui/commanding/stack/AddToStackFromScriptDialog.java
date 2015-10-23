@@ -27,8 +27,8 @@ import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
-import org.yamcs.protobuf.Rest.RestSendCommandRequest;
-import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
+import org.yamcs.protobuf.Commanding.SendCommandRequest;
+import org.yamcs.protobuf.Commanding.ValidateCommandRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -172,7 +172,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             RestClient restClient = ConnectionManager.getInstance().getRestClient();
             if (!checkConnected(restClient))
                 return;
-            RestValidateCommandRequest.Builder req = RestValidateCommandRequest.newBuilder();
+            ValidateCommandRequest.Builder req = ValidateCommandRequest.newBuilder();
             req.addCommands(CommandParser.toCommand(text.getText()));
             restClient.validateCommand(req.build(), new ResponseHandler() {
                 @Override
@@ -204,7 +204,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             RestClient restClient = ConnectionManager.getInstance().getRestClient();
             if (!checkConnected(restClient))
                 return;
-            RestSendCommandRequest.Builder req = RestSendCommandRequest.newBuilder();
+            SendCommandRequest.Builder req = SendCommandRequest.newBuilder();
             req.addCommands(CommandParser.toCommand(text.getText()));
             restClient.sendCommand(req.build(), new ResponseHandler() {
                 @Override

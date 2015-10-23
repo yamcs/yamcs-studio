@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.yamcs.protobuf.Commanding.ArgumentType;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
-import org.yamcs.protobuf.Rest.RestArgumentType;
-import org.yamcs.protobuf.Rest.RestCommandType;
+import org.yamcs.protobuf.Commanding.CommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.commanding.PTVInfo;
@@ -110,13 +110,13 @@ public class StackedCommand {
      * Generates a REST-representation. The sequence number is increased everytime this method is
      * called, and therefore represents an 'issue attempt'.
      */
-    public RestCommandType.Builder toRestCommandType() {
-        RestCommandType.Builder req = RestCommandType.newBuilder();
+    public CommandType.Builder toRestCommandType() {
+        CommandType.Builder req = CommandType.newBuilder();
         req.setId(NamedObjectId.newBuilder().setName(meta.getQualifiedName()));
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
         req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         assignments.forEach((k, v) -> {
-            req.addArguments(RestArgumentType.newBuilder().setName(k.getName()).setValue(v));
+            req.addArguments(ArgumentType.newBuilder().setName(k.getName()).setValue(v));
         });
 
         return req;

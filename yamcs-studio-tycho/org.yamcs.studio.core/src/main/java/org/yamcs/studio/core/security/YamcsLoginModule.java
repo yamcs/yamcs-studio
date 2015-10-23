@@ -14,7 +14,6 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -88,15 +87,13 @@ public class YamcsLoginModule implements LoginModule {
     private boolean authenticate(final String user, final String password) {
         log.info("yamcs login, authenticating " + user + "/****");
 
-        RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
-
         YamcsConnectionProperties yprops = ConnectionManager.getInstance().getWebProperties();
         RestClient restClient = new RestClient(yprops, new YamcsCredentials(user, password));
 
         AuthReponseHandler arh = new AuthReponseHandler();
 
         try {
-            restClient.listAvailableParameters(req.build(), arh);
+            restClient.listParameters(null, arh);
         } catch (Exception e) {
             log.log(Level.SEVERE, "Could not authenticate", e);
             return false;

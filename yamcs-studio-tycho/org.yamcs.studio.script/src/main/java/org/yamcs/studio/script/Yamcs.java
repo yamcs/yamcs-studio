@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.csstudio.opibuilder.util.DisplayUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.Rest.RestSendCommandRequest;
+import org.yamcs.protobuf.Commanding.SendCommandRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -31,7 +31,7 @@ public class Yamcs {
             return;
         }
 
-        RestSendCommandRequest req = RestSendCommandRequest.newBuilder()
+        SendCommandRequest req = SendCommandRequest.newBuilder()
                 .addCommands(CommandParser.toCommand(text)).build();
         restClient.sendCommand(req, new ResponseHandler() {
             @Override

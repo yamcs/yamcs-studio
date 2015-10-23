@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.pvmanager;
 
-import org.yamcs.protobuf.Rest.RestParameter;
+import org.yamcs.protobuf.Parameters.ParameterInfo;
 import org.yamcs.studio.core.ConnectionManager;
 
 /**
@@ -14,9 +14,9 @@ public class PVConnectionInfo {
      * The parameter matching the default namespace in combination with the pvname. (this
      * information comes from a rest call)
      */
-    public RestParameter parameter;
+    public ParameterInfo parameter;
 
-    public PVConnectionInfo(RestParameter parameter) {
+    public PVConnectionInfo(ParameterInfo parameter) {
         this.connected = ConnectionManager.getInstance().isConnected();
         this.parameter = parameter;
     }

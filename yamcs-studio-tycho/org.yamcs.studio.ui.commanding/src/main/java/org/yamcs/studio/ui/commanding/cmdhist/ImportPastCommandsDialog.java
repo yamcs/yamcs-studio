@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.protobuf.Archive.DumpArchiveRequest;
+import org.yamcs.protobuf.Archive.DumpArchiveResponse;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Rest.RestDumpArchiveRequest;
-import org.yamcs.protobuf.Rest.RestDumpArchiveResponse;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -140,14 +140,14 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
         getButton(IDialogConstants.OK_ID).setEnabled(false);
 
-        RestDumpArchiveRequest.Builder reqBuilder = RestDumpArchiveRequest.newBuilder();
+        DumpArchiveRequest.Builder reqBuilder = DumpArchiveRequest.newBuilder();
         reqBuilder.setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)));
         reqBuilder.setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)));
         reqBuilder.setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder());
         restClient.dumpArchive(reqBuilder.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                RestDumpArchiveResponse response = (RestDumpArchiveResponse) responseMsg;
+                DumpArchiveResponse response = (DumpArchiveResponse) responseMsg;
                 Display.getDefault().asyncExec(() -> {
                     for (CommandHistoryEntry cmdhistEntry : response.getCommandList())
                         cmdhistView.processCommandHistoryEntry(cmdhistEntry);

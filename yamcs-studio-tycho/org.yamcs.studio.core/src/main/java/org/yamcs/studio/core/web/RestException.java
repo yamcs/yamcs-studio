@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.web;
 
-import org.yamcs.protobuf.Rest.RestExceptionMessage;
+import org.yamcs.protobuf.Web.RestExceptionMessage;
 
 /**
  * Wraps a RestExceptionMessage in a java Exception for easier downstream consumption

@@ -12,8 +12,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Commanding.CommandSignificance;
-import org.yamcs.protobuf.Rest.RestValidateCommandRequest;
-import org.yamcs.protobuf.Rest.RestValidateCommandResponse;
+import org.yamcs.protobuf.Commanding.ValidateCommandRequest;
+import org.yamcs.protobuf.Commanding.ValidateCommandResponse;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -40,7 +40,7 @@ public class ArmCommandHandler extends AbstractRestHandler {
     }
 
     private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
-        RestValidateCommandRequest req = RestValidateCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
+        ValidateCommandRequest req = ValidateCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
 
         RestClient restClient = checkRestClient(activeShell, "arm command");
         if (restClient == null)
@@ -50,7 +50,7 @@ public class ArmCommandHandler extends AbstractRestHandler {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {
-                    RestValidateCommandResponse validateResponse = (RestValidateCommandResponse) response;
+                    ValidateCommandResponse validateResponse = (ValidateCommandResponse) response;
 
                     boolean doArm = false;
                     if (validateResponse.getCommandsSignificanceCount() > 0) {

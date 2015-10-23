@@ -8,11 +8,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.protobuf.Parameters.ListParametersResponse;
+import org.yamcs.protobuf.Parameters.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersRequest;
-import org.yamcs.protobuf.Rest.RestListAvailableParametersResponse;
-import org.yamcs.protobuf.Rest.RestParameter;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.studio.core.ConnectionManager;
@@ -32,12 +31,12 @@ public class ParameterCatalogue implements Catalogue {
 
     private static final Logger log = Logger.getLogger(ParameterCatalogue.class.getName());
 
-    private List<RestParameter> metaParameters = Collections.emptyList();
+    private List<ParameterInfo> metaParameters = Collections.emptyList();
 
     // Store pvreaders while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
     private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
-    private Map<NamedObjectId, RestParameter> availableParametersById = new LinkedHashMap<>();
+    private Map<NamedObjectId, ParameterInfo> availableParametersById = new LinkedHashMap<>();
 
     private LosTracker losTracker = new LosTracker();
 
@@ -60,7 +59,7 @@ public class ParameterCatalogue implements Catalogue {
     public synchronized void register(YamcsPVReader pvReader) {
         pvReadersById.put(pvReader.getId(), pvReader);
         // Report current connection state
-        RestParameter p = availableParametersById.get(pvReader.getId());
+        ParameterInfo p = availableParametersById.get(pvReader.getId());
         pvReader.processConnectionInfo(new PVConnectionInfo(p));
         // Register (pending) websocket request
         NamedObjectList idList = pvReader.toNamedObjectList();
@@ -79,18 +78,18 @@ public class ParameterCatalogue implements Catalogue {
         }
     }
 
-    public synchronized void processMetaParameters(List<RestParameter> metaParameters) {
+    public synchronized void processMetaParameters(List<ParameterInfo> metaParameters) {
         this.metaParameters = new ArrayList<>(metaParameters);
         this.metaParameters.sort((p1, p2) -> {
             return p1.getId().getName().compareTo(p2.getId().getName());
         });
 
         log.fine("Refreshing all pv readers");
-        for (RestParameter p : this.metaParameters)
+        for (ParameterInfo p : this.metaParameters)
             availableParametersById.put(p.getId(), p);
 
         pvReadersById.forEach((id, pvReader) -> {
-            RestParameter parameter = availableParametersById.get(id);
+            ParameterInfo parameter = availableParametersById.get(id);
             log.finer(String.format("Signaling %s --> %s", id, parameter));
             pvReader.processConnectionInfo(new PVConnectionInfo(parameter));
         });
@@ -115,7 +114,7 @@ public class ParameterCatalogue implements Catalogue {
 
     private void reportConnectionState() {
         pvReadersById.forEach((id, pvReader) -> {
-            RestParameter p = availableParametersById.get(id);
+            ParameterInfo p = availableParametersById.get(id);
             pvReader.processConnectionInfo(new PVConnectionInfo(p));
         });
     }
@@ -123,12 +122,11 @@ public class ParameterCatalogue implements Catalogue {
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        RestListAvailableParametersRequest.Builder req = RestListAvailableParametersRequest.newBuilder();
-        restClient.listAvailableParameters(req.build(), new ResponseHandler() {
+        restClient.listParameters(null, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                RestListAvailableParametersResponse response = (RestListAvailableParametersResponse) responseMsg;
-                processMetaParameters(response.getParametersList());
+                ListParametersResponse response = (ListParametersResponse) responseMsg;
+                processMetaParameters(response.getParameterList());
             }
 
             @Override
@@ -138,7 +136,7 @@ public class ParameterCatalogue implements Catalogue {
         });
     }
 
-    public List<RestParameter> getMetaParameters() {
+    public List<ParameterInfo> getMetaParameters() {
         return new ArrayList<>(metaParameters);
     }
 
