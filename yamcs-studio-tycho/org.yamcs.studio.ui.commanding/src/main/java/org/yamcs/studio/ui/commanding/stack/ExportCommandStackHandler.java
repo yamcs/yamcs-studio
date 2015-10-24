@@ -52,7 +52,7 @@ public class ExportCommandStackHandler extends AbstractHandler {
         for (StackedCommand sc : scs)
         {
             org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command c = new org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command();
-            c.setCommandName(sc.getMetaCommand().getQualifiedName());
+            c.setCommandName(sc.getMetaCommand().getDescription().getQualifiedName());
             exportedCommands.add(c);
             List<CommandArgument> cas = c.getCommandArgument();
 

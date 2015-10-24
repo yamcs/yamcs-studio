@@ -19,12 +19,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.epics.vtype.Display;
-import org.yamcs.protobuf.Parameters.AlarmInfo;
-import org.yamcs.protobuf.Parameters.AlarmRange;
-import org.yamcs.protobuf.Parameters.NameDescriptionInfo;
-import org.yamcs.protobuf.Parameters.ParameterInfo;
-import org.yamcs.protobuf.Parameters.ParameterTypeInfo;
-import org.yamcs.protobuf.Parameters.UnitInfo;
+import org.yamcs.protobuf.Mdb.AlarmInfo;
+import org.yamcs.protobuf.Mdb.AlarmRange;
+import org.yamcs.protobuf.Mdb.NameDescriptionInfo;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
+import org.yamcs.protobuf.Mdb.UnitInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
 public class PVInfoDialog extends Dialog {
@@ -264,12 +264,7 @@ public class PVInfoDialog extends Dialog {
             if (!found && Character.isLetter(chars[i])) {
                 chars[i] = Character.toUpperCase(chars[i]);
                 found = true;
-            } else if (Character.isWhitespace(chars[i]) || chars[i] == '.' || chars[i] == '\'') { // You
-                                                                                                  // can
-                                                                                                  // add
-                                                                                                  // other
-                                                                                                  // chars
-                                                                                                  // here
+            } else if (Character.isWhitespace(chars[i]) || chars[i] == '.' || chars[i] == '\'') {
                 found = false;
             }
         }

@@ -1,7 +1,7 @@
 package org.yamcs.studio.ui.css;
 
 import org.csstudio.simplepv.IPV;
-import org.yamcs.protobuf.Parameters.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
 
 public class PVInfo implements Comparable<PVInfo> {
 

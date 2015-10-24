@@ -1,11 +1,12 @@
 package org.yamcs.studio.core.model;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,13 +15,13 @@ import java.util.logging.Logger;
 
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Yamcs.DumpRawMdbResponse;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Rest.ListCommandsResponse;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
-import org.yamcs.xtce.MetaCommand;
-import org.yamcs.xtce.XtceDb;
 
 import com.google.protobuf.MessageLite;
 
@@ -30,10 +31,12 @@ public class CommandingCatalogue implements Catalogue {
 
     private AtomicInteger cmdClientId = new AtomicInteger(1);
 
-    @Deprecated
-    private XtceDb mdb;
-    private Collection<MetaCommand> metaCommands = Collections.emptyList();
+    private List<CommandInfo> metaCommands = Collections.emptyList();
+
     private Set<CommandHistoryListener> cmdhistListeners = new CopyOnWriteArraySet<>();
+
+    // Indexes
+    private Map<String, CommandInfo> commandsByQualifiedName = new LinkedHashMap<>();
 
     public static CommandingCatalogue getInstance() {
         return YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class);
@@ -63,23 +66,33 @@ public class CommandingCatalogue implements Catalogue {
         cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
     }
 
-    public Collection<MetaCommand> getMetaCommands() {
+    public List<CommandInfo> getMetaCommands() {
         return metaCommands;
+    }
+
+    public CommandInfo getCommandInfo(String qualifiedName) {
+        return commandsByQualifiedName.get(qualifiedName);
+    }
+
+    public synchronized void processMetaCommands(List<CommandInfo> metaCommands) {
+        this.metaCommands = new ArrayList<>(metaCommands);
+        this.metaCommands.sort((p1, p2) -> {
+            return p1.getDescription().getQualifiedName().compareTo(p2.getDescription().getQualifiedName());
+        });
+
+        for (CommandInfo cmd : this.metaCommands) {
+            commandsByQualifiedName.put(cmd.getDescription().getQualifiedName(), cmd);
+        }
     }
 
     private void loadMetaCommands() {
         log.fine("Fetching available commands");
-        ConnectionManager.getInstance().getRestClient().dumpRawMdb(new ResponseHandler() {
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        restClient.listCommands(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                DumpRawMdbResponse response = (DumpRawMdbResponse) responseMsg;
-                try (ObjectInputStream oin = new ObjectInputStream(response.getRawMdb().newInput())) {
-                    XtceDb newMdb = (XtceDb) oin.readObject();
-                    mdb = newMdb;
-                    metaCommands = mdb.getMetaCommands();
-                } catch (IOException | ClassNotFoundException e) {
-                    log.log(Level.SEVERE, "Could not deserialize mdb", e);
-                }
+                ListCommandsResponse response = (ListCommandsResponse) responseMsg;
+                processMetaCommands(response.getCommandList());
             }
 
             @Override

@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.xtce.Argument;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
 
 public class EditStackedCommandDialog extends TitleAreaDialog {
 
@@ -39,13 +39,13 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
 
         composite.setLayout(new GridLayout());
         Label desc = new Label(composite, SWT.NONE);
-        desc.setText("Specify the parameters for command " + command.getMetaCommand().getName());
+        desc.setText("Specify the parameters for command " + command.getMetaCommand().getDescription().getQualifiedName());
         desc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Composite argumentsComposite = new Composite(composite, SWT.NONE);
         argumentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         argumentsComposite.setLayout(new GridLayout(2, false));
-        for (Argument arg : command.getMetaCommand().getArgumentList()) {
+        for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
             Label lbl = new Label(argumentsComposite, SWT.NONE);
             lbl.setText(arg.getName());
 
@@ -63,7 +63,7 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         for (Text textField : textFields) {
-            Argument arg = (Argument) textField.getData();
+            ArgumentInfo arg = (ArgumentInfo) textField.getData();
             if (textField.getText().trim().isEmpty()) {
                 command.addAssignment(arg, null);
             } else {

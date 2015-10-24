@@ -9,8 +9,8 @@ import org.epics.vtype.AlarmSeverity;
 import org.epics.vtype.Display;
 import org.epics.vtype.Time;
 import org.epics.vtype.VType;
-import org.yamcs.protobuf.Parameters.AlarmLevel;
-import org.yamcs.protobuf.Parameters.AlarmRange;
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
@@ -116,9 +116,9 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Double getUpperWarningLimit() {
         // Assumes ordered ranges
         for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevel.WATCH
-                    || range.getLevel() == AlarmLevel.WARNING
-                    || range.getLevel() == AlarmLevel.DISTRESS)
+            if (range.getLevel() == AlarmLevelType.WATCH
+                    || range.getLevel() == AlarmLevelType.WARNING
+                    || range.getLevel() == AlarmLevelType.DISTRESS)
                 return range.getMaxInclusive();
         }
         return Double.MAX_VALUE;
@@ -131,8 +131,8 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Double getUpperAlarmLimit() {
         // Assumes ordered ranges
         for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevel.CRITICAL
-                    || range.getLevel() == AlarmLevel.SEVERE)
+            if (range.getLevel() == AlarmLevelType.CRITICAL
+                    || range.getLevel() == AlarmLevelType.SEVERE)
                 return range.getMaxInclusive();
         }
         return Double.MAX_VALUE;

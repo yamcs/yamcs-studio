@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.pvmanager;
 
-import org.yamcs.protobuf.Parameters.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.core.ConnectionManager;
 
 /**

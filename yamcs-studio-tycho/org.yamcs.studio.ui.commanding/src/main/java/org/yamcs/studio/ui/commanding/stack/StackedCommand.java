@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
-import org.yamcs.protobuf.Commanding.ArgumentType;
+import org.yamcs.protobuf.Commanding.ArgumentAssignmentType;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Commanding.CommandType;
+import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.commanding.PTVInfo;
-import org.yamcs.xtce.Argument;
-import org.yamcs.xtce.ArgumentAssignment;
-import org.yamcs.xtce.MetaCommand;
 
 /**
  * Keep track of the lifecycle of a stacked command.
@@ -45,8 +45,8 @@ public class StackedCommand {
         }
     }
 
-    private MetaCommand meta;
-    private Map<Argument, String> assignments = new HashMap<>();
+    private CommandInfo meta;
+    private Map<ArgumentInfo, String> assignments = new HashMap<>();
 
     // Increases every attempt
     private int clientId = -1;
@@ -79,10 +79,10 @@ public class StackedCommand {
 
     public StyledString toStyledString(CommandStackView styleProvider) {
         StyledString str = new StyledString();
-        str.append(meta.getQualifiedName(), styleProvider.getIdentifierStyler(this));
+        str.append(meta.getDescription().getQualifiedName(), styleProvider.getIdentifierStyler(this));
         str.append("(", styleProvider.getBracketStyler(this));
         boolean first = true;
-        for (Argument arg : meta.getArgumentList()) {
+        for (ArgumentInfo arg : meta.getArgumentList()) {
             if (!first)
                 str.append(", ", styleProvider.getBracketStyler(this));
             first = false;
@@ -112,21 +112,21 @@ public class StackedCommand {
      */
     public CommandType.Builder toRestCommandType() {
         CommandType.Builder req = CommandType.newBuilder();
-        req.setId(NamedObjectId.newBuilder().setName(meta.getQualifiedName()));
+        req.setId(NamedObjectId.newBuilder().setName(meta.getDescription().getQualifiedName()));
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
         req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         assignments.forEach((k, v) -> {
-            req.addArguments(ArgumentType.newBuilder().setName(k.getName()).setValue(v));
+            req.addArguments(ArgumentAssignmentType.newBuilder().setName(k.getName()).setValue(v));
         });
 
         return req;
     }
 
-    public void setMetaCommand(MetaCommand meta) {
+    public void setMetaCommand(CommandInfo meta) {
         this.meta = meta;
     }
 
-    public MetaCommand getMetaCommand() {
+    public CommandInfo getMetaCommand() {
         return meta;
     }
 
@@ -142,29 +142,29 @@ public class StackedCommand {
         return ptvInfo;
     }
 
-    public void addAssignment(Argument arg, String value) {
+    public void addAssignment(ArgumentInfo arg, String value) {
         assignments.put(arg, value);
     }
 
-    public Map<Argument, String> getAssignments() {
+    public Map<ArgumentInfo, String> getAssignments() {
         return assignments;
     }
 
     public Collection<TelecommandArgument> getEffectiveAssignments() {
         // We want this to be top-down, as-defined in mdb
         Map<String, TelecommandArgument> argumentsByName = new LinkedHashMap<>();
-        List<MetaCommand> hierarchy = new ArrayList<>();
+        List<CommandInfo> hierarchy = new ArrayList<>();
         hierarchy.add(meta);
-        MetaCommand base = meta;
-        while (base.getBaseMetaCommand() != null) {
-            base = base.getBaseMetaCommand();
+        CommandInfo base = meta;
+        while (base.getBaseCommand() != null) {
+            base = base.getBaseCommand();
             hierarchy.add(0, base);
         }
 
         // From parent to child. Children can override initial values (= defaults)
-        for (MetaCommand cmd : hierarchy) {
+        for (CommandInfo cmd : hierarchy) {
             // Set all values, even if null initial value. This gives us consistent ordering
-            for (Argument argument : cmd.getArgumentList()) {
+            for (ArgumentInfo argument : cmd.getArgumentList()) {
                 String name = argument.getName();
                 String value = argument.getInitialValue();
                 boolean editable = true;
@@ -174,9 +174,9 @@ public class StackedCommand {
             // Override with actual assignments
             // TODO this should return an empty list in yamcs. Not null
             if (cmd.getArgumentAssignmentList() != null)
-                for (ArgumentAssignment argumentAssignment : cmd.getArgumentAssignmentList()) {
-                    String name = argumentAssignment.getArgumentName();
-                    String value = argumentAssignment.getArgumentValue();
+                for (ArgumentAssignmentInfo argumentAssignment : cmd.getArgumentAssignmentList()) {
+                    String name = argumentAssignment.getName();
+                    String value = argumentAssignment.getValue();
                     boolean editable = (cmd == meta);
                     argumentsByName.put(name, new TelecommandArgument(name, value, editable));
                 }
@@ -187,37 +187,37 @@ public class StackedCommand {
 
     public List<String> getMessages() {
         List<String> messages = new ArrayList<String>();
-        for (Argument arg : meta.getArgumentList())
+        for (ArgumentInfo arg : meta.getArgumentList())
             if (!isValid(arg))
                 messages.add(String.format("Missing argument '%s'", arg.getName()));
 
         return messages;
     }
 
-    public String getAssignedStringValue(Argument argument) {
+    public String getAssignedStringValue(ArgumentInfo argument) {
         return assignments.get(argument);
     }
 
-    public boolean isAssigned(Argument arg) {
+    public boolean isAssigned(ArgumentInfo arg) {
         return assignments.get(arg) != null;
     }
 
-    public boolean isValid(Argument arg) {
+    public boolean isValid(ArgumentInfo arg) {
         if (!isAssigned(arg))
             return false;
         return true; // TODO more local checks
     }
 
     public boolean isValid() {
-        for (Argument arg : meta.getArgumentList())
+        for (ArgumentInfo arg : meta.getArgumentList())
             if (!isValid(arg))
                 return false;
         return true;
     }
 
-    public List<Argument> getMissingArguments() {
-        List<Argument> res = new ArrayList<>();
-        for (Argument arg : meta.getArgumentList()) {
+    public List<ArgumentInfo> getMissingArguments() {
+        List<ArgumentInfo> res = new ArrayList<>();
+        for (ArgumentInfo arg : meta.getArgumentList()) {
             if (assignments.get(arg) == null)
                 res.add(arg);
         }
@@ -230,6 +230,6 @@ public class StackedCommand {
 
     @Override
     public String toString() {
-        return meta.getQualifiedName();
+        return meta.getDescription().getQualifiedName();
     }
 }

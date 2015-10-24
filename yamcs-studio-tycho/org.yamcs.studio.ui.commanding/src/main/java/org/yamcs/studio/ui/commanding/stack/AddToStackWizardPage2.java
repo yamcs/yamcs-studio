@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.xtce.Argument;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
 
 public class AddToStackWizardPage2 extends WizardPage {
 
@@ -35,7 +35,8 @@ public class AddToStackWizardPage2 extends WizardPage {
     }
 
     private void updateControl() {
-        desc.setText("Specify the parameters for command " + command.getMetaCommand().getQualifiedName());
+        String qname = command.getMetaCommand().getDescription().getQualifiedName();
+        desc.setText("Specify the parameters for command " + qname);
 
         // Clear previous state. This is slightly suboptimal since we also lose state
         // If the user just flips between back and next without actually changing the command.
@@ -44,7 +45,7 @@ public class AddToStackWizardPage2 extends WizardPage {
             child.dispose();
 
         // Register new state
-        for (Argument arg : command.getMetaCommand().getArgumentList()) {
+        for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
             Label lbl = new Label(argumentsComposite, SWT.NONE);
             lbl.setText(arg.getName());
 

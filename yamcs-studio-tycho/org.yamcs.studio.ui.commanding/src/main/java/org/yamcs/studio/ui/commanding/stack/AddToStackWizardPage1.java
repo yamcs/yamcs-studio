@@ -25,12 +25,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Mdb.SignificanceInfo;
+import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.xtce.MetaCommand;
-import org.yamcs.xtce.Significance;
-import org.yamcs.xtce.Significance.Levels;
 
 public class AddToStackWizardPage1 extends WizardPage {
 
@@ -83,19 +83,19 @@ public class AddToStackWizardPage1 extends WizardPage {
         significanceColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
             public Image getImage(Object element) {
-                MetaCommand cmd = (MetaCommand) element;
-                if (cmd.getDefaultSignificance() == null)
+                CommandInfo cmd = (CommandInfo) element;
+                if (cmd.getSignificance() == null)
                     return null;
-                switch (cmd.getDefaultSignificance().getConsequenceLevel()) {
-                case watch:
+                switch (cmd.getSignificance().getConsequenceLevel()) {
+                case WATCH:
                     return level1Image;
-                case warning:
+                case WARNING:
                     return level2Image;
-                case distress:
+                case DISTRESS:
                     return level3Image;
-                case critical:
+                case CRITICAL:
                     return level4Image;
-                case severe:
+                case SEVERE:
                     return level5Image;
                 default:
                     return null;
@@ -108,8 +108,8 @@ public class AddToStackWizardPage1 extends WizardPage {
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                MetaCommand cmd = (MetaCommand) element;
-                return cmd.getQualifiedName();
+                CommandInfo cmd = (CommandInfo) element;
+                return cmd.getDescription().getQualifiedName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
@@ -121,13 +121,13 @@ public class AddToStackWizardPage1 extends WizardPage {
                 return;
             }
 
-            MetaCommand cmd = (MetaCommand) sel.getFirstElement();
-            Significance significance = cmd.getDefaultSignificance();
+            CommandInfo cmd = (CommandInfo) sel.getFirstElement();
+            SignificanceInfo significance = cmd.getSignificance();
             if (significance != null) {
                 StringBuilder buf = new StringBuilder();
-                if (significance.getConsequenceLevel() != Levels.none) {
+                if (significance.getConsequenceLevel() != SignificanceLevelType.NONE) {
                     buf.append("[");
-                    buf.append(significance.getConsequenceLevel().toString().toUpperCase());
+                    buf.append(significance.getConsequenceLevel().toString());
                     buf.append("] ");
                 }
                 if (significance.getReasonForWarning() != null) {
@@ -144,9 +144,9 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         commandsTable.setContentProvider(ArrayContentProvider.getInstance());
 
-        Collection<MetaCommand> nonAbstract = new ArrayList<>();
+        Collection<CommandInfo> nonAbstract = new ArrayList<>();
         CommandingCatalogue.getInstance().getMetaCommands().forEach(cmd -> {
-            if (!cmd.isAbstract())
+            if (!cmd.getAbstract())
                 nonAbstract.add(cmd);
         });
         commandsTable.setInput(nonAbstract);
@@ -154,9 +154,9 @@ public class AddToStackWizardPage1 extends WizardPage {
         commandsTable.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object o1, Object o2) {
-                MetaCommand c1 = (MetaCommand) o1;
-                MetaCommand c2 = (MetaCommand) o2;
-                return c1.getQualifiedName().compareTo(c2.getQualifiedName());
+                CommandInfo c1 = (CommandInfo) o1;
+                CommandInfo c2 = (CommandInfo) o2;
+                return c1.getDescription().getQualifiedName().compareTo(c2.getDescription().getQualifiedName());
             }
         });
 

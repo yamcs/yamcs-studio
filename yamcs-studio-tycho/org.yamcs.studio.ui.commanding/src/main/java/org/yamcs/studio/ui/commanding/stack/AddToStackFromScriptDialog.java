@@ -27,16 +27,16 @@ import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
-import org.yamcs.protobuf.Commanding.SendCommandRequest;
-import org.yamcs.protobuf.Commanding.ValidateCommandRequest;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Rest.SendCommandRequest;
+import org.yamcs.protobuf.Rest.ValidateCommandRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.CommandParser;
 import org.yamcs.studio.ycl.dsl.ui.internal.YCLActivator;
-import org.yamcs.xtce.Argument;
-import org.yamcs.xtce.MetaCommand;
 
 import com.google.inject.Injector;
 import com.google.protobuf.MessageLite;
@@ -54,7 +54,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
 
     private static final Logger log = Logger.getLogger(AddToStackFromScriptDialog.class.getName());
 
-    private Collection<MetaCommand> commands;
+    private Collection<CommandInfo> commands;
     private StyledText text;
 
     public AddToStackFromScriptDialog(Shell parentShell) {
@@ -83,9 +83,9 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
 
         Combo commandCombo = new Combo(container, SWT.BORDER | SWT.READ_ONLY);
         commandCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        for (MetaCommand command : commands) {
-            if (!command.isAbstract()) {
-                commandCombo.add(command.getQualifiedName());
+        for (CommandInfo command : commands) {
+            if (!command.getAbstract()) {
+                commandCombo.add(command.getDescription().getQualifiedName());
             }
         }
 
@@ -96,14 +96,14 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
         text.addListener(SWT.Modify, evt -> setErrorMessage(null));
 
         commandCombo.addListener(SWT.Selection, event -> {
-            for (MetaCommand command : commands) {
+            for (CommandInfo command : commands) {
                 String selected = ((Combo) event.widget).getText();
-                if (!command.isAbstract() && command.getQualifiedName().equals(selected)) {
+                if (!command.getAbstract() && command.getDescription().getQualifiedName().equals(selected)) {
 
-                    StringBuilder buf = new StringBuilder(command.getQualifiedName());
+                    StringBuilder buf = new StringBuilder(command.getDescription().getQualifiedName());
                     if (command.getArgumentList() != null) {
                         buf.append("(\n");
-                        for (Argument arg : command.getArgumentList()) {
+                        for (ArgumentInfo arg : command.getArgumentList()) {
                             buf.append("\t" + arg.getName() + ": \n");
                         }
                         buf.append(")");
@@ -173,7 +173,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             if (!checkConnected(restClient))
                 return;
             ValidateCommandRequest.Builder req = ValidateCommandRequest.newBuilder();
-            req.addCommands(CommandParser.toCommand(text.getText()));
+            req.addCommand(CommandParser.toCommand(text.getText()));
             restClient.validateCommand(req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
@@ -205,7 +205,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             if (!checkConnected(restClient))
                 return;
             SendCommandRequest.Builder req = SendCommandRequest.newBuilder();
-            req.addCommands(CommandParser.toCommand(text.getText()));
+            req.addCommand(CommandParser.toCommand(text.getText()));
             restClient.sendCommand(req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {

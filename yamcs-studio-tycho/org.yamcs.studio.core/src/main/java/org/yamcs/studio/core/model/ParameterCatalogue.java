@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.Parameters.ListParametersResponse;
-import org.yamcs.protobuf.Parameters.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Rest.ListParametersResponse;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.studio.core.ConnectionManager;
@@ -85,12 +85,13 @@ public class ParameterCatalogue implements Catalogue {
     public synchronized void processMetaParameters(List<ParameterInfo> metaParameters) {
         this.metaParameters = new ArrayList<>(metaParameters);
         this.metaParameters.sort((p1, p2) -> {
-            return p1.getId().getName().compareTo(p2.getId().getName());
+            return p1.getDescription().getQualifiedName().compareTo(p2.getDescription().getQualifiedName());
         });
 
         log.fine("Refreshing all pv readers");
         for (ParameterInfo p : this.metaParameters) {
-            parametersById.put(p.getId(), p);
+            NamedObjectId id = NamedObjectId.newBuilder().setName(p.getDescription().getQualifiedName()).build();
+            parametersById.put(id, p);
 
             // Update unit index
             if (p != null && p.hasType() && p.getType().getUnitSetCount() > 0) {
@@ -98,7 +99,7 @@ public class ParameterCatalogue implements Catalogue {
                 for (int i = 1; i < p.getType().getUnitSetCount(); i++) {
                     combinedUnit += " " + p.getType().getUnitSet(i).getUnit();
                 }
-                unitsById.put(p.getId(), combinedUnit);
+                unitsById.put(id, combinedUnit);
             }
         }
 
@@ -136,7 +137,7 @@ public class ParameterCatalogue implements Catalogue {
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        restClient.listParameters(null, new ResponseHandler() {
+        restClient.listParameters(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 ListParametersResponse response = (ListParametersResponse) responseMsg;

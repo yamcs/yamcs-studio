@@ -14,15 +14,14 @@ import org.yamcs.protobuf.Archive.GetTagsResponse;
 import org.yamcs.protobuf.Archive.InsertTagRequest;
 import org.yamcs.protobuf.Archive.InsertTagResponse;
 import org.yamcs.protobuf.Archive.UpdateTagRequest;
-import org.yamcs.protobuf.Commanding.SendCommandRequest;
-import org.yamcs.protobuf.Commanding.ValidateCommandRequest;
-import org.yamcs.protobuf.Commanding.ValidateCommandResponse;
 import org.yamcs.protobuf.Events.GetEventsRequest;
-import org.yamcs.protobuf.Parameters.ListParametersRequest;
-import org.yamcs.protobuf.Parameters.ListParametersResponse;
-import org.yamcs.protobuf.Parameters.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Yamcs.DumpRawMdbResponse;
+import org.yamcs.protobuf.Rest.ListCommandsResponse;
+import org.yamcs.protobuf.Rest.ListParametersResponse;
+import org.yamcs.protobuf.Rest.SendCommandRequest;
+import org.yamcs.protobuf.Rest.ValidateCommandRequest;
+import org.yamcs.protobuf.Rest.ValidateCommandResponse;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.ListAuthorizationsResponse;
 import org.yamcs.protobuf.YamcsManagement.ListProcessorsResponse;
@@ -84,8 +83,8 @@ public class RestClient {
         post("/commanding/queue", request, null, responseHandler);
     }
 
-    public void listParameters(ListParametersRequest request, ResponseHandler responseHandler) {
-        get("/parameters", request, ListParametersResponse.newBuilder(), responseHandler);
+    public void listParameters(ResponseHandler responseHandler) {
+        get("/parameters", null, ListParametersResponse.newBuilder(), responseHandler);
     }
 
     public void getParameter(String qualifiedName, ResponseHandler responseHandler) {
@@ -96,8 +95,8 @@ public class RestClient {
         streamGet("/events", request, () -> Event.newBuilder(), responseHandler);
     }
 
-    public void dumpRawMdb(ResponseHandler responseHandler) {
-        get("/mdb/dump", null, DumpRawMdbResponse.newBuilder(), responseHandler);
+    public void listCommands(ResponseHandler responseHandler) {
+        get("/commands", null, ListCommandsResponse.newBuilder(), responseHandler);
     }
 
     public void setParameters(ParameterData request, ResponseHandler responseHandler) {

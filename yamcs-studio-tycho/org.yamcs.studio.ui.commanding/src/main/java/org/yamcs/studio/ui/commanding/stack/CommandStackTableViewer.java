@@ -16,14 +16,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.yamcs.protobuf.Mdb.ComparisonInfo;
+import org.yamcs.protobuf.Mdb.TransmissionConstraintInfo;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.xtce.Comparison;
-import org.yamcs.xtce.ComparisonList;
-import org.yamcs.xtce.MatchCriteria;
-import org.yamcs.xtce.OperatorType;
-import org.yamcs.xtce.TransmissionConstraint;
 
 public class CommandStackTableViewer extends TableViewer {
 
@@ -96,18 +93,18 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public Image getImage(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getMetaCommand().getDefaultSignificance() == null)
+                if (cmd.getMetaCommand().getSignificance() == null)
                     return null;
-                switch (cmd.getMetaCommand().getDefaultSignificance().getConsequenceLevel()) {
-                case watch:
+                switch (cmd.getMetaCommand().getSignificance().getConsequenceLevel()) {
+                case WATCH:
                     return level1Image;
-                case warning:
+                case WARNING:
                     return level2Image;
-                case distress:
+                case DISTRESS:
                     return level3Image;
-                case critical:
+                case CRITICAL:
                     return level4Image;
-                case severe:
+                case SEVERE:
                     return level5Image;
                 default:
                     return null;
@@ -117,9 +114,9 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public String getToolTipText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getMetaCommand().getDefaultSignificance() == null)
+                if (cmd.getMetaCommand().getSignificance() == null)
                     return super.getToolTipText(element);
-                return cmd.getMetaCommand().getDefaultSignificance().getReasonForWarning();
+                return cmd.getMetaCommand().getSignificance().getReasonForWarning();
             }
         });
         significanceColumn.getColumn().setWidth(50);
@@ -132,8 +129,16 @@ public class CommandStackTableViewer extends TableViewer {
             public String getText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
                 StringBuilder buf = new StringBuilder();
-                for (TransmissionConstraint constraint : cmd.getMetaCommand().getTransmissionConstraintList())
-                    appendConstraint(constraint.getMatchCriteria(), buf);
+                for (int i = 0; i < cmd.getMetaCommand().getConstraintCount(); i++) {
+                    if (i != 0)
+                        buf.append(" and ");
+                    TransmissionConstraintInfo constraint = cmd.getMetaCommand().getConstraint(i);
+                    for (int j = 0; j < constraint.getComparisonCount(); j++) {
+                        if (j != 0)
+                            buf.append(", ");
+                        appendConstraint(constraint.getComparison(j), buf);
+                    }
+                }
                 return buf.length() != 0 ? buf.toString() : "-";
             }
         });
@@ -147,7 +152,7 @@ public class CommandStackTableViewer extends TableViewer {
             public String getText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
                 long timeout = -1;
-                for (TransmissionConstraint constraint : cmd.getMetaCommand().getTransmissionConstraintList())
+                for (TransmissionConstraintInfo constraint : cmd.getMetaCommand().getConstraintList())
                     timeout = Math.max(timeout, constraint.getTimeout());
 
                 return (timeout >= 0) ? Long.toString(timeout) + " ms" : "-";
@@ -235,22 +240,31 @@ public class CommandStackTableViewer extends TableViewer {
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
     }
 
-    public void appendConstraint(MatchCriteria criteria, StringBuilder buf) {
-        if (criteria instanceof ComparisonList) {
-            ComparisonList list = (ComparisonList) criteria;
-            for (Comparison comparison : list.getComparisonList()) {
-                appendConstraint(comparison, buf);
-                buf.append(", ");
-            }
-        } else {
-            Comparison comparison = (Comparison) criteria;
-            buf.append(comparison.getParameter().getName());
-            if (comparison.getComparisonOperator() == OperatorType.EQUALITY)
-                buf.append("="); // I don't like the ==. should be same as in spreadsheet
-            else
-                buf.append(Comparison.operatorToString(comparison.getComparisonOperator()));
-            buf.append(comparison.getStringValue());
+    public void appendConstraint(ComparisonInfo comparison, StringBuilder buf) {
+        buf.append(comparison.getParameter());
+        switch (comparison.getOperator()) {
+        case EQUAL_TO:
+            buf.append("=");
+            break;
+        case NOT_EQUAL_TO:
+            buf.append("!=");
+            break;
+        case GREATER_THAN:
+            buf.append(">");
+            break;
+        case GREATER_THAN_OR_EQUAL_TO:
+            buf.append(">=");
+            break;
+        case SMALLER_THAN:
+            buf.append("<");
+            break;
+        case SMALLER_THAN_OR_EQUAL_TO:
+            buf.append("<=");
+            break;
+        default:
+            throw new IllegalStateException("Unexpected operator " + comparison.getOperator());
         }
+        buf.append(comparison.getValue());
     }
 
     public void addTelecommand(StackedCommand command) {

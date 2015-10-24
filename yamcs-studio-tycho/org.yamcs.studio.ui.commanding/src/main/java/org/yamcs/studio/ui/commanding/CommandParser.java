@@ -1,6 +1,6 @@
 package org.yamcs.studio.ui.commanding;
 
-import org.yamcs.protobuf.Commanding.ArgumentType;
+import org.yamcs.protobuf.Commanding.ArgumentAssignmentType;
 import org.yamcs.protobuf.Commanding.CommandType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.CommandingCatalogue;
@@ -51,7 +51,7 @@ public class CommandParser {
                         value = value.replace("\\\"", "\"").replace("\\'", "'");
                     }
                 }
-                cmd.addArguments(ArgumentType.newBuilder().setName(name).setValue(value));
+                cmd.addArguments(ArgumentAssignmentType.newBuilder().setName(name).setValue(value));
             }
         }
 

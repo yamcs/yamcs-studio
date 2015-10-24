@@ -11,9 +11,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Commanding.CommandSignificance;
-import org.yamcs.protobuf.Commanding.ValidateCommandRequest;
-import org.yamcs.protobuf.Commanding.ValidateCommandResponse;
+import org.yamcs.protobuf.Mdb.SignificanceInfo;
+import org.yamcs.protobuf.Rest.ValidateCommandRequest;
+import org.yamcs.protobuf.Rest.ValidateCommandResponse;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -40,7 +40,7 @@ public class ArmCommandHandler extends AbstractRestHandler {
     }
 
     private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
-        ValidateCommandRequest req = ValidateCommandRequest.newBuilder().addCommands(command.toRestCommandType()).build();
+        ValidateCommandRequest req = ValidateCommandRequest.newBuilder().addCommand(command.toRestCommandType()).build();
 
         RestClient restClient = checkRestClient(activeShell, "arm command");
         if (restClient == null)
@@ -53,14 +53,14 @@ public class ArmCommandHandler extends AbstractRestHandler {
                     ValidateCommandResponse validateResponse = (ValidateCommandResponse) response;
 
                     boolean doArm = false;
-                    if (validateResponse.getCommandsSignificanceCount() > 0) {
-                        CommandSignificance significance = validateResponse.getCommandsSignificance(0);
+                    if (validateResponse.getCommandSignificanceCount() > 0) {
+                        SignificanceInfo significance = validateResponse.getCommandSignificance(0).getSignificance();
                         switch (significance.getConsequenceLevel()) {
-                        case watch:
-                        case warning:
-                        case distress:
-                        case critical:
-                        case severe:
+                        case WATCH:
+                        case WARNING:
+                        case DISTRESS:
+                        case CRITICAL:
+                        case SEVERE:
                             String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
                                     + significance.getConsequenceLevel().toString().substring(1);
                             if (MessageDialog.openConfirm(activeShell, "Confirm",

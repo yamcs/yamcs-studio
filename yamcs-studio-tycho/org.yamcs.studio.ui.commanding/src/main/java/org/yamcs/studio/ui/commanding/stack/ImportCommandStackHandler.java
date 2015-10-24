@@ -1,7 +1,6 @@
 package org.yamcs.studio.ui.commanding.stack;
 
 import java.io.FileReader;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,11 +19,11 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.commanding.stack.xml.CommandStack;
 import org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command.CommandArgument;
-import org.yamcs.xtce.Argument;
-import org.yamcs.xtce.MetaCommand;
 
 public class ImportCommandStackHandler extends AbstractHandler {
 
@@ -76,7 +75,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
             {
                 StackedCommand sc = new StackedCommand();
 
-                MetaCommand mc = getMetaCommandFromYamcs(c.getCommandName());
+                CommandInfo mc = CommandingCatalogue.getInstance().getCommandInfo(c.getCommandName());
                 if (mc == null)
                 {
                     MessageDialog.openError(Display.getCurrent().getActiveShell(), "Import Command Stack",
@@ -87,7 +86,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
 
                 for (CommandArgument ca : c.getCommandArgument())
                 {
-                    Argument a = getArgumentFromYamcs(mc, ca.getArgumentName());
+                    ArgumentInfo a = getArgumentFromYamcs(mc, ca.getArgumentName());
                     if (a == null)
                     {
                         MessageDialog.openError(Display.getCurrent().getActiveShell(), "Import Command Stack",
@@ -112,23 +111,12 @@ public class ImportCommandStackHandler extends AbstractHandler {
         }
     }
 
-    private Argument getArgumentFromYamcs(MetaCommand mc, String argumentName) {
-        for (Argument a : mc.getArgumentList())
+    private ArgumentInfo getArgumentFromYamcs(CommandInfo mc, String argumentName) {
+        for (ArgumentInfo a : mc.getArgumentList())
         {
             if (a.getName().equals(argumentName))
                 return a;
         }
         return null;
     }
-
-    private MetaCommand getMetaCommandFromYamcs(String commandName) {
-        Collection<MetaCommand> mcs = CommandingCatalogue.getInstance().getMetaCommands();
-        for (MetaCommand mc : mcs)
-        {
-            if (mc.getQualifiedName().equals(commandName))
-                return mc;
-        }
-        return null;
-    }
-
 }

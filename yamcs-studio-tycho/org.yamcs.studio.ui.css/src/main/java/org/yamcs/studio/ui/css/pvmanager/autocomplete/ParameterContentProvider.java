@@ -10,8 +10,8 @@ import org.csstudio.autocomplete.parser.ContentDescriptor;
 import org.csstudio.autocomplete.parser.ContentType;
 import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
-import org.yamcs.protobuf.Parameters.DataSourceType;
-import org.yamcs.protobuf.Parameters.ParameterInfo;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
 /**
@@ -53,9 +53,9 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
             // TODO should also exclude sysparams, but yamcs server doesn't do
             // it either right now
             if (para.getDataSource() != DataSourceType.LOCAL) {
-                Matcher m = namePattern.matcher(para.getId().getName());
+                Matcher m = namePattern.matcher(para.getDescription().getQualifiedName());
                 if (m.find()) {
-                    Proposal p = new Proposal(para.getId().getName(), false);
+                    Proposal p = new Proposal(para.getDescription().getQualifiedName(), false);
                     p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                     pvs.addProposal(p);
                     matchCount++;

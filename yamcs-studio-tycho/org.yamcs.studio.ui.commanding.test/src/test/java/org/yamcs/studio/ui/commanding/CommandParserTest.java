@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-import org.yamcs.protobuf.Commanding.ArgumentType;
+import org.yamcs.protobuf.Commanding.ArgumentAssignmentType;
 import org.yamcs.protobuf.Commanding.CommandType;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 
@@ -21,7 +21,7 @@ public class CommandParserTest {
         assertEquals("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON", commandType.getId().getName());
         assertEquals(1, commandType.getArgumentsCount());
 
-        ArgumentType arg0 = commandType.getArguments(0);
+        ArgumentAssignmentType arg0 = commandType.getArguments(0);
         assertEquals("voltage_num", arg0.getName());
         assertEquals("1", arg0.getValue());
     }
@@ -47,7 +47,7 @@ public class CommandParserTest {
         assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getId().getName());
         assertEquals(1, commandType.getArgumentsCount());
 
-        ArgumentType arg0 = commandType.getArguments(0);
+        ArgumentAssignmentType arg0 = commandType.getArguments(0);
         assertEquals("Param", arg0.getName());
         assertEquals("Hello world", arg0.getValue());
     }
@@ -62,7 +62,7 @@ public class CommandParserTest {
         assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getId().getName());
         assertEquals(1, commandType.getArgumentsCount());
 
-        ArgumentType arg0 = commandType.getArguments(0);
+        ArgumentAssignmentType arg0 = commandType.getArguments(0);
         assertEquals("Param", arg0.getName());
         assertEquals("Hello world", arg0.getValue());
     }
@@ -79,7 +79,7 @@ public class CommandParserTest {
         assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getId().getName());
         assertEquals(1, commandType.getArgumentsCount());
 
-        ArgumentType arg0 = commandType.getArguments(0);
+        ArgumentAssignmentType arg0 = commandType.getArguments(0);
         assertEquals("Param", arg0.getName());
         assertEquals("'Hello' \"world\"", arg0.getValue());
     }
