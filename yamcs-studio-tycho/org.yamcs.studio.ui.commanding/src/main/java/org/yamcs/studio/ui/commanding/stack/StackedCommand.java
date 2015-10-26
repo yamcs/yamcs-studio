@@ -8,15 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
-import org.yamcs.protobuf.Commanding.ArgumentAssignmentType;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
-import org.yamcs.protobuf.Commanding.CommandType;
 import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Rest.IssueCommandRequest;
+import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.commanding.PTVInfo;
 
@@ -79,7 +78,7 @@ public class StackedCommand {
 
     public StyledString toStyledString(CommandStackView styleProvider) {
         StyledString str = new StyledString();
-        str.append(meta.getDescription().getQualifiedName(), styleProvider.getIdentifierStyler(this));
+        str.append(meta.getQualifiedName(), styleProvider.getIdentifierStyler(this));
         str.append("(", styleProvider.getBracketStyler(this));
         boolean first = true;
         for (ArgumentInfo arg : meta.getArgumentList()) {
@@ -110,13 +109,12 @@ public class StackedCommand {
      * Generates a REST-representation. The sequence number is increased everytime this method is
      * called, and therefore represents an 'issue attempt'.
      */
-    public CommandType.Builder toRestCommandType() {
-        CommandType.Builder req = CommandType.newBuilder();
-        req.setId(NamedObjectId.newBuilder().setName(meta.getDescription().getQualifiedName()));
+    public IssueCommandRequest.Builder toIssueCommandRequest() {
+        IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
         req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         assignments.forEach((k, v) -> {
-            req.addArguments(ArgumentAssignmentType.newBuilder().setName(k.getName()).setValue(v));
+            req.addAssignment(Assignment.newBuilder().setName(k.getName()).setValue(v));
         });
 
         return req;
@@ -230,6 +228,6 @@ public class StackedCommand {
 
     @Override
     public String toString() {
-        return meta.getDescription().getQualifiedName();
+        return meta.getQualifiedName();
     }
 }

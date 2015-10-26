@@ -109,7 +109,7 @@ public class AddToStackWizardPage1 extends WizardPage {
             @Override
             public String getText(Object element) {
                 CommandInfo cmd = (CommandInfo) element;
-                return cmd.getDescription().getQualifiedName();
+                return cmd.getQualifiedName();
             }
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
@@ -156,11 +156,11 @@ public class AddToStackWizardPage1 extends WizardPage {
             public int compare(Viewer viewer, Object o1, Object o2) {
                 CommandInfo c1 = (CommandInfo) o1;
                 CommandInfo c2 = (CommandInfo) o2;
-                return c1.getDescription().getQualifiedName().compareTo(c2.getDescription().getQualifiedName());
+                return c1.getQualifiedName().compareTo(c2.getQualifiedName());
             }
         });
 
-        MetaCommandViewerFilter filter = new MetaCommandViewerFilter();
+        CommandInfoViewerFilter filter = new CommandInfoViewerFilter();
         commandsTable.addFilter(filter);
         searchbox.addKeyListener(new KeyAdapter() {
             @Override

@@ -9,7 +9,7 @@ import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Alarms.Alarm;
+import org.yamcs.protobuf.Alarms.AlarmInfo;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
@@ -150,9 +150,9 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
             Event event = data.getEvent();
             YamcsPlugin.getDefault().getCatalogue(EventCatalogue.class).processEvent(event);
             break;
-        case ALARM:
-            Alarm alarm = data.getAlarm();
-            YamcsPlugin.getDefault().getCatalogue(AlarmCatalogue.class).processAlarm(alarm);
+        case ALARM_INFO:
+            AlarmInfo alarm = data.getAlarmInfo();
+            YamcsPlugin.getDefault().getCatalogue(AlarmCatalogue.class).processAlarmInfo(alarm);
             break;
         default:
             throw new IllegalArgumentException("Unexpected data type " + data.getType());

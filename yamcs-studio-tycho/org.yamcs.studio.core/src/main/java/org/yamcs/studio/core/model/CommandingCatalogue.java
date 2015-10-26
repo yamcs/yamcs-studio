@@ -77,11 +77,11 @@ public class CommandingCatalogue implements Catalogue {
     public synchronized void processMetaCommands(List<CommandInfo> metaCommands) {
         this.metaCommands = new ArrayList<>(metaCommands);
         this.metaCommands.sort((p1, p2) -> {
-            return p1.getDescription().getQualifiedName().compareTo(p2.getDescription().getQualifiedName());
+            return p1.getQualifiedName().compareTo(p2.getQualifiedName());
         });
 
         for (CommandInfo cmd : this.metaCommands) {
-            commandsByQualifiedName.put(cmd.getDescription().getQualifiedName(), cmd);
+            commandsByQualifiedName.put(cmd.getQualifiedName(), cmd);
         }
     }
 

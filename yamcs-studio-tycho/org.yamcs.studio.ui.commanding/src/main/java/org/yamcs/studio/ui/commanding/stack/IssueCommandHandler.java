@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.SendCommandRequest;
+import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -37,8 +37,9 @@ public class IssueCommandHandler extends AbstractRestHandler {
         if (restClient == null)
             return;
 
-        SendCommandRequest req = SendCommandRequest.newBuilder().addCommand(command.toRestCommandType()).build();
-        restClient.sendCommand(req, new ResponseHandler() {
+        IssueCommandRequest req = command.toIssueCommandRequest().build();
+        String qname = command.getMetaCommand().getQualifiedName();
+        restClient.sendCommand(qname, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {

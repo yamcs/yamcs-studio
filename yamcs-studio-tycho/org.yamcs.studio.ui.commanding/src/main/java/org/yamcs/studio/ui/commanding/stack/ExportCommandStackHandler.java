@@ -27,8 +27,7 @@ public class ExportCommandStackHandler extends AbstractHandler {
 
         // Get current command stack
         Collection<StackedCommand> scs = org.yamcs.studio.ui.commanding.stack.CommandStack.getInstance().getCommands();
-        if (scs == null || scs.isEmpty())
-        {
+        if (scs == null || scs.isEmpty()) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Export Command Stack",
                     "Current command stack is empty. No command to export.");
             return null;
@@ -40,8 +39,7 @@ public class ExportCommandStackHandler extends AbstractHandler {
         String exportFile = dialog.open();
         System.out.println("export file choosen: " + exportFile);
 
-        if (exportFile == null)
-        {
+        if (exportFile == null) {
             // cancelled
             return null;
         }
@@ -49,16 +47,14 @@ public class ExportCommandStackHandler extends AbstractHandler {
         // Build model
         org.yamcs.studio.ui.commanding.stack.xml.CommandStack exportCommandStack = new org.yamcs.studio.ui.commanding.stack.xml.CommandStack();
         List<org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command> exportedCommands = exportCommandStack.getCommand();
-        for (StackedCommand sc : scs)
-        {
+        for (StackedCommand sc : scs) {
             org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command c = new org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command();
-            c.setCommandName(sc.getMetaCommand().getDescription().getQualifiedName());
+            c.setCommandName(sc.getMetaCommand().getQualifiedName());
             exportedCommands.add(c);
             List<CommandArgument> cas = c.getCommandArgument();
 
             Iterator<?> it = sc.getAssignments().entrySet().iterator();
-            while (it.hasNext())
-            {
+            while (it.hasNext()) {
                 @SuppressWarnings("unchecked")
                 Map.Entry<Argument, String> pair = (Entry<Argument, String>) it.next();
                 String argName = pair.getKey().getName();
@@ -79,8 +75,7 @@ public class ExportCommandStackHandler extends AbstractHandler {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(exportCommandStack, file);
             jaxbMarshaller.marshal(exportCommandStack, System.out);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Export Command Stack",
                     "Unable to perform command stack export.\nDetails:" + e.getMessage());
             return null;

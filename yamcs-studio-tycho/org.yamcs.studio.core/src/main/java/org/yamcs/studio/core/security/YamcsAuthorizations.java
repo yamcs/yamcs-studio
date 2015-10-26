@@ -3,10 +3,10 @@ package org.yamcs.studio.core.security;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.Yamcs.ListAuthorizationsResponse;
-import org.yamcs.protobuf.Yamcs.UserAuthorizationInfo;
+import org.yamcs.protobuf.Yamcs.UserInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 
 import com.google.protobuf.MessageLite;
 
@@ -24,18 +24,18 @@ public class YamcsAuthorizations {
     }
 
     private static YamcsAuthorizations instance = new YamcsAuthorizations();
-    private UserAuthorizationInfo userAuthorizationsInfo;
+    private UserInfo userInfo;
 
     public static YamcsAuthorizations getInstance() {
         return instance;
     }
 
-    public void getAuthorizations() {
-        ConnectionManager.getInstance().getRestClient().listAuthorizations(new ResponseHandler() {
+    public void loadAuthorizations() {
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        restClient.getAuthenticatedUser(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                ListAuthorizationsResponse response = (ListAuthorizationsResponse) responseMsg;
-                userAuthorizationsInfo = response.getUserAuthorizationInfo();
+                userInfo = (UserInfo) responseMsg;
             }
 
             @Override
@@ -48,9 +48,9 @@ public class YamcsAuthorizations {
     public boolean hasSystemPrivilege(SystemPrivilege systemPrivilege) {
         if (!isAuthorizationEnabled())
             return true;
-        if (userAuthorizationsInfo == null)
+        if (userInfo == null)
             return false;
-        return userAuthorizationsInfo.getSystemPrivilegesList().contains(systemPrivilege.name());
+        return userInfo.getSystemPrivilegesList().contains(systemPrivilege.name());
     }
 
     private boolean isAuthorizationEnabled() {

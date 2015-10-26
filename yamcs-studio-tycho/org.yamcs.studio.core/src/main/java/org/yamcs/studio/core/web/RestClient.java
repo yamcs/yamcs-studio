@@ -17,14 +17,12 @@ import org.yamcs.protobuf.Archive.UpdateTagRequest;
 import org.yamcs.protobuf.Events.GetEventsRequest;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.protobuf.Rest.ListCommandsResponse;
 import org.yamcs.protobuf.Rest.ListParametersResponse;
-import org.yamcs.protobuf.Rest.SendCommandRequest;
-import org.yamcs.protobuf.Rest.ValidateCommandRequest;
-import org.yamcs.protobuf.Rest.ValidateCommandResponse;
+import org.yamcs.protobuf.Rest.ListProcessorsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.protobuf.Yamcs.ListAuthorizationsResponse;
-import org.yamcs.protobuf.YamcsManagement.ListProcessorsResponse;
+import org.yamcs.protobuf.Yamcs.UserInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.studio.core.security.YamcsCredentials;
@@ -68,19 +66,14 @@ public class RestClient {
     public RestClient(YamcsConnectionProperties yprops, YamcsCredentials yamcsCredentials) {
         this.yprops = yprops;
         this.credentials = yamcsCredentials;
-
     }
 
     public void dumpArchive(DumpArchiveRequest request, ResponseHandler responseHandler) {
         get("/archive", request, DumpArchiveResponse.newBuilder(), responseHandler);
     }
 
-    public void validateCommand(ValidateCommandRequest request, ResponseHandler responseHandler) {
-        post("/commanding/validator", request, ValidateCommandResponse.newBuilder(), responseHandler);
-    }
-
-    public void sendCommand(SendCommandRequest request, ResponseHandler responseHandler) {
-        post("/commanding/queue", request, null, responseHandler);
+    public void sendCommand(String commandName, IssueCommandRequest request, ResponseHandler responseHandler) {
+        post("/commands" + commandName, request, null, responseHandler);
     }
 
     public void listParameters(ResponseHandler responseHandler) {
@@ -104,19 +97,19 @@ public class RestClient {
     }
 
     public void createProcessorManagementRequest(ProcessorManagementRequest request, ResponseHandler responseHandler) {
-        post("/processor", request, null, responseHandler);
+        post("/processors", request, null, responseHandler);
     }
 
     public void createProcessorRequest(String processorName, ProcessorRequest request, ResponseHandler responseHandler) {
-        post("/processor/" + processorName, request, null, responseHandler);
+        post("/processors/" + processorName, request, null, responseHandler);
     }
 
     public void listProcessors(ResponseHandler responseHandler) {
-        get("/processor/list", null, ListProcessorsResponse.newBuilder(), responseHandler);
+        get("/processors", null, ListProcessorsResponse.newBuilder(), responseHandler);
     }
 
-    public void listAuthorizations(ResponseHandler responseHandler) {
-        get("/authorization/list", null, ListAuthorizationsResponse.newBuilder(), responseHandler);
+    public void getAuthenticatedUser(ResponseHandler responseHandler) {
+        get("/user", null, UserInfo.newBuilder(), responseHandler);
     }
 
     public void insertTag(InsertTagRequest request, ResponseHandler responseHandler) {

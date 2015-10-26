@@ -1,9 +1,9 @@
 package org.yamcs.studio.ui.commanding;
 
-import org.yamcs.protobuf.Commanding.ArgumentAssignmentType;
-import org.yamcs.protobuf.Commanding.CommandType;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
 
 /**
  * Hand-written ugly command parser. Follows some very simple logic:
@@ -15,26 +15,17 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
  */
 public class CommandParser {
 
-    public static CommandType toCommand(String commandString) {
-        return toCommand(commandString, CommandingCatalogue.getInstance());
-    }
-
-    // Extracted out for unit tests
-    static CommandType toCommand(String commandString, CommandingCatalogue commandingCatalogue) {
+    public static ParseResult parseCommand(String commandString) {
         if (commandString == null)
             return null;
 
         commandString = commandString.trim();
 
         int lparen = commandString.indexOf('(');
-        CommandType.Builder cmd = CommandType.newBuilder();
+        ParseResult result = new ParseResult();
 
         String commandName = commandString.substring(0, lparen).trim();
-        NamedObjectId.Builder commandId = NamedObjectId.newBuilder();
-        commandId.setName(commandName.trim());
-        cmd.setId(commandId);
-        cmd.setSequenceNumber(commandingCatalogue.getNextCommandClientId());
-        cmd.setOrigin(commandingCatalogue.getCommandOrigin());
+        result.qualifiedName = commandName.trim();
 
         String argString = commandString.substring(lparen + 1, commandString.length() - 1);
         String[] args = argString.split(",");
@@ -51,10 +42,23 @@ public class CommandParser {
                         value = value.replace("\\\"", "\"").replace("\\'", "'");
                     }
                 }
-                cmd.addArguments(ArgumentAssignmentType.newBuilder().setName(name).setValue(value));
+                result.assignments.add(Assignment.newBuilder().setName(name).setValue(value).build());
             }
         }
 
-        return cmd.build();
+        return result;
+    }
+
+    public static class ParseResult {
+        private String qualifiedName;
+        private List<Assignment> assignments = new ArrayList<>();
+
+        public String getQualifiedName() {
+            return qualifiedName;
+        }
+
+        public List<Assignment> getAssignments() {
+            return assignments;
+        }
     }
 }

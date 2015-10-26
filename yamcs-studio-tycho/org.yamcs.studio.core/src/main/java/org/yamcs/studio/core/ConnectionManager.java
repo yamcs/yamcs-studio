@@ -130,7 +130,7 @@ public class ConnectionManager {
 
     public void onWebSocketConnected() {
         log.fine("WebSocket connected");
-        YamcsAuthorizations.getInstance().getAuthorizations();
+        YamcsAuthorizations.getInstance().loadAuthorizations();
 
         setConnectionStatus(ConnectionStatus.Connected);
         studioConnectionListeners.forEach(l -> l.onStudioConnect());

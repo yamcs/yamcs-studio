@@ -53,9 +53,9 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
             // TODO should also exclude sysparams, but yamcs server doesn't do
             // it either right now
             if (para.getDataSource() != DataSourceType.LOCAL) {
-                Matcher m = namePattern.matcher(para.getDescription().getQualifiedName());
+                Matcher m = namePattern.matcher(para.getQualifiedName());
                 if (m.find()) {
-                    Proposal p = new Proposal(para.getDescription().getQualifiedName(), false);
+                    Proposal p = new Proposal(para.getQualifiedName(), false);
                     p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                     pvs.addProposal(p);
                     matchCount++;

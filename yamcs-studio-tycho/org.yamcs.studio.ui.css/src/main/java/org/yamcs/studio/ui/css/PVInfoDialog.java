@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.epics.vtype.Display;
 import org.yamcs.protobuf.Mdb.AlarmInfo;
 import org.yamcs.protobuf.Mdb.AlarmRange;
-import org.yamcs.protobuf.Mdb.NameDescriptionInfo;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Mdb.UnitInfo;
@@ -136,18 +135,17 @@ public class PVInfoDialog extends Dialog {
 
     private void createYamcsProperties(Composite parent, ParameterInfo pinfo) {
         createKeyValueTextPair(parent, "Yamcs Data Source", capitalize(pinfo.getDataSource().toString()));
-        NameDescriptionInfo desc = pinfo.getDescription();
-        createKeyValueTextPair(parent, "Qualified Name", desc.getQualifiedName());
-        for (int i = 0; i < desc.getAliasesCount(); i++) {
-            NamedObjectId alias = desc.getAliases(i);
+        createKeyValueTextPair(parent, "Qualified Name", pinfo.getQualifiedName());
+        for (int i = 0; i < pinfo.getAliasCount(); i++) {
+            NamedObjectId alias = pinfo.getAlias(i);
             String key = (i == 0) ? "Aliases" : null;
             createKeyValueTextPair(parent, key, alias.getNamespace() + "; " + alias.getName());
         }
 
-        if (desc.hasShortDescription())
-            createKeyValueTextPair(parent, "Short Description", desc.getShortDescription());
-        if (desc.hasLongDescription())
-            createKeyValueTextPair(parent, "Long Description", desc.getLongDescription());
+        if (pinfo.hasShortDescription())
+            createKeyValueTextPair(parent, "Short Description", pinfo.getShortDescription());
+        if (pinfo.hasLongDescription())
+            createKeyValueTextPair(parent, "Long Description", pinfo.getLongDescription());
         createSeparator(parent);
 
         ParameterTypeInfo type = pinfo.getType();

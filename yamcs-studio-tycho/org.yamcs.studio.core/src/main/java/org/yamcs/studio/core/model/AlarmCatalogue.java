@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Alarms.Alarm;
+import org.yamcs.protobuf.Alarms.AlarmInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
@@ -27,8 +27,8 @@ public class AlarmCatalogue implements Catalogue {
         webSocketClient.sendMessage(new WebSocketRequest("alarms", "subscribe"));
     }
 
-    public void processAlarm(Alarm alarm) {
-        alarmListeners.forEach(l -> l.processAlarm(alarm));
+    public void processAlarmInfo(AlarmInfo alarmInfo) {
+        alarmListeners.forEach(l -> l.processAlarmInfo(alarmInfo));
     }
 
     @Override

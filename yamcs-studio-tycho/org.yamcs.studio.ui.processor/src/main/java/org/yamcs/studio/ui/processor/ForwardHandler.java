@@ -10,7 +10,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Yamcs.ReplaySpeed;
-import org.yamcs.protobuf.Yamcs.ReplaySpeedType;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
@@ -36,17 +36,13 @@ public class ForwardHandler extends AbstractHandler {
             float speedValue = currentSpeed.getParam() * 2f;
             if (speedValue > 17)
                 speedValue = 1.0f;
-            newSpeed = ReplaySpeed.newBuilder()
-                    .setType(ReplaySpeedType.REALTIME)
+            newSpeed = ReplaySpeed.newBuilder().setType(ReplaySpeedType.REALTIME)
                     .setParam(speedValue == 0f ? 1f : speedValue).build();
         } else {
-            newSpeed = ReplaySpeed.newBuilder()
-                    .setType(ReplaySpeedType.REALTIME)
-                    .setParam(2).build();
+            newSpeed = ReplaySpeed.newBuilder().setType(ReplaySpeedType.REALTIME).setParam(2).build();
         }
 
-        ProcessorRequest req = ProcessorRequest.newBuilder()
-                .setOperation(Operation.CHANGE_SPEED)
+        ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.CHANGE_SPEED)
                 .setReplaySpeed(newSpeed).build();
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
         restClient.createProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
@@ -58,7 +54,8 @@ public class ForwardHandler extends AbstractHandler {
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Could not change speed of processing", e);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not change speed of processing", e.getMessage());
+                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not change speed of processing",
+                            e.getMessage());
                 });
             }
         });

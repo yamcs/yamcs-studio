@@ -18,8 +18,8 @@ public class YCLProposalProvider extends AbstractYCLProposalProvider {
     public void complete_CommandId(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
         for (CommandInfo cmd : CommandingCatalogue.getInstance().getMetaCommands()) {
             if (!cmd.getAbstract()) {
-                ICompletionProposal proposal = createCompletionProposal(cmd.getDescription().getQualifiedName() + "()",
-                        cmd.getDescription().getQualifiedName(), null, context);
+                ICompletionProposal proposal = createCompletionProposal(cmd.getQualifiedName() + "()",
+                        cmd.getQualifiedName(), null, context);
                 acceptor.accept(proposal);
             }
         }

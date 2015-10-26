@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.protobuf.YamcsManagement.ListProcessorsResponse;
+import org.yamcs.protobuf.Rest.ListProcessorsResponse;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;

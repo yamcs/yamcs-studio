@@ -29,13 +29,13 @@ import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
-import org.yamcs.protobuf.Rest.SendCommandRequest;
-import org.yamcs.protobuf.Rest.ValidateCommandRequest;
+import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.CommandParser;
+import org.yamcs.studio.ui.commanding.CommandParser.ParseResult;
 import org.yamcs.studio.ycl.dsl.ui.internal.YCLActivator;
 
 import com.google.inject.Injector;
@@ -85,7 +85,7 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
         commandCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         for (CommandInfo command : commands) {
             if (!command.getAbstract()) {
-                commandCombo.add(command.getDescription().getQualifiedName());
+                commandCombo.add(command.getQualifiedName());
             }
         }
 
@@ -98,9 +98,9 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
         commandCombo.addListener(SWT.Selection, event -> {
             for (CommandInfo command : commands) {
                 String selected = ((Combo) event.widget).getText();
-                if (!command.getAbstract() && command.getDescription().getQualifiedName().equals(selected)) {
+                if (!command.getAbstract() && command.getQualifiedName().equals(selected)) {
 
-                    StringBuilder buf = new StringBuilder(command.getDescription().getQualifiedName());
+                    StringBuilder buf = new StringBuilder(command.getQualifiedName());
                     if (command.getArgumentList() != null) {
                         buf.append("(\n");
                         for (ArgumentInfo arg : command.getArgumentList()) {
@@ -172,9 +172,13 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             RestClient restClient = ConnectionManager.getInstance().getRestClient();
             if (!checkConnected(restClient))
                 return;
-            ValidateCommandRequest.Builder req = ValidateCommandRequest.newBuilder();
-            req.addCommand(CommandParser.toCommand(text.getText()));
-            restClient.validateCommand(req.build(), new ResponseHandler() {
+
+            ParseResult parsed = CommandParser.parseCommand(text.getText());
+            IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
+            req.addAllAssignment(parsed.getAssignments());
+            req.setDryRun(true);
+
+            restClient.sendCommand(parsed.getQualifiedName(), req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
@@ -204,9 +208,12 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             RestClient restClient = ConnectionManager.getInstance().getRestClient();
             if (!checkConnected(restClient))
                 return;
-            SendCommandRequest.Builder req = SendCommandRequest.newBuilder();
-            req.addCommand(CommandParser.toCommand(text.getText()));
-            restClient.sendCommand(req.build(), new ResponseHandler() {
+
+            ParseResult parsed = CommandParser.parseCommand(text.getText());
+            IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
+            req.addAllAssignment(parsed.getAssignments());
+
+            restClient.sendCommand(parsed.getQualifiedName(), req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> close());

@@ -85,12 +85,12 @@ public class ParameterCatalogue implements Catalogue {
     public synchronized void processMetaParameters(List<ParameterInfo> metaParameters) {
         this.metaParameters = new ArrayList<>(metaParameters);
         this.metaParameters.sort((p1, p2) -> {
-            return p1.getDescription().getQualifiedName().compareTo(p2.getDescription().getQualifiedName());
+            return p1.getQualifiedName().compareTo(p2.getQualifiedName());
         });
 
         log.fine("Refreshing all pv readers");
         for (ParameterInfo p : this.metaParameters) {
-            NamedObjectId id = NamedObjectId.newBuilder().setName(p.getDescription().getQualifiedName()).build();
+            NamedObjectId id = NamedObjectId.newBuilder().setName(p.getQualifiedName()).build();
             parametersById.put(id, p);
 
             // Update unit index

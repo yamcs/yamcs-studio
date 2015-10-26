@@ -35,7 +35,7 @@ public class AddToStackWizardPage2 extends WizardPage {
     }
 
     private void updateControl() {
-        String qname = command.getMetaCommand().getDescription().getQualifiedName();
+        String qname = command.getMetaCommand().getQualifiedName();
         desc.setText("Specify the parameters for command " + qname);
 
         // Clear previous state. This is slightly suboptimal since we also lose state

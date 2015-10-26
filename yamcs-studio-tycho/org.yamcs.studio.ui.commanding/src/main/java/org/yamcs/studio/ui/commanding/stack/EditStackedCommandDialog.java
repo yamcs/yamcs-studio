@@ -39,7 +39,7 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
 
         composite.setLayout(new GridLayout());
         Label desc = new Label(composite, SWT.NONE);
-        desc.setText("Specify the parameters for command " + command.getMetaCommand().getDescription().getQualifiedName());
+        desc.setText("Specify the parameters for command " + command.getMetaCommand().getQualifiedName());
         desc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Composite argumentsComposite = new Composite(composite, SWT.NONE);

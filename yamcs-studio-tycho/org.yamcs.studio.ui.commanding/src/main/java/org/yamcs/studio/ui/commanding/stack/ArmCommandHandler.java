@@ -12,8 +12,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
-import org.yamcs.protobuf.Rest.ValidateCommandRequest;
-import org.yamcs.protobuf.Rest.ValidateCommandResponse;
+import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -40,21 +39,20 @@ public class ArmCommandHandler extends AbstractRestHandler {
     }
 
     private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
-        ValidateCommandRequest req = ValidateCommandRequest.newBuilder().addCommand(command.toRestCommandType()).build();
+        IssueCommandRequest req = command.toIssueCommandRequest().setDryRun(true).build();
 
         RestClient restClient = checkRestClient(activeShell, "arm command");
         if (restClient == null)
             return;
 
-        restClient.validateCommand(req, new ResponseHandler() {
+        String qname = command.getMetaCommand().getQualifiedName();
+        restClient.sendCommand(qname, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {
-                    ValidateCommandResponse validateResponse = (ValidateCommandResponse) response;
-
                     boolean doArm = false;
-                    if (validateResponse.getCommandSignificanceCount() > 0) {
-                        SignificanceInfo significance = validateResponse.getCommandSignificance(0).getSignificance();
+                    SignificanceInfo significance = command.getMetaCommand().getSignificance();
+                    if (significance != null) {
                         switch (significance.getConsequenceLevel()) {
                         case WATCH:
                         case WARNING:

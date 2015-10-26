@@ -1,85 +1,67 @@
 package org.yamcs.studio.ui.commanding;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-import org.yamcs.protobuf.Commanding.ArgumentAssignmentType;
-import org.yamcs.protobuf.Commanding.CommandType;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
+import org.yamcs.studio.ui.commanding.CommandParser.ParseResult;
 
 public class CommandParserTest {
 
     @Test
     public void testIntegerArguments() {
-        CommandingCatalogue mockCatalogue = mock(CommandingCatalogue.class);
-        when(mockCatalogue.getCommandOrigin()).thenReturn("an-origin");
-        when(mockCatalogue.getNextCommandClientId()).thenReturn(123);
-        CommandType commandType = CommandParser.toCommand("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON(voltage_num: 1)", mockCatalogue);
+        ParseResult commandType = CommandParser.parseCommand("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON(voltage_num: 1)");
 
-        assertEquals("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON", commandType.getId().getName());
-        assertEquals(1, commandType.getArgumentsCount());
+        assertEquals("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON", commandType.getQualifiedName());
+        assertEquals(1, commandType.getAssignments().size());
 
-        ArgumentAssignmentType arg0 = commandType.getArguments(0);
+        Assignment arg0 = commandType.getAssignments().get(0);
         assertEquals("voltage_num", arg0.getName());
         assertEquals("1", arg0.getValue());
     }
 
     @Test
     public void testNoArguments() {
-        CommandingCatalogue mockCatalogue = mock(CommandingCatalogue.class);
-        when(mockCatalogue.getCommandOrigin()).thenReturn("an-origin");
-        when(mockCatalogue.getNextCommandClientId()).thenReturn(123);
-        CommandType commandType = CommandParser.toCommand("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON()", mockCatalogue);
+        ParseResult commandType = CommandParser.parseCommand("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON()");
 
-        assertEquals("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON", commandType.getId().getName());
-        assertEquals(0, commandType.getArgumentsCount());
+        assertEquals("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON", commandType.getQualifiedName());
+        assertEquals(0, commandType.getAssignments().size());
     }
 
     @Test
     public void testDoubleQuotedStringArguments() {
-        CommandingCatalogue mockCatalogue = mock(CommandingCatalogue.class);
-        when(mockCatalogue.getCommandOrigin()).thenReturn("an-origin");
-        when(mockCatalogue.getNextCommandClientId()).thenReturn(123);
-        CommandType commandType = CommandParser.toCommand("/YSS/SIMULATOR/TestCmd(Param: \"Hello world\")", mockCatalogue);
+        ParseResult commandType = CommandParser.parseCommand("/YSS/SIMULATOR/TestCmd(Param: \"Hello world\")");
 
-        assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getId().getName());
-        assertEquals(1, commandType.getArgumentsCount());
+        assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getQualifiedName());
+        assertEquals(1, commandType.getAssignments().size());
 
-        ArgumentAssignmentType arg0 = commandType.getArguments(0);
+        Assignment arg0 = commandType.getAssignments().get(0);
         assertEquals("Param", arg0.getName());
         assertEquals("Hello world", arg0.getValue());
     }
 
     @Test
     public void testSingleQuotedStringArguments() {
-        CommandingCatalogue mockCatalogue = mock(CommandingCatalogue.class);
-        when(mockCatalogue.getCommandOrigin()).thenReturn("an-origin");
-        when(mockCatalogue.getNextCommandClientId()).thenReturn(123);
-        CommandType commandType = CommandParser.toCommand("/YSS/SIMULATOR/TestCmd(Param: 'Hello world')", mockCatalogue);
+        ParseResult commandType = CommandParser.parseCommand("/YSS/SIMULATOR/TestCmd(Param: 'Hello world')");
 
-        assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getId().getName());
-        assertEquals(1, commandType.getArgumentsCount());
+        assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getQualifiedName());
+        assertEquals(1, commandType.getAssignments().size());
 
-        ArgumentAssignmentType arg0 = commandType.getArguments(0);
+        Assignment arg0 = commandType.getAssignments().get(0);
         assertEquals("Param", arg0.getName());
         assertEquals("Hello world", arg0.getValue());
     }
 
     @Test
     public void testStringArgumentEscaping() {
-        CommandingCatalogue mockCatalogue = mock(CommandingCatalogue.class);
-        when(mockCatalogue.getCommandOrigin()).thenReturn("an-origin");
-        when(mockCatalogue.getNextCommandClientId()).thenReturn(123);
         // Actual test string after java interpets it: '\'Hello\' \"world\"'
         // which our parser should interpet then as: 'Hello' "world"
-        CommandType commandType = CommandParser.toCommand("/YSS/SIMULATOR/TestCmd(Param: '\\'Hello\\' \\\"world\\\"')", mockCatalogue);
+        ParseResult commandType = CommandParser.parseCommand("/YSS/SIMULATOR/TestCmd(Param: '\\'Hello\\' \\\"world\\\"')");
 
-        assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getId().getName());
-        assertEquals(1, commandType.getArgumentsCount());
+        assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getQualifiedName());
+        assertEquals(1, commandType.getAssignments().size());
 
-        ArgumentAssignmentType arg0 = commandType.getArguments(0);
+        Assignment arg0 = commandType.getAssignments().get(0);
         assertEquals("Param", arg0.getName());
         assertEquals("'Hello' \"world\"", arg0.getValue());
     }
