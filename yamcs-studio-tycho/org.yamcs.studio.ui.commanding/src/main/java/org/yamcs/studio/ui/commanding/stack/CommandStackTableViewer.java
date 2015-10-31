@@ -20,9 +20,9 @@ import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.xtce.Comparison;
-import org.yamcs.xtce.Comparison.OperatorType;
 import org.yamcs.xtce.ComparisonList;
 import org.yamcs.xtce.MatchCriteria;
+import org.yamcs.xtce.OperatorType;
 import org.yamcs.xtce.TransmissionConstraint;
 
 public class CommandStackTableViewer extends TableViewer {
