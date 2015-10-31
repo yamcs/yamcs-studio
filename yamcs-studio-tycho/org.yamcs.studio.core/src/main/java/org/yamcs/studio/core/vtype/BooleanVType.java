@@ -16,6 +16,6 @@ public class BooleanVType extends YamcsVType implements VBoolean {
 
     @Override
     public String toString() {
-        return String.valueOf(pval.getEngValue().getBooleanValue());
+        return Boolean.toString(pval.getEngValue().getBooleanValue());
     }
 }

@@ -1,21 +1,21 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.vtype.VInt;
+import org.epics.vtype.VLong;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
-public class Uint32VType extends YamcsVType implements VInt {
+public class Uint32VType extends YamcsVType implements VLong {
 
     public Uint32VType(ParameterValue pval) {
         super(pval);
     }
 
     @Override
-    public Integer getValue() {
-        return pval.getEngValue().getUint32Value();
+    public Long getValue() {
+        return pval.getEngValue().getUint32Value() & 0xFFFFFFFFL;
     }
 
     @Override
     public String toString() {
-        return String.valueOf(pval.getEngValue().getUint32Value());
+        return Long.toString(pval.getEngValue().getUint32Value() & 0xFFFFFFFFL);
     }
 }

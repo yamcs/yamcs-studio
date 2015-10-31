@@ -16,6 +16,6 @@ public class FloatVType extends YamcsVType implements VFloat {
 
     @Override
     public String toString() {
-        return String.valueOf(pval.getEngValue().getFloatValue());
+        return Float.toString(pval.getEngValue().getFloatValue());
     }
 }
