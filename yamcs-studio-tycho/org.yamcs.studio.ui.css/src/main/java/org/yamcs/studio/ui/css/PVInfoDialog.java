@@ -177,7 +177,7 @@ public class PVInfoDialog extends Dialog {
 
             // Now forwards for upper limits
             for (AlarmRange range : defaultAlarm.getStaticAlarmRangeList()) {
-                if (range.hasMinInclusive()) {
+                if (range.hasMaxInclusive()) {
                     String label = capitalize(range.getLevel().toString()) + " High";
                     String limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
                     createKeyValueTextPair(parent, label, limit);
