@@ -39,7 +39,8 @@ public class Yamcs {
         req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         req.addAllAssignment(parsed.getAssignments());
 
-        restClient.sendCommand(parsed.getQualifiedName(), req.build(), new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        restClient.sendCommand(instance, "realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 log.fine(String.format("Sent command %s", req));

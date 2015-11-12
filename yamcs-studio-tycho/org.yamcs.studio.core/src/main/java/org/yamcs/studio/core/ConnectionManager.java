@@ -62,6 +62,10 @@ public class ConnectionManager {
         return mode;
     }
 
+    public String getYamcsInstance() {
+        return connectionInfo.getConnection(mode).getInstance();
+    }
+
     public void connect(YamcsCredentials creds) {
         connect(creds, mode);
     }

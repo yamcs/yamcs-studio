@@ -7,9 +7,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.protobuf.Rest.PatchClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -24,16 +23,10 @@ public class LeaveReplayHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        String yamcsInstance = ConnectionManager.getInstance().getWebProperties().getInstance();
-
         ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
-        ProcessorManagementRequest req = ProcessorManagementRequest.newBuilder()
-                .setOperation(Operation.CONNECT_TO_PROCESSOR)
-                .setInstance(yamcsInstance)
-                .setName("realtime")
-                .addClientId(clientInfo.getId()).build();
+        PatchClientRequest req = PatchClientRequest.newBuilder().setProcessor("realtime").build();
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        restClient.createProcessorManagementRequest(req, new ResponseHandler() {
+        restClient.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {

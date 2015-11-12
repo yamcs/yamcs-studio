@@ -137,7 +137,8 @@ public class ParameterCatalogue implements Catalogue {
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        restClient.listParameters(new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        restClient.listParameters(instance, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 ListParametersResponse response = (ListParametersResponse) responseMsg;

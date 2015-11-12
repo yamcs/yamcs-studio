@@ -2,10 +2,12 @@ package org.yamcs.studio.core.web;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.ConfigurationException;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Archive.DumpArchiveRequest;
 import org.yamcs.protobuf.Archive.DumpArchiveResponse;
@@ -16,15 +18,18 @@ import org.yamcs.protobuf.Archive.InsertTagResponse;
 import org.yamcs.protobuf.Archive.UpdateTagRequest;
 import org.yamcs.protobuf.Events.GetEventsRequest;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Rest.CreateProcessorRequest;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
+import org.yamcs.protobuf.Rest.IssueCommandResponse;
 import org.yamcs.protobuf.Rest.ListCommandsResponse;
 import org.yamcs.protobuf.Rest.ListParametersResponse;
 import org.yamcs.protobuf.Rest.ListProcessorsResponse;
+import org.yamcs.protobuf.Rest.PatchClientRequest;
+import org.yamcs.protobuf.Rest.PatchProcessorRequest;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.protobuf.Yamcs.UserInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.ProtobufHandler.BuilderGenerator;
 
@@ -68,64 +73,69 @@ public class RestClient {
         this.credentials = yamcsCredentials;
     }
 
-    public void dumpArchive(DumpArchiveRequest request, ResponseHandler responseHandler) {
-        get("/archive", request, DumpArchiveResponse.newBuilder(), responseHandler);
+    public void dumpArchive(String instance, DumpArchiveRequest request, ResponseHandler responseHandler) {
+        get("/archive" + instance, request, DumpArchiveResponse.newBuilder(), responseHandler);
     }
 
-    public void sendCommand(String commandName, IssueCommandRequest request, ResponseHandler responseHandler) {
-        post("/commands" + commandName, request, null, responseHandler);
+    public void sendCommand(String instance, String processor, String commandName, IssueCommandRequest request, ResponseHandler responseHandler) {
+        post("/processors/" + instance + "/" + processor + "/commands" + commandName, request, IssueCommandResponse.newBuilder(), responseHandler);
     }
 
-    public void listParameters(ResponseHandler responseHandler) {
-        get("/parameters", null, ListParametersResponse.newBuilder(), responseHandler);
+    public void listParameters(String instance, ResponseHandler responseHandler) {
+        get("/mdb/" + instance + "/parameters", null, ListParametersResponse.newBuilder(), responseHandler);
     }
 
-    public void getParameter(String qualifiedName, ResponseHandler responseHandler) {
-        get("/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
+    public void getParameterDetail(String instance, String qualifiedName, ResponseHandler responseHandler) {
+        get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
     }
 
     public void getEvents(GetEventsRequest request, ResponseHandler responseHandler) {
         streamGet("/events", request, () -> Event.newBuilder(), responseHandler);
     }
 
-    public void listCommands(ResponseHandler responseHandler) {
-        get("/commands", null, ListCommandsResponse.newBuilder(), responseHandler);
+    public void listCommands(String instance, ResponseHandler responseHandler) {
+        get("/mdb/" + instance + "/commands", null, ListCommandsResponse.newBuilder(), responseHandler);
     }
 
-    public void setParameters(ParameterData request, ResponseHandler responseHandler) {
-        post("/parameter/_set", request, null, responseHandler);
+    public void setParameter(String instance, String processor, NamedObjectId id, Value value, ResponseHandler responseHandler) {
+        String pResource = toURISegments(id);
+        put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null, responseHandler);
     }
 
-    public void createProcessorManagementRequest(ProcessorManagementRequest request, ResponseHandler responseHandler) {
-        post("/processors", request, null, responseHandler);
+    public void createProcessorRequest(String instance, CreateProcessorRequest request, ResponseHandler responseHandler) {
+        post("/processors/" + instance, request, null, responseHandler);
     }
 
-    public void createProcessorRequest(String processorName, ProcessorRequest request, ResponseHandler responseHandler) {
-        post("/processors/" + processorName, request, null, responseHandler);
+    public void patchProcessorRequest(String instance, String processor, PatchProcessorRequest request, ResponseHandler responseHandler) {
+        post("/processors/" + instance + "/" + processor, request, null, responseHandler);
     }
 
-    public void listProcessors(ResponseHandler responseHandler) {
-        get("/processors", null, ListProcessorsResponse.newBuilder(), responseHandler);
+    public void listProcessors(String instance, ResponseHandler responseHandler) {
+        get("/processors/" + instance, null, ListProcessorsResponse.newBuilder(), responseHandler);
     }
 
     public void getAuthenticatedUser(ResponseHandler responseHandler) {
         get("/user", null, UserInfo.newBuilder(), responseHandler);
     }
 
-    public void insertTag(InsertTagRequest request, ResponseHandler responseHandler) {
-        post("/archive/tags", request, InsertTagResponse.newBuilder(), responseHandler);
+    public void patchClientRequest(int clientId, PatchClientRequest request, ResponseHandler responseHandler) {
+        post("/clients/" + clientId, request, null, responseHandler);
     }
 
-    public void updateTag(long tagTime, int tagId, UpdateTagRequest request, ResponseHandler responseHandler) {
-        put("/archive/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
+    public void insertTag(String instance, InsertTagRequest request, ResponseHandler responseHandler) {
+        post("/archive/" + instance + "/tags", request, InsertTagResponse.newBuilder(), responseHandler);
     }
 
-    public void deleteTag(long tagTime, int tagId, ResponseHandler responseHandler) {
-        delete("/archive/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
+    public void updateTag(String instance, long tagTime, int tagId, UpdateTagRequest request, ResponseHandler responseHandler) {
+        put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
     }
 
-    public void getTags(GetTagsRequest request, ResponseHandler responseHandler) {
-        get("/archive/tags", request, GetTagsResponse.newBuilder(), responseHandler);
+    public void deleteTag(String instance, long tagTime, int tagId, ResponseHandler responseHandler) {
+        delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
+    }
+
+    public void getTags(String instance, GetTagsRequest request, ResponseHandler responseHandler) {
+        get("/archive/" + instance + "/tags", request, GetTagsResponse.newBuilder(), responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
@@ -149,7 +159,7 @@ public class RestClient {
     }
 
     private <S extends MessageLite> void doRequest(HttpMethod method, String uri, MessageLite requestBody, MessageLite.Builder target, ResponseHandler handler) {
-        URI resource = yprops.webResourceURI(uri);
+        URI resource = webResourceURI(yprops, uri);
         try {
             Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class).handler(new FullProtobufChannelInitializer(target, handler));
@@ -164,7 +174,7 @@ public class RestClient {
     private <S extends MessageLite> void doRequestWithDelimitedResponse(HttpMethod method, String uri, MessageLite requestBody, BuilderGenerator builderGenerator, ResponseHandler handler) {
         // Currently doesn't correctly interpret RestExceptionMessage. Should probably
         // add a pipeline handler for HttpResponse for that
-        URI resource = yprops.webResourceURI(uri);
+        URI resource = webResourceURI(yprops, uri);
         try {
             Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
@@ -234,6 +244,22 @@ public class RestClient {
      */
     public void shutdown() {
         group.shutdownGracefully();
+    }
+
+    private String toURISegments(NamedObjectId id) {
+        if (!id.hasNamespace()) {
+            return id.getName();
+        } else {
+            return "/" + id.getNamespace() + "/" + id.getName();
+        }
+    }
+
+    private URI webResourceURI(YamcsConnectionProperties yprops, String relativePath) {
+        try {
+            return new URI("http://" + yprops.getHost() + ":" + yprops.getPort() + "/api" + relativePath);
+        } catch (URISyntaxException e) {
+            throw new ConfigurationException("Invalid URL", e);
+        }
     }
 
     public static void main(String... args) throws InterruptedException {

@@ -9,11 +9,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Rest.PatchProcessorRequest;
 import org.yamcs.protobuf.Yamcs.ReplaySpeed;
-import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -30,35 +28,34 @@ public class ForwardHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         ProcessorInfo processorInfo = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
 
-        ReplaySpeed newSpeed;
+        String newSpeed;
         if (processorInfo.getReplayRequest().hasSpeed()) {
             ReplaySpeed currentSpeed = processorInfo.getReplayRequest().getSpeed();
             float speedValue = currentSpeed.getParam() * 2f;
             if (speedValue > 17)
                 speedValue = 1.0f;
-            newSpeed = ReplaySpeed.newBuilder().setType(ReplaySpeedType.REALTIME)
-                    .setParam(speedValue == 0f ? 1f : speedValue).build();
+            newSpeed = (speedValue == 0f ? 1f : speedValue) + "x";
         } else {
-            newSpeed = ReplaySpeed.newBuilder().setType(ReplaySpeedType.REALTIME).setParam(2).build();
+            newSpeed = "2x";
         }
 
-        ProcessorRequest req = ProcessorRequest.newBuilder().setOperation(Operation.CHANGE_SPEED)
-                .setReplaySpeed(newSpeed).build();
+        PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setSpeed(newSpeed).build();
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        restClient.createProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-            }
+        restClient.patchProcessorRequest(processorInfo.getInstance(), processorInfo.getName(), req,
+                new ResponseHandler() {
+                    @Override
+                    public void onMessage(MessageLite responseMsg) {
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not change speed of processing", e);
-                Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not change speed of processing",
-                            e.getMessage());
+                    @Override
+                    public void onException(Exception e) {
+                        log.log(Level.SEVERE, "Could not change speed of processing", e);
+                        Display.getDefault().asyncExec(() -> {
+                            MessageDialog.openError(HandlerUtil.getActiveShell(event),
+                                    "Could not change speed of processing", e.getMessage());
+                        });
+                    }
                 });
-            }
-        });
         return null;
     }
 }

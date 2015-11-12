@@ -26,12 +26,11 @@ import javax.swing.SwingUtilities;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.protobuf.Rest.PatchProcessorRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorRequest.Operation;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.Prefs;
@@ -243,11 +242,9 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             if (processor == null || processor.getName().equals("realtime"))
                 return;
 
-            ProcessorRequest req = ProcessorRequest.newBuilder()
-                    .setOperation(Operation.SEEK)
-                    .setSeekTime(newPosition).build();
+            PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setSeekTime(newPosition).build();
             RestClient restClient = ConnectionManager.getInstance().getRestClient();
-            restClient.createProcessorRequest(processor.getName(), req, new ResponseHandler() {
+            restClient.patchProcessorRequest(processor.getInstance(), processor.getName(), req, new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite responseMsg) {
                     Display.getDefault().asyncExec(() -> {

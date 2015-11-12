@@ -12,7 +12,6 @@ import org.epics.pvmanager.ValueCache;
 import org.yamcs.protobuf.Mdb.DataSourceType;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
-import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
@@ -111,9 +110,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
         ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
-        ParameterData pdata = ParameterData.newBuilder().addParameter(ParameterValue.newBuilder()
-                .setId(id)
-                .setEngValue(toValue(p, (String) newValue))).build();
+        Value v = toValue(p, (String) newValue);
 
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
         if (restClient == null) {
@@ -121,7 +118,8 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
             return;
         }
 
-        restClient.setParameters(pdata, new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        restClient.setParameter(instance, "realtime", id, v, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 // Report success

@@ -3,7 +3,7 @@ package org.yamcs.studio.core.security;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.Yamcs.UserInfo;
+import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;

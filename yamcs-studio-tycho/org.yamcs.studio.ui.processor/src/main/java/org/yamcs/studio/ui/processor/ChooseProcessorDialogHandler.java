@@ -9,10 +9,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Rest.PatchClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -24,7 +23,7 @@ import com.google.protobuf.MessageLite;
 public class ChooseProcessorDialogHandler extends AbstractRestHandler {
 
     private static final Logger log = Logger.getLogger(ChooseProcessorDialogHandler.class.getName());
- 
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         RestClient restClient = checkRestClient(HandlerUtil.getActiveShell(event), "switch processor");
@@ -37,12 +36,8 @@ public class ChooseProcessorDialogHandler extends AbstractRestHandler {
             ProcessorInfo info = dialog.getProcessorInfo();
             if (info != null) {
                 ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
-                ProcessorManagementRequest req = ProcessorManagementRequest.newBuilder()
-                        .setOperation(Operation.CONNECT_TO_PROCESSOR)
-                        .setInstance(info.getInstance())
-                        .setName(info.getName())
-                        .addClientId(clientInfo.getId()).build();
-                restClient.createProcessorManagementRequest(req, new ResponseHandler() {
+                PatchClientRequest req = PatchClientRequest.newBuilder().setProcessor(info.getName()).build();
+                restClient.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
                     @Override
                     public void onMessage(MessageLite responseMsg) {
                         Display.getDefault().asyncExec(() -> {

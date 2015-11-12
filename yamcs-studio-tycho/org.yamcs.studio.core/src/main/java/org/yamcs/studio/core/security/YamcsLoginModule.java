@@ -93,7 +93,7 @@ public class YamcsLoginModule implements LoginModule {
         AuthReponseHandler arh = new AuthReponseHandler();
 
         try {
-            restClient.listParameters(arh);
+            restClient.listParameters(yprops.getInstance(), arh);
         } catch (Exception e) {
             log.log(Level.SEVERE, "Could not authenticate", e);
             return false;

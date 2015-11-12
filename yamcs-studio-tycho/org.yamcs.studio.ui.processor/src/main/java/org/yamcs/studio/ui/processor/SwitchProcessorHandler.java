@@ -15,10 +15,9 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
+import org.yamcs.protobuf.Rest.PatchClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest.Operation;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -42,13 +41,9 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
         ProcessorInfo processorInfo = ManagementCatalogue.getInstance().getProcessorInfo(radioParameter);
         if (processorInfo != null) {
             ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
-            ProcessorManagementRequest req = ProcessorManagementRequest.newBuilder()
-                    .setOperation(Operation.CONNECT_TO_PROCESSOR)
-                    .setInstance(processorInfo.getInstance())
-                    .setName(processorInfo.getName())
-                    .addClientId(clientInfo.getId()).build();
+            PatchClientRequest req = PatchClientRequest.newBuilder().setProcessor(processorInfo.getName()).build();
             RestClient restClient = ConnectionManager.getInstance().getRestClient();
-            restClient.createProcessorManagementRequest(req, new ResponseHandler() {
+            restClient.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite responseMsg) {
                     Display.getDefault().asyncExec(() -> {

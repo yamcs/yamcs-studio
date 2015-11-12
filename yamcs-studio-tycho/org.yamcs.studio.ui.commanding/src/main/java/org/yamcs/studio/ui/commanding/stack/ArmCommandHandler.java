@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -45,34 +46,34 @@ public class ArmCommandHandler extends AbstractRestHandler {
         if (restClient == null)
             return;
 
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
         String qname = command.getMetaCommand().getQualifiedName();
-        restClient.sendCommand(qname, req, new ResponseHandler() {
+        restClient.sendCommand(instance, "realtime", qname, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {
                     boolean doArm = false;
                     SignificanceInfo significance = command.getMetaCommand().getSignificance();
-                    if (significance != null) {
-                        switch (significance.getConsequenceLevel()) {
-                        case WATCH:
-                        case WARNING:
-                        case DISTRESS:
-                        case CRITICAL:
-                        case SEVERE:
-                            String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
-                                    + significance.getConsequenceLevel().toString().substring(1);
-                            if (MessageDialog.openConfirm(activeShell, "Confirm",
-                                    level + ": Are you sure you want to arm this command?\n" +
-                                            "    " + command.toStyledString(view).getString() + "\n\n" +
-                                            significance.getReasonForWarning())) {
-                                doArm = true;
-                            }
-                            break;
-                        default:
-                            break;
+                    switch (significance.getConsequenceLevel()) {
+                    case WATCH:
+                    case WARNING:
+                    case DISTRESS:
+                    case CRITICAL:
+                    case SEVERE:
+                        String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
+                                + significance.getConsequenceLevel().toString().substring(1);
+                        if (MessageDialog.openConfirm(activeShell, "Confirm",
+                                level + ": Are you sure you want to arm this command?\n" +
+                                        "    " + command.toStyledString(view).getString() + "\n\n" +
+                                        significance.getReasonForWarning())) {
+                            doArm = true;
                         }
-                    } else {
+                        break;
+                    case NONE:
                         doArm = true;
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected significance level " + significance.getConsequenceLevel());
                     }
 
                     if (doArm) {

@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -38,8 +39,9 @@ public class IssueCommandHandler extends AbstractRestHandler {
             return;
 
         IssueCommandRequest req = command.toIssueCommandRequest().build();
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
         String qname = command.getMetaCommand().getQualifiedName();
-        restClient.sendCommand(qname, req, new ResponseHandler() {
+        restClient.sendCommand(instance, "realtime", qname, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {

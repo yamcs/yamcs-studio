@@ -178,7 +178,8 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             req.addAllAssignment(parsed.getAssignments());
             req.setDryRun(true);
 
-            restClient.sendCommand(parsed.getQualifiedName(), req.build(), new ResponseHandler() {
+            String instance = ConnectionManager.getInstance().getYamcsInstance();
+            restClient.sendCommand(instance, "realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
@@ -213,7 +214,8 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
             IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
             req.addAllAssignment(parsed.getAssignments());
 
-            restClient.sendCommand(parsed.getQualifiedName(), req.build(), new ResponseHandler() {
+            String instance = ConnectionManager.getInstance().getYamcsInstance();
+            restClient.sendCommand(instance, "realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> close());

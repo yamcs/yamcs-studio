@@ -101,7 +101,8 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
             }
         });
 
-        ConnectionManager.getInstance().getRestClient().listProcessors(new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        ConnectionManager.getInstance().getRestClient().listProcessors(instance, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {

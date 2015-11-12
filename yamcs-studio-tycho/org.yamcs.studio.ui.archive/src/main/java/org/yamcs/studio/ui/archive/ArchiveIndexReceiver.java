@@ -95,7 +95,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
             requestb.setStart(interval.getStart());
         if (interval.hasStop())
             requestb.setStop(interval.getStop());
-        ConnectionManager.getInstance().getRestClient().getTags(requestb.build(), new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        ConnectionManager.getInstance().getRestClient().getTags(instance, requestb.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 GetTagsResponse response = (GetTagsResponse) responseMsg;
@@ -124,7 +125,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
             requestb.setStart(tag.getStart());
         if (tag.hasStop())
             requestb.setStop(tag.getStop());
-        ConnectionManager.getInstance().getRestClient().insertTag(requestb.build(), new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        ConnectionManager.getInstance().getRestClient().insertTag(instance, requestb.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 InsertTagResponse response = (InsertTagResponse) responseMsg;
@@ -152,7 +154,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
             requestb.setStop(newTag.getStop());
         long tagTime = oldTag.hasStart() ? oldTag.getStart() : 0;
         int tagId = oldTag.getId();
-        ConnectionManager.getInstance().getRestClient().updateTag(tagTime, tagId, requestb.build(), new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        ConnectionManager.getInstance().getRestClient().updateTag(instance, tagTime, tagId, requestb.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 archiveView.tagChanged(oldTag, newTag);
@@ -168,7 +171,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
     public void deleteTag(ArchiveTag tag) {
         long tagTime = tag.hasStart() ? tag.getStart() : 0;
         int tagId = tag.getId();
-        ConnectionManager.getInstance().getRestClient().updateTag(tagTime, tagId, null, new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        ConnectionManager.getInstance().getRestClient().updateTag(instance, tagTime, tagId, null, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 archiveView.tagRemoved(tag);

@@ -25,13 +25,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.protobuf.Yamcs.EndAction;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
-import org.yamcs.protobuf.Yamcs.PpReplayRequest;
-import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.protobuf.Rest.CreateProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorManagementRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -182,9 +177,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
         }
 
         getButton(IDialogConstants.OK_ID).setEnabled(false);
-        ProcessorManagementRequest req = toProcessorManagementRequest();
-
-        restClient.createProcessorManagementRequest(req, new ResponseHandler() {
+        CreateProcessorRequest req = toCreateProcessorRequest();
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        restClient.createProcessorRequest(instance, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {
@@ -216,36 +211,24 @@ public class CreateReplayDialog extends TitleAreaDialog {
         ppValue = ppGroups;
     }
 
-    public ProcessorManagementRequest toProcessorManagementRequest() {
-        PacketReplayRequest.Builder prr = PacketReplayRequest.newBuilder();
+    public CreateProcessorRequest toCreateProcessorRequest() {
+        ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
+        CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
+                .setName(name.getText())
+                .setStart(TimeEncoding.toString(TimeEncoding.fromCalendar(toCalendar(startDate, startTime))))
+                .setStop(TimeEncoding.toString(TimeEncoding.MAX_INSTANT))
+                .setLoop(false)
+                .addClientId(ci.getId());
+
         for (TableItem item : packetsTable.getTable().getItems())
             if (item.getChecked())
-                prr.addNameFilter(NamedObjectId.newBuilder().setName(item.getText()));
+                resultb.addParaname(item.getText());
 
-        PpReplayRequest.Builder pprr = PpReplayRequest.newBuilder();
         for (TableItem item : ppTable.getTable().getItems())
             if (item.getChecked())
-                pprr.addGroupNameFilter(item.getText());
+                resultb.addPpgroup(item.getText());
 
-        ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
-        ReplayRequest.Builder rr = ReplayRequest.newBuilder()
-                .setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)))
-                .setStop(TimeEncoding.MAX_INSTANT)
-                .setEndAction(EndAction.STOP);
-
-        if (prr.getNameFilterCount() > 0)
-            rr.setPacketRequest(prr);
-        if (pprr.getGroupNameFilterCount() > 0)
-            rr.setPpRequest(pprr);
-
-        return ProcessorManagementRequest.newBuilder()
-                .setOperation(ProcessorManagementRequest.Operation.CREATE_PROCESSOR)
-                .setInstance(ConnectionManager.getInstance().getWebProperties().getInstance())
-                .setName(name.getText())
-                .setType("Archive")
-                .setReplaySpec(rr)
-                .addClientId(ci.getId())
-                .build();
+        return resultb.build();
     }
 
     @Override

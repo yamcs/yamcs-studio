@@ -30,9 +30,7 @@ public class CommandingCatalogue implements Catalogue {
     private static final Logger log = Logger.getLogger(CommandingCatalogue.class.getName());
 
     private AtomicInteger cmdClientId = new AtomicInteger(1);
-
     private List<CommandInfo> metaCommands = Collections.emptyList();
-
     private Set<CommandHistoryListener> cmdhistListeners = new CopyOnWriteArraySet<>();
 
     // Indexes
@@ -88,7 +86,8 @@ public class CommandingCatalogue implements Catalogue {
     private void loadMetaCommands() {
         log.fine("Fetching available commands");
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        restClient.listCommands(new ResponseHandler() {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        restClient.listCommands(instance, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 ListCommandsResponse response = (ListCommandsResponse) responseMsg;

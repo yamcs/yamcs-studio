@@ -144,7 +144,9 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         reqBuilder.setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)));
         reqBuilder.setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)));
         reqBuilder.setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder());
-        restClient.dumpArchive(reqBuilder.build(), new ResponseHandler() {
+
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        restClient.dumpArchive(instance, reqBuilder.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 DumpArchiveResponse response = (DumpArchiveResponse) responseMsg;

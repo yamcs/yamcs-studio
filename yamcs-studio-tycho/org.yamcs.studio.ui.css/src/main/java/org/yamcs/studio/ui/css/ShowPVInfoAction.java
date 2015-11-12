@@ -88,7 +88,8 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                         continue;
                     }
 
-                    restClient.getParameter(pvInfo.getYamcsQualifiedName(), new ResponseHandler() {
+                    String instance = ConnectionManager.getInstance().getYamcsInstance();
+                    restClient.getParameterDetail(instance, pvInfo.getYamcsQualifiedName(), new ResponseHandler() {
                         @Override
                         public void onMessage(MessageLite responseMsg) {
                             ParameterInfo response = (ParameterInfo) responseMsg;

@@ -149,7 +149,7 @@ public class PVInfoDialog extends Dialog {
         createSeparator(parent);
 
         ParameterTypeInfo type = pinfo.getType();
-        createKeyValueTextPair(parent, "Data Encoding", type.getDataEncoding());
+        createKeyValueTextPair(parent, "Data Encoding", capitalize(type.getDataEncoding().getType().toString()));
         createKeyValueTextPair(parent, "Engineering Type", capitalize(type.getEngType()));
         if (type.getUnitSetCount() > 0) {
             String units = "";
@@ -166,8 +166,8 @@ public class PVInfoDialog extends Dialog {
             createKeyValueTextPair(parent, "Min. Violations", "" + defaultAlarm.getMinViolations());
 
             // Backwards for lower limits
-            for (int i = defaultAlarm.getStaticAlarmRangesCount() - 1; i >= 0; i--) {
-                AlarmRange range = defaultAlarm.getStaticAlarmRanges(i);
+            for (int i = defaultAlarm.getStaticAlarmRangeCount() - 1; i >= 0; i--) {
+                AlarmRange range = defaultAlarm.getStaticAlarmRange(i);
                 if (range.hasMinInclusive()) {
                     String label = capitalize(range.getLevel().toString()) + " Low";
                     String limit = new DecimalFormat("#.############").format(range.getMinInclusive());
@@ -176,7 +176,7 @@ public class PVInfoDialog extends Dialog {
             }
 
             // Now forwards for upper limits
-            for (AlarmRange range : defaultAlarm.getStaticAlarmRangesList()) {
+            for (AlarmRange range : defaultAlarm.getStaticAlarmRangeList()) {
                 if (range.hasMinInclusive()) {
                     String label = capitalize(range.getLevel().toString()) + " High";
                     String limit = new DecimalFormat("#.############").format(range.getMaxInclusive());
