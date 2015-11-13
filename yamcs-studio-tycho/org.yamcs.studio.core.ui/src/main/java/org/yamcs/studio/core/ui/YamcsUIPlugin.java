@@ -2,6 +2,7 @@ package org.yamcs.studio.core.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.yamcs.studio.core.vtype.YamcsVType;
 import org.yamcs.utils.TimeEncoding;
 
 public class YamcsUIPlugin extends AbstractUIPlugin {
@@ -16,6 +17,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         plugin = this;
         TimeEncoding.setUp();
         ConnectionUIHelper.getInstance();
+        YamcsVType.severityHandler = new SeverityHandlerSound();
     }
 
     @Override

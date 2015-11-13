@@ -17,9 +17,12 @@ import org.yamcs.studio.core.model.ParameterCatalogue;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
     protected ParameterValue pval;
+    public static SeverityHandler severityHandler = null;
 
     public YamcsVType(ParameterValue pval) {
         this.pval = pval;
+        if (severityHandler != null)
+            severityHandler.handle(this);
     }
 
     @Override
