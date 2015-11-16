@@ -22,7 +22,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public YamcsVType(ParameterValue pval) {
         this.pval = pval;
         if (severityHandler != null)
-            severityHandler.handle(this);
+            severityHandler.handle(pval);
     }
 
     @Override
