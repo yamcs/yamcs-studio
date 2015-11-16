@@ -16,7 +16,6 @@ import org.yamcs.protobuf.Archive.GetTagsResponse;
 import org.yamcs.protobuf.Archive.InsertTagRequest;
 import org.yamcs.protobuf.Archive.InsertTagResponse;
 import org.yamcs.protobuf.Archive.UpdateTagRequest;
-import org.yamcs.protobuf.Events.GetEventsRequest;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
@@ -32,6 +31,7 @@ import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.ProtobufHandler.BuilderGenerator;
+import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;
 
@@ -89,8 +89,17 @@ public class RestClient {
         get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
     }
 
-    public void getEvents(GetEventsRequest request, ResponseHandler responseHandler) {
-        streamGet("/events", request, () -> Event.newBuilder(), responseHandler);
+    public void downloadEvents(String instance, long start, long stop, ResponseHandler responseHandler) {
+        String resource = "/archive/" + instance + "/downloads/events";
+        if (start != TimeEncoding.INVALID_INSTANT) {
+            resource += "?start=" + start;
+            if (stop != TimeEncoding.INVALID_INSTANT) {
+                resource += "&stop=" + stop;
+            }
+        } else if (stop != TimeEncoding.INVALID_INSTANT) {
+            resource += "?stop=" + stop;
+        }
+        streamGet(resource, null, () -> Event.newBuilder(), responseHandler);
     }
 
     public void listCommands(String instance, ResponseHandler responseHandler) {
@@ -267,7 +276,7 @@ public class RestClient {
         RestClient endpoint = new RestClient(new YamcsConnectionProperties("machine", 8090, "simulator"),
                 new YamcsCredentials("operator", "password"));
         System.out.println("ahum ");
-        endpoint.getEvents(null, new ResponseHandler() {
+        endpoint.downloadEvents("simulator", -1, -1, new ResponseHandler() {
 
             @Override
             public void onMessage(MessageLite responseMsg) {
