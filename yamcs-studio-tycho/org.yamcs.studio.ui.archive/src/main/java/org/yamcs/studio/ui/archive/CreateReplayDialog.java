@@ -222,7 +222,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
         for (TableItem item : packetsTable.getTable().getItems())
             if (item.getChecked())
-                resultb.addParaname(item.getText());
+                resultb.addPacketname(item.getText());
 
         for (TableItem item : ppTable.getTable().getItems())
             if (item.getChecked())
