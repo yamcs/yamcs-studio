@@ -1,5 +1,24 @@
 package org.yamcs.studio.core.web;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,25 +53,6 @@ import org.yamcs.studio.core.web.ProtobufHandler.BuilderGenerator;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;
-
-import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.DefaultFullHttpRequest;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.HttpClientCodec;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpVersion;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 
 /**
  * Implements the client-side API of the rest web api. Sequences outgoing requests on a single
@@ -116,7 +116,7 @@ public class RestClient {
     }
 
     public void patchProcessorRequest(String instance, String processor, PatchProcessorRequest request, ResponseHandler responseHandler) {
-        post("/processors/" + instance + "/" + processor, request, null, responseHandler);
+        patch("/processors/" + instance + "/" + processor, request, null, responseHandler);
     }
 
     public void listProcessors(String instance, ResponseHandler responseHandler) {
@@ -157,6 +157,10 @@ public class RestClient {
 
     public void post(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
         doRequest(HttpMethod.POST, uri, msg, target, handler);
+    }
+
+    public void patch(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
+        doRequest(HttpMethod.PATCH, uri, msg, target, handler);
     }
 
     public void put(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
