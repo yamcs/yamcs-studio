@@ -1,5 +1,11 @@
 package org.yamcs.studio.core.web;
 
+import java.io.InputStream;
+
+import org.yamcs.protobuf.Web.RestExceptionMessage;
+
+import com.google.protobuf.MessageLite;
+
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -9,13 +15,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpResponseStatus;
-
-import java.io.InputStream;
-
-import org.yamcs.protobuf.Web.RestExceptionMessage;
-
-import com.google.protobuf.MessageLite;
 
 /**
  * Assumes responses are smaller than 1MB and aggregates any http content before unserializing
@@ -38,7 +37,8 @@ public class FullProtobufChannelInitializer extends ChannelInitializer<SocketCha
         p.addLast(new SimpleChannelInboundHandler<FullHttpResponse>() {
             @Override
             public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse response) throws Exception {
-                if (HttpResponseStatus.OK.equals(response.getStatus())) {
+                int code = response.getStatus().code();
+                if (200 <= code && code <= 299) {
                     MessageLite responseMsg = null;
                     if (target != null)
                         responseMsg = target.mergeFrom(new ByteBufInputStream(response.content())).build();
