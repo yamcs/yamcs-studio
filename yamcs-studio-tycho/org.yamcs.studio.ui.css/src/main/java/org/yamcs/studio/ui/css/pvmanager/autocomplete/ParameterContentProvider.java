@@ -40,16 +40,19 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
         String content = desc.getValue();
         if (content.startsWith(ParameterContentParser.PARA_SOURCE)) {
-            content = content.substring(ParameterContentParser.PARA_SOURCE.length());
+            content = content.substring(ParameterContentParser.PARA_SOURCE
+                    .length());
         }
 
         content = AutoCompleteHelper.trimWildcards(content);
         Pattern namePattern = AutoCompleteHelper.convertToPattern(content);
-        namePattern = Pattern.compile(namePattern.pattern(), Pattern.CASE_INSENSITIVE);
+        namePattern = Pattern.compile(namePattern.pattern(),
+                Pattern.CASE_INSENSITIVE);
 
         AutoCompleteResult pvs = new AutoCompleteResult();
         int matchCount = 0;
-        for (ParameterInfo para : ParameterCatalogue.getInstance().getMetaParameters()) {
+        for (ParameterInfo para : ParameterCatalogue.getInstance()
+                .getMetaParameters()) {
             // TODO should also exclude sysparams, but yamcs server doesn't do
             // it either right now
             if (para.getDataSource() != DataSourceType.LOCAL) {
@@ -59,6 +62,8 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
                     p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                     pvs.addProposal(p);
                     matchCount++;
+                    if (matchCount >= limit)
+                        break;
                 }
             }
         }
