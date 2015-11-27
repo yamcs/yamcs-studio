@@ -93,10 +93,8 @@ public class TimeInterval implements Serializable {
         if (!(obj instanceof TimeInterval))
             return false;
         TimeInterval other = (TimeInterval) obj;
-        return Objects.equals(start, other.start)
-                && Objects.equals(stop, other.stop)
-                && Objects.equals(hasStart, other.hasStart)
-                && Objects.equals(hasStop, other.hasStop);
+        return Objects.equals(start, other.start) && Objects.equals(stop, other.stop)
+                && Objects.equals(hasStart, other.hasStart) && Objects.equals(hasStop, other.hasStop);
     }
 
     @Override
