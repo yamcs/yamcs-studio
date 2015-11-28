@@ -12,78 +12,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.model.LinkCatalogue;
+import org.yamcs.studio.core.model.LinkListener;
 import org.yamcs.utils.TimeEncoding;
 
 public class LinksView extends ViewPart implements StudioConnectionListener, LinkListener {
 
     private static final Logger log = Logger.getLogger(LinksView.class.getName());
-    YamcsConnector yconnector;
-    private volatile String selectedInstance; // TODO: handle switching between instance at the Studio level
     ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
 
     LinksTableViewer linksTableViewer;
     LinkContentProvider linksContentProvider;
-    LinkControlClient linkControlClient;
 
     HashMap<String, LinkTableModel> linkModels = new HashMap<String, LinkTableModel>();
     LinkTableModel currentLinkModel;
-
-    @Override
-    public void log(String message) {
-        log.info(message);
-    }
-
-    @Override
-    public void updateLink(LinkInfo li) {
-        if (!li.getInstance().equals(selectedInstance))
-            return;
-
-        if (linksTableViewer.getTable().isDisposed())
-            return;
-
-        Display display = linksTableViewer.getTable().getDisplay();
-        display.asyncExec(() -> {
-            if (display.isDisposed())
-                return;
-
-            log.fine("processing updateLink " + li);
-            String modelName = li.getInstance();
-            if (!linkModels.containsKey(modelName)) {
-                addLinkModel(li.getInstance());
-            }
-            LinkTableModel model = linkModels.get(modelName);
-            model.updateLink(li);
-        });
-    }
-
-    public void addLinkModel(String instance) {
-        LinkTableModel model = new LinkTableModel(timer, linksTableViewer);
-        linkModels.put(instance, model);
-        if (currentLinkModel == null)
-            currentLinkModel = model;
-    }
-
-    @Override
-    public void onStudioConnect() {
-        YamcsConnectData hornetqProps = ConnectionManager.getInstance().getHornetqProperties();
-        yconnector.connect(hornetqProps);
-        setSelectedInstance(hornetqProps.instance);
-    }
-
-    @Override
-    public void onStudioDisconnect() {
-        Display.getDefault().asyncExec(() -> {
-            this.linksTableViewer.getTable().removeAll();
-            this.currentLinkModel = null;
-            this.linkModels.clear();
-        });
-        yconnector.disconnect();
-    }
 
     @Override
     public void createPartControl(Composite parent) {
@@ -112,13 +57,58 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
         // Set initial state
         linksTableViewer.refresh();
 
-        // Connection to Yamcs server
-        yconnector = new YamcsConnector(false);
-        linkControlClient = new LinkControlClient(yconnector);
-        if (ConnectionManager.getInstance() != null)
-            ConnectionManager.getInstance().addStudioConnectionListener(this);
-        linkControlClient.setLinkListener(this);
+        LinkCatalogue.getInstance().addLinkListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
+    }
 
+    @Override
+    public void linkRegistered(LinkInfo linkInfo) {
+        linkUpdated(linkInfo);
+    }
+
+    @Override
+    public void linkUpdated(LinkInfo li) {
+        if (linksTableViewer.getTable().isDisposed())
+            return;
+
+        Display display = linksTableViewer.getTable().getDisplay();
+        display.asyncExec(() -> {
+            if (display.isDisposed())
+                return;
+
+            log.fine("processing updateLink " + li);
+            String modelName = li.getInstance();
+            if (!linkModels.containsKey(modelName)) {
+                addLinkModel(li.getInstance());
+            }
+            LinkTableModel model = linkModels.get(modelName);
+            model.updateLink(li);
+        });
+    }
+
+    @Override
+    public void linkUnregistered(LinkInfo linkInfo) {
+        // TODO but not currently sent by Yamcs
+    }
+
+    public void addLinkModel(String instance) {
+        LinkTableModel model = new LinkTableModel(timer, linksTableViewer);
+        linkModels.put(instance, model);
+        if (currentLinkModel == null)
+            currentLinkModel = model;
+    }
+
+    @Override
+    public void onStudioConnect() {
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+        Display.getDefault().asyncExec(() -> {
+            this.linksTableViewer.getTable().removeAll();
+            this.currentLinkModel = null;
+            this.linkModels.clear();
+        });
     }
 
     @Override
@@ -127,9 +117,10 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
 
     }
 
-    private void setSelectedInstance(String newInstance) {
-        // queuesModels.clear();
-        this.selectedInstance = newInstance;
+    @Override
+    public void dispose() {
+        timer.shutdown();
+        super.dispose();
     }
 
     public static void main(String[] arg) {
@@ -143,11 +134,6 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
         lv.createPartControl(shell);
         shell.pack();
 
-        YamcsConnectData hornetqProps = new YamcsConnectData();
-        hornetqProps.host = "127.0.0.1";
-        hornetqProps.instance = "obcp";
-        hornetqProps.username = "operator";
-        hornetqProps.password = "password";
         lv.onStudioConnect();
 
         while (!shell.isDisposed()) {

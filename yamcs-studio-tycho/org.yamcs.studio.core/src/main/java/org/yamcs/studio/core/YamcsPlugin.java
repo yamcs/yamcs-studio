@@ -10,6 +10,7 @@ import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.Catalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.EventCatalogue;
+import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -38,6 +39,7 @@ public class YamcsPlugin extends Plugin {
         catalogues.put(CommandingCatalogue.class, new CommandingCatalogue());
         catalogues.put(AlarmCatalogue.class, new AlarmCatalogue());
         catalogues.put(EventCatalogue.class, new EventCatalogue());
+        catalogues.put(LinkCatalogue.class, new LinkCatalogue());
 
         connectionManager = new ConnectionManager();
         catalogues.values().forEach(c -> connectionManager.addStudioConnectionListener(c));

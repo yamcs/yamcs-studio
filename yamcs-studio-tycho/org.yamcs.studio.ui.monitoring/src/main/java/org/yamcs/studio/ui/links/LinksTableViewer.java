@@ -22,7 +22,11 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
+import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.ui.utils.UiColors;
+import org.yamcs.studio.core.web.ResponseHandler;
+
+import com.google.protobuf.MessageLite;
 
 public class LinksTableViewer extends TableViewer {
 
@@ -63,11 +67,22 @@ public class LinksTableViewer extends TableViewer {
                 LinkInfo li = (LinkInfo) (getTable().getSelection()[0].getData());
                 if (li == null)
                     return;
-                try {
-                    linksView.linkControlClient.enable(li);
-                } catch (Exception x) {
-                    showMessage(parent.getShell(), x.toString());
-                }
+
+                LinkCatalogue catalogue = LinkCatalogue.getInstance();
+                catalogue.enableLink(li.getInstance(), li.getName(), new ResponseHandler() {
+
+                    @Override
+                    public void onMessage(MessageLite responseMsg) {
+                        // success
+                    }
+
+                    @Override
+                    public void onException(Exception e) {
+                        getTable().getDisplay().asyncExec(() -> {
+                            showMessage(parent.getShell(), e.getMessage());
+                        });
+                    }
+                });
             }
         });
 
@@ -84,11 +99,22 @@ public class LinksTableViewer extends TableViewer {
                 LinkInfo li = (LinkInfo) (getTable().getSelection()[0].getData());
                 if (li == null)
                     return;
-                try {
-                    linksView.linkControlClient.disable(li);
-                } catch (Exception x) {
-                    showMessage(parent.getShell(), x.toString());
-                }
+
+                LinkCatalogue catalogue = LinkCatalogue.getInstance();
+                catalogue.disableLink(li.getInstance(), li.getName(), new ResponseHandler() {
+
+                    @Override
+                    public void onMessage(MessageLite responseMsg) {
+                        // success
+                    }
+
+                    @Override
+                    public void onException(Exception e) {
+                        getTable().getDisplay().asyncExec(() -> {
+                            showMessage(parent.getShell(), e.getMessage());
+                        });
+                    }
+                });
             }
         });
 

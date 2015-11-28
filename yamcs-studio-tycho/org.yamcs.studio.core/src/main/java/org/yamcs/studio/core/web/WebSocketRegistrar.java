@@ -17,6 +17,7 @@ import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.protobuf.YamcsManagement.LinkEvent;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
@@ -24,6 +25,7 @@ import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.EventCatalogue;
+import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -153,6 +155,10 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         case ALARM_DATA:
             AlarmData alarm = data.getAlarmData();
             YamcsPlugin.getDefault().getCatalogue(AlarmCatalogue.class).processAlarmData(alarm);
+            break;
+        case LINK_EVENT:
+            LinkEvent linkEvent = data.getLinkEvent();
+            YamcsPlugin.getDefault().getCatalogue(LinkCatalogue.class).processLinkEvent(linkEvent);
             break;
         default:
             throw new IllegalArgumentException("Unexpected data type " + data.getType());
