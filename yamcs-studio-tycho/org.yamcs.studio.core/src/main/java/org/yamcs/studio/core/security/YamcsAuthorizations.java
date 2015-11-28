@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 
 import com.google.protobuf.MessageLite;
 
@@ -31,8 +30,8 @@ public class YamcsAuthorizations {
     }
 
     public void loadAuthorizations() {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        restClient.getAuthenticatedUser(new ResponseHandler() {
+        ConnectionManager manager = ConnectionManager.getInstance();
+        manager.requestAuthenticatedUser(new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 userInfo = (UserInfo) responseMsg;

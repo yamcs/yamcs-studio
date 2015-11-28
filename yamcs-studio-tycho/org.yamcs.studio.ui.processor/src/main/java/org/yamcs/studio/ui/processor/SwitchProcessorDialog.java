@@ -1,8 +1,5 @@
 package org.yamcs.studio.ui.processor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -20,19 +17,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.protobuf.Rest.ListProcessorsResponse;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 
-import com.google.protobuf.MessageLite;
-
-// TODO Refactor to use ProcessorCatalogue instead of direct rest
 public class SwitchProcessorDialog extends TitleAreaDialog {
-
-    private static final Logger log = Logger.getLogger(SwitchProcessorDialog.class.getName());
 
     private TableViewer processorsTable;
     private ProcessorInfo processorInfo;
@@ -101,21 +90,8 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
             }
         });
 
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        ConnectionManager.getInstance().getRestClient().listProcessors(instance, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                Display.getDefault().asyncExec(() -> {
-                    ListProcessorsResponse response = (ListProcessorsResponse) responseMsg;
-                    processorsTable.setInput(response.getProcessorList());
-                });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not list processors", e);
-            }
-        });
+        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+        processorsTable.setInput(catalogue.getProcessors());
 
         return composite;
     }

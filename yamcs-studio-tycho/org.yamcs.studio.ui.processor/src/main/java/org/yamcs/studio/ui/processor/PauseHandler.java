@@ -11,10 +11,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.PatchProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 
 import com.google.protobuf.MessageLite;
 
@@ -24,24 +22,24 @@ public class PauseHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ProcessorInfo processorInfo = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
+        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+        ProcessorInfo processorInfo = catalogue.getCurrentProcessorInfo();
         PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setState("PAUSED").build();
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        restClient.patchProcessorRequest(processorInfo.getInstance(), processorInfo.getName(), req,
-                new ResponseHandler() {
-                    @Override
-                    public void onMessage(MessageLite responseMsg) {
-                    }
+        catalogue.patchProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                // success
+            }
 
-                    @Override
-                    public void onException(Exception e) {
-                        log.log(Level.SEVERE, "Could not pause processing", e);
-                        Display.getDefault().asyncExec(() -> {
-                            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not pause processing",
-                                    e.getMessage());
-                        });
-                    }
+            @Override
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Could not pause processing", e);
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not pause processing",
+                            e.getMessage());
                 });
+            }
+        });
         return null;
     }
 }

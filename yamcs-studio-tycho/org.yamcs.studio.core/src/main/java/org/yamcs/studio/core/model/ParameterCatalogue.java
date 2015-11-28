@@ -15,7 +15,9 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Rest.ListParametersResponse;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.pvmanager.LosTracker;
 import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
@@ -136,9 +138,10 @@ public class ParameterCatalogue implements Catalogue {
 
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        restClient.listParameters(instance, new ResponseHandler() {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        String instance = connectionManager.getYamcsInstance();
+        restClient.get("/mdb/" + instance + "/parameters", null, ListParametersResponse.newBuilder(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 ListParametersResponse response = (ListParametersResponse) responseMsg;
@@ -152,6 +155,30 @@ public class ParameterCatalogue implements Catalogue {
         });
     }
 
+    public void requestParameterDetail(String qualifiedName, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            String instance = connectionManager.getYamcsInstance();
+            restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
+    public void setParameter(String processor, NamedObjectId id, Value value, ResponseHandler responseHandler) {
+        String pResource = toURISegments(id);
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            String instance = connectionManager.getYamcsInstance();
+            restClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null, responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
+    // TODO find usages. This will only provide condensed info
     public ParameterInfo getParameterInfo(NamedObjectId id) {
         return parametersById.get(id);
     }
@@ -167,5 +194,13 @@ public class ParameterCatalogue implements Catalogue {
     @Override
     public void shutdown() {
         losTracker.shutdown();
+    }
+
+    private String toURISegments(NamedObjectId id) {
+        if (!id.hasNamespace()) {
+            return id.getName();
+        } else {
+            return "/" + id.getNamespace() + "/" + id.getName();
+        }
     }
 }

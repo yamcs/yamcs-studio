@@ -27,12 +27,10 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
 
@@ -169,17 +167,11 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        if (restClient == null) {
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay\n", ""
-                    + "Disconnected from Yamcs server");
-            return;
-        }
-
         getButton(IDialogConstants.OK_ID).setEnabled(false);
         CreateProcessorRequest req = toCreateProcessorRequest();
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        restClient.createProcessorRequest(instance, req, new ResponseHandler() {
+
+        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+        catalogue.createProcessorRequest(req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {

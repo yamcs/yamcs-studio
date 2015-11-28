@@ -21,7 +21,6 @@ import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 
 import com.google.protobuf.MessageLite;
 
@@ -112,14 +111,8 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
         ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
         Value v = toValue(p, (String) newValue);
 
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        if (restClient == null) {
-            callback.channelWritten(new Exception("Client is disconnected from Yamcs server"));
-            return;
-        }
-
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        restClient.setParameter(instance, "realtime", id, v, new ResponseHandler() {
+        ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
+        catalogue.setParameter("realtime", id, v, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 // Report success

@@ -31,12 +31,10 @@ import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.Prefs;
 import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
 
@@ -243,8 +241,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
                 return;
 
             PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setSeekTime(newPosition).build();
-            RestClient restClient = ConnectionManager.getInstance().getRestClient();
-            restClient.patchProcessorRequest(processor.getInstance(), processor.getName(), req, new ResponseHandler() {
+            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+            catalogue.patchProcessorRequest(processor.getName(), req, new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite responseMsg) {
                     Display.getDefault().asyncExec(() -> {

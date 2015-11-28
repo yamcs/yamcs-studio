@@ -16,8 +16,11 @@ import java.util.logging.Logger;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Rest.IssueCommandRequest;
+import org.yamcs.protobuf.Rest.IssueCommandResponse;
 import org.yamcs.protobuf.Rest.ListCommandsResponse;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -72,6 +75,18 @@ public class CommandingCatalogue implements Catalogue {
         return commandsByQualifiedName.get(qualifiedName);
     }
 
+    public void sendCommand(String processor, String commandName, IssueCommandRequest request, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        String instance = connectionManager.getYamcsInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            restClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request, IssueCommandResponse.newBuilder(),
+                    responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
     public synchronized void processMetaCommands(List<CommandInfo> metaCommands) {
         this.metaCommands = new ArrayList<>(metaCommands);
         this.metaCommands.sort((p1, p2) -> {
@@ -85,9 +100,10 @@ public class CommandingCatalogue implements Catalogue {
 
     private void loadMetaCommands() {
         log.fine("Fetching available commands");
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        restClient.listCommands(instance, new ResponseHandler() {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        String instance = connectionManager.getYamcsInstance();
+        restClient.get("/mdb/" + instance + "/commands", null, ListCommandsResponse.newBuilder(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 ListCommandsResponse response = (ListCommandsResponse) responseMsg;

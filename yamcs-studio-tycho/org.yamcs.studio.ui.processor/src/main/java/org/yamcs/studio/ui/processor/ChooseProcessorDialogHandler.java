@@ -15,7 +15,6 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.css.OPIUtils;
 
 import com.google.protobuf.MessageLite;
@@ -26,18 +25,15 @@ public class ChooseProcessorDialogHandler extends AbstractRestHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        RestClient restClient = checkRestClient(HandlerUtil.getActiveShell(event), "switch processor");
-        if (restClient == null)
-            return null;
-
         Shell shell = HandlerUtil.getActiveShellChecked(event);
         SwitchProcessorDialog dialog = new SwitchProcessorDialog(shell);
         if (dialog.open() == Window.OK) {
             ProcessorInfo info = dialog.getProcessorInfo();
             if (info != null) {
-                ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
+                ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+                ClientInfo clientInfo = catalogue.getCurrentClientInfo();
                 PatchClientRequest req = PatchClientRequest.newBuilder().setProcessor(info.getName()).build();
-                restClient.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
+                catalogue.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
                     @Override
                     public void onMessage(MessageLite responseMsg) {
                         Display.getDefault().asyncExec(() -> {

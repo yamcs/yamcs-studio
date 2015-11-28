@@ -15,9 +15,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 
 import com.google.protobuf.MessageLite;
 
@@ -66,8 +65,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                 yamcsPvs.add(pvInfo);
 
         // Start a worker thread that will show the dialog when a response for
-        // all
-        // yamcs parameters arrived
+        // all yamcs parameters arrived
         new Thread() {
 
             @Override
@@ -81,15 +79,8 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                         continue;
                     }
 
-                    RestClient restClient = ConnectionManager.getInstance().getRestClient();
-                    if (restClient == null) {
-                        pvInfo.setParameterInfoException("Not connected to Yamcs");
-                        latch.countDown();
-                        continue;
-                    }
-
-                    String instance = ConnectionManager.getInstance().getYamcsInstance();
-                    restClient.getParameterDetail(instance, pvInfo.getYamcsQualifiedName(), new ResponseHandler() {
+                    ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
+                    catalogue.requestParameterDetail(pvInfo.getYamcsQualifiedName(), new ResponseHandler() {
                         @Override
                         public void onMessage(MessageLite responseMsg) {
                             ParameterInfo response = (ParameterInfo) responseMsg;

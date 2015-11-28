@@ -19,11 +19,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.BulkResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
@@ -130,19 +129,13 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        if (restClient == null) {
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import events\n",
-                    "Disconnected from Yamcs");
-            return;
-        }
-
         getButton(IDialogConstants.OK_ID).setEnabled(false);
 
         long start = TimeEncoding.fromCalendar(toCalendar(startDate, startTime));
         long stop = TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime));
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        restClient.downloadEvents(instance, start, stop, new BulkResponseHandler<Event>() {
+
+        EventCatalogue catalogue = EventCatalogue.getInstance();
+        catalogue.downloadEvents(start, stop, new BulkResponseHandler<Event>() {
 
             @Override
             public void onMessages(List<Event> events) {

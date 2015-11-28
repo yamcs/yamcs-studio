@@ -8,13 +8,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Rest.CreateProcessorRequest;
+import org.yamcs.protobuf.Rest.PatchClientRequest;
+import org.yamcs.protobuf.Rest.PatchProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
@@ -111,5 +117,37 @@ public class ManagementCatalogue implements Catalogue {
 
     public List<ClientInfo> getClients() {
         return new ArrayList<>(clientInfoById.values());
+    }
+
+    public void createProcessorRequest(CreateProcessorRequest request, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        String instance = connectionManager.getYamcsInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            restClient.post("/processors/" + instance, request, null, responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
+    public void patchProcessorRequest(String processor, PatchProcessorRequest request, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        String instance = connectionManager.getYamcsInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            restClient.patch("/processors/" + instance + "/" + processor, request, null, responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
+    public void patchClientRequest(int clientId, PatchClientRequest request, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            restClient.patch("/clients/" + clientId, request, null, responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
     }
 }

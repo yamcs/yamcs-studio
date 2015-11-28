@@ -16,7 +16,7 @@ import org.yamcs.protobuf.Archive.UpdateTagRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexRequest;
 import org.yamcs.protobuf.Yamcs.IndexResult;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
 
@@ -95,8 +95,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
             requestb.setStart(interval.getStart());
         if (interval.hasStop())
             requestb.setStop(interval.getStop());
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        ConnectionManager.getInstance().getRestClient().getTags(instance, requestb.build(), new ResponseHandler() {
+        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
+        catalogue.getTags(requestb.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 GetTagsResponse response = (GetTagsResponse) responseMsg;
@@ -125,8 +125,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
             requestb.setStart(tag.getStart());
         if (tag.hasStop())
             requestb.setStop(tag.getStop());
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        ConnectionManager.getInstance().getRestClient().insertTag(instance, requestb.build(), new ResponseHandler() {
+        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
+        catalogue.insertTag(requestb.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 InsertTagResponse response = (InsertTagResponse) responseMsg;
@@ -154,8 +154,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
             requestb.setStop(newTag.getStop());
         long tagTime = oldTag.hasStart() ? oldTag.getStart() : 0;
         int tagId = oldTag.getId();
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        ConnectionManager.getInstance().getRestClient().updateTag(instance, tagTime, tagId, requestb.build(), new ResponseHandler() {
+        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
+        catalogue.updateTag(tagTime, tagId, requestb.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 archiveView.tagChanged(oldTag, newTag);
@@ -171,8 +171,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
     public void deleteTag(ArchiveTag tag) {
         long tagTime = tag.hasStart() ? tag.getStart() : 0;
         int tagId = tag.getId();
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        ConnectionManager.getInstance().getRestClient().updateTag(instance, tagTime, tagId, null, new ResponseHandler() {
+        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
+        catalogue.updateTag(tagTime, tagId, null, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 archiveView.tagRemoved(tag);

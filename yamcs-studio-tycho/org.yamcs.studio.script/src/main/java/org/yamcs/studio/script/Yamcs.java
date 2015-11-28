@@ -7,10 +7,8 @@ import org.csstudio.opibuilder.util.DisplayUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.CommandParser;
 import org.yamcs.studio.ui.commanding.CommandParser.ParseResult;
 
@@ -27,20 +25,14 @@ public class Yamcs {
     private static final Logger log = Logger.getLogger(Yamcs.class.getName());
 
     public static void issueCommand(String text) {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        if (restClient == null) {
-            showErrorDialog("Could not issue command, client is disconnected from Yamcs server");
-            return;
-        }
-
         ParseResult parsed = CommandParser.parseCommand(text);
         IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
         req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         req.addAllAssignment(parsed.getAssignments());
 
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        restClient.sendCommand(instance, "realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
+        CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
+        catalogue.sendCommand("realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 log.fine(String.format("Sent command %s", req));

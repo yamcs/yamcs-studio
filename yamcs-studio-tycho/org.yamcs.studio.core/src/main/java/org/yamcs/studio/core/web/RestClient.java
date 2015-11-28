@@ -9,29 +9,8 @@ import java.util.logging.Logger;
 
 import org.yamcs.ConfigurationException;
 import org.yamcs.api.ws.YamcsConnectionProperties;
-import org.yamcs.protobuf.Archive.DumpArchiveRequest;
-import org.yamcs.protobuf.Archive.DumpArchiveResponse;
-import org.yamcs.protobuf.Archive.GetTagsRequest;
-import org.yamcs.protobuf.Archive.GetTagsResponse;
-import org.yamcs.protobuf.Archive.InsertTagRequest;
-import org.yamcs.protobuf.Archive.InsertTagResponse;
-import org.yamcs.protobuf.Archive.UpdateTagRequest;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.protobuf.Rest.CreateProcessorRequest;
-import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.protobuf.Rest.IssueCommandResponse;
-import org.yamcs.protobuf.Rest.ListCommandsResponse;
-import org.yamcs.protobuf.Rest.ListParametersResponse;
-import org.yamcs.protobuf.Rest.ListProcessorsResponse;
-import org.yamcs.protobuf.Rest.PatchClientRequest;
-import org.yamcs.protobuf.Rest.PatchProcessorRequest;
-import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.protobuf.Yamcs.Value;
-import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.ProtobufHandler.BuilderGenerator;
-import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;
 
@@ -71,81 +50,6 @@ public class RestClient {
     public RestClient(YamcsConnectionProperties yprops, YamcsCredentials yamcsCredentials) {
         this.yprops = yprops;
         this.credentials = yamcsCredentials;
-    }
-
-    @Deprecated
-    public void dumpArchive(String instance, DumpArchiveRequest request, ResponseHandler responseHandler) {
-        get("/archive" + instance, request, DumpArchiveResponse.newBuilder(), responseHandler);
-    }
-
-    public void sendCommand(String instance, String processor, String commandName, IssueCommandRequest request, ResponseHandler responseHandler) {
-        post("/processors/" + instance + "/" + processor + "/commands" + commandName, request, IssueCommandResponse.newBuilder(), responseHandler);
-    }
-
-    public void listParameters(String instance, ResponseHandler responseHandler) {
-        get("/mdb/" + instance + "/parameters", null, ListParametersResponse.newBuilder(), responseHandler);
-    }
-
-    public void getParameterDetail(String instance, String qualifiedName, ResponseHandler responseHandler) {
-        get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
-    }
-
-    public void downloadEvents(String instance, long start, long stop, ResponseHandler responseHandler) {
-        String resource = "/archive/" + instance + "/downloads/events";
-        if (start != TimeEncoding.INVALID_INSTANT) {
-            resource += "?start=" + start;
-            if (stop != TimeEncoding.INVALID_INSTANT) {
-                resource += "&stop=" + stop;
-            }
-        } else if (stop != TimeEncoding.INVALID_INSTANT) {
-            resource += "?stop=" + stop;
-        }
-        streamGet(resource, null, () -> Event.newBuilder(), responseHandler);
-    }
-
-    public void listCommands(String instance, ResponseHandler responseHandler) {
-        get("/mdb/" + instance + "/commands", null, ListCommandsResponse.newBuilder(), responseHandler);
-    }
-
-    public void setParameter(String instance, String processor, NamedObjectId id, Value value, ResponseHandler responseHandler) {
-        String pResource = toURISegments(id);
-        put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null, responseHandler);
-    }
-
-    public void createProcessorRequest(String instance, CreateProcessorRequest request, ResponseHandler responseHandler) {
-        post("/processors/" + instance, request, null, responseHandler);
-    }
-
-    public void patchProcessorRequest(String instance, String processor, PatchProcessorRequest request, ResponseHandler responseHandler) {
-        patch("/processors/" + instance + "/" + processor, request, null, responseHandler);
-    }
-
-    public void listProcessors(String instance, ResponseHandler responseHandler) {
-        get("/processors/" + instance, null, ListProcessorsResponse.newBuilder(), responseHandler);
-    }
-
-    public void getAuthenticatedUser(ResponseHandler responseHandler) {
-        get("/user", null, UserInfo.newBuilder(), responseHandler);
-    }
-
-    public void patchClientRequest(int clientId, PatchClientRequest request, ResponseHandler responseHandler) {
-        post("/clients/" + clientId, request, null, responseHandler);
-    }
-
-    public void insertTag(String instance, InsertTagRequest request, ResponseHandler responseHandler) {
-        post("/archive/" + instance + "/tags", request, InsertTagResponse.newBuilder(), responseHandler);
-    }
-
-    public void updateTag(String instance, long tagTime, int tagId, UpdateTagRequest request, ResponseHandler responseHandler) {
-        put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
-    }
-
-    public void deleteTag(String instance, long tagTime, int tagId, ResponseHandler responseHandler) {
-        delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
-    }
-
-    public void getTags(String instance, GetTagsRequest request, ResponseHandler responseHandler) {
-        get("/archive/" + instance + "/tags", request, GetTagsResponse.newBuilder(), responseHandler);
     }
 
     public void get(String uri, MessageLite msg, MessageLite.Builder target, ResponseHandler handler) {
@@ -260,40 +164,11 @@ public class RestClient {
         group.shutdownGracefully();
     }
 
-    private String toURISegments(NamedObjectId id) {
-        if (!id.hasNamespace()) {
-            return id.getName();
-        } else {
-            return "/" + id.getNamespace() + "/" + id.getName();
-        }
-    }
-
     private URI webResourceURI(YamcsConnectionProperties yprops, String relativePath) {
         try {
             return new URI("http://" + yprops.getHost() + ":" + yprops.getPort() + "/api" + relativePath);
         } catch (URISyntaxException e) {
             throw new ConfigurationException("Invalid URL", e);
         }
-    }
-
-    public static void main(String... args) throws InterruptedException {
-        //Events.GetEventsRequest req = RestDumpArchiveRequest.newBuilder().setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder()).build();
-        RestClient endpoint = new RestClient(new YamcsConnectionProperties("machine", 8090, "simulator"),
-                new YamcsCredentials("operator", "password"));
-        System.out.println("ahum ");
-        endpoint.downloadEvents("simulator", -1, -1, new ResponseHandler() {
-
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                System.out.println("msg " + responseMsg);
-            }
-
-            @Override
-            public void onException(Exception e) {
-                System.out.println("e " + e);
-            }
-        });
-        Thread.sleep(10000);
-        endpoint.shutdown();
     }
 }

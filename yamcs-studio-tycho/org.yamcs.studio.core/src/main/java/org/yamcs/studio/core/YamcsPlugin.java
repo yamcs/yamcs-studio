@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.studio.core.model.AlarmCatalogue;
+import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.Catalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.EventCatalogue;
@@ -40,6 +41,7 @@ public class YamcsPlugin extends Plugin {
         catalogues.put(AlarmCatalogue.class, new AlarmCatalogue());
         catalogues.put(EventCatalogue.class, new EventCatalogue());
         catalogues.put(LinkCatalogue.class, new LinkCatalogue());
+        catalogues.put(ArchiveCatalogue.class, new ArchiveCatalogue());
 
         connectionManager = new ConnectionManager();
         catalogues.values().forEach(c -> connectionManager.addStudioConnectionListener(c));

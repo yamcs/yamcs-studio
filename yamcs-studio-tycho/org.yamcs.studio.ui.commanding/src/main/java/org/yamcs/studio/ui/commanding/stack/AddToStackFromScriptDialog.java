@@ -30,7 +30,6 @@ import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -169,17 +168,13 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
 
         Button validateButton = createButton(parent, IDialogConstants.NO_ID, "Validate", true);
         validateButton.addListener(SWT.Selection, evt -> {
-            RestClient restClient = ConnectionManager.getInstance().getRestClient();
-            if (!checkConnected(restClient))
-                return;
-
             ParseResult parsed = CommandParser.parseCommand(text.getText());
             IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
             req.addAllAssignment(parsed.getAssignments());
             req.setDryRun(true);
 
-            String instance = ConnectionManager.getInstance().getYamcsInstance();
-            restClient.sendCommand(instance, "realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
+            CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
+            catalogue.sendCommand("realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> setMessage("Command is valid", MessageDialog.INFORMATION));
@@ -206,16 +201,12 @@ public class AddToStackFromScriptDialog extends TitleAreaDialog {
 
         Button okButton = createButton(parent, IDialogConstants.OK_ID, "Send", true);
         okButton.addListener(SWT.Selection, evt -> {
-            RestClient restClient = ConnectionManager.getInstance().getRestClient();
-            if (!checkConnected(restClient))
-                return;
-
             ParseResult parsed = CommandParser.parseCommand(text.getText());
             IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
             req.addAllAssignment(parsed.getAssignments());
 
-            String instance = ConnectionManager.getInstance().getYamcsInstance();
-            restClient.sendCommand(instance, "realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
+            CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
+            catalogue.sendCommand("realtime", parsed.getQualifiedName(), req.build(), new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite response) {
                     Display.getDefault().asyncExec(() -> close());

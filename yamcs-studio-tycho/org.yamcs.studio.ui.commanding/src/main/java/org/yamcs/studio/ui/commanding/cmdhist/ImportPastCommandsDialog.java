@@ -23,6 +23,7 @@ import org.yamcs.protobuf.Archive.DumpArchiveResponse;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -145,8 +146,8 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         reqBuilder.setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)));
         reqBuilder.setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder());
 
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        restClient.dumpArchive(instance, reqBuilder.build(), new ResponseHandler() {
+        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
+        catalogue.dumpArchive(reqBuilder.build(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 DumpArchiveResponse response = (DumpArchiveResponse) responseMsg;

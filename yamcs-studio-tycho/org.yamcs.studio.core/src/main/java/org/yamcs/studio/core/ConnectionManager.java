@@ -7,8 +7,10 @@ import java.util.logging.Logger;
 
 import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsCredentials;
+import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
@@ -60,6 +62,14 @@ public class ConnectionManager {
 
     public ConnectionMode getConnectionMode() {
         return mode;
+    }
+
+    public void requestAuthenticatedUser(ResponseHandler responseHandler) {
+        if (restClient != null) {
+            restClient.get("/user", null, UserInfo.newBuilder(), responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
     }
 
     public String getYamcsInstance() {

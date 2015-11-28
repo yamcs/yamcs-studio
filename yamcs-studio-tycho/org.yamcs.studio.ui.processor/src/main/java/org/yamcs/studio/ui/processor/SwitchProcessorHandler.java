@@ -18,10 +18,8 @@ import org.eclipse.ui.menus.UIElement;
 import org.yamcs.protobuf.Rest.PatchClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.css.OPIUtils;
 
 import com.google.protobuf.MessageLite;
@@ -38,12 +36,12 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
         String radioParameter = event.getParameter(RadioState.PARAMETER_ID);
         HandlerUtil.updateRadioState(event.getCommand(), radioParameter);
 
-        ProcessorInfo processorInfo = ManagementCatalogue.getInstance().getProcessorInfo(radioParameter);
+        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+        ProcessorInfo processorInfo = catalogue.getProcessorInfo(radioParameter);
         if (processorInfo != null) {
-            ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
+            ClientInfo clientInfo = catalogue.getCurrentClientInfo();
             PatchClientRequest req = PatchClientRequest.newBuilder().setProcessor(processorInfo.getName()).build();
-            RestClient restClient = ConnectionManager.getInstance().getRestClient();
-            restClient.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
+            catalogue.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite responseMsg) {
                     Display.getDefault().asyncExec(() -> {

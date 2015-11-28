@@ -11,10 +11,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
 import com.google.protobuf.MessageLite;
@@ -34,14 +33,11 @@ public class IssueCommandHandler extends AbstractRestHandler {
     }
 
     private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
-        RestClient restClient = checkRestClient(activeShell, "issue command");
-        if (restClient == null)
-            return;
-
         IssueCommandRequest req = command.toIssueCommandRequest().build();
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
         String qname = command.getMetaCommand().getQualifiedName();
-        restClient.sendCommand(instance, "realtime", qname, req, new ResponseHandler() {
+
+        catalogue.sendCommand("realtime", qname, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {
                 Display.getDefault().asyncExec(() -> {
