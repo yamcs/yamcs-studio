@@ -1,93 +1,68 @@
 package org.yamcs.studio.ui.archive;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.hornetq.api.core.HornetQException;
-import org.yamcs.YamcsException;
-import org.yamcs.api.ConnectionListener;
-import org.yamcs.api.Protocol;
-import org.yamcs.api.YamcsClient;
-import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.Archive.GetTagsRequest;
 import org.yamcs.protobuf.Archive.GetTagsResponse;
 import org.yamcs.protobuf.Archive.InsertTagRequest;
 import org.yamcs.protobuf.Archive.InsertTagResponse;
 import org.yamcs.protobuf.Archive.UpdateTagRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.protobuf.Yamcs.IndexRequest;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.MessageLite;
 
-public class ArchiveIndexReceiver implements ConnectionListener {
+public class ArchiveIndexReceiver {
 
     private static final Logger log = Logger.getLogger(ArchiveIndexReceiver.class.getName());
     private ArchiveView archiveView;
 
     volatile private boolean receiving = false;
 
-    private YamcsConnector yconnector;
-    private YamcsClient yamcsClient;
-
-    public ArchiveIndexReceiver(YamcsConnector yconnector) {
-        this.yconnector = yconnector;
-        yconnector.addConnectionListener(this);
-    }
-
     public void setIndexListener(ArchiveView archiveView) {
         this.archiveView = archiveView;
     }
 
-    public void getIndex(String instance, TimeInterval interval) {
+    public void getIndex(TimeInterval interval) {
         if (receiving) {
-            archiveView.log("already receiving data");
+            log.info("already receiving data");
             return;
         }
-        if (instance == null) {
-            archiveView.receiveArchiveRecordsError("No yamcs instance to get data from");
-            return;
-        }
-        Thread receivingThread = new Thread() {
+
+        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
+        long start = interval.hasStart() ? interval.getStart() : TimeEncoding.INVALID_INSTANT;
+        long stop = interval.hasStop() ? interval.getStop() : TimeEncoding.INVALID_INSTANT;
+        catalogue.downloadIndexes(start, stop, new ResponseHandler() {
+
             @Override
-            public void run() {
-                try {
-                    IndexRequest.Builder request = IndexRequest.newBuilder().setInstance(instance);
-                    if (interval.hasStart())
-                        request.setStart(interval.getStart());
-                    if (interval.hasStop())
-                        request.setStop(interval.getStop());
-                    request.setSendAllPp(true).setSendAllTm(true).setSendAllCmd(true);
-                    request.setSendCompletenessIndex(true);
-                    //       yamcsClient.executeRpc(Protocol.getYarchIndexControlAddress(instance), "getIndex", request.build(), null);
-                    yamcsClient.sendRequest(Protocol.getYarchIndexControlAddress(instance), "getIndex", request.build());
-                    while (true) {
-                        log.info("Ready to receive another archive chunk");
-                        IndexResult ir = (IndexResult) yamcsClient.receiveData(IndexResult.newBuilder());
-                        if (ir == null) {
-                            log.info("Done receiving archive records.");
-                            archiveView.receiveArchiveRecordsFinished();
-                            break;
-                        }
-                        log.info(String.format("Received %d archive records", ir.getRecordsCount()));
-                        archiveView.receiveArchiveRecords(ir);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    archiveView.receiveArchiveRecordsError(e.toString());
-                } finally {
+            public void onMessage(MessageLite responseMsg) {
+                if (responseMsg != null) {
+                    IndexResult response = (IndexResult) responseMsg;
+                    log.info(String.format("Received %d archive records", response.getRecordsCount()));
+                    archiveView.receiveArchiveRecords(response);
+                } else {
+                    log.info("Done receiving archive records.");
+                    archiveView.receiveArchiveRecordsFinished();
                     receiving = false;
                 }
-            };
-        };
-        receivingThread.start();
+            }
+
+            @Override
+            public void onException(Exception e) {
+                e.printStackTrace();
+                archiveView.receiveArchiveRecordsError(e.toString());
+            }
+        });
     }
 
     public void getTag(TimeInterval interval) {
         if (receiving) {
-            archiveView.log("already receiving data");
+            log.info("Already receiving data");
             return;
         }
         GetTagsRequest.Builder requestb = GetTagsRequest.newBuilder();
@@ -107,7 +82,7 @@ public class ArchiveIndexReceiver implements ConnectionListener {
 
             @Override
             public void onException(Exception e) {
-                archiveView.log("Failed to retreive tags: " + e.getMessage());
+                log.log(Level.SEVERE, "Failed to retreive tags", e);
                 receiving = false;
             }
         });
@@ -135,7 +110,7 @@ public class ArchiveIndexReceiver implements ConnectionListener {
 
             @Override
             public void onException(Exception e) {
-                archiveView.log("Failed to insert tag: " + e.getMessage());
+                log.log(Level.SEVERE, "Failed to insert tag", e);
             }
         });
     }
@@ -163,7 +138,7 @@ public class ArchiveIndexReceiver implements ConnectionListener {
 
             @Override
             public void onException(Exception e) {
-                archiveView.log("Failed to insert tag: " + e.getMessage());
+                log.log(Level.SEVERE, "Failed to insert tag", e);
             }
         });
     }
@@ -180,43 +155,8 @@ public class ArchiveIndexReceiver implements ConnectionListener {
 
             @Override
             public void onException(Exception e) {
-                archiveView.log("Failed to remove tag: " + e.getMessage());
+                log.log(Level.SEVERE, "Failed to remove tag", e);
             }
         });
-    }
-
-    public boolean supportsTags() {
-        return true;
-    }
-
-    @Override
-    public void connecting(String url) {
-        archiveView.connecting(url);
-    }
-
-    @Override
-    public void connected(String url) {
-        try {
-            yamcsClient = yconnector.getSession().newClientBuilder().setRpc(true).setDataConsumer(null, null).build();
-            archiveView.log("connected to " + yconnector.getUrl());
-        } catch (HornetQException e) {
-            e.printStackTrace();
-            archiveView.log("Failed to build yamcs client: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void connectionFailed(String url, YamcsException exception) {
-        archiveView.connectionFailed(url, exception);
-    }
-
-    @Override
-    public void disconnected() {
-        archiveView.disconnected();
-    }
-
-    @Override
-    public void log(String message) {
-        archiveView.log(message);
     }
 }

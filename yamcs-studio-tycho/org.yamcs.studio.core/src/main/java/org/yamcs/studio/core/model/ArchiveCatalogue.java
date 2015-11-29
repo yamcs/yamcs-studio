@@ -7,15 +7,16 @@ import org.yamcs.protobuf.Archive.GetTagsResponse;
 import org.yamcs.protobuf.Archive.InsertTagRequest;
 import org.yamcs.protobuf.Archive.InsertTagResponse;
 import org.yamcs.protobuf.Archive.UpdateTagRequest;
+import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.utils.TimeEncoding;
 
 /**
- * Groups generic archive operations (index, tags). There's is still some hornetq api that needs to
- * be refactored into this.
+ * Groups generic archive operations (index, tags).
  */
 public class ArchiveCatalogue implements Catalogue {
 
@@ -37,7 +38,24 @@ public class ArchiveCatalogue implements Catalogue {
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
             String instance = connectionManager.getYamcsInstance();
-            restClient.get("/archive" + instance, request, DumpArchiveResponse.newBuilder(), responseHandler);
+            restClient.get("/archive/" + instance, request, DumpArchiveResponse.newBuilder(), responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
+    public void downloadIndexes(long start, long stop, ResponseHandler responseHandler) {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        String resource = "/archive/" + instance + "/indexes?filter=tm,pp,commands,completeness";
+        if (start != TimeEncoding.INVALID_INSTANT) {
+            resource += "&start=" + start;
+        }
+        if (stop != TimeEncoding.INVALID_INSTANT) {
+            resource += "&stop=" + stop;
+        }
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        if (restClient != null) {
+            restClient.streamGet(resource, null, () -> IndexResult.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }

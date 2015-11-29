@@ -105,7 +105,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     public void startReloading() {
         recCount = 0;
-        archiveView.setInstance(archiveView.yconnector.getConnectionParams().instance); // TODO do we need this in Studio?
 
         setBusyPointer();
         archiveView.setRefreshEnabled(false);
@@ -183,14 +182,6 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         public String toString() {
             return "start: " + startInstant + " stop: " + stopInstant + " count:" + tmcount;
         }
-    }
-
-    public void connected() {
-        archiveView.setRefreshEnabled(true);
-    }
-
-    public void disconnected() {
-        archiveView.setRefreshEnabled(false);
     }
 
     public void setBusyPointer() {

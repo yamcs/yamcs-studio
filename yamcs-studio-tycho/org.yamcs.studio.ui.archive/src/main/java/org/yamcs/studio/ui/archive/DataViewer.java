@@ -84,9 +84,9 @@ public class DataViewer extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equalsIgnoreCase("completeness_selection_finished")) {
-            archivePanel.archiveView.setTagEnabled(indexReceiver.supportsTags());
+            archivePanel.archiveView.setTagEnabled(true);
         } else if (cmd.toLowerCase().endsWith("selection_finished")) {
-            archivePanel.archiveView.setTagEnabled(indexReceiver.supportsTags());
+            archivePanel.archiveView.setTagEnabled(true);
             if (cmd.startsWith("pp") || cmd.startsWith("tm")) {
                 //packetRetrieval.setEnabled(true);
                 //parameterRetrieval.setEnabled(true);

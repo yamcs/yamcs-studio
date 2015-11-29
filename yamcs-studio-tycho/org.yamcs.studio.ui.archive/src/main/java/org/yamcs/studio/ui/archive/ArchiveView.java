@@ -36,9 +36,6 @@ import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
-import org.yamcs.YamcsException;
-import org.yamcs.api.ConnectionListener;
-import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
@@ -52,14 +49,12 @@ import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart
-        implements StudioConnectionListener, TimeListener, ISourceProviderListener, ConnectionListener {
+        implements StudioConnectionListener, TimeListener, ISourceProviderListener {
 
     private static final Logger log = Logger.getLogger(ArchiveView.class.getName());
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
-    YamcsConnector yconnector;
-    private String instance;
     private ResourceManager resourceManager;
 
     private Label replayTimeLabel;
@@ -96,8 +91,7 @@ public class ArchiveView extends ViewPart
 
         createActions();
 
-        yconnector = new YamcsConnector(false);
-        indexReceiver = new ArchiveIndexReceiver(yconnector);
+        indexReceiver = new ArchiveIndexReceiver();
 
         parent.setLayout(new FillLayout());
 
@@ -205,7 +199,6 @@ public class ArchiveView extends ViewPart
         connectionState.addSourceProviderListener(this);
 
         indexReceiver.setIndexListener(this);
-        yconnector.addConnectionListener(this);
         TimeCatalogue.getInstance().addTimeListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
@@ -220,13 +213,16 @@ public class ArchiveView extends ViewPart
 
     @Override
     public void onStudioConnect() {
-        yconnector.connect(ConnectionManager.getInstance().getHornetqProperties());
+        SwingUtilities.invokeLater(() -> {
+            setRefreshEnabled(true);
+            refresh();
+        });
     }
 
     @Override
     public void onStudioDisconnect() {
-        yconnector.disconnect();
         SwingUtilities.invokeLater(() -> {
+            setRefreshEnabled(false);
             archivePanel.getDataViewer().getDataView()
                     .setCurrentLocator(archivePanel.getDataViewer().getDataView().DO_NOT_DRAW);
         });
@@ -454,39 +450,6 @@ public class ArchiveView extends ViewPart
         //JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.ERROR_MESSAGE);
     }
 
-    @Override
-    public void connecting(String url) {
-        log("Connecting to " + url);
-    }
-
-    @Override
-    public void connected(String url) {
-        try {
-            List<String> instances = yconnector.getYamcsInstances();
-            if (instances != null) {
-                archivePanel.connected();
-                refresh();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void connectionFailed(String url, YamcsException exception) {
-        archivePanel.disconnected();
-    }
-
-    @Override
-    public void disconnected() {
-        archivePanel.disconnected();
-    }
-
-    @Override
-    public void log(String text) {
-        System.out.println(text);
-    }
-
     public void popup(String text) {
         showMessage(text);
     }
@@ -500,12 +463,13 @@ public class ArchiveView extends ViewPart
     }
 
     public void receiveArchiveRecordsFinished() {
-        if (indexReceiver.supportsTags()) {
-            TimeInterval interval = archivePanel.getRequestedDataInterval();
-            indexReceiver.getTag(interval);
-        } else {
-            archivePanel.archiveLoadFinished();
-        }
+        TimeInterval interval = archivePanel.getRequestedDataInterval();
+        new Thread() { // FIXME new thread because currently RestClients syncs on the call thread causing deadlock
+            @Override
+            public void run() {
+                indexReceiver.getTag(interval);
+            }
+        }.start();
     }
 
     public void receiveTagsFinished() {
@@ -515,7 +479,7 @@ public class ArchiveView extends ViewPart
     public void refresh() {
         archivePanel.startReloading();
         TimeInterval interval = archivePanel.getRequestedDataInterval();
-        indexReceiver.getIndex(instance, interval);
+        indexReceiver.getIndex(interval);
     }
 
     public void receiveTags(final List<ArchiveTag> tagList) {
@@ -534,23 +498,8 @@ public class ArchiveView extends ViewPart
         SwingUtilities.invokeLater(() -> archivePanel.tagChanged(oldTag, newTag));
     }
 
-    public String getInstance() {
-        return instance;
-    }
-
-    public void setInstance(String instance) {
-        this.instance = instance;
-    }
-
     @Override
     public void setFocus() {
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        if (yconnector != null)
-            yconnector.disconnect();
     }
 
     @Override
