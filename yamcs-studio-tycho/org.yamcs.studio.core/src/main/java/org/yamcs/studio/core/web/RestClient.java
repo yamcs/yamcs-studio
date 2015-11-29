@@ -151,7 +151,11 @@ public class RestClient {
     private ChannelFuture initializeChannel(Bootstrap b, URI resource, HttpMethod method, MessageLite requestBody) throws IOException, InterruptedException {
         // FIXME no sync on call thread
         Channel ch = b.connect(resource.getHost(), resource.getPort()).sync().channel();
-        FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, resource.getRawPath());
+        String uri = resource.getRawPath() + "?nolink";
+        if (resource.getRawQuery() != null) {
+            uri += "&" + resource.getRawQuery();
+        }
+        FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, uri);
         request.headers().set(HttpHeaders.Names.HOST, resource.getHost());
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
         request.headers().set(HttpHeaders.Names.ACCEPT, BINARY_MIME_TYPE);
