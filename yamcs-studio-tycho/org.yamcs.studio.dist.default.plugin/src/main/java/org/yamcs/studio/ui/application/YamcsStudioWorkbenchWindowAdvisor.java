@@ -108,8 +108,8 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor
 
     @Override
     public void onStudioConnect() {
-        yprops = ConnectionManager.getInstance().getWebProperties();
-        subjectName = ConnectionManager.getInstance().getHornetqProperties().username;
+        yprops = ConnectionManager.getInstance().getConnectionProperties();
+        subjectName = ConnectionManager.getInstance().getUsername();
         Display.getDefault().asyncExec(() -> updateTitle());
     }
 

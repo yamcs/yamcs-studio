@@ -75,8 +75,6 @@
 							io.netty.handler.codec.protobuf,
 							io.netty.util.concurrent,
 							io.protostuff,
-							org.hornetq.api.core,
-							org.hornetq.api.core.client,
 							org.yamcs,
 							org.yamcs.api,
 							org.yamcs.api.ws,

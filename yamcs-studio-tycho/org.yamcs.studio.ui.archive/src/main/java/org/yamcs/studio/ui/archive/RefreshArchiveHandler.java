@@ -16,8 +16,7 @@ public class RefreshArchiveHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        // Disable refresh button, to prevent double-click from the user, which might
-        // currently break our hornetq client
+        // Disable refresh button, to prevent double-click from the user
         RefreshStateProvider provider = RCPUtils.findSourceProvider(event,
                 RefreshStateProvider.STATE_KEY_ENABLED, RefreshStateProvider.class);
         provider.setEnabled(false);

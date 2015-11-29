@@ -87,7 +87,7 @@ public class YamcsLoginModule implements LoginModule {
     private boolean authenticate(final String user, final String password) {
         log.info("yamcs login, authenticating " + user + "/****");
 
-        YamcsConnectionProperties yprops = ConnectionManager.getInstance().getWebProperties();
+        YamcsConnectionProperties yprops = ConnectionManager.getInstance().getConnectionProperties();
         RestClient restClient = new RestClient(yprops, new YamcsCredentials(user, password));
 
         AuthReponseHandler arh = new AuthReponseHandler();

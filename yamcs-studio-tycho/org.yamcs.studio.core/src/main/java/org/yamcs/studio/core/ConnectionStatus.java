@@ -1,9 +1,12 @@
 package org.yamcs.studio.core;
 
+/**
+ * Connection status of the single shared websocket connection
+ */
 public enum ConnectionStatus {
-    Disconnected, // no clients (WebSocket, HornetQ) are connected to Yamcs server
+    Disconnected, // not connected to Yamcs server
     Connecting,
-    Connected, // all clients are connected
+    Connected,
     Disconnecting,
     ConnectionFailure; // something prevented the connection from ever being established
 }

@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.api.YamcsConnectData;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
@@ -76,6 +75,10 @@ public class ConnectionManager {
         return connectionInfo.getConnection(mode).getInstance();
     }
 
+    public String getUsername() {
+        return creds == null ? null : creds.getUsername();
+    }
+
     public void connect(YamcsCredentials creds) {
         connect(creds, mode);
     }
@@ -87,12 +90,12 @@ public class ConnectionManager {
 
         setConnectionStatus(ConnectionStatus.Connecting);
 
-        YamcsConnectionProperties yrops = getWebProperties();
-        restClient = new RestClient(yrops, creds);
+        YamcsConnectionProperties yprops = getConnectionProperties();
+        restClient = new RestClient(yprops, creds);
 
         // (re)establish the connection to yamcs
         log.info("Connecting WebSocket");
-        webSocketClient = new WebSocketRegistrar(yrops, creds);
+        webSocketClient = new WebSocketRegistrar(yprops, creds);
         webSocketClient.connect();
     }
 
@@ -191,23 +194,8 @@ public class ConnectionManager {
         return webSocketClient;
     }
 
-    public YamcsConnectionProperties getWebProperties() {
+    public YamcsConnectionProperties getConnectionProperties() {
         return connectionInfo.getConnection(mode);
-    }
-
-    @Deprecated
-    public YamcsConnectData getHornetqProperties() {
-        YamcsConnectionProperties yprops = getWebProperties();
-        YamcsConnectData hornetqProps = new YamcsConnectData();
-        hornetqProps.host = yprops.getHost();
-        hornetqProps.port = 5445; // Hardcoded, we need to get rid of hornetq anyway
-        hornetqProps.instance = yprops.getInstance();
-        if (creds != null) {
-            hornetqProps.username = creds.getUsername();
-            hornetqProps.password = creds.getPasswordS();
-            hornetqProps.ssl = true;
-        }
-        return hornetqProps;
     }
 
     private void setConnectionStatus(ConnectionStatus connectionStatus) {

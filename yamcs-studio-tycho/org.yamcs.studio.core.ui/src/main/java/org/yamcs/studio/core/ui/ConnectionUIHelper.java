@@ -23,7 +23,7 @@ public class ConnectionUIHelper implements StudioConnectionListener {
 
     @Override
     public void onStudioConnectionFailure(Throwable t) {
-        YamcsConnectionProperties yprops = ConnectionManager.getInstance().getWebProperties();
+        YamcsConnectionProperties yprops = ConnectionManager.getInstance().getConnectionProperties();
         Display.getDefault().asyncExec(() -> {
             if (t.getMessage().contains("401")) {
                 // Show Login Pane
@@ -54,7 +54,7 @@ public class ConnectionUIHelper implements StudioConnectionListener {
     }
 
     private void askSwitchNode(String errorMessage) {
-        YamcsConnectionProperties yprops = ConnectionManager.getInstance().getWebProperties();
+        YamcsConnectionProperties yprops = ConnectionManager.getInstance().getConnectionProperties();
         String connectionString = yprops.getYamcsConnectionString();
         String message = "Connection error with " + connectionString;
         if (errorMessage != null && errorMessage != "") {
