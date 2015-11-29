@@ -16,10 +16,12 @@ import com.google.protobuf.MessageLite;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -92,6 +94,7 @@ public class RestClient {
         URI resource = webResourceURI(yprops, uri);
         try {
             Bootstrap b = new Bootstrap();
+            b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
             b.group(group).channel(NioSocketChannel.class).handler(new FullProtobufChannelInitializer(target, handler));
             initializeChannel(b, resource, method, requestBody);
 
@@ -107,6 +110,7 @@ public class RestClient {
         URI resource = webResourceURI(yprops, uri);
         try {
             Bootstrap b = new Bootstrap();
+            b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
             b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
