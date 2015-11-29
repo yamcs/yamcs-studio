@@ -11,6 +11,8 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.api.ws.YamcsConnectionProperties;
 import org.yamcs.protobuf.Alarms.AlarmData;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandQueueEvent;
+import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
@@ -159,6 +161,14 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         case LINK_EVENT:
             LinkEvent linkEvent = data.getLinkEvent();
             YamcsPlugin.getDefault().getCatalogue(LinkCatalogue.class).processLinkEvent(linkEvent);
+            break;
+        case COMMAND_QUEUE_INFO:
+            CommandQueueInfo queueInfo = data.getCommandQueueInfo();
+            YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandQueueInfo(queueInfo);
+            break;
+        case COMMAND_QUEUE_EVENT:
+            CommandQueueEvent queueEvent = data.getCommandQueueEvent();
+            YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandQueueEvent(queueEvent);
             break;
         default:
             throw new IllegalArgumentException("Unexpected data type " + data.getType());

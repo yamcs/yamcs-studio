@@ -17,7 +17,7 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 
 /**
- * Assumes responses are smaller than 1MB and aggregates any http content before unserializing
+ * Assumes responses are smaller than 2MB and aggregates any http content before unserializing
  */
 public class FullProtobufChannelInitializer extends ChannelInitializer<SocketChannel> {
 

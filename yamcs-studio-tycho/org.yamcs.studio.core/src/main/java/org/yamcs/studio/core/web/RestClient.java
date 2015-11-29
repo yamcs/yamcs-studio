@@ -41,6 +41,18 @@ public class RestClient {
 
     private static final Logger log = Logger.getLogger(RestClient.class.getName());
     private static final String BINARY_MIME_TYPE = "application/octet-stream";
+    public static final ResponseHandler NULL_RESPONSE_HANDLER = new ResponseHandler() {
+
+        @Override
+        public void onMessage(MessageLite responseMsg) {
+            // NOP
+        }
+
+        @Override
+        public void onException(Exception e) {
+            Logger.getLogger(RestClient.class.getName()).log(Level.SEVERE, "Error while processing request", e);
+        }
+    };
 
     private YamcsConnectionProperties yprops;
     private EventLoopGroup group = new NioEventLoopGroup(1);

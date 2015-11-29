@@ -131,6 +131,7 @@ public class QueuesTableModel implements IStructuredContentProvider {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace(); // FIXME
             }
 
             if (q != null) {

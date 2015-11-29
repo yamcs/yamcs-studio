@@ -20,9 +20,12 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
+import org.yamcs.protobuf.Rest.PatchCommandQueueEntryRequest;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuedTableViewer extends TableViewer {
@@ -64,32 +67,28 @@ public class CommandQueuedTableViewer extends TableViewer {
                 CommandQueueEntry cqe = (CommandQueueEntry) (getTable().getSelection()[0].getData());
                 if (cqe == null)
                     return;
-                try {
-                    long missionTime = TimeCatalogue.getInstance().getMissionTime();
-                    long timeinthequeue = missionTime - cqe.getGenerationTime();
-                    if (timeinthequeue > CommandQueueView.oldCommandWarningTime * 1000L) {
-                        int res = CommandFateDialog.showDialog(parent.getShell(), cqe.getCmdId());
-                        switch (res) {
-                        case -1: //cancel
-                            return;
-                        case 0: //rebuild the command
-                            log.info("sending command with updated time: " + cqe.getSource());
-                            commandQueueView.commandQueueControl.sendCommand(cqe, true);
-                            break;
-                        case 1: //send the command with the old generation time
-                            log.info("sending command: " + cqe);
-                            commandQueueView.commandQueueControl.sendCommand(cqe, false);
-                            break;
-                        case 2: //rejecting command
-                            log.info("rejecting command: " + cqe.getSource());
-                            commandQueueView.commandQueueControl.rejectCommand(cqe);
-                        }
-                    } else {
-                        log.info("sending command: " + cqe.getSource());
-                        commandQueueView.commandQueueControl.sendCommand(cqe, false);
+                long missionTime = TimeCatalogue.getInstance().getMissionTime();
+                long timeinthequeue = missionTime - cqe.getGenerationTime();
+                if (timeinthequeue > CommandQueueView.oldCommandWarningTime * 1000L) {
+                    int res = CommandFateDialog.showDialog(parent.getShell(), cqe.getCmdId());
+                    switch (res) {
+                    case -1: //cancel
+                        return;
+                    case 0: //rebuild the command
+                        log.info("sending command with updated time: " + cqe.getSource());
+                        updateQueueEntryState(cqe, "released", true);
+                        break;
+                    case 1: //send the command with the old generation time
+                        log.info("sending command: " + cqe);
+                        updateQueueEntryState(cqe, "released", false);
+                        break;
+                    case 2: //rejecting command
+                        log.info("rejecting command: " + cqe.getSource());
+                        updateQueueEntryState(cqe, "rejected", false);
                     }
-                } catch (Exception e) {
-                    log.severe("Unable to send command: " + e.getMessage());
+                } else {
+                    log.info("sending command: " + cqe.getSource());
+                    updateQueueEntryState(cqe, "released", false);
                 }
             }
 
@@ -109,11 +108,7 @@ public class CommandQueuedTableViewer extends TableViewer {
                 if (cqe == null)
                     return;
                 log.info("rejecting command: " + cqe.getSource());
-                try {
-                    commandQueueView.commandQueueControl.rejectCommand(cqe);
-                } catch (Exception e) {
-                    log.severe("unable to reject command: " + e.getMessage());
-                }
+                updateQueueEntryState(cqe, "rejected", false);
             }
 
         });
@@ -156,7 +151,15 @@ public class CommandQueuedTableViewer extends TableViewer {
         tcl.setColumnData(timeColumn.getColumn(), new ColumnWeightData(200));
     }
 
-    // Command Queue Entry lable provider
+    // rebuild doesn't seem to do anything and therefore is not currently included in rest api
+    // keeping it around for future reference mostly
+    private void updateQueueEntryState(CommandQueueEntry entry, String state, boolean rebuild) {
+        PatchCommandQueueEntryRequest req = PatchCommandQueueEntryRequest.newBuilder().setState(state).build();
+        CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
+        catalogue.editQueuedCommand(entry, req, RestClient.NULL_RESPONSE_HANDLER);
+    }
+
+    // Command Queue Entry label provider
     class CqeLabelProvider extends LabelProvider implements
             ITableLabelProvider {
 

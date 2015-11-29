@@ -2,8 +2,6 @@ package org.yamcs.studio.ui.commanding.queue;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -24,19 +22,18 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.YamcsException;
-import org.yamcs.api.YamcsApiException;
 import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Commanding.QueueState;
+import org.yamcs.protobuf.Rest.PatchCommandQueueRequest;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
+import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.ui.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 
 public class CommandQueuesTableViewer extends TableViewer {
-
-    private static final Logger log = Logger.getLogger(CommandQueuesTableViewer.class.getName());
 
     public static final String COL_QUEUE = "Queue";
     public static final String COL_STATE = "State";
@@ -44,7 +41,6 @@ public class CommandQueuesTableViewer extends TableViewer {
     public static final String COL_SENT = "Sent";
     public static final String COL_REJECTED = "Rejected";
 
-    private CommandQueuesTableContentProvider contentProvider;
     private CommandQueueView commandQueueView;
 
     Composite parent;
@@ -173,37 +169,31 @@ public class CommandQueuesTableViewer extends TableViewer {
         if (!commandQueue.getState().equals(newState)) {
             commandQueue.setState(newState);
 
-            try {
-                CommandQueueInfo q = null;
-                for (RowCommandQueueInfo rcqi : commandQueueView.currentQueuesModel.queues) {
-                    if (rcqi.cq == commandQueue)
-                        q = rcqi.commandQueueInfo;
-                }
-                //CommandQueueInfo q = queues.get(row);
-                if (newState == QueueState.BLOCKED) {
-                    blockQueue(q);
-                } else if (newState == QueueState.DISABLED) {
-                    disableQueue(q);
-                } else if (newState == QueueState.ENABLED) {
-                    enableQueue(q);
-                }
-            } catch (YamcsApiException | YamcsException e) {
-                log.log(Level.SEVERE, e.getMessage(), e);
+            CommandQueueInfo q = null;
+            for (RowCommandQueueInfo rcqi : commandQueueView.currentQueuesModel.queues) {
+                if (rcqi.cq == commandQueue)
+                    q = rcqi.commandQueueInfo;
+            }
+            //CommandQueueInfo q = queues.get(row);
+            if (newState == QueueState.BLOCKED) {
+                blockQueue(q);
+            } else if (newState == QueueState.DISABLED) {
+                disableQueue(q);
+            } else if (newState == QueueState.ENABLED) {
+                enableQueue(q);
             }
         }
     }
 
-    private void blockQueue(CommandQueueInfo q) throws YamcsApiException, YamcsException {
-        commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.BLOCKED)
-                .build(), false);
+    private void blockQueue(CommandQueueInfo q) {
+        updateQueueState(q, QueueState.BLOCKED, false);
     }
 
-    private void disableQueue(CommandQueueInfo q) throws YamcsApiException, YamcsException {
-        commandQueueView.commandQueueControl.setQueueState(CommandQueueInfo.newBuilder(q)
-                .setState(Commanding.QueueState.DISABLED).build(), false);
+    private void disableQueue(CommandQueueInfo q) {
+        updateQueueState(q, QueueState.DISABLED, false);
     }
 
-    private void enableQueue(CommandQueueInfo q) throws YamcsApiException, YamcsException {
+    private void enableQueue(CommandQueueInfo q) {
         boolean oldcommandsfound = false;
         ArrayList<CommandQueueEntry> cmds = commandQueueView.currentQueuesModel.commands.get(q.getName());
         if (cmds != null) {
@@ -222,19 +212,23 @@ public class CommandQueuesTableViewer extends TableViewer {
             case -1://cancel
                 return;
             case 0: //send with updated times
-                commandQueueView.commandQueueControl.setQueueState(
-                        CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), true);
+                updateQueueState(q, QueueState.ENABLED, true);
                 break;
             case 1://send with old times
-                commandQueueView.commandQueueControl.setQueueState(
-                        CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(), false);
+                updateQueueState(q, QueueState.ENABLED, false);
                 break;
             }
         } else {
-            commandQueueView.commandQueueControl.setQueueState(
-                    CommandQueueInfo.newBuilder(q).setState(Commanding.QueueState.ENABLED).build(),
-                    false);
+            updateQueueState(q, QueueState.ENABLED, false);
         }
+    }
+
+    // rebuild doesn't seem to do anything and therefore is not currently included in rest api
+    // keeping it around for future reference mostly
+    private void updateQueueState(CommandQueueInfo queue, QueueState queueState, boolean rebuild) {
+        PatchCommandQueueRequest req = PatchCommandQueueRequest.newBuilder().setState(queueState.toString()).build();
+        CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
+        catalogue.editQueue(queue, req, RestClient.NULL_RESPONSE_HANDLER);
     }
 
     class ModelLabelProvider extends LabelProvider implements
@@ -258,8 +252,7 @@ public class CommandQueuesTableViewer extends TableViewer {
                 return model.getQueue();
             case 1:
                 String state = model.getState().name();
-                if (model.getStateExpirationTimeS() > 0)
-                {
+                if (model.getStateExpirationTimeS() > 0) {
                     state += " (" + toDayHourMinuteSecond(model.getStateExpirationTimeS()) + ")";
                 }
                 return state;
@@ -278,8 +271,7 @@ public class CommandQueuesTableViewer extends TableViewer {
         }
     }
 
-    static public String toDayHourMinuteSecond(int totalSeconds)
-    {
+    static public String toDayHourMinuteSecond(int totalSeconds) {
         String result = "";
         int days = (int) TimeUnit.SECONDS.toDays(totalSeconds);
         long hours = TimeUnit.SECONDS.toHours(totalSeconds) - (days * 24);
@@ -293,8 +285,7 @@ public class CommandQueuesTableViewer extends TableViewer {
         return result;
     }
 
-    public static void main(String arg[])
-    {
+    public static void main(String arg[]) {
         int nbSeconds = 5; // 00:00:05
         System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
         nbSeconds = 65; // 00:01:05

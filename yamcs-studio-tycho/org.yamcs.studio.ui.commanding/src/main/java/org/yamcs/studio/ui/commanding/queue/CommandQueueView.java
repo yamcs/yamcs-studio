@@ -13,20 +13,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.api.YamcsConnectData;
-import org.yamcs.api.YamcsConnector;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.model.CommandQueueListener;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
-public class CommandQueueView extends ViewPart implements StudioConnectionListener, CommandQueueListener {
+public class CommandQueueView extends ViewPart implements CommandQueueListener {
     public static long oldCommandWarningTime = 60;
     private static final Logger log = Logger.getLogger(CommandQueueView.class.getName());
-
-    CommandQueueControlClient commandQueueControl;
-    YamcsConnector yconnector;
 
     HashMap<String, QueuesTableModel> queuesModels = new HashMap<String, QueuesTableModel>();
     QueuesTableModel currentQueuesModel;
@@ -37,24 +33,17 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
     CommandQueuesTableViewer commandQueuesTableViewer;
     CommandQueuedTableViewer commandQueuedTableViewer;
 
-    private volatile String selectedInstance;
-
     @Override
     public void onStudioConnect() {
-        YamcsConnectData hornetqProps = ConnectionManager.getInstance().getHornetqProperties();
-        yconnector.connect(hornetqProps);
-        setSelectedInstance(hornetqProps.instance);
     }
 
     @Override
     public void onStudioDisconnect() {
-        Display.getDefault().asyncExec(() ->
-        {
+        Display.getDefault().asyncExec(() -> {
             commandQueuesTableViewer.getTable().removeAll();
             commandQueuedTableViewer.getTable().removeAll();
             currentQueuesModel = null;
         });
-        yconnector.disconnect();
     }
 
     @Override
@@ -76,8 +65,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
         commandQueuesContentProvider = new CommandQueuesTableContentProvider(commandQueuesTableViewer);
         commandQueuesTableViewer.setContentProvider(commandQueuesContentProvider);
         commandQueuesTableViewer.setInput(commandQueuesContentProvider);
-        commandQueuesTableViewer.addSelectionChangedListener(evt ->
-        {
+        commandQueuesTableViewer.addSelectionChangedListener(evt -> {
             currentQueuesModel.reloadCommandsTable((IStructuredSelection) evt.getSelection());
         });
         if (getViewSite() != null)
@@ -95,11 +83,8 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
         // Set initial state
         refreshState();
 
-        // Connection to Yamcs server
-        yconnector = new YamcsConnector(false);
-        commandQueueControl = new CommandQueueControlClient(yconnector);
+        CommandingCatalogue.getInstance().addCommandQueueListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
-        commandQueueControl.addCommandQueueListener(this);
     }
 
     public void refreshState() {
@@ -143,8 +128,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
                 return;
             log.fine(String.format("processing updateQueue %s", cqi));
             String modelName = cqi.getInstance() + "." + cqi.getProcessorName();
-            if (!queuesModels.containsKey(modelName))
-            {
+            if (!queuesModels.containsKey(modelName)) {
                 addProcessor(cqi.getInstance(), cqi.getProcessorName());
             }
             QueuesTableModel model = queuesModels.get(modelName);
@@ -176,27 +160,7 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
         });
     }
 
-    /*
-     * called when instance changed in yamcs studio. After the list of channels is received, the
-     * update is also called to retrieve the list of commnand queues
-     */
-    public void setSelectedInstance(String newInstance) {
-        queuesModels.clear();
-        this.selectedInstance = newInstance;
-    }
-
-    /* called when the instance has been changed from yamcs studio menu */
-    public void update() {
-        commandQueueControl.receiveInitialConfig();
-    }
-
-    @Override
-    public void log(String string) {
-        log.info(string);
-    }
-
-    public static void main(String[] arg)
-    {
+    public static void main(String[] arg) {
         TimeEncoding.setUp();
         Display display = new Display();
         Shell shell = new Shell();
@@ -207,11 +171,6 @@ public class CommandQueueView extends ViewPart implements StudioConnectionListen
         cqv.createPartControl(shell);
         shell.pack();
 
-        YamcsConnectData hornetqProps = new YamcsConnectData();
-        hornetqProps.host = "127.0.0.1";
-        hornetqProps.instance = "obcp";
-        hornetqProps.username = "operator";
-        hornetqProps.password = "password";
         cqv.onStudioConnect();
 
         while (!shell.isDisposed()) {
