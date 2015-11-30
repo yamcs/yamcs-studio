@@ -27,7 +27,9 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public AlarmSeverity getAlarmSeverity() {
-        if (pval.getAcquisitionStatus() == AcquisitionStatus.EXPIRED)
+        if (pval.getAcquisitionStatus() == AcquisitionStatus.EXPIRED
+                || pval.getAcquisitionStatus() == AcquisitionStatus.NOT_RECEIVED
+                || pval.getAcquisitionStatus() == AcquisitionStatus.INVALID)
             return AlarmSeverity.INVALID; // Workaround to display LOS in the displays, should be 'Expired'
 
         if (!pval.hasMonitoringResult())
