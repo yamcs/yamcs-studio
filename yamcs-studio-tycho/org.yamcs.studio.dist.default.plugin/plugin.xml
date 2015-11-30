@@ -127,6 +127,11 @@
             id="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"
             name="Sound">
       </page>
+      <page
+            class="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
+            id="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
+            name="Events">
+      </page>
    </extension>
    
    <extension point="org.eclipse.ui.services">   

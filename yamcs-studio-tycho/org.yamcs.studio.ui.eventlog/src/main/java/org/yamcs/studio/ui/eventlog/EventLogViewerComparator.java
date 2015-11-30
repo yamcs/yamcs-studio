@@ -38,11 +38,17 @@ public class EventLogViewerComparator extends ViewerComparator {
         Event r2 = (Event) o2;
         int rc;
         switch (currentColumn) {
+        case EventLogView.COL_SEQNUM:
+            rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
+            break;
         case EventLogView.COL_DESCRIPTION:
             rc = STRING_COMPARATOR.compare(r1.getMessage(), r2.getMessage());
             break;
         case EventLogView.COL_RECEIVED:
             rc = LONG_COMPARATOR.compare(r1.getReceptionTime(), r2.getReceptionTime());
+            break;
+        case EventLogView.COL_GENERATION:
+            rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             break;
         case EventLogView.COL_SOURCE:
             rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
