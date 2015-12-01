@@ -39,25 +39,34 @@ public class EventLogViewerComparator extends ViewerComparator {
         int rc;
         switch (currentColumn) {
         case EventLogView.COL_SEQNUM:
+            // compare seq number
             rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             break;
         case EventLogView.COL_DESCRIPTION:
+            // compare message
             rc = STRING_COMPARATOR.compare(r1.getMessage(), r2.getMessage());
             break;
         case EventLogView.COL_RECEIVED:
+            // compare reception time, seq number
             rc = LONG_COMPARATOR.compare(r1.getReceptionTime(), r2.getReceptionTime());
             if (rc == 0)
                 rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             break;
         case EventLogView.COL_GENERATION:
+            // compare generation time, seq number
             rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             if (rc == 0)
                 rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             break;
         case EventLogView.COL_SOURCE:
+            // compare source, type, generation time, seq number
             rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
             if (rc == 0)
                 rc = STRING_COMPARATOR.compare(r1.getType(), r2.getType());
+            if (rc == 0)
+                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+            if (rc == 0)
+                rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             break;
         default:
             throw new IllegalStateException("Cannot order unsupported column " + currentColumn);
