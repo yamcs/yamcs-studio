@@ -321,15 +321,28 @@ public class EventLogView extends ViewPart implements EventListener {
                 .setReceptionTime(new Date().getTime())
                 .setMessage(
                         "test event3\nline *\nline ** - verylooooooooooooooooooooooooooooooooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnggggggggggggggg")
-                .setSeqNumber(3)
+                .setSeqNumber(2)
                 .setSeverity(EventSeverity.ERROR)
                 .setSource("test_source3")
                 .setType("test_type3")
                 .build();
 
+        Event event4 = Event
+                .newBuilder()
+                .setGenerationTime(event2.getGenerationTime())
+                .setReceptionTime(new Date().getTime())
+                .setMessage(
+                        "should replace event2")
+                .setSeqNumber(event2.getSeqNumber())
+                .setSeverity(EventSeverity.ERROR)
+                .setSource(event2.getSource())
+                .setType("test_type4")
+                .build();
+
         lv.processEvent(event);
         lv.processEvent(event2);
         lv.processEvent(event3);
+        lv.processEvent(event4);
 
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {

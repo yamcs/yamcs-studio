@@ -39,14 +39,18 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     public void addEvent(Event event) {
-        if (eventsBySequenceNumber.containsKey(event.getSeqNumber())) {
-            // Hmm not sure if this will do an equals
-            tableViewer.update(event, null);
+        if (eventsBySequenceNumber.containsKey(primaryKeyHash(event))) {
+            tableViewer.remove(eventsBySequenceNumber.get(primaryKeyHash(event)));
         } else {
-            tableViewer.add(event);
-            eventsBySequenceNumber.put(event.getSeqNumber(), event);
-            maybeSelectAndReveal(event);
+            eventsBySequenceNumber.put(primaryKeyHash(event), event);
         }
+        tableViewer.add(event);
+        maybeSelectAndReveal(event);
+    }
+
+    private int primaryKeyHash(Event event)
+    {
+        return event.getSource().hashCode() + Long.hashCode(event.getGenerationTime()) + event.getSeqNumber();
     }
 
     public void addEvents(List<Event> events) {
@@ -54,7 +58,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         events.forEach(evt -> {
             if (eventsBySequenceNumber.containsKey(evt.getSeqNumber()))
                 needsUpdating.add(evt);
-            eventsBySequenceNumber.put(evt.getSeqNumber(), evt);
+            eventsBySequenceNumber.put(primaryKeyHash(evt), evt);
         });
         tableViewer.update(needsUpdating.toArray(), null);
 
