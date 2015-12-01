@@ -56,7 +56,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     public void addEvents(List<Event> events) {
         List<Object> needsUpdating = new ArrayList<>();
         events.forEach(evt -> {
-            if (eventsBySequenceNumber.containsKey(evt.getSeqNumber()))
+            if (eventsBySequenceNumber.containsKey(primaryKeyHash(evt)))
                 needsUpdating.add(evt);
             eventsBySequenceNumber.put(primaryKeyHash(evt), evt);
         });
