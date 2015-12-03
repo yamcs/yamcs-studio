@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -20,12 +22,18 @@ import org.yamcs.utils.TimeEncoding;
  * Keep the last PV received and trigger an action if a PV expires.
  *
  */
-public class LosTracker {
+public class LosTracker implements TimeListener {
     private static final Logger log = Logger.getLogger(LosTracker.class.getName());
 
+    Calendar missionTime = Calendar.getInstance();
     Map<YamcsPVReader, PvExpiration> pvs = new HashMap<>();
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
+
+    public LosTracker()
+    {
+        TimeCatalogue.getInstance().addTimeListener(this);
+    }
 
     public void updatePv(YamcsPVReader pvReader, ParameterValue pval)
     {
@@ -37,7 +45,7 @@ public class LosTracker {
         PvExpiration pvExpiration = pvs.get(pvReader);
         pvExpiration.updateLosHandle(pval);
     }
-    
+
     public void shutdown() {
         scheduler.shutdown();
     }
@@ -55,17 +63,18 @@ public class LosTracker {
 
         public void updateLosHandle(ParameterValue lastKnownValue)
         {
+
             if (this.losHandle != null)
                 this.losHandle.cancel(false);
             this.lastKnownValue = lastKnownValue;
 
-            if (!lastKnownValue.hasExpirationTime())
+            if (!lastKnownValue.hasExpirationTime() || missionTime == null)
                 return;
 
-            Calendar now = Calendar.getInstance();
+            //Calendar now = Calendar.getInstance();
             Calendar expirationTime = TimeEncoding.toCalendar(lastKnownValue.getExpirationTime());
 
-            long expirationDelayMs = expirationTime.getTimeInMillis() - now.getTimeInMillis();
+            long expirationDelayMs = expirationTime.getTimeInMillis() - missionTime.getTimeInMillis();
 
             losHandle = scheduler.schedule(displayLos, expirationDelayMs, TimeUnit.MILLISECONDS);
         }
@@ -79,4 +88,11 @@ public class LosTracker {
         };
     }
 
+    @Override
+    public void processTime(long newMissionTime) {
+        if (newMissionTime == TimeEncoding.INVALID_INSTANT || newMissionTime == 0) {
+            missionTime = null;
+        }
+        missionTime = TimeEncoding.toCalendar(newMissionTime);
+    }
 }
