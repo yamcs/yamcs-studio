@@ -1,12 +1,11 @@
 package org.yamcs.studio.core.model;
 
-import org.yamcs.protobuf.Archive.DumpArchiveRequest;
-import org.yamcs.protobuf.Archive.DumpArchiveResponse;
 import org.yamcs.protobuf.Archive.GetTagsRequest;
 import org.yamcs.protobuf.Archive.GetTagsResponse;
 import org.yamcs.protobuf.Archive.InsertTagRequest;
 import org.yamcs.protobuf.Archive.InsertTagResponse;
 import org.yamcs.protobuf.Archive.UpdateTagRequest;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
@@ -32,13 +31,20 @@ public class ArchiveCatalogue implements Catalogue {
     public void onStudioDisconnect() {
     }
 
-    @Deprecated
-    public void dumpArchive(DumpArchiveRequest request, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+    public void downloadCommands(long start, long stop, ResponseHandler responseHandler) {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        String resource = "/archive/" + instance + "/commands";
+        if (start != TimeEncoding.INVALID_INSTANT) {
+            resource += "?start=" + start;
+            if (stop != TimeEncoding.INVALID_INSTANT) {
+                resource += "&stop=" + stop;
+            }
+        } else if (stop != TimeEncoding.INVALID_INSTANT) {
+            resource += "?stop=" + stop;
+        }
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
         if (restClient != null) {
-            String instance = connectionManager.getYamcsInstance();
-            restClient.get("/archive/" + instance, request, DumpArchiveResponse.newBuilder(), responseHandler);
+            restClient.streamGet(resource, null, () -> CommandHistoryEntry.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }

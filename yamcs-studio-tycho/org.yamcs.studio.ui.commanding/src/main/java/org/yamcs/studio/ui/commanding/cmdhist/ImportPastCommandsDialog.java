@@ -18,10 +18,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.protobuf.Archive.DumpArchiveRequest;
-import org.yamcs.protobuf.Archive.DumpArchiveResponse;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -141,21 +138,23 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
         getButton(IDialogConstants.OK_ID).setEnabled(false);
 
-        DumpArchiveRequest.Builder reqBuilder = DumpArchiveRequest.newBuilder();
-        reqBuilder.setStart(TimeEncoding.fromCalendar(toCalendar(startDate, startTime)));
-        reqBuilder.setStop(TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime)));
-        reqBuilder.setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder());
+        long start = TimeEncoding.fromCalendar(toCalendar(startDate, startTime));
+        long stop = TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime));
 
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.dumpArchive(reqBuilder.build(), new ResponseHandler() {
+        catalogue.downloadCommands(start, stop, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                DumpArchiveResponse response = (DumpArchiveResponse) responseMsg;
-                Display.getDefault().asyncExec(() -> {
-                    for (CommandHistoryEntry cmdhistEntry : response.getCommandList())
-                        cmdhistView.processCommandHistoryEntry(cmdhistEntry);
-                    ImportPastCommandsDialog.super.okPressed();
-                });
+                if (responseMsg != null) {
+                    CommandHistoryEntry response = (CommandHistoryEntry) responseMsg;
+                    Display.getDefault().asyncExec(() -> {
+                        cmdhistView.processCommandHistoryEntry(response);
+                    });
+                } else {
+                    Display.getDefault().asyncExec(() -> {
+                        ImportPastCommandsDialog.super.okPressed();
+                    });
+                }
             }
 
             @Override
