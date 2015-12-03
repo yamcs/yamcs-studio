@@ -25,7 +25,7 @@ import org.yamcs.utils.TimeEncoding;
 public class LosTracker implements TimeListener {
     private static final Logger log = Logger.getLogger(LosTracker.class.getName());
 
-    Calendar missionTime = Calendar.getInstance();
+    Calendar missionTime = null;
     Map<YamcsPVReader, PvExpiration> pvs = new HashMap<>();
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
