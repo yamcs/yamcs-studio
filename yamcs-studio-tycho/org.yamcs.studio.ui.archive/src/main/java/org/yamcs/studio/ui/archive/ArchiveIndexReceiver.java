@@ -3,15 +3,14 @@ package org.yamcs.studio.ui.archive;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.Archive.GetTagsRequest;
-import org.yamcs.protobuf.Archive.GetTagsResponse;
 import org.yamcs.protobuf.Archive.InsertTagRequest;
 import org.yamcs.protobuf.Archive.InsertTagResponse;
-import org.yamcs.protobuf.Archive.UpdateTagRequest;
+import org.yamcs.protobuf.Archive.ListTagsResponse;
+import org.yamcs.protobuf.Archive.PatchTagRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
+import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
-import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
 
@@ -35,9 +34,7 @@ public class ArchiveIndexReceiver {
         }
 
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        long start = interval.hasStart() ? interval.getStart() : TimeEncoding.INVALID_INSTANT;
-        long stop = interval.hasStop() ? interval.getStop() : TimeEncoding.INVALID_INSTANT;
-        catalogue.downloadIndexes(start, stop, new ResponseHandler() {
+        catalogue.downloadIndexes(interval, new ResponseHandler() {
 
             @Override
             public void onMessage(MessageLite responseMsg) {
@@ -65,17 +62,12 @@ public class ArchiveIndexReceiver {
             log.info("Already receiving data");
             return;
         }
-        GetTagsRequest.Builder requestb = GetTagsRequest.newBuilder();
-        if (interval.hasStart())
-            requestb.setStart(interval.getStart());
-        if (interval.hasStop())
-            requestb.setStop(interval.getStop());
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.getTags(requestb.build(), new ResponseHandler() {
+        catalogue.listTags(interval, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                GetTagsResponse response = (GetTagsResponse) responseMsg;
-                archiveView.receiveTags(response.getTagsList());
+                ListTagsResponse response = (ListTagsResponse) responseMsg;
+                archiveView.receiveTags(response.getTagList());
                 archiveView.receiveTagsFinished();
                 receiving = false;
             }
@@ -97,9 +89,9 @@ public class ArchiveIndexReceiver {
         if (tag.hasDescription())
             requestb.setDescription(tag.getDescription());
         if (tag.hasStart())
-            requestb.setStart(tag.getStart());
+            requestb.setStart(TimeEncoding.toString(tag.getStart()));
         if (tag.hasStop())
-            requestb.setStop(tag.getStop());
+            requestb.setStop(TimeEncoding.toString(tag.getStop()));
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
         catalogue.insertTag(requestb.build(), new ResponseHandler() {
             @Override
@@ -116,7 +108,7 @@ public class ArchiveIndexReceiver {
     }
 
     public void updateTag(ArchiveTag oldTag, ArchiveTag newTag) {
-        UpdateTagRequest.Builder requestb = UpdateTagRequest.newBuilder();
+        PatchTagRequest.Builder requestb = PatchTagRequest.newBuilder();
         if (newTag.hasName())
             requestb.setName(newTag.getName());
         if (newTag.hasColor())
@@ -124,9 +116,9 @@ public class ArchiveIndexReceiver {
         if (newTag.hasDescription())
             requestb.setDescription(newTag.getDescription());
         if (newTag.hasStart())
-            requestb.setStart(newTag.getStart());
+            requestb.setStart(TimeEncoding.toString(newTag.getStart()));
         if (newTag.hasStop())
-            requestb.setStop(newTag.getStop());
+            requestb.setStop(TimeEncoding.toString(newTag.getStop()));
         long tagTime = oldTag.hasStart() ? oldTag.getStart() : 0;
         int tagId = oldTag.getId();
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();

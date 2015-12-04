@@ -40,11 +40,11 @@ import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 import org.yamcs.utils.TimeEncoding;
 

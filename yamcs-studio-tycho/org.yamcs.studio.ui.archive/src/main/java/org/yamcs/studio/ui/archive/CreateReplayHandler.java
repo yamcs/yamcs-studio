@@ -10,8 +10,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.ui.utils.TimeInterval;
 
 public class CreateReplayHandler extends AbstractHandler {
 

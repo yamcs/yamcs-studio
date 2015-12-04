@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
 public class CustomizeRangeDialog extends TitleAreaDialog {

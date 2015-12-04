@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.utils.TimeEncoding;
 

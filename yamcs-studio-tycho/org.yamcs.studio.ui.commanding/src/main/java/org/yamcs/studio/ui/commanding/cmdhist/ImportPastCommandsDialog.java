@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.ui.utils.TimeInterval;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
@@ -140,9 +140,10 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
         long start = TimeEncoding.fromCalendar(toCalendar(startDate, startTime));
         long stop = TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime));
+        TimeInterval interval = new TimeInterval(start, stop);
 
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.downloadCommands(start, stop, new ResponseHandler() {
+        catalogue.downloadCommands(interval, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 if (responseMsg != null) {

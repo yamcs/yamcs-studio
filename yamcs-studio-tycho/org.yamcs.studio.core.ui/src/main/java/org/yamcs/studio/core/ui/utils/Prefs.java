@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.prefs.Preferences;
 
+import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.TimeCatalogue;
 
 /**
