@@ -25,12 +25,26 @@
             id="org.yamcs.studio.ui.eventlog.importCommand"
             name="Import Events">
       </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.exportCommand"
+            name="Export Events to CSV">
+      </command>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
       <handler
             class="org.yamcs.studio.ui.eventlog.ImportEventsHandler"
             commandId="org.yamcs.studio.ui.eventlog.importCommand">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.ExportEventsHandler"
+            commandId="org.yamcs.studio.ui.eventlog.exportCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.state.connected">
                <equals value="true"/>
@@ -74,6 +88,13 @@
                disabledIcon="icons/dlcl16/lock_co.png"
                label="Scroll Lock"
                style="toggle"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.exportCommand"
+               icon="icons/elcl16/export_wiz.png"
+               disabledIcon="icons/dlcl16/export_wiz.png"
+               label="Export Events to CSV"
+               style="push"/>
          <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.eventlog.importCommand"

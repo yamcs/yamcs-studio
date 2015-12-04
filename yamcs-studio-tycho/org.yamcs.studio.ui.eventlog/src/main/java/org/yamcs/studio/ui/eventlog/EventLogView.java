@@ -269,6 +269,11 @@ public class EventLogView extends ViewPart implements EventListener {
         tableContentProvider.addEvent(event);
     }
 
+    public EventLogContentProvider getTableContentProvider()
+    {
+        return tableContentProvider;
+    }
+
     private SelectionAdapter getSelectionAdapter(TableColumn column) {
         SelectionAdapter selectionAdapter = new SelectionAdapter() {
             @Override

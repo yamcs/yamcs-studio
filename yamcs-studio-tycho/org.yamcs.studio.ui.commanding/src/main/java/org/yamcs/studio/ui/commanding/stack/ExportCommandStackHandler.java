@@ -81,7 +81,7 @@ public class ExportCommandStackHandler extends AbstractHandler {
             return null;
         }
 
-        MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), "Export Command Stack", "Command stack exported successfully.");
+        MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Export Command Stack", "Command stack exported successfully.");
         return null;
     }
 }
