@@ -4,6 +4,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
@@ -57,11 +58,13 @@ public class EventDetailsDialog extends TitleAreaDialog {
 
     private void createDetailArea(Composite container)
     {
+        org.eclipse.swt.graphics.Font terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
         final StyledText styledText = new StyledText(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         styledText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
         styledText.setEditable(false);
         styledText.setText(event.getMessage());
         styledText.setAlwaysShowScrollBars(false);
+        styledText.setFont(terminalFont);
     }
 
     @Override
