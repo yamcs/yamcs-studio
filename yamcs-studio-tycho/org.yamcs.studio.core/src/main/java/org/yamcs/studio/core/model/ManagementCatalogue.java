@@ -9,8 +9,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
-import org.yamcs.protobuf.Rest.PatchClientRequest;
-import org.yamcs.protobuf.Rest.PatchProcessorRequest;
+import org.yamcs.protobuf.Rest.EditClientRequest;
+import org.yamcs.protobuf.Rest.EditProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -130,7 +130,7 @@ public class ManagementCatalogue implements Catalogue {
         }
     }
 
-    public void patchProcessorRequest(String processor, PatchProcessorRequest request, ResponseHandler responseHandler) {
+    public void editProcessorRequest(String processor, EditProcessorRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         String instance = connectionManager.getYamcsInstance();
         RestClient restClient = connectionManager.getRestClient();
@@ -141,7 +141,7 @@ public class ManagementCatalogue implements Catalogue {
         }
     }
 
-    public void patchClientRequest(int clientId, PatchClientRequest request, ResponseHandler responseHandler) {
+    public void editClientRequest(int clientId, EditClientRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {

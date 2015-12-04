@@ -9,7 +9,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.PatchProcessorRequest;
+import org.yamcs.protobuf.Rest.EditProcessorRequest;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -24,8 +24,8 @@ public class PauseHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
         ProcessorInfo processorInfo = catalogue.getCurrentProcessorInfo();
-        PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setState("PAUSED").build();
-        catalogue.patchProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
+        EditProcessorRequest req = EditProcessorRequest.newBuilder().setState("PAUSED").build();
+        catalogue.editProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 // success

@@ -120,7 +120,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
 
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
-        YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class).processInvalidIdentification(id);
+        ParameterCatalogue.getInstance().processInvalidIdentification(id);
     }
 
     @Override
@@ -128,47 +128,47 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         switch (data.getType()) {
         case TIME_INFO:
             TimeInfo timeInfo = data.getTimeInfo();
-            YamcsPlugin.getDefault().getCatalogue(TimeCatalogue.class).processTimeInfo(timeInfo);
+            TimeCatalogue.getInstance().processTimeInfo(timeInfo);
             break;
         case PARAMETER:
             ParameterData pdata = data.getParameterData();
-            YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class).processParameterData(pdata);
+            ParameterCatalogue.getInstance().processParameterData(pdata);
             break;
         case CLIENT_INFO:
             ClientInfo clientInfo = data.getClientInfo();
-            YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processClientInfo(clientInfo);
+            ManagementCatalogue.getInstance().processClientInfo(clientInfo);
             break;
         case PROCESSOR_INFO:
             ProcessorInfo processorInfo = data.getProcessorInfo();
-            YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processProcessorInfo(processorInfo);
+            ManagementCatalogue.getInstance().processProcessorInfo(processorInfo);
             break;
         case CMD_HISTORY:
             CommandHistoryEntry cmdhistEntry = data.getCommand();
-            YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandHistoryEntry(cmdhistEntry);
+            CommandingCatalogue.getInstance().processCommandHistoryEntry(cmdhistEntry);
             break;
         case PROCESSING_STATISTICS:
             Statistics statistics = data.getStatistics();
-            YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class).processStatistics(statistics);
+            ManagementCatalogue.getInstance().processStatistics(statistics);
             break;
         case EVENT:
             Event event = data.getEvent();
-            YamcsPlugin.getDefault().getCatalogue(EventCatalogue.class).processEvent(event);
+            EventCatalogue.getInstance().processEvent(event);
             break;
         case ALARM_DATA:
             AlarmData alarm = data.getAlarmData();
-            YamcsPlugin.getDefault().getCatalogue(AlarmCatalogue.class).processAlarmData(alarm);
+            AlarmCatalogue.getInstance().processAlarmData(alarm);
             break;
         case LINK_EVENT:
             LinkEvent linkEvent = data.getLinkEvent();
-            YamcsPlugin.getDefault().getCatalogue(LinkCatalogue.class).processLinkEvent(linkEvent);
+            LinkCatalogue.getInstance().processLinkEvent(linkEvent);
             break;
         case COMMAND_QUEUE_INFO:
             CommandQueueInfo queueInfo = data.getCommandQueueInfo();
-            YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandQueueInfo(queueInfo);
+            CommandingCatalogue.getInstance().processCommandQueueInfo(queueInfo);
             break;
         case COMMAND_QUEUE_EVENT:
             CommandQueueEvent queueEvent = data.getCommandQueueEvent();
-            YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class).processCommandQueueEvent(queueEvent);
+            CommandingCatalogue.getInstance().processCommandQueueEvent(queueEvent);
             break;
         default:
             throw new IllegalArgumentException("Unexpected data type " + data.getType());

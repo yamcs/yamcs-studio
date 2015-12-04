@@ -9,7 +9,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.PatchClientRequest;
+import org.yamcs.protobuf.Rest.EditClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -32,8 +32,8 @@ public class ChooseProcessorDialogHandler extends AbstractRestHandler {
             if (info != null) {
                 ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
                 ClientInfo clientInfo = catalogue.getCurrentClientInfo();
-                PatchClientRequest req = PatchClientRequest.newBuilder().setProcessor(info.getName()).build();
-                catalogue.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
+                EditClientRequest req = EditClientRequest.newBuilder().setProcessor(info.getName()).build();
+                catalogue.editClientRequest(clientInfo.getId(), req, new ResponseHandler() {
                     @Override
                     public void onMessage(MessageLite responseMsg) {
                         Display.getDefault().asyncExec(() -> {

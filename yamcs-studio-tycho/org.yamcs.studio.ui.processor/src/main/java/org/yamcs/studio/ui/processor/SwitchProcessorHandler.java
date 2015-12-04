@@ -15,7 +15,7 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
-import org.yamcs.protobuf.Rest.PatchClientRequest;
+import org.yamcs.protobuf.Rest.EditClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -40,8 +40,8 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
         ProcessorInfo processorInfo = catalogue.getProcessorInfo(radioParameter);
         if (processorInfo != null) {
             ClientInfo clientInfo = catalogue.getCurrentClientInfo();
-            PatchClientRequest req = PatchClientRequest.newBuilder().setProcessor(processorInfo.getName()).build();
-            catalogue.patchClientRequest(clientInfo.getId(), req, new ResponseHandler() {
+            EditClientRequest req = EditClientRequest.newBuilder().setProcessor(processorInfo.getName()).build();
+            catalogue.editClientRequest(clientInfo.getId(), req, new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite responseMsg) {
                     Display.getDefault().asyncExec(() -> {

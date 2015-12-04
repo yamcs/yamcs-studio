@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Rest.PatchLinkRequest;
+import org.yamcs.protobuf.Rest.EditLinkRequest;
 import org.yamcs.protobuf.YamcsManagement.LinkEvent;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.ConnectionManager;
@@ -88,13 +88,13 @@ public class LinkCatalogue implements Catalogue {
 
     public void enableLink(String instance, String name, ResponseHandler responseHandler) {
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        PatchLinkRequest req = PatchLinkRequest.newBuilder().setState("enabled").build();
+        EditLinkRequest req = EditLinkRequest.newBuilder().setState("enabled").build();
         restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
     }
 
     public void disableLink(String instance, String name, ResponseHandler responseHandler) {
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
-        PatchLinkRequest req = PatchLinkRequest.newBuilder().setState("disabled").build();
+        EditLinkRequest req = EditLinkRequest.newBuilder().setState("disabled").build();
         restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
     }
 

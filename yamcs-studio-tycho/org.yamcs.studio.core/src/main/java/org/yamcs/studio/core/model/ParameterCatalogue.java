@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Rest.ListParametersResponse;
+import org.yamcs.protobuf.Rest.ListParameterInfoResponse;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
@@ -141,10 +141,10 @@ public class ParameterCatalogue implements Catalogue {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         String instance = connectionManager.getYamcsInstance();
-        restClient.get("/mdb/" + instance + "/parameters", null, ListParametersResponse.newBuilder(), new ResponseHandler() {
+        restClient.get("/mdb/" + instance + "/parameters", null, ListParameterInfoResponse.newBuilder(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
-                ListParametersResponse response = (ListParametersResponse) responseMsg;
+                ListParameterInfoResponse response = (ListParameterInfoResponse) responseMsg;
                 processMetaParameters(response.getParameterList());
             }
 

@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.Rest.PatchProcessorRequest;
+import org.yamcs.protobuf.Rest.EditProcessorRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
@@ -232,9 +232,9 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
                 return;
 
             String seekTime = TimeEncoding.toString(newPosition);
-            PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setSeek(seekTime).build();
+            EditProcessorRequest req = EditProcessorRequest.newBuilder().setSeek(seekTime).build();
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            catalogue.patchProcessorRequest(processor.getName(), req, new ResponseHandler() {
+            catalogue.editProcessorRequest(processor.getName(), req, new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite responseMsg) {
                     Display.getDefault().asyncExec(() -> {

@@ -26,7 +26,7 @@ import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Commanding.QueueState;
-import org.yamcs.protobuf.Rest.PatchCommandQueueRequest;
+import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
@@ -226,7 +226,7 @@ public class CommandQueuesTableViewer extends TableViewer {
     // rebuild doesn't seem to do anything and therefore is not currently included in rest api
     // keeping it around for future reference mostly
     private void updateQueueState(CommandQueueInfo queue, QueueState queueState, boolean rebuild) {
-        PatchCommandQueueRequest req = PatchCommandQueueRequest.newBuilder().setState(queueState.toString()).build();
+        EditCommandQueueRequest req = EditCommandQueueRequest.newBuilder().setState(queueState.toString()).build();
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
         catalogue.editQueue(queue, req, RestClient.NULL_RESPONSE_HANDLER);
     }

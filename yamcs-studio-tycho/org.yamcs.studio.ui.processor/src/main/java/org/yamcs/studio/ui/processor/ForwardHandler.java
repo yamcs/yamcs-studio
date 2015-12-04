@@ -9,7 +9,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.PatchProcessorRequest;
+import org.yamcs.protobuf.Rest.EditProcessorRequest;
 import org.yamcs.protobuf.Yamcs.ReplaySpeed;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -36,9 +36,9 @@ public class ForwardHandler extends AbstractHandler {
         } else {
             newSpeed = "2x";
         }
-        PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setSpeed(newSpeed).build();
+        EditProcessorRequest req = EditProcessorRequest.newBuilder().setSpeed(newSpeed).build();
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        catalogue.patchProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
+        catalogue.editProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 // success

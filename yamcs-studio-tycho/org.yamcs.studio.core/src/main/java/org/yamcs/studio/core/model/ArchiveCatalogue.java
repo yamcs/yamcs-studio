@@ -2,11 +2,11 @@ package org.yamcs.studio.core.model;
 
 import java.util.Arrays;
 
-import org.yamcs.protobuf.Archive.InsertTagRequest;
-import org.yamcs.protobuf.Archive.InsertTagResponse;
-import org.yamcs.protobuf.Archive.ListTagsResponse;
-import org.yamcs.protobuf.Archive.PatchTagRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Rest.CreateTagRequest;
+import org.yamcs.protobuf.Rest.EditTagRequest;
+import org.yamcs.protobuf.Rest.ListTagsResponse;
+import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
@@ -51,7 +51,7 @@ public class ArchiveCatalogue implements Catalogue {
 
     public void downloadIndexes(TimeInterval interval, ResponseHandler responseHandler) {
         String instance = ConnectionManager.getInstance().getYamcsInstance();
-        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/indexes?filter=tm,pp,commands,completeness");
+        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/indexes");
         urlb.setParam("filter", Arrays.asList("tm", "pp", "commands", "completeness"));
         if (interval.hasStart())
             urlb.setParam("start", interval.getStartUTC());
@@ -66,18 +66,18 @@ public class ArchiveCatalogue implements Catalogue {
         }
     }
 
-    public void insertTag(InsertTagRequest request, ResponseHandler responseHandler) {
+    public void createTag(CreateTagRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
             String instance = connectionManager.getYamcsInstance();
-            restClient.post("/archive/" + instance + "/tags", request, InsertTagResponse.newBuilder(), responseHandler);
+            restClient.post("/archive/" + instance + "/tags", request, ArchiveTag.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }
     }
 
-    public void updateTag(long tagTime, int tagId, PatchTagRequest request, ResponseHandler responseHandler) {
+    public void editTag(long tagTime, int tagId, EditTagRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
