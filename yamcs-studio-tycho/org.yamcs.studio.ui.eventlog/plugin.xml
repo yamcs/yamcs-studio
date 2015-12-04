@@ -44,12 +44,7 @@
       </handler>
       <handler
             class="org.yamcs.studio.ui.eventlog.ExportEventsHandler"
-            commandId="org.yamcs.studio.ui.eventlog.exportCommand">
-         <activeWhen>
-            <with variable="org.yamcs.studio.ui.state.connected">
-               <equals value="true"/>
-            </with>
-         </activeWhen>
+            commandId="org.yamcs.studio.ui.eventlog.exportCommand">        
       </handler>
       <handler
             class="org.yamcs.studio.ui.eventlog.ClearEventLogHandler"
@@ -100,7 +95,7 @@
                commandId="org.yamcs.studio.ui.eventlog.importCommand"
                icon="icons/elcl16/import_wiz.gif"
                disabledIcon="icons/dlcl16/import_wiz.gif"
-               label="Import Events"
+               label="Import Events from Yamcs"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
       </menuContribution>
