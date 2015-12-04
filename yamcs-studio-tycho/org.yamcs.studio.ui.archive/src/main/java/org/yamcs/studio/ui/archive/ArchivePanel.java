@@ -231,7 +231,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             if (processor == null || processor.getName().equals("realtime"))
                 return;
 
-            PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setSeekTime(newPosition).build();
+            String seekTime = TimeEncoding.toString(newPosition);
+            PatchProcessorRequest req = PatchProcessorRequest.newBuilder().setSeek(seekTime).build();
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
             catalogue.patchProcessorRequest(processor.getName(), req, new ResponseHandler() {
                 @Override

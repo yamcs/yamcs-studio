@@ -30,10 +30,9 @@ public class ForwardHandler extends AbstractHandler {
         if (processorInfo.getReplayRequest().hasSpeed()) {
             ReplaySpeed currentSpeed = processorInfo.getReplayRequest().getSpeed();
             float speedValue = currentSpeed.getParam() * 2f;
-            if (speedValue > 17 || speedValue == 0f)
-                newSpeed = "realtime";
-            else
-                newSpeed = speedValue + "x";
+            if (speedValue > 17)
+                speedValue = 1.0f;
+            newSpeed = (speedValue == 0f ? 1f : speedValue) + "x";
         } else {
             newSpeed = "2x";
         }
