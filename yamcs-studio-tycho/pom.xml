@@ -27,6 +27,7 @@
 
 	<modules>
 		<module>org.yamcs.studio.core</module>
+		<module>org.yamcs.studio.core.test</module>
 		<module>org.yamcs.studio.core.ui</module>
 		<module>org.yamcs.studio.dist.default.plugin</module>
 		<module>org.yamcs.studio.dist.default.repository</module>

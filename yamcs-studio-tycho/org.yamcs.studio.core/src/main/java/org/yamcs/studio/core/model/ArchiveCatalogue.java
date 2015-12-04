@@ -1,5 +1,7 @@
 package org.yamcs.studio.core.model;
 
+import java.util.Arrays;
+
 import org.yamcs.protobuf.Archive.InsertTagRequest;
 import org.yamcs.protobuf.Archive.InsertTagResponse;
 import org.yamcs.protobuf.Archive.ListTagsResponse;
@@ -12,6 +14,7 @@ import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.URLBuilder;
 
 /**
  * Groups generic archive operations (index, tags).
@@ -32,18 +35,15 @@ public class ArchiveCatalogue implements Catalogue {
 
     public void downloadCommands(TimeInterval interval, ResponseHandler responseHandler) {
         String instance = ConnectionManager.getInstance().getYamcsInstance();
-        String resource = "/archive/" + instance + "/commands";
-        if (interval.hasStart()) {
-            resource += "?start=" + interval.getStart();
-            if (interval.hasStop()) {
-                resource += "&stop=" + interval.getStop();
-            }
-        } else if (interval.hasStop()) {
-            resource += "?stop=" + interval.getStop();
-        }
+        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/commands");
+        if (interval.hasStart())
+            urlb.setParam("start", interval.getStartUTC());
+        if (interval.hasStop())
+            urlb.setParam("stop", interval.getStopUTC());
+
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
         if (restClient != null) {
-            restClient.streamGet(resource, null, () -> CommandHistoryEntry.newBuilder(), responseHandler);
+            restClient.streamGet(urlb.toString(), null, () -> CommandHistoryEntry.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }
@@ -51,16 +51,16 @@ public class ArchiveCatalogue implements Catalogue {
 
     public void downloadIndexes(TimeInterval interval, ResponseHandler responseHandler) {
         String instance = ConnectionManager.getInstance().getYamcsInstance();
-        String resource = "/archive/" + instance + "/indexes?filter=tm,pp,commands,completeness";
-        if (interval.hasStart()) {
-            resource += "&start=" + interval.getStart();
-        }
-        if (interval.hasStop()) {
-            resource += "&stop=" + interval.getStop();
-        }
+        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/indexes?filter=tm,pp,commands,completeness");
+        urlb.setParam("filter", Arrays.asList("tm", "pp", "commands", "completeness"));
+        if (interval.hasStart())
+            urlb.setParam("start", interval.getStartUTC());
+        if (interval.hasStop())
+            urlb.setParam("stop", interval.getStopUTC());
+
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
         if (restClient != null) {
-            restClient.streamGet(resource, null, () -> IndexResult.newBuilder(), responseHandler);
+            restClient.streamGet(urlb.toString(), null, () -> IndexResult.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }
@@ -102,19 +102,16 @@ public class ArchiveCatalogue implements Catalogue {
     public void listTags(TimeInterval interval, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         String instance = connectionManager.getYamcsInstance();
-        String resource = "/archive/" + instance + "/tags";
-        if (interval.hasStart()) {
-            resource += "?start=" + interval.getStart();
-            if (interval.hasStop()) {
-                resource += "&stop=" + interval.getStop();
-            }
-        } else if (interval.hasStop()) {
-            resource += "?stop=" + interval.getStop();
-        }
+
+        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/tags");
+        if (interval.hasStart())
+            urlb.setParam("start", interval.getStartUTC());
+        if (interval.hasStop())
+            urlb.setParam("stop", interval.getStopUTC());
 
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
-            restClient.get(resource, null, ListTagsResponse.newBuilder(), responseHandler);
+            restClient.get(urlb.toString(), null, ListTagsResponse.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }

@@ -52,6 +52,10 @@ public class TimeInterval implements Serializable {
         return start;
     }
 
+    public String getStartUTC() {
+        return TimeEncoding.toString(start);
+    }
+
     public void setStop(long stop) {
         hasStop = true;
         this.stop = stop;
@@ -59,6 +63,10 @@ public class TimeInterval implements Serializable {
 
     public long getStop() {
         return stop;
+    }
+
+    public String getStopUTC() {
+        return TimeEncoding.toString(stop);
     }
 
     public long calculateStart() {

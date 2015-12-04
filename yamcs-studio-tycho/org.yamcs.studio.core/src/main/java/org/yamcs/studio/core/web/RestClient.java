@@ -42,7 +42,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 public class RestClient {
 
     private static final Logger log = Logger.getLogger(RestClient.class.getName());
-    private static final String BINARY_MIME_TYPE = "application/protobuf";
+    private static final String PROTOBUF_MIME_TYPE = "application/protobuf";
     public static final ResponseHandler NULL_RESPONSE_HANDLER = new ResponseHandler() {
 
         @Override
@@ -158,7 +158,7 @@ public class RestClient {
         FullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, uri);
         request.headers().set(HttpHeaders.Names.HOST, resource.getHost());
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
-        request.headers().set(HttpHeaders.Names.ACCEPT, BINARY_MIME_TYPE);
+        request.headers().set(HttpHeaders.Names.ACCEPT, PROTOBUF_MIME_TYPE);
 
         if (credentials != null) {
             String credentialsClear = credentials.getUsername();
@@ -171,7 +171,7 @@ public class RestClient {
 
         if (requestBody != null) {
             requestBody.writeTo(new ByteBufOutputStream(request.content()));
-            request.headers().set(HttpHeaders.Names.CONTENT_TYPE, BINARY_MIME_TYPE);
+            request.headers().set(HttpHeaders.Names.CONTENT_TYPE, PROTOBUF_MIME_TYPE);
             request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
         }
         return ch.writeAndFlush(request);
