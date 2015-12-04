@@ -42,7 +42,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 public class RestClient {
 
     private static final Logger log = Logger.getLogger(RestClient.class.getName());
-    private static final String BINARY_MIME_TYPE = "application/octet-stream";
+    private static final String BINARY_MIME_TYPE = "application/protobuf";
     public static final ResponseHandler NULL_RESPONSE_HANDLER = new ResponseHandler() {
 
         @Override
