@@ -6,7 +6,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 
 class LinkTableModel {
@@ -34,22 +33,20 @@ class LinkTableModel {
         ScheduledFuture<?> future = schduledFutures.get(row);
         if (future != null)
             future.cancel(false);
-        future = timer.schedule(new Runnable() {
-            @Override
-            public void run() {
-                Display.getDefault().asyncExec(() ->
-                {
-                    // fireTableRowsUpdated(row, row);
-                    });
-
-            }
-        }, 2, TimeUnit.SECONDS);
+        future = timer.schedule(() -> {
+            if (linksTableViewer.getTable().isDisposed())
+                return;
+            linksTableViewer.getTable().getDisplay().asyncExec(() -> {
+                if (linksTableViewer.getTable().isDisposed())
+                    return;
+                // fireTableRowsUpdated(row, row);
+            });
+        } , 2, TimeUnit.SECONDS);
         schduledFutures.set(row, future);
     }
 
     public boolean isDataCountIncreasing(LinkInfo li) {
-        for (int i = 0; i < links.size(); i++)
-        {
+        for (int i = 0; i < links.size(); i++) {
             if (links.get(i) == li)
                 return (System.currentTimeMillis() - lastDataCountIncrease.get(i)) < 1500;
         }
