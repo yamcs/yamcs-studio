@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
@@ -46,6 +47,8 @@ import org.yamcs.studio.ui.archive.ArchivePanel.IndexChunkSpec;
  */
 public class IndexBox extends Box implements MouseListener {
     private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(IndexBox.class.getName());
+
     public static final Color BORDER_COLOR = new Color(216, 216, 216);
     private static final Color PACKET_LABEL_COLOR = new Color(102, 102, 102);
     DataView dataView;
@@ -526,7 +529,13 @@ public class IndexBox extends Box implements MouseListener {
     }
 
     public void dataLoadFinished() {
-        Object o = Prefs.getObject(prefs, "indexLines");
+        Object o;
+        try {
+            o = Prefs.getObject(prefs, "indexLines");
+        } catch (ClassNotFoundException e) {
+            log.warning("Class not found while loading index lines from preferences. Assume not set");
+            o = null;
+        }
         if (o == null)
             return;
 

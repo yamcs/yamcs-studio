@@ -22,7 +22,13 @@ public class Prefs {
     }
 
     public TimeInterval getInterval() {
-        TimeInterval range = (TimeInterval) getObject(prefs, "archiveRange");
+        TimeInterval range;
+        try {
+            range = (TimeInterval) getObject(prefs, "archiveRange");
+        } catch (ClassNotFoundException e) {
+            range = null; // Keep this around for a while until we migrate prefs
+                          // to gson. TimeInterval was moved multiple times.
+        }
         if (range == null) {
             long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
             range = TimeInterval.starting(missionTime - 30 * 24 * 3600);
@@ -53,13 +59,13 @@ public class Prefs {
         }
     }
 
-    static public Object getObject(Preferences prefs, String key) {
+    static public Object getObject(Preferences prefs, String key) throws ClassNotFoundException {
         byte[] raw = prefs.getByteArray(key, null);
         if (raw == null)
             return null;
         try {
             return bytes2Object(raw);
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
