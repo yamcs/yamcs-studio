@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?compositeArtifactRepository version="1.0.0"?>
+<repository name="Local Composite Repository"
+            type="org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository"
+            version="1.0.0">
+  <properties size="0">
+  </properties>
+  <children size="5">
+    <!--
+         Locations starting in file:/ refer to the root directory,
+         everything else is relative to this xml file
+      -->
+    <child location="../diirt/p2/target/repository/"/>
+    <child location="../maven-osgi-bundles/repository/target/repository"/>
+    <child location="../cs-studio-thirdparty/repository/target/repository"/>
+    <child location="../cs-studio/core/p2repo"/>
+    <child location="../cs-studio/applications/p2repo"/>
+  </children>
+</repository>

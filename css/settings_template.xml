@@ -1,9 +1,9 @@
 <settings>
   <profiles>
     <profile>
-      <id>css-for-yamcs</id>
+      <id>css-for-yamcs-v2</id>
       <properties>
-        <csstudio.local.repo>REPLACE_WITH_LOCAL_P2_REPO</csstudio.local.repo>
+        <csstudio.composite.repo>REPLACE_WITH_COMPOSITE_P2_REPO</csstudio.composite.repo>
         <cs-studio>dummy_value</cs-studio>
         <baselineMode>warn</baselineMode>
         <jgit.dirtyWorkingTree>warning</jgit.dirtyWorkingTree>
@@ -11,7 +11,7 @@
     </profile>
   </profiles>
   <activeProfiles>
-    <activeProfile>css-for-yamcs</activeProfile>
+    <activeProfile>css-for-yamcs-v2</activeProfile>
   </activeProfiles>
 </settings>
 

@@ -16,14 +16,6 @@ while [ -h "$PRG" ]; do
   fi
 done
 
-PRGDIR=`dirname "$PRG"`
-if [ ! -f $PRGDIR/css/local_p2_repository/artifacts.jar ]
-then
-	echo "Could not locate Target Platform"
-	echo "Did you run ./make-platform.sh already?"
-	exit 1
-fi
-
 set -e
 mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify
 mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify

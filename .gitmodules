@@ -7,3 +7,6 @@
 [submodule "css/cs-studio"]
 	path = css/cs-studio
 	url = https://github.com/ControlSystemStudio/cs-studio.git
+[submodule "css/diirt"]
+	path = css/diirt
+	url = https://github.com/ControlSystemStudio/diirt.git

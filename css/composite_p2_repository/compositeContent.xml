@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?compositeMetadataRepository version="1.0.0"?>
+<repository name="Local Composite Repository"
+            type="org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository"
+            version="1.0.0">
+  <properties size="1">
+    <!-- 'true' will report any error in a child repo.
+         Good for asserting that the child locations are valid,
+         bad when the child locations already list repositories
+         that will only be populated later in the build and are
+         initially empty.
+     -->
+    <property name="p2.atomic.composite.loading" value="false"/>
+  </properties>
+  <children size="5">
+    <child location="../diirt/p2/target/repository/"/>
+    <child location="../maven-osgi-bundles/repository/target/repository"/>
+    <child location="../cs-studio-thirdparty/repository/target/repository"/>
+    <child location="../cs-studio/core/p2repo"/>
+    <child location="../cs-studio/applications/p2repo"/>
+  </children>
+</repository>
