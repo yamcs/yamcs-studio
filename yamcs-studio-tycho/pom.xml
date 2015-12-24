@@ -20,7 +20,6 @@
 
 	<properties>
 		<tycho.version>0.24.0</tycho.version>
-		<tycho-extras.version>0.24.0</tycho-extras.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -198,11 +197,11 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		<repository>
+		<!--  repository>
 			<id>pvmanager-snapshots</id>
 			<name>sonatype snapshots</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository>
+		</repository-->
 	</repositories>
 
 	<profiles>
