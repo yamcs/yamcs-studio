@@ -48,8 +48,6 @@ With the previous steps all successfully completed, we now continue with getting
 
 - Under `Preferences > Maven > Discovery`, click on the `Open Catalog` button and install the Tycho Configurator from there. This plugin will add support for Tycho artefacts to the integrated Maven build cycle.
 
-- For now, you'll need to install the Xtext SDK as well from this update site: http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/ I'm hoping to make this optional in the future (presumably by packaging it up in a bundle ourselves).
-
 - Configure a Target Platform by going to `Preferences > Plug-in Development > Target Platform`. We want to configure Eclipse so that it gives priority to the projects that are open in your workspace, and only then checks the local P2 repository which you built earlier. So click `Add...`. Choose to initialize with the `Current Target`. Click `Next`. Click `Add...` to add a directory. Choose the directory `css/local_p2_repository` that we generated earlier on the command line. Click `Finish`. And select that new entry as the active Target Platform. Close the preferences pane with `OK`.
 
 - Import the Yamcs Studio maven projects under `yamcs-studio-tycho` into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.

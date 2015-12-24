@@ -19,7 +19,6 @@
 	</organization>
 
 	<properties>
-		<csstudio.pvmanager.version>2.9.1-SNAPSHOT</csstudio.pvmanager.version>
 		<tycho.version>0.24.0</tycho.version>
 		<tycho-extras.version>0.24.0</tycho-extras.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,8 +44,6 @@
 		<module>org.yamcs.studio.ui.eventlog</module>
 		<module>org.yamcs.studio.ui.monitoring</module>
 		<module>org.yamcs.studio.ui.processor</module>
-		<module>org.yamcs.studio.ycl.dsl</module>
-		<module>org.yamcs.studio.ycl.ui</module>
 	</modules>
 
 	<build>
@@ -179,11 +176,6 @@
 			<id>orbit-kepler</id>
 			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</url>
 			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>xtext</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
 		</repository>
 		<repository>
 			<id>repository.jboss.org</id>

@@ -13,5 +13,3 @@ css/local_p2_repository/
 # Generated from POM
 yamcs-studio-osgi/org.yamcs.osgiclient/META-INF/
 
-# Xtext stuff
-*.xtendbin
