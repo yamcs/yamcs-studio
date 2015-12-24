@@ -1,7 +1,7 @@
 package org.yamcs.studio.core.pvmanager;
 
-import org.epics.pvmanager.ChannelHandler;
-import org.epics.pvmanager.DataSource;
+import org.diirt.datasource.ChannelHandler;
+import org.diirt.datasource.DataSource;
 
 /**
  * When running the OPIbuilder this is instantiated for every parameter separately.

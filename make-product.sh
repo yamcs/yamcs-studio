@@ -16,6 +16,8 @@ while [ -h "$PRG" ]; do
   fi
 done
 
+PRGDIR=`dirname "$PRG"`
+
 set -e
 mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify
 mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify

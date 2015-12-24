@@ -1,7 +1,7 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.pvmanager.DataSourceTypeAdapter;
-import org.epics.pvmanager.ValueCache;
+import org.diirt.datasource.DataSourceTypeAdapter;
+import org.diirt.datasource.ValueCache;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
 

@@ -2,13 +2,13 @@ package org.yamcs.studio.core.vtype;
 
 import java.util.List;
 
-import org.epics.util.array.ArrayByte;
-import org.epics.util.array.ArrayInt;
-import org.epics.util.array.ListByte;
-import org.epics.util.array.ListInt;
-import org.epics.vtype.ArrayDimensionDisplay;
-import org.epics.vtype.VByteArray;
-import org.epics.vtype.ValueUtil;
+import org.diirt.util.array.ArrayByte;
+import org.diirt.util.array.ArrayInt;
+import org.diirt.util.array.ListByte;
+import org.diirt.util.array.ListInt;
+import org.diirt.vtype.ArrayDimensionDisplay;
+import org.diirt.vtype.VByteArray;
+import org.diirt.vtype.ValueUtil;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class BinaryVType extends YamcsVType implements VByteArray {

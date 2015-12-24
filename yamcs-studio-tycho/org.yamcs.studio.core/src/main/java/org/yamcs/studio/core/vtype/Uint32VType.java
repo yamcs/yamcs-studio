@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.vtype.VLong;
+import org.diirt.vtype.VLong;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class Uint32VType extends YamcsVType implements VLong {

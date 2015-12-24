@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.csstudio.utility.pvmanager.datasource">
-      <datasource
-            datasource="org.yamcs.studio.core.pvmanager.ParameterDataSource"
-            name="Yamcs Parameter"
-            prefix="para">
-      </datasource>
-   </extension>
-   <extension point="org.csstudio.utility.pvmanager.datasource">
-      <datasource
-            datasource="org.yamcs.studio.core.pvmanager.SoftwareParameterDataSource"
-            name="Yamcs Software Parameter"
-            prefix="sw">
-      </datasource>
-   </extension>
    <extension
          id="org.yamcs.studio.core.YamcsLoginModule"
          point="org.eclipse.equinox.security.loginModule">

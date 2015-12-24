@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.vtype.VString;
+import org.diirt.vtype.VString;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class StringVType extends YamcsVType implements VString {

@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.vtype.VDouble;
+import org.diirt.vtype.VDouble;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class DoubleVType extends YamcsVType implements VDouble {

@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.vtype.VFloat;
+import org.diirt.vtype.VFloat;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class FloatVType extends YamcsVType implements VFloat {

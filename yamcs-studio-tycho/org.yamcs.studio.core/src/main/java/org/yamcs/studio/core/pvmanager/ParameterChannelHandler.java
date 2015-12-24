@@ -2,10 +2,10 @@ package org.yamcs.studio.core.pvmanager;
 
 import java.util.logging.Logger;
 
-import org.epics.pvmanager.ChannelWriteCallback;
-import org.epics.pvmanager.DataSourceTypeAdapter;
-import org.epics.pvmanager.MultiplexedChannelHandler;
-import org.epics.pvmanager.ValueCache;
+import org.diirt.datasource.ChannelWriteCallback;
+import org.diirt.datasource.DataSourceTypeAdapter;
+import org.diirt.datasource.MultiplexedChannelHandler;
+import org.diirt.datasource.ValueCache;
 import org.yamcs.protobuf.Mdb.DataSourceType;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;

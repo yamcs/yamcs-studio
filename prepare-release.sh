@@ -8,9 +8,9 @@ if [ -z "$1" ]; then
 fi
 
 echo "Updating poms and manifests"
-mvn -o -f yamcs-studio-osgi/pom.xml org.eclipse.tycho:tycho-versions-plugin:0.23.0:set-version -DnewVersion=$1
+mvn -o -f yamcs-studio-osgi/pom.xml org.eclipse.tycho:tycho-versions-plugin:0.24.0:set-version -DnewVersion=$1
 
-mvn -o -f yamcs-studio-tycho/pom.xml org.eclipse.tycho:tycho-versions-plugin:0.23.0:set-version -DnewVersion=$1
+mvn -o -f yamcs-studio-tycho/pom.xml org.eclipse.tycho:tycho-versions-plugin:0.24.0:set-version -DnewVersion=$1
 
 echo "Updated version numbers to $1"
 read -p 'Rebuild binaries? [Y/n]' yn

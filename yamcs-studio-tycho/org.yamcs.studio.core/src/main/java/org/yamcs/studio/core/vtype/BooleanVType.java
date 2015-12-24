@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.vtype.VBoolean;
+import org.diirt.vtype.VBoolean;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class BooleanVType extends YamcsVType implements VBoolean {

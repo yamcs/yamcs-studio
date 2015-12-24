@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.vtype;
 
-import org.epics.vtype.VInt;
+import org.diirt.vtype.VInt;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class Sint32VType extends YamcsVType implements VInt {

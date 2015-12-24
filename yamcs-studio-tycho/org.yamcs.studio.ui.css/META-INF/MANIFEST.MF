@@ -20,7 +20,6 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.startup,
  org.csstudio.apputil.ui,
  org.csstudio.ui.menu.app,
- org.epics.vtype,
  org.csstudio.simplepv,
  org.eclipse.e4.core.services,
  org.eclipse.e4.core.contexts,
@@ -35,9 +34,8 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.opibuilder,
  org.eclipse.ui.forms,
  org.eclipse.gef,
- com.google.gson
-Import-Package: org.epics.pvmanager,
- org.epics.pvmanager.vtype
+ com.google.gson,
+ org.diirt.vtype
 Export-Package: org.yamcs.studio.ui.css
 Service-Component: OSGI-INF/*.xml
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

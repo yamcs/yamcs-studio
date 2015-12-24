@@ -2,13 +2,13 @@ package org.yamcs.studio.core.vtype;
 
 import java.text.NumberFormat;
 
-import org.epics.util.text.NumberFormats;
-import org.epics.util.time.Timestamp;
-import org.epics.vtype.Alarm;
-import org.epics.vtype.AlarmSeverity;
-import org.epics.vtype.Display;
-import org.epics.vtype.Time;
-import org.epics.vtype.VType;
+import org.diirt.util.text.NumberFormats;
+import org.diirt.util.time.Timestamp;
+import org.diirt.vtype.Alarm;
+import org.diirt.vtype.AlarmSeverity;
+import org.diirt.vtype.Display;
+import org.diirt.vtype.Time;
+import org.diirt.vtype.VType;
 import org.yamcs.protobuf.Mdb.AlarmLevelType;
 import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;

@@ -7,11 +7,12 @@ Bundle-SymbolicName: org.yamcs.studio.theming;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.ui.editors,
- org.eclipse.jface.text,
+Require-Bundle: org.eclipse.jface.text,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.jface,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
  org.eclipse.ui.workbench,
  org.eclipse.ui.views,
  org.eclipse.ui.forms,

@@ -2,7 +2,7 @@ package org.yamcs.studio.core.vtype;
 
 import java.math.BigInteger;
 
-import org.epics.vtype.VLong;
+import org.diirt.vtype.VLong;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 /**

@@ -20,8 +20,8 @@
 
 	<properties>
 		<csstudio.pvmanager.version>2.9.1-SNAPSHOT</csstudio.pvmanager.version>
-		<tycho.version>0.22.0</tycho.version>
-		<tycho-extras.version>0.22.0</tycho-extras.version>
+		<tycho.version>0.24.0</tycho.version>
+		<tycho-extras.version>0.24.0</tycho-extras.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -171,7 +171,7 @@
 	<repositories>
 		<repository>
 			<id>Eclipse</id>
-			<url>http://download.eclipse.org/releases/luna</url>
+			<url>http://download.eclipse.org/releases/mars</url>
 			<layout>p2</layout>
 		</repository>
 		<!-- Introduced for resolving junit/mockito dependencies -->
@@ -211,39 +211,9 @@
 			<name>sonatype snapshots</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
-		<repository>
-			<id>epics</id>
-			<name>EPICS Repository</name>
-			<url>http://epics.sourceforge.net/maven2/</url>
-		</repository>
 	</repositories>
 
-	<!-- Temporary to be able to use 0.23.1 which fixes a high-memory consumption 
-		bug -->
-	<pluginRepositories>
-		<pluginRepository>
-			<id>tycho-staged</id>
-			<url>https://oss.sonatype.org/content/repositories/orgeclipsetycho-1022/</url>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<profiles>
-		<!-- If a local repository is specified, use that. -->
-		<profile>
-			<id>csstudio-local-repo-enable</id>
-			<activation>
-				<file>
-					<exists>${csstudio.local.repo}/artifacts.jar</exists>
-				</file>
-			</activation>
-			<repositories>
-				<repository>
-					<id>csstudio-local-repo</id>
-					<url>file:${csstudio.local.repo}</url>
-					<layout>p2</layout>
-				</repository>
-			</repositories>
-		</profile>
 		<profile>
 			<id>csstudio-composite-repo-enable</id>
 			<activation>
