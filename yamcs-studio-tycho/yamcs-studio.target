@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="Running Platform" sequenceNumber="66">
+<locations>
+<location path="/Users/fdi/workspace/yamcs-studio/css/maven-osgi-bundles/repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/diirt/p2/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio-thirdparty/repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/applications/opibuilder/opibuilder-repository/target/repository" type="Directory"/>
+<location path="${eclipse_home}" type="Profile"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/core/ui/ui-repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/core/utility/utility-repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/core/base/base-repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/applications/apputil/apputil-repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/core/platform/platform-repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/applications/appunorganized/appunorganized-repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/applications/logbook/logbook-repository/target/repository" type="Directory"/>
+<location path="/Users/fdi/workspace/yamcs-studio/css/cs-studio/core/unorganized/unorganized-repository/target/repository" type="Directory"/>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.fx.target.feature.feature.group" version="1.2.0.201501301037"/>
+<unit id="org.eclipse.fx.target.rcp.feature.feature.group" version="1.2.0.201501301037"/>
+<unit id="org.eclipse.fx.core.feature.feature.group" version="1.2.0.201501301037"/>
+<unit id="org.eclipse.fx.runtime.feature.feature.group" version="1.2.0.201501301037"/>
+<unit id="org.eclipse.fx.target.rcp4.feature.feature.group" version="1.2.0.201501301037"/>
+<repository location="http://download.eclipse.org/efxclipse/runtime-released/1.2.0/site"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.batik.util.gui.source" version="1.7.0.v200903091627"/>
+<unit id="org.apache.batik.ext.awt" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.xml" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.swing" version="1.7.0.v201302011158"/>
+<unit id="org.apache.batik.svggen" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.dom.svg.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.svggen.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.css" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.parser" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.bridge" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.xml.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.pdf" version="1.6.0.v201105071520"/>
+<unit id="org.apache.batik.transcoder.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.ext.awt.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.dom" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.util.gui" version="1.7.0.v200903091627"/>
+<unit id="org.apache.batik.extension" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.parser.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.bridge.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.util" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.css.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.util.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.extension.source" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.transcoder" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.dom.svg" version="1.7.0.v201011041433"/>
+<unit id="org.apache.batik.swing.source" version="1.7.0.v201302011158"/>
+<unit id="org.apache.batik.dom.source" version="1.7.0.v201011041433"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository"/>
+</location>
+</locations>
+<environment>
+<os>macosx</os>
+<ws>cocoa</ws>
+<arch>x86_64</arch>
+<nl>en_US</nl>
+</environment>
+<launcherArgs>
+<vmArgs>-Dosgi.requiredJavaVersion=1.7 -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -XX:MaxPermSize=256m -Xms256m -Xmx1024m -Xdock:icon=../Resources/Eclipse.icns -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgs>
+</launcherArgs>
+</target>
