@@ -57,14 +57,6 @@ With the previous steps all successfully completed, we now continue with getting
 
 - Click `Launch an Eclipse Application`
 
-This will give you a lot of error output the first time, but that's fine. We need to tweak the generated launch file first. Note that this launch file is specific to your Eclipse installation and should therefore not be version controlled.
-
-So, to fix the errors, open the launch configuration dialog (`Run > Run Configurations...`), and in the tab Plugins of the `yamcs-studio.product` configuration, include the lower version for `org.antlr.runtime` in the setup.
-
-You'll have to do this workaround every time you click that launch button. We have not yet found an elegant solution to this, so please be patient.
-
-I would also recommend to tick the option `Validate plug-ins automatically prior to launching`. This will save you time.
-
 ### Keep your development copy up-to-date
 
 #### Target Platform

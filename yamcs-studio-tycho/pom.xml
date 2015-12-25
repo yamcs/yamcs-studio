@@ -157,9 +157,9 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<configuration>
+				<!--  configuration>
 					<skipTests>true</skipTests>
-				</configuration>
+				</configuration-->
 			</plugin>
 		</plugins>
 	</build>
@@ -170,20 +170,24 @@
 			<url>http://download.eclipse.org/releases/mars</url>
 			<layout>p2</layout>
 		</repository>
-		<!-- Introduced for resolving junit/mockito dependencies -->
 		<repository>
 			<id>orbit-kepler</id>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20130517111416/repository/</url>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
+		  <id>Efxclipse</id>
+		  <url>http://download.eclipse.org/efxclipse/runtime-released/1.2.0/site/</url>
+		  <layout>p2</layout>
+		</repository>
+		<!--  repository>
 			<id>repository.jboss.org</id>
 			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-		<repository>
+		</repository-->
+		<!--  repository>
 			<id>yamcs-mvn-repo-releases</id>
 			<url>https://raw.github.com/yamcs/mvn-repo/master/releases/</url>
 			<snapshots>
@@ -196,7 +200,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository>
+		</repository-->
 		<!--  repository>
 			<id>pvmanager-snapshots</id>
 			<name>sonatype snapshots</name>

@@ -88,10 +88,11 @@
 		</plugins>
 	</build>
 
-	<!-- As a result of the director plugin run configured above, products will
-		be generated under yamcs-studio-repository/target/products/*, and a P2
-		repo for installing additional features under yamcs-studio-repository/target/repository.
-		If a local repository is specified, mirror the build repository to that local
+	<!-- As a result of the director plugin run configured above, products will 
+		be generated under org.yamcs.studio.dist.default.repository/target/products/*, 
+		and a P2 repo for installing additional features under
+		org.yamcs.studio.dist.default.repository/target/repository. 
+		If a local repository is specified, mirror the build repository to that local 
 		repository -->
 	<profiles>
 		<profile>
