@@ -43,11 +43,11 @@ public class DefaultYamcsStudioProject extends DefaultProject {
             landingProject.open(new NullProgressMonitor());
             importIntoProject(landingProject, "YSS Landing");
 
-            IProject leoSpacecraftProject = createProject("YSS LEO Spacecraft");
-            leoSpacecraftProject.open(new NullProgressMonitor());
-            importIntoProject(leoSpacecraftProject, "YSS LEO Spacecraft");
+            //IProject leoSpacecraftProject = createProject("YSS LEO Spacecraft");
+            //leoSpacecraftProject.open(new NullProgressMonitor());
+            //importIntoProject(leoSpacecraftProject, "YSS LEO Spacecraft");
             // put project into parameters map as requested by API to make it available to other extension points
-            parameters.put(PROJECTS, new IProject[] { landingProject, leoSpacecraftProject });
+            parameters.put(PROJECTS, new IProject[] { landingProject /* , leoSpacecraftProject */ });
             return null;
         } catch (CoreException e) {
             log.log(Level.SEVERE, "Could not create default projects", e);
