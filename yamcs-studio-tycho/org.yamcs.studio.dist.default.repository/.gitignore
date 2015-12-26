@@ -1,1 +1,5 @@
 /target/
+
+# This is here due to maven-antrun-plugin that copies it over from org.yamcs.studio.dist.default.plugin
+# But we should probably rethink some of the product packaging
+org.yamcs.studio.dist.default.plugin/

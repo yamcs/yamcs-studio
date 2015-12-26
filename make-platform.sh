@@ -19,7 +19,7 @@ done
 PRGDIR=`dirname "$PRG"`
 
 # Generate settings.xml (to be reused in Eclipse)
-COMPOSITE_P2_REPO=$PRGDIR/css/composite_p2_repository
+COMPOSITE_P2_REPO=$PRGDIR/composite-repository
 mkdir -p $COMPOSITE_P2_REPO
 COMPOSITE_P2_REPO_FULL=`cd "$COMPOSITE_P2_REPO"; pwd`
 sed "s#REPLACE_WITH_COMPOSITE_P2_REPO#"$COMPOSITE_P2_REPO_FULL"#" $PRGDIR/css/settings_template.xml >$PRGDIR/css/settings.xml

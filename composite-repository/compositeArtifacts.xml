@@ -5,15 +5,16 @@
             version="1.0.0">
   <properties size="0">
   </properties>
-  <children size="5">
+  <children size="6">
     <!--
          Locations starting in file:/ refer to the root directory,
          everything else is relative to this xml file
       -->
-    <child location="../diirt/p2/target/repository/"/>
-    <child location="../maven-osgi-bundles/repository/target/repository"/>
-    <child location="../cs-studio-thirdparty/repository/target/repository"/>
-    <child location="../cs-studio/core/p2repo"/>
-    <child location="../cs-studio/applications/p2repo"/>
+    <child location="../css/diirt/p2/target/repository/"/>
+    <child location="../css/maven-osgi-bundles/repository/target/repository"/>
+    <child location="../css/cs-studio-thirdparty/repository/target/repository"/>
+    <child location="../css/cs-studio/core/p2repo"/>
+    <child location="../css/cs-studio/applications/p2repo"/>
+    <child location="../yamcs-studio-osgi/org.yamcs.studio.osgi.repository/target/repository"/>
   </children>
 </repository>

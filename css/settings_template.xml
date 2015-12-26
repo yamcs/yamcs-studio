@@ -10,8 +10,5 @@
       </properties>
     </profile>
   </profiles>
-  <activeProfiles>
-    <activeProfile>css-for-yamcs-v2</activeProfile>
-  </activeProfiles>
 </settings>
 

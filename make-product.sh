@@ -19,8 +19,8 @@ done
 PRGDIR=`dirname "$PRG"`
 
 set -e
-mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify
-mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify
+mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2
+mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2
 set +e
 
 echo

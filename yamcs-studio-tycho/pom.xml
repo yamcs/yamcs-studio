@@ -157,9 +157,9 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<!--  configuration>
+				<configuration>
 					<skipTests>true</skipTests>
-				</configuration-->
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
