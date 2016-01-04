@@ -88,6 +88,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         maybeSelectAndReveal(event);
     }
 
+    Event lastAddedEvent = null;
+
     public void addEvents(List<Event> events) {
         if (events.size() == 0)
             return;
@@ -97,7 +99,6 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             if (eventsBySequenceNumber.containsKey(primaryKeyHash(event))) {
                 // event is already loaded, ignoring it
             } else {
-
                 eventsBySequenceNumber.put(primaryKeyHash(event), event);
                 sortedEvents.add(event);
                 addItemFromEvent(event, -1);
@@ -114,13 +115,15 @@ public class EventLogContentProvider implements IStructuredContentProvider {
                 }
             }
         });
-
+        lastAddedEvent = events.get(events.size() - 1);
         tableViewer.setItemCount(sortedEvents.size());
         tableViewer.setRedraw(true);
+    }
 
+    public void addedAllEvents() {
+        sort();
         // select last inserted event
-        maybeSelectAndReveal(events.get(events.size() - 1));
-
+        maybeSelectAndReveal(lastAddedEvent);
     }
 
     private TableItem addItemFromEvent(Event event, int index)

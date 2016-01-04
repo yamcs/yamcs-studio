@@ -11,6 +11,8 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
@@ -45,8 +47,8 @@ public class EventLogView extends ViewPart implements EventListener {
     public static final String COL_DESCRIPTION = "Message";
     public static final String COL_SEQNUM = "Sequ. #";
 
-    private boolean showColumSeqNum = true;
-    private boolean showColumReception = true;
+    private boolean showColumnSeqNum = true;
+    private boolean showColumnReception = true;
     private boolean showColumnGeneration = true;
     private int nbMessageLineToDisplay = 1;
 
@@ -65,8 +67,8 @@ public class EventLogView extends ViewPart implements EventListener {
         // get preference from plugin
         if (YamcsUIPlugin.getDefault() != null)
         {
-            showColumSeqNum = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumSeqNum");
-            showColumReception = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumReception");
+            showColumnSeqNum = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumSeqNum");
+            showColumnReception = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumReception");
             showColumnGeneration = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumnGeneration");
             nbMessageLineToDisplay = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("events.nbMessageLineToDisplay");
         }
@@ -107,13 +109,6 @@ public class EventLogView extends ViewPart implements EventListener {
         tableViewer = new Table(tableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
         tableViewer.setHeaderVisible(true);
         tableViewer.setLinesVisible(true);
-        tableViewer.addListener(SWT.SetData, new Listener() {
-            @Override
-            public void handleEvent(org.eclipse.swt.widgets.Event event) {
-                TableItem item = (TableItem) event.item;
-                item.setText("Item " + tableViewer.indexOf(item));
-            }
-        });
         addFixedColumns();
         tableContentProvider = new EventLogContentProvider(tableViewer);
         tableContentProvider.setNbLineToDisplay(nbMessageLineToDisplay);
@@ -193,12 +188,9 @@ public class EventLogView extends ViewPart implements EventListener {
 
     private void addFixedColumns() {
 
-        TableColumn seqNumColum = null;
-        if (showColumSeqNum) {
-            seqNumColum = new TableColumn(tableViewer, SWT.NULL);
-            seqNumColum.setText(COL_SEQNUM);
-            tcl.setColumnData(seqNumColum, new ColumnPixelData(80));
-        }
+        TableColumn seqNumColum = new TableColumn(tableViewer, SWT.NULL);
+        seqNumColum.setText(COL_SEQNUM);
+        tcl.setColumnData(seqNumColum, new ColumnPixelData(80));
 
         TableColumn descriptionColumn = new TableColumn(tableViewer, SWT.NULL);
         descriptionColumn.setText(COL_DESCRIPTION);
@@ -208,19 +200,13 @@ public class EventLogView extends ViewPart implements EventListener {
         sourceColumn.setText(COL_SOURCE);
         tcl.setColumnData(sourceColumn, new ColumnPixelData(150));
 
-        TableColumn receivedColumn = null;
-        if (showColumReception) {
-            receivedColumn = new TableColumn(tableViewer, SWT.NULL);
-            receivedColumn.setText(COL_RECEIVED);
-            tcl.setColumnData(receivedColumn, new ColumnPixelData(150));
-        }
+        TableColumn receivedColumn = new TableColumn(tableViewer, SWT.NULL);
+        receivedColumn.setText(COL_RECEIVED);
+        tcl.setColumnData(receivedColumn, new ColumnPixelData(150));
 
-        TableColumn gererationColumn = null;
-        if (showColumnGeneration) {
-            gererationColumn = new TableColumn(tableViewer, SWT.NULL);
-            gererationColumn.setText(COL_GENERATION);
-            tcl.setColumnData(gererationColumn, new ColumnPixelData(150));
-        }
+        TableColumn gererationColumn = new TableColumn(tableViewer, SWT.NULL);
+        gererationColumn.setText(COL_GENERATION);
+        tcl.setColumnData(gererationColumn, new ColumnPixelData(150));
 
         // sort listener common for all columns
         Listener sortListener = new Listener() {
@@ -232,17 +218,45 @@ public class EventLogView extends ViewPart implements EventListener {
 
             }
         };
-        if (seqNumColum != null)
-            seqNumColum.addListener(SWT.Selection, sortListener);
+        seqNumColum.addListener(SWT.Selection, sortListener);
         descriptionColumn.addListener(SWT.Selection, sortListener);
         sourceColumn.addListener(SWT.Selection, sortListener);
-        if (receivedColumn != null)
-            receivedColumn.addListener(SWT.Selection, sortListener);
-        if (gererationColumn != null)
-            gererationColumn.addListener(SWT.Selection, sortListener);
+        receivedColumn.addListener(SWT.Selection, sortListener);
+        gererationColumn.addListener(SWT.Selection, sortListener);
+
+        if (!showColumnSeqNum) {
+            tcl.setColumnData(seqNumColum, new ColumnPixelData(0));
+            seqNumColum.setResizable(false);
+        }
+        if (!showColumnReception) {
+            tcl.setColumnData(receivedColumn, new ColumnPixelData(0));
+            receivedColumn.setResizable(false);
+        }
+        if (!showColumnGeneration) {
+            tcl.setColumnData(gererationColumn, new ColumnPixelData(0));
+            gererationColumn.setResizable(false);
+        }
+
+        for (TableColumn tableColumn : tableViewer.getColumns())
+        {
+            // prevent resize to 0
+            tableColumn.addControlListener(new ControlListener() {
+                @Override
+                public void controlMoved(ControlEvent e) {
+                }
+
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (tableColumn.getWidth() < 5)
+                        tableColumn.setWidth(5);
+                }
+            });
+        }
 
         // TODO use IMemento or something
-        tableViewer.setSortDirection(SWT.DOWN);
+        tableViewer.setSortColumn(receivedColumn);
+        tableViewer.setSortDirection(SWT.UP);
+
     }
 
     @Override
@@ -282,7 +296,7 @@ public class EventLogView extends ViewPart implements EventListener {
     public void addedAllEvents()
     {
         log.finest("sort started");
-        tableContentProvider.sort();
+        tableContentProvider.addedAllEvents();
         log.finest("sort done");
     }
 
@@ -303,6 +317,7 @@ public class EventLogView extends ViewPart implements EventListener {
         labelErrors.setText("Errors: " + errors);
     }
 
+    // test function
     public static void main(String args[]) throws InterruptedException
     {
         TimeEncoding.setUp();
@@ -316,20 +331,23 @@ public class EventLogView extends ViewPart implements EventListener {
         shell.pack();
 
         // insert and clear a lot of events
+        //final int NB_TEST_EVENTS = 10;
         final int NB_TEST_EVENTS = 100000;
-        for (int i = 0; i < 3; i++)
+        final int BLOCK_SIZE = 500;
+        for (int i = 0; i < 1; i++)
         {
             // clear events
             lv.clear();
-            insertTestEvents(lv, NB_TEST_EVENTS);
+            insertTestEvents(lv, NB_TEST_EVENTS, BLOCK_SIZE);
+
             Display.getDefault().asyncExec(() ->
                     lv.addedAllEvents());
             log.info("sort queued");
         }
-        // insert a batch without clearing the previous one
-        // should include only a few events with a different primary key
-        insertTestEvents(lv, NB_TEST_EVENTS);
-        Display.getDefault().asyncExec(() -> lv.addedAllEvents());
+        //         insert a batch without clearing the previous one
+        //         should include only a few events with a different primary key
+        //        insertTestEvents(lv, NB_TEST_EVENTS, BLOCK_SIZE);
+        //        Display.getDefault().asyncExec(() -> lv.addedAllEvents());
 
         // insert special events
         Event event = Event.newBuilder()
@@ -382,14 +400,14 @@ public class EventLogView extends ViewPart implements EventListener {
         lv.processEvent(event4);
 
         // export to csv
-        //        Display.getDefault().asyncExec(() -> {
-        //            ExportEventsHandler eeh = new ExportEventsHandler();
-        //            try {
-        //                eeh.doExecute(lv, shell);
-        //            } catch (Exception e) {
-        //                e.printStackTrace();
-        //            }
-        //        });
+        Display.getDefault().asyncExec(() -> {
+            ExportEventsHandler eeh = new ExportEventsHandler();
+            try {
+                eeh.doExecute(lv, shell);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {
@@ -399,22 +417,30 @@ public class EventLogView extends ViewPart implements EventListener {
         display.dispose();
     }
 
-    private static void insertTestEvents(EventLogView lv, int nbEvents) {
-        List<Event> events = new LinkedList<Event>();
-        for (int i = 0; i < nbEvents; i++)
+    private static void insertTestEvents(EventLogView lv, int nbEvents, int blockSize) {
+
+        int eventId = 0;
+        while (eventId < nbEvents)
         {
-            Event event = Event.newBuilder()
-                    .setGenerationTime(new Date().getTime())
-                    .setReceptionTime(new Date().getTime())
-                    .setMessage("test event " + i)
-                    .setSeqNumber(i)
-                    .setSeverity(EventSeverity.WARNING)
-                    .setSource("test_source")
-                    .setType("test_type")
-                    .build();
-            events.add(event);
+            List<Event> events = new LinkedList<Event>();
+            for (int j = 0; j < blockSize; j++)
+            {
+                eventId++;
+                if (eventId > nbEvents)
+                    break;
+                Event event = Event.newBuilder()
+                        .setGenerationTime(new Date().getTime())
+                        .setReceptionTime(new Date().getTime())
+                        .setMessage("test event " + eventId)
+                        .setSeqNumber(eventId)
+                        .setSeverity(EventSeverity.WARNING)
+                        .setSource("test_source")
+                        .setType("test_type")
+                        .build();
+                events.add(event);
+            }
+            Display.getDefault().asyncExec(() -> lv.addEvents(events));
         }
-        Display.getDefault().asyncExec(() -> lv.addEvents(events));
         log.info("addEvents queued");
 
     }
