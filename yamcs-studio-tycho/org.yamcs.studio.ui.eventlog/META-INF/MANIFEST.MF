@@ -27,3 +27,4 @@ Require-Bundle: org.eclipse.ui,
  javax.inject,
  com.google.gson
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Import-Package: com.csvreader
