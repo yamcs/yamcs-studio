@@ -147,6 +147,7 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
             @Override
             public void onEndOfStream() {
                 Display.getDefault().asyncExec(() -> {
+                    eventLogView.addedAllEvents();
                     ImportPastEventsDialog.super.okPressed();
                 });
             }

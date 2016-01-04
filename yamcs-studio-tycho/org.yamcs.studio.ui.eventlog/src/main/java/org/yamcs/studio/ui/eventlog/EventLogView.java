@@ -1,29 +1,31 @@
 package org.yamcs.studio.ui.eventlog;
 
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
@@ -48,12 +50,11 @@ public class EventLogView extends ViewPart implements EventListener {
     private boolean showColumnGeneration = true;
     private int nbMessageLineToDisplay = 1;
 
-    private Image errorIcon;
-    private Image warnIcon;
-    private Image infoIcon;
+    private Label labelTotalEvents;
+    private Label labelWarnings;
+    private Label labelErrors;
 
-    private TableViewer tableViewer;
-    private EventLogViewerComparator tableViewerComparator;
+    private Table tableViewer;
     private TableColumnLayout tcl;
 
     private EventLogContentProvider tableContentProvider;
@@ -70,184 +71,164 @@ public class EventLogView extends ViewPart implements EventListener {
             nbMessageLineToDisplay = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("events.nbMessageLineToDisplay");
         }
 
-        if (PlatformUI.isWorkbenchRunning())
-        {
-            errorIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
-            warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
-            infoIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
-        }
+        GridLayout gl = new GridLayout();
+        parent.setLayout(gl);
+        gl.horizontalSpacing = 0;
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        gl.verticalSpacing = 0;
 
+        // create event table part
+        Composite tableComposite = new Composite(parent, SWT.NONE);
+        tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         tcl = new TableColumnLayout();
-        parent.setLayout(tcl);
+        tableComposite.setLayout(tcl);
 
-        tableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-        tableViewer.getTable().setHeaderVisible(true);
-        tableViewer.getTable().setLinesVisible(true);
+        //  create status bar part
+        Composite statusComposite = new Composite(parent, SWT.NONE);
+        statusComposite.setLayout(new RowLayout());
+        RowData gd = new RowData();
+        gd.width = 150;
+        labelTotalEvents = new Label(statusComposite, SWT.BORDER);
+        labelTotalEvents.setText("Total Events: 0");
+        labelTotalEvents.setLayoutData(gd);
+
+        labelWarnings = new Label(statusComposite, SWT.BORDER);
+        labelWarnings.setText("Warnings: 0");
+        gd = new RowData();
+        gd.width = 130;
+        labelWarnings.setLayoutData(gd);
+        labelErrors = new Label(statusComposite, SWT.BORDER);
+        labelErrors.setText("Errors: 0");
+        gd = new RowData();
+        gd.width = 110;
+        labelErrors.setLayoutData(gd);
+
+        tableViewer = new Table(tableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+        tableViewer.setHeaderVisible(true);
+        tableViewer.setLinesVisible(true);
         addFixedColumns();
         tableContentProvider = new EventLogContentProvider(tableViewer);
-        tableViewer.setContentProvider(tableContentProvider);
-        tableViewer.setInput(tableContentProvider); // ! otherwise refresh() deletes everything...
-
-        tableViewerComparator = new EventLogViewerComparator();
-        tableViewer.setComparator(tableViewerComparator);
+        tableContentProvider.setNbLineToDisplay(nbMessageLineToDisplay);
 
         // open a popup with event detail in case of double click
-        tableViewer.addDoubleClickListener(new IDoubleClickListener()
-        {
+        tableViewer.addMouseListener(new MouseListener() {
             @Override
-            public void doubleClick(DoubleClickEvent event) {
+            public void mouseDoubleClick(MouseEvent event) {
                 try {
-                    IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                    EventDetailsDialog dialog = new EventDetailsDialog(parent.getShell(), (Event) selection.getFirstElement());
+                    Point pt = new Point(event.x, event.y);
+                    TableItem item = tableViewer.getItem(pt);
+                    if (item == null)
+                        return;
+
+                    Event selectedEvent = (Event) item.getData();
+                    if (selectedEvent == null)
+                        return;
+                    EventDetailsDialog dialog = new EventDetailsDialog(parent.getShell(), selectedEvent);
                     dialog.create();
                     dialog.open();
                 } catch (Exception e) {
                     log.log(Level.SEVERE, "Unable to open event detail.", e);
                 }
             }
-        });
 
-        if (getViewSite() != null)
-            getViewSite().setSelectionProvider(tableViewer);
+            @Override
+            public void mouseDown(MouseEvent e)
+            {
+            }
+
+            @Override
+            public void mouseUp(MouseEvent e)
+            {
+            }
+
+        });
 
         if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null)
             EventCatalogue.getInstance().addEventListener(this);
+
     }
 
     @Override
     public void processEvent(Event event) {
-        if (tableViewer.getTable().isDisposed())
+        if (tableViewer.isDisposed())
             return;
         Display.getDefault().asyncExec(() -> addEvent(event));
     }
 
     public void clear() {
-        tableContentProvider.clearAll();
+        Display.getDefault().asyncExec(() -> {
+            log.finest("clear started");
+            tableContentProvider.clearAll();
+            setStatusTotalEvents(0);
+            setStatusWarnings(0);
+            setStatusErrors(0);
+            log.finest("clear done");
+        });
+        log.finest("clear queued");
     }
 
     public void enableScrollLock(boolean enabled) {
         tableContentProvider.enableScrollLock(enabled);
     }
 
-    private Image getSeverityImage(Event evt)
-    {
-        if (evt.hasSeverity()) {
-            switch (evt.getSeverity()) {
-            case INFO:
-                return infoIcon;
-            case WARNING:
-                return warnIcon;
-            case ERROR:
-                return errorIcon;
-            }
+    public final Comparator<TableItem> BY_STR = new Comparator<TableItem>() {
+        @Override
+        public int compare(TableItem o1, TableItem o2) {
+            Event e1 = (Event) o1.getData();
+            Event e2 = (Event) o2.getData();
+            if (e1.getSeqNumber() > e2.getSeqNumber())
+                return 1;
+            else
+                return -1;
         }
-        return null;
-    }
+    };
 
     private void addFixedColumns() {
 
-        // Seq. Number
-        if (showColumSeqNum) {
-            TableViewerColumn setnumColumb = new TableViewerColumn(tableViewer, SWT.NONE);
-            setnumColumb.getColumn().setText(COL_SEQNUM);
-            setnumColumb.getColumn().addSelectionListener(getSelectionAdapter(setnumColumb.getColumn()));
-            setnumColumb.setLabelProvider(new ColumnLabelProvider() {
-                @Override
-                public String getText(Object element) {
-                    return ((Event) element).getSeqNumber() + "";
-                }
-            });
-            tcl.setColumnData(setnumColumb.getColumn(), new ColumnPixelData(80));
-        }
+        TableColumn setnumColumb = new TableColumn(tableViewer, SWT.NULL);
+        setnumColumb.setText(COL_SEQNUM);
+        tcl.setColumnData(setnumColumb, new ColumnPixelData(80));
 
-        // Message
-        TableViewerColumn descriptionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        descriptionColumn.getColumn().setText(COL_DESCRIPTION);
-        descriptionColumn.getColumn().addSelectionListener(getSelectionAdapter(descriptionColumn.getColumn()));
-        descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
+        TableColumn descriptionColumn = new TableColumn(tableViewer, SWT.NULL);
+        descriptionColumn.setText(COL_DESCRIPTION);
+        tcl.setColumnData(descriptionColumn, new ColumnWeightData(200));
+
+        TableColumn sourceColumn = new TableColumn(tableViewer, SWT.NULL);
+        sourceColumn.setText(COL_SOURCE);
+        tcl.setColumnData(sourceColumn, new ColumnPixelData(150));
+
+        TableColumn receivedColumn = new TableColumn(tableViewer, SWT.NULL);
+        receivedColumn.setText(COL_RECEIVED);
+        tcl.setColumnData(receivedColumn, new ColumnPixelData(150));
+
+        TableColumn gererationColumn = new TableColumn(tableViewer, SWT.NULL);
+        gererationColumn.setText(COL_GENERATION);
+        tcl.setColumnData(gererationColumn, new ColumnPixelData(150));
+
+        Listener sortListener = new Listener() {
             @Override
-            public String getText(Object element) {
+            public void handleEvent(org.eclipse.swt.widgets.Event e) {
 
-                String message = ((Event) element).getMessage();
+                TableColumn column = (TableColumn) e.widget;
+                tableContentProvider.sort(column);
 
-                if (nbMessageLineToDisplay > 0)
-                {
-                    String lineSeparator = "\n";
-                    String[] messageLines = message.split(lineSeparator);
-                    message = "";
-                    int i = 0;
-                    for (; i < nbMessageLineToDisplay && i < messageLines.length; i++)
-                    {
-                        if (!message.isEmpty())
-                            message += lineSeparator;
-                        message += messageLines[i];
-                    }
-                    if (i + 1 < messageLines.length)
-                        message += " [...]";
-                }
-                return message;
             }
+        };
 
-            @Override
-            public Image getImage(Object element) {
-                Event evt = (Event) element;
-                return getSeverityImage(evt);
-            }
-        });
-        tcl.setColumnData(descriptionColumn.getColumn(), new ColumnWeightData(200));
-
-        // Source :: Type
-        TableViewerColumn sourceColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-        sourceColumn.getColumn().setText(COL_SOURCE);
-        sourceColumn.getColumn().addSelectionListener(getSelectionAdapter(sourceColumn.getColumn()));
-        sourceColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                Event evt = (Event) element;
-                if (evt.hasType())
-                    return evt.getSource() + " :: " + evt.getType();
-                else
-                    return evt.getSource();
-            }
-        });
-        tcl.setColumnData(sourceColumn.getColumn(), new ColumnPixelData(150));
-
-        // Reception time
-        if (showColumReception) {
-            TableViewerColumn receivedColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-            receivedColumn.getColumn().setText(COL_RECEIVED);
-            receivedColumn.getColumn().addSelectionListener(getSelectionAdapter(receivedColumn.getColumn()));
-            receivedColumn.setLabelProvider(new ColumnLabelProvider() {
-                @Override
-                public String getText(Object element) {
-                    return TimeEncoding.toString(((Event) element).getReceptionTime());
-                }
-            });
-            tcl.setColumnData(receivedColumn.getColumn(), new ColumnPixelData(150));
-            tableViewer.getTable().setSortColumn(receivedColumn.getColumn());
-        }
-
-        // Generation Time
-        if (showColumnGeneration) {
-            TableViewerColumn gererationColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-            gererationColumn.getColumn().setText(COL_GENERATION);
-            gererationColumn.getColumn().addSelectionListener(getSelectionAdapter(gererationColumn.getColumn()));
-            gererationColumn.setLabelProvider(new ColumnLabelProvider() {
-                @Override
-                public String getText(Object element) {
-                    return TimeEncoding.toString(((Event) element).getGenerationTime());
-                }
-            });
-            tcl.setColumnData(gererationColumn.getColumn(), new ColumnPixelData(150));
-        }
+        setnumColumb.addListener(SWT.Selection, sortListener);
+        descriptionColumn.addListener(SWT.Selection, sortListener);
+        sourceColumn.addListener(SWT.Selection, sortListener);
+        receivedColumn.addListener(SWT.Selection, sortListener);
+        gererationColumn.addListener(SWT.Selection, sortListener);
 
         // TODO use IMemento or something
-        tableViewer.getTable().setSortDirection(SWT.DOWN);
+        tableViewer.setSortDirection(SWT.DOWN);
     }
 
     @Override
     public void setFocus() {
-        tableViewer.getTable().setFocus();
+        tableViewer.setFocus();
     }
 
     @Override
@@ -256,17 +237,34 @@ public class EventLogView extends ViewPart implements EventListener {
         // TODO remove EventListener
     }
 
-    public void addEvents(List<Event> events) {
-        log.info("add chunk of " + events.size());
-        if (tableViewer.getTable().isDisposed())
-            return;
-        tableContentProvider.addEvents(events);
-    }
-
     public void addEvent(Event event) {
-        if (tableViewer.getTable().isDisposed())
+        if (tableViewer.isDisposed())
             return;
         tableContentProvider.addEvent(event);
+
+        setStatusTotalEvents(tableContentProvider.getNbEvents());
+        setStatusWarnings(tableContentProvider.getNbWarnings());
+        setStatusErrors(tableContentProvider.getNbErrors());
+    }
+
+    public void addEvents(List<Event> events) {
+        log.info("add chunk of " + events.size());
+        if (tableViewer.isDisposed())
+            return;
+        tableContentProvider.addEvents(events);
+
+        setStatusTotalEvents(tableContentProvider.getNbEvents());
+        setStatusWarnings(tableContentProvider.getNbWarnings());
+        setStatusErrors(tableContentProvider.getNbErrors());
+        log.finest("Events added");
+    }
+
+    // This method should be called when the stream of events to be imported is ended
+    public void addedAllEvents()
+    {
+        log.finest("sort started");
+        tableContentProvider.sort();
+        log.finest("sort done");
     }
 
     public EventLogContentProvider getTableContentProvider()
@@ -274,21 +272,19 @@ public class EventLogView extends ViewPart implements EventListener {
         return tableContentProvider;
     }
 
-    private SelectionAdapter getSelectionAdapter(TableColumn column) {
-        SelectionAdapter selectionAdapter = new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                tableViewerComparator.setColumn(column);
-                int dir = tableViewerComparator.getDirection();
-                tableViewer.getTable().setSortDirection(dir);
-                tableViewer.getTable().setSortColumn(column);
-                tableViewer.refresh();
-            }
-        };
-        return selectionAdapter;
+    private void setStatusTotalEvents(int eventNumbers) {
+        labelTotalEvents.setText("Total Events: " + eventNumbers);
     }
 
-    public static void main(String args[])
+    private void setStatusWarnings(int warnings) {
+        labelWarnings.setText("Warnings: " + warnings);
+    }
+
+    private void setStatusErrors(int errors) {
+        labelErrors.setText("Errors: " + errors);
+    }
+
+    public static void main(String args[]) throws InterruptedException
     {
         TimeEncoding.setUp();
         Display display = new Display();
@@ -300,6 +296,19 @@ public class EventLogView extends ViewPart implements EventListener {
         lv.createPartControl(shell);
         shell.pack();
 
+        // insert and clear a lot of events
+        final int NB_TEST_EVENTS = 10000;
+        for (int i = 0; i < 2; i++)
+        {
+            // clear events
+            //lv.clear();
+            insertTestEvents(lv, NB_TEST_EVENTS);
+            Display.getDefault().asyncExec(() ->
+                    lv.addedAllEvents());
+            log.info("sort queued");
+        }
+
+        // insert special events
         Event event = Event.newBuilder()
                 .setGenerationTime(new Date().getTime() - 10000)
                 .setReceptionTime(new Date().getTime())
@@ -325,7 +334,7 @@ public class EventLogView extends ViewPart implements EventListener {
                 .setGenerationTime(new Date().getTime() - 20000)
                 .setReceptionTime(new Date().getTime())
                 .setMessage(
-                        "test event3\nline *\nline ** - verylooooooooooooooooooooooooooooooooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnggggggggggggggg")
+                        "test event3\nline *\nline ** - very\"looooooooooooooooooooooooooooooooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnggggggggggggggg")
                 .setSeqNumber(2)
                 .setSeverity(EventSeverity.ERROR)
                 .setSource("test_source3")
@@ -349,11 +358,41 @@ public class EventLogView extends ViewPart implements EventListener {
         lv.processEvent(event3);
         lv.processEvent(event4);
 
+        // export to csv
+        //        Display.getDefault().asyncExec(() -> {
+        //            ExportEventsHandler eeh = new ExportEventsHandler();
+        //            try {
+        //                eeh.doExecute(lv, shell);
+        //            } catch (Exception e) {
+        //                e.printStackTrace();
+        //            }
+        //        });
+
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {
                 display.sleep();
             }
         }
         display.dispose();
+    }
+
+    private static void insertTestEvents(EventLogView lv, int nbEvents) {
+        List<Event> events = new LinkedList<Event>();
+        for (int i = 0; i < nbEvents; i++)
+        {
+            Event event = Event.newBuilder()
+                    .setGenerationTime(new Date().getTime())
+                    .setReceptionTime(new Date().getTime())
+                    .setMessage("test event " + i)
+                    .setSeqNumber(i)
+                    .setSeverity(EventSeverity.WARNING)
+                    .setSource("test_source")
+                    .setType("test_type")
+                    .build();
+            events.add(event);
+        }
+        Display.getDefault().asyncExec(() -> lv.addEvents(events));
+        log.info("addEvents queued");
+
     }
 }

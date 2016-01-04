@@ -3,13 +3,13 @@ package org.yamcs.studio.ui.eventlog;
 import static org.yamcs.studio.core.ui.utils.Comparators.LONG_COMPARATOR;
 import static org.yamcs.studio.core.ui.utils.Comparators.STRING_COMPARATOR;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
+import java.util.Comparator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableColumn;
 import org.yamcs.protobuf.Yamcs.Event;
 
-public class EventLogViewerComparator extends ViewerComparator {
+public class EventLogViewerComparator implements Comparator<Event> {
 
     private String currentColumn;
     private boolean ascending;
@@ -20,7 +20,7 @@ public class EventLogViewerComparator extends ViewerComparator {
     }
 
     public int getDirection() {
-        return ascending ? SWT.UP : SWT.DOWN;
+        return ascending ? SWT.DOWN : SWT.UP;
     }
 
     public void setColumn(TableColumn column) {
@@ -33,9 +33,7 @@ public class EventLogViewerComparator extends ViewerComparator {
     }
 
     @Override
-    public int compare(Viewer viewer, Object o1, Object o2) {
-        Event r1 = (Event) o1;
-        Event r2 = (Event) o2;
+    public int compare(Event r1, Event r2) {
         int rc;
         switch (currentColumn) {
         case EventLogView.COL_SEQNUM:
