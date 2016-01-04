@@ -64,82 +64,14 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     public void addEvent(Event event) {
         if (eventsBySequenceNumber.containsKey(primaryKeyHash(event))) {
-            // remove the old event from the records
-            Event oldEvent = eventsBySequenceNumber.get(primaryKeyHash(event));
-            switch (event.getSeverity())
-            {
-            case WARNING:
-                warnings--;
-                break;
-            case ERROR:
-                errors--;
-                break;
-            default:
-                break;
-            }
+            // event is already loaded, ignoring it
+        } else {
+            sortedEvents.add(event); // add to local event list
+            sortedEvents.sort(eventLogViewerComparator); // and sort the sorted list
+            int index = sortedEvents.indexOf(event);
+            addItemFromEvent(event, index); // add to table
+            eventsBySequenceNumber.put(primaryKeyHash(event), event); // add to the hash map
 
-            // update table
-            tableViewer.remove(sortedEvents.indexOf(oldEvent));
-            // update sorted list
-            sortedEvents.remove(oldEvent);
-            eventsBySequenceNumber.remove(primaryKeyHash(event));
-        }
-
-        sortedEvents.add(event); // add to local event list
-        sortedEvents.sort(eventLogViewerComparator); // and sort the sorted list
-        int index = sortedEvents.indexOf(event);
-        addItemFromEvent(event, index); // add to table
-        eventsBySequenceNumber.put(primaryKeyHash(event), event); // add to the hash map
-
-        switch (event.getSeverity())
-        {
-        case WARNING:
-            warnings++;
-            break;
-        case ERROR:
-            errors++;
-            break;
-        default:
-            break;
-        }
-
-        maybeSelectAndReveal(event);
-    }
-
-    public void addEvents(List<Event> events) {
-        if (events.size() == 0)
-            return;
-
-        int[] indexNeedsUpdating = new int[events.size()];
-        List<Event> eventsNeedsUpdating = new ArrayList<>();
-        events.forEach(event -> {
-            if (eventsBySequenceNumber.containsKey(primaryKeyHash(event)))
-            {
-                // remove the old events from the records
-                Event oldEvent = eventsBySequenceNumber.get(primaryKeyHash(event));
-                switch (event.getSeverity())
-                {
-                case WARNING:
-                    warnings--;
-                    break;
-                case ERROR:
-                    errors--;
-                    break;
-                default:
-                    break;
-                }
-
-                // update table latter
-                indexNeedsUpdating[eventsNeedsUpdating.size()] = sortedEvents.indexOf(oldEvent);
-
-                // update sorted list latter
-                // eventsNeedsUpdating.add(oldEvent);
-
-                // update hash map
-                eventsBySequenceNumber.remove(primaryKeyHash(event));
-            }
-
-            eventsBySequenceNumber.put(primaryKeyHash(event), event);
             switch (event.getSeverity())
             {
             case WARNING:
@@ -151,22 +83,40 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             default:
                 break;
             }
+        }
+
+        maybeSelectAndReveal(event);
+    }
+
+    public void addEvents(List<Event> events) {
+        if (events.size() == 0)
+            return;
+
+        tableViewer.setRedraw(false);
+        events.forEach(event -> {
+            if (eventsBySequenceNumber.containsKey(primaryKeyHash(event))) {
+                // event is already loaded, ignoring it
+            } else {
+
+                eventsBySequenceNumber.put(primaryKeyHash(event), event);
+                sortedEvents.add(event);
+                addItemFromEvent(event, -1);
+                switch (event.getSeverity())
+                {
+                case WARNING:
+                    warnings++;
+                    break;
+                case ERROR:
+                    errors++;
+                    break;
+                default:
+                    break;
+                }
+            }
         });
 
-        // Remove outdated events from records
-        // update table
-        int[] indexes = new int[eventsNeedsUpdating.size()];
-        java.lang.System.arraycopy(indexNeedsUpdating, 0, indexes, 0, indexes.length);
-        tableViewer.remove(indexes);
-        // update sorted list
-        sortedEvents.removeAll(eventsNeedsUpdating);
-
-        // Add new events to records, not sorting
-        // sort should be called latter when all chunks have been added
-        sortedEvents.addAll(events); // add to local event list
-        for (Event event : events) {
-            addItemFromEvent(event, -1);
-        }
+        tableViewer.setItemCount(sortedEvents.size());
+        tableViewer.setRedraw(true);
 
         // select last inserted event
         maybeSelectAndReveal(events.get(events.size() - 1));

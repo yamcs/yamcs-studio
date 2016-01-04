@@ -316,16 +316,20 @@ public class EventLogView extends ViewPart implements EventListener {
         shell.pack();
 
         // insert and clear a lot of events
-        final int NB_TEST_EVENTS = 10000;
-        for (int i = 0; i < 2; i++)
+        final int NB_TEST_EVENTS = 100000;
+        for (int i = 0; i < 3; i++)
         {
             // clear events
-            // lv.clear();
+            lv.clear();
             insertTestEvents(lv, NB_TEST_EVENTS);
             Display.getDefault().asyncExec(() ->
                     lv.addedAllEvents());
             log.info("sort queued");
         }
+        // insert a batch without clearing the previous one
+        // should include only a few events with a different primary key
+        insertTestEvents(lv, NB_TEST_EVENTS);
+        Display.getDefault().asyncExec(() -> lv.addedAllEvents());
 
         // insert special events
         Event event = Event.newBuilder()
@@ -365,7 +369,7 @@ public class EventLogView extends ViewPart implements EventListener {
                 .setGenerationTime(event2.getGenerationTime())
                 .setReceptionTime(new Date().getTime())
                 .setMessage(
-                        "should replace event2")
+                        "should not replace event2")
                 .setSeqNumber(event2.getSeqNumber())
                 .setSeverity(EventSeverity.ERROR)
                 .setSource(event2.getSource())
