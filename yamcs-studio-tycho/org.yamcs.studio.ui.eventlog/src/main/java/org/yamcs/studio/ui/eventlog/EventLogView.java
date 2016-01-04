@@ -104,9 +104,16 @@ public class EventLogView extends ViewPart implements EventListener {
         gd.width = 110;
         labelErrors.setLayoutData(gd);
 
-        tableViewer = new Table(tableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+        tableViewer = new Table(tableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
         tableViewer.setHeaderVisible(true);
         tableViewer.setLinesVisible(true);
+        tableViewer.addListener(SWT.SetData, new Listener() {
+            @Override
+            public void handleEvent(org.eclipse.swt.widgets.Event event) {
+                TableItem item = (TableItem) event.item;
+                item.setText("Item " + tableViewer.indexOf(item));
+            }
+        });
         addFixedColumns();
         tableContentProvider = new EventLogContentProvider(tableViewer);
         tableContentProvider.setNbLineToDisplay(nbMessageLineToDisplay);
@@ -186,9 +193,12 @@ public class EventLogView extends ViewPart implements EventListener {
 
     private void addFixedColumns() {
 
-        TableColumn setnumColumb = new TableColumn(tableViewer, SWT.NULL);
-        setnumColumb.setText(COL_SEQNUM);
-        tcl.setColumnData(setnumColumb, new ColumnPixelData(80));
+        TableColumn seqNumColum = null;
+        if (showColumSeqNum) {
+            seqNumColum = new TableColumn(tableViewer, SWT.NULL);
+            seqNumColum.setText(COL_SEQNUM);
+            tcl.setColumnData(seqNumColum, new ColumnPixelData(80));
+        }
 
         TableColumn descriptionColumn = new TableColumn(tableViewer, SWT.NULL);
         descriptionColumn.setText(COL_DESCRIPTION);
@@ -198,14 +208,21 @@ public class EventLogView extends ViewPart implements EventListener {
         sourceColumn.setText(COL_SOURCE);
         tcl.setColumnData(sourceColumn, new ColumnPixelData(150));
 
-        TableColumn receivedColumn = new TableColumn(tableViewer, SWT.NULL);
-        receivedColumn.setText(COL_RECEIVED);
-        tcl.setColumnData(receivedColumn, new ColumnPixelData(150));
+        TableColumn receivedColumn = null;
+        if (showColumReception) {
+            receivedColumn = new TableColumn(tableViewer, SWT.NULL);
+            receivedColumn.setText(COL_RECEIVED);
+            tcl.setColumnData(receivedColumn, new ColumnPixelData(150));
+        }
 
-        TableColumn gererationColumn = new TableColumn(tableViewer, SWT.NULL);
-        gererationColumn.setText(COL_GENERATION);
-        tcl.setColumnData(gererationColumn, new ColumnPixelData(150));
+        TableColumn gererationColumn = null;
+        if (showColumnGeneration) {
+            gererationColumn = new TableColumn(tableViewer, SWT.NULL);
+            gererationColumn.setText(COL_GENERATION);
+            tcl.setColumnData(gererationColumn, new ColumnPixelData(150));
+        }
 
+        // sort listener common for all columns
         Listener sortListener = new Listener() {
             @Override
             public void handleEvent(org.eclipse.swt.widgets.Event e) {
@@ -215,12 +232,14 @@ public class EventLogView extends ViewPart implements EventListener {
 
             }
         };
-
-        setnumColumb.addListener(SWT.Selection, sortListener);
+        if (seqNumColum != null)
+            seqNumColum.addListener(SWT.Selection, sortListener);
         descriptionColumn.addListener(SWT.Selection, sortListener);
         sourceColumn.addListener(SWT.Selection, sortListener);
-        receivedColumn.addListener(SWT.Selection, sortListener);
-        gererationColumn.addListener(SWT.Selection, sortListener);
+        if (receivedColumn != null)
+            receivedColumn.addListener(SWT.Selection, sortListener);
+        if (gererationColumn != null)
+            gererationColumn.addListener(SWT.Selection, sortListener);
 
         // TODO use IMemento or something
         tableViewer.setSortDirection(SWT.DOWN);
@@ -301,7 +320,7 @@ public class EventLogView extends ViewPart implements EventListener {
         for (int i = 0; i < 2; i++)
         {
             // clear events
-            //lv.clear();
+            // lv.clear();
             insertTestEvents(lv, NB_TEST_EVENTS);
             Display.getDefault().asyncExec(() ->
                     lv.addedAllEvents());
@@ -395,4 +414,5 @@ public class EventLogView extends ViewPart implements EventListener {
         log.info("addEvents queued");
 
     }
+
 }
