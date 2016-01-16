@@ -81,8 +81,11 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
             if (!linkModels.containsKey(modelName)) {
                 addLinkModel(li.getInstance());
             }
-            LinkTableModel model = linkModels.get(modelName);
-            model.updateLink(li);
+            String currentYamcsInstance = ConnectionManager.getInstance().getYamcsInstance();
+            if (currentYamcsInstance != null && currentYamcsInstance.equals(modelName)) {
+                LinkTableModel model = linkModels.get(modelName);
+                model.updateLink(li);
+            }
         });
     }
 
