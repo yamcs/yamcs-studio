@@ -28,7 +28,11 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
     LinkContentProvider linksContentProvider;
 
     HashMap<String, LinkTableModel> linkModels = new HashMap<String, LinkTableModel>();
-    LinkTableModel currentLinkModel;
+
+    LinkTableModel getCurrentLinkTableModel() {
+        String currentYamcsInstance = ConnectionManager.getInstance().getYamcsInstance();
+        return linkModels.get(currentYamcsInstance);
+    }
 
     @Override
     public void createPartControl(Composite parent) {
@@ -97,8 +101,6 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
     public void addLinkModel(String instance) {
         LinkTableModel model = new LinkTableModel(timer, linksTableViewer);
         linkModels.put(instance, model);
-        if (currentLinkModel == null)
-            currentLinkModel = model;
     }
 
     @Override
@@ -109,7 +111,6 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
     public void onStudioDisconnect() {
         Display.getDefault().asyncExec(() -> {
             this.linksTableViewer.getTable().removeAll();
-            this.currentLinkModel = null;
             this.linkModels.clear();
         });
     }

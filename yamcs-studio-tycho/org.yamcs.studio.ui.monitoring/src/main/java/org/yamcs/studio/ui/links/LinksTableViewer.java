@@ -205,7 +205,7 @@ public class LinksTableViewer extends TableViewer {
                     if (li.getDisabled()) {
                         return UiColors.DISABLED_FAINT_FG;
                     } else if ("OK".equals(li.getStatus())) {
-                        if (linksView.currentLinkModel.isDataCountIncreasing(li)) {
+                        if (linksView.getCurrentLinkTableModel().isDataCountIncreasing(li)) {
                             return UiColors.GOOD_BRIGHT_FG;
                         } else {
                             return UiColors.GOOD_FAINT_FG;
@@ -243,7 +243,7 @@ public class LinksTableViewer extends TableViewer {
                     if (li.getDisabled()) {
                         return UiColors.DISABLED_FAINT_BG;
                     } else if ("OK".equals(li.getStatus())) {
-                        if (linksView.currentLinkModel.isDataCountIncreasing(li)) {
+                        if (linksView.getCurrentLinkTableModel().isDataCountIncreasing(li)) {
                             return UiColors.GOOD_BRIGHT_BG;
                         } else {
                             return UiColors.GOOD_FAINT_BG;
