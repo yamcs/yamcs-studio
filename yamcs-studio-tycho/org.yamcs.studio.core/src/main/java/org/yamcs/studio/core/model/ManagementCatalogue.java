@@ -82,6 +82,10 @@ public class ManagementCatalogue implements Catalogue {
     }
 
     public void processProcessorInfo(ProcessorInfo processorInfo) {
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        if (instance == null || !instance.equals(processorInfo.getInstance())) {
+            return;
+        }
         if (processorInfo.getState() == ServiceState.TERMINATED)
             processorInfoByName.remove(processorInfo.getName());
         else
