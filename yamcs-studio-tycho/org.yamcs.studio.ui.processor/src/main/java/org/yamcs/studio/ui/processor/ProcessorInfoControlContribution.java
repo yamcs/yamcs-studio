@@ -38,7 +38,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
     private static final int ANGLE_DELTA = 10;
     private static final int REC_WIDTH = 120;
     private static final int REC_HEIGHT = 20;
-    private static final int X_INDENT = ANGLE_DELTA / 2;
+    private static final int X_INDENT = ANGLE_DELTA / 4;
 
     private static final int X_OVERLAP = ANGLE_DELTA - 2;
     private static final int TIMEREC_WIDTH = X_OVERLAP + 130;
@@ -65,7 +65,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
         canvas.addPaintListener(new MyPaintListener(parent));
         GridData gd = new GridData(GridData.FILL_VERTICAL);
-        gd.widthHint = X_INDENT + REC_WIDTH + X_INDENT - X_OVERLAP + TIMEREC_WIDTH;
+        gd.widthHint = X_INDENT + 2 * (REC_WIDTH + X_INDENT - X_OVERLAP) + TIMEREC_WIDTH;
         canvas.setLayoutData(gd);
 
         Label spacer = new Label(top, SWT.NONE);
@@ -73,11 +73,35 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         gd.widthHint = 40;
         spacer.setLayoutData(gd);
 
-        canvas.addListener(SWT.MouseDown, evt -> {
-            if (ConnectionManager.getInstance().isConnected()) {
-                RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
+        canvas.addListener(SWT.MouseHover, evt -> {
+
+            int x = evt.x;
+            // click on instance
+            if (x < (X_INDENT + REC_WIDTH - X_OVERLAP)) {
+                canvas.setToolTipText("Current Yamcs Instance");
+            }
+            // click on processor
+            else if (x < 2 * (X_INDENT + REC_WIDTH - X_OVERLAP)) {
+                canvas.setToolTipText("Subscribed Yamcs Processor");
             } else {
+                canvas.setToolTipText("Mission Time");
+            }
+        });
+
+        canvas.addListener(SWT.MouseDown, evt -> {
+
+            int x = evt.x;
+            // click on instance
+            if (x < (X_INDENT + REC_WIDTH - X_OVERLAP)) {
                 RCPUtils.runCommand("org.yamcs.studio.ui.connect");
+            }
+            // click on processor
+            else if (x < 2 * (X_INDENT + REC_WIDTH - X_OVERLAP)) {
+                if (ConnectionManager.getInstance().isConnected()) {
+                    RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
+                } else {
+                    RCPUtils.runCommand("org.yamcs.studio.ui.connect");
+                }
             }
         });
 
@@ -184,10 +208,48 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             GC gc = evt.gc;
             gc.setAntialias(SWT.ON);
             Color defaultBackground = gc.getBackground();
+
+            paintInstanceInfo(gc);
+
             paintProcessorInfo(gc);
 
             gc.setBackground(defaultBackground);
             paintTimeInfo(gc);
+        }
+
+        private void paintInstanceInfo(GC gc) {
+            if (processorInfo != null) {
+                gc.setBackground(getSystemColor(SWT.COLOR_GREEN));
+                gc.setForeground(getSystemColor(SWT.COLOR_DARK_GREEN));
+            } else {
+                gc.setForeground(getSystemColor(SWT.COLOR_DARK_GRAY));
+            }
+
+            Rectangle bounds = canvas.getBounds();
+
+            int y_indent = (bounds.height - REC_HEIGHT) / 2;
+            int[] points = new int[] { X_INDENT, y_indent, X_INDENT + ANGLE_DELTA, bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
+                    X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and the -1 is magic to get the drawPolygon nicely contouring the shape
+                    X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA, y_indent };
+
+            if (processorInfo != null)
+                gc.fillPolygon(points);
+
+            gc.drawPolygon(points);
+
+            String text;
+            if (processorInfo == null) {
+                text = "not connected";
+                gc.setForeground(getSystemColor(SWT.COLOR_DARK_GRAY));
+            } else {
+                text = processorInfo.getInstance();
+            }
+            gc.setFont(JFaceResources.getTextFont());
+            int textWidth = gc.getFontMetrics().getAverageCharWidth() * text.length();
+            int text_x = X_INDENT + Math.max((REC_WIDTH - textWidth) / 2, 0);
+            int text_y = (bounds.height - gc.getFontMetrics().getHeight()) / 2;
+            gc.drawText(text, text_x, text_y, true /* transparent */);
+
         }
 
         private void paintProcessorInfo(GC gc) {
@@ -219,12 +281,11 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
             int y_indent = (bounds.height - REC_HEIGHT) / 2;
 
-            int[] points = new int[] {
-                    X_INDENT, y_indent,
-                    X_INDENT + ANGLE_DELTA, bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
-                    X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and the -1 is magic to get the drawPolygon nicely contouring the shape
-                    X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA, y_indent
-            };
+            int offsetX = X_INDENT + REC_WIDTH - X_OVERLAP;
+            int[] points = new int[] { offsetX + X_INDENT, y_indent, offsetX + X_INDENT + ANGLE_DELTA,
+                    bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
+                    offsetX + X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and the -1 is magic to get the drawPolygon nicely contouring the shape
+                    offsetX + X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA, y_indent };
 
             if (processorInfo != null)
                 gc.fillPolygon(points);
@@ -233,14 +294,14 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
             String text;
             if (processorInfo == null) {
-                text = "not connected";
+                text = "---	";
                 gc.setForeground(getSystemColor(SWT.COLOR_DARK_GRAY));
             } else {
                 text = processorInfo.getName();
             }
             gc.setFont(JFaceResources.getTextFont());
             int textWidth = gc.getFontMetrics().getAverageCharWidth() * text.length();
-            int text_x = X_INDENT + Math.max((REC_WIDTH - textWidth) / 2, 0);
+            int text_x = offsetX + X_INDENT + Math.max((REC_WIDTH - textWidth) / 2, 0);
             int text_y = (bounds.height - gc.getFontMetrics().getHeight()) / 2;
             gc.drawText(text, text_x, text_y, true /* transparent */);
         }
@@ -251,13 +312,11 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
             int y_indent = (bounds.height - REC_HEIGHT) / 2;
 
-            int offsetX = X_INDENT + REC_WIDTH - X_OVERLAP;
-            int[] points = new int[] {
-                    offsetX + X_INDENT, y_indent,
-                    offsetX + X_INDENT + ANGLE_DELTA, bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
+            int offsetX = 2 * (X_INDENT + REC_WIDTH - X_OVERLAP);
+            int[] points = new int[] { offsetX + X_INDENT, y_indent, offsetX + X_INDENT + ANGLE_DELTA,
+                    bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
                     offsetX + X_INDENT + TIMEREC_WIDTH - 1, bounds.height - y_indent - 1, // and the -1 is magic to get the drawPolygon nicely contouring the shape
-                    offsetX + X_INDENT + TIMEREC_WIDTH - 1 - ANGLE_DELTA, y_indent
-            };
+                    offsetX + X_INDENT + TIMEREC_WIDTH - 1 - ANGLE_DELTA, y_indent };
 
             if (missionTime != TimeEncoding.INVALID_INSTANT)
                 gc.fillPolygon(points);
