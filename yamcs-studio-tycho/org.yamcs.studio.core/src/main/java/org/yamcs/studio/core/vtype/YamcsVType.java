@@ -39,23 +39,13 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         case IN_LIMITS:
             return AlarmSeverity.NONE;
         case DISABLED:
-            return AlarmSeverity.UNDEFINED;
+            return AlarmSeverity.NONE;
         case WATCH:
-        case WATCH_HIGH:
-        case WATCH_LOW:
         case WARNING:
-        case WARNING_HIGH:
-        case WARNING_LOW:
         case DISTRESS:
-        case DISTRESS_HIGH:
-        case DISTRESS_LOW:
             return AlarmSeverity.MINOR;
         case CRITICAL:
-        case CRITICAL_HIGH:
-        case CRITICAL_LOW:
         case SEVERE:
-        case SEVERE_HIGH:
-        case SEVERE_LOW:
             return AlarmSeverity.MAJOR;
         default:
             throw new IllegalStateException("Unexpected alarm severity " + pval.getMonitoringResult());
