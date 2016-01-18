@@ -78,7 +78,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             int x = evt.x;
             // click on instance
             if (x < (X_INDENT + REC_WIDTH - X_OVERLAP)) {
-                canvas.setToolTipText("Current Yamcs Instance");
+                canvas.setToolTipText("Yamcs Instance");
             }
             // click on processor
             else if (x < 2 * (X_INDENT + REC_WIDTH - X_OVERLAP)) {
