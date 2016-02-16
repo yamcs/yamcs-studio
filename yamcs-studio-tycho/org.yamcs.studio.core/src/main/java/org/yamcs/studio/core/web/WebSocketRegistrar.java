@@ -52,6 +52,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         String user = credentials != null ? credentials.getUsername() : null;
         String pass = credentials != null ? credentials.getPasswordS() : null;
         wsclient = new WebSocketClient(yprops, this, user, pass);
+        wsclient.setConnectionTimeoutMs(3000);
         wsclient.setUserAgent(USER_AGENT);
         requestSender = new Thread(() -> {
             try {
