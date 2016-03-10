@@ -77,6 +77,9 @@ public class ArchiveView extends ViewPart
     @SuppressWarnings("rawtypes")
     private Map combinedState = new HashMap();
 
+    ProcessorStateProvider processorState;
+    ConnectionStateProvider connectionState;
+
     @Override
     public void createPartControl(Composite parent) {
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
@@ -190,22 +193,29 @@ public class ArchiveView extends ViewPart
         gd.horizontalAlignment = SWT.RIGHT;
         buttonWrapper.setLayoutData(gd);
 
-        toggleReplayComposite(false);
-
         ISourceProviderService service = (ISourceProviderService) getSite().getService(ISourceProviderService.class);
-        ProcessorStateProvider processorState = (ProcessorStateProvider) service.getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
+        processorState = (ProcessorStateProvider) service.getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         processorState.addSourceProviderListener(this);
-        ConnectionStateProvider connectionState = (ConnectionStateProvider) service.getSourceProvider(ConnectionStateProvider.STATE_KEY_CONNECTED);
+        connectionState = (ConnectionStateProvider) service.getSourceProvider(ConnectionStateProvider.STATE_KEY_CONNECTED);
         connectionState.addSourceProviderListener(this);
 
         indexReceiver.setIndexListener(this);
         TimeCatalogue.getInstance().addTimeListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
+
+        updateState();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        TimeCatalogue.getInstance().removeTimeListener(this);
+        processorState.removeSourceProviderListener(this);
+        connectionState.removeSourceProviderListener(this);
+        ConnectionManager.getInstance().removeStudioConnectionListener(this);
     }
 
     private void toggleReplayComposite(boolean enabled) {
-        if (replayComposite.isDisposed())
-            return;
         replayCompositeGridData.exclude = !enabled;
         replayComposite.setVisible(enabled);
         replayComposite.getParent().layout();
@@ -233,8 +243,6 @@ public class ArchiveView extends ViewPart
         SwingUtilities.invokeLater(() -> {
             archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime);
         });
-        if (replayTimeLabel.isDisposed())
-            return;
         replayTimeLabel.getDisplay().asyncExec(() -> {
             if (replayTimeLabel.isDisposed())
                 return;
@@ -522,10 +530,13 @@ public class ArchiveView extends ViewPart
      * the future. This way we avoid duplicating similar logic here.
      */
     private void updateState() {
-        Boolean connected = (Boolean) combinedState.get(ConnectionStateProvider.STATE_KEY_CONNECTED);
-        String processing = (String) combinedState.get(ProcessorStateProvider.STATE_KEY_PROCESSING);
-        Boolean replay = (Boolean) combinedState.get(ProcessorStateProvider.STATE_KEY_REPLAY);
-        Float replaySpeed = (Float) combinedState.get(ProcessorStateProvider.STATE_KEY_REPLAY_SPEED);
+
+        // Refresh the current states
+        Boolean connected = (Boolean) connectionState.getCurrentState().get(ConnectionStateProvider.STATE_KEY_CONNECTED);
+        String processing = (String) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_PROCESSING);
+        Boolean replay = (Boolean) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY);
+        Float replaySpeed = (Float) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY_SPEED);
+
         if (connected == null || processing == null || replay == null || replaySpeed == null)
             return;
 

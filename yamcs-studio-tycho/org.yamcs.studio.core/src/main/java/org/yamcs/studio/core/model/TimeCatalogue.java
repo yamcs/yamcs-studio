@@ -31,6 +31,10 @@ public class TimeCatalogue implements Catalogue {
         listener.processTime(currentTime);
     }
 
+    public void removeTimeListener(TimeListener listener) {
+        timeListeners.remove(listener);
+    }
+
     public long getMissionTime() {
         return getMissionTime(false);
     }
