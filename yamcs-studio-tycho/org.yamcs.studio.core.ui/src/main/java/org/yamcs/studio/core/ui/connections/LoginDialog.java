@@ -4,12 +4,6 @@ import static org.yamcs.studio.core.ui.utils.TextUtils.forceString;
 import static org.yamcs.studio.core.ui.utils.TextUtils.isBlank;
 import static org.yamcs.studio.core.ui.utils.TextUtils.nvl;
 
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.TextOutputCallback;
-
-import org.csstudio.security.authentication.LoginJob;
-import org.csstudio.security.authentication.UnattendedCallbackHandler;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.security.auth.ILoginContext;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -28,7 +22,7 @@ import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
  * Uses Eclipse {@link ILoginContext} to perform a JAAS-based login. This dialog
- * stays open until the user either succesfully connects, or the dialog is
+ * stays open until the user either successfully connects, or the dialog is
  * cancelled.
  */
 public class LoginDialog extends TitleAreaDialog {
@@ -38,7 +32,16 @@ public class LoginDialog extends TitleAreaDialog {
     private Text user;
     private Text password;
 
-    private Job job;
+    String newUser = null;
+    String newPassword = null;
+
+    public String getUser() {
+        return newUser;
+    }
+
+    public String getPassword() {
+        return newPassword;
+    }
 
     public LoginDialog(Shell shell, YamcsConfiguration conf) {
         super(shell);
@@ -106,55 +109,16 @@ public class LoginDialog extends TitleAreaDialog {
         return composite;
     }
 
-    private void displayError(String error) {
-        // Fix weird punctuation. Unsure where it comes from.
-        String msg = (error != null) ? error = error.replace(".:", ".") : null;
-        setErrorMessage(msg);
-    }
-
     @Override
     protected void okPressed() {
-        // Perform login with entered name and password
-        job = new LoginJob(new DialogCallbackHandler());
-        job.schedule();
+        newUser = user.getText();
+        newPassword = password.getText();
+        super.okPressed();
     }
 
     @Override
     protected void cancelPressed() {
-        if (job != null)
-            job.cancel();
         super.cancelPressed();
     }
 
-    /**
-     * JAAS {@link CallbackHandler} that fetches name, password from dialog and
-     * displays errors in dialog as well.
-     */
-    class DialogCallbackHandler extends UnattendedCallbackHandler {
-        public DialogCallbackHandler() {
-            // Initialize with name, password from dialog
-            super(user.getText(), password.getText());
-        }
-
-        @Override
-        public void handleText(TextOutputCallback text) {
-            if (user.isDisposed())
-                return;
-            user.getDisplay().syncExec(() -> {
-                if (user.isDisposed())
-                    return;
-                if (text.getMessageType() == TextOutputCallback.INFORMATION && "OK".equals(text.getMessage())) {
-                    // Close dialog
-                    setReturnCode(OK);
-                    close();
-                } else { // Clear (possibly wrong) password.
-                    password.setText("");
-                    displayError(text.getMessage());
-                    // Start over at user name
-                    user.setFocus();
-                    user.selectAll();
-                }
-            });
-        }
-    }
 }

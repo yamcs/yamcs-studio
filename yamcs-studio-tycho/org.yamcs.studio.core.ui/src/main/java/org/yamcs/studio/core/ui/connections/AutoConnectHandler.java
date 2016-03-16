@@ -64,7 +64,12 @@ public class AutoConnectHandler extends AbstractHandler {
         } else {
             log.info("Want to connect to '" + connectionString
                     + "' but credentials are needed (not saved and not in dialog). Show password dialog");
-            new LoginDialog(shell, conf).open();
+            LoginDialog dialog = new LoginDialog(shell, conf);
+            if (dialog.open() == Dialog.OK) {
+                conf.setUser(dialog.getUser());
+                conf.setPassword(dialog.getPassword());
+                ConnectionManager.getInstance().connect(conf.toYamcsCredentials());
+            }
         }
     }
 }
