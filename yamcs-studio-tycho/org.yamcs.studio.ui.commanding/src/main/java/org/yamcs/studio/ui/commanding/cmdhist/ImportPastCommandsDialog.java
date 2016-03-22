@@ -158,12 +158,18 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
                 }
             }
 
+            volatile boolean showingMessageDialog = false;
+
             @Override
             public void onException(Exception e) {
                 log.log(Level.SEVERE, "Error while fetching archived telecommands", e);
                 Display.getDefault().asyncExec(() -> {
+                    if (showingMessageDialog)
+                        return;
+                    showingMessageDialog = true;
                     MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import commands", e.getMessage());
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
+                    showingMessageDialog = false;
                 });
             }
         });
