@@ -35,7 +35,7 @@ public class ArchiveCatalogue implements Catalogue {
 
     public void downloadCommands(TimeInterval interval, ResponseHandler responseHandler) {
         String instance = ConnectionManager.getInstance().getYamcsInstance();
-        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/commands");
+        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/downloads/commands");
         if (interval.hasStart())
             urlb.setParam("start", interval.getStartUTC());
         if (interval.hasStop())

@@ -23,11 +23,9 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.MessageLite;
 
 public class ImportPastCommandsDialog extends TitleAreaDialog {
 
@@ -143,19 +141,27 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         TimeInterval interval = new TimeInterval(start, stop);
 
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.downloadCommands(interval, new ResponseHandler() {
+        catalogue.downloadCommands(interval, new BulkResponseHandler<CommandHistoryEntry>() {
             @Override
-            public void onMessage(MessageLite responseMsg) {
-                if (responseMsg != null) {
-                    CommandHistoryEntry response = (CommandHistoryEntry) responseMsg;
-                    Display.getDefault().asyncExec(() -> {
-                        cmdhistView.processCommandHistoryEntry(response);
-                    });
+            public void onMessages(List<CommandHistoryEntry> commandHistoryEntries) {
+                if (commandHistoryEntries != null) {
+                    for (CommandHistoryEntry commandHistoryEntry : commandHistoryEntries) {
+                        Display.getDefault().asyncExec(() -> {
+                            cmdhistView.processCommandHistoryEntry(commandHistoryEntry);
+                        });
+                    }
                 } else {
                     Display.getDefault().asyncExec(() -> {
                         ImportPastCommandsDialog.super.okPressed();
                     });
                 }
+            }
+
+            @Override
+            public void onEndOfStream() {
+                Display.getDefault().asyncExec(() -> {
+                    ImportPastCommandsDialog.super.okPressed();
+                });
             }
 
             volatile boolean showingMessageDialog = false;
@@ -172,6 +178,7 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
                     showingMessageDialog = false;
                 });
             }
+
         });
     }
 
