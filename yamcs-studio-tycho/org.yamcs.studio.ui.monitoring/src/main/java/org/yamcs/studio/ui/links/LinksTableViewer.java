@@ -1,6 +1,8 @@
 package org.yamcs.studio.ui.links;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -11,6 +13,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -154,6 +158,29 @@ public class LinksTableViewer extends TableViewer {
         TableViewerColumn datacount = new TableViewerColumn(this, SWT.RIGHT);
         datacount.getColumn().setText(COL_DATACOUNT);
         tcl.setColumnData(datacount.getColumn(), new ColumnWeightData(10));
+
+        // Common properties to all columns
+        List<TableViewerColumn> columns = new ArrayList<>();
+        columns.add(nameColumn);
+        columns.add(typeColumn);
+        columns.add(specColumn);
+        columns.add(streamColumn);
+        columns.add(statusColumn);
+        columns.add(datacount);
+        for (TableViewerColumn column : columns) {
+            // prevent resize to 0
+            column.getColumn().addControlListener(new ControlListener() {
+                @Override
+                public void controlMoved(ControlEvent e) {
+                }
+
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (column.getColumn().getWidth() < 5)
+                        column.getColumn().setWidth(5);
+                }
+            });
+        }
     }
 
     class LinkLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {

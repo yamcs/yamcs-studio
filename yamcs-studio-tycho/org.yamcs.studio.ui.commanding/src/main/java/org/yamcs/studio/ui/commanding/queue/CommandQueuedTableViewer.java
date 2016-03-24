@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.commanding.queue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -9,6 +11,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -149,6 +153,27 @@ public class CommandQueuedTableViewer extends TableViewer {
         timeColumn.getColumn().setText(COL_TIME);
         timeColumn.getColumn().setToolTipText("Time");
         tcl.setColumnData(timeColumn.getColumn(), new ColumnWeightData(200));
+
+        // Common properties to all columns
+        List<TableViewerColumn> columns = new ArrayList<>();
+        columns.add(nameColumn);
+        columns.add(userColumn);
+        columns.add(stringColumn);
+        columns.add(timeColumn);
+        for (TableViewerColumn column : columns) {
+            // prevent resize to 0
+            column.getColumn().addControlListener(new ControlListener() {
+                @Override
+                public void controlMoved(ControlEvent e) {
+                }
+
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (column.getColumn().getWidth() < 5)
+                        column.getColumn().setWidth(5);
+                }
+            });
+        }
     }
 
     // rebuild doesn't seem to do anything and therefore is not currently included in rest api

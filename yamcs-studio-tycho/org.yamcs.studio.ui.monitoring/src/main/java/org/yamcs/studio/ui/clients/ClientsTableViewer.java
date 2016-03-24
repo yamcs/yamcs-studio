@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.clients;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -10,6 +12,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -71,6 +75,28 @@ public class ClientsTableViewer extends TableViewer {
         TableViewerColumn eColumn = new TableViewerColumn(this, SWT.LEFT);
         eColumn.getColumn().setText(COL_PROCESSOR);
         tcl.setColumnData(eColumn.getColumn(), new ColumnWeightData(23));
+
+        // Common properties to all columns
+        List<TableViewerColumn> columns = new ArrayList<>();
+        columns.add(aColumn);
+        columns.add(bColumn);
+        columns.add(cColumn);
+        columns.add(dColumn);
+        columns.add(eColumn);
+        for (TableViewerColumn column : columns) {
+            // prevent resize to 0
+            column.getColumn().addControlListener(new ControlListener() {
+                @Override
+                public void controlMoved(ControlEvent e) {
+                }
+
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (column.getColumn().getWidth() < 5)
+                        column.getColumn().setWidth(5);
+                }
+            });
+        }
 
     }
 

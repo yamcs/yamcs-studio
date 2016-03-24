@@ -1,6 +1,7 @@
 package org.yamcs.studio.ui.commanding.queue;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.action.Action;
@@ -18,6 +19,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -84,6 +87,28 @@ public class CommandQueuesTableViewer extends TableViewer {
         TableViewerColumn rejectedColumn = new TableViewerColumn(this, SWT.CENTER);
         rejectedColumn.getColumn().setText(COL_REJECTED);
         tcl.setColumnData(rejectedColumn.getColumn(), new ColumnWeightData(10));
+
+        // Common properties to all columns
+        List<TableViewerColumn> columns = new ArrayList<>();
+        columns.add(nameColumn);
+        columns.add(stateColumn);
+        columns.add(commandsColumn);
+        columns.add(sentColumn);
+        columns.add(rejectedColumn);
+        for (TableViewerColumn column : columns) {
+            // prevent resize to 0
+            column.getColumn().addControlListener(new ControlListener() {
+                @Override
+                public void controlMoved(ControlEvent e) {
+                }
+
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (column.getColumn().getWidth() < 5)
+                        column.getColumn().setWidth(5);
+                }
+            });
+        }
 
     }
 

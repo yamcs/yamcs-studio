@@ -1,5 +1,6 @@
 package org.yamcs.studio.ui.commanding.cmdhist;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +19,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -109,6 +112,7 @@ public class CommandHistoryView extends ViewPart {
     }
 
     private void addFixedColumns() {
+
         TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         gentimeColumn.getColumn().setText(COL_T);
         gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
@@ -204,6 +208,29 @@ public class CommandHistoryView extends ViewPart {
         });
         layoutDataByColumn.put(finalSeqColumn.getColumn(), new ColumnPixelData(50));
 
+        // Common properties to all columns
+        List<TableViewerColumn> columns = new ArrayList<>();
+        columns.add(gentimeColumn);
+        columns.add(nameColumn);
+        columns.add(originColumn);
+        columns.add(seqIdColumn);
+        columns.add(ptvColumn);
+        columns.add(finalSeqColumn);
+        for (TableViewerColumn column : columns) {
+            // prevent resize to 0
+            column.getColumn().addControlListener(new ControlListener() {
+                @Override
+                public void controlMoved(ControlEvent e) {
+                }
+
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (column.getColumn().getWidth() < 5)
+                        column.getColumn().setWidth(5);
+                }
+            });
+        }
+
         // TODO use IMemento or something
         tableViewer.getTable().setSortColumn(gentimeColumn.getColumn());
         tableViewer.getTable().setSortDirection(SWT.DOWN);
@@ -258,6 +285,18 @@ public class CommandHistoryView extends ViewPart {
                 applyColumnLayoutData(tcl);
                 column.getColumn().setWidth(90);
                 tableViewer.getTable().layout();
+
+                column.getColumn().addControlListener(new ControlListener() {
+                    @Override
+                    public void controlMoved(ControlEvent e) {
+                    }
+
+                    @Override
+                    public void controlResized(ControlEvent e) {
+                        if (column.getColumn().getWidth() < 5)
+                            column.getColumn().setWidth(5);
+                    }
+                });
             }
         }
 

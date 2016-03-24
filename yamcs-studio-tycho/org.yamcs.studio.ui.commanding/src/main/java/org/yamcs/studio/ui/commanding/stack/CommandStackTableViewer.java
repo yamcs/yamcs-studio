@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -12,6 +14,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -238,6 +242,31 @@ public class CommandStackTableViewer extends TableViewer {
             }
         });
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
+
+        // Common properties to all columns
+        List<TableViewerColumn> columns = new ArrayList<>();
+        columns.add(rowIdColumn);
+        columns.add(nameColumn);
+        columns.add(significanceColumn);
+        columns.add(constraintsColumn);
+        columns.add(constraintsTimeOutColumn);
+        columns.add(releaseColumn);
+        columns.add(ptvColumn);
+        columns.add(stateColumn);
+        for (TableViewerColumn column : columns) {
+            // prevent resize to 0
+            column.getColumn().addControlListener(new ControlListener() {
+                @Override
+                public void controlMoved(ControlEvent e) {
+                }
+
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (column.getColumn().getWidth() < 5)
+                        column.getColumn().setWidth(5);
+                }
+            });
+        }
     }
 
     public void appendConstraint(ComparisonInfo comparison, StringBuilder buf) {
