@@ -184,11 +184,11 @@ public class DataView extends JScrollPane {
         }
     }
 
-    long getMouseInstant(MouseEvent e) {
+    long getMouseInstant(int mouseX) {
         if (zoomStack.isEmpty()) {
             return TimeEncoding.INVALID_INSTANT;
         }
-        previewLocator = zoomStack.peek().convertPixelToInstant(e.getX());
+        previewLocator = zoomStack.peek().convertPixelToInstant(mouseX);
         return previewLocator;
     }
 
@@ -518,6 +518,7 @@ public class DataView extends JScrollPane {
                 g.setColor(Color.LIGHT_GRAY);
                 //int tagBoxHeight = tagBox.getHeight();
                 g.drawLine(mouseLocatorX, getHeight() - 8, mouseLocatorX, getHeight());
+
             }
         }
     }
@@ -539,7 +540,7 @@ public class DataView extends JScrollPane {
                     drawPreviewLocator = true;
                     previewLocatorAlpha = 0.8f;
                     previewLocatorX = e.getX();
-                    previewLocator = getMouseInstant(e);
+                    previewLocator = getMouseInstant(e.getX());
                     archivePanel.seekReplay(previewLocator);
                     repaint();
                 } else {
@@ -631,6 +632,10 @@ public class DataView extends JScrollPane {
                         g.drawLine(x1, y1, x1, y2);
                         g.drawLine(x2, y1, x2, y2);
                     }
+
+                    // draw end selection time
+                    drawMouseTime(g, x1, 0);
+                    drawMouseTime(g, x2, 12);
                 }
 
                 if (currentLocator != DO_NOT_DRAW || drawPreviewLocator) {
@@ -661,10 +666,32 @@ public class DataView extends JScrollPane {
                             g2d.setStroke(dashed);
                             g2d.drawLine(x, 0, x, h - 1);
                             g2d.setStroke(oldStroke);
+
+                            // print date time
+                            drawMouseTime(g, mouseLocatorX, 1);
+
                         }
                     }
                 }
+
             }
+        }
+
+        // Draw the date and time that is under the current mouse X position, high is 11 pixels
+        void drawMouseTime(Graphics g, int mouseX, int offsetY) {
+            int boxPadding = 1;
+            long instant = getMouseInstant(mouseX);
+            String dateTimeText = TimeEncoding.toString(instant);
+            int fontWidth = g.getFontMetrics().stringWidth(dateTimeText);
+            int fontHeight = 9;
+            // g.setColor(Color.LIGHT_GRAY);
+            g.setColor(Color.WHITE);
+            mouseX++;
+            g.fillRect(mouseX, offsetY, fontWidth + 2 * boxPadding, fontHeight + 2 * boxPadding);
+            //g.setColor(Color.LIGHT_GRAY);
+            g.setColor(Color.BLACK);
+            g.drawString(dateTimeText, mouseX + boxPadding, offsetY + fontHeight + boxPadding);
+
         }
     }
 }
