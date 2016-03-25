@@ -23,6 +23,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.utils.TimeEncoding;
@@ -54,8 +55,8 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
     private void validate() {
         String errorMessage = null;
-        Calendar start = toCalendar(startDate, startTime);
-        Calendar stop = toCalendar(stopDate, stopTime);
+        Calendar start = RCPUtils.toCalendar(startDate, startTime);
+        Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
         if (start.after(stop))
             errorMessage = "Stop has to be greater than start";
 
@@ -115,16 +116,6 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         return container;
     }
 
-    private static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
-        cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
-        cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
-        cal.set(Calendar.MINUTE, timeWidget.getMinutes());
-        cal.set(Calendar.SECOND, timeWidget.getSeconds());
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal;
-    }
-
     @Override
     protected void okPressed() {
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
@@ -136,8 +127,8 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
         getButton(IDialogConstants.OK_ID).setEnabled(false);
 
-        long start = TimeEncoding.fromCalendar(toCalendar(startDate, startTime));
-        long stop = TimeEncoding.fromCalendar(toCalendar(stopDate, stopTime));
+        long start = TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime));
+        long stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
         TimeInterval interval = new TimeInterval(start, stop);
 
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
 public class CustomizeRangeDialog extends TitleAreaDialog {
@@ -48,8 +49,8 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         if (!startClosed.getSelection() && !stopClosed.getSelection()) {
             errorMessage = "At least one of start or stop has to be specified";
         } else if (startClosed.getSelection() && stopClosed.getSelection()) {
-            Calendar start = CustomizeRangeDialog.toCalendar(startDate, startTime);
-            Calendar stop = CustomizeRangeDialog.toCalendar(stopDate, stopTime);
+            Calendar start = RCPUtils.toCalendar(startDate, startTime);
+            Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
             if (start.after(stop)) {
                 errorMessage = "Stop has to be greater than start";
             }
@@ -141,24 +142,14 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         return container;
     }
 
-    private static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
-        cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
-        cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
-        cal.set(Calendar.MINUTE, timeWidget.getMinutes());
-        cal.set(Calendar.SECOND, timeWidget.getSeconds());
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal;
-    }
-
     /**
      * Save our stuff, because everything is gonna get disposed
      */
     @Override
     protected void okPressed() {
-        startTimeValue = (startClosed.getSelection()) ? toCalendar(startDate, startTime) : null;
+        startTimeValue = (startClosed.getSelection()) ? RCPUtils.toCalendar(startDate, startTime) : null;
         startClosedValue = startClosed.getSelection();
-        stopTimeValue = (stopClosed.getSelection()) ? toCalendar(stopDate, stopTime) : null;
+        stopTimeValue = (stopClosed.getSelection()) ? RCPUtils.toCalendar(stopDate, stopTime) : null;
         stopClosedValue = stopClosed.getSelection();
         super.okPressed();
     }

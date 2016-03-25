@@ -1,5 +1,6 @@
 package org.yamcs.studio.core.ui.utils;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +10,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -18,6 +20,7 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.yamcs.studio.core.model.TimeCatalogue;
 
 /**
  * Various 'improvements' to RCP code to shorten our code a bit
@@ -61,5 +64,15 @@ public class RCPUtils {
     public static ImageDescriptor getImageDescriptor(Class<?> classFromBundle, String path) {
         Bundle bundle = FrameworkUtil.getBundle(classFromBundle);
         return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
+    }
+
+    public static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
+        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
+        cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
+        cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
+        cal.set(Calendar.MINUTE, timeWidget.getMinutes());
+        cal.set(Calendar.SECOND, timeWidget.getSeconds());
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal;
     }
 }

@@ -222,7 +222,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         });
     }
 
-    void seekReplay(long newPosition) {
+    public void seekReplay(long newPosition) {
         if (newPosition == TimeEncoding.INVALID_INSTANT)
             return;
 

@@ -30,6 +30,7 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
@@ -155,16 +156,6 @@ public class CreateReplayDialog extends TitleAreaDialog {
         return container;
     }
 
-    private static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
-        cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
-        cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
-        cal.set(Calendar.MINUTE, timeWidget.getMinutes());
-        cal.set(Calendar.SECOND, timeWidget.getSeconds());
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal;
-    }
-
     @Override
     protected void okPressed() {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
@@ -207,7 +198,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
         CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
                 .setName(name.getText())
-                .setStart(TimeEncoding.toString(TimeEncoding.fromCalendar(toCalendar(startDate, startTime))))
+                .setStart(TimeEncoding.toString(TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime))))
                 .setStop(TimeEncoding.toString(TimeEncoding.MAX_INSTANT))
                 .setLoop(false)
                 .addClientId(ci.getId());

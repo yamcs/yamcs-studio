@@ -29,6 +29,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
@@ -61,6 +62,7 @@ public class ArchiveView extends ViewPart
     private Composite replayComposite;
     private GridData replayCompositeGridData;
 
+    private Image seekImage;
     private Image playImage;
     private Image pauseImage;
     private Image forwardImage;
@@ -70,6 +72,9 @@ public class ArchiveView extends ViewPart
     private Image forward16xImage;
     private Image leaveReplayImage;
 
+    private DateTime seekDate;
+    private DateTime seekTime;
+    private Button seekButton;
     private Button playButton;
     private Button forwardButton;
     private Button leaveReplayButton;
@@ -83,6 +88,8 @@ public class ArchiveView extends ViewPart
     @Override
     public void createPartControl(Composite parent) {
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+
+        seekImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/seek.png"));
         playImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/play.png"));
         pauseImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/pause.png"));
         forwardImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward.png"));
@@ -125,28 +132,49 @@ public class ArchiveView extends ViewPart
         replayComposite = new Composite(contentArea, SWT.NONE);
         replayCompositeGridData = new GridData(GridData.FILL_HORIZONTAL);
         replayComposite.setLayoutData(replayCompositeGridData);
-        gl = new GridLayout(3, false);
+        gl = new GridLayout(4, false);
         gl.marginHeight = 0;
         gl.verticalSpacing = 0;
         gl.horizontalSpacing = 0;
         replayComposite.setLayout(gl);
 
-        replayTimeLabel = new Label(replayComposite, SWT.NONE);
+        //   current time / jump date / jump time / jump button
+        Composite timeComposite = new Composite(replayComposite, SWT.NONE);
+        GridData gd = new GridData();
+        gd.horizontalAlignment = SWT.LEFT;
+        //  gd.widthHint = 140;
+        //   gd.grabExcessHorizontalSpace = true;
+        timeComposite.setLayoutData(gd);
+        gl = new GridLayout(4, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        gl.verticalSpacing = 0;
+        gl.horizontalSpacing = 0;
+        timeComposite.setLayout(gl);
+
+        replayTimeLabel = new Label(timeComposite, SWT.NONE);
         FontData[] fd = replayTimeLabel.getFont().getFontData();
         fd[0].setHeight(fd[0].getHeight() - 2);
         replayTimeLabel.setFont(new Font(parent.getDisplay(), fd)); // TODO dispose this font!
         replayTimeLabel.setText("                             "); // ugh...
-        GridData gd = new GridData();
-        gd.horizontalAlignment = SWT.LEFT;
-        gd.widthHint = 140;
-        replayTimeLabel.setLayoutData(gd);
 
+        seekDate = new DateTime(timeComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
+        seekTime = new DateTime(timeComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
+        seekButton = new Button(timeComposite, SWT.PUSH);
+        seekButton.setImage(seekImage);
+        seekButton.setToolTipText("Seek Specified Time");
+        seekButton.addListener(SWT.Selection, evt -> {
+            long seekInstant = TimeEncoding.fromCalendar(RCPUtils.toCalendar(seekDate, seekTime));
+            archivePanel.seekReplay(seekInstant);
+        });
+
+        // play / pause / forward
         Composite controlsComposite = new Composite(replayComposite, SWT.NONE);
         gd = new GridData();
         gd.horizontalAlignment = SWT.CENTER;
         gd.grabExcessHorizontalSpace = true;
         controlsComposite.setLayoutData(gd);
-        gl = new GridLayout(5, false);
+        gl = new GridLayout(3, false);
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         gl.verticalSpacing = 0;
