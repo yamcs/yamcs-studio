@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueEvent;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
@@ -25,6 +26,8 @@ import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.protobuf.Rest.IssueCommandResponse;
 import org.yamcs.protobuf.Rest.ListCommandInfoResponse;
+import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
+import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -186,6 +189,21 @@ public class CommandingCatalogue implements Catalogue {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
             return "Unknown";
+        }
+    }
+
+    public void updateCommandComment(String processor, CommandId cmdId, String newComment, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        String instance = connectionManager.getYamcsInstance();
+        RestClient restClient = connectionManager.getRestClient();
+
+        KeyValue keyValue = KeyValue.newBuilder().setKey("Comment").setValue(newComment).build();
+        UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId).addHistoryEntry(keyValue).build();
+
+        if (restClient != null) {
+            restClient.post("/processors/" + instance + "/" + processor + "/commandhistory" + cmdId.getCommandName(), request, null, responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
         }
     }
 }

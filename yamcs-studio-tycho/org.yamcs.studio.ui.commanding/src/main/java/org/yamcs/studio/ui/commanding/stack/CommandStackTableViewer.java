@@ -38,6 +38,7 @@ public class CommandStackTableViewer extends TableViewer {
     public static final String COL_RELEASE = "Release";
     public static final String COL_STATE = "Stack State";
     public static final String COL_PTV = "PTV";
+    public static final String COL_COMMENT = "Comment";
 
     private Image greenBubble;
     private Image redBubble;
@@ -243,6 +244,18 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
 
+        // column comment
+        TableViewerColumn commentColumn = new TableViewerColumn(this, SWT.CENTER);
+        commentColumn.getColumn().setText(COL_COMMENT);
+        commentColumn.getColumn().setToolTipText("Free Text Comment");
+        commentColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((StackedCommand) element).getComment();
+            }
+        });
+        tcl.setColumnData(commentColumn.getColumn(), new ColumnPixelData(80));
+
         // Common properties to all columns
         List<TableViewerColumn> columns = new ArrayList<>();
         columns.add(rowIdColumn);
@@ -253,6 +266,7 @@ public class CommandStackTableViewer extends TableViewer {
         columns.add(releaseColumn);
         columns.add(ptvColumn);
         columns.add(stateColumn);
+        columns.add(commentColumn);
         for (TableViewerColumn column : columns) {
             // prevent resize to 0
             column.getColumn().addControlListener(new ControlListener() {

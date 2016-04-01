@@ -54,6 +54,8 @@ public class StackedCommand {
 
     private PTVInfo ptvInfo = new PTVInfo();
 
+    private String comment = null;
+
     public boolean matches(CommandId commandId) {
         // FIXME add user too
         String ourOrigin = CommandingCatalogue.getInstance().getCommandOrigin();
@@ -113,6 +115,8 @@ public class StackedCommand {
         IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
         req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
+        if (comment != null)
+            req.setComment(comment);
         assignments.forEach((k, v) -> {
             req.addAssignment(Assignment.newBuilder().setName(k.getName()).setValue(v));
         });
@@ -224,6 +228,14 @@ public class StackedCommand {
 
     public void markSkipped() {
         state = StackedState.SKIPPED;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     @Override

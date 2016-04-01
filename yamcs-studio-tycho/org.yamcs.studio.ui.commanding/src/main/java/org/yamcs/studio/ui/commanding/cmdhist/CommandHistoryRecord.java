@@ -47,6 +47,10 @@ public class CommandHistoryRecord {
         ptvInfo = new PTVInfo();
     }
 
+    public CommandId getCommandId() {
+        return id;
+    }
+
     public void setFinalSequenceCount(Value finalSequenceCount) {
         this.finalSequenceCount = valueToString(finalSequenceCount);
     }
