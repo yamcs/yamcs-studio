@@ -24,3 +24,4 @@ Require-Bundle: org.eclipse.ui,
  com.google.gson
 Export-Package: org.yamcs.studio.ui.commanding
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Import-Package: org.yamcs.protobuf

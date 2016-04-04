@@ -2,6 +2,7 @@ package org.yamcs.studio.ui.commanding.stack;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
@@ -10,7 +11,6 @@ import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -24,15 +24,21 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class AddToStackWizardPage1 extends WizardPage {
+
+    public static final String COL_SIGN = "Sig.";
+    public static final String COL_QNAME = "Qualified Name";
+    public static final int COLUMN_WIDTH = 10;
 
     private Image level1Image;
     private Image level2Image;
@@ -41,12 +47,35 @@ public class AddToStackWizardPage1 extends WizardPage {
     private Image level5Image;
 
     private StackedCommand command;
+    TableViewer commandsTable;
+    TableColumnLayout tcl;
+
+    List<String> namespaces = new ArrayList();
 
     public AddToStackWizardPage1(StackedCommand command) {
         super("Choose a Command");
         this.command = command;
         setTitle("Choose a Command");
         setPageComplete(false);
+    }
+
+    private void addAliasColumn(String namespace) {
+        TableViewerColumn aliasColumn = new TableViewerColumn(commandsTable, SWT.NONE);
+        aliasColumn.getColumn().setText(namespace);
+
+        aliasColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                CommandInfo cmd = (CommandInfo) element;
+                List<NamedObjectId> aliases = cmd.getAliasList();
+                for (NamedObjectId aliase : aliases) {
+                    if (aliase.getNamespace().equals(namespace))
+                        return aliase.getName();
+                }
+                return "";
+            }
+        });
+        tcl.setColumnData(aliasColumn.getColumn(), new ColumnPixelData(COLUMN_WIDTH));
     }
 
     @Override
@@ -70,15 +99,17 @@ public class AddToStackWizardPage1 extends WizardPage {
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Composite tableWrapper = new Composite(composite, SWT.NONE);
-        TableColumnLayout tcl = new TableColumnLayout();
+        tcl = new TableColumnLayout();
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableWrapper.setLayout(tcl);
 
-        TableViewer commandsTable = new TableViewer(tableWrapper, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
-        commandsTable.getTable().setHeaderVisible(false);
+        commandsTable = new TableViewer(tableWrapper, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+        commandsTable.getTable().setHeaderVisible(true);
         commandsTable.getTable().setLinesVisible(false);
 
         TableViewerColumn significanceColumn = new TableViewerColumn(commandsTable, SWT.NONE);
+        significanceColumn.getColumn().setText(COL_SIGN);
+        significanceColumn.getColumn().setToolTipText("Significance");
         significanceColumn.getColumn().setAlignment(SWT.CENTER);
         significanceColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
@@ -102,9 +133,10 @@ public class AddToStackWizardPage1 extends WizardPage {
                 }
             }
         });
-        tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(50));
+        tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(40));
 
         TableViewerColumn nameColumn = new TableViewerColumn(commandsTable, SWT.NONE);
+        nameColumn.getColumn().setText(COL_QNAME);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -112,7 +144,7 @@ public class AddToStackWizardPage1 extends WizardPage {
                 return cmd.getQualifiedName();
             }
         });
-        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(COLUMN_WIDTH));
 
         commandsTable.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
@@ -144,12 +176,25 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         commandsTable.setContentProvider(ArrayContentProvider.getInstance());
 
+        // load command list
         Collection<CommandInfo> nonAbstract = new ArrayList<>();
         CommandingCatalogue.getInstance().getMetaCommands().forEach(cmd -> {
-            if (!cmd.getAbstract())
+            if (!cmd.getAbstract()) {
+                for (NamedObjectId alias : cmd.getAliasList()) {
+                    String namespace = alias.getNamespace();
+                    if (!namespaces.contains(namespace) && !namespace.startsWith("/")) {
+                        namespaces.add(namespace);
+                        addAliasColumn(namespace);
+                    }
+                }
                 nonAbstract.add(cmd);
+            }
         });
         commandsTable.setInput(nonAbstract);
+
+        // adjust columns width to content
+        for (TableColumn tc : commandsTable.getTable().getColumns())
+            tc.pack();
 
         commandsTable.setComparator(new ViewerComparator() {
             @Override
