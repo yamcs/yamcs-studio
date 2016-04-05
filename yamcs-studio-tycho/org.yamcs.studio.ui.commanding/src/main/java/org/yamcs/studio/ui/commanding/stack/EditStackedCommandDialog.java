@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -17,6 +18,7 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.studio.ui.commanding.stack.ArgumentTableBuilder.ArgumentAssignement;
 
 public class EditStackedCommandDialog extends TitleAreaDialog {
 
@@ -69,10 +71,8 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
             @Override
             public void expansionStateChanged(ExpansionEvent e) {
                 parent.layout(true);
-                // parent.getShell().pack();
                 composite.layout();
                 optionsComposite.layout();
-                composite.layout();
             }
         });
         comment.addModifyListener(evt -> {
@@ -84,24 +84,17 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
         });
 
         Label desc = new Label(composite, SWT.NONE);
-        desc.setText("Specify the command parameters:");
+        desc.setText("Specify the command arguments:");
         desc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Composite argumentsComposite = new Composite(composite, SWT.NONE);
-        argumentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        argumentsComposite.setLayout(new GridLayout(2, false));
+        TableViewer argumentTable = (new ArgumentTableBuilder(command)).createArgumentTable(composite);
+        ArrayList<ArgumentAssignement> argumentAssignements = new ArrayList<>();
         for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
-            Label lbl = new Label(argumentsComposite, SWT.NONE);
-            lbl.setText(arg.getName());
-
-            Text text = new Text(argumentsComposite, SWT.BORDER);
-            text.setData(arg);
-            text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             String value = command.getAssignedStringValue(arg);
-            text.setText(value == null ? "" : value);
-            text.addModifyListener(evt -> command.addAssignment(arg, text.getText()));
-            textFields.add(text);
+            argumentAssignements.add(new ArgumentAssignement(arg, value == null ? "" : value));
         }
+        argumentTable.setInput(argumentAssignements);
+        argumentTable.getTable().getColumn(0).pack();
 
         return composite;
     }

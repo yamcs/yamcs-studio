@@ -1,28 +1,33 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.util.ArrayList;
+
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.studio.ui.commanding.stack.ArgumentTableBuilder.ArgumentAssignement;
 
 public class AddToStackWizardPage2 extends WizardPage {
 
     private StackedCommand command;
     private Composite controlComposite;
     private Label desc;
-    private Composite argumentsComposite;
+    TableViewer argumentTable;
+
+    private String previousCommand = "";
 
     public AddToStackWizardPage2(StackedCommand command) {
-        super("Specify Parameters");
-        setTitle("Specify Parameters");
+        super("Specify Arguments");
+        setTitle("Specify Arguments");
         this.command = command;
         setPageComplete(true);
     }
@@ -38,42 +43,38 @@ public class AddToStackWizardPage2 extends WizardPage {
     }
 
     private void updateControl() {
-        setMessage(command.getMetaCommand().getQualifiedName());
-        desc.setText("Specify the command parameters:");
 
-        // Clear previous state. This is slightly suboptimal since we also lose state
-        // If the user just flips between back and next without actually changing the command.
+        if (previousCommand.equals(command.getMetaCommand().getQualifiedName())) {
+            // Keep state if the user just flips between back and next without actually changing the command.
+            return;
+        }
+        previousCommand = command.getMetaCommand().getQualifiedName();
+
+        setMessage(command.getMetaCommand().getQualifiedName());
+        desc.setText("Specify the command arguments:");
+
+        // Clear previous state
         command.getAssignments().clear();
-        for (Control child : argumentsComposite.getChildren())
-            child.dispose();
 
         // Register new state
+        ArrayList<ArgumentAssignement> argumentAssignements = new ArrayList<>();
         for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
-            Label lbl = new Label(argumentsComposite, SWT.NONE);
-            lbl.setText(arg.getName());
-
-            Text text = new Text(argumentsComposite, SWT.BORDER);
-            text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (arg.getInitialValue() != null) {
-                text.setText(arg.getInitialValue());
-                command.addAssignment(arg, arg.getInitialValue());
+                argumentAssignements.add(new ArgumentAssignement(arg, arg.getInitialValue()));
+            } else {
+                argumentAssignements.add(new ArgumentAssignement(arg, ""));
             }
-            text.addModifyListener(evt -> {
-                if (text.getText().trim().isEmpty()) {
-                    command.addAssignment(arg, null);
-                } else {
-                    command.addAssignment(arg, text.getText());
-                }
-            });
         }
-
-        argumentsComposite.layout();
+        argumentTable.setInput(argumentAssignements);
+        argumentTable.getTable().getColumn(0).pack();
         controlComposite.layout();
     }
 
     @Override
     public void createControl(Composite parent) {
+
         controlComposite = new Composite(parent, SWT.NONE);
+
         setControl(controlComposite);
         controlComposite.setLayout(new GridLayout());
 
@@ -100,8 +101,7 @@ public class AddToStackWizardPage2 extends WizardPage {
             @Override
             public void expansionStateChanged(ExpansionEvent e) {
                 parent.layout(true);
-                parent.getShell().pack();
-                updateControl();
+                controlComposite.layout(true);
             }
         });
         comment.addModifyListener(evt -> {
@@ -115,8 +115,7 @@ public class AddToStackWizardPage2 extends WizardPage {
         desc = new Label(controlComposite, SWT.NONE);
         desc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        argumentsComposite = new Composite(controlComposite, SWT.NONE);
-        argumentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        argumentsComposite.setLayout(new GridLayout(2, false));
+        argumentTable = (new ArgumentTableBuilder(command)).createArgumentTable(controlComposite);
     }
+
 }
