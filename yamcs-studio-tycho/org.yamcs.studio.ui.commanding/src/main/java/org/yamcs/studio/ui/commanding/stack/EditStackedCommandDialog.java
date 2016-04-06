@@ -94,7 +94,7 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
             argumentAssignements.add(new ArgumentAssignement(arg, value == null ? "" : value));
         }
         argumentTable.setInput(argumentAssignements);
-        argumentTable.getTable().getColumn(0).pack();
+        (new ArgumentTableBuilder(command)).pack(argumentTable);
 
         return composite;
     }

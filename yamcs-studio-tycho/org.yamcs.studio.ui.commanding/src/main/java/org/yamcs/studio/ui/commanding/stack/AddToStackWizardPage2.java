@@ -66,7 +66,7 @@ public class AddToStackWizardPage2 extends WizardPage {
             }
         }
         argumentTable.setInput(argumentAssignements);
-        argumentTable.getTable().getColumn(0).pack();
+        (new ArgumentTableBuilder(command)).pack(argumentTable);
         controlComposite.layout();
     }
 
