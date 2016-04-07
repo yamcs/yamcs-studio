@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,6 +57,7 @@ public class StackedCommand {
     private PTVInfo ptvInfo = new PTVInfo();
 
     private String comment = null;
+    private String selectedAlias = null;
 
     public boolean matches(CommandId commandId) {
         // FIXME add user too
@@ -80,7 +83,7 @@ public class StackedCommand {
 
     public StyledString toStyledString(CommandStackView styleProvider) {
         StyledString str = new StyledString();
-        str.append(meta.getQualifiedName(), styleProvider.getIdentifierStyler(this));
+        str.append(getSelectedAlias(), styleProvider.getIdentifierStyler(this));
         str.append("(", styleProvider.getBracketStyler(this));
         boolean first = true;
         for (ArgumentInfo arg : meta.getArgumentList()) {
@@ -241,5 +244,19 @@ public class StackedCommand {
     @Override
     public String toString() {
         return meta.getQualifiedName();
+    }
+
+    public void setSelectedAliase(String alias) {
+        this.selectedAlias = alias;
+
+    }
+
+    public String getSelectedAlias() {
+        return selectedAlias;
+
+    }
+
+    public String getSelectedAliasEncoded() throws UnsupportedEncodingException {
+        return "/" + URLEncoder.encode(selectedAlias, "UTF-8");
     }
 }

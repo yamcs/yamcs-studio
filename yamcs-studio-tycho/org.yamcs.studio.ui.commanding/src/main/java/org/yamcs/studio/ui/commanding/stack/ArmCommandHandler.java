@@ -1,5 +1,6 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,11 +39,17 @@ public class ArmCommandHandler extends AbstractRestHandler {
         return null;
     }
 
-    private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command) {
+    private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command) throws ExecutionException {
         IssueCommandRequest req = command.toIssueCommandRequest().setDryRun(true).build();
 
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-        String qname = command.getMetaCommand().getQualifiedName();
+        String qname;
+        try {
+            qname = command.getSelectedAliasEncoded();
+        } catch (UnsupportedEncodingException e1) {
+            throw new ExecutionException(e1.getMessage());
+        }
+
         catalogue.sendCommand("realtime", qname, req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite response) {

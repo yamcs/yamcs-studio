@@ -32,7 +32,7 @@ public class CommandStackTableViewer extends TableViewer {
 
     public static final String COL_ROW_ID = "#";
     public static final String COL_COMMAND = "Command";
-    public static final String COL_SIGNIFICANCE = "Lvl";
+    public static final String COL_SIGNIFICANCE = "Sig.";
     public static final String COL_CONSTRAINTS = "Constraints";
     public static final String COL_CONSTRAINTS_TIMEOUT = "T/O";
     public static final String COL_RELEASE = "Release";

@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentTypeInfo;
@@ -41,6 +42,10 @@ public class ArgumentTableBuilder {
     }
 
     public TableViewer createArgumentTable(Composite shell) {
+
+        Label desc = new Label(shell, SWT.NONE);
+        desc.setText("Specify the command arguments:");
+        desc.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         TableColumnLayout tcl = new TableColumnLayout();
         Composite argumentsComposite = new Composite(shell, SWT.NONE);

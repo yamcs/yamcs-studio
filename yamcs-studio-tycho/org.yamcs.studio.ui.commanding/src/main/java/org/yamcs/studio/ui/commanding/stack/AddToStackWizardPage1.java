@@ -133,7 +133,7 @@ public class AddToStackWizardPage1 extends WizardPage {
         // column significance
         TreeViewerColumn significanceColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
         significanceColumn.getColumn().setText(COL_SIGN);
-        significanceColumn.getColumn().setToolTipText("Significance");
+        significanceColumn.getColumn().setToolTipText("Significance Level");
         significanceColumn.getColumn().setAlignment(SWT.CENTER);
         significanceColumn.setLabelProvider(new CenteredImageLabelProvider() {
             @Override
@@ -184,23 +184,8 @@ public class AddToStackWizardPage1 extends WizardPage {
             }
 
             CommandInfo cmd = (CommandInfo) sel.getFirstElement();
+            setMessage(getMessage(cmd));
 
-            SignificanceInfo significance = cmd.getSignificance();
-            if (significance != null) {
-                StringBuilder buf = new StringBuilder();
-                if (significance.getConsequenceLevel() != SignificanceLevelType.NONE) {
-                    buf.append("[");
-                    buf.append(significance.getConsequenceLevel().toString());
-                    buf.append("] ");
-                }
-                if (significance.getReasonForWarning() != null) {
-                    buf.append(significance.getReasonForWarning());
-                }
-                setMessage(buf.toString());
-
-            } else {
-                setMessage(null);
-            }
             command.setMetaCommand(cmd);
             setPageComplete(!cmd.getAbstract());
         });
@@ -255,6 +240,32 @@ public class AddToStackWizardPage1 extends WizardPage {
             }
         });
 
+    }
+
+    static public String getMessage(CommandInfo cmd) {
+        if (cmd == null)
+            return null;
+
+        StringBuilder buf = new StringBuilder();
+
+        buf.append(cmd.getQualifiedName());
+
+        SignificanceInfo significance = cmd.getSignificance();
+        if (significance != null) {
+            buf.append("\n");
+            if (significance.getConsequenceLevel() != SignificanceLevelType.NONE) {
+                buf.append("[");
+                buf.append(significance.getConsequenceLevel().toString());
+                buf.append("] ");
+            }
+            if (significance.getReasonForWarning() != null) {
+                buf.append(significance.getReasonForWarning());
+            }
+            return buf.toString();
+
+        } else {
+            return null;
+        }
     }
 
     class CommandTreeContentProvider implements ITreeContentProvider {
