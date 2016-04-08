@@ -88,7 +88,7 @@ public class StackedCommand {
         boolean first = true;
         for (ArgumentInfo arg : meta.getArgumentList()) {
             if (!first)
-                str.append(", ", styleProvider.getBracketStyler(this));
+                str.append("\n, ", styleProvider.getBracketStyler(this));
             first = false;
             str.append(arg.getName() + ": ", styleProvider.getArgNameStyler(this));
             String value = getAssignedStringValue(arg);
@@ -171,7 +171,7 @@ public class StackedCommand {
             // Set all values, even if null initial value. This gives us consistent ordering
             for (ArgumentInfo argument : cmd.getArgumentList()) {
                 String name = argument.getName();
-                String value = argument.getInitialValue();
+                String value = argument.hasInitialValue() ? argument.getInitialValue() : null;
                 boolean editable = true;
                 argumentsByName.put(name, new TelecommandArgument(name, value, editable));
             }

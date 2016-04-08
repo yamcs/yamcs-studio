@@ -66,12 +66,13 @@ public class AddToStackWizardPage2 extends WizardPage {
         // populate namespace combo
         // (switching ops name and qualified name)
         aliases = new ArrayList<String>();
+        aliases.add(command.getMetaCommand().getQualifiedName());
         for (NamedObjectId noi : command.getMetaCommand().getAliasList()) {
-            aliases.add(noi.getNamespace() + "/" + noi.getName());
+            String alias = noi.getNamespace() + "/" + noi.getName();
+            if (alias.equals(command.getMetaCommand().getQualifiedName()))
+                continue;
+            aliases.add(alias);
         }
-        String temp = aliases.get(0);
-        aliases.set(0, aliases.get(1));
-        aliases.set(1, temp);
         namespaceCombo.setItems(aliases.toArray(new String[aliases.size()]));
         namespaceCombo.select(0);
         command.setSelectedAliase(aliases.get(0));
@@ -79,7 +80,7 @@ public class AddToStackWizardPage2 extends WizardPage {
         // Register new state
         ArrayList<ArgumentAssignement> argumentAssignements = new ArrayList<>();
         for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
-            if (arg.getInitialValue() != null) {
+            if (arg.hasInitialValue()) {
                 argumentAssignements.add(new ArgumentAssignement(arg, arg.getInitialValue()));
                 command.addAssignment(arg, arg.getInitialValue());
             } else {

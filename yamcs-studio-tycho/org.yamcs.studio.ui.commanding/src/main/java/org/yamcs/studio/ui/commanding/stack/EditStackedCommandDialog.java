@@ -56,12 +56,13 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
         // populate namespace combo
         // (switching ops name and qualified name)
         List<String> aliases = new ArrayList<String>();
+        aliases.add(command.getMetaCommand().getQualifiedName());
         for (NamedObjectId noi : command.getMetaCommand().getAliasList()) {
-            aliases.add(noi.getNamespace() + "/" + noi.getName());
+            String alias = noi.getNamespace() + "/" + noi.getName();
+            if (alias.equals(command.getMetaCommand().getQualifiedName()))
+                continue;
+            aliases.add(alias);
         }
-        String temp = aliases.get(0);
-        aliases.set(0, aliases.get(1));
-        aliases.set(1, temp);
 
         Composite namespaceComposite = new Composite(composite, SWT.NONE);
         namespaceComposite.setLayout(new GridLayout(2, false));
@@ -127,10 +128,11 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
         ArrayList<ArgumentAssignement> argumentAssignements = new ArrayList<>();
         for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
             String value = command.getAssignedStringValue(arg);
-            if (value == null && arg.getInitialValue() != null) {
+            if (value == null && arg.hasInitialValue()) {
                 command.addAssignment(arg, arg.getInitialValue());
+                argumentAssignements.add(new ArgumentAssignement(arg, arg.getInitialValue()));
             }
-            argumentAssignements.add(new ArgumentAssignement(arg, value == null ? arg.getInitialValue() : value));
+            argumentAssignements.add(new ArgumentAssignement(arg, value));
         }
         argumentTable.setInput(argumentAssignements);
         (new ArgumentTableBuilder(command)).pack(argumentTable);
