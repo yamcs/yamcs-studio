@@ -81,6 +81,7 @@ public class AddToStackWizardPage2 extends WizardPage {
         for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
             if (arg.getInitialValue() != null) {
                 argumentAssignements.add(new ArgumentAssignement(arg, arg.getInitialValue()));
+                command.addAssignment(arg, arg.getInitialValue());
             } else {
                 argumentAssignements.add(new ArgumentAssignement(arg, ""));
             }

@@ -8,7 +8,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -128,7 +127,10 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
         ArrayList<ArgumentAssignement> argumentAssignements = new ArrayList<>();
         for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
             String value = command.getAssignedStringValue(arg);
-            argumentAssignements.add(new ArgumentAssignement(arg, value == null ? "" : value));
+            if (value == null && arg.getInitialValue() != null) {
+                command.addAssignment(arg, arg.getInitialValue());
+            }
+            argumentAssignements.add(new ArgumentAssignement(arg, value == null ? arg.getInitialValue() : value));
         }
         argumentTable.setInput(argumentAssignements);
         (new ArgumentTableBuilder(command)).pack(argumentTable);
@@ -147,10 +149,5 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
             }
         }
         super.okPressed();
-    }
-
-    @Override
-    protected Point getInitialSize() {
-        return new Point(500, 375);
     }
 }

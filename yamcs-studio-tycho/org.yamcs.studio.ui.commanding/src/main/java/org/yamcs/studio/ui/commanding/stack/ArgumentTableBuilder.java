@@ -243,14 +243,13 @@ public class ArgumentTableBuilder {
                 value = String.valueOf(userInputValue);
             }
 
+            // Add in command assignments and table viewer
             if (value.trim().isEmpty()) {
                 command.addAssignment(aa.arg, null);
             } else {
                 command.addAssignment(aa.arg, value);
             }
-
-            // update table
-            aa.value = String.valueOf(value);
+            aa.value = value;
             viewer.update(element, null);
         }
 
