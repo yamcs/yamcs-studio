@@ -21,6 +21,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -317,12 +320,6 @@ public class CommandHistoryView extends ViewPart {
 
                         @Override
                         public void onMessage(MessageLite responseMsg) {
-                            //                            table.getDisplay().asyncExec(() -> {
-                            //                                MessageBox dialog = new MessageBox(shell, SWT.ICON_INFORMATION | SWT.OK);
-                            //                                dialog.setText("Comment Update");
-                            //                                dialog.setMessage("Comment has been updated with success");
-                            //                                dialog.open();
-                            //                            });
                         }
 
                         @Override
@@ -339,6 +336,31 @@ public class CommandHistoryView extends ViewPart {
 
                 }
             }
+        });
+
+        MenuItem mItemCopySrc = new MenuItem(contextMenu, SWT.None);
+        mItemCopySrc.setText("Copy");
+        mItemCopySrc.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                CommandHistoryRecord chr = (CommandHistoryRecord) (tableViewer.getTable().getSelection()[0].getData());
+                if (chr == null)
+                    return;
+
+                String source = chr.getSource();
+                if (source == null)
+                    return;
+                final Clipboard cb = new Clipboard(tableViewer.getTable().getDisplay());
+                TextTransfer textTransfer = TextTransfer.getInstance();
+                cb.setContents(new Object[] { source }, new Transfer[] { textTransfer });
+
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+
         });
 
         tableViewer.getTable().addListener(SWT.MouseDown, new Listener() {
