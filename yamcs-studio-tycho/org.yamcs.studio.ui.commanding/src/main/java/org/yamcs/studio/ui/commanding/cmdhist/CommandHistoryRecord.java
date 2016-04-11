@@ -103,6 +103,12 @@ public class CommandHistoryRecord {
         cellPropsByColumn.get(columnName).put(KEY_IMAGE, imageLocation);
     }
 
+    public String getCellImage(String columnName) {
+        if (!cellPropsByColumn.containsKey(columnName))
+            return null;
+        return (String) cellPropsByColumn.get(columnName).get(KEY_IMAGE);
+    }
+
     public int getSequenceNumber() {
         return id.getSequenceNumber();
     }

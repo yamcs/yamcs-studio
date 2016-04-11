@@ -17,7 +17,6 @@ import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
@@ -48,6 +47,7 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.web.ResponseHandler;
+import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryFilters.Filter;
 
 import com.google.protobuf.MessageLite;
 
@@ -61,6 +61,8 @@ public class CommandHistoryView extends ViewPart {
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
+
+    public static final int MAX_WIDTH = 500;
 
     // Prefix used in command attribute names
     private static final String ACK_PREFIX = "Acknowledge_";
@@ -89,9 +91,12 @@ public class CommandHistoryView extends ViewPart {
     private CommandHistoryRecordContentProvider tableContentProvider;
     private Set<String> dynamicColumns = new HashSet<>();
 
+    private static CommandHistoryView instance;
+
     @Override
     public void createPartControl(Composite parent) {
         this.parent = parent;
+        instance = this;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         greenBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/ok.png"));
         redBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/nok.png"));
@@ -119,6 +124,10 @@ public class CommandHistoryView extends ViewPart {
         CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
         });
+    }
+
+    public static CommandHistoryView getInstance() {
+        return instance;
     }
 
     public void clear() {
@@ -152,7 +161,7 @@ public class CommandHistoryView extends ViewPart {
                 return ((CommandHistoryRecord) element).getSource();
             }
         });
-        layoutDataByColumn.put(nameColumn.getColumn(), new ColumnWeightData(200));
+        layoutDataByColumn.put(nameColumn.getColumn(), new ColumnPixelData(500));
 
         TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         originColumn.getColumn().setText(COL_SRC);
@@ -243,8 +252,7 @@ public class CommandHistoryView extends ViewPart {
 
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (column.getColumn().getWidth() < 5)
-                        column.getColumn().setWidth(5);
+                    checkMinWidth(column.getColumn());
                 }
             });
         }
@@ -361,7 +369,7 @@ public class CommandHistoryView extends ViewPart {
                     .replace(CommandHistoryRecord.STATUS_SUFFIX, "")
                     .replace(CommandHistoryRecord.TIME_SUFFIX, "");
             if (!dynamicColumns.contains(shortName)) {
-                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
+                TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
                 column.getColumn().setText(shortName);
                 column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
                 column.setLabelProvider(new ColumnLabelProvider() {
@@ -384,7 +392,7 @@ public class CommandHistoryView extends ViewPart {
                         else if (CommandHistoryRecordContentProvider.RED.equals(imgLoc))
                             return redBubble;
                         else
-                            return grayBubble;
+                            return null;
                     }
                 });
                 dynamicColumns.add(shortName);
@@ -402,8 +410,7 @@ public class CommandHistoryView extends ViewPart {
 
                     @Override
                     public void controlResized(ControlEvent e) {
-                        if (column.getColumn().getWidth() < 5)
-                            column.getColumn().setWidth(5);
+                        checkMinWidth(column.getColumn());
                     }
                 });
             }
@@ -411,6 +418,13 @@ public class CommandHistoryView extends ViewPart {
 
         // Now add content
         tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+    }
+
+    private void checkMinWidth(TableColumn column) {
+        if (column.getData("hidden") != null && !((boolean) column.getData("hidden"))) {
+            if (column.getWidth() < 5)
+                column.setWidth(5);
+        }
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {
@@ -430,5 +444,20 @@ public class CommandHistoryView extends ViewPart {
     @Override
     public void setFocus() {
         tableViewer.getTable().setFocus();
+    }
+
+    public void applyFilter(Filter selectedFilter) {
+        for (TableColumn column : tableViewer.getTable().getColumns()) {
+            if (selectedFilter.matchFilter(column.getText())) {
+                column.setData("hidden", false);
+                column.pack();
+                if (column.getWidth() > MAX_WIDTH)
+                    column.setWidth(MAX_WIDTH);
+            } else {
+                column.setData("hidden", true);
+                column.setWidth(0);
+            }
+        }
+
     }
 }

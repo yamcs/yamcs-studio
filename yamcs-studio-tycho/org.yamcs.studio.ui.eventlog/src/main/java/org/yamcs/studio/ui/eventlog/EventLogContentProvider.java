@@ -9,7 +9,9 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -33,10 +35,12 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private Image warnIcon;
     private Image infoIcon;
 
+    private RGB errorBackground = new RGB(255, 102, 102);
+    private RGB warningBackground = new RGB(255, 255, 102);
+
     public EventLogContentProvider(Table tableViewer) {
         this.tableViewer = tableViewer;
-        if (PlatformUI.isWorkbenchRunning())
-        {
+        if (PlatformUI.isWorkbenchRunning()) {
             errorIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
             warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
             infoIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
@@ -57,8 +61,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         return eventsBySequenceNumber.values().toArray();
     }
 
-    public List<Event> getSortedEvents()
-    {
+    public List<Event> getSortedEvents() {
         return sortedEvents;
     }
 
@@ -72,8 +75,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             addItemFromEvent(event, index); // add to table
             eventsBySequenceNumber.put(primaryKeyHash(event), event); // add to the hash map
 
-            switch (event.getSeverity())
-            {
+            switch (event.getSeverity()) {
             case WARNING:
                 warnings++;
                 break;
@@ -102,8 +104,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
                 eventsBySequenceNumber.put(primaryKeyHash(event), event);
                 sortedEvents.add(event);
                 addItemFromEvent(event, -1);
-                switch (event.getSeverity())
-                {
+                switch (event.getSeverity()) {
                 case WARNING:
                     warnings++;
                     break;
@@ -126,8 +127,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         maybeSelectAndReveal(lastAddedEvent);
     }
 
-    private TableItem addItemFromEvent(Event event, int index)
-    {
+    private TableItem addItemFromEvent(Event event, int index) {
         TableItem item = null;
         if (index >= 0)
             item = new TableItem(tableViewer, SWT.NULL, index);
@@ -140,14 +140,12 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
         // description
         String message = event.getMessage();
-        if (nbMessageLineToDisplay > 0)
-        {
+        if (nbMessageLineToDisplay > 0) {
             String lineSeparator = "\n";
             String[] messageLines = message.split(lineSeparator);
             message = "";
             int i = 0;
-            for (; i < nbMessageLineToDisplay && i < messageLines.length; i++)
-            {
+            for (; i < nbMessageLineToDisplay && i < messageLines.length; i++) {
                 if (!message.isEmpty())
                     message += lineSeparator;
                 message += messageLines[i];
@@ -157,6 +155,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         }
         item.setText(1, message);
         item.setImage(getSeverityImage(event));
+        item.setBackground(getSeverityColor(event));
 
         // source
         String source = "";
@@ -178,8 +177,21 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         return item;
     }
 
-    private Image getSeverityImage(Event evt)
-    {
+    private Color getSeverityColor(Event evt) {
+        if (evt.hasSeverity()) {
+            switch (evt.getSeverity()) {
+            case INFO:
+                return null;
+            case WARNING:
+                return new Color(tableViewer.getDisplay(), warningBackground);
+            case ERROR:
+                return new Color(tableViewer.getDisplay(), errorBackground);
+            }
+        }
+        return null;
+    }
+
+    private Image getSeverityImage(Event evt) {
         if (evt.hasSeverity()) {
             switch (evt.getSeverity()) {
             case INFO:
@@ -197,18 +209,15 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         return eventsBySequenceNumber.size();
     }
 
-    public int getNbWarnings()
-    {
+    public int getNbWarnings() {
         return warnings;
     }
 
-    public int getNbErrors()
-    {
+    public int getNbErrors() {
         return errors;
     }
 
-    private long primaryKeyHash(Event event)
-    {
+    private long primaryKeyHash(Event event) {
         return event.getSource().hashCode() + event.getGenerationTime() + event.getSeqNumber();
     }
 
@@ -235,8 +244,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         scrollLock = enabled;
     }
 
-    public void setNbLineToDisplay(int nb)
-    {
+    public void setNbLineToDisplay(int nb) {
         nbMessageLineToDisplay = nb;
     }
 
@@ -251,8 +259,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         sort();
     }
 
-    public void sort()
-    {
+    public void sort() {
         tableViewer.setRedraw(false);
         sortedEvents.sort(eventLogViewerComparator);
 

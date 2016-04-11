@@ -65,8 +65,7 @@ public class EventLogView extends ViewPart implements EventListener {
     public void createPartControl(Composite parent) {
 
         // get preference from plugin
-        if (YamcsUIPlugin.getDefault() != null)
-        {
+        if (YamcsUIPlugin.getDefault() != null) {
             showColumnSeqNum = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumSeqNum");
             showColumnReception = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumReception");
             showColumnGeneration = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumnGeneration");
@@ -135,13 +134,11 @@ public class EventLogView extends ViewPart implements EventListener {
             }
 
             @Override
-            public void mouseDown(MouseEvent e)
-            {
+            public void mouseDown(MouseEvent e) {
             }
 
             @Override
-            public void mouseUp(MouseEvent e)
-            {
+            public void mouseUp(MouseEvent e) {
             }
 
         });
@@ -237,8 +234,8 @@ public class EventLogView extends ViewPart implements EventListener {
             gererationColumn.setResizable(false);
         }
 
-        for (TableColumn tableColumn : tableViewer.getColumns())
-        {
+        for (TableColumn tableColumn : tableViewer.getColumns()) {
+            tableColumn.setMoveable(true);
             // prevent resize to 0
             tableColumn.addControlListener(new ControlListener() {
                 @Override
@@ -293,15 +290,13 @@ public class EventLogView extends ViewPart implements EventListener {
     }
 
     // This method should be called when the stream of events to be imported is ended
-    public void addedAllEvents()
-    {
+    public void addedAllEvents() {
         log.finest("sort started");
         tableContentProvider.addedAllEvents();
         log.finest("sort done");
     }
 
-    public EventLogContentProvider getTableContentProvider()
-    {
+    public EventLogContentProvider getTableContentProvider() {
         return tableContentProvider;
     }
 
@@ -318,8 +313,7 @@ public class EventLogView extends ViewPart implements EventListener {
     }
 
     // test function
-    public static void main(String args[]) throws InterruptedException
-    {
+    public static void main(String args[]) throws InterruptedException {
         TimeEncoding.setUp();
         Display display = new Display();
         Shell shell = new Shell();
@@ -334,14 +328,12 @@ public class EventLogView extends ViewPart implements EventListener {
         //final int NB_TEST_EVENTS = 10;
         final int NB_TEST_EVENTS = 100000;
         final int BLOCK_SIZE = 500;
-        for (int i = 0; i < 1; i++)
-        {
+        for (int i = 0; i < 1; i++) {
             // clear events
             lv.clear();
             insertTestEvents(lv, NB_TEST_EVENTS, BLOCK_SIZE);
 
-            Display.getDefault().asyncExec(() ->
-                    lv.addedAllEvents());
+            Display.getDefault().asyncExec(() -> lv.addedAllEvents());
             log.info("sort queued");
         }
         //         insert a batch without clearing the previous one
@@ -420,11 +412,9 @@ public class EventLogView extends ViewPart implements EventListener {
     private static void insertTestEvents(EventLogView lv, int nbEvents, int blockSize) {
 
         int eventId = 0;
-        while (eventId < nbEvents)
-        {
+        while (eventId < nbEvents) {
             List<Event> events = new LinkedList<Event>();
-            for (int j = 0; j < blockSize; j++)
-            {
+            for (int j = 0; j < blockSize; j++) {
                 eventId++;
                 if (eventId > nbEvents)
                     break;

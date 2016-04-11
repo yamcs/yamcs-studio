@@ -245,7 +245,7 @@ public class CommandStackTableViewer extends TableViewer {
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
 
         // column comment
-        TableViewerColumn commentColumn = new TableViewerColumn(this, SWT.CENTER);
+        TableViewerColumn commentColumn = new TableViewerColumn(this, SWT.LEFT);
         commentColumn.getColumn().setText(COL_COMMENT);
         commentColumn.getColumn().setToolTipText("Free Text Comment");
         commentColumn.setLabelProvider(new ColumnLabelProvider() {

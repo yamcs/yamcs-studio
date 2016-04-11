@@ -100,7 +100,7 @@
                   <equals value="true"/>
                </with>
                <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
-                  <equals value="true"/>
+                  <equals value="true"/> 
                </with>
             </and>
          </activeWhen>
@@ -290,6 +290,10 @@
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
+        <control
+              class="org.yamcs.studio.ui.commanding.cmdhist.ComboFilterContribution"
+              label="View Profile">
+        </control>
          <command
                commandId="org.yamcs.studio.ui.commanding.cmdhist.clearCommand"
                icon="icons/elcl16/clear.png"
