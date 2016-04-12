@@ -87,19 +87,23 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
         return isConnected(info);
     }
 
-    private static Value toValue(ParameterInfo p, String stringValue) {
+    private static Value toValue(ParameterInfo p, Object value) {
         ParameterTypeInfo ptype = p.getType();
         if (ptype != null) {
             switch (ptype.getEngType()) {
             case "string":
             case "enumeration":
-                return Value.newBuilder().setType(Type.STRING).setStringValue(stringValue).build();
+                return Value.newBuilder().setType(Type.STRING).setStringValue(String.valueOf(value)).build();
             case "integer":
-                return Value.newBuilder().setType(Type.UINT64).setUint64Value(Long.parseLong(stringValue)).build();
+                if (value instanceof Double) {
+                    return Value.newBuilder().setType(Type.UINT64).setUint64Value(((Double) value).longValue()).build();
+                } else {
+                    return Value.newBuilder().setType(Type.UINT64).setUint64Value(Long.parseLong(String.valueOf(value))).build();
+                }
             case "float":
-                return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(stringValue)).build();
+                return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(String.valueOf(value))).build();
             case "boolean":
-                boolean booleanValue = TRUTHY.contains(stringValue.toLowerCase());
+                boolean booleanValue = TRUTHY.contains(String.valueOf(value).toLowerCase());
                 return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
             }
         }
@@ -108,23 +112,29 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
-        ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
-        Value v = toValue(p, (String) newValue);
 
-        ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
-        catalogue.setParameter("realtime", id, v, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                // Report success
-                callback.channelWritten(null);
-            }
+        try {
+            ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
+            Value v = toValue(p, newValue);
+            ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
+            catalogue.setParameter("realtime", id, v, new ResponseHandler() {
+                @Override
+                public void onMessage(MessageLite responseMsg) {
+                    // Report success
+                    callback.channelWritten(null);
+                }
 
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not write to parameter", e);
-                callback.channelWritten(e);
-            }
-        });
+                @Override
+                public void onException(Exception e) {
+                    log.log(Level.SEVERE, "Could not write to parameter", e);
+                    callback.channelWritten(e);
+                }
+            });
+
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Unable to write parameter value: " + newValue, e);
+            return;
+        }
     }
 
     /**
