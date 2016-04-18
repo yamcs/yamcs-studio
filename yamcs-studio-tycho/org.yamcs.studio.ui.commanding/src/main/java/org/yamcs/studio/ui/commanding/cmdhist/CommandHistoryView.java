@@ -95,6 +95,7 @@ public class CommandHistoryView extends ViewPart {
     private Set<String> dynamicColumns = new HashSet<>();
 
     private static CommandHistoryView instance;
+    private List<CommandHistoryRecord> copyedCommandHistoryRecords = new ArrayList<>();
 
     @Override
     public void createPartControl(Composite parent) {
@@ -109,7 +110,7 @@ public class CommandHistoryView extends ViewPart {
         TableColumnLayout tcl = new TableColumnLayout();
         parent.setLayout(tcl);
 
-        tableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+        tableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.MULTI);
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.getTable().setLinesVisible(true);
 
@@ -289,8 +290,11 @@ public class CommandHistoryView extends ViewPart {
                 CommandHistoryRecord chr = (CommandHistoryRecord) (tableViewer.getTable().getSelection()[0].getData());
                 if (chr == null)
                     return;
+                TableItem[] selection = tableViewer.getTable().getSelection();
 
-                String cmdComment = chr.getTextForColumn("Comment");
+                String cmdComment = "";
+                if (selection.length == 1)
+                    cmdComment = chr.getTextForColumn("Comment");
                 InputDialog commentDialog = new InputDialog(tableViewer.getTable().getShell(), "Add Comment", "Add a comment for the command",
                         cmdComment,
                         new IInputValidator() {
@@ -316,23 +320,31 @@ public class CommandHistoryView extends ViewPart {
                 if (commentResult == Window.OK) {
                     String newComment = commentDialog.getValue();
                     CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-                    catalogue.updateCommandComment("realtime", chr.getCommandId(), newComment, new ResponseHandler() {
 
-                        @Override
-                        public void onMessage(MessageLite responseMsg) {
-                        }
+                    for (TableItem ti : selection) {
 
-                        @Override
-                        public void onException(Exception e) {
-                            table.getDisplay().asyncExec(() -> {
-                                MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-                                dialog.setText("Comment Update");
-                                dialog.setMessage("Comment has not been updated. Details: " + e.getMessage());
-                                // open dialog and await user selection
-                                dialog.open();
-                            });
-                        }
-                    });
+                        CommandHistoryRecord chri = (CommandHistoryRecord) ti.getData();
+                        if (chri == null)
+                            continue;
+
+                        catalogue.updateCommandComment("realtime", chri.getCommandId(), newComment, new ResponseHandler() {
+
+                            @Override
+                            public void onMessage(MessageLite responseMsg) {
+                            }
+
+                            @Override
+                            public void onException(Exception e) {
+                                table.getDisplay().asyncExec(() -> {
+                                    MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+                                    dialog.setText("Comment Update");
+                                    dialog.setMessage("Comment has not been updated. Details: " + e.getMessage());
+                                    // open dialog and await user selection
+                                    dialog.open();
+                                });
+                            }
+                        });
+                    }
 
                 }
             }
@@ -344,13 +356,26 @@ public class CommandHistoryView extends ViewPart {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                CommandHistoryRecord chr = (CommandHistoryRecord) (tableViewer.getTable().getSelection()[0].getData());
-                if (chr == null)
+
+                // check something is selected
+                TableItem[] selection = tableViewer.getTable().getSelection();
+                if (selection == null || selection.length == 0)
                     return;
 
-                String source = chr.getSource();
-                if (source == null)
-                    return;
+                // clear previous data
+                copyedCommandHistoryRecords.clear();
+                String source = "";
+
+                // copy each selected items
+                for (TableItem ti : selection) {
+                    CommandHistoryRecord chr = (CommandHistoryRecord) (ti.getData());
+                    if (chr == null)
+                        continue;
+
+                    copyedCommandHistoryRecords.add(chr);
+                    source += chr.getSource() + "\n";
+                }
+
                 final Clipboard cb = new Clipboard(tableViewer.getTable().getDisplay());
                 TextTransfer textTransfer = TextTransfer.getInstance();
                 cb.setContents(new Object[] { source }, new Transfer[] { textTransfer });
@@ -481,5 +506,9 @@ public class CommandHistoryView extends ViewPart {
             }
         }
 
+    }
+
+    public List<CommandHistoryRecord> getCopyedCommandHistoryRecords() {
+        return copyedCommandHistoryRecords;
     }
 }

@@ -35,4 +35,9 @@ public class CommandStackTableContentProvider implements IStructuredContentProvi
         stack.addCommand(entry);
         tableViewer.add(entry);
     }
+
+    public void insertTelecommand(StackedCommand entry, int index) {
+        stack.insertCommand(entry, index);
+        tableViewer.insert(entry, index);
+    }
 }

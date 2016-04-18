@@ -28,6 +28,10 @@ public class CommandStack {
         commands.add(command);
     }
 
+    public void insertCommand(StackedCommand command, int index) {
+        commands.add(index, command);
+    }
+
     public List<StackedCommand> getCommands() {
         return commands;
     }

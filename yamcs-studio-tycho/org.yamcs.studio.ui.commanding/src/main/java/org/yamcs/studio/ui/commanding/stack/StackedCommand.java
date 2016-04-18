@@ -18,6 +18,7 @@ import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.ui.commanding.PTVInfo;
 
@@ -258,5 +259,62 @@ public class StackedCommand {
 
     public String getSelectedAliasEncoded() throws UnsupportedEncodingException {
         return "/" + URLEncoder.encode(selectedAlias, "UTF-8");
+    }
+
+    public static StackedCommand buildCommandFromSource(String commandSource) throws Exception {
+        StackedCommand result = new StackedCommand();
+
+        // Source must follow the format:
+        // <CommandAlias>(<arg1>:<val1>, [...] , <argN>:<valN>)
+        // or
+        // <CommandAlias>()
+        if (commandSource == null)
+            throw new Exception("No Source attached to this command");
+        commandSource = commandSource.trim();
+        if (commandSource.isEmpty())
+            throw new Exception("No Source attached to this command");
+        int indexStartOfArguments = commandSource.lastIndexOf("(");
+        String commandArguments = commandSource.substring(indexStartOfArguments);
+        commandArguments = commandArguments.replaceAll("[()\n ]", "");
+        String commandAlias = commandSource.substring(0, indexStartOfArguments);
+
+        // Retrieve meta command and selected namespace
+        CommandInfo commandInfo = null;
+        String selectedAlias = "";
+        for (CommandInfo ci : CommandingCatalogue.getInstance().getMetaCommands()) {
+
+            for (NamedObjectId noi : ci.getAliasList()) {
+                String alias = noi.getNamespace() + "/" + noi.getName();
+                if (alias.equals(commandAlias)) {
+                    commandInfo = ci;
+                    selectedAlias = alias;
+                    break;
+                }
+            }
+        }
+        if (commandInfo == null)
+            throw new Exception("Unable to retrieved this command in the MDB");
+        result.setMetaCommand(commandInfo);
+        result.setSelectedAliase(selectedAlias);
+
+        // Retrieve arguments assignment
+        String[] commandArgumentsTab = commandArguments.split(",");
+        for (String commandArgument : commandArgumentsTab) {
+            String[] components = commandArgument.split(":");
+            String argument = components[0];
+            String value = components[1];
+            boolean foundArgument = false;
+            for (ArgumentInfo ai : commandInfo.getArgumentList()) {
+                foundArgument = ai.getName().equals(argument);
+                if (foundArgument) {
+                    result.addAssignment(ai, value);
+                    break;
+                }
+            }
+            if (!foundArgument)
+                throw new Exception("Argument " + argument + " is not part of the command definition");
+        }
+
+        return result;
     }
 }

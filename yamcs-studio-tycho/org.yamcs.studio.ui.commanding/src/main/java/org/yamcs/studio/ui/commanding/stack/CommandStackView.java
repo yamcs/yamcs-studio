@@ -1,6 +1,7 @@
 package org.yamcs.studio.ui.commanding.stack;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.TextStyle;
@@ -24,7 +27,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
@@ -35,6 +45,8 @@ import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryRecord;
+import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
 public class CommandStackView extends ViewPart {
@@ -239,6 +251,9 @@ public class CommandStackView extends ViewPart {
             }
         });
 
+        // Add the popup menu for pasting commands
+        addPopupMenu();
+
         // Set initial state
         refreshState();
 
@@ -402,5 +417,107 @@ public class CommandStackView extends ViewPart {
             }
         }
         commandTableViewer.refresh();
+    }
+
+    enum PastingType {
+        BEFORE_ITEM,
+        AFTER_ITEM,
+        APPEND
+    }
+
+    private void addPopupMenu() {
+
+        class PasteSelectionListener implements SelectionListener {
+            PastingType pastingType;
+
+            public PasteSelectionListener(PastingType pastingType) {
+                this.pastingType = pastingType;
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent arg0) {
+                widgetSelected(arg0);
+            }
+
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+                StackedCommand sc = null;
+                TableItem[] selection = commandTableViewer.getTable().getSelection();
+                if (selection != null && selection.length > 0)
+                    sc = (StackedCommand) (commandTableViewer.getTable().getSelection()[0].getData());
+                if (sc == null && pastingType != PastingType.APPEND)
+                    pastingType = PastingType.APPEND;
+
+                List<CommandHistoryRecord> chrs = CommandHistoryView.getInstance().getCopyedCommandHistoryRecords();
+                if (chrs.isEmpty())
+                    return;
+
+                int index = commandTableViewer.getIndex(sc);
+
+                for (CommandHistoryRecord chr : chrs) {
+                    StackedCommand pastedCommand;
+                    try {
+                        pastedCommand = StackedCommand.buildCommandFromSource(chr.getSource());
+                    } catch (Exception e) {
+                        String errorMessage = "Unable to build Stacked Command from the specifed source: ";
+                        log.log(Level.WARNING, errorMessage + chr.getSource(), e);
+                        commandTableViewer.getTable().getDisplay().asyncExec(() -> {
+                            MessageBox dialog = new MessageBox(commandTableViewer.getTable().getShell(), SWT.ICON_ERROR | SWT.OK);
+                            dialog.setText("Comment Copy");
+                            dialog.setMessage(errorMessage + e.getMessage());
+                            // open dialog and await user selection
+                            dialog.open();
+                        });
+                        return;
+                    }
+                    pastedCommand.setComment(chr.getTextForColumn("Comment"));
+                    if (pastingType == PastingType.APPEND) {
+                        commandTableViewer.addTelecommand(pastedCommand);
+                    } else if (pastingType == PastingType.AFTER_ITEM) {
+                        commandTableViewer.insertTelecommand(pastedCommand, index + 1);
+                    } else {
+                        commandTableViewer.insertTelecommand(pastedCommand, index);
+                    }
+                    index++;
+                }
+            }
+        }
+
+        Table table = commandTableViewer.getTable();
+        Menu contextMenu = new Menu(commandTableViewer.getTable());
+        table.setMenu(contextMenu);
+
+        MenuItem mItemPasteBefore = new MenuItem(contextMenu, SWT.None);
+        mItemPasteBefore.setText("Paste Before");
+        mItemPasteBefore.addSelectionListener(new PasteSelectionListener(PastingType.BEFORE_ITEM));
+
+        MenuItem mItemPasteAfter = new MenuItem(contextMenu, SWT.None);
+        mItemPasteAfter.setText("Paste After");
+        mItemPasteAfter.addSelectionListener(new PasteSelectionListener(PastingType.AFTER_ITEM));
+
+        MenuItem mItemPaste = new MenuItem(contextMenu, SWT.None);
+        mItemPaste.setText("Paste Append");
+        mItemPaste.addSelectionListener(new PasteSelectionListener(PastingType.APPEND));
+
+        commandTableViewer.getTable().addListener(SWT.MouseDown, new Listener() {
+
+            @Override
+            public void handleEvent(Event event) {
+                TableItem[] selection = commandTableViewer.getTable().getSelection();
+                if (event.button == 3) {
+                    contextMenu.setVisible(true);
+                    List<CommandHistoryRecord> chrs = CommandHistoryView.getInstance().getCopyedCommandHistoryRecords();
+
+                    mItemPaste.setEnabled(!chrs.isEmpty());
+                    mItemPasteBefore.setEnabled(!chrs.isEmpty() && selection.length != 0);
+                    mItemPasteAfter.setEnabled(!chrs.isEmpty() && selection.length != 0);
+
+                } else {
+                    contextMenu.setVisible(false);
+                }
+
+            }
+
+        });
     }
 }

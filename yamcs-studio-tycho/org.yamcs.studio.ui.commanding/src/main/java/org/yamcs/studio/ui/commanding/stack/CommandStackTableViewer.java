@@ -50,7 +50,7 @@ public class CommandStackTableViewer extends TableViewer {
     private ResourceManager resourceManager;
 
     public CommandStackTableViewer(Composite parent, TableColumnLayout tcl, CommandStackView styleProvider) {
-        super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
+        super(new Table(parent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         greenBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/ok.png"));
@@ -310,7 +310,15 @@ public class CommandStackTableViewer extends TableViewer {
         buf.append(comparison.getValue());
     }
 
+    public int getIndex(StackedCommand command) {
+        return contentProvider.indexOf(command);
+    }
+
     public void addTelecommand(StackedCommand command) {
         contentProvider.addTelecommand(command);
+    }
+
+    public void insertTelecommand(StackedCommand command, int index) {
+        contentProvider.insertTelecommand(command, index);
     }
 }
