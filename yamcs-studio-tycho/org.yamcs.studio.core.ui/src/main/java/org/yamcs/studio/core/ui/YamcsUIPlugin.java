@@ -18,6 +18,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         TimeEncoding.setUp();
         ConnectionUIHelper.getInstance();
         YamcsVType.severityHandler = new SeverityHandlerSound();
+        DisplayOpener.init();
     }
 
     @Override

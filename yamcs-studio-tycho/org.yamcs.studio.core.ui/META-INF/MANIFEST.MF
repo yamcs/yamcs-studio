@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.eclipse.gef,
  com.google.gson
-Import-Package: org.epics.pvmanager,
+Import-Package: org.eclipse.ui.ide,
+ org.epics.pvmanager,
  org.epics.pvmanager.vtype,
  org.epics.vtype
 Export-Package: org.yamcs.studio.core.ui,
