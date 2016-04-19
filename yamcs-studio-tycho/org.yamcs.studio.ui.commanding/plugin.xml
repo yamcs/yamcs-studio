@@ -76,6 +76,11 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.cmdhist.exportCommand"
+            name="Export Commands to CSV">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
             name="Import Commands">
       </command>
@@ -204,6 +209,10 @@
             commandId="org.yamcs.studio.ui.commanding.cmdhist.scrollLockCommand">
       </handler>
       <handler
+            class="org.yamcs.studio.ui.commanding.cmdhist.ExportCommandsHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhist.exportCommand">        
+      </handler>
+      <handler
             class="org.yamcs.studio.ui.commanding.cmdhist.ImportCommandsHandler"
             commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand">
          <activeWhen>
@@ -306,6 +315,12 @@
                label="Scroll Lock"
                style="toggle"/>
          <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.cmdhist.exportCommand"
+               icon="icons/elcl16/export_wiz.png"
+               disabledIcon="icons/dlcl16/export_wiz.png"
+               label="Export Commands to CSV"
+               style="push"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
                icon="icons/elcl16/import_wiz.gif"

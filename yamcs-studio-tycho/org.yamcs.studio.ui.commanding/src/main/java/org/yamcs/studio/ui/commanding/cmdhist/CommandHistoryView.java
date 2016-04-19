@@ -498,4 +498,8 @@ public class CommandHistoryView extends ViewPart {
 
     }
 
+    public TableViewer getTableViewer() {
+        return this.tableViewer;
+    }
+
 }
