@@ -33,8 +33,7 @@ public class ExportEventsHandler extends AbstractHandler {
         return null;
     }
 
-    public void doExecute(EventLogView eventLogView, Shell shell)
-    {
+    public void doExecute(EventLogView eventLogView, Shell shell) {
 
         // Ask for file to export
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
@@ -47,11 +46,9 @@ public class ExportEventsHandler extends AbstractHandler {
         }
 
         // Write CSV
-        try
-        {
+        try {
             exportEventToCsv(exportFile, eventLogView.getTableContentProvider());
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             MessageDialog.openError(shell, "Export Events",
                     "Unable to perform events export.\nDetails:" + e.getMessage());
             return;
@@ -75,6 +72,7 @@ public class ExportEventsHandler extends AbstractHandler {
                         event.getSeqNumber() + "",
                         event.getSeverity().name(),
                         event.getMessage(),
+                        event.getSource() != null ? event.getSource() : "",
                         event.getType() != null ? event.getType() : "",
                         TimeEncoding.toString((event).getReceptionTime()),
                         TimeEncoding.toString((event).getGenerationTime()) });
