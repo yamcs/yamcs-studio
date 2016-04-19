@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <commandStack xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="commandStack.xsd">          
-	<command commandName="/DCSIM/EPS_TC_SWITCH_VOLTAGE">
+	<command qualifiedName="/DCSIM/EPS_TC_SWITCH_VOLTAGE" selectedAlias="/DCSIM/DS_CHECKOUT" comment="test command">
 		<commandArgument argumentName="voltage_num" argumentValue="1"/>
 		<commandArgument argumentName="action" argumentValue="ON"/>
 	</command>
-	<command commandName="/DCSIM/DS_CHECKOUT"/>
+	<command qualifiedName="/DCSIM/DS_CHECKOUT"  selectedAlias="/DCSIM/DS_CHECKOUT"/>
 </commandStack>

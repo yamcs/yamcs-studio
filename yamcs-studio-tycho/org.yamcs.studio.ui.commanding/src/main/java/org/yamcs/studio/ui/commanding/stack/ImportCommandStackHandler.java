@@ -35,8 +35,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.OPEN);
         dialog.setFilterExtensions(new String[] { "*.xml" });
         String importFile = dialog.open();
-        if (importFile == null)
-        {
+        if (importFile == null) {
             // cancelled
             return null;
         }
@@ -47,50 +46,40 @@ public class ImportCommandStackHandler extends AbstractHandler {
         IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
         CommandStackView commandStackView = (CommandStackView) part;
 
-        // clear current stack
-        //        org.yamcs.studio.ui.commanding.stack.CommandStack.getInstance().getCommands().clear();
-        //        commandStackView.refreshState();
-        // Actually, why clear current stack ? could be more flexible to keep current commands. User could delete them before if he wishes so.
-
         // import new commands
-        for (StackedCommand sc : parseCommandStack(importFile))
-        {
+        for (StackedCommand sc : parseCommandStack(importFile)) {
             commandStackView.addTelecommand(sc);
         }
 
         return null;
     }
 
-    public List<StackedCommand> parseCommandStack(String fileName)
-    {
+    public List<StackedCommand> parseCommandStack(String fileName) {
         try {
             final JAXBContext jc = JAXBContext.newInstance(org.yamcs.studio.ui.commanding.stack.xml.CommandStack.class);
             final Unmarshaller unmarshaller = jc.createUnmarshaller();
-            final org.yamcs.studio.ui.commanding.stack.xml.CommandStack commandStack =
-                    (org.yamcs.studio.ui.commanding.stack.xml.CommandStack) unmarshaller
-                            .unmarshal(new FileReader(fileName));
+            final org.yamcs.studio.ui.commanding.stack.xml.CommandStack commandStack = (org.yamcs.studio.ui.commanding.stack.xml.CommandStack) unmarshaller
+                    .unmarshal(new FileReader(fileName));
 
             List<StackedCommand> importedStack = new LinkedList<StackedCommand>();
-            for (CommandStack.Command c : commandStack.getCommand())
-            {
+            for (CommandStack.Command c : commandStack.getCommand()) {
                 StackedCommand sc = new StackedCommand();
 
-                CommandInfo mc = CommandingCatalogue.getInstance().getCommandInfo(c.getCommandName());
-                if (mc == null)
-                {
+                CommandInfo mc = CommandingCatalogue.getInstance().getCommandInfo(c.getQualifiedName());
+                if (mc == null) {
                     MessageDialog.openError(Display.getCurrent().getActiveShell(), "Import Command Stack",
-                            "Command " + c.getCommandName() + " does not exist in MDB.");
+                            "Command " + c.getQualifiedName() + " does not exist in MDB.");
                     return null;
                 }
                 sc.setMetaCommand(mc);
+                sc.setSelectedAliase(c.getSelectedAlias());
+                sc.setComment(c.getComment());
 
-                for (CommandArgument ca : c.getCommandArgument())
-                {
+                for (CommandArgument ca : c.getCommandArgument()) {
                     ArgumentInfo a = getArgumentFromYamcs(mc, ca.getArgumentName());
-                    if (a == null)
-                    {
+                    if (a == null) {
                         MessageDialog.openError(Display.getCurrent().getActiveShell(), "Import Command Stack",
-                                "In command " + c.getCommandName() + ", argument " + ca.getArgumentName() + " does not exist in MDB.");
+                                "In command " + c.getQualifiedName() + ", argument " + ca.getArgumentName() + " does not exist in MDB.");
                         return null;
                     }
                     sc.addAssignment(a, ca.getArgumentValue());
@@ -112,8 +101,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
     }
 
     private ArgumentInfo getArgumentFromYamcs(CommandInfo mc, String argumentName) {
-        for (ArgumentInfo a : mc.getArgumentList())
-        {
+        for (ArgumentInfo a : mc.getArgumentList()) {
             if (a.getName().equals(argumentName))
                 return a;
         }

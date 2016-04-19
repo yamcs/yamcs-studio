@@ -17,8 +17,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command.CommandArgument;
-import org.yamcs.xtce.Argument;
 
 public class ExportCommandStackHandler extends AbstractHandler {
 
@@ -49,14 +49,15 @@ public class ExportCommandStackHandler extends AbstractHandler {
         List<org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command> exportedCommands = exportCommandStack.getCommand();
         for (StackedCommand sc : scs) {
             org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command c = new org.yamcs.studio.ui.commanding.stack.xml.CommandStack.Command();
-            c.setCommandName(sc.getMetaCommand().getQualifiedName());
+            c.setQualifiedName(sc.getMetaCommand().getQualifiedName());
+            c.setSelectedAlias(sc.getSelectedAlias());
+            c.setComment(sc.getComment());
             exportedCommands.add(c);
             List<CommandArgument> cas = c.getCommandArgument();
 
-            Iterator<?> it = sc.getAssignments().entrySet().iterator();
+            Iterator<Entry<ArgumentInfo, String>> it = sc.getAssignments().entrySet().iterator();
             while (it.hasNext()) {
-                @SuppressWarnings("unchecked")
-                Map.Entry<Argument, String> pair = (Entry<Argument, String>) it.next();
+                Map.Entry<ArgumentInfo, String> pair = it.next();
                 String argName = pair.getKey().getName();
                 String argValue = pair.getValue();
 
