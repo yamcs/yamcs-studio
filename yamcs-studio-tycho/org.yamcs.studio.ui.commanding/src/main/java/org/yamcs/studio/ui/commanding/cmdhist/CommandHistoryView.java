@@ -21,9 +21,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -51,6 +48,7 @@ import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryFilters.Filter;
+import org.yamcs.studio.ui.commanding.stack.CommandClipboard;
 
 import com.google.protobuf.MessageLite;
 
@@ -95,7 +93,6 @@ public class CommandHistoryView extends ViewPart {
     private Set<String> dynamicColumns = new HashSet<>();
 
     private static CommandHistoryView instance;
-    private List<CommandHistoryRecord> copyedCommandHistoryRecords = new ArrayList<>();
 
     @Override
     public void createPartControl(Composite parent) {
@@ -362,23 +359,16 @@ public class CommandHistoryView extends ViewPart {
                 if (selection == null || selection.length == 0)
                     return;
 
-                // clear previous data
-                copyedCommandHistoryRecords.clear();
-                String source = "";
-
                 // copy each selected items
+                List<CommandHistoryRecord> chrs = new ArrayList<>();
                 for (TableItem ti : selection) {
                     CommandHistoryRecord chr = (CommandHistoryRecord) (ti.getData());
                     if (chr == null)
                         continue;
+                    chrs.add(chr);
 
-                    copyedCommandHistoryRecords.add(chr);
-                    source += chr.getSource() + "\n";
                 }
-
-                final Clipboard cb = new Clipboard(tableViewer.getTable().getDisplay());
-                TextTransfer textTransfer = TextTransfer.getInstance();
-                cb.setContents(new Object[] { source }, new Transfer[] { textTransfer });
+                CommandClipboard.addCommandHistoryRecords(chrs, tableViewer.getTable().getDisplay());
 
             }
 
@@ -508,7 +498,4 @@ public class CommandHistoryView extends ViewPart {
 
     }
 
-    public List<CommandHistoryRecord> getCopyedCommandHistoryRecords() {
-        return copyedCommandHistoryRecords;
-    }
 }

@@ -10,7 +10,6 @@ import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -50,7 +49,7 @@ public class CommandStackTableViewer extends TableViewer {
     private ResourceManager resourceManager;
 
     public CommandStackTableViewer(Composite parent, TableColumnLayout tcl, CommandStackView styleProvider) {
-        super(new Table(parent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
+        super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.HIDE_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
         greenBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/ok.png"));
@@ -89,7 +88,7 @@ public class CommandStackTableViewer extends TableViewer {
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
         nameColumn.setLabelProvider(new CommandSourceColumnLabelProvider(styleProvider));
-        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(200));
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(300));
 
         TableViewerColumn significanceColumn = new TableViewerColumn(this, SWT.CENTER);
         significanceColumn.getColumn().setText(COL_SIGNIFICANCE);

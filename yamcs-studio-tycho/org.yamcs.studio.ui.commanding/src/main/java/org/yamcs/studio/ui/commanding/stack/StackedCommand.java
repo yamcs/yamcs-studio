@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
@@ -83,23 +84,30 @@ public class StackedCommand {
     }
 
     public StyledString toStyledString(CommandStackView styleProvider) {
+
+        Styler identifierStyler = styleProvider != null ? styleProvider.getIdentifierStyler(this) : null;
+        Styler bracketStyler = styleProvider != null ? styleProvider.getBracketStyler(this) : null;
+        Styler argNameSyler = styleProvider != null ? styleProvider.getArgNameStyler(this) : null;
+        Styler errorStyler = styleProvider != null ? styleProvider.getErrorStyler(this) : null;
+        Styler numberStyler = styleProvider != null ? styleProvider.getNumberStyler(this) : null;
+
         StyledString str = new StyledString();
-        str.append(getSelectedAlias(), styleProvider.getIdentifierStyler(this));
-        str.append("(", styleProvider.getBracketStyler(this));
+        str.append(getSelectedAlias(), identifierStyler);
+        str.append("(", bracketStyler);
         boolean first = true;
         for (ArgumentInfo arg : meta.getArgumentList()) {
             if (!first)
-                str.append("\n, ", styleProvider.getBracketStyler(this));
+                str.append("\n, ", bracketStyler);
             first = false;
-            str.append(arg.getName() + ": ", styleProvider.getArgNameStyler(this));
+            str.append(arg.getName() + ": ", argNameSyler);
             String value = getAssignedStringValue(arg);
             if (value == null) {
-                str.append("  ", styleProvider.getErrorStyler(this));
+                str.append("  ", errorStyler);
             } else {
-                str.append(value, isValid(arg) ? styleProvider.getNumberStyler(this) : styleProvider.getErrorStyler(this));
+                str.append(value, isValid(arg) ? numberStyler : errorStyler);
             }
         }
-        str.append(")", styleProvider.getBracketStyler(this));
+        str.append(")", bracketStyler);
         return str;
     }
 
@@ -316,5 +324,25 @@ public class StackedCommand {
         }
 
         return result;
+    }
+
+    public String getSource() {
+        return toStyledString(null).getString();
+    }
+
+    public StackedCommand copy() {
+        StackedCommand copy = new StackedCommand();
+
+        copy.meta = this.meta;
+        copy.assignments = this.assignments;
+        copy.clientId = this.clientId;
+        copy.comment = this.comment;
+        copy.selectedAlias = this.selectedAlias;
+
+        // reset state and ptv info
+        copy.state = StackedState.DISARMED;
+        copy.ptvInfo = new PTVInfo();
+
+        return copy;
     }
 }

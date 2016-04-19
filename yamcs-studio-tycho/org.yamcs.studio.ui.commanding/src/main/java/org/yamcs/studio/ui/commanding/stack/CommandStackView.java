@@ -1,5 +1,6 @@
 package org.yamcs.studio.ui.commanding.stack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,8 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISourceProviderListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
@@ -45,8 +48,6 @@ import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryRecord;
-import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
 
 public class CommandStackView extends ViewPart {
@@ -427,6 +428,38 @@ public class CommandStackView extends ViewPart {
 
     private void addPopupMenu() {
 
+        class CopySelectionListener implements SelectionListener {
+            boolean cut = false;
+
+            public CopySelectionListener(boolean cut) {
+                this.cut = cut;
+            }
+
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                // check something is selected
+                TableItem[] selection = commandTableViewer.getTable().getSelection();
+                if (selection == null || selection.length == 0)
+                    return;
+
+                // copy each selected items
+                List<StackedCommand> scs = new ArrayList<>();
+                for (TableItem ti : selection) {
+                    StackedCommand sc = (StackedCommand) (ti.getData());
+                    if (sc == null)
+                        continue;
+                    scs.add(sc);
+
+                }
+                CommandClipboard.addStackedCommands(scs, cut, event.display);
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        }
+
         class PasteSelectionListener implements SelectionListener {
             PastingType pastingType;
 
@@ -440,52 +473,72 @@ public class CommandStackView extends ViewPart {
             }
 
             @Override
-            public void widgetSelected(SelectionEvent arg0) {
+            public void widgetSelected(SelectionEvent event) {
                 StackedCommand sc = null;
+
+                // sanity checks
                 TableItem[] selection = commandTableViewer.getTable().getSelection();
-                if (selection != null && selection.length > 0)
+                if (selection != null && selection.length > 0) {
                     sc = (StackedCommand) (commandTableViewer.getTable().getSelection()[0].getData());
+                }
                 if (sc == null && pastingType != PastingType.APPEND)
                     pastingType = PastingType.APPEND;
 
-                List<CommandHistoryRecord> chrs = CommandHistoryView.getInstance().getCopyedCommandHistoryRecords();
-                if (chrs.isEmpty())
+                // get commands from clipboard
+                List<StackedCommand> copyedCommands = new ArrayList<>();
+                try {
+                    copyedCommands = CommandClipboard.getCopiedCommands();
+                } catch (Exception e) {
+                    String errorMessage = "Unable to build Stacked Command from the specifed source: ";
+                    log.log(Level.WARNING, errorMessage, e);
+                    commandTableViewer.getTable().getDisplay().asyncExec(() -> {
+                        MessageBox dialog = new MessageBox(commandTableViewer.getTable().getShell(), SWT.ICON_ERROR | SWT.OK);
+                        dialog.setText("Command Stack Edition");
+                        dialog.setMessage(errorMessage + e.getMessage());
+                        // open dialog and await user selection
+                        dialog.open();
+                    });
+                    return;
+                }
+                if (copyedCommands.isEmpty())
                     return;
 
+                // paste
                 int index = commandTableViewer.getIndex(sc);
-
-                for (CommandHistoryRecord chr : chrs) {
-                    StackedCommand pastedCommand;
-                    try {
-                        pastedCommand = StackedCommand.buildCommandFromSource(chr.getSource());
-                    } catch (Exception e) {
-                        String errorMessage = "Unable to build Stacked Command from the specifed source: ";
-                        log.log(Level.WARNING, errorMessage + chr.getSource(), e);
-                        commandTableViewer.getTable().getDisplay().asyncExec(() -> {
-                            MessageBox dialog = new MessageBox(commandTableViewer.getTable().getShell(), SWT.ICON_ERROR | SWT.OK);
-                            dialog.setText("Comment Copy");
-                            dialog.setMessage(errorMessage + e.getMessage());
-                            // open dialog and await user selection
-                            dialog.open();
-                        });
-                        return;
-                    }
-                    pastedCommand.setComment(chr.getTextForColumn("Comment"));
+                for (StackedCommand pastedCommand : copyedCommands) {
                     if (pastingType == PastingType.APPEND) {
                         commandTableViewer.addTelecommand(pastedCommand);
                     } else if (pastingType == PastingType.AFTER_ITEM) {
-                        commandTableViewer.insertTelecommand(pastedCommand, index + 1);
-                    } else {
+                        commandTableViewer.insertTelecommand(pastedCommand, index + selection.length);
+                    } else if (pastingType == PastingType.BEFORE_ITEM) {
                         commandTableViewer.insertTelecommand(pastedCommand, index);
                     }
                     index++;
                 }
+
+                // delete cut commands
+                CommandStack.getInstance().getCommands().removeAll(CommandClipboard.getCutCommands());
+
+                // refresh command stack view state
+                IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(CommandStackView.ID);
+                CommandStackView commandStackView = (CommandStackView) part;
+                commandStackView.refreshState();
             }
         }
 
         Table table = commandTableViewer.getTable();
         Menu contextMenu = new Menu(commandTableViewer.getTable());
         table.setMenu(contextMenu);
+
+        MenuItem mItemCopy = new MenuItem(contextMenu, SWT.None);
+        mItemCopy.setText("Copy");
+        mItemCopy.addSelectionListener(new CopySelectionListener(false));
+
+        MenuItem mItemCut = new MenuItem(contextMenu, SWT.None);
+        mItemCut.setText("Cut");
+        mItemCut.addSelectionListener(new CopySelectionListener(true));
+
+        new MenuItem(contextMenu, SWT.SEPARATOR);
 
         MenuItem mItemPasteBefore = new MenuItem(contextMenu, SWT.None);
         mItemPasteBefore.setText("Paste Before");
@@ -504,13 +557,36 @@ public class CommandStackView extends ViewPart {
             @Override
             public void handleEvent(Event event) {
                 TableItem[] selection = commandTableViewer.getTable().getSelection();
+
+                boolean pastBeforeAuthorized = true;
+                boolean pastAfterAuthorized = true;
+
+                StackedCommand sc1 = null;
+                StackedCommand sc2 = null;
+                if (selection.length > 0) {
+                    // prevent to edit part of the command stack that has already been executed
+                    sc1 = (StackedCommand) selection[0].getData();
+                    sc2 = (StackedCommand) selection[selection.length - 1].getData();
+                    int lastSelectionIndex = commandTableViewer.getIndex(sc2);
+                    sc2 = (StackedCommand) commandTableViewer.getElementAt(lastSelectionIndex + 1);
+
+                    pastBeforeAuthorized = sc1 != null && sc1.getStackedState() == StackedState.DISARMED;
+                    pastAfterAuthorized = sc2 == null || sc2.getStackedState() == StackedState.DISARMED;
+
+                } else {
+                    pastBeforeAuthorized = false;
+                    pastAfterAuthorized = false;
+                }
+
                 if (event.button == 3) {
                     contextMenu.setVisible(true);
-                    List<CommandHistoryRecord> chrs = CommandHistoryView.getInstance().getCopyedCommandHistoryRecords();
 
-                    mItemPaste.setEnabled(!chrs.isEmpty());
-                    mItemPasteBefore.setEnabled(!chrs.isEmpty() && selection.length != 0);
-                    mItemPasteAfter.setEnabled(!chrs.isEmpty() && selection.length != 0);
+                    mItemCopy.setEnabled(selection.length != 0);
+                    mItemCut.setEnabled(selection.length != 0);
+
+                    mItemPaste.setEnabled(CommandClipboard.hasData());
+                    mItemPasteBefore.setEnabled(CommandClipboard.hasData() && pastBeforeAuthorized);
+                    mItemPasteAfter.setEnabled(CommandClipboard.hasData() && pastAfterAuthorized);
 
                 } else {
                     contextMenu.setVisible(false);

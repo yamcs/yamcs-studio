@@ -111,7 +111,6 @@
          <enabledWhen>
             <with variable="selection">
                <and>
-                  <count value="1" />
                   <iterate ifEmpty="false">
                      <instanceof value="org.yamcs.studio.ui.commanding.stack.StackedCommand"/>
                   </iterate>
