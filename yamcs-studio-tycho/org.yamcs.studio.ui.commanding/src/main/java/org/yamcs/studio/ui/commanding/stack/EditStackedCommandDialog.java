@@ -129,10 +129,11 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
         for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
             String value = command.getAssignedStringValue(arg);
             if (value == null && arg.hasInitialValue()) {
-                command.addAssignment(arg, arg.getInitialValue());
+                // command.addAssignment(arg, arg.getInitialValue());
                 argumentAssignements.add(new ArgumentAssignement(arg, arg.getInitialValue()));
+            } else {
+                argumentAssignements.add(new ArgumentAssignement(arg, value));
             }
-            argumentAssignements.add(new ArgumentAssignement(arg, value));
         }
         argumentTable.setInput(argumentAssignements);
         (new ArgumentTableBuilder(command)).pack(argumentTable);

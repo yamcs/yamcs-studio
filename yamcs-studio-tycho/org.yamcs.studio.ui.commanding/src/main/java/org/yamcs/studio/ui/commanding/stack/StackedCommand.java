@@ -96,11 +96,15 @@ public class StackedCommand {
         str.append("(", bracketStyler);
         boolean first = true;
         for (ArgumentInfo arg : meta.getArgumentList()) {
+            String value = getAssignedStringValue(arg);
+
+            if (value == null && arg.hasInitialValue())
+                continue;
+
             if (!first)
                 str.append("\n, ", bracketStyler);
             first = false;
             str.append(arg.getName() + ": ", argNameSyler);
-            String value = getAssignedStringValue(arg);
             if (value == null) {
                 str.append("  ", errorStyler);
             } else {
@@ -217,7 +221,7 @@ public class StackedCommand {
     }
 
     public boolean isValid(ArgumentInfo arg) {
-        if (!isAssigned(arg))
+        if (!isAssigned(arg) && !arg.hasInitialValue())
             return false;
         return true; // TODO more local checks
     }
@@ -308,6 +312,8 @@ public class StackedCommand {
         // Retrieve arguments assignment
         String[] commandArgumentsTab = commandArguments.split(",");
         for (String commandArgument : commandArgumentsTab) {
+            if (commandArgument == null || commandArgument.isEmpty())
+                continue;
             String[] components = commandArgument.split(":");
             String argument = components[0];
             String value = components[1];
