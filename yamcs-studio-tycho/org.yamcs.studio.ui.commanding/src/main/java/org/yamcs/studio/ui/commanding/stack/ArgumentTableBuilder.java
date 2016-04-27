@@ -7,7 +7,6 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -30,12 +29,15 @@ import org.yamcs.protobuf.Mdb.EnumValue;
  */
 public class ArgumentTableBuilder {
 
-    final String FLOAT = "float";
-    final String DOUBLE = "double";
-    final String INT = "integer";
-    final String ENUM = "enumeration";
+    final static String FLOAT = "float";
+    final static String DOUBLE = "double";
+    final static String INT = "integer";
+    final static String ENUM = "enumeration";
+    final static String STRING = "string";
 
     StackedCommand command;
+    List<ArgumentAssignement> argumentAssignements;
+    TableViewer argumentTable;
 
     public ArgumentTableBuilder(StackedCommand command) {
         this.command = command;
@@ -52,7 +54,7 @@ public class ArgumentTableBuilder {
         argumentsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
         argumentsComposite.setLayout(tcl);
 
-        TableViewer argumentTable = new TableViewer(argumentsComposite, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION);
+        argumentTable = new TableViewer(argumentsComposite, SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION);
         Table table = argumentTable.getTable();
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         table.setLayoutData(gridData);
@@ -61,7 +63,7 @@ public class ArgumentTableBuilder {
         argumentTable.setContentProvider(new ArrayContentProvider());
 
         // create columns
-        String[] titles = { "Argument", "Eng. Type", "Range", "Value" };
+        String[] titles = { "Argument", "Eng. Type", "Range", "Value", "Default Value" };
 
         // argument
         TableViewerColumn column = createTableViewerColumn(argumentTable, titles[0], 0);
@@ -120,12 +122,35 @@ public class ArgumentTableBuilder {
             }
         });
         column.setEditingSupport(new ParameterEditingSupport(argumentTable));
-        tcl.setColumnData(column.getColumn(), new ColumnWeightData(100));
+        tcl.setColumnData(column.getColumn(), new ColumnPixelData(200));
+
+        // default value
+        column = createTableViewerColumn(argumentTable, titles[4], 4);
+        column.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                if (element instanceof ArgumentAssignement) {
+                    ArgumentAssignement aa = (ArgumentAssignement) element;
+                    return aa.arg.hasInitialValue() ? aa.arg.getInitialValue() : null;
+                }
+                return super.getText(element);
+            }
+        });
+        tcl.setColumnData(column.getColumn(), new ColumnPixelData(200));
 
         return argumentTable;
     }
 
-    public void pack(TableViewer argumentTable) {
+    public void updateCommandArguments() {
+        argumentAssignements = new ArrayList<>();
+        for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
+            String value = command.getAssignedStringValue(arg);
+            argumentAssignements.add(new ArgumentAssignement(arg, value == null ? "" : value));
+        }
+        argumentTable.setInput(argumentAssignements);
+    }
+
+    public void pack() {
         argumentTable.getTable().getColumn(0).pack();
         argumentTable.getTable().getColumn(1).pack();
         argumentTable.getTable().getColumn(2).setText("");
@@ -136,6 +161,30 @@ public class ArgumentTableBuilder {
         else
             argumentTable.getTable().getColumn(2).pack();
 
+        argumentTable.getTable().getColumn(3).pack();
+        if (argumentTable.getTable().getColumn(3).getWidth() < 100)
+            argumentTable.getTable().getColumn(3).setWidth(100); // show a not too small column for initial edition
+        argumentTable.getTable().getColumn(4).pack();
+
+    }
+
+    public void applyArgumentsToCommands() {
+        if (argumentAssignements == null)
+            return;
+        for (ArgumentAssignement aa : argumentAssignements) {
+
+            String engType = aa.arg.getType().getEngType();
+            String value = aa.value;
+
+            // Add in command assignments and table viewer
+            if (!(STRING.equals(engType) || ENUM.equals(engType))
+                    && value.trim().isEmpty()) {
+                value = null;
+                command.addAssignment(aa.arg, null);
+            } else {
+                command.addAssignment(aa.arg, value);
+            }
+        }
     }
 
     private TableViewerColumn createTableViewerColumn(TableViewer tableViewer, String header, int idx) {
@@ -243,12 +292,6 @@ public class ArgumentTableBuilder {
                 value = String.valueOf(userInputValue);
             }
 
-            // Add in command assignments and table viewer
-            if (value.trim().isEmpty()) {
-                command.addAssignment(aa.arg, null);
-            } else {
-                command.addAssignment(aa.arg, value);
-            }
             aa.value = value;
             viewer.update(element, null);
         }

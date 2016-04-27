@@ -105,10 +105,17 @@ public class StackedCommand {
                 str.append("\n, ", bracketStyler);
             first = false;
             str.append(arg.getName() + ": ", argNameSyler);
+
             if (value == null) {
                 str.append("  ", errorStyler);
             } else {
+                boolean needQuotationMark = ArgumentTableBuilder.STRING.equals(arg.getType().getEngType())
+                        || ArgumentTableBuilder.ENUM.equals(arg.getType().getEngType());
+                if (needQuotationMark)
+                    str.append("\"", isValid(arg) ? numberStyler : errorStyler);
                 str.append(value, isValid(arg) ? numberStyler : errorStyler);
+                if (needQuotationMark)
+                    str.append("\"", isValid(arg) ? numberStyler : errorStyler);
             }
         }
         str.append(")", bracketStyler);
@@ -285,9 +292,10 @@ public class StackedCommand {
         commandSource = commandSource.trim();
         if (commandSource.isEmpty())
             throw new Exception("No Source attached to this command");
-        int indexStartOfArguments = commandSource.lastIndexOf("(");
-        String commandArguments = commandSource.substring(indexStartOfArguments);
-        commandArguments = commandArguments.replaceAll("[()\n ]", "");
+        int indexStartOfArguments = commandSource.indexOf("(");
+        int indexStopOfArguments = commandSource.lastIndexOf(")");
+        String commandArguments = commandSource.substring(indexStartOfArguments + 1, indexStopOfArguments);
+        commandArguments = commandArguments.replaceAll("[\n]", "");
         String commandAlias = commandSource.substring(0, indexStartOfArguments);
 
         // Retrieve meta command and selected namespace
@@ -310,17 +318,20 @@ public class StackedCommand {
         result.setSelectedAliase(selectedAlias);
 
         // Retrieve arguments assignment
+        // TODO: write formal source grammar
         String[] commandArgumentsTab = commandArguments.split(",");
         for (String commandArgument : commandArgumentsTab) {
             if (commandArgument == null || commandArgument.isEmpty())
                 continue;
             String[] components = commandArgument.split(":");
-            String argument = components[0];
-            String value = components[1];
+            String argument = components[0].trim();
+            String value = components[1].trim();
             boolean foundArgument = false;
             for (ArgumentInfo ai : commandInfo.getArgumentList()) {
-                foundArgument = ai.getName().equals(argument);
+                foundArgument = ai.getName().toUpperCase().equals(argument.toUpperCase());
                 if (foundArgument) {
+                    if (value.startsWith("\"") && value.endsWith("\""))
+                        value = value.substring(1, value.length() - 1);
                     result.addAssignment(ai, value);
                     break;
                 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -19,14 +18,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.ui.commanding.stack.ArgumentTableBuilder.ArgumentAssignement;
 
 public class EditStackedCommandDialog extends TitleAreaDialog {
 
     private StackedCommand command;
-    private List<Text> textFields = new ArrayList<>();
+    ArgumentTableBuilder atb;
 
     public EditStackedCommandDialog(Shell parentShell, StackedCommand command) {
         super(parentShell);
@@ -124,33 +121,17 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
             }
         });
 
-        TableViewer argumentTable = (new ArgumentTableBuilder(command)).createArgumentTable(composite);
-        ArrayList<ArgumentAssignement> argumentAssignements = new ArrayList<>();
-        for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
-            String value = command.getAssignedStringValue(arg);
-            if (value == null && arg.hasInitialValue()) {
-                // command.addAssignment(arg, arg.getInitialValue());
-                argumentAssignements.add(new ArgumentAssignement(arg, arg.getInitialValue()));
-            } else {
-                argumentAssignements.add(new ArgumentAssignement(arg, value));
-            }
-        }
-        argumentTable.setInput(argumentAssignements);
-        (new ArgumentTableBuilder(command)).pack(argumentTable);
+        atb = new ArgumentTableBuilder(command);
+        atb.createArgumentTable(composite);
+        atb.updateCommandArguments();
+        atb.pack();
 
         return composite;
     }
 
     @Override
     protected void okPressed() {
-        for (Text textField : textFields) {
-            ArgumentInfo arg = (ArgumentInfo) textField.getData();
-            if (textField.getText().trim().isEmpty()) {
-                command.addAssignment(arg, null);
-            } else {
-                command.addAssignment(arg, textField.getText());
-            }
-        }
+        atb.applyArgumentsToCommands();
         super.okPressed();
     }
 }

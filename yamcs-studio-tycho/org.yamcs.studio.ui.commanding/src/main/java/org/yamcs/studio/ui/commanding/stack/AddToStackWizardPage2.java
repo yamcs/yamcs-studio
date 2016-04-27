@@ -17,13 +17,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.ui.commanding.stack.ArgumentTableBuilder.ArgumentAssignement;
 
 public class AddToStackWizardPage2 extends WizardPage {
 
     private StackedCommand command;
+    ArgumentTableBuilder atb;
     private Composite controlComposite;
     private Combo namespaceCombo;
     private Label desc;
@@ -78,17 +77,8 @@ public class AddToStackWizardPage2 extends WizardPage {
         command.setSelectedAliase(aliases.get(0));
 
         // Register new state
-        ArrayList<ArgumentAssignement> argumentAssignements = new ArrayList<>();
-        for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
-            if (arg.hasInitialValue()) {
-                argumentAssignements.add(new ArgumentAssignement(arg, arg.getInitialValue()));
-                command.addAssignment(arg, arg.getInitialValue());
-            } else {
-                argumentAssignements.add(new ArgumentAssignement(arg, ""));
-            }
-        }
-        argumentTable.setInput(argumentAssignements);
-        (new ArgumentTableBuilder(command)).pack(argumentTable);
+        atb.updateCommandArguments();
+        atb.pack();
         controlComposite.layout();
     }
 
@@ -156,7 +146,13 @@ public class AddToStackWizardPage2 extends WizardPage {
         });
 
         // argument table
-        argumentTable = (new ArgumentTableBuilder(command)).createArgumentTable(controlComposite);
+        atb = new ArgumentTableBuilder(command);
+        atb.createArgumentTable(controlComposite);
+    }
+
+    public void applyArgumentsToCommand() {
+        if (atb != null)
+            atb.applyArgumentsToCommands();
     }
 
 }

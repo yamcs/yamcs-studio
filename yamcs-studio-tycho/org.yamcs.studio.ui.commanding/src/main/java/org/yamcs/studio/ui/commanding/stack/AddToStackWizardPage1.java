@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
@@ -189,11 +188,6 @@ public class AddToStackWizardPage1 extends WizardPage {
 
             command.setMetaCommand(cmd);
             command.setSelectedAliase(cmd.getQualifiedName());
-            for (ArgumentInfo arg : command.getMetaCommand().getArgumentList()) {
-                if (arg.hasInitialValue()) {
-                    command.addAssignment(arg, arg.getInitialValue());
-                }
-            }
             setPageComplete(!cmd.getAbstract());
         });
         CommandTreeContentProvider commandTreeContentProvider = new CommandTreeContentProvider();
