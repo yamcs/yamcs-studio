@@ -56,6 +56,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         wsclient.setUserAgent(USER_AGENT);
         requestSender = new Thread(() -> {
             try {
+                log.warning("WebSocketRegistrar");
                 sendMergedRequests();
             } catch (InterruptedException e) {
                 log.log(Level.SEVERE, "OOPS, got interrupted", e);
@@ -95,9 +96,11 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
     private void sendMergedRequests() throws InterruptedException {
         while (true) {
             WebSocketRequest evt = pendingRequests.take();
+
             // We now have at least one event to handle
-            Thread.sleep(500); // Wait for more events, before going into synchronized block
+            Thread.sleep(100); // Wait for more events, before going into synchronized block
             synchronized (pendingRequests) {
+
                 while (pendingRequests.peek() != null
                         && evt instanceof MergeableWebSocketRequest
                         && pendingRequests.peek() instanceof MergeableWebSocketRequest

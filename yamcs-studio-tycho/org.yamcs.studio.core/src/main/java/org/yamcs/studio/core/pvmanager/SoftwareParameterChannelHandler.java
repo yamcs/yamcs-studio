@@ -37,6 +37,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     private NamedObjectId id;
 
     public SoftwareParameterChannelHandler(String channelName) {
+
         super(channelName);
         id = NamedObjectId.newBuilder().setName(channelName).build();
         ConnectionManager.getInstance().addStudioConnectionListener(this);
@@ -45,7 +46,6 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     @Override
     public void onStudioConnect() {
         log.info("processConnectionInfo called on " + getChannelName());
-        disconnect();
         connect();
     }
 
