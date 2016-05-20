@@ -32,7 +32,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
-    private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1");
+    private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1", "1.0");
 
     private NamedObjectId id;
 
