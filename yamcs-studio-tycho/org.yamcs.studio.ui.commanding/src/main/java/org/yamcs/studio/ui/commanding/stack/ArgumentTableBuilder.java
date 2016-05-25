@@ -25,7 +25,7 @@ import org.yamcs.protobuf.Mdb.EnumValue;
 
 /*
  * Build an editable table to enter command's argument
- * TODO: provide support to specific type editor (e.g. combobox for enums)
+ * Provides support to specific type editor (e.g. combobox for enums)
  */
 public class ArgumentTableBuilder {
 
@@ -180,7 +180,7 @@ public class ArgumentTableBuilder {
             if (!(STRING.equals(engType) || ENUM.equals(engType))
                     && value.trim().isEmpty()) {
                 value = null;
-                command.addAssignment(aa.arg, null);
+                //command.addAssignment(aa.arg, null);
             } else {
                 command.addAssignment(aa.arg, value);
             }
