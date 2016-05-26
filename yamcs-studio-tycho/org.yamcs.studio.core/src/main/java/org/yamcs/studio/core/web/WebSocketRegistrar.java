@@ -56,7 +56,6 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         wsclient.setUserAgent(USER_AGENT);
         requestSender = new Thread(() -> {
             try {
-                log.warning("WebSocketRegistrar");
                 sendMergedRequests();
             } catch (InterruptedException e) {
                 log.log(Level.SEVERE, "OOPS, got interrupted", e);
