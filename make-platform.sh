@@ -41,7 +41,7 @@ then
 		cat $PRGDIR/css/settings.xml
         echo
         echo 'If you have an old profile configured (i.e. css-for-yamcs),'
-        echo 'replace it content with the above instead.'
+        echo 'replace its content with the above instead.'
 		exit 1
 	else
 		echo 'Could not find css-for-yamcs-v2 maven profile.'
@@ -67,8 +67,7 @@ mvn -DskipTests -f $PRGDIR/css/cs-studio/core/pom.xml -s $PRGDIR/css/settings.xm
 mvn -DskipTests -f $PRGDIR/css/cs-studio/applications/pom.xml -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2 clean verify
 set +e
 
-echo 
+echo
 echo '----------------------------------------------------------------'
 echo 'CS-Studio dependencies successfully built.'
 echo '----------------------------------------------------------------'
-

@@ -13,8 +13,8 @@
 	</prerequisites>
 
 	<properties>
-        <tycho.version>0.24.0</tycho.version>
-		<yamcs.version>0.29.1</yamcs.version>
+        <tycho.version>0.26.0</tycho.version>
+		<yamcs.version>0.29.5</yamcs.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
