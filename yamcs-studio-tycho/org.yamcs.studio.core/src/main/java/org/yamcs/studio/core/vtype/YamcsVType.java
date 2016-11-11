@@ -1,9 +1,10 @@
 package org.yamcs.studio.core.vtype;
 
 import java.text.NumberFormat;
+import java.time.Instant;
+import java.util.Date;
 
 import org.diirt.util.text.NumberFormats;
-import org.diirt.util.time.Timestamp;
 import org.diirt.vtype.Alarm;
 import org.diirt.vtype.AlarmSeverity;
 import org.diirt.vtype.Display;
@@ -58,8 +59,9 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     }
 
     @Override
-    public Timestamp getTimestamp() {
-        return Timestamp.of(YamcsUTCString.parse(pval.getGenerationTimeUTC()));
+    public Instant getTimestamp() {
+        Date dt = YamcsUTCString.parse(pval.getGenerationTimeUTC());
+        return (dt != null) ? dt.toInstant() : null;
     }
 
     @Override

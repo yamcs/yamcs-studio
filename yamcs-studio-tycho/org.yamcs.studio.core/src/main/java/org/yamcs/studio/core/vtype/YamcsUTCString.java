@@ -10,8 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Parses dates using SimpleDateFormat patterns. This is thread safe unlike the
- * normal SimpleDateFormat
+ * Parses dates using SimpleDateFormat patterns. This is thread safe unlike the normal
+ * SimpleDateFormat
  */
 public class YamcsUTCString {
     private static final Logger log = Logger.getLogger(YamcsUTCString.class.getName());
