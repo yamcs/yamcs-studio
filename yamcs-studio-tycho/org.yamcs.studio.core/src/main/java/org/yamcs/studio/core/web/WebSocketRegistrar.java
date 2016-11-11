@@ -31,7 +31,6 @@ import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.security.YamcsCredentials;
 
 /**
  * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient.
@@ -48,10 +47,8 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
 
     private final Thread requestSender;
 
-    public WebSocketRegistrar(YamcsConnectionProperties yprops, YamcsCredentials credentials) {
-        String user = credentials != null ? credentials.getUsername() : null;
-        String pass = credentials != null ? credentials.getPasswordS() : null;
-        wsclient = new WebSocketClient(yprops, this, user, pass);
+    public WebSocketRegistrar(YamcsConnectionProperties yprops) {
+        wsclient = new WebSocketClient(yprops, this);
         wsclient.setConnectionTimeoutMs(3000);
         wsclient.setUserAgent(USER_AGENT);
         requestSender = new Thread(() -> {

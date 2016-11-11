@@ -17,7 +17,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
-import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 

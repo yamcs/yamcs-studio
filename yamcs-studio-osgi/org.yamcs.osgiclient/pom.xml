@@ -79,6 +79,7 @@
 							org.yamcs.api,
 							org.yamcs.api.ws,
 							org.yamcs.protobuf,
+							org.yamcs.security,
 							org.yamcs.utils,
 							org.yamcs.xtce,
 							org.yamcs.xtce.xml

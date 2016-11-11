@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
+import org.yamcs.security.UsernamePasswordToken;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -95,7 +96,14 @@ public class ConnectionManager {
 
         // (re)establish the connection to yamcs
         log.info("Connecting WebSocket");
-        webSocketClient = new WebSocketRegistrar(yprops, creds);
+        String user = creds != null ? creds.getUsername() : null;
+        String pass = creds != null ? creds.getPasswordS() : null;
+        if (user != null) {
+            yprops.setAuthenticationToken(new UsernamePasswordToken(user, pass));
+        } else {
+            yprops.setAuthenticationToken(null);
+        }
+        webSocketClient = new WebSocketRegistrar(yprops);
         webSocketClient.connect();
     }
 

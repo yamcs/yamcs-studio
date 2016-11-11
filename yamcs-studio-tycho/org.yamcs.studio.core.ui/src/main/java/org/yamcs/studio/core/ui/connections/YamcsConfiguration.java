@@ -2,7 +2,7 @@ package org.yamcs.studio.core.ui.connections;
 
 import java.util.Objects;
 
-import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionInfo;
 import org.yamcs.studio.core.security.YamcsCredentials;
 
@@ -129,8 +129,10 @@ public class YamcsConfiguration {
 
     @Override
     public boolean equals(Object obj) {
-        // TODO This is not exactly true, since we don't currently check for duplicates.
-        // We do need an equals-method though, as it is used to compare the last-used configuration
+        // TODO This is not exactly true, since we don't currently check for
+        // duplicates.
+        // We do need an equals-method though, as it is used to compare the
+        // last-used configuration
         // with the list of all configurations.
         if (obj == null)
             return false;

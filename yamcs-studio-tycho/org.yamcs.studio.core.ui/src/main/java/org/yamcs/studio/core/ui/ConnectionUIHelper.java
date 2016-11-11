@@ -3,7 +3,7 @@ package org.yamcs.studio.core.ui;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.ConnectionMode;
 import org.yamcs.studio.core.StudioConnectionListener;
@@ -30,9 +30,7 @@ public class ConnectionUIHelper implements StudioConnectionListener {
                 RCPUtils.runCommand("org.yamcs.studio.ui.login");
             } else {
                 String detail = (t.getMessage() != null) ? t.getMessage() : t.getClass().getSimpleName();
-                MessageDialog.openError(
-                        Display.getDefault().getActiveShell(),
-                        yprops.getYamcsConnectionString(),
+                MessageDialog.openError(Display.getDefault().getActiveShell(), yprops.getYamcsConnectionString(),
                         "Could not connect. " + detail);
                 // TODO attempt failover
                 // askSwitchNode(errorMessage);
@@ -47,10 +45,13 @@ public class ConnectionUIHelper implements StudioConnectionListener {
 
     @Override
     public void onStudioDisconnect() {
-        // We should make this optional i think. It can be quite annoying during development
-        // YamcsConnectionProperties yprops = ConnectionManager.getInstance().getWebProperties();
+        // We should make this optional i think. It can be quite annoying during
+        // development
+        // YamcsConnectionProperties yprops =
+        // ConnectionManager.getInstance().getWebProperties();
         // String connectionString = yprops.getYamcsConnectionString();
-        // MessageDialog.openWarning(null, connectionString, "You are no longer connected to Yamcs");
+        // MessageDialog.openWarning(null, connectionString, "You are no longer
+        // connected to Yamcs");
     }
 
     private void askSwitchNode(String errorMessage) {
@@ -64,9 +65,8 @@ public class ConnectionUIHelper implements StudioConnectionListener {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         if (connectionManager.getConnectionInfo().getConnection(ConnectionMode.FAILOVER) != null) {
             message += "\n\n" + "Do you want to switch to the failover server?";
-            MessageDialog dialog = new MessageDialog(
-                    null, "Connection Error", null, message,
-                    MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
+            MessageDialog dialog = new MessageDialog(null, "Connection Error", null, message, MessageDialog.QUESTION,
+                    new String[] { "Yes", "No" }, 0);
 
             if (dialog.open() == Dialog.OK)
                 connectionManager.switchNode();
