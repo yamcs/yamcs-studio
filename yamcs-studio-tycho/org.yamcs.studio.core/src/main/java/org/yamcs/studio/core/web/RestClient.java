@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.yamcs.ConfigurationException;
-import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.ProtobufHandler.BuilderGenerator;
 

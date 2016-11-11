@@ -1,6 +1,6 @@
 package org.yamcs.studio.core;
 
-import org.yamcs.api.ws.YamcsConnectionProperties;
+import org.yamcs.api.YamcsConnectionProperties;
 
 public class ConnectionInfo {
 
