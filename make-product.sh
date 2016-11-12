@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+DEPS_REACTOR=1
+
+if [ "$1" = "--no-deps" ]; then
+  DEPS_REACTOR=0
+fi
 
 # Set available memory for java in maven builds
 export MAVEN_OPTS="-Xmx1024M -Xss128M -XX:+CMSClassUnloadingEnabled"
@@ -19,7 +24,9 @@ done
 PRGDIR=`dirname "$PRG"`
 
 set -e
-mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2
+if [ "$DEPS_REACTOR" = 1 ]; then
+  mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2
+fi
 mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2
 set +e
 
