@@ -63,6 +63,7 @@
 							*; resolution:=optional
 						</Import-Package>
 						<Export-Package>
+							com.csvreader,
 							com.google.protobuf,
 							io.netty.bootstrap,
 							io.netty.buffer,
