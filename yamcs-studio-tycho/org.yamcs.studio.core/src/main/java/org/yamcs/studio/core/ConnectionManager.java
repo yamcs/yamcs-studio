@@ -162,7 +162,7 @@ public class ConnectionManager {
     }
 
     public void onWebSocketConnectionFailed(Throwable t) {
-        log.log(Level.SEVERE, "Could not connect", t);
+        log.severe("Could not connect: " + t.getMessage());
         synchronized (this) {
             setConnectionStatus(ConnectionStatus.ConnectionFailure);
         }

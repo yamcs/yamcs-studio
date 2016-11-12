@@ -15,6 +15,9 @@ public class ProductPlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
 
+        // Enable java.util.logging
+        //LogConfigurator.configureFromPreferences();
+
         // Trigger other bundles
         YamcsUIPlugin.getDefault();
     }

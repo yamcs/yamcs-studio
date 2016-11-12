@@ -28,20 +28,20 @@ public class AutoConnectHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Shell shell = HandlerUtil.getActiveShell(event);
-        log.info("Autoconnecting");
+        log.fine("Attempting Autoconnect");
         YamcsConfiguration conf = ConnectionPreferences.getLastUsedConfiguration();
         if (conf != null) {
-            log.info("Found previous configuration '" + conf.getName() + "'");
+            log.fine("Found previous configuration '" + conf.getName() + "'");
             doConnect(shell, conf, false);
         } else {
-            log.info("No previous configuration. Open Connections dialog");
+            log.fine("No previous configuration. Open Connections dialog");
             IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
             ConnectionsDialog dialog = new ConnectionsDialog(window.getShell());
             if (dialog.open() == Dialog.OK) {
                 conf = dialog.getChosenConfiguration();
                 doConnect(shell, conf, true);
             } else {
-                log.info("Connection attempt cancelled by user");
+                log.fine("Connection attempt cancelled by user");
             }
         }
 
@@ -56,13 +56,13 @@ public class AutoConnectHandler extends AbstractHandler {
         // Check if authentication is needed
         String connectionString = conf.getPrimaryConnectionString();
         if (conf.isAnonymous()) {
-            log.info("Will connect anonymously to " + connectionString);
+            log.fine("Will connect anonymously to " + connectionString);
             ConnectionManager.getInstance().connect(null);
         } else if (conf.isSavePassword() || noPasswordPopup) {
-            log.info("Will connect as user '" + conf.getUser() + "' to " + connectionString);
+            log.fine("Will connect as user '" + conf.getUser() + "' to " + connectionString);
             ConnectionManager.getInstance().connect(conf.toYamcsCredentials());
         } else {
-            log.info("Want to connect to '" + connectionString
+            log.fine("Want to connect to '" + connectionString
                     + "' but credentials are needed (not saved and not in dialog). Show password dialog");
             LoginDialog dialog = new LoginDialog(shell, conf);
             if (dialog.open() == Dialog.OK) {
