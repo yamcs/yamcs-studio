@@ -34,6 +34,7 @@
 		<module>org.yamcs.studio.dist.feature.eclipse</module>
 		<module>org.yamcs.studio.dist.feature.p2</module>
 		<module>org.yamcs.studio.p2</module>
+		<module>org.yamcs.studio.platform</module>
 		<module>org.yamcs.studio.script</module>
 		<module>org.yamcs.studio.theming</module>
 		<module>org.yamcs.studio.ui.archive</module>
@@ -115,6 +116,14 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<configuration>
+					<!--  targetDefinitionIncludeSource>honor</targetDefinitionIncludeSource-->
+					<target>
+						<artifact>
+							<groupId>org.yamcs.studio</groupId>
+							<artifactId>org.yamcs.studio.platform</artifactId>
+							<version>${project.version}</version>
+						</artifact>
+					</target>
 					<environments>
 						<environment>
 							<os>linux</os>
@@ -164,52 +173,8 @@
 		</plugins>
 	</build>
 
-	<repositories>
-		<repository>
-			<id>Eclipse</id>
-			<url>http://download.eclipse.org/releases/mars</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<id>orbit-kepler</id>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20140114142710/repository/</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-		  <id>Efxclipse</id>
-		  <url>http://download.eclipse.org/efxclipse/runtime-released/1.2.0/site/</url>
-		  <layout>p2</layout>
-		</repository>
-		<!--  repository>
-			<id>repository.jboss.org</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository-->
-		<!--  repository>
-			<id>yamcs-mvn-repo-releases</id>
-			<url>https://raw.github.com/yamcs/mvn-repo/master/releases/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>yamcs-mvn-repo-snapshots</id>
-			<url>https://raw.github.com/yamcs/mvn-repo/master/snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository-->
-		<!--  repository>
-			<id>pvmanager-snapshots</id>
-			<name>sonatype snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository-->
-	</repositories>
-
 	<profiles>
-		<profile>
+ 		<profile>
 			<id>csstudio-composite-repo-enable</id>
 			<activation>
 				<property>
