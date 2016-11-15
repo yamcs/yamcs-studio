@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.application;
+package org.yamcs.studio.product.utility;
 
 import static org.yamcs.studio.core.ui.utils.TextUtils.isBlank;
 
@@ -40,7 +40,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
         configurer.setShowProgressIndicator(true);
         configurer.setShowPerspectiveBar(true);
         configurer.setShowStatusLine(false);
-        configurer.setTitle("Yamcs Studio");
+        configurer.setTitle(getDefaultTitle());
     }
 
     @Override
@@ -92,15 +92,19 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
     }
 
     private void updateTitle() {
-        String label = "Yamcs Studio";
+        String label = getDefaultTitle();
         if (yprops != null) {
             String host = yprops.getHost();
             String instance = yprops.getInstance();
             if (isBlank(subjectName))
-                label = String.format("Yamcs Studio (anonymous@%s/%s)", host, instance);
+                label = String.format("%s (anonymous@%s/%s)", getDefaultTitle(), host, instance);
             else
-                label = String.format("Yamcs Studio (%s@%s/%s)", subjectName, host, instance);
+                label = String.format("%s (%s@%s/%s)", getDefaultTitle(), subjectName, host, instance);
         }
         getWindowConfigurer().setTitle(label);
+    }
+
+    public String getDefaultTitle() {
+        return "Yamcs Studio";
     }
 }

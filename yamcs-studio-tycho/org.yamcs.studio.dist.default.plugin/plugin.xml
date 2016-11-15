@@ -21,10 +21,10 @@
                value="Yamcs Studio"/>
          <property
                name="lifeCycleURI"
-               value="bundleclass://org.yamcs.studio.dist.default.plugin/org.yamcs.studio.ui.application.LifeCycleManager"/>
+               value="bundleclass://org.yamcs.studio.product.utility/org.yamcs.studio.product.utility.LifeCycleManager"/>
          <property
                name="applicationCSS"
-               value="platform:/plugin/org.yamcs.studio.dist.default.plugin/css/default.css"/>
+               value="platform:/plugin/org.yamcs.studio.product.utility/css/default.css"/>
          <property
                name="applicationCSSResources"
                value="platform:/plugin/org.eclipse.platform/images/"/>
@@ -71,10 +71,10 @@
         triggers initialization of the workspace
      -->
    <extension point="org.csstudio.startup.module">
-      <startupParameters class="org.yamcs.studio.ui.application.StartupParameters"/>
-      <workspace class="org.yamcs.studio.ui.application.WorkspacePrompt"/>
-      <workbench class="org.yamcs.studio.ui.application.Workbench"/>
-      <project class="org.yamcs.studio.ui.application.DefaultYamcsStudioProject"/>
+      <startupParameters class="org.yamcs.studio.product.utility.StartupParameters"/>
+      <workspace class="org.yamcs.studio.product.utility.WorkspacePrompt"/>
+      <workbench class="org.yamcs.studio.product.utility.Workbench"/>
+      <project class="org.yamcs.studio.product.utility.DefaultYamcsStudioProject"/>
    </extension>
    
    <extension point="org.eclipse.ui.activities">

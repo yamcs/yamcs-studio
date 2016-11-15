@@ -35,6 +35,7 @@
 		<module>org.yamcs.studio.dist.feature.p2</module>
 		<module>org.yamcs.studio.p2</module>
 		<module>org.yamcs.studio.platform</module>
+		<module>org.yamcs.studio.product.utility</module>
 		<module>org.yamcs.studio.script</module>
 		<module>org.yamcs.studio.theming</module>
 		<module>org.yamcs.studio.ui.archive</module>

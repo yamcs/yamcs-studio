@@ -1,22 +1,19 @@
-package org.yamcs.studio.product;
+package org.yamcs.studio.product.utility;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
-public class ProductPlugin extends AbstractUIPlugin {
+public class Activator extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "org.yamcs.studio.product.default";
+    public static final String PLUGIN_ID = "org.yamcs.studio.product.utility";
 
-    private static ProductPlugin plugin;
+    private static Activator plugin;
 
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-
-        // Enable java.util.logging
-        //LogConfigurator.configureFromPreferences();
 
         // Trigger other bundles
         YamcsUIPlugin.getDefault();
@@ -28,8 +25,7 @@ public class ProductPlugin extends AbstractUIPlugin {
         super.stop(context);
     }
 
-    public static ProductPlugin getDefault() {
+    public static Activator getDefault() {
         return plugin;
     }
-
 }

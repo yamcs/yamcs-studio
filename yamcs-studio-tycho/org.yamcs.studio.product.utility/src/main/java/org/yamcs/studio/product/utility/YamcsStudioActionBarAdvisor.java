@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.application;
+package org.yamcs.studio.product.utility;
 
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.jface.action.GroupMarker;

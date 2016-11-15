@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.application;
+package org.yamcs.studio.product.utility;
 
 import java.util.Map;
 import java.util.logging.Level;

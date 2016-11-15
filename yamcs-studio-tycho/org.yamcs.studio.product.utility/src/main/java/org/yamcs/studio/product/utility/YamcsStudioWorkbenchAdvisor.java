@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.application;
+package org.yamcs.studio.product.utility;
 
 import java.net.URL;
 

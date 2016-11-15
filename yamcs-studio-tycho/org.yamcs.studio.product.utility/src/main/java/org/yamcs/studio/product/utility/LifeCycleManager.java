@@ -1,10 +1,9 @@
-package org.yamcs.studio.ui.application;
+package org.yamcs.studio.product.utility;
 
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.autocomplete.AutoCompleteHelper;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -32,8 +31,6 @@ public class LifeCycleManager {
 
     @PostContextCreate
     public void postContextCreate(IEventBroker broker) {
-        registerAutocompleteExtensions();
-
         broker.subscribe(UILifeCycle.APP_STARTUP_COMPLETE, evt -> {
 
             IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -81,18 +78,6 @@ public class LifeCycleManager {
             if(ConnectionPreferences.isAutoConnect())
                 RCPUtils.runCommand("org.yamcs.studio.ui.autoconnect");
         });
-    }
-
-    /**
-     * This is a bit of a hack to get yamcs datasources registered early on. Maybe there's a better
-     * way, but couldn't find it right away.
-     */
-    private void registerAutocompleteExtensions() {
-        StringBuilder msg = new StringBuilder("Registering datasources early on: ");
-        for (String prefix : AutoCompleteHelper.retrievePVManagerSupported()) {
-            msg.append(prefix + "://   ");
-        }
-        log.fine(msg.toString());
     }
 
     private void updateGlobalProcessingState(ProcessorInfo processorInfo) {
