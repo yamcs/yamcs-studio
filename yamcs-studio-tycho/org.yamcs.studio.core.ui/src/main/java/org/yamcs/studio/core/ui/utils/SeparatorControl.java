@@ -7,16 +7,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 /**
- * A custom spacer. Eclipse separators look a bit crappy, and don't even seem to
- * work in 4.3
- * 
+ * A custom separator. Eclipse don't seem to work in 4.3 when using menu
+ * contributions in the plugin.xml.
+ *
  * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=413213
  */
-public class ToolbarSpacer extends WorkbenchWindowControlContribution {
+public class SeparatorControl extends WorkbenchWindowControlContribution {
 
     @Override
     protected Control createControl(Composite parent) {
-        Label bla = new Label(parent, SWT.NONE);
+        Label bla = new Label(parent, SWT.VERTICAL | SWT.SEPARATOR);
         bla.setText("   ");
         return bla;
     }
