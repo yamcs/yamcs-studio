@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.core.runtime,
  javax.inject,
  org.diirt.vtype,
  org.diirt.util,
- org.diirt.datasource
+ org.diirt.datasource,
+ org.diirt.datasource-vtype
 Import-Package: io.netty.handler.codec,
  io.netty.handler.codec.protobuf
 Export-Package: org.yamcs.studio.core,

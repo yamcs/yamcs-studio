@@ -1,5 +1,6 @@
 package org.yamcs.studio.core.pvmanager;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.diirt.datasource.ChannelWriteCallback;
@@ -81,7 +82,8 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
      */
     @Override
     public void processParameterValue(ParameterValue pval) {
-        log.fine(String.format("Incoming value %s", pval));
+        if (log.isLoggable(Level.FINEST))
+            log.finest(String.format("Incoming value %s", pval));
         processMessage(pval);
     }
 
