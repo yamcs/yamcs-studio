@@ -41,7 +41,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
     private static final int X_INDENT = ANGLE_DELTA / 4;
 
     private static final int X_OVERLAP = ANGLE_DELTA - 2;
-    private static final int TIMEREC_WIDTH = X_OVERLAP + 130;
+    private static final int TIMEREC_WIDTH = X_OVERLAP + 150;
 
     private Composite top;
     private Canvas canvas;
@@ -76,11 +76,11 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         canvas.addListener(SWT.MouseHover, evt -> {
 
             int x = evt.x;
-            // click on instance
+            // hover instance
             if (x < (X_INDENT + REC_WIDTH - X_OVERLAP)) {
                 canvas.setToolTipText("Yamcs Instance");
             }
-            // click on processor
+            // hover processor
             else if (x < 2 * (X_INDENT + REC_WIDTH - X_OVERLAP)) {
                 canvas.setToolTipText("Subscribed Yamcs Processor");
             } else {
@@ -91,12 +91,8 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         canvas.addListener(SWT.MouseDown, evt -> {
 
             int x = evt.x;
-            // click on instance
-            if (x < (X_INDENT + REC_WIDTH - X_OVERLAP)) {
-                RCPUtils.runCommand("org.yamcs.studio.ui.connect");
-            }
-            // click on processor
-            else if (x < 2 * (X_INDENT + REC_WIDTH - X_OVERLAP)) {
+            // click on instance or processor
+            if (x < 2 * (X_INDENT + REC_WIDTH - X_OVERLAP)) {
                 if (ConnectionManager.getInstance().isConnected()) {
                     RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
                 } else {
@@ -228,8 +224,30 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             Rectangle bounds = canvas.getBounds();
 
             int y_indent = (bounds.height - REC_HEIGHT) / 2;
-            int[] points = new int[] { X_INDENT, y_indent, X_INDENT + ANGLE_DELTA, bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
-                    X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and the -1 is magic to get the drawPolygon nicely contouring the shape
+            int[] points = new int[] { X_INDENT, y_indent, X_INDENT + ANGLE_DELTA, bounds.height - y_indent - 1, // the
+                                                                                                                 // -1
+                                                                                                                 // is
+                                                                                                                 // magic.
+                                                                                                                 // Without
+                                                                                                                 // it,
+                                                                                                                 // it
+                                                                                                                 // clips
+                                                                                                                 // for
+                                                                                                                 // no
+                                                                                                                 // reason...
+                    X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and
+                                                                            // the
+                                                                            // -1
+                                                                            // is
+                                                                            // magic
+                                                                            // to
+                                                                            // get
+                                                                            // the
+                                                                            // drawPolygon
+                                                                            // nicely
+                                                                            // contouring
+                                                                            // the
+                                                                            // shape
                     X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA, y_indent };
 
             if (processorInfo != null)
@@ -283,8 +301,22 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
             int offsetX = X_INDENT + REC_WIDTH - X_OVERLAP;
             int[] points = new int[] { offsetX + X_INDENT, y_indent, offsetX + X_INDENT + ANGLE_DELTA,
-                    bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
-                    offsetX + X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and the -1 is magic to get the drawPolygon nicely contouring the shape
+                    bounds.height - y_indent - 1, // the -1 is magic. Without
+                                                  // it, it clips for no
+                                                  // reason...
+                    offsetX + X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and
+                                                                                      // the
+                                                                                      // -1
+                                                                                      // is
+                                                                                      // magic
+                                                                                      // to
+                                                                                      // get
+                                                                                      // the
+                                                                                      // drawPolygon
+                                                                                      // nicely
+                                                                                      // contouring
+                                                                                      // the
+                                                                                      // shape
                     offsetX + X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA, y_indent };
 
             if (processorInfo != null)
@@ -314,8 +346,22 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
 
             int offsetX = 2 * (X_INDENT + REC_WIDTH - X_OVERLAP);
             int[] points = new int[] { offsetX + X_INDENT, y_indent, offsetX + X_INDENT + ANGLE_DELTA,
-                    bounds.height - y_indent - 1, // the -1 is magic. Without it, it clips for no reason...
-                    offsetX + X_INDENT + TIMEREC_WIDTH - 1, bounds.height - y_indent - 1, // and the -1 is magic to get the drawPolygon nicely contouring the shape
+                    bounds.height - y_indent - 1, // the -1 is magic. Without
+                                                  // it, it clips for no
+                                                  // reason...
+                    offsetX + X_INDENT + TIMEREC_WIDTH - 1, bounds.height - y_indent - 1, // and
+                                                                                          // the
+                                                                                          // -1
+                                                                                          // is
+                                                                                          // magic
+                                                                                          // to
+                                                                                          // get
+                                                                                          // the
+                                                                                          // drawPolygon
+                                                                                          // nicely
+                                                                                          // contouring
+                                                                                          // the
+                                                                                          // shape
                     offsetX + X_INDENT + TIMEREC_WIDTH - 1 - ANGLE_DELTA, y_indent };
 
             if (missionTime != TimeEncoding.INVALID_INSTANT)
