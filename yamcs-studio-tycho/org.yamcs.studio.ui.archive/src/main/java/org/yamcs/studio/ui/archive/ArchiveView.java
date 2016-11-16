@@ -4,10 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
@@ -79,11 +77,8 @@ public class ArchiveView extends ViewPart
     private Button forwardButton;
     private Button leaveReplayButton;
 
-    @SuppressWarnings("rawtypes")
-    private Map combinedState = new HashMap();
-
-    ProcessorStateProvider processorState;
-    ConnectionStateProvider connectionState;
+    private ProcessorStateProvider processorState;
+    private ConnectionStateProvider connectionState;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -539,18 +534,14 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings("rawtypes")
     public void sourceChanged(int sourcePriority, Map sourceValuesByName) {
-        for (Object entry : sourceValuesByName.entrySet()) {
-            combinedState.put(((Entry) entry).getKey(), ((Entry) entry).getValue());
-        }
         updateState();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void sourceChanged(int sourcePriority, String sourceName, Object sourceValue) {
-        combinedState.put(sourceName, sourceValue);
+        updateState();
     }
 
     /*

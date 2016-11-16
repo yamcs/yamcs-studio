@@ -27,7 +27,7 @@ public class LinksView extends ViewPart implements StudioConnectionListener, Lin
     LinksTableViewer linksTableViewer;
     LinkContentProvider linksContentProvider;
 
-    HashMap<String, LinkTableModel> linkModels = new HashMap<String, LinkTableModel>();
+    HashMap<String, LinkTableModel> linkModels = new HashMap<>();
 
     LinkTableModel getCurrentLinkTableModel() {
         String currentYamcsInstance = ConnectionManager.getInstance().getYamcsInstance();
