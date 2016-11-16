@@ -224,31 +224,13 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             Rectangle bounds = canvas.getBounds();
 
             int y_indent = (bounds.height - REC_HEIGHT) / 2;
-            int[] points = new int[] { X_INDENT, y_indent, X_INDENT + ANGLE_DELTA, bounds.height - y_indent - 1, // the
-                                                                                                                 // -1
-                                                                                                                 // is
-                                                                                                                 // magic.
-                                                                                                                 // Without
-                                                                                                                 // it,
-                                                                                                                 // it
-                                                                                                                 // clips
-                                                                                                                 // for
-                                                                                                                 // no
-                                                                                                                 // reason...
-                    X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and
-                                                                            // the
-                                                                            // -1
-                                                                            // is
-                                                                            // magic
-                                                                            // to
-                                                                            // get
-                                                                            // the
-                                                                            // drawPolygon
-                                                                            // nicely
-                                                                            // contouring
-                                                                            // the
-                                                                            // shape
-                    X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA, y_indent };
+
+            // the -1 is magic. Without it, it clips for no reason...
+            int[] points = new int[] { X_INDENT, y_indent, X_INDENT + ANGLE_DELTA, bounds.height - y_indent - 1,
+                    // and the -1 is magic to get the drawPolygon nicely
+                    // contouring the shape
+                    X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA,
+                    y_indent };
 
             if (processorInfo != null)
                 gc.fillPolygon(points);
@@ -304,19 +286,9 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
                     bounds.height - y_indent - 1, // the -1 is magic. Without
                                                   // it, it clips for no
                                                   // reason...
-                    offsetX + X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1, // and
-                                                                                      // the
-                                                                                      // -1
-                                                                                      // is
-                                                                                      // magic
-                                                                                      // to
-                                                                                      // get
-                                                                                      // the
-                                                                                      // drawPolygon
-                                                                                      // nicely
-                                                                                      // contouring
-                                                                                      // the
-                                                                                      // shape
+                    offsetX + X_INDENT + REC_WIDTH - 1, bounds.height - y_indent - 1,
+                    // and the -1 is magic to get the drawPolygon nicely
+                    // contouring the shape
                     offsetX + X_INDENT + REC_WIDTH - 1 - ANGLE_DELTA, y_indent };
 
             if (processorInfo != null)
@@ -349,19 +321,9 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
                     bounds.height - y_indent - 1, // the -1 is magic. Without
                                                   // it, it clips for no
                                                   // reason...
-                    offsetX + X_INDENT + TIMEREC_WIDTH - 1, bounds.height - y_indent - 1, // and
-                                                                                          // the
-                                                                                          // -1
-                                                                                          // is
-                                                                                          // magic
-                                                                                          // to
-                                                                                          // get
-                                                                                          // the
-                                                                                          // drawPolygon
-                                                                                          // nicely
-                                                                                          // contouring
-                                                                                          // the
-                                                                                          // shape
+                    // and the -1 is magic to get the drawPolygon nicely
+                    // contouring the shape
+                    offsetX + X_INDENT + TIMEREC_WIDTH - 1, bounds.height - y_indent - 1,
                     offsetX + X_INDENT + TIMEREC_WIDTH - 1 - ANGLE_DELTA, y_indent };
 
             if (missionTime != TimeEncoding.INVALID_INSTANT)
