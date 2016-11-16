@@ -37,7 +37,6 @@ import org.yamcs.studio.core.model.TimeCatalogue;
  */
 public class WebSocketRegistrar implements WebSocketClientCallback {
 
-    private static final String USER_AGENT = "Yamcs Studio v" + YamcsPlugin.getDefault().getBundle().getVersion().toString();
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
     private WebSocketClient wsclient;
@@ -50,7 +49,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
     public WebSocketRegistrar(YamcsConnectionProperties yprops) {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setConnectionTimeoutMs(3000);
-        wsclient.setUserAgent(USER_AGENT);
+        wsclient.setUserAgent(YamcsPlugin.getDefault().getProductIdentifier());
         requestSender = new Thread(() -> {
             try {
                 sendMergedRequests();

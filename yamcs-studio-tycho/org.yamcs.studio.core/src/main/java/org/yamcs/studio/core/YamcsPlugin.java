@@ -23,6 +23,7 @@ public class YamcsPlugin extends Plugin {
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());
 
     private static YamcsPlugin plugin;
+    private static String productIdentifier;
 
     private ConnectionManager connectionManager;
     private Map<Class<? extends Catalogue>, Catalogue> catalogues = new HashMap<>();
@@ -31,7 +32,7 @@ public class YamcsPlugin extends Plugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        log.info("Yamcs Studio v." + getBundle().getVersion().toString());
+        log.info(getProductIdentifier());
         TimeEncoding.setUp();
 
         catalogues.put(TimeCatalogue.class, new TimeCatalogue());
@@ -45,6 +46,17 @@ public class YamcsPlugin extends Plugin {
 
         connectionManager = new ConnectionManager();
         catalogues.values().forEach(c -> connectionManager.addStudioConnectionListener(c));
+    }
+
+    public static void setProductIdentifier(String productIdentifier) {
+        YamcsPlugin.productIdentifier = productIdentifier;
+    }
+
+    public String getProductIdentifier() {
+        if (productIdentifier == null) {
+            productIdentifier = "Yamcs Studio v" + getBundle().getVersion().toString();
+        }
+        return productIdentifier;
     }
 
     public ConnectionManager getConnectionManager() {
