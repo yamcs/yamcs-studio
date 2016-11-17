@@ -85,8 +85,10 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
         startComposite.setLayout(rl);
         startDate = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
         startDate.addListener(SWT.Selection, e -> validate());
+        startDate.addListener(SWT.FocusOut, e -> validate());
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         startTime.addListener(SWT.Selection, e -> validate());
+        startTime.addListener(SWT.FocusOut, e -> validate());
         if (startTimeValue != null) {
             startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH),
                     startTimeValue.get(Calendar.DAY_OF_MONTH));
@@ -106,8 +108,10 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
         stopComposite.setLayout(rl);
         stopDate = new DateTime(stopComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
         stopDate.addListener(SWT.Selection, e -> validate());
+        stopDate.addListener(SWT.FocusOut, e -> validate());
         stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         stopTime.addListener(SWT.Selection, e -> validate());
+        stopTime.addListener(SWT.FocusOut, e -> validate());
         if (stopTimeValue != null) {
             stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH),
                     stopTimeValue.get(Calendar.DAY_OF_MONTH));
