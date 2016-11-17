@@ -68,6 +68,11 @@ public class YamcsPlugin extends Plugin {
         return (T) catalogues.get(clazz);
     }
 
+    public <T extends Catalogue> void registerCatalogue(T catalogue) {
+        catalogues.put(catalogue.getClass(), catalogue);
+        connectionManager.addStudioConnectionListener(catalogue);
+    }
+
     @Override
     public void stop(BundleContext context) throws Exception {
         try {
