@@ -58,7 +58,10 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected void disconnect() { // Interpret this as an unsubscribe
         log.fine("PV disconnect on " + getChannelName());
-        ParameterCatalogue.getInstance().unregister(this);
+        ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
+        if (catalogue != null) { // Conservative, could be null at shutdown
+            ParameterCatalogue.getInstance().unregister(this);
+        }
     }
 
     /**

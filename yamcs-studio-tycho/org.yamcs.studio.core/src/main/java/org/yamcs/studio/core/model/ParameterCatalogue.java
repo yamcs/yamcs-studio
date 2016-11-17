@@ -47,7 +47,12 @@ public class ParameterCatalogue implements Catalogue {
     private LosTracker losTracker = new LosTracker();
 
     public static ParameterCatalogue getInstance() {
-        return YamcsPlugin.getDefault().getCatalogue(ParameterCatalogue.class);
+        YamcsPlugin plugin = YamcsPlugin.getDefault();
+        if (plugin != null) {
+            return plugin.getCatalogue(ParameterCatalogue.class);
+        } else {
+            return null;
+        }
     }
 
     @Override
