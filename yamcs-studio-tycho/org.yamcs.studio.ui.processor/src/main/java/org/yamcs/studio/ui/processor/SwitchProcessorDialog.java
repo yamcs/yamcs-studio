@@ -66,7 +66,7 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         tcl.setColumnData(instanceColumn.getColumn(), new ColumnPixelData(100));
 
         TableViewerColumn nameColumn = new TableViewerColumn(processorsTable, SWT.NONE);
-        nameColumn.getColumn().setText("Name");
+        nameColumn.getColumn().setText("Processor");
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
