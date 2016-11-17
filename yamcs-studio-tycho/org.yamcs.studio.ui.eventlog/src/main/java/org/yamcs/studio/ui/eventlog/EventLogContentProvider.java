@@ -23,7 +23,7 @@ import org.yamcs.utils.TimeEncoding;
 public class EventLogContentProvider implements IStructuredContentProvider {
 
     private EventLogViewerComparator eventLogViewerComparator = new EventLogViewerComparator();
-    private ArrayList<Event> sortedEvents = new ArrayList<Event>();
+    private ArrayList<Event> sortedEvents = new ArrayList<>();
     private Map<Long, Event> eventsBySequenceNumber = new LinkedHashMap<>();
     private Table tableViewer;
     private boolean scrollLock;
@@ -35,8 +35,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private Image warnIcon;
     private Image infoIcon;
 
-    private RGB errorBackground = new RGB(255, 102, 102);
-    private RGB warningBackground = new RGB(255, 255, 102);
+    private Color errorColor;
+    private Color warningColor;
 
     public EventLogContentProvider(Table tableViewer) {
         this.tableViewer = tableViewer;
@@ -45,6 +45,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
             infoIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
         }
+        errorColor = new Color(tableViewer.getDisplay(), new RGB(255, 102, 102));
+        warningColor = new Color(tableViewer.getDisplay(), new RGB(255, 255, 102));
     }
 
     @Override
@@ -54,6 +56,10 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     @Override
     public void dispose() {
+        if (errorColor != null)
+            errorColor.dispose();
+        if (warningColor != null)
+            warningColor.dispose();
     }
 
     @Override
@@ -183,9 +189,9 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             case INFO:
                 return null;
             case WARNING:
-                return new Color(tableViewer.getDisplay(), warningBackground);
+                return warningColor;
             case ERROR:
-                return new Color(tableViewer.getDisplay(), errorBackground);
+                return errorColor;
             }
         }
         return null;

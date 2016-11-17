@@ -185,7 +185,7 @@ public class EventLogView extends ViewPart implements EventListener {
 
     private void addFixedColumns() {
 
-        TableColumn seqNumColum = new TableColumn(tableViewer, SWT.NULL);
+        TableColumn seqNumColum = new TableColumn(tableViewer, SWT.RIGHT);
         seqNumColum.setText(COL_SEQNUM);
         tcl.setColumnData(seqNumColum, new ColumnPixelData(80));
 
@@ -413,7 +413,7 @@ public class EventLogView extends ViewPart implements EventListener {
 
         int eventId = 0;
         while (eventId < nbEvents) {
-            List<Event> events = new LinkedList<Event>();
+            List<Event> events = new LinkedList<>();
             for (int j = 0; j < blockSize; j++) {
                 eventId++;
                 if (eventId > nbEvents)
