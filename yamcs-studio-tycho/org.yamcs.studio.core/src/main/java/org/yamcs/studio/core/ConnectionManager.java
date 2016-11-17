@@ -16,6 +16,8 @@ import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
  * Handles external connections and its related state.
+ *
+ * @todo don't really like the use of synchronized here, we may be blocking the gui thread
  */
 public class ConnectionManager {
 
@@ -41,13 +43,17 @@ public class ConnectionManager {
     }
 
     public void addStudioConnectionListener(StudioConnectionListener listener) {
-        studioConnectionListeners.add(listener);
-        if (isConnected())
-            listener.onStudioConnect();
+        synchronized (studioConnectionListeners) {
+            studioConnectionListeners.add(listener);
+            if (isConnected())
+                listener.onStudioConnect();
+        }
     }
 
     public void removeStudioConnectionListener(StudioConnectionListener listener) {
-        studioConnectionListeners.remove(listener);
+        synchronized (studioConnectionListeners) {
+            studioConnectionListeners.remove(listener);
+        }
     }
 
     public void setConnectionInfo(ConnectionInfo connectionInfo) {
@@ -74,6 +80,11 @@ public class ConnectionManager {
 
     public String getYamcsInstance() {
         return connectionInfo.getConnection(mode).getInstance();
+    }
+
+    public void setYamcsInstance(String yamcsInstance) {
+        // TODO should not reuse conn info field
+        connectionInfo.getConnection(mode).setInstance(yamcsInstance);
     }
 
     public String getUsername() {
@@ -141,12 +152,14 @@ public class ConnectionManager {
         restClient = null;
 
         log.info("Notify downstream components of Studio disconnect");
-        for (StudioConnectionListener scl : studioConnectionListeners) {
-            log.info(String.format(" -> Inform %s", scl.getClass().getSimpleName()));
-            try {
-                scl.onStudioDisconnect();
-            } catch (Exception e) {
-                log.log(Level.SEVERE, "Unable to disconnect listener " + scl + ".", e);
+        synchronized (studioConnectionListeners) {
+            for (StudioConnectionListener scl : studioConnectionListeners) {
+                log.info(String.format(" -> Inform %s", scl.getClass().getSimpleName()));
+                try {
+                    scl.onStudioDisconnect();
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Unable to disconnect listener " + scl + ".", e);
+                }
             }
         }
 
@@ -158,7 +171,9 @@ public class ConnectionManager {
         YamcsAuthorizations.getInstance().loadAuthorizations();
 
         setConnectionStatus(ConnectionStatus.Connected);
-        studioConnectionListeners.forEach(l -> l.onStudioConnect());
+        synchronized (studioConnectionListeners) {
+            studioConnectionListeners.forEach(l -> l.onStudioConnect());
+        }
     }
 
     public void onWebSocketConnectionFailed(Throwable t) {
@@ -166,7 +181,9 @@ public class ConnectionManager {
         synchronized (this) {
             setConnectionStatus(ConnectionStatus.ConnectionFailure);
         }
-        studioConnectionListeners.forEach(l -> l.onStudioConnectionFailure(t));
+        synchronized (studioConnectionListeners) {
+            studioConnectionListeners.forEach(l -> l.onStudioConnectionFailure(t));
+        }
     }
 
     public void switchNode() {
