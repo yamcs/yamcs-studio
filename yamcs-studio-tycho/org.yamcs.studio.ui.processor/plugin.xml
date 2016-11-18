@@ -147,10 +147,17 @@
    </extension>
    
    <extension point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="toolbar:studiocoolbar?after=processorinfo">
-         <control id="studiocontributions.processorInfo" class="org.yamcs.studio.ui.processor.ProcessorInfoControlContribution"/>
+      <menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+         <menu 
+               id="processor"
+               label="Processor" />
+      </menuContribution>
+      
+      <menuContribution locationURI="menu:processor">
+         <command
+               commandId="org.yamcs.studio.ui.processor.choose"
+               label="Switch Processor..."
+               style="push"/>
       </menuContribution>
    </extension>
 </plugin>
