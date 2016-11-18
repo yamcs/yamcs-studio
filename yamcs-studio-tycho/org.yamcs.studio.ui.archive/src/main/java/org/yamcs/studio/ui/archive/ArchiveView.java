@@ -54,7 +54,6 @@ public class ArchiveView extends ViewPart
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
-    private ResourceManager resourceManager;
 
     private Label replayTimeLabel;
     private Composite replayComposite;
@@ -82,7 +81,7 @@ public class ArchiveView extends ViewPart
 
     @Override
     public void createPartControl(Composite parent) {
-        resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
         seekImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/seek.png"));
         playImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/play.png"));

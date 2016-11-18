@@ -81,16 +81,20 @@ public class TimeCatalogue implements Catalogue {
     public void onStudioConnect() {
         WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
         webSocketClient.sendMessage(new WebSocketRequest("time", "subscribe"));
-        currentTime = TimeEncoding.INVALID_INSTANT;
+        distributeTime(TimeEncoding.INVALID_INSTANT);
     }
 
     public void processTimeInfo(TimeInfo timeInfo) {
-        currentTime = timeInfo.getCurrentTime();
-        timeListeners.forEach(l -> l.processTime(timeInfo.getCurrentTime()));
+        distributeTime(timeInfo.getCurrentTime());
     }
 
     @Override
     public void onStudioDisconnect() {
-        currentTime = TimeEncoding.INVALID_INSTANT;
+        distributeTime(TimeEncoding.INVALID_INSTANT);
+    }
+
+    private void distributeTime(long time) {
+        currentTime = time;
+        timeListeners.forEach(l -> l.processTime(time));
     }
 }

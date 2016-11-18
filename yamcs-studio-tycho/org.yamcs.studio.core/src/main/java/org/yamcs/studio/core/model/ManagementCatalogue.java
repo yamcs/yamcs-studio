@@ -65,6 +65,10 @@ public class ManagementCatalogue implements Catalogue {
         clientInfoById.forEach((k, v) -> listener.clientUpdated(v));
     }
 
+    public void removeManagementListener(ManagementListener listener) {
+        managementListeners.remove(listener);
+    }
+
     public void processClientInfo(ClientInfo clientInfo) {
         if (clientInfo.getState() == ClientState.DISCONNECTED) {
             clientInfoById.remove(clientInfo.getId());

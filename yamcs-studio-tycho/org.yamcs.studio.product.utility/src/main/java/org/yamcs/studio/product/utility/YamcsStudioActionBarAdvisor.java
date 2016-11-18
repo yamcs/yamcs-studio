@@ -22,6 +22,8 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.eclipse.ui.part.CoolItemGroupMarker;
+import org.yamcs.studio.core.ui.MissionTimeStatusLineContributionItem;
+import org.yamcs.studio.core.ui.ProcessorStatusLineContributionItem;
 
 /**
  * Forked from org.csstudio.utility.product.ApplicationActionBarAdvisor
@@ -55,6 +57,10 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction onlineHelpAction;
     private IWorkbenchAction raiseIssueAction;
     private IWorkbenchAction aboutAction;
+
+    // Allow to override individual addition of status line contribution items
+    protected boolean showProcessor = true;
+    protected boolean showMissionTime = true;
 
     public YamcsStudioActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -146,13 +152,14 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     @Override
     protected void fillCoolBar(ICoolBarManager coolbar) {
-        coolbar.setLockLayout(true);
+        ///coolbar.setLockLayout(true);
 
         // Specific to Yamcs Studio
         IToolBarManager studioBar = new ToolBarManager();
         studioBar.add(new CoolItemGroupMarker(COOL_GROUP_PROCESSOR_INFO));
         studioBar.add(new CoolItemGroupMarker(COOL_GROUP_BOOKMARK_SHORTCUTS));
         studioBar.add(new CoolItemGroupMarker(COOL_GROUP_PROCESSOR_CONTROLS));
+        studioBar.add(new CoolItemGroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         coolbar.add(new ToolBarContributionItem(studioBar, "studiocoolbar"));
 
         // 'File' section of the cool bar
@@ -176,7 +183,12 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
-        super.fillStatusLine(statusLine);
+        if (showProcessor) {
+            statusLine.add(new ProcessorStatusLineContributionItem("ystudio.status.processor"));
+        }
+        if (showMissionTime) {
+            statusLine.add(new MissionTimeStatusLineContributionItem("ystudio.status.missionTime"));
+        }
     }
 
     private void removeActionById(String actionSetId) {
