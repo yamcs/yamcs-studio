@@ -78,6 +78,7 @@
 							io.protostuff,
 							org.yamcs,
 							org.yamcs.api,
+							org.yamcs.api.rest,
 							org.yamcs.api.ws,
 							org.yamcs.protobuf,
 							org.yamcs.security,
