@@ -20,6 +20,7 @@ import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 /**
@@ -38,7 +39,8 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
         ProcessorInfo realtimeProcessor = ManagementCatalogue.getInstance().getProcessorInfo("realtime");
         items.add(createProcessorItem(realtimeProcessor));
         items.add(new Separator());
-        List<ProcessorInfo> processors = ManagementCatalogue.getInstance().getProcessors();
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        List<ProcessorInfo> processors = ManagementCatalogue.getInstance().getProcessors(instance);
         Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
         ManagementCatalogue.getInstance().getProcessors().forEach(processor -> {
             if (!processor.getName().equals("realtime")) {
@@ -52,9 +54,7 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
 
     private CommandContributionItem createProcessorItem(ProcessorInfo processor) {
         CommandContributionItemParameter itemParameter = new CommandContributionItemParameter(
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow(),
-                null,
-                SWITCH_PROCESSOR_COMMAND,
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow(), null, SWITCH_PROCESSOR_COMMAND,
                 CommandContributionItem.STYLE_RADIO);
 
         HashMap<String, String> params = new HashMap<>();

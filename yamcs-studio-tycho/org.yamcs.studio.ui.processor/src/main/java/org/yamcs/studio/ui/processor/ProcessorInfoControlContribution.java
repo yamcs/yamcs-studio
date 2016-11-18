@@ -130,7 +130,7 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
         Display.getDefault().asyncExec(() -> {
             if (updatedInfo.getCurrentClient()) {
                 ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-                processorInfo = catalogue.getProcessorInfo(updatedInfo.getProcessorName());
+                processorInfo = catalogue.getProcessorInfo(updatedInfo.getInstance(), updatedInfo.getProcessorName());
                 if (!canvas.isDisposed())
                     canvas.redraw();
             }
@@ -151,7 +151,8 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
     @Override
     public void processorUpdated(ProcessorInfo updatedInfo) {
         Display.getDefault().asyncExec(() -> {
-            if (processorInfo != null && updatedInfo.getName().equals(processorInfo.getName())) {
+            if (processorInfo != null && updatedInfo.getInstance().equals(processorInfo.getInstance())
+                    && updatedInfo.getName().equals(processorInfo.getName())) {
                 processorInfo = updatedInfo;
                 if (!canvas.isDisposed())
                     canvas.redraw();

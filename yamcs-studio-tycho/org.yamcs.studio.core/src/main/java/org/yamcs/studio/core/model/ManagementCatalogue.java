@@ -1,6 +1,7 @@
 package org.yamcs.studio.core.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +34,8 @@ import org.yamcs.studio.core.web.WebSocketRegistrar;
 public class ManagementCatalogue implements Catalogue {
 
     private Set<ManagementListener> managementListeners = new CopyOnWriteArraySet<>();
-    private Map<String, ProcessorInfo> processorInfoByName = new ConcurrentHashMap<>();
+    // instance -> processorName -> info
+    private Map<String, Map<String, ProcessorInfo>> processorInfoByInstance = new ConcurrentHashMap<>();
     private Map<Integer, ClientInfo> clientInfoById = new ConcurrentHashMap<>();
 
     // Redundant, but quickly accessible
@@ -53,7 +55,7 @@ public class ManagementCatalogue implements Catalogue {
     public void onStudioDisconnect() {
         // Clear everything, we'll get a fresh set upon connect
         clientInfoById.clear();
-        processorInfoByName.clear();
+        processorInfoByInstance.clear();
         currentClientId = -1;
     }
 
@@ -61,7 +63,9 @@ public class ManagementCatalogue implements Catalogue {
         managementListeners.add(listener);
 
         // Inform listeners of the current model
-        processorInfoByName.forEach((k, v) -> listener.processorUpdated(v));
+        processorInfoByInstance.forEach((k, m) -> {
+            m.forEach((sk, v) -> listener.processorUpdated(v));
+        });
         clientInfoById.forEach((k, v) -> listener.clientUpdated(v));
     }
 
@@ -86,14 +90,17 @@ public class ManagementCatalogue implements Catalogue {
     }
 
     public void processProcessorInfo(ProcessorInfo processorInfo) {
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
-        if (instance == null || !instance.equals(processorInfo.getInstance())) {
-            return;
+        String instance = processorInfo.getInstance();
+        Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(instance);
+        if (instanceProcessors == null) {
+            instanceProcessors = new ConcurrentHashMap<>();
+            processorInfoByInstance.put(instance, instanceProcessors);
         }
-        if (processorInfo.getState() == ServiceState.TERMINATED)
-            processorInfoByName.remove(processorInfo.getName());
-        else
-            processorInfoByName.put(processorInfo.getName(), processorInfo);
+        if (processorInfo.getState() == ServiceState.TERMINATED) {
+            instanceProcessors.remove(processorInfo.getName());
+        } else {
+            instanceProcessors.put(processorInfo.getName(), processorInfo);
+        }
 
         managementListeners.forEach(l -> l.processorUpdated(processorInfo));
     }
@@ -102,8 +109,20 @@ public class ManagementCatalogue implements Catalogue {
         managementListeners.forEach(l -> l.statisticsUpdated(stats));
     }
 
+    /**
+     * Returns processor with matching name for the currently connected instance
+     */
     public ProcessorInfo getProcessorInfo(String processorName) {
-        return processorInfoByName.get(processorName);
+        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        return getProcessorInfo(instance, processorName);
+    }
+
+    public ProcessorInfo getProcessorInfo(String yamcsInstance, String processorName) {
+        Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(yamcsInstance);
+        if (instanceProcessors != null) {
+            return instanceProcessors.get(processorName);
+        }
+        return null;
     }
 
     public ClientInfo getClientInfo(int clientId) {
@@ -116,11 +135,30 @@ public class ManagementCatalogue implements Catalogue {
 
     public ProcessorInfo getCurrentProcessorInfo() {
         ClientInfo ci = clientInfoById.get(currentClientId);
-        return (ci != null) ? processorInfoByName.get(ci.getProcessorName()) : null;
+        return (ci != null) ? getProcessorInfo(ci.getInstance(), ci.getProcessorName()) : null;
     }
 
+    /**
+     * Returns processors for any instance
+     */
     public List<ProcessorInfo> getProcessors() {
-        return new ArrayList<>(processorInfoByName.values());
+        List<ProcessorInfo> result = new ArrayList<>();
+        processorInfoByInstance.forEach((k, m) -> {
+            result.addAll(m.values());
+        });
+        return result;
+    }
+
+    /**
+     * Returns processors for the specified instance
+     */
+    public List<ProcessorInfo> getProcessors(String yamcsInstance) {
+        Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(yamcsInstance);
+        if (instanceProcessors != null) {
+            return new ArrayList<>(instanceProcessors.values());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public List<ClientInfo> getClients() {
