@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.yamcs.studio</groupId>
-	<artifactId>yamcs-studio-osgi</artifactId>
+	<artifactId>yamcs-studio-deps</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -19,7 +19,7 @@
 
 	<modules>
 		<module>org.yamcs.osgiclient</module>
-		<module>org.yamcs.studio.osgi.repository</module>
+		<module>org.yamcs.studio.deps.repository</module>
 	</modules>
 
 	<build>

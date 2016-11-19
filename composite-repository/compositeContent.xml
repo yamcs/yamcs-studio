@@ -18,6 +18,6 @@
     <child location="../css/cs-studio-thirdparty/repository/target/repository"/>
     <child location="../css/cs-studio/core/p2repo"/>
     <child location="../css/cs-studio/applications/p2repo"/-->
-    <child location="../yamcs-studio-deps/org.yamcs.studio.osgi.repository/target/repository"/>
+    <child location="../yamcs-studio-deps/org.yamcs.studio.deps.repository/target/repository"/>
   </children>
 </repository>
