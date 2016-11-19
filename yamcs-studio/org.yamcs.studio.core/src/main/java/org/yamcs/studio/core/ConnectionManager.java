@@ -33,8 +33,11 @@ public class ConnectionManager {
     private ConnectionMode mode;
     private ConnectionStatus connectionStatus;
 
+    // Below are not-null after connect, null again after disconnect
     private RestClient restClient;
     private WebSocketRegistrar webSocketClient;
+    private String serverId;
+    private String serverVersion;
 
     public static ConnectionManager getInstance() {
         YamcsPlugin plugin = YamcsPlugin.getDefault(); // null when workbench is closing
@@ -94,6 +97,10 @@ public class ConnectionManager {
         return creds == null ? null : creds.getUsername();
     }
 
+    public String getServerId() {
+        return serverId;
+    }
+
     public void connect(YamcsCredentials creds) {
         connect(creds, mode);
     }
@@ -128,8 +135,10 @@ public class ConnectionManager {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 GetApiOverviewResponse response = (GetApiOverviewResponse) responseMsg;
+                serverId = response.getServerId();
+                serverVersion = response.getYamcsVersion();
 
-                log.info("Detected Yamcs Server v" + response.getYamcsVersion());
+                log.info(String.format("Detected Yamcs Server v%s (id: '%s')", serverVersion, serverId));
                 if (response.hasDefaultYamcsInstance()) {
                     yprops.setInstance(response.getDefaultYamcsInstance());
                 }
@@ -191,6 +200,8 @@ public class ConnectionManager {
             }
         }
 
+        serverId = null;
+        serverVersion = null;
         setConnectionStatus(ConnectionStatus.Disconnected);
     }
 
