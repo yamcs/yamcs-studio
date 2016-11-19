@@ -9,8 +9,10 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -59,6 +61,34 @@ public class RCPUtils {
         } catch (Exception exception) {
             log.log(Level.SEVERE, "Could not execute command " + commandId, exception);
         }
+    }
+
+    /**
+     * Sets a message in the lower left status line. These messages are by
+     * rcp-design associated with a view.
+     *
+     * @param viewId
+     *            the view from which the message originates
+     */
+    public static void setStatusMessage(String viewId, String message) {
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IViewSite site = window.getActivePage().findView(viewId).getViewSite();
+        IStatusLineManager mgr = site.getActionBars().getStatusLineManager();
+        mgr.setMessage(message);
+    }
+
+    /**
+     * Sets an error message in the lower left status line. These messages are
+     * by rcp-design associated with a view.
+     *
+     * @param viewId
+     *            the view from which the message originates
+     */
+    public static void setStatusErrorMessage(String viewId, String message) {
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IViewSite site = window.getActivePage().findView(viewId).getViewSite();
+        IStatusLineManager mgr = site.getActionBars().getStatusLineManager();
+        mgr.setErrorMessage(message);
     }
 
     public static ImageDescriptor getImageDescriptor(Class<?> classFromBundle, String path) {
