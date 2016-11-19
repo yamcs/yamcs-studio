@@ -121,6 +121,8 @@ public class YamcsLoginModule implements LoginModule {
         Principal principal = new SimplePrincipal(user);
         subject.getPrincipals().add(principal);
 
+        // TODO this connect does not yet show progress, because i don't want
+        // a jface dependency in core
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         connectionManager.connect(new YamcsCredentials(user, password));
         return true;

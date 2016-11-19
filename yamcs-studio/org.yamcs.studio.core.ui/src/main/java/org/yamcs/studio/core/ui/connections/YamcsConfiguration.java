@@ -104,14 +104,23 @@ public class YamcsConfiguration {
     }
 
     public String getPrimaryConnectionString() {
-        return "yamcs://" + primaryHost + ":" + primaryPort + "/" + instance;
+        if (instance == null || "".equals(instance)) {
+            return "yamcs://" + primaryHost + ":" + primaryPort;
+        } else {
+            return "yamcs://" + primaryHost + ":" + primaryPort + "/" + instance;
+        }
     }
 
     public String getFailoverConnectionString() {
-        if (isFailoverConfigured())
-            return "yamcs://" + failoverHost + ":" + failoverPort + "/" + instance;
-        else
+        if (isFailoverConfigured()) {
+            if (instance == null || "".equals(instance)) {
+                return "yamcs://" + failoverHost + ":" + failoverPort;
+            } else {
+                return "yamcs://" + failoverHost + ":" + failoverPort + "/" + instance;
+            }
+        } else {
             return null;
+        }
     }
 
     public ConnectionInfo toConnectionInfo() {

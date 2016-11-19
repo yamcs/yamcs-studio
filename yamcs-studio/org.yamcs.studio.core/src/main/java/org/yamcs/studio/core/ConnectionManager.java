@@ -2,9 +2,11 @@ package org.yamcs.studio.core;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.ConfigurationException;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.GetApiOverviewResponse;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
@@ -16,6 +18,9 @@ import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 import com.google.protobuf.MessageLite;
+
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 
 /**
  * Handles external connections and its related state.
@@ -101,14 +106,14 @@ public class ConnectionManager {
         return serverId;
     }
 
-    public void connect(YamcsCredentials creds) {
-        connect(creds, mode);
+    public CompletableFuture<Void> connect(YamcsCredentials creds) {
+        return connect(creds, mode);
     }
 
     /**
      * (re)establish the connection to yamcs
      */
-    public void connect(YamcsCredentials creds, ConnectionMode mode) {
+    public CompletableFuture<Void> connect(YamcsCredentials creds, ConnectionMode mode) {
         disconnectIfConnected();
         this.creds = creds;
         this.mode = mode;
@@ -126,10 +131,13 @@ public class ConnectionManager {
 
         restClient = new RestClient(yprops, creds);
 
+        // Future covering both the initial rest call, and the ws conn attempt
+        CompletableFuture<Void> cf = new CompletableFuture<>();
+
         // This 'defaultInstance' should really be moved to Server,
         // but for that we require more work on the websocket api,
         // which currently requires an instance to work with
-        log.info("Retrieving server information for " + yprops.getYamcsConnectionString());
+        log.info("Retrieving server information for " + yprops.getUrl("http"));
         restClient.get("", null, GetApiOverviewResponse.newBuilder(), new ResponseHandler() {
 
             @Override
@@ -139,20 +147,43 @@ public class ConnectionManager {
                 serverVersion = response.getYamcsVersion();
 
                 log.info(String.format("Detected Yamcs Server v%s (id: '%s')", serverVersion, serverId));
-                if (response.hasDefaultYamcsInstance()) {
-                    yprops.setInstance(response.getDefaultYamcsInstance());
+                if (yprops.getInstance() == null || "".equals(yprops.getInstance())) {
+                    if (response.hasDefaultYamcsInstance()) {
+                        yprops.setInstance(response.getDefaultYamcsInstance());
+                    } else {
+                        Exception ex = new ConfigurationException(
+                                "No 'instance' was specified, and no "
+                                        + "default instance was configured on Yamcs Server.");
+
+                        // TODO get rid of this, use only future
+                        onWebSocketConnectionFailed(ex);
+                        cf.completeExceptionally(ex);
+                        return;
+                    }
                 }
 
                 log.info("Connecting WebSocket to instance " + yprops.getInstance());
                 webSocketClient = new WebSocketRegistrar(yprops);
-                webSocketClient.connect();
+                webSocketClient.connect().addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture future) throws Exception {
+                        if (future.isSuccess()) {
+                            cf.complete(null);
+                        } else {
+                            cf.completeExceptionally(future.cause());
+                        }
+                    }
+                });
             }
 
             @Override
             public void onException(Exception e) {
                 onWebSocketConnectionFailed(e);
+                cf.completeExceptionally(e);
             }
         });
+
+        return cf;
     }
 
     public void disconnectIfConnected() {

@@ -32,7 +32,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -87,7 +86,7 @@ public class ConnectionsDialog extends Dialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        parent.getShell().setText("Connections");
+        parent.getShell().setText("Yamcs Server Connections");
         Composite contentArea = new Composite(parent, SWT.NONE);
         GridLayout gl = new GridLayout();
         gl.marginHeight = 0;
@@ -224,7 +223,7 @@ public class ConnectionsDialog extends Dialog {
         conf.setPrimaryPort(8090);
         connViewer.add(conf);
         connViewer.setSelection(new StructuredSelection(conf), true);
-        yamcsInstanceText.setFocus();
+        yamcsPrimaryHostText.setFocus();
     }
 
     private void removeSelectedServer() {
@@ -253,7 +252,7 @@ public class ConnectionsDialog extends Dialog {
         connViewer.getTable().setLinesVisible(false);
 
         TableViewerColumn nameColumn = new TableViewerColumn(connViewer, SWT.NONE);
-        nameColumn.getColumn().setText("Name");
+        nameColumn.getColumn().setText("Connection Name");
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public Image getImage(Object element) {
@@ -310,9 +309,99 @@ public class ConnectionsDialog extends Dialog {
         detailPanel.setLayout(gl);
 
         Label lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Primary Yamcs Server");
+        GridData gd = new GridData();
+        gd.horizontalSpan = 2;
+        lbl.setLayoutData(gd);
+
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Host:");
+        yamcsPrimaryHostText = new Text(detailPanel, SWT.BORDER);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        yamcsPrimaryHostText.setLayoutData(gd);
+        yamcsPrimaryHostText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(yamcsPrimaryHostText.getText()) && selectedConfiguration != null) {
+                selectedConfiguration.setPrimaryHost(yamcsPrimaryHostText.getText());
+            } else if (selectedConfiguration != null) {
+                selectedConfiguration.setPrimaryHost(null);
+            }
+        });
+
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Port:");
+        yamcsPrimaryPortText = new Text(detailPanel, SWT.BORDER);
+        gd = new GridData();
+        gd.widthHint = 50;
+        yamcsPrimaryPortText.setLayoutData(gd);
+        yamcsPrimaryPortText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(yamcsPrimaryPortText.getText()) && selectedConfiguration != null) {
+                try {
+                    int d = Integer.parseInt(yamcsPrimaryPortText.getText());
+                    selectedConfiguration.setPrimaryPort(d);
+                } catch (NumberFormatException e) {
+                    log.warning("Ignoring invalid number for primary port " + yamcsPrimaryPortText.getText());
+                    selectedConfiguration.setPrimaryPort(null);
+                }
+            } else if (selectedConfiguration != null) {
+                selectedConfiguration.setPrimaryPort(null);
+            }
+        });
+
+        // Spacer
+        lbl = new Label(detailPanel, SWT.NONE);
+        gd = new GridData();
+        gd.horizontalSpan = 2;
+        lbl.setLayoutData(gd);
+
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Failover (optional)");
+        gd = new GridData();
+        gd.horizontalSpan = 2;
+        lbl.setLayoutData(gd);
+
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Host:");
+        yamcsFailoverHostText = new Text(detailPanel, SWT.BORDER);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        yamcsFailoverHostText.setLayoutData(gd);
+        yamcsFailoverHostText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(yamcsFailoverHostText.getText()) && selectedConfiguration != null) {
+                selectedConfiguration.setFailoverHost(yamcsFailoverHostText.getText());
+            } else if (selectedConfiguration != null) {
+                selectedConfiguration.setFailoverHost(null);
+            }
+        });
+
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Port:");
+        yamcsFailoverPortText = new Text(detailPanel, SWT.BORDER);
+        gd = new GridData();
+        gd.widthHint = 50;
+        yamcsFailoverPortText.setLayoutData(gd);
+        yamcsFailoverPortText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(yamcsFailoverPortText.getText()) && selectedConfiguration != null) {
+                try {
+                    int d = Integer.parseInt(yamcsFailoverPortText.getText());
+                    selectedConfiguration.setFailoverPort(d);
+                } catch (NumberFormatException e) {
+                    log.warning("Ignoring invalid number for failover port " + yamcsFailoverPortText.getText());
+                    selectedConfiguration.setFailoverPort(null);
+                }
+            } else if (selectedConfiguration != null) {
+                selectedConfiguration.setFailoverPort(null);
+            }
+        });
+
+        // Spacer
+        lbl = new Label(detailPanel, SWT.NONE);
+        gd = new GridData();
+        gd.horizontalSpan = 2;
+        lbl.setLayoutData(gd);
+
+        lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Yamcs Instance:");
         yamcsInstanceText = new Text(detailPanel, SWT.BORDER);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
         yamcsInstanceText.setLayoutData(gd);
         yamcsInstanceText.addListener(SWT.KeyUp, evt -> {
             if (!isBlank(yamcsInstanceText.getText()) && selectedConfiguration != null) {
@@ -354,105 +443,8 @@ public class ConnectionsDialog extends Dialog {
         gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
 
-        Group detailsGroup = new Group(detailPanel, SWT.NONE);
-        detailsGroup.setText("Connection Details");
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        detailsGroup.setLayoutData(gd);
-        gl = new GridLayout(2, false);
-        detailsGroup.setLayout(gl);
-
-        lbl = new Label(detailsGroup, SWT.NONE);
-        lbl.setText("Primary Server");
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailsGroup, SWT.NONE);
-        lbl.setText("Host:");
-        yamcsPrimaryHostText = new Text(detailsGroup, SWT.BORDER);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        yamcsPrimaryHostText.setLayoutData(gd);
-        yamcsPrimaryHostText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsPrimaryHostText.getText()) && selectedConfiguration != null) {
-                selectedConfiguration.setPrimaryHost(yamcsPrimaryHostText.getText());
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setPrimaryHost(null);
-            }
-        });
-
-        lbl = new Label(detailsGroup, SWT.NONE);
-        lbl.setText("Port:");
-        yamcsPrimaryPortText = new Text(detailsGroup, SWT.BORDER);
-        gd = new GridData();
-        gd.widthHint = 50;
-        yamcsPrimaryPortText.setLayoutData(gd);
-        yamcsPrimaryPortText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsPrimaryPortText.getText()) && selectedConfiguration != null) {
-                try {
-                    int d = Integer.parseInt(yamcsPrimaryPortText.getText());
-                    selectedConfiguration.setPrimaryPort(d);
-                } catch (NumberFormatException e) {
-                    log.warning("Ignoring invalid number for primary port " + yamcsPrimaryPortText.getText());
-                    selectedConfiguration.setPrimaryPort(null);
-                }
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setPrimaryPort(null);
-            }
-        });
-
-        lbl = new Label(detailsGroup, SWT.HORIZONTAL | SWT.SEPARATOR);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailsGroup, SWT.NONE);
-        lbl.setText("Failover (optional)");
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailsGroup, SWT.NONE);
-        lbl.setText("Host:");
-        yamcsFailoverHostText = new Text(detailsGroup, SWT.BORDER);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        yamcsFailoverHostText.setLayoutData(gd);
-        yamcsFailoverHostText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsFailoverHostText.getText()) && selectedConfiguration != null) {
-                selectedConfiguration.setFailoverHost(yamcsFailoverHostText.getText());
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setFailoverHost(null);
-            }
-        });
-
-        lbl = new Label(detailsGroup, SWT.NONE);
-        lbl.setText("Port:");
-        yamcsFailoverPortText = new Text(detailsGroup, SWT.BORDER);
-        gd = new GridData();
-        gd.widthHint = 50;
-        yamcsFailoverPortText.setLayoutData(gd);
-        yamcsFailoverPortText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsFailoverPortText.getText()) && selectedConfiguration != null) {
-                try {
-                    int d = Integer.parseInt(yamcsFailoverPortText.getText());
-                    selectedConfiguration.setFailoverPort(d);
-                } catch (NumberFormatException e) {
-                    log.warning("Ignoring invalid number for failover port " + yamcsFailoverPortText.getText());
-                    selectedConfiguration.setFailoverPort(null);
-                }
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setFailoverPort(null);
-            }
-        });
-
-        // Spacer
         lbl = new Label(detailPanel, SWT.NONE);
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Name:");
+        lbl.setText("Saved Connection Name:");
         gd = new GridData();
         gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
@@ -469,7 +461,7 @@ public class ConnectionsDialog extends Dialog {
             connViewer.update(conf, null);
 
             if (!isBlank(nameText.getText()) && selectedConfiguration != null) {
-                System.out.println("Storing name " + nameText.getText());
+                log.fine("Storing name " + nameText.getText());
                 selectedConfiguration.setName(nameText.getText());
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setName(null);

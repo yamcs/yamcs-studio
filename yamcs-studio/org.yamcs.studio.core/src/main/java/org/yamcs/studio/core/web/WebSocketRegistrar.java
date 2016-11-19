@@ -32,6 +32,8 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 
+import io.netty.channel.ChannelFuture;
+
 /**
  * Acts as the single gateway for yamcs-studio to yamcs WebSocketClient.
  */
@@ -59,8 +61,8 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         });
     }
 
-    public void connect() {
-        wsclient.connect();
+    public ChannelFuture connect() {
+        return wsclient.connect();
     }
 
     @Override
