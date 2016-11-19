@@ -76,6 +76,17 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(100));
 
+        TableViewerColumn typeColumn = new TableViewerColumn(processorsTable, SWT.NONE);
+        typeColumn.getColumn().setText("Type");
+        typeColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                ProcessorInfo info = (ProcessorInfo) element;
+                return info.getType();
+            }
+        });
+        tcl.setColumnData(typeColumn.getColumn(), new ColumnPixelData(100));
+
         processorsTable.setContentProvider(ArrayContentProvider.getInstance());
         processorsTable.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
         processorsTable.setComparator(new ViewerComparator() {
