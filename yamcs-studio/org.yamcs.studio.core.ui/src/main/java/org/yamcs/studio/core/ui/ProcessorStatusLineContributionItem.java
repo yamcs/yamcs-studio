@@ -91,6 +91,9 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
 
     @Override
     public void onStudioDisconnect() {
-        updateText(null);
+        Display display = Display.getDefault();
+        if (!display.isDisposed()) {
+            display.asyncExec(() -> updateText(null));
+        }
     }
 }
