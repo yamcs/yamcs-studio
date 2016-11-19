@@ -22,13 +22,11 @@ openFile
       <vmArgs>-Xmx1024m
 -Dpython.cachedir.skip=true
 -Declipse.p2.unsignedPolicy=allow
+-Duser.timezone=GMT
       </vmArgs>
       <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
 -XstartOnFirstThread
       </vmArgsMac>
-      <vmArgs>
-      -Duser.timezone=GMT
-      </vmArgs>
    </launcherArgs>
 
    <windowImages i16="/org.yamcs.studio.dist.default.plugin/icons/css16.png" i32="/org.yamcs.studio.dist.default.plugin/icons/css32.png" i48="/org.yamcs.studio.dist.default.plugin/icons/css48.png" i64="/org.yamcs.studio.dist.default.plugin/icons/css64.png" i128="/org.yamcs.studio.dist.default.plugin/icons/css128.png" i256="/org.yamcs.studio.dist.default.plugin/icons/css256.png"/>
@@ -87,5 +85,12 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
    </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
 
 </product>
