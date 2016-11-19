@@ -72,15 +72,13 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
       <feature id="org.yamcs.studio.dist.feature.core" version="1.0.0.qualifier"/>
       <feature id="org.yamcs.studio.dist.feature.css" version="1.0.0.qualifier"/>
       <feature id="org.yamcs.studio.dist.feature.eclipse" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.dist.default.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
-      <!--
-	FDI: commented out because not needed, esp when not adding p2 support
-	plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" /-->
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
