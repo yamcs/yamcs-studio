@@ -45,7 +45,7 @@ With the previous steps all successfully completed, we now continue with getting
 
 - Configure a Target Platform by going to `Preferences > Plug-in Development > Target Platform`. We want to configure Eclipse so that it gives priority to the projects that are open in your workspace, and only then checks the local P2 repository which you built earlier. So click `Add...`. Choose to initialize with the `Current Target`. Click `Next`. Click `Add...` to add a directory. Choose the directory `css/local_p2_repository` that we generated earlier on the command line. Click `Finish`. And select that new entry as the active Target Platform. Close the preferences pane with `OK`.
 
-- Import the Yamcs Studio maven projects under `yamcs-studio-tycho` into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.
+- Import the Yamcs Studio maven projects into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.
 
 - Open `org.yamcs.studio.dist.default.repository/yamcs-studio.product`
 ![Product Testing](images/product-testing.png)

@@ -9,5 +9,5 @@ target/
 contrib/css/settings.xml
 
 # Generated from POM
-yamcs-studio-osgi/org.yamcs.osgiclient/META-INF/
+yamcs-studio-deps/org.yamcs.osgiclient/META-INF/
 
