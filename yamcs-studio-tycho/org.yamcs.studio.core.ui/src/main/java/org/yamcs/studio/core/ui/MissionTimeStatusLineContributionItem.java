@@ -11,7 +11,7 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
     private static final String DEFAULT_TEXT = "---";
 
     public MissionTimeStatusLineContributionItem(String id) {
-        this(id, 40);
+        this(id, CALC_TRUE_WIDTH);
     }
 
     public MissionTimeStatusLineContributionItem(String id, int charWidth) {

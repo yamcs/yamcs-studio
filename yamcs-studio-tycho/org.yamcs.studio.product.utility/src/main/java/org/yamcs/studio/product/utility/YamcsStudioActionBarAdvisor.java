@@ -22,6 +22,7 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.eclipse.ui.part.CoolItemGroupMarker;
+import org.yamcs.studio.core.ui.ConnectionStringStatusLineContributionItem;
 import org.yamcs.studio.core.ui.MissionTimeStatusLineContributionItem;
 import org.yamcs.studio.core.ui.ProcessorStatusLineContributionItem;
 
@@ -59,6 +60,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction aboutAction;
 
     // Allow to override individual addition of status line contribution items
+    protected boolean showYamcsConnectionString = true;
     protected boolean showProcessor = true;
     protected boolean showMissionTime = true;
 
@@ -183,6 +185,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
+        if (showYamcsConnectionString) {
+            statusLine.add(new ConnectionStringStatusLineContributionItem("ystudio.status.conn"));
+        }
         if (showProcessor) {
             statusLine.add(new ProcessorStatusLineContributionItem("ystudio.status.processor"));
         }

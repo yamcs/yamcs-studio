@@ -18,10 +18,10 @@ import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 public class ProcessorStatusLineContributionItem extends StatusLineContributionItem
         implements ManagementListener, StudioConnectionListener {
 
-    private static final String DEFAULT_TEXT = "Not Connected";
+    private static final String DEFAULT_TEXT = "---";
 
     public ProcessorStatusLineContributionItem(String id) {
-        this(id, 40);
+        this(id, CALC_TRUE_WIDTH);
     }
 
     public ProcessorStatusLineContributionItem(String id, int charWidth) {

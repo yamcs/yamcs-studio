@@ -19,10 +19,7 @@ public class ProcessorStateProvider extends AbstractSourceProvider {
     public static final String STATE_KEY_PROCESSING = "org.yamcs.studio.ui.processor.state.processing";
     public static final String STATE_KEY_REPLAY = "org.yamcs.studio.ui.processor.state.replay";
     public static final String STATE_KEY_REPLAY_SPEED = "org.yamcs.studio.ui.processor.state.speed";
-    private static final String[] SOURCE_NAMES = {
-            STATE_KEY_REPLAY,
-            STATE_KEY_PROCESSING,
-            STATE_KEY_REPLAY_SPEED };
+    private static final String[] SOURCE_NAMES = { STATE_KEY_REPLAY, STATE_KEY_PROCESSING, STATE_KEY_REPLAY_SPEED };
 
     private boolean replay = false;
     private String processing = "";
@@ -46,7 +43,7 @@ public class ProcessorStateProvider extends AbstractSourceProvider {
 
     @Override
     public Map getCurrentState() {
-        Map map = new HashMap(2);
+        Map map = new HashMap(3);
         map.put(STATE_KEY_REPLAY, replay);
         map.put(STATE_KEY_PROCESSING, processing);
         map.put(STATE_KEY_REPLAY_SPEED, speed);
