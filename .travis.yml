@@ -1,4 +1,3 @@
-# Don't clone submodules, to save on build time we rely on  binary p2 repo instead using travis profile
 git:
   submodules: false
 
@@ -12,11 +11,10 @@ cache:
 install:
   - git clone --depth 1 --branch master https://github.com/yamcs/yamcs
   - mvn install -DskipTests -f yamcs/pom.xml
-  - sed "s#REPLACE_WITH_LOCAL_P2_REPO#"`pwd`/css/local_p2_repository"#" css/settings_template.xml >css/settings.xml
 
 script:
-  - mvn verify -f yamcs-studio-osgi/pom.xml -s css/settings.xml -Pcss-for-yamcs,travis
-  - mvn verify -f yamcs-studio-tycho/pom.xml -s css/settings.xml -Pcss-for-yamcs,travis
+  - mvn verify -f yamcs-studio-deps/pom.xml
+  - mvn verify -f yamcs-studio/pom.xml
 
 deploy:
   provider: releases
@@ -24,8 +22,8 @@ deploy:
     secure: wRRoOFh5iNtS6I6miZokq8IgGG8gNJV1D36mx46z7wacusOEA35TGLieegNzfTvwLMgLYZN4vbMyouwimaApokP+aJdhpHiGQ4pJLQ9Y1mEyjGAXiYcQ9qC6k2/mv4b3p/72cajtLfVeKT/0PIURQ6bAhiliBcUerq1Gx/9u8KU=
   file_glob: true
   file:
-    - yamcs-studio-tycho/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.zip
-    - yamcs-studio-tycho/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.tar.gz
+    - yamcs-studio/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.zip
+    - yamcs-studio/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.tar.gz
   skip_cleanup: true
   on:
     tags: true
