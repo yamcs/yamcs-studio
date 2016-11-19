@@ -6,9 +6,7 @@
 target/
 
 # Generated when building the CSS submodules
-# --> see css/make-css.sh
-css/settings.xml
-css/local_p2_repository/
+contrib/css/settings.xml
 
 # Generated from POM
 yamcs-studio-osgi/org.yamcs.osgiclient/META-INF/

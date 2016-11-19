@@ -1,12 +1,12 @@
 [submodule "css/maven-osgi-bundles"]
-	path = css/maven-osgi-bundles
+	path = contrib/css/maven-osgi-bundles
 	url = https://github.com/ControlSystemStudio/maven-osgi-bundles.git
 [submodule "css/cs-studio-thirdparty"]
-	path = css/cs-studio-thirdparty
+	path = contrib/css/cs-studio-thirdparty
 	url = https://github.com/ControlSystemStudio/cs-studio-thirdparty.git
 [submodule "css/cs-studio"]
-	path = css/cs-studio
+	path = contrib/css/cs-studio
 	url = https://github.com/ControlSystemStudio/cs-studio.git
 [submodule "css/diirt"]
-	path = css/diirt
+	path = contrib/css/diirt
 	url = https://github.com/ControlSystemStudio/diirt.git

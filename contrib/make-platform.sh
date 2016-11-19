@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# !!!!!!!!!!!!!!
+# This file is outdated. It was introduced in previous versions
+# of Yamcs Studio to build a complete offline development copy
+# of all CSS p2 repos. This was a lengthy, fragile process.
+#
+# Nowadays, we instead fetch our dependencies from their update
+# sites, which saves us building all the binaries.
+# These update sites are configured in the *.target definition
+# that can be found in one of the tycho maven modules.
+#
+# We keep it around for future reference, in case we need to
+# build all CSS deps without relying on their update site
+# (could be useful for working with unreleased versions too).
+# !!!!!!!!!!!!!!
+
 # Builds CSS from the sources using a local composite p2 repository as described
 # in their documentation.
 

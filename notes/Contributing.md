@@ -22,18 +22,13 @@ cd ..
 ```
 
 ### Generate Yamcs Studio Products
-Clone the Yamcs Studio repository, including the CS-Studio submodules. These are 'separate' nested git repositories. Read up on git-submodules, if this concept is new to you.
+Clone the Yamcs Studio repository.
 ```
-git clone --recursive https://github.com/yamcs/yamcs-studio
+git clone https://github.com/yamcs/yamcs-studio
 cd yamcs-studio
 ```
 
-Run the `make-platform.sh` helper script. This will run some checks and guide you through the whole process of setting up the CS-Studio dependencies.
-```
-./make-platform.sh
-```
-
-With that out of the way, we're now ready to generate the actual Yamcs Studio product. There are two different maven reactors (one bundles up non-OSGI friendly dependencies), so use this simple wrapper script to build both:
+There are two different maven reactors (one bundles up non-OSGI friendly dependencies), so use this simple wrapper script to build both:
 ```
 ./make-product.sh
 ```
@@ -66,13 +61,3 @@ When you run Yamcs Studio through Eclipse RCP, you always work with a Target Pla
 2. Close the preferences dialog with OK.
 3. Adapt your launch configuration to the updated platform, by opening `org.yamcs.studio.dist.default.repository/yamcs-studio.product` and clicking the `Synchronize` link.
 
-#### Git Submodules
-In general we try to stick to a stable version of our upstream CS-Studio dependencies so that you don't need to run `make-platform.sh` all the time. Assuming that none of the submodules were updated, you typically only run `make-product.sh` to generate the Yamcs Studio product.
-
-If, however, `git status` starts outputting weird error messages, it may be time for you to update your entire CS-Studio Platform. You'll want to do something like this:
-```
-git submodule update
-./make-platform.sh
-./make-product.sh
-```
-This will give you the option to update your platform in-place, or to replace it entirely. Be aware that `git submodule update` will really update your submodules, thereby losing any local uncommited changes you may have made in there. This is because submodules by default are set to a detached HEAD. If you want to keep your changes when updating submodules, set them aside using `git stash`, or commit them on a branch which you can `git checkout` again after having updated your submodules.

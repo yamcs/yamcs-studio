@@ -17,11 +17,11 @@
          Locations starting in file:/ refer to the root directory,
          everything else is relative to this xml file
       -->
-    <!--child location="../css/diirt/p2/target/repository/"/>
-    <child location="../css/maven-osgi-bundles/repository/target/repository"/>
-    <child location="../css/cs-studio-thirdparty/repository/target/repository"/>
-    <child location="../css/cs-studio/core/p2repo"/>
-    <child location="../css/cs-studio/applications/p2repo"/-->
+    <!--child location="../contrib/css/diirt/p2/target/repository/"/>
+    <child location="../contrib/css/maven-osgi-bundles/repository/target/repository"/>
+    <child location="../contrib/css/cs-studio-thirdparty/repository/target/repository"/>
+    <child location="../contrib/css/cs-studio/core/p2repo"/>
+    <child location="../contrib/css/cs-studio/applications/p2repo"/-->
     <child location="../yamcs-studio-osgi/org.yamcs.studio.osgi.repository/target/repository"/>
   </children>
 </repository>

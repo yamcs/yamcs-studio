@@ -1,6 +1,11 @@
 #!/bin/bash
 DEPS_REACTOR=1
 
+# !!!!!!
+# Outdated. Keeping around for a while.
+# See long comment in ./make-platform.sh
+# !!!!!!
+
 if [ "$1" = "--no-deps" ]; then
   DEPS_REACTOR=0
 fi
@@ -25,9 +30,9 @@ PRGDIR=`dirname "$PRG"`
 
 set -e
 if [ "$DEPS_REACTOR" = 1 ]; then
-  mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify
+  mvn -f $PRGDIR/yamcs-studio-osgi/pom.xml clean verify -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2
 fi
-mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify
+mvn -f $PRGDIR/yamcs-studio-tycho/pom.xml clean verify -s $PRGDIR/css/settings.xml -Pcss-for-yamcs-v2
 set +e
 
 echo
