@@ -37,7 +37,7 @@ public class ProcessorStateProvider extends AbstractSourceProvider {
         }
 
         Map newState = getCurrentState();
-        log.info(String.format("Fire new processing state %s", newState));
+        log.fine(String.format("Fire new processing state %s", newState));
         fireSourceChanged(ISources.WORKBENCH, newState);
     }
 

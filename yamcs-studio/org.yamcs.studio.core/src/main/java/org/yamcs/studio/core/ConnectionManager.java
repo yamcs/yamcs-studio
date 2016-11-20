@@ -197,7 +197,7 @@ public class ConnectionManager {
     }
 
     public void disconnect() {
-        log.info("Start disconnect procedure (current state: " + connectionStatus + ")");
+        log.fine("Start disconnect procedure (current state: " + connectionStatus + ")");
         synchronized (this) {
             if (connectionStatus == ConnectionStatus.Disconnected
                     || connectionStatus == ConnectionStatus.Disconnecting
@@ -207,19 +207,19 @@ public class ConnectionManager {
             setConnectionStatus(ConnectionStatus.Disconnecting);
         }
 
-        log.info("Shutting down WebSocket client");
+        log.fine("Shutting down WebSocket client");
         if (webSocketClient != null)
             webSocketClient.shutdown();
 
         webSocketClient = null;
 
-        log.info("Shutting down REST client");
+        log.fine("Shutting down REST client");
         if (restClient != null)
             restClient.shutdown();
 
         restClient = null;
 
-        log.info("Notify downstream components of Studio disconnect");
+        log.fine("Notify downstream components of Studio disconnect");
         synchronized (studioConnectionListeners) {
             for (StudioConnectionListener scl : studioConnectionListeners) {
                 log.fine(String.format(" -> Inform %s", scl.getClass().getSimpleName()));

@@ -47,6 +47,7 @@ public class LinkCatalogue implements Catalogue {
     public void onStudioDisconnect() {
         // Clear everything, we'll get a fresh set upon connect
         linksById.clear();
+        linkListeners.forEach(l -> l.reinitializeLinkData());
     }
 
     public void addLinkListener(LinkListener listener) {
