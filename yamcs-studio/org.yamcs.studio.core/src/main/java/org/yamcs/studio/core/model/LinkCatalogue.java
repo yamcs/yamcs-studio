@@ -89,13 +89,13 @@ public class LinkCatalogue implements Catalogue {
     public void enableLink(String instance, String name, ResponseHandler responseHandler) {
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("enabled").build();
-        restClient.patch("/links/" + instance + "/link/" + name, req, null, responseHandler);
+        restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
     }
 
     public void disableLink(String instance, String name, ResponseHandler responseHandler) {
         RestClient restClient = ConnectionManager.getInstance().getRestClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("disabled").build();
-        restClient.patch("/links/" + instance + "/link/" + name, req, null, responseHandler);
+        restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
     }
 
     public List<LinkInfo> getLinks() {
