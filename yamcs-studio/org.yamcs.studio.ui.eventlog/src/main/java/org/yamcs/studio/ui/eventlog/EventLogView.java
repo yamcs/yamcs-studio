@@ -16,13 +16,8 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -52,10 +47,6 @@ public class EventLogView extends ViewPart implements EventListener {
     private boolean showColumnGeneration = true;
     private int nbMessageLineToDisplay = 1;
 
-    private Label labelTotalEvents;
-    private Label labelWarnings;
-    private Label labelErrors;
-
     private Table tableViewer;
     private TableColumnLayout tcl;
 
@@ -72,40 +63,11 @@ public class EventLogView extends ViewPart implements EventListener {
             nbMessageLineToDisplay = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("events.nbMessageLineToDisplay");
         }
 
-        GridLayout gl = new GridLayout();
-        parent.setLayout(gl);
-        gl.horizontalSpacing = 0;
-        gl.marginHeight = 0;
-        gl.marginWidth = 0;
-        gl.verticalSpacing = 0;
-
         // create event table part
-        Composite tableComposite = new Composite(parent, SWT.NONE);
-        tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         tcl = new TableColumnLayout();
-        tableComposite.setLayout(tcl);
+        parent.setLayout(tcl);
 
-        //  create status bar part
-        Composite statusComposite = new Composite(parent, SWT.NONE);
-        statusComposite.setLayout(new RowLayout());
-        RowData gd = new RowData();
-        gd.width = 150;
-        labelTotalEvents = new Label(statusComposite, SWT.NONE);
-        labelTotalEvents.setText("Total Events: 0");
-        labelTotalEvents.setLayoutData(gd);
-
-        labelWarnings = new Label(statusComposite, SWT.NONE);
-        labelWarnings.setText("Warnings: 0");
-        gd = new RowData();
-        gd.width = 130;
-        labelWarnings.setLayoutData(gd);
-        labelErrors = new Label(statusComposite, SWT.NONE);
-        labelErrors.setText("Errors: 0");
-        gd = new RowData();
-        gd.width = 110;
-        labelErrors.setLayoutData(gd);
-
-        tableViewer = new Table(tableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
+        tableViewer = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
         tableViewer.setHeaderVisible(true);
         tableViewer.setLinesVisible(true);
         addFixedColumns();
@@ -143,9 +105,10 @@ public class EventLogView extends ViewPart implements EventListener {
 
         });
 
+        updateSummaryLine();
+
         if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null)
             EventCatalogue.getInstance().addEventListener(this);
-
     }
 
     @Override
@@ -159,9 +122,7 @@ public class EventLogView extends ViewPart implements EventListener {
         Display.getDefault().asyncExec(() -> {
             log.finest("clear started");
             tableContentProvider.clearAll();
-            setStatusTotalEvents(0);
-            setStatusWarnings(0);
-            setStatusErrors(0);
+            updateSummaryLine();
             log.finest("clear done");
         });
         log.finest("clear queued");
@@ -272,9 +233,7 @@ public class EventLogView extends ViewPart implements EventListener {
             return;
         tableContentProvider.addEvent(event);
 
-        setStatusTotalEvents(tableContentProvider.getNbEvents());
-        setStatusWarnings(tableContentProvider.getNbWarnings());
-        setStatusErrors(tableContentProvider.getNbErrors());
+        updateSummaryLine();
     }
 
     public void addEvents(List<Event> events) {
@@ -283,9 +242,7 @@ public class EventLogView extends ViewPart implements EventListener {
             return;
         tableContentProvider.addEvents(events);
 
-        setStatusTotalEvents(tableContentProvider.getNbEvents());
-        setStatusWarnings(tableContentProvider.getNbWarnings());
-        setStatusErrors(tableContentProvider.getNbErrors());
+        updateSummaryLine();
         log.finest("Events added");
     }
 
@@ -300,16 +257,11 @@ public class EventLogView extends ViewPart implements EventListener {
         return tableContentProvider;
     }
 
-    private void setStatusTotalEvents(int eventNumbers) {
-        labelTotalEvents.setText("Total Events: " + eventNumbers);
-    }
-
-    private void setStatusWarnings(int warnings) {
-        labelWarnings.setText("Warnings: " + warnings);
-    }
-
-    private void setStatusErrors(int errors) {
-        labelErrors.setText("Errors: " + errors);
+    private void updateSummaryLine() {
+        setContentDescription(String.format("%d errors, %d warnings, %d others (no filter)",
+                tableContentProvider.getNbErrors(),
+                tableContentProvider.getNbWarnings(),
+                tableContentProvider.getNbInfo()));
     }
 
     // test function

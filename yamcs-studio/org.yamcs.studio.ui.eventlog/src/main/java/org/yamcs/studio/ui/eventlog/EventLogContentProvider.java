@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -22,14 +23,16 @@ import org.yamcs.utils.TimeEncoding;
 
 public class EventLogContentProvider implements IStructuredContentProvider {
 
+    private static final Logger log = Logger.getLogger(EventLogContentProvider.class.getName());
     private EventLogViewerComparator eventLogViewerComparator = new EventLogViewerComparator();
     private ArrayList<Event> sortedEvents = new ArrayList<>();
     private Map<Long, Event> eventsBySequenceNumber = new LinkedHashMap<>();
     private Table tableViewer;
     private boolean scrollLock;
     private int nbMessageLineToDisplay;
-    private int warnings = 0;
-    private int errors = 0;
+    private int warningCount = 0;
+    private int errorCount = 0;
+    private int infoCount = 0;
 
     private Image errorIcon;
     private Image warnIcon;
@@ -82,13 +85,17 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             eventsBySequenceNumber.put(primaryKeyHash(event), event); // add to the hash map
 
             switch (event.getSeverity()) {
+            case INFO:
+                infoCount++;
+                break;
             case WARNING:
-                warnings++;
+                warningCount++;
                 break;
             case ERROR:
-                errors++;
+                errorCount++;
                 break;
             default:
+                log.warning("Unexpected event severity '" + event.getSeverity() + "'");
                 break;
             }
         }
@@ -111,13 +118,17 @@ public class EventLogContentProvider implements IStructuredContentProvider {
                 sortedEvents.add(event);
                 addItemFromEvent(event, -1);
                 switch (event.getSeverity()) {
+                case INFO:
+                    infoCount++;
+                    break;
                 case WARNING:
-                    warnings++;
+                    warningCount++;
                     break;
                 case ERROR:
-                    errors++;
+                    errorCount++;
                     break;
                 default:
+                    log.warning("Unexpected event severity '" + event.getSeverity() + "'");
                     break;
                 }
             }
@@ -216,11 +227,15 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     public int getNbWarnings() {
-        return warnings;
+        return warningCount;
     }
 
     public int getNbErrors() {
-        return errors;
+        return errorCount;
+    }
+
+    public int getNbInfo() {
+        return infoCount;
     }
 
     private long primaryKeyHash(Event event) {
@@ -241,8 +256,9 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             sortedEvents.clear();
             eventsBySequenceNumber.clear();
             tableViewer.setRedraw(true);
-            warnings = 0;
-            errors = 0;
+            warningCount = 0;
+            errorCount = 0;
+            infoCount = 0;
         });
     }
 
