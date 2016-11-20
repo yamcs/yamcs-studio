@@ -28,7 +28,7 @@
       <command
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.exportCommand"
-            name="Export Events to CSV">
+            name="Export Events as CSV">
       </command>
    </extension>
    
