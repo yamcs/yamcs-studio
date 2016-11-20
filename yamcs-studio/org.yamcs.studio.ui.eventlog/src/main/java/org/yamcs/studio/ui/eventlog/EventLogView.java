@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -13,12 +12,12 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -47,7 +46,7 @@ public class EventLogView extends ViewPart implements EventListener {
     private boolean showColumnGeneration = true;
     private int nbMessageLineToDisplay = 1;
 
-    private Table tableViewer;
+    private Table table;
     private TableColumnLayout tcl;
 
     private EventLogContentProvider tableContentProvider;
@@ -67,45 +66,45 @@ public class EventLogView extends ViewPart implements EventListener {
         tcl = new TableColumnLayout();
         parent.setLayout(tcl);
 
-        tableViewer = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
-        tableViewer.setHeaderVisible(true);
-        tableViewer.setLinesVisible(true);
+        table = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
         addFixedColumns();
-        tableContentProvider = new EventLogContentProvider(tableViewer);
+        tableContentProvider = new EventLogContentProvider(table);
         tableContentProvider.setNbLineToDisplay(nbMessageLineToDisplay);
 
-        // open a popup with event detail in case of double click
-        tableViewer.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseDoubleClick(MouseEvent event) {
-                try {
-                    Point pt = new Point(event.x, event.y);
-                    TableItem item = tableViewer.getItem(pt);
-                    if (item == null)
-                        return;
+        Listener propertiesHandler = (evt -> {
+            if (table.isDisposed())
+                return;
 
-                    Event selectedEvent = (Event) item.getData();
-                    if (selectedEvent == null)
-                        return;
-                    EventDetailsDialog dialog = new EventDetailsDialog(parent.getShell(), selectedEvent);
-                    dialog.create();
-                    dialog.open();
-                } catch (Exception e) {
-                    log.log(Level.SEVERE, "Unable to open event detail.", e);
-                }
-            }
+            Point pt = new Point(evt.x, evt.y);
+            TableItem item = table.getItem(pt);
+            if (item == null || item.getData() == null)
+                return;
 
-            @Override
-            public void mouseDown(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseUp(MouseEvent e) {
-            }
-
+            Event selectedEvent = (Event) item.getData();
+            EventDetailsDialog dialog = new EventDetailsDialog(parent.getShell(), selectedEvent);
+            dialog.create();
+            dialog.open();
         });
 
+        // open a popup with event detail in case of double click
+        table.addListener(SWT.MouseDoubleClick, propertiesHandler);
+
         updateSummaryLine();
+
+        // Install context menu
+        // Not registered with site, because it's not a jface table
+        Menu tableMenu = new Menu(table);
+        table.setMenu(tableMenu);
+
+        MenuItem miProperties = new MenuItem(tableMenu, SWT.NONE);
+        miProperties.setText("Properties");
+        miProperties.addListener(SWT.Selection, propertiesHandler);
+
+        table.addListener(SWT.MenuDetect, evt -> {
+            evt.doit = (table.getSelectionCount() > 0);
+        });
 
         if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null)
             EventCatalogue.getInstance().addEventListener(this);
@@ -113,7 +112,7 @@ public class EventLogView extends ViewPart implements EventListener {
 
     @Override
     public void processEvent(Event event) {
-        if (tableViewer.isDisposed())
+        if (table.isDisposed())
             return;
         Display.getDefault().asyncExec(() -> addEvent(event));
     }
@@ -146,23 +145,23 @@ public class EventLogView extends ViewPart implements EventListener {
 
     private void addFixedColumns() {
 
-        TableColumn seqNumColum = new TableColumn(tableViewer, SWT.RIGHT);
+        TableColumn seqNumColum = new TableColumn(table, SWT.RIGHT);
         seqNumColum.setText(COL_SEQNUM);
         tcl.setColumnData(seqNumColum, new ColumnPixelData(80));
 
-        TableColumn descriptionColumn = new TableColumn(tableViewer, SWT.NULL);
+        TableColumn descriptionColumn = new TableColumn(table, SWT.NULL);
         descriptionColumn.setText(COL_DESCRIPTION);
         tcl.setColumnData(descriptionColumn, new ColumnWeightData(200));
 
-        TableColumn sourceColumn = new TableColumn(tableViewer, SWT.NULL);
+        TableColumn sourceColumn = new TableColumn(table, SWT.NULL);
         sourceColumn.setText(COL_SOURCE);
         tcl.setColumnData(sourceColumn, new ColumnPixelData(150));
 
-        TableColumn receivedColumn = new TableColumn(tableViewer, SWT.NULL);
+        TableColumn receivedColumn = new TableColumn(table, SWT.NULL);
         receivedColumn.setText(COL_RECEIVED);
         tcl.setColumnData(receivedColumn, new ColumnPixelData(150));
 
-        TableColumn gererationColumn = new TableColumn(tableViewer, SWT.NULL);
+        TableColumn gererationColumn = new TableColumn(table, SWT.NULL);
         gererationColumn.setText(COL_GENERATION);
         tcl.setColumnData(gererationColumn, new ColumnPixelData(150));
 
@@ -195,7 +194,7 @@ public class EventLogView extends ViewPart implements EventListener {
             gererationColumn.setResizable(false);
         }
 
-        for (TableColumn tableColumn : tableViewer.getColumns()) {
+        for (TableColumn tableColumn : table.getColumns()) {
             tableColumn.setMoveable(true);
             // prevent resize to 0
             tableColumn.addControlListener(new ControlListener() {
@@ -212,14 +211,14 @@ public class EventLogView extends ViewPart implements EventListener {
         }
 
         // TODO use IMemento or something
-        tableViewer.setSortColumn(receivedColumn);
-        tableViewer.setSortDirection(SWT.UP);
+        table.setSortColumn(receivedColumn);
+        table.setSortDirection(SWT.UP);
 
     }
 
     @Override
     public void setFocus() {
-        tableViewer.setFocus();
+        table.setFocus();
     }
 
     @Override
@@ -229,7 +228,7 @@ public class EventLogView extends ViewPart implements EventListener {
     }
 
     public void addEvent(Event event) {
-        if (tableViewer.isDisposed())
+        if (table.isDisposed())
             return;
         tableContentProvider.addEvent(event);
 
@@ -238,7 +237,7 @@ public class EventLogView extends ViewPart implements EventListener {
 
     public void addEvents(List<Event> events) {
         log.info("add chunk of " + events.size());
-        if (tableViewer.isDisposed())
+        if (table.isDisposed())
             return;
         tableContentProvider.addEvents(events);
 
