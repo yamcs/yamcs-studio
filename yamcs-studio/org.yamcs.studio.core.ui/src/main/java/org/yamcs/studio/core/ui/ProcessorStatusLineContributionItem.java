@@ -8,6 +8,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
 /**
@@ -28,6 +29,13 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
         super(id, charWidth);
         setText(DEFAULT_TEXT);
         setToolTipText("Subscribed Yamcs Processor");
+        addClickListener(evt -> {
+            if (ConnectionManager.getInstance().isConnected()) {
+                // Hmm should probably move processor plugin back in core.ui
+                // RCPUtils.runCommand(ProcessorPlugin.CMD_CHOOSE_PROCESSOR);
+                RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
+            }
+        });
         ManagementCatalogue.getInstance().addManagementListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
     }
