@@ -222,7 +222,7 @@ public class ConnectionManager {
         log.info("Notify downstream components of Studio disconnect");
         synchronized (studioConnectionListeners) {
             for (StudioConnectionListener scl : studioConnectionListeners) {
-                log.info(String.format(" -> Inform %s", scl.getClass().getSimpleName()));
+                log.fine(String.format(" -> Inform %s", scl.getClass().getSimpleName()));
                 try {
                     scl.onStudioDisconnect();
                 } catch (Exception e) {

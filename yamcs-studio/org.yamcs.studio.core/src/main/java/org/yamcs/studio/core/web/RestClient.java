@@ -7,6 +7,8 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.yamcs.ConfigurationException;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.security.YamcsCredentials;
@@ -92,60 +94,72 @@ public class RestClient {
 
     private <S extends MessageLite> void doRequest(HttpMethod method, String uri, MessageLite requestBody, MessageLite.Builder target, ResponseHandler handler) {
         URI resource = webResourceURI(yprops, uri);
-        try {
-            Bootstrap b = new Bootstrap();
-            b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-            b.group(group).channel(NioSocketChannel.class).handler(new FullProtobufChannelInitializer(target, handler));
-            initializeChannel(b, resource, method, requestBody);
-
-        } catch (IOException | InterruptedException e) {
-            log.log(Level.SEVERE, "Could not execute REST call", e);
-            handler.onException(e);
-        }
+        Job job = Job.create(method + " " + resource, monitor -> {
+            try {
+                Bootstrap b = new Bootstrap();
+                b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+                b.group(group).channel(NioSocketChannel.class).handler(new FullProtobufChannelInitializer(target, handler));
+                ChannelFuture cf = initializeChannel(b, resource, method, requestBody);
+                cf.await();
+                Thread.sleep(1500); // Fake delay, to improve visual effect in status line
+                return Status.OK_STATUS;
+            } catch (IOException | InterruptedException e) {
+                log.log(Level.SEVERE, "Could not execute HTTP call", e);
+                handler.onException(e);
+                return Status.OK_STATUS;
+            }
+        });
+        job.schedule();
     }
 
     private <S extends MessageLite> void doRequestWithDelimitedResponse(HttpMethod method, String uri, MessageLite requestBody, BuilderGenerator builderGenerator, ResponseHandler handler) {
         // Currently doesn't correctly interpret RestExceptionMessage. Should probably
         // add a pipeline handler for HttpResponse for that
         URI resource = webResourceURI(yprops, uri);
-        try {
-            Bootstrap b = new Bootstrap();
-            b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-            b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                protected void initChannel(SocketChannel ch) throws Exception {
-                    ChannelPipeline p = ch.pipeline();
-                    p.addLast(new HttpClientCodec());
-                    p.addLast(new HttpContentToByteBufDecoder());
-                    p.addLast(new ProtobufVarint32FrameDecoder());
-                    p.addLast(new ProtobufHandler(handler) {
-                        @Override
-                        public BuilderGenerator generator() {
-                            return builderGenerator;
-                        }
-                    });
-                }
-            });
-            // A very verbose way of signaling the end of the stream...
-            // (UI components that bulk up data rely on this)
-            ChannelFuture channelFuture = initializeChannel(b, resource, method, requestBody);
-            channelFuture.addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (future.isSuccess()) {
-                        future.channel().closeFuture().addListener(new ChannelFutureListener() {
+        Job job = Job.create(method + " " + resource, monitor -> {
+            try {
+                Bootstrap b = new Bootstrap();
+                b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+                b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline p = ch.pipeline();
+                        p.addLast(new HttpClientCodec());
+                        p.addLast(new HttpContentToByteBufDecoder());
+                        p.addLast(new ProtobufVarint32FrameDecoder());
+                        p.addLast(new ProtobufHandler(handler) {
                             @Override
-                            public void operationComplete(ChannelFuture future) throws Exception {
-                                handler.onMessage(null);
+                            public BuilderGenerator generator() {
+                                return builderGenerator;
                             }
                         });
                     }
-                }
-            });
-        } catch (IOException | InterruptedException e) {
-            log.log(Level.SEVERE, "Could not execute REST call", e);
-            handler.onException(e);
-        }
+                });
+                // A very verbose way of signaling the end of the stream...
+                // (UI components that bulk up data rely on this)
+                ChannelFuture channelFuture = initializeChannel(b, resource, method, requestBody);
+                channelFuture.addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture future) throws Exception {
+                        if (future.isSuccess()) {
+                            future.channel().closeFuture().addListener(new ChannelFutureListener() {
+                                @Override
+                                public void operationComplete(ChannelFuture future) throws Exception {
+                                    handler.onMessage(null);
+                                }
+                            });
+                        }
+                    }
+                });
+                channelFuture.await();
+                return Status.OK_STATUS;
+            } catch (IOException | InterruptedException e) {
+                log.log(Level.SEVERE, "Could not execute HTTP call", e);
+                handler.onException(e);
+                return Status.OK_STATUS;
+            }
+        });
+        job.schedule();
     }
 
     private ChannelFuture initializeChannel(Bootstrap b, URI resource, HttpMethod method, MessageLite requestBody) throws IOException, InterruptedException {
