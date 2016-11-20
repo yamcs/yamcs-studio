@@ -30,15 +30,12 @@ import org.yamcs.studio.core.web.ResponseHandler;
 import com.google.protobuf.MessageLite;
 
 /**
- * 'Connection context' (for lack of a better name) is the ensemble of the
- * subscribed instance (and matching MDB), and processor.
- * <p>
- * Not calling this a processor per se, because we might transition to be able
- * to connect to an instance without choosing a processor.
+ * Ensemble of information for the subscribed instance (and matching MDB), and
+ * processor.
  */
-public class ConnectionContextInfoDialogHandler extends AbstractHandler {
+public class ProcessingInfoDialogHandler extends AbstractHandler {
 
-    private static final Logger log = Logger.getLogger(ConnectionContextInfoDialogHandler.class.getName());
+    private static final Logger log = Logger.getLogger(ProcessingInfoDialogHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -54,12 +51,7 @@ public class ConnectionContextInfoDialogHandler extends AbstractHandler {
                     if (!display.isDisposed()) {
                         display.asyncExec(() -> {
                             YamcsInstance instance = (YamcsInstance) responseMsg;
-                            ConnectionContextInfoDialog dialog = new ConnectionContextInfoDialog(shell, instance,
-                                    processor);
-                            int ret = dialog.open();
-                            if (ret == IDialogConstants.CLOSE_ID) {
-                                dialog.close();
-                            }
+                            new ProcessingInfoDialog(shell, instance, processor).open();
                         });
                     }
                 }
@@ -73,12 +65,12 @@ public class ConnectionContextInfoDialogHandler extends AbstractHandler {
         return null;
     }
 
-    public static class ConnectionContextInfoDialog extends Dialog {
+    public static class ProcessingInfoDialog extends Dialog {
 
         private YamcsInstance instance;
         private ProcessorInfo processor;
 
-        public ConnectionContextInfoDialog(Shell parentShell, YamcsInstance instance, ProcessorInfo processor) {
+        public ProcessingInfoDialog(Shell parentShell, YamcsInstance instance, ProcessorInfo processor) {
             super(parentShell);
             this.instance = instance;
             this.processor = processor;
@@ -92,8 +84,16 @@ public class ConnectionContextInfoDialogHandler extends AbstractHandler {
         }
 
         @Override
+        protected void buttonPressed(int buttonId) {
+            if (buttonId == IDialogConstants.CLOSE_ID)
+                close();
+            else
+                super.buttonPressed(buttonId);
+        }
+
+        @Override
         protected Control createDialogArea(Composite parent) {
-            parent.getShell().setText("Connection Context");
+            parent.getShell().setText("Processing Info");
 
             Composite composite = new Composite(parent, SWT.NONE);
             GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -113,7 +113,8 @@ public class ConnectionContextInfoDialogHandler extends AbstractHandler {
                 } else {
                     createKeyValueTextPair(composite, "MDB", "Unnamed, instance-specific");
                 }
-                createKeyValueTextPair(composite, "MDB Last Scanned", "todo");
+                // TODO would like to show this
+                createKeyValueTextPair(composite, "MDB Last Scanned", "(information not available)");
 
                 createHeader(composite, "Top-level Space Systems", true);
                 for (int i = 0; i < mdb.getSpaceSystemCount(); i++) {

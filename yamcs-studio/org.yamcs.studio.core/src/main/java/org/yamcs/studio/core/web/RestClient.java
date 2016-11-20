@@ -101,7 +101,7 @@ public class RestClient {
                 b.group(group).channel(NioSocketChannel.class).handler(new FullProtobufChannelInitializer(target, handler));
                 ChannelFuture cf = initializeChannel(b, resource, method, requestBody);
                 cf.await();
-                Thread.sleep(1500); // Fake delay, to improve visual effect in status line
+                //Thread.sleep(1500); // Fake delay, to improve visual effect in status line
                 return Status.OK_STATUS;
             } catch (IOException | InterruptedException e) {
                 log.log(Level.SEVERE, "Could not execute HTTP call", e);

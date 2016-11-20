@@ -32,7 +32,7 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.processor.contextInfoCommand"
+            id="org.yamcs.studio.ui.processor.infoCommand"
             name="Connection Context Info">
       </command>
       <command
@@ -150,8 +150,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.processor.ConnectionContextInfoDialogHandler"
-            commandId="org.yamcs.studio.ui.processor.contextInfoCommand">
+            class="org.yamcs.studio.ui.processor.ProcessingInfoDialogHandler"
+            commandId="org.yamcs.studio.ui.processor.infoCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.state.connected">
                <equals value="true"/>
@@ -168,6 +168,10 @@
       </menuContribution>
       
       <menuContribution locationURI="menu:processor">
+         <command
+               commandId="org.yamcs.studio.ui.processor.infoCommand"
+               label="Processing Info"
+               style="push"/>
          <command
                commandId="org.yamcs.studio.ui.processor.choose"
                label="Switch Processor..."
