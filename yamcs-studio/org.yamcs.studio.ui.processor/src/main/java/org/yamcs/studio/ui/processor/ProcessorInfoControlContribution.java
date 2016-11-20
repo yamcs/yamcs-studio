@@ -26,6 +26,7 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
@@ -94,9 +95,9 @@ public class ProcessorInfoControlContribution extends WorkbenchWindowControlCont
             // click on instance or processor
             if (x < 2 * (X_INDENT + REC_WIDTH - X_OVERLAP)) {
                 if (ConnectionManager.getInstance().isConnected()) {
-                    RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
+                    RCPUtils.runCommand(ProcessorPlugin.CMD_CHOOSE_PROCESSOR);
                 } else {
-                    RCPUtils.runCommand("org.yamcs.studio.ui.connect");
+                    RCPUtils.runCommand(YamcsUIPlugin.CMD_CONNECT);
                 }
             }
         });

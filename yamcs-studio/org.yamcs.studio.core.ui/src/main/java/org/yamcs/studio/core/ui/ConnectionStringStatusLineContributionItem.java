@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
 public class ConnectionStringStatusLineContributionItem extends StatusLineContributionItem
@@ -30,6 +31,16 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         super(id, charWidth);
 
         setToolTipText("Yamcs Server Connection String");
+
+        addClickListener(evt -> {
+            if (ConnectionManager.getInstance().isConnected()) {
+                // Hmm should probably move processor plugin back in core.ui
+                // RCPUtils.runCommand(ProcessorPlugin.CMD_CHOOSE_PROCESSOR);
+                RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
+            } else {
+                RCPUtils.runCommand(YamcsUIPlugin.CMD_CONNECT);
+            }
+        });
 
         // Initial text
         changedSecurity(SecuritySupport.getSubject(), true, null);

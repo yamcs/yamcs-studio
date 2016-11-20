@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
 /**
  * A contribution item to be used with status line managers. Forked and modified
@@ -21,21 +22,15 @@ import org.eclipse.swt.widgets.Label;
  */
 public class StatusLineContributionItem extends ContributionItem {
 
-    private final static int DEFAULT_CHAR_WIDTH = 40;
-
     /**
      * A constant indicating that the contribution should compute its actual
      * size depending on the text. It will grab all space necessary to display
      * the whole text.
-     *
-     * @since 3.6
      */
     public final static int CALC_TRUE_WIDTH = -1;
 
     private int charWidth;
-
     private CLabel label;
-
     private String tooltip;
 
     /**
@@ -47,8 +42,10 @@ public class StatusLineContributionItem extends ContributionItem {
     private String text = Util.ZERO_LENGTH_STRING;
 
     private int widthHint = -1;
-
     private int heightHint = -1;
+
+    private Listener clickListener;
+    private boolean addTrailingSeparator;
 
     /**
      * Creates a status line contribution item with the given id.
@@ -58,7 +55,11 @@ public class StatusLineContributionItem extends ContributionItem {
      *            have no id
      */
     public StatusLineContributionItem(String id) {
-        this(id, DEFAULT_CHAR_WIDTH);
+        this(id, CALC_TRUE_WIDTH, false);
+    }
+
+    public StatusLineContributionItem(String id, boolean addTrailingSeparator) {
+        this(id, CALC_TRUE_WIDTH, addTrailingSeparator);
     }
 
     /**
@@ -75,8 +76,13 @@ public class StatusLineContributionItem extends ContributionItem {
      *            the average character size * 'charWidth'
      */
     public StatusLineContributionItem(String id, int charWidth) {
+        this(id, charWidth, false);
+    }
+
+    public StatusLineContributionItem(String id, int charWidth, boolean addTrailingSeparator) {
         super(id);
         this.charWidth = charWidth;
+        this.addTrailingSeparator = addTrailingSeparator;
         setVisible(false); // no text to start with
     }
 
@@ -89,6 +95,9 @@ public class StatusLineContributionItem extends ContributionItem {
         label.setText(text);
         if (tooltip != null) {
             label.setToolTipText(tooltip);
+        }
+        if (clickListener != null) {
+            label.addListener(SWT.MouseDown, clickListener);
         }
 
         if (charWidth == CALC_TRUE_WIDTH) {
@@ -114,6 +123,13 @@ public class StatusLineContributionItem extends ContributionItem {
         data = new StatusLineLayoutData();
         data.heightHint = heightHint;
         sep.setLayoutData(data);
+
+        if (addTrailingSeparator) {
+            sep = new Label(parent, SWT.SEPARATOR);
+            data = new StatusLineLayoutData();
+            data.heightHint = heightHint;
+            sep.setLayoutData(data);
+        }
     }
 
     /**
@@ -135,6 +151,15 @@ public class StatusLineContributionItem extends ContributionItem {
         this.tooltip = tooltip;
         if (label != null && !label.isDisposed()) {
             label.setToolTipText(tooltip);
+        }
+
+        updateManager();
+    }
+
+    public void addClickListener(Listener listener) {
+        this.clickListener = listener;
+        if (label != null && !label.isDisposed()) {
+            label.addListener(SWT.MouseDown, listener);
         }
 
         updateManager();

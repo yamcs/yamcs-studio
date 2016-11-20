@@ -11,11 +11,15 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
     private static final String DEFAULT_TEXT = "---";
 
     public MissionTimeStatusLineContributionItem(String id) {
-        this(id, CALC_TRUE_WIDTH);
+        this(id, CALC_TRUE_WIDTH, false);
     }
 
-    public MissionTimeStatusLineContributionItem(String id, int charWidth) {
-        super(id, charWidth);
+    public MissionTimeStatusLineContributionItem(String id, boolean addTrailingSeparator) {
+        this(id, CALC_TRUE_WIDTH, addTrailingSeparator);
+    }
+
+    public MissionTimeStatusLineContributionItem(String id, int charWidth, boolean addTrailingSeparator) {
+        super(id, charWidth, addTrailingSeparator);
         setText(DEFAULT_TEXT);
         setToolTipText("Mission Time");
         TimeCatalogue.getInstance().addTimeListener(this);

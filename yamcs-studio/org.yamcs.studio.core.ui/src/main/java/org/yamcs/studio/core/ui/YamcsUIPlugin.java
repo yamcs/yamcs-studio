@@ -11,6 +11,8 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
     private static YamcsUIPlugin plugin;
 
+    public static final String CMD_CONNECT = "org.yamcs.studio.ui.connect";
+
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);

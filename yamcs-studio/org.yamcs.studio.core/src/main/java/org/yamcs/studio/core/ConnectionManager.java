@@ -155,9 +155,9 @@ public class ConnectionManager {
                                 "No 'instance' was specified, and no "
                                         + "default instance was configured on Yamcs Server.");
 
+                        cf.completeExceptionally(ex);
                         // TODO get rid of this, use only future
                         onWebSocketConnectionFailed(ex);
-                        cf.completeExceptionally(ex);
                         return;
                     }
                 }
@@ -178,8 +178,8 @@ public class ConnectionManager {
 
             @Override
             public void onException(Exception e) {
-                onWebSocketConnectionFailed(e);
                 cf.completeExceptionally(e);
+                onWebSocketConnectionFailed(e);
             }
         });
 
