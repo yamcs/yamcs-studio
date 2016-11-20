@@ -59,11 +59,6 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction raiseIssueAction;
     private IWorkbenchAction aboutAction;
 
-    // Allow to override individual addition of status line contribution items
-    protected boolean showYamcsConnectionString = true;
-    protected boolean showProcessor = true;
-    protected boolean showMissionTime = true;
-
     public YamcsStudioActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
         window = configurer.getWindowConfigurer().getWindow();
@@ -185,15 +180,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
-        if (showYamcsConnectionString) {
-            statusLine.add(new ConnectionStringStatusLineContributionItem("ystudio.status.conn"));
-        }
-        if (showProcessor) {
-            statusLine.add(new ProcessorStatusLineContributionItem("ystudio.status.processor"));
-        }
-        if (showMissionTime) {
-            statusLine.add(new MissionTimeStatusLineContributionItem("ystudio.status.missionTime"));
-        }
+        statusLine.add(new ConnectionStringStatusLineContributionItem("ystudio.status.conn"));
+        statusLine.add(new ProcessorStatusLineContributionItem("ystudio.status.processor"));
+        statusLine.add(new MissionTimeStatusLineContributionItem("ystudio.status.missionTime", true));
     }
 
     private void removeActionById(String actionSetId) {
