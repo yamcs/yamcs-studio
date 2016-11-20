@@ -202,7 +202,7 @@ public class ManagementCatalogue implements Catalogue {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
-            restClient.get("/instances/" + yamcsInstance, null, YamcsInstance.newBuilder(), responseHandler);
+            restClient.get("/instances/" + yamcsInstance + "?aggregate", null, YamcsInstance.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }
