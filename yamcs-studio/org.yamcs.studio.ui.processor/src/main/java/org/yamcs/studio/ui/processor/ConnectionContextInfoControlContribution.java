@@ -33,7 +33,7 @@ import org.yamcs.utils.TimeEncoding;
 /**
  * Shows a visual indicator for the currently subscribed processor.
  */
-public class ProcessorInfoControlContribution extends WorkbenchWindowControlContribution
+public class ConnectionContextInfoControlContribution extends WorkbenchWindowControlContribution
         implements StudioConnectionListener, ManagementListener, TimeListener {
 
     private static final int ANGLE_DELTA = 10;

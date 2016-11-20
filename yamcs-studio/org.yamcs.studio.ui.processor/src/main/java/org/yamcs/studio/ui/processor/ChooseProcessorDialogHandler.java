@@ -3,6 +3,7 @@ package org.yamcs.studio.ui.processor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
@@ -14,13 +15,12 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.core.ui.utils.AbstractRestHandler;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.css.OPIUtils;
 
 import com.google.protobuf.MessageLite;
 
-public class ChooseProcessorDialogHandler extends AbstractRestHandler {
+public class ChooseProcessorDialogHandler extends AbstractHandler {
 
     private static final Logger log = Logger.getLogger(ChooseProcessorDialogHandler.class.getName());
 

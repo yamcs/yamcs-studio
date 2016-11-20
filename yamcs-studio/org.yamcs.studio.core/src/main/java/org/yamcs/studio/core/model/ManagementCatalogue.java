@@ -17,6 +17,7 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -192,6 +193,16 @@ public class ManagementCatalogue implements Catalogue {
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
             restClient.patch("/clients/" + clientId, request, null, responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
+    public void fetchInstanceInformationRequest(String yamcsInstance, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            restClient.get("/instances/" + yamcsInstance, null, YamcsInstance.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }
