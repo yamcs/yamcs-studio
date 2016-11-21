@@ -1,9 +1,8 @@
 package org.yamcs.studio.ui.links;
 
-import java.util.logging.Logger;
-
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -17,8 +16,6 @@ import org.yamcs.studio.core.model.LinkListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 public class DataLinkView extends ViewPart implements StudioConnectionListener, InstanceListener, LinkListener {
-
-    private static final Logger log = Logger.getLogger(DataLinkView.class.getName());
 
     private DataLinkTableViewer tableViewer;
     private DataLinkTableViewerContentProvider contentProvider;
@@ -34,8 +31,13 @@ public class DataLinkView extends ViewPart implements StudioConnectionListener, 
         tableViewer.setContentProvider(contentProvider);
         tableViewer.setInput(contentProvider);
 
-        tableViewer.getTable().addListener(SWT.FocusOut, evt -> {
-            tableViewer.getTable().deselectAll();
+        tableViewer.getTable().addListener(SWT.MouseDown, evt -> {
+            // Allow the user to get rid of a selection in small tables
+            // Note: before this was registered to a FocusOut, but that
+            // broke the popup menu for me.
+            if (tableViewer.getCell(new Point(evt.x, evt.y)) == null) {
+                tableViewer.getTable().deselectAll();
+            }
         });
 
         if (getViewSite() != null)
