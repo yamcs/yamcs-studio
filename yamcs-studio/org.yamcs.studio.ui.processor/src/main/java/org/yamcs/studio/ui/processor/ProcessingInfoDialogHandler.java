@@ -19,12 +19,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.MissionDatabase;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.SpaceSystemInfo;
+import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.web.ResponseHandler;
 
 import com.google.protobuf.MessageLite;
@@ -65,10 +69,13 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         return null;
     }
 
-    public static class ProcessingInfoDialog extends Dialog {
+    public static class ProcessingInfoDialog extends Dialog implements ManagementListener, TimeListener {
 
         private YamcsInstance instance;
         private ProcessorInfo processor;
+
+        private StyledText missionTimeTxt;
+        private StyledText processorStateTxt;
 
         public ProcessingInfoDialog(Shell parentShell, YamcsInstance instance, ProcessorInfo processor) {
             super(parentShell);
@@ -76,6 +83,16 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             this.processor = processor;
             setShellStyle(SWT.CLOSE | SWT.MODELESS | SWT.BORDER);
             setBlockOnOpen(false);
+
+            ManagementCatalogue.getInstance().addManagementListener(this);
+            TimeCatalogue.getInstance().addTimeListener(this);
+        }
+
+        @Override
+        public boolean close() {
+            ManagementCatalogue.getInstance().removeManagementListener(this);
+            TimeCatalogue.getInstance().removeTimeListener(this);
+            return super.close();
         }
 
         @Override
@@ -140,20 +157,77 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             createKeyValueTextPair(composite, "Type", processor.getType());
             createKeyValueTextPair(composite, "Created by", processor.getCreator());
             if (processor.hasHasCommanding()) {
-                String supportsCommands = (processor.getHasCommanding() ? "yes" : "no");
+                String supportsCommands = (processor.getHasCommanding() ? "on" : "off");
                 createKeyValueTextPair(composite, "Commanding", supportsCommands);
             }
-            createKeyValueTextPair(composite, "Alarms", "todo");
+            if (processor.hasHasAlarms()) {
+                String supportsAlarms = (processor.getHasAlarms() ? "on" : "off");
+                createKeyValueTextPair(composite, "Alarms", supportsAlarms);
+            }
 
             createHeader(composite, "Runtime Information", true);
             long missionTime = TimeCatalogue.getInstance().getMissionTime();
-            createKeyValueTextPair(composite, "Mission Time", TimeCatalogue.getInstance().toString(missionTime));
-            createKeyValueTextPair(composite, "Processor State", "" + processor.getState());
+            missionTimeTxt = createKeyValueTextPair(composite, "Mission Time",
+                    TimeCatalogue.getInstance().toString(missionTime));
+            processorStateTxt = createKeyValueTextPair(composite, "Processor State", "" + processor.getState());
 
             return composite;
         }
 
-        private void createKeyValueTextPair(Composite parent, String key, String value) {
+        @Override
+        public void processTime(long missionTime) {
+            Display.getDefault().asyncExec(() -> {
+                if (missionTimeTxt != null && !missionTimeTxt.isDisposed())
+                    missionTimeTxt.setText(TimeCatalogue.getInstance().toString(missionTime));
+                else
+                    missionTimeTxt.setText("---");
+            });
+        }
+
+        @Override
+        public void processorUpdated(ProcessorInfo processorInfo) {
+            Display.getDefault().asyncExec(() -> refreshProcessorState());
+        }
+
+        @Override
+        public void processorClosed(ProcessorInfo processorInfo) {
+            Display.getDefault().asyncExec(() -> refreshProcessorState());
+        }
+
+        @Override
+        public void clearAllManagementData() {
+            Display.getDefault().asyncExec(() -> processorStateTxt.setText("---"));
+        }
+
+        @Override
+        public void clientUpdated(ClientInfo clientInfo) {
+        }
+
+        @Override
+        public void clientDisconnected(ClientInfo clientInfo) {
+        }
+
+        @Override
+        public void statisticsUpdated(Statistics stats) {
+        }
+
+        /**
+         * With this dialog currently only being reindered on load, it does not
+         * have capability to follow the client's processor after load.
+         * Therefore, update runtime information using the shown processor,
+         * rather than the current.
+         */
+        private void refreshProcessorState() {
+            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+            ProcessorInfo latestInfo = catalogue.getProcessorInfo(instance.getName(), processor.getName());
+            if (latestInfo != null) {
+                processorStateTxt.setText("" + latestInfo.getState());
+            } else {
+                processorStateTxt.setText("---");
+            }
+        }
+
+        private StyledText createKeyValueTextPair(Composite parent, String key, String value) {
             Label lbl = new Label(parent, SWT.NONE);
             if (key != null)
                 lbl.setText(key + ":");
@@ -170,6 +244,7 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             txt.setCaret(null);
             txt.setText(value);
             txt.setWordWrap(true);
+            return txt;
         }
 
         private void createSeparator(Composite parent) {

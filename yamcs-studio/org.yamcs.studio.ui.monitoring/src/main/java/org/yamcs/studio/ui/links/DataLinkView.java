@@ -97,7 +97,6 @@ public class DataLinkView extends ViewPart implements StudioConnectionListener, 
             if (display.isDisposed())
                 return;
 
-            log.info("processing updateLink " + linkInfo);
             contentProvider.processLinkInfo(linkInfo);
         });
     }
