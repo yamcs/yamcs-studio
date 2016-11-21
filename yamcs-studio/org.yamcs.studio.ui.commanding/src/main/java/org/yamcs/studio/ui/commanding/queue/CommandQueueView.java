@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.CommandQueueListener;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.utils.TimeEncoding;
@@ -24,7 +23,7 @@ public class CommandQueueView extends ViewPart implements CommandQueueListener {
     public static long oldCommandWarningTime = 60;
     private static final Logger log = Logger.getLogger(CommandQueueView.class.getName());
 
-    HashMap<String, QueuesTableModel> queuesModels = new HashMap<String, QueuesTableModel>();
+    HashMap<String, QueuesTableModel> queuesModels = new HashMap<>();
     QueuesTableModel currentQueuesModel;
 
     CommandQueuesTableContentProvider commandQueuesContentProvider;
@@ -34,11 +33,7 @@ public class CommandQueueView extends ViewPart implements CommandQueueListener {
     CommandQueuedTableViewer commandQueuedTableViewer;
 
     @Override
-    public void onStudioConnect() {
-    }
-
-    @Override
-    public void onStudioDisconnect() {
+    public void clearCommandQueueData() {
         Display.getDefault().asyncExec(() -> {
             commandQueuesTableViewer.getTable().removeAll();
             commandQueuedTableViewer.getTable().removeAll();
@@ -84,7 +79,12 @@ public class CommandQueueView extends ViewPart implements CommandQueueListener {
         refreshState();
 
         CommandingCatalogue.getInstance().addCommandQueueListener(this);
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+    }
+
+    @Override
+    public void dispose() {
+        CommandingCatalogue.getInstance().removeCommandQueueListener(this);
+        super.dispose();
     }
 
     public void refreshState() {
@@ -170,8 +170,6 @@ public class CommandQueueView extends ViewPart implements CommandQueueListener {
         CommandQueueView cqv = new CommandQueueView();
         cqv.createPartControl(shell);
         shell.pack();
-
-        cqv.onStudioConnect();
 
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {

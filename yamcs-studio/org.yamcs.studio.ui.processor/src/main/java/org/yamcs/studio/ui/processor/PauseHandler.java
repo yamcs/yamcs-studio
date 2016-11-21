@@ -25,21 +25,22 @@ public class PauseHandler extends AbstractHandler {
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
         ProcessorInfo processorInfo = catalogue.getCurrentProcessorInfo();
         EditProcessorRequest req = EditProcessorRequest.newBuilder().setState("PAUSED").build();
-        catalogue.editProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                // success
-            }
+        catalogue.editProcessorRequest(processorInfo.getInstance(), processorInfo.getName(), req,
+                new ResponseHandler() {
+                    @Override
+                    public void onMessage(MessageLite responseMsg) {
+                        // success
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not pause processing", e);
-                Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not pause processing",
-                            e.getMessage());
+                    @Override
+                    public void onException(Exception e) {
+                        log.log(Level.SEVERE, "Could not pause processing", e);
+                        Display.getDefault().asyncExec(() -> {
+                            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not pause processing",
+                                    e.getMessage());
+                        });
+                    }
                 });
-            }
-        });
         return null;
     }
 }

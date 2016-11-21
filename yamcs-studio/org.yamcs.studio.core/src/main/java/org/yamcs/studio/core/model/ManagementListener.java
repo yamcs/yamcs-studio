@@ -35,4 +35,12 @@ public interface ManagementListener {
      * Called when *any* client was disconnected.
      */
     public void clientDisconnected(ClientInfo clientInfo);
+
+    /**
+     * Called when all listeners should update their state to remove any client or processor data.
+     * This serves to warrant consistency between the catalogue and any listeners.
+     * <p>
+     * Currently the only event where this can happen, is when the Studio lost connection.
+     */
+    public void clearAllManagementData();
 }

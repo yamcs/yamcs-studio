@@ -89,6 +89,11 @@ public class TimeCatalogue implements Catalogue {
     }
 
     @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        distributeTime(TimeEncoding.INVALID_INSTANT);
+    }
+
+    @Override
     public void onStudioDisconnect() {
         distributeTime(TimeEncoding.INVALID_INSTANT);
     }

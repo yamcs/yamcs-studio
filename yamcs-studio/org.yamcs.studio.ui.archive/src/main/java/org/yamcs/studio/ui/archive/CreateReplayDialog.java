@@ -159,10 +159,12 @@ public class CreateReplayDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
-        CreateProcessorRequest req = toCreateProcessorRequest();
+
+        ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
+        CreateProcessorRequest req = toCreateProcessorRequest(ci);
 
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        catalogue.createProcessorRequest(req, new ResponseHandler() {
+        catalogue.createProcessorRequest(ci.getInstance(), req, new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
                 Display.getDefault().asyncExec(() -> {
@@ -194,8 +196,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         ppValue = ppGroups;
     }
 
-    public CreateProcessorRequest toCreateProcessorRequest() {
-        ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
+    public CreateProcessorRequest toCreateProcessorRequest(ClientInfo ci) {
         CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
                 .setName(name.getText())
                 .setStart(TimeEncoding.toString(TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime))))

@@ -38,21 +38,22 @@ public class ForwardHandler extends AbstractHandler {
         }
         EditProcessorRequest req = EditProcessorRequest.newBuilder().setSpeed(newSpeed).build();
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        catalogue.editProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                // success
-            }
+        catalogue.editProcessorRequest(processorInfo.getInstance(), processorInfo.getName(), req,
+                new ResponseHandler() {
+                    @Override
+                    public void onMessage(MessageLite responseMsg) {
+                        // success
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not change speed of processing", e);
-                Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not change speed of processing",
-                            e.getMessage());
+                    @Override
+                    public void onException(Exception e) {
+                        log.log(Level.SEVERE, "Could not change speed of processing", e);
+                        Display.getDefault().asyncExec(() -> {
+                            MessageDialog.openError(HandlerUtil.getActiveShell(event),
+                                    "Could not change speed of processing", e.getMessage());
+                        });
+                    }
                 });
-            }
-        });
         return null;
     }
 }

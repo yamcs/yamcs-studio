@@ -14,12 +14,8 @@ public interface LinkListener {
     public void linkUpdated(LinkInfo linkInfo);
 
     /**
-     * The listener should clear its internal state, as if there are no links. This can happen for
-     * two reasons:
-     * <ul>
-     * <li>The connection was lost
-     * <li>The instance was changed within the same connection
-     * </ul>
+     * The listener should clear its internal state, as if there are no links. This usually happens
+     * when the connection was lost
      */
-    public void reinitializeLinkData();
+    public void clearDataLinkData();
 }

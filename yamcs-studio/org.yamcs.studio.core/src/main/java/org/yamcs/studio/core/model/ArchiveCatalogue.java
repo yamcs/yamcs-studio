@@ -30,11 +30,15 @@ public class ArchiveCatalogue implements Catalogue {
     }
 
     @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+    }
+
+    @Override
     public void onStudioDisconnect() {
     }
 
     public void downloadCommands(TimeInterval interval, ResponseHandler responseHandler) {
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/downloads/commands");
         if (interval.hasStart())
             urlb.setParam("start", interval.getStartUTC());
@@ -50,7 +54,7 @@ public class ArchiveCatalogue implements Catalogue {
     }
 
     public void downloadIndexes(TimeInterval interval, ResponseHandler responseHandler) {
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/indexes");
         urlb.setParam("filter", Arrays.asList("tm", "pp", "commands", "completeness"));
         if (interval.hasStart())
@@ -67,10 +71,9 @@ public class ArchiveCatalogue implements Catalogue {
     }
 
     public void createTag(CreateTagRequest request, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
         if (restClient != null) {
-            String instance = connectionManager.getYamcsInstance();
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.post("/archive/" + instance + "/tags", request, ArchiveTag.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
@@ -81,7 +84,7 @@ public class ArchiveCatalogue implements Catalogue {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
-            String instance = connectionManager.getYamcsInstance();
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
@@ -92,7 +95,7 @@ public class ArchiveCatalogue implements Catalogue {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
-            String instance = connectionManager.getYamcsInstance();
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
@@ -101,7 +104,7 @@ public class ArchiveCatalogue implements Catalogue {
 
     public void listTags(TimeInterval interval, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        String instance = connectionManager.getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
 
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/tags");
         if (interval.hasStart())

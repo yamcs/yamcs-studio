@@ -31,12 +31,22 @@ public class EventCatalogue implements Catalogue {
         webSocketClient.sendMessage(new WebSocketRequest("events", "subscribe"));
     }
 
+    @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        // Don't assume anything. Let listeners choose whether they want
+        // to register as an instance listeners.
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+    }
+
     public void processEvent(Event event) {
         eventListeners.forEach(l -> l.processEvent(event));
     }
 
     public void downloadEvents(long start, long stop, ResponseHandler responseHandler) {
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         String resource = "/archive/" + instance + "/downloads/events";
         if (start != TimeEncoding.INVALID_INSTANT) {
             resource += "?start=" + start;
@@ -52,9 +62,5 @@ public class EventCatalogue implements Catalogue {
         } else {
             responseHandler.onException(new NotConnectedException());
         }
-    }
-
-    @Override
-    public void onStudioDisconnect() {
     }
 }

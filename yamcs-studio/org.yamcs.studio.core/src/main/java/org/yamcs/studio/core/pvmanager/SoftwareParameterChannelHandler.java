@@ -18,6 +18,8 @@ import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.model.InstanceListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 import org.yamcs.studio.core.web.ResponseHandler;
@@ -28,7 +30,7 @@ import com.google.protobuf.MessageLite;
  * Supports writable Software parameters
  */
 public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsPVReader, StudioConnectionListener {
+        implements YamcsPVReader, StudioConnectionListener, InstanceListener {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
@@ -41,12 +43,23 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
         super(channelName);
         id = NamedObjectId.newBuilder().setName(channelName).build();
         ConnectionManager.getInstance().addStudioConnectionListener(this);
+        ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
     @Override
     public void onStudioConnect() {
-        log.info("processConnectionInfo called on " + getChannelName());
+        log.fine("connect called on " + getChannelName());
         connect();
+    }
+
+    @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        // The server will normally transfer our parameter subscription,
+        // but don't necessarily trust that right now. So reconnect all pvs
+        // manually
+        // (probably handled by OPIUtils.refresh in org.yamcs.studio.ui.css.Activator)
+        ///disconnect();
+        ///connect();
     }
 
     @Override

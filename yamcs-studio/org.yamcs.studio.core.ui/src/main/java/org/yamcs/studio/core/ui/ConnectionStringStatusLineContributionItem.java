@@ -34,9 +34,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
         addClickListener(evt -> {
             if (ConnectionManager.getInstance().isConnected()) {
-                // Hmm should probably move processor plugin back in core.ui
-                // RCPUtils.runCommand(ProcessorPlugin.CMD_CHOOSE_PROCESSOR);
-                RCPUtils.runCommand("org.yamcs.studio.ui.processor.choose");
+                // TODO show server info (version string etc)
             } else {
                 RCPUtils.runCommand(YamcsUIPlugin.CMD_CONNECT);
             }

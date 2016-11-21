@@ -89,13 +89,13 @@ public class ConnectionManager {
         }
     }
 
-    public String getYamcsInstance() {
+    /**
+     * This returns the Yamcs instance that was used to set up the connection. You probably don't
+     * need this in any views. Instead use {@link ManagementCatalogue.getCurrentYamcsInstance()}
+     * instead which reflects instance changes within the same connection.
+     */
+    public String getInitialYamcsInstance() {
         return connectionInfo.getConnection(mode).getInstance();
-    }
-
-    public void setYamcsInstance(String yamcsInstance) {
-        // TODO should not reuse conn info field
-        connectionInfo.getConnection(mode).setInstance(yamcsInstance);
     }
 
     public String getUsername() {

@@ -93,6 +93,10 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
     }
 
     @Override
+    public void clearAllManagementData() {
+    }
+
+    @Override
     public void onStudioConnect() {
     }
 

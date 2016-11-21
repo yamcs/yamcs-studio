@@ -10,29 +10,14 @@ import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
 
-public class ClientsView extends ViewPart implements StudioConnectionListener, ManagementListener {
+public class ClientsView extends ViewPart implements ManagementListener {
 
-    ClientsTableViewer clientsTableViewer;
-    ClientsContentProvider clientsContentProvider;
-    ClientsTableModel currentClientsModel;
-
-    @Override
-    public void onStudioConnect() {
-    }
-
-    @Override
-    public void onStudioDisconnect() {
-        Display.getDefault().asyncExec(() ->
-        {
-            this.clientsTableViewer.getTable().removeAll();
-            this.currentClientsModel = null;
-        });
-    }
+    private ClientsTableViewer clientsTableViewer;
+    private ClientsContentProvider clientsContentProvider;
+    private ClientsTableModel currentClientsModel;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -56,16 +41,19 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, M
 
         // Set initial state
         clientsTableViewer.refresh();
-        
-        ManagementCatalogue.getInstance().addManagementListener(this);
 
-        // Connection to Yamcs server
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        ManagementCatalogue.getInstance().addManagementListener(this);
+    }
+
+    @Override
+    public void dispose() {
+        ManagementCatalogue.getInstance().removeManagementListener(this);
+        super.dispose();
     }
 
     @Override
     public void setFocus() {
-
+        clientsTableViewer.getTable().setFocus();
     }
 
     @Override
@@ -82,12 +70,10 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, M
 
     @Override
     public void clientUpdated(ClientInfo clientInfo) {
-        if (currentClientsModel == null)
-        {
+        if (currentClientsModel == null) {
             currentClientsModel = new ClientsTableModel(clientsTableViewer);
         }
-        Display.getDefault().asyncExec(() ->
-        {
+        Display.getDefault().asyncExec(() -> {
             currentClientsModel.updateClient(clientInfo);
         });
 
@@ -95,12 +81,18 @@ public class ClientsView extends ViewPart implements StudioConnectionListener, M
 
     @Override
     public void clientDisconnected(ClientInfo clientInfo) {
-        Display.getDefault().asyncExec(() ->
-        {
+        Display.getDefault().asyncExec(() -> {
             if (currentClientsModel != null && clientInfo != null) {
                 currentClientsModel.removeClient(clientInfo);
             }
         });
     }
 
+    @Override
+    public void clearAllManagementData() {
+        Display.getDefault().asyncExec(() -> {
+            clientsTableViewer.getTable().removeAll();
+            currentClientsModel = null;
+        });
+    }
 }

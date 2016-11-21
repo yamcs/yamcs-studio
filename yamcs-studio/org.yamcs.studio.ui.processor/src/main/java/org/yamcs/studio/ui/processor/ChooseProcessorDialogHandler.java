@@ -7,16 +7,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.EditClientRequest;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.ui.css.OPIUtils;
 
 import com.google.protobuf.MessageLite;
 
@@ -32,16 +28,15 @@ public class ChooseProcessorDialogHandler extends AbstractHandler {
             ProcessorInfo info = dialog.getProcessorInfo();
             if (info != null) {
                 ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-                ClientInfo clientInfo = catalogue.getCurrentClientInfo();
+                int currentClientId = catalogue.getCurrentClientInfo().getId();
                 EditClientRequest req = EditClientRequest.newBuilder().setInstance(info.getInstance())
                         .setProcessor(info.getName()).build();
-                catalogue.editClientRequest(clientInfo.getId(), req, new ResponseHandler() {
+
+                // Internal state will be changed automatically within
+                // the ManagementCatalogue.
+                catalogue.editClientRequest(currentClientId, req, new ResponseHandler() {
                     @Override
                     public void onMessage(MessageLite responseMsg) {
-                        Display.getDefault().asyncExec(() -> {
-                            ConnectionManager.getInstance().setYamcsInstance(info.getInstance());
-                            OPIUtils.resetDisplays();
-                        });
                     }
 
                     @Override

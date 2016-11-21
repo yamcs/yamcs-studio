@@ -8,7 +8,7 @@
       </category>
       <view
             category="org.yamcs.studio.server"
-            class="org.yamcs.studio.ui.links.LinksView"
+            class="org.yamcs.studio.ui.links.DataLinkView"
             icon="icons/eview16/datalinks.png"
             id="org.yamcs.studio.ui.links.LinksView"
             name="Data Links"/>

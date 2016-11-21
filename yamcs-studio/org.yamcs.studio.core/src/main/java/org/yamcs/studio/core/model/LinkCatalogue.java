@@ -26,7 +26,7 @@ import org.yamcs.studio.core.web.WebSocketRegistrar;
  * application (same lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining
  * correct state accross connection-reconnects, so listeners only need to register once.
  */
-public class LinkCatalogue implements Catalogue {
+public class LinkCatalogue implements Catalogue, InstanceListener {
 
     private static final Logger log = Logger.getLogger(LinkCatalogue.class.getName());
 
@@ -44,10 +44,18 @@ public class LinkCatalogue implements Catalogue {
     }
 
     @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        // Nothing, the state in this catalogue is server-wide. Not instance-specific
+    }
+
+    @Override
     public void onStudioDisconnect() {
-        // Clear everything, we'll get a fresh set upon connect
+        clearState();
+    }
+
+    private void clearState() {
         linksById.clear();
-        linkListeners.forEach(l -> l.reinitializeLinkData());
+        linkListeners.forEach(l -> l.clearDataLinkData());
     }
 
     public void addLinkListener(LinkListener listener) {
@@ -55,6 +63,10 @@ public class LinkCatalogue implements Catalogue {
 
         // Inform listeners of the current model
         linksById.forEach((k, v) -> listener.linkRegistered(v));
+    }
+
+    public void removeLinkListener(LinkListener listener) {
+        linkListeners.remove(listener);
     }
 
     public void processLinkEvent(LinkEvent linkEvent) {

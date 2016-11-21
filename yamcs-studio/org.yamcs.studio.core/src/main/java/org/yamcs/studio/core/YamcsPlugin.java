@@ -35,9 +35,11 @@ public class YamcsPlugin extends Plugin {
         log.info(getProductIdentifier());
         TimeEncoding.setUp();
 
+        ManagementCatalogue managementCatalogue = new ManagementCatalogue();
+
         catalogues.put(TimeCatalogue.class, new TimeCatalogue());
         catalogues.put(ParameterCatalogue.class, new ParameterCatalogue());
-        catalogues.put(ManagementCatalogue.class, new ManagementCatalogue());
+        catalogues.put(ManagementCatalogue.class, managementCatalogue);
         catalogues.put(CommandingCatalogue.class, new CommandingCatalogue());
         catalogues.put(AlarmCatalogue.class, new AlarmCatalogue());
         catalogues.put(EventCatalogue.class, new EventCatalogue());
@@ -45,7 +47,10 @@ public class YamcsPlugin extends Plugin {
         catalogues.put(ArchiveCatalogue.class, new ArchiveCatalogue());
 
         connectionManager = new ConnectionManager();
-        catalogues.values().forEach(c -> connectionManager.addStudioConnectionListener(c));
+        catalogues.values().forEach(c -> {
+            managementCatalogue.addInstanceListener(c);
+            connectionManager.addStudioConnectionListener(c);
+        });
     }
 
     public static void setProductIdentifier(String productIdentifier) {

@@ -12,6 +12,8 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.model.InstanceListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
 
@@ -21,7 +23,7 @@ import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
  * under a different scheme.
  */
 public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsPVReader, StudioConnectionListener {
+        implements YamcsPVReader, StudioConnectionListener, InstanceListener {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
@@ -31,6 +33,12 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         super(channelName);
         id = NamedObjectId.newBuilder().setName(channelName).build();
         ConnectionManager.getInstance().addStudioConnectionListener(this);
+        ManagementCatalogue.getInstance().addInstanceListener(this);
+    }
+
+    @Override
+    public NamedObjectId getId() {
+        return id;
     }
 
     @Override
@@ -40,8 +48,13 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
-    public NamedObjectId getId() {
-        return id;
+    public void instanceChanged(String oldInstance, String newInstance) {
+        // The server will normally transfer our parameter subscription,
+        // but don't necessarily trust that right now. So reconnect all pvs
+        // manually
+        // (probably handled by OPIUtils.refresh in org.yamcs.studio.ui.css.Activator)
+        ///disconnect();
+        ///connect();
     }
 
     @Override

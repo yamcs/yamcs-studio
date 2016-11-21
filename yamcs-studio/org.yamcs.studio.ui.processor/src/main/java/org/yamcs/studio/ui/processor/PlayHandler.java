@@ -31,20 +31,21 @@ public class PlayHandler extends AbstractHandler {
         ProcessorInfo processorInfo = catalogue.getCurrentProcessorInfo();
         EditProcessorRequest req = EditProcessorRequest.newBuilder().setState("RUNNING").build();
 
-        catalogue.editProcessorRequest(processorInfo.getName(), req, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-            }
+        catalogue.editProcessorRequest(processorInfo.getInstance(), processorInfo.getName(), req,
+                new ResponseHandler() {
+                    @Override
+                    public void onMessage(MessageLite responseMsg) {
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not resume processing", e);
-                Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not resume processing",
-                            e.getMessage());
+                    @Override
+                    public void onException(Exception e) {
+                        log.log(Level.SEVERE, "Could not resume processing", e);
+                        Display.getDefault().asyncExec(() -> {
+                            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Could not resume processing",
+                                    e.getMessage());
+                        });
+                    }
                 });
-            }
-        });
         return null;
     }
 }

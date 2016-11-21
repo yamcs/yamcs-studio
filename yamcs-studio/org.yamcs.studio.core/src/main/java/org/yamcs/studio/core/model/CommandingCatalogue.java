@@ -44,12 +44,11 @@ public class CommandingCatalogue implements Catalogue {
     private AtomicInteger cmdClientId = new AtomicInteger(1);
     private List<CommandInfo> metaCommands = Collections.emptyList();
     private Map<String, CommandQueueInfo> queuesByName = new ConcurrentHashMap<>();
+    // Indexes
+    private Map<String, CommandInfo> commandsByQualifiedName = new LinkedHashMap<>();
 
     private Set<CommandHistoryListener> cmdhistListeners = new CopyOnWriteArraySet<>();
     private Set<CommandQueueListener> queueListeners = new CopyOnWriteArraySet<>();
-
-    // Indexes
-    private Map<String, CommandInfo> commandsByQualifiedName = new LinkedHashMap<>();
 
     public static CommandingCatalogue getInstance() {
         return YamcsPlugin.getDefault().getCatalogue(CommandingCatalogue.class);
@@ -70,18 +69,41 @@ public class CommandingCatalogue implements Catalogue {
         queuesByName.forEach((k, v) -> listener.updateQueue(v));
     }
 
+    public void removeCommandHistoryListener(CommandHistoryListener listener) {
+        cmdhistListeners.remove(listener);
+    }
+
+    public void removeCommandQueueListener(CommandQueueListener listener) {
+        queueListeners.remove(listener);
+    }
+
     @Override
     public void onStudioConnect() {
         WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
         webSocketClient.sendMessage(new WebSocketRequest("cmdhistory", "subscribe"));
         webSocketClient.sendMessage(new WebSocketRequest("cqueues", "subscribe"));
-        loadMetaCommands();
+        initialiseState();
+    }
+
+    @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        clearState();
+        initialiseState();
     }
 
     @Override
     public void onStudioDisconnect() {
+        clearState();
+    }
+
+    private void initialiseState() {
+        loadMetaCommands();
+    }
+
+    private void clearState() {
         metaCommands = Collections.emptyList();
         queuesByName.clear();
+        commandsByQualifiedName.clear();
     }
 
     public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
@@ -119,7 +141,7 @@ public class CommandingCatalogue implements Catalogue {
 
     public void sendCommand(String processor, String commandName, IssueCommandRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        String instance = connectionManager.getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
             restClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request, IssueCommandResponse.newBuilder(),
@@ -131,7 +153,7 @@ public class CommandingCatalogue implements Catalogue {
 
     public void editQueue(CommandQueueInfo queue, EditCommandQueueRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        String instance = connectionManager.getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
             restClient.patch("/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(),
@@ -143,7 +165,7 @@ public class CommandingCatalogue implements Catalogue {
 
     public void editQueuedCommand(CommandQueueEntry entry, EditCommandQueueEntryRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        String instance = connectionManager.getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
             restClient.patch(
@@ -169,7 +191,7 @@ public class CommandingCatalogue implements Catalogue {
         log.fine("Fetching available commands");
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
-        String instance = connectionManager.getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         restClient.get("/mdb/" + instance + "/commands", null, ListCommandInfoResponse.newBuilder(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
@@ -194,7 +216,7 @@ public class CommandingCatalogue implements Catalogue {
 
     public void updateCommandComment(String processor, CommandId cmdId, String newComment, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        String instance = connectionManager.getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         RestClient restClient = connectionManager.getRestClient();
 
         KeyValue keyValue = KeyValue.newBuilder().setKey("Comment").setValue(newComment).build();

@@ -40,6 +40,8 @@ import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.TimeInterval;
+import org.yamcs.studio.core.model.InstanceListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
@@ -48,7 +50,7 @@ import org.yamcs.studio.ui.processor.ProcessorStateProvider;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart
-        implements StudioConnectionListener, TimeListener, ISourceProviderListener {
+        implements StudioConnectionListener, InstanceListener, TimeListener, ISourceProviderListener {
 
     private static final Logger log = Logger.getLogger(ArchiveView.class.getName());
 
@@ -224,6 +226,7 @@ public class ArchiveView extends ViewPart
         indexReceiver.setIndexListener(this);
         TimeCatalogue.getInstance().addTimeListener(this);
         ConnectionManager.getInstance().addStudioConnectionListener(this);
+        ManagementCatalogue.getInstance().addInstanceListener(this);
 
         updateState();
     }
@@ -231,6 +234,7 @@ public class ArchiveView extends ViewPart
     @Override
     public void dispose() {
         super.dispose();
+        ManagementCatalogue.getInstance().removeInstanceListener(this);
         TimeCatalogue.getInstance().removeTimeListener(this);
         processorState.removeSourceProviderListener(this);
         connectionState.removeSourceProviderListener(this);
@@ -247,12 +251,21 @@ public class ArchiveView extends ViewPart
     public void onStudioConnect() {
         SwingUtilities.invokeLater(() -> {
             setRefreshEnabled(true);
-            refresh();
+            refreshData();
         });
     }
 
     @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        clearInstanceSpecificState();
+    }
+
+    @Override
     public void onStudioDisconnect() {
+        clearInstanceSpecificState();
+    }
+
+    private void clearInstanceSpecificState() {
         SwingUtilities.invokeLater(() -> {
             setRefreshEnabled(false);
             archivePanel.getDataViewer().getDataView()
@@ -373,7 +386,7 @@ public class ArchiveView extends ViewPart
     private void doFilter(TimeInterval range) {
         SwingUtilities.invokeLater(() -> {
             archivePanel.prefs.saveRange(range);
-            refresh();
+            refreshData();
         });
     }
 
@@ -506,7 +519,7 @@ public class ArchiveView extends ViewPart
         archivePanel.archiveLoadFinished();
     }
 
-    public void refresh() {
+    public void refreshData() {
         archivePanel.startReloading();
         TimeInterval interval = archivePanel.getRequestedDataInterval();
         indexReceiver.getIndex(interval);

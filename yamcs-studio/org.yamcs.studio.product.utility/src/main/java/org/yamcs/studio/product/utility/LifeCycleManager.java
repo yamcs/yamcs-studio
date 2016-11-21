@@ -72,6 +72,10 @@ public class LifeCycleManager {
                 public void clientDisconnected(ClientInfo clientInfo) {
                     updateGlobalProcessingState(clientInfo);
                 }
+
+                @Override
+                public void clearAllManagementData() {
+                }
             });
 
             // request connection to Yamcs server

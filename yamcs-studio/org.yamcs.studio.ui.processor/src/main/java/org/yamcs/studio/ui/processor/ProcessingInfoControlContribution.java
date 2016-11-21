@@ -184,6 +184,15 @@ public class ProcessingInfoControlContribution extends WorkbenchWindowControlCon
     }
 
     @Override
+    public void clearAllManagementData() {
+        Display.getDefault().asyncExec(() -> {
+            processorInfo = null;
+            if (!canvas.isDisposed())
+                canvas.redraw();
+        });
+    }
+
+    @Override
     public void dispose() {
         if (timeFont != null)
             timeFont.dispose();

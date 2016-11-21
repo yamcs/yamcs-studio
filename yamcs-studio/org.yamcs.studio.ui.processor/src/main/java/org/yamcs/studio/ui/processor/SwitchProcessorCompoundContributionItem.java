@@ -20,7 +20,6 @@ import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 /**
@@ -39,7 +38,7 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
         ProcessorInfo currentProcessor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
         items.add(createProcessorItem(currentProcessor));
         items.add(new Separator());
-        String instance = ConnectionManager.getInstance().getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         List<ProcessorInfo> processors = ManagementCatalogue.getInstance().getProcessors(instance);
         Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
         processors.forEach(processor -> {

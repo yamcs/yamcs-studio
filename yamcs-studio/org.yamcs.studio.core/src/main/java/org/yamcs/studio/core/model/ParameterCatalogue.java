@@ -2,10 +2,10 @@ package org.yamcs.studio.core.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,8 +41,8 @@ public class ParameterCatalogue implements Catalogue {
     private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
     private Map<NamedObjectId, ParameterInfo> parametersById = new LinkedHashMap<>();
 
-    // Index for faster repeated access
-    private Map<NamedObjectId, String> unitsById = new HashMap<>();
+    // Index for faster repeat access
+    private Map<NamedObjectId, String> unitsById = new ConcurrentHashMap<>();
 
     private LosTracker losTracker = new LosTracker();
 
@@ -62,8 +62,20 @@ public class ParameterCatalogue implements Catalogue {
     }
 
     @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        clearState();
+        loadMetaParameters();
+        reportConnectionState();
+    }
+
+    @Override
     public void onStudioDisconnect() {
+        clearState();
+    }
+
+    private void clearState() {
         metaParameters = Collections.emptyList();
+        unitsById.clear();
         reportConnectionState();
     }
 
@@ -112,7 +124,9 @@ public class ParameterCatalogue implements Catalogue {
 
         pvReadersById.forEach((id, pvReader) -> {
             ParameterInfo parameter = parametersById.get(id);
-            log.finer(String.format("Signaling %s --> %s", id, parameter));
+            if (log.isLoggable(Level.FINER)) {
+                log.finer(String.format("Signaling %s --> %s", id, parameter));
+            }
             pvReader.processConnectionInfo(new PVConnectionInfo(parameter));
         });
     }
@@ -121,7 +135,9 @@ public class ParameterCatalogue implements Catalogue {
         for (ParameterValue pval : pdata.getParameterList()) {
             YamcsPVReader pvReader = pvReadersById.get(pval.getId());
             if (pvReader != null) {
-                log.fine(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(), pval.getEngValue()));
+                if (log.isLoggable(Level.FINER)) {
+                    log.finer(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(), pval.getEngValue()));
+                }
                 losTracker.updatePv(pvReader, pval);
                 pvReader.processParameterValue(pval);
             } else {
@@ -145,7 +161,7 @@ public class ParameterCatalogue implements Catalogue {
         log.fine("Fetching available parameters");
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
-        String instance = connectionManager.getYamcsInstance();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         restClient.get("/mdb/" + instance + "/parameters", null, ListParameterInfoResponse.newBuilder(), new ResponseHandler() {
             @Override
             public void onMessage(MessageLite responseMsg) {
@@ -164,7 +180,7 @@ public class ParameterCatalogue implements Catalogue {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
-            String instance = connectionManager.getYamcsInstance();
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
@@ -176,7 +192,7 @@ public class ParameterCatalogue implements Catalogue {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         RestClient restClient = connectionManager.getRestClient();
         if (restClient != null) {
-            String instance = connectionManager.getYamcsInstance();
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null, responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());

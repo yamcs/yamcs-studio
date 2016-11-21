@@ -27,11 +27,15 @@ public class AlarmCatalogue implements Catalogue {
         webSocketClient.sendMessage(new WebSocketRequest("alarms", "subscribe"));
     }
 
-    public void processAlarmData(AlarmData alarmData) {
-        alarmListeners.forEach(l -> l.processAlarmData(alarmData));
+    @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
     }
 
     @Override
     public void onStudioDisconnect() {
+    }
+
+    public void processAlarmData(AlarmData alarmData) {
+        alarmListeners.forEach(l -> l.processAlarmData(alarmData));
     }
 }

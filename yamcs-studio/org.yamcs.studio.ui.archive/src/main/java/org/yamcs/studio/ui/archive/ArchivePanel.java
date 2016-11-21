@@ -234,7 +234,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             String seekTime = TimeEncoding.toString(newPosition);
             EditProcessorRequest req = EditProcessorRequest.newBuilder().setSeek(seekTime).build();
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            catalogue.editProcessorRequest(processor.getName(), req, new ResponseHandler() {
+            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req, new ResponseHandler() {
                 @Override
                 public void onMessage(MessageLite responseMsg) {
                     Display.getDefault().asyncExec(() -> {
