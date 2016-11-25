@@ -22,7 +22,6 @@ import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.pvmanager.LosTracker;
 import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.core.pvmanager.YamcsPVReader;
-import org.yamcs.studio.core.web.InvalidIdentification;
 import org.yamcs.studio.core.web.MergeableWebSocketRequest;
 import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.RestClient;
@@ -183,6 +182,16 @@ public class ParameterCatalogue implements Catalogue {
         if (restClient != null) {
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
+    }
+
+    public void fetchParameterValue(String instance, String qualifiedName, ResponseHandler responseHandler) {
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        RestClient restClient = connectionManager.getRestClient();
+        if (restClient != null) {
+            restClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null, ParameterData.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }
