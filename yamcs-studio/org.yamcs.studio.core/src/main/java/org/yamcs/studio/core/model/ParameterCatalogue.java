@@ -147,7 +147,8 @@ public class ParameterCatalogue implements Catalogue {
     }
 
     public void processInvalidIdentification(NamedObjectId id) {
-        pvReadersById.get(id).reportException(new InvalidIdentification(id));
+        log.fine("No pv for id " + id);
+        //pvReadersById.get(id).reportException(new InvalidIdentification(id));
     }
 
     private void reportConnectionState() {
