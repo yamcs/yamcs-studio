@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
@@ -25,6 +26,10 @@ public class EventCatalogue implements Catalogue {
         eventListeners.add(listener);
     }
 
+    public void removeEventListener(EventListener listener) {
+        eventListeners.remove(listener);
+    }
+
     @Override
     public void onStudioConnect() {
         WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
@@ -43,6 +48,16 @@ public class EventCatalogue implements Catalogue {
 
     public void processEvent(Event event) {
         eventListeners.forEach(l -> l.processEvent(event));
+    }
+
+    public void fetchLatestEvents(String instance, ResponseHandler responseHandler) {
+        String resource = "/archive/" + instance + "/events";
+        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        if (restClient != null) {
+            restClient.get(resource, null, ListEventsResponse.newBuilder(), responseHandler);
+        } else {
+            responseHandler.onException(new NotConnectedException());
+        }
     }
 
     public void downloadEvents(long start, long stop, ResponseHandler responseHandler) {
