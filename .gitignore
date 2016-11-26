@@ -7,7 +7,3 @@ target/
 
 # Generated when building the CSS submodules
 contrib/css/settings.xml
-
-# Generated from POM
-yamcs-studio-deps/org.yamcs.osgiclient/META-INF/
-
