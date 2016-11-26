@@ -9,7 +9,7 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>org.yamcs.osgiclient</artifactId>
+	<artifactId>org.yamcs.studio.deps.yamcs-api</artifactId>
 	<packaging>bundle</packaging>
 
 	<dependencies>
@@ -48,9 +48,9 @@
 					<unpackBundle>true</unpackBundle>
 					<instructions>
 						<Bundle-Name>Yamcs OSGI Client</Bundle-Name>
-						<Bundle-SymbolicName>org.yamcs.osgiclient;singleton:=true</Bundle-SymbolicName>
+						<Bundle-SymbolicName>org.yamcs.studio.deps.yamcs-api;singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>Space Applications Services</Bundle-Vendor>
-						<Bundle-Description>OSGI-friendly repackaging of yamcs-client</Bundle-Description>
+						<Bundle-Description>OSGI-friendly repackaging of yamcs-api</Bundle-Description>
 						<Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
 						<!-- 
 							Attempt to resolve all and dump in Export-Package.

@@ -18,7 +18,7 @@
 	</properties>
 
 	<modules>
-		<module>org.yamcs.osgiclient</module>
+		<module>org.yamcs.studio.deps.yamcs-api</module>
 		<module>org.yamcs.studio.deps.repository</module>
 	</modules>
 

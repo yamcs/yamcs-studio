@@ -25,7 +25,7 @@
 							<artifacts>
 								<!-- From reactor -->
 								<artifact>
-									<id>org.yamcs.studio:org.yamcs.osgiclient:${project.version}</id>
+									<id>org.yamcs.studio:org.yamcs.studio.deps.yamcs-api:${project.version}</id>
 								</artifact>
 							</artifacts>
 						</configuration>
