@@ -10,3 +10,6 @@
 [submodule "css/diirt"]
 	path = contrib/css/diirt
 	url = https://github.com/ControlSystemStudio/diirt.git
+[submodule "contrib/css/org.csstudio.product"]
+	path = contrib/css/org.csstudio.product
+	url = https://github.com/ControlSystemStudio/org.csstudio.product.git
