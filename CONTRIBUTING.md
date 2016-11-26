@@ -48,7 +48,6 @@ With the previous steps all successfully completed, we now continue with getting
 - Import the Yamcs Studio maven projects into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.
 
 - Open `org.yamcs.studio.dist.default.repository/yamcs-studio.product`
-![Product Testing](images/product-testing.png)
 
 - Click `Launch an Eclipse Application`
 
