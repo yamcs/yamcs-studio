@@ -95,7 +95,11 @@ public class ConnectionManager {
      * instead which reflects instance changes within the same connection.
      */
     public String getInitialYamcsInstance() {
-        return connectionInfo.getConnection(mode).getInstance();
+        if (connectionInfo != null) {
+            return connectionInfo.getConnection(mode).getInstance();
+        } else {
+            return null;
+        }
     }
 
     public String getUsername() {

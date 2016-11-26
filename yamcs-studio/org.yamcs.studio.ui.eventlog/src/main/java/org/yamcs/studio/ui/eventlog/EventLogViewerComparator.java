@@ -16,7 +16,7 @@ public class EventLogViewerComparator implements Comparator<Event> {
 
     public EventLogViewerComparator() {
         currentColumn = EventLogView.COL_RECEIVED;
-        ascending = false;
+        ascending = true;
     }
 
     public int getDirection() {
@@ -49,6 +49,8 @@ public class EventLogViewerComparator implements Comparator<Event> {
             rc = LONG_COMPARATOR.compare(r1.getReceptionTime(), r2.getReceptionTime());
             if (rc == 0)
                 rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
+            if (rc == 0)
+                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             break;
         case EventLogView.COL_GENERATION:
             // compare generation time, seq number

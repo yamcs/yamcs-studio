@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -12,7 +13,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
@@ -23,15 +23,23 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
+import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.EventListener;
+import org.yamcs.studio.core.model.InstanceListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
 
-public class EventLogView extends ViewPart implements EventListener {
+import com.google.protobuf.MessageLite;
+
+public class EventLogView extends ViewPart implements StudioConnectionListener, InstanceListener, EventListener {
 
     private static final Logger log = Logger.getLogger(EventLogView.class.getName());
 
@@ -58,7 +66,7 @@ public class EventLogView extends ViewPart implements EventListener {
         if (YamcsUIPlugin.getDefault() != null) {
             showColumnSeqNum = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumSeqNum");
             showColumnReception = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumReception");
-            showColumnGeneration = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumnGeneration");
+            //showColumnGeneration = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumnGeneration");
             nbMessageLineToDisplay = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("events.nbMessageLineToDisplay");
         }
 
@@ -66,9 +74,12 @@ public class EventLogView extends ViewPart implements EventListener {
         tcl = new TableColumnLayout();
         parent.setLayout(tcl);
 
-        table = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
+        table = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION /*
+                                                                                    * | SWT.VIRTUAL
+                                                                                    */);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
+
         addFixedColumns();
         tableContentProvider = new EventLogContentProvider(table);
         tableContentProvider.setNbLineToDisplay(nbMessageLineToDisplay);
@@ -77,12 +88,11 @@ public class EventLogView extends ViewPart implements EventListener {
             if (table.isDisposed())
                 return;
 
-            Point pt = new Point(evt.x, evt.y);
-            TableItem item = table.getItem(pt);
-            if (item == null || item.getData() == null)
+            TableItem[] sel = table.getSelection();
+            if (sel == null || sel.length == 0)
                 return;
 
-            Event selectedEvent = (Event) item.getData();
+            Event selectedEvent = (Event) sel[0].getData();
             EventDetailsDialog dialog = new EventDetailsDialog(parent.getShell(), selectedEvent);
             dialog.create();
             dialog.open();
@@ -108,6 +118,48 @@ public class EventLogView extends ViewPart implements EventListener {
 
         if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null)
             EventCatalogue.getInstance().addEventListener(this);
+        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        ManagementCatalogue.getInstance().addInstanceListener(this);
+    }
+
+    @Override
+    public void onStudioConnect() {
+        Display.getDefault().asyncExec(() -> {
+            clear();
+            // TODO make optional? fetchLatestEvents();
+        });
+    }
+
+    @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        Display.getDefault().asyncExec(() -> {
+            clear();
+            // TODO make optional? fetchLatestEvents();
+        });
+    }
+
+    @Override
+    public void onStudioDisconnect() {
+        // NOP for now
+    }
+
+    private void fetchLatestEvents() {
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        EventCatalogue.getInstance().fetchLatestEvents(instance, new ResponseHandler() {
+
+            @Override
+            public void onMessage(MessageLite responseMsg) {
+                ListEventsResponse response = (ListEventsResponse) responseMsg;
+                Display.getDefault().asyncExec(() -> {
+                    addEvents(response.getEventList());
+                });
+            }
+
+            @Override
+            public void onException(Exception e) {
+                log.log(Level.SEVERE, "Failed to retrieve latests events", e);
+            }
+        });
     }
 
     @Override
@@ -211,6 +263,7 @@ public class EventLogView extends ViewPart implements EventListener {
         }
 
         // TODO use IMemento or something
+        // !! Keep these values in sync with EventLogViewerComparator constructor
         table.setSortColumn(receivedColumn);
         table.setSortDirection(SWT.UP);
 
@@ -223,8 +276,10 @@ public class EventLogView extends ViewPart implements EventListener {
 
     @Override
     public void dispose() {
+        EventCatalogue.getInstance().addEventListener(this);
+        ConnectionManager.getInstance().removeStudioConnectionListener(this);
+        ManagementCatalogue.getInstance().removeInstanceListener(this);
         super.dispose();
-        // TODO remove EventListener
     }
 
     public void addEvent(Event event) {
@@ -257,7 +312,12 @@ public class EventLogView extends ViewPart implements EventListener {
     }
 
     private void updateSummaryLine() {
-        setContentDescription(String.format("%d errors, %d warnings, %d others (no filter)",
+        String yamcsInstance = ManagementCatalogue.getCurrentYamcsInstance();
+        String summaryLine = "";
+        if (yamcsInstance != null) {
+            summaryLine = "Showing events for Yamcs instance " + yamcsInstance + ". ";
+        }
+        setContentDescription(summaryLine + String.format("%d errors, %d warnings, %d others (no filter)",
                 tableContentProvider.getNbErrors(),
                 tableContentProvider.getNbWarnings(),
                 tableContentProvider.getNbInfo()));

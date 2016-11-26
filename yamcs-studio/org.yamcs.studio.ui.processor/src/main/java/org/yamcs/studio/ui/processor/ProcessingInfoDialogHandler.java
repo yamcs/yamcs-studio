@@ -1,7 +1,5 @@
 package org.yamcs.studio.ui.processor;
 
-import java.util.logging.Logger;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -38,8 +36,6 @@ import com.google.protobuf.MessageLite;
  * processor.
  */
 public class ProcessingInfoDialogHandler extends AbstractHandler {
-
-    private static final Logger log = Logger.getLogger(ProcessingInfoDialogHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -177,6 +173,8 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         @Override
         public void processTime(long missionTime) {
             Display.getDefault().asyncExec(() -> {
+                if (missionTimeTxt.isDisposed())
+                    return;
                 if (missionTimeTxt != null && !missionTimeTxt.isDisposed())
                     missionTimeTxt.setText(TimeCatalogue.getInstance().toString(missionTime));
                 else
@@ -218,6 +216,8 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
          * rather than the current.
          */
         private void refreshProcessorState() {
+            if (processorStateTxt.isDisposed())
+                return;
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
             ProcessorInfo latestInfo = catalogue.getProcessorInfo(instance.getName(), processor.getName());
             if (latestInfo != null) {

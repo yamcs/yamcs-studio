@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -150,6 +151,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             item = new TableItem(tableViewer, SWT.NULL, index);
         else
             item = new TableItem(tableViewer, SWT.NULL);
+
         item.setText("Item " + event.getSeqNumber());
 
         // seq number
@@ -171,6 +173,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
                 message += " [...]";
         }
         item.setText(1, message);
+        // Install a monospaced font, because it works better with logs
+        item.setFont(1, JFaceResources.getFont(JFaceResources.TEXT_FONT));
         item.setImage(getSeverityImage(event));
         item.setBackground(getSeverityColor(event));
 

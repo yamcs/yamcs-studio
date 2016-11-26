@@ -87,8 +87,11 @@ public class DataLinkTableViewerContentProvider implements IStructuredContentPro
         // TODO not sure if this is the recommended way to delete all. Need to verify
         BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
             tableViewer.getTable().setRedraw(false);
-            Collection<DataLinkRecord> recs = linksByNameByInstance.get(yamcsInstance).values();
-            tableViewer.remove(recs.toArray());
+            Map<String, DataLinkRecord> linksByName = linksByNameByInstance.get(yamcsInstance);
+            if (linksByName != null) {
+                Collection<DataLinkRecord> recs = linksByNameByInstance.get(yamcsInstance).values();
+                tableViewer.remove(recs.toArray());
+            }
             tableViewer.getTable().setRedraw(true);
         });
     }
@@ -97,9 +100,12 @@ public class DataLinkTableViewerContentProvider implements IStructuredContentPro
         // TODO not sure if this is the recommended way to delete all. Need to verify
         BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
             tableViewer.getTable().setRedraw(false);
-            Collection<DataLinkRecord> recs = linksByNameByInstance.get(yamcsInstance).values();
-            tableViewer.remove(recs.toArray());
-            linksByNameByInstance.clear();
+            Map<String, DataLinkRecord> linksByName = linksByNameByInstance.get(yamcsInstance);
+            if (linksByName != null) {
+                Collection<DataLinkRecord> recs = linksByName.values();
+                tableViewer.remove(recs.toArray());
+                linksByNameByInstance.clear();
+            }
             tableViewer.getTable().setRedraw(true);
         });
     }

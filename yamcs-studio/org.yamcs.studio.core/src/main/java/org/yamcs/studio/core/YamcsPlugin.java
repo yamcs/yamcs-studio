@@ -14,6 +14,7 @@ import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.model.StreamCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
@@ -45,6 +46,7 @@ public class YamcsPlugin extends Plugin {
         catalogues.put(EventCatalogue.class, new EventCatalogue());
         catalogues.put(LinkCatalogue.class, new LinkCatalogue());
         catalogues.put(ArchiveCatalogue.class, new ArchiveCatalogue());
+        catalogues.put(StreamCatalogue.class, new StreamCatalogue());
 
         connectionManager = new ConnectionManager();
         catalogues.values().forEach(c -> {
