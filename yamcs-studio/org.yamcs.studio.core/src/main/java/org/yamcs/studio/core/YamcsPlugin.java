@@ -11,10 +11,10 @@ import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.Catalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.EventCatalogue;
+import org.yamcs.studio.core.model.ExtensionCatalogue;
 import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.StreamCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.utils.TimeEncoding;
 
@@ -28,6 +28,9 @@ public class YamcsPlugin extends Plugin {
 
     private ConnectionManager connectionManager;
     private Map<Class<? extends Catalogue>, Catalogue> catalogues = new HashMap<>();
+
+    // Additionally, keep track of catalogues by extension type
+    private Map<Integer, ExtensionCatalogue> extensionCatalogues = new HashMap<>(5);
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -46,7 +49,6 @@ public class YamcsPlugin extends Plugin {
         catalogues.put(EventCatalogue.class, new EventCatalogue());
         catalogues.put(LinkCatalogue.class, new LinkCatalogue());
         catalogues.put(ArchiveCatalogue.class, new ArchiveCatalogue());
-        catalogues.put(StreamCatalogue.class, new StreamCatalogue());
 
         connectionManager = new ConnectionManager();
         catalogues.values().forEach(c -> {
@@ -75,8 +77,18 @@ public class YamcsPlugin extends Plugin {
         return (T) catalogues.get(clazz);
     }
 
-    public <T extends Catalogue> void registerCatalogue(T catalogue) {
+    public ExtensionCatalogue getExtensionCatalogue(int extensionType) {
+        return extensionCatalogues.get(extensionType);
+    }
+
+    /**
+     * Hook to register a catalogue that will be provided with
+     * incoming websocket data of the specified extension type.
+     */
+    public <T extends ExtensionCatalogue> void registerExtensionCatalogue(int extensionType, T catalogue) {
         catalogues.put(catalogue.getClass(), catalogue);
+        ManagementCatalogue managementCatalogue = getCatalogue(ManagementCatalogue.class);
+        managementCatalogue.addInstanceListener(catalogue);
         connectionManager.addStudioConnectionListener(catalogue);
     }
 

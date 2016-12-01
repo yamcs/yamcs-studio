@@ -10,11 +10,11 @@ import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Alarms.AlarmData;
-import org.yamcs.protobuf.Archive.StreamData;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueEvent;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Web.WebSocketExtensionData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -28,11 +28,13 @@ import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.EventCatalogue;
+import org.yamcs.studio.core.model.ExtensionCatalogue;
 import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.StreamCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.netty.channel.ChannelFuture;
 
@@ -173,9 +175,20 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
             CommandQueueEvent queueEvent = data.getCommandQueueEvent();
             CommandingCatalogue.getInstance().processCommandQueueEvent(queueEvent);
             break;
-        case STREAM_DATA:
-            StreamData streamData = data.getStreamData();
-            StreamCatalogue.getInstance().processStreamData(streamData);
+        case EXTENSION_DATA:
+            WebSocketExtensionData extData = data.getExtensionData();
+            YamcsPlugin plugin = YamcsPlugin.getDefault();
+            int extType = extData.getType();
+            ExtensionCatalogue catalogue = plugin.getExtensionCatalogue(extType);
+            if (catalogue != null) {
+                try {
+                    catalogue.processMessage(extType, extData.getData());
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Invalid message", e);
+                }
+            } else {
+                log.warning("Unexpected message of extension type " + extType);
+            }
             break;
         default:
             throw new IllegalArgumentException("Unexpected data type " + data.getType());
