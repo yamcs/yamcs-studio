@@ -8,6 +8,7 @@ import org.csstudio.logging.LogConfigurator;
 import org.csstudio.platform.workspace.RelaunchConstants;
 import org.csstudio.startup.application.OpenDocumentEventProcessor;
 import org.csstudio.startup.module.WorkbenchExtPoint;
+import org.csstudio.utility.product.ApplicationWorkbenchAdvisor;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
