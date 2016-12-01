@@ -141,7 +141,7 @@ public class ConnectionManager {
         // This 'defaultInstance' should really be moved to Server,
         // but for that we require more work on the websocket api,
         // which currently requires an instance to work with
-        log.info("Retrieving server information for " + yprops.getUrl("http"));
+        log.info("Retrieving server information for " + yprops.getUrl());
         restClient.get("", null, GetApiOverviewResponse.newBuilder(), new ResponseHandler() {
 
             @Override

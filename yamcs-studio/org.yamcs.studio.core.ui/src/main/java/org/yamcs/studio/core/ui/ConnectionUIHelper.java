@@ -30,7 +30,7 @@ public class ConnectionUIHelper implements StudioConnectionListener {
                 RCPUtils.runCommand("org.yamcs.studio.ui.login");
             } else {
                 String detail = (t.getMessage() != null) ? t.getMessage() : t.getClass().getSimpleName();
-                MessageDialog.openError(Display.getDefault().getActiveShell(), yprops.getUrl("http"),
+                MessageDialog.openError(Display.getDefault().getActiveShell(), yprops.getUrl(),
                         "Could not connect. " + detail);
                 // TODO attempt failover
                 // askSwitchNode(errorMessage);
@@ -56,7 +56,7 @@ public class ConnectionUIHelper implements StudioConnectionListener {
 
     private void askSwitchNode(String errorMessage) {
         YamcsConnectionProperties yprops = ConnectionManager.getInstance().getConnectionProperties();
-        String connectionString = yprops.getUrl("http");
+        String connectionString = yprops.getUrl();
         String message = "Connection error with " + connectionString;
         if (errorMessage != null && errorMessage != "") {
             message += "\nDetails:" + errorMessage;
