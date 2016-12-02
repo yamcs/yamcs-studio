@@ -32,7 +32,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 import com.google.protobuf.MessageLite;
@@ -142,7 +142,7 @@ public class CommandingCatalogue implements Catalogue {
     public void sendCommand(String processor, String commandName, IssueCommandRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request, IssueCommandResponse.newBuilder(),
                     responseHandler);
@@ -154,7 +154,7 @@ public class CommandingCatalogue implements Catalogue {
     public void editQueue(CommandQueueInfo queue, EditCommandQueueRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.patch("/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(),
                     request, null, responseHandler);
@@ -166,7 +166,7 @@ public class CommandingCatalogue implements Catalogue {
     public void editQueuedCommand(CommandQueueEntry entry, EditCommandQueueEntryRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.patch(
                     "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName() + "/entries/" + entry.getUuid(),
@@ -190,7 +190,7 @@ public class CommandingCatalogue implements Catalogue {
     private void loadMetaCommands() {
         log.fine("Fetching available commands");
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         restClient.get("/mdb/" + instance + "/commands", null, ListCommandInfoResponse.newBuilder(), new ResponseHandler() {
             @Override
@@ -217,7 +217,7 @@ public class CommandingCatalogue implements Catalogue {
     public void updateCommandComment(String processor, CommandId cmdId, String newComment, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
 
         KeyValue keyValue = KeyValue.newBuilder().setKey("Comment").setValue(newComment).build();
         UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId).addHistoryEntry(keyValue).build();

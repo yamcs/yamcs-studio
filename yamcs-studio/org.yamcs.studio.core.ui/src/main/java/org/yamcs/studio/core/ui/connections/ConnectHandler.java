@@ -17,7 +17,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.security.YamcsCredentials;
 
 /**
  * Pops up the connection manager dialog.
@@ -47,23 +46,18 @@ public class ConnectHandler extends AbstractHandler {
         ConnectionManager.getInstance().setConnectionInfo(conf.toConnectionInfo());
 
         String connectionString = conf.getPrimaryConnectionString();
-        if (conf.isAnonymous()) {
-            log.info("Will connect anonymously to " + connectionString);
-            doConnectWithProgress(shell, null, connectionString);
-        } else {
-            log.info("Will connect as user '" + conf.getUser() + "' to " + connectionString);
-            doConnectWithProgress(shell, conf.toYamcsCredentials(), connectionString);
-        }
+        log.info("Will connect to " + connectionString);
+        doConnectWithProgress(shell, connectionString);
     }
 
     /*
      * TODO make this job cancellable
      */
-    private void doConnectWithProgress(Shell shell, YamcsCredentials creds, String connectionString) {
+    private void doConnectWithProgress(Shell shell, String connectionString) {
         try {
             IRunnableWithProgress op = monitor -> {
                 monitor.beginTask("Connecting to " + connectionString, IProgressMonitor.UNKNOWN);
-                CompletableFuture<Void> future = ConnectionManager.getInstance().connect(creds);
+                CompletableFuture<Void> future = ConnectionManager.getInstance().connect();
                 future.whenComplete((ret, ex) -> {
                     monitor.done();
                 });

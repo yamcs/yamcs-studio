@@ -24,7 +24,7 @@ import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.core.pvmanager.YamcsPVReader;
 import org.yamcs.studio.core.web.MergeableWebSocketRequest;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 import com.google.protobuf.MessageLite;
@@ -160,7 +160,7 @@ public class ParameterCatalogue implements Catalogue {
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         restClient.get("/mdb/" + instance + "/parameters", null, ListParameterInfoResponse.newBuilder(), new ResponseHandler() {
             @Override
@@ -178,7 +178,7 @@ public class ParameterCatalogue implements Catalogue {
 
     public void requestParameterDetail(String qualifiedName, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
@@ -189,7 +189,7 @@ public class ParameterCatalogue implements Catalogue {
 
     public void fetchParameterValue(String instance, String qualifiedName, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null, ParameterData.newBuilder(), responseHandler);
         } else {
@@ -200,7 +200,7 @@ public class ParameterCatalogue implements Catalogue {
     public void setParameter(String processor, NamedObjectId id, Value value, ResponseHandler responseHandler) {
         String pResource = toURISegments(id);
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null, responseHandler);

@@ -13,7 +13,7 @@ import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.URLBuilder;
 
 /**
@@ -45,7 +45,7 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         if (restClient != null) {
             restClient.streamGet(urlb.toString(), null, () -> CommandHistoryEntry.newBuilder(), responseHandler);
         } else {
@@ -62,7 +62,7 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         if (restClient != null) {
             restClient.streamGet(urlb.toString(), null, () -> IndexResult.newBuilder(), responseHandler);
         } else {
@@ -71,7 +71,7 @@ public class ArchiveCatalogue implements Catalogue {
     }
 
     public void createTag(CreateTagRequest request, ResponseHandler responseHandler) {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         if (restClient != null) {
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.post("/archive/" + instance + "/tags", request, ArchiveTag.newBuilder(), responseHandler);
@@ -82,7 +82,7 @@ public class ArchiveCatalogue implements Catalogue {
 
     public void editTag(long tagTime, int tagId, EditTagRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
@@ -93,7 +93,7 @@ public class ArchiveCatalogue implements Catalogue {
 
     public void deleteTag(long tagTime, int tagId, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
             restClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
@@ -112,7 +112,7 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.get(urlb.toString(), null, ListTagsResponse.newBuilder(), responseHandler);
         } else {

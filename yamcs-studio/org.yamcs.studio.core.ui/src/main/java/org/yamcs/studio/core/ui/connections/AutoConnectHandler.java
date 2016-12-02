@@ -17,7 +17,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.security.YamcsCredentials;
 
 /**
  * Does a connection on the last-used configuration, with potential UI
@@ -64,10 +63,10 @@ public class AutoConnectHandler extends AbstractHandler {
         String connectionString = conf.getPrimaryConnectionString();
         if (conf.isAnonymous()) {
             log.fine("Will connect anonymously to " + connectionString);
-            doConnectWithProgress(shell, null, connectionString);
+            doConnectWithProgress(shell, connectionString);
         } else if (conf.isSavePassword() || noPasswordPopup) {
             log.fine("Will connect as user '" + conf.getUser() + "' to " + connectionString);
-            doConnectWithProgress(shell, conf.toYamcsCredentials(), connectionString);
+            doConnectWithProgress(shell, connectionString);
         } else {
             log.fine("Want to connect to '" + connectionString
                     + "' but credentials are needed (not saved and not in dialog). Show password dialog");
@@ -75,7 +74,7 @@ public class AutoConnectHandler extends AbstractHandler {
             if (dialog.open() == Dialog.OK) {
                 conf.setUser(dialog.getUser());
                 conf.setPassword(dialog.getPassword());
-                doConnectWithProgress(shell, conf.toYamcsCredentials(), connectionString);
+                doConnectWithProgress(shell, connectionString);
             }
         }
     }
@@ -84,11 +83,11 @@ public class AutoConnectHandler extends AbstractHandler {
      * TODO this is same code as in ConnectHandler, can we just call that one's
      * command?
      */
-    private void doConnectWithProgress(Shell shell, YamcsCredentials creds, String connectionString) {
+    private void doConnectWithProgress(Shell shell, String connectionString) {
         try {
             IRunnableWithProgress op = monitor -> {
                 monitor.beginTask("Connecting to " + connectionString, IProgressMonitor.UNKNOWN);
-                CompletableFuture<Void> future = ConnectionManager.getInstance().connect(creds);
+                CompletableFuture<Void> future = ConnectionManager.getInstance().connect();
                 future.whenComplete((ret, ex) -> {
                     monitor.done();
                 });

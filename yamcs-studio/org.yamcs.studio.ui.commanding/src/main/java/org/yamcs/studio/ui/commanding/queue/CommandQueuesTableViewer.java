@@ -33,7 +33,7 @@ import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.ui.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 
 public class CommandQueuesTableViewer extends TableViewer {
@@ -253,7 +253,7 @@ public class CommandQueuesTableViewer extends TableViewer {
     private void updateQueueState(CommandQueueInfo queue, QueueState queueState, boolean rebuild) {
         EditCommandQueueRequest req = EditCommandQueueRequest.newBuilder().setState(queueState.toString()).build();
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-        catalogue.editQueue(queue, req, RestClient.NULL_RESPONSE_HANDLER);
+        catalogue.editQueue(queue, req, YamcsClient.NULL_RESPONSE_HANDLER);
     }
 
     class ModelLabelProvider extends LabelProvider implements

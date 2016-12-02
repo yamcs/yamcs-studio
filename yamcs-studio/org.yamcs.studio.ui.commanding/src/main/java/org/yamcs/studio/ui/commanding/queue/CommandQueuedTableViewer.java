@@ -29,7 +29,7 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuedTableViewer extends TableViewer {
@@ -181,7 +181,7 @@ public class CommandQueuedTableViewer extends TableViewer {
     private void updateQueueEntryState(CommandQueueEntry entry, String state, boolean rebuild) {
         EditCommandQueueEntryRequest req = EditCommandQueueEntryRequest.newBuilder().setState(state).build();
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-        catalogue.editQueuedCommand(entry, req, RestClient.NULL_RESPONSE_HANDLER);
+        catalogue.editQueuedCommand(entry, req, YamcsClient.NULL_RESPONSE_HANDLER);
     }
 
     // Command Queue Entry label provider

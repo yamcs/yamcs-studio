@@ -2,6 +2,7 @@ package org.yamcs.studio.core.web;
 
 import com.google.protobuf.MessageLite;
 
+@Deprecated
 public interface ResponseHandler {
 
     /**

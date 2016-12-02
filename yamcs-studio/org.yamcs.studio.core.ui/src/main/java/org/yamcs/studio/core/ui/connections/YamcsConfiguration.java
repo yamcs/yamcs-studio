@@ -3,8 +3,8 @@ package org.yamcs.studio.core.ui.connections;
 import java.util.Objects;
 
 import org.yamcs.api.YamcsConnectionProperties;
+import org.yamcs.security.UsernamePasswordToken;
 import org.yamcs.studio.core.ConnectionInfo;
-import org.yamcs.studio.core.security.YamcsCredentials;
 
 /**
  * UI class. Used to maintain state of a server in the connection manager dialog
@@ -125,15 +125,17 @@ public class YamcsConfiguration {
 
     public ConnectionInfo toConnectionInfo() {
         YamcsConnectionProperties primaryProps = new YamcsConnectionProperties(primaryHost, primaryPort, instance);
+        if (!isAnonymous()) {
+            primaryProps.setAuthenticationToken(new UsernamePasswordToken(user, password));
+        }
         YamcsConnectionProperties failoverProps = null;
         if (failoverHost != null) {
             failoverProps = new YamcsConnectionProperties(failoverHost, failoverPort, instance);
+            if (!isAnonymous()) {
+                failoverProps.setAuthenticationToken(new UsernamePasswordToken(user, password));
+            }
         }
         return new ConnectionInfo(primaryProps, failoverProps);
-    }
-
-    public YamcsCredentials toYamcsCredentials() {
-        return (isAnonymous()) ? null : new YamcsCredentials(user, password);
     }
 
     @Override

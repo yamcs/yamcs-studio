@@ -25,7 +25,7 @@ import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.web.BulkResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastCommandsDialog extends TitleAreaDialog {
@@ -118,7 +118,7 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         if (restClient == null) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import commands\n",
                     "Disconnected from Yamcs");

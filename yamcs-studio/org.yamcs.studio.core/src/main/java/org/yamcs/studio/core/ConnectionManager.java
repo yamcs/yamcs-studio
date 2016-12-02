@@ -10,12 +10,10 @@ import org.yamcs.ConfigurationException;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.GetApiOverviewResponse;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
-import org.yamcs.security.UsernamePasswordToken;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.web.YamcsClient;
 
 import com.google.protobuf.MessageLite;
 
@@ -33,13 +31,12 @@ public class ConnectionManager {
 
     private Set<StudioConnectionListener> studioConnectionListeners = new HashSet<>();
 
-    private YamcsCredentials creds;
     private ConnectionInfo connectionInfo;
     private ConnectionMode mode;
     private ConnectionStatus connectionStatus;
 
     // Below are not-null after connect, null again after disconnect
-    private RestClient restClient;
+    private YamcsClient yamcsClient;
     private WebSocketRegistrar webSocketClient;
     private String serverId;
     private String serverVersion;
@@ -82,8 +79,8 @@ public class ConnectionManager {
     }
 
     public void requestAuthenticatedUser(ResponseHandler responseHandler) {
-        if (restClient != null) {
-            restClient.get("/user", null, UserInfo.newBuilder(), responseHandler);
+        if (yamcsClient != null) {
+            yamcsClient.get("/user", null, UserInfo.newBuilder(), responseHandler);
         } else {
             responseHandler.onException(new NotConnectedException());
         }
@@ -103,37 +100,33 @@ public class ConnectionManager {
     }
 
     public String getUsername() {
-        return creds == null ? null : creds.getUsername();
+        YamcsConnectionProperties yprops = connectionInfo.getConnection(mode);
+        if (yprops.getAuthenticationToken() != null) {
+            return "" + yprops.getAuthenticationToken().getPrincipal();
+        } else {
+            return null;
+        }
     }
 
     public String getServerId() {
         return serverId;
     }
 
-    public CompletableFuture<Void> connect(YamcsCredentials creds) {
-        return connect(creds, mode);
+    public CompletableFuture<Void> connect() {
+        return connect(mode);
     }
 
     /**
      * (re)establish the connection to yamcs
      */
-    public CompletableFuture<Void> connect(YamcsCredentials creds, ConnectionMode mode) {
+    public CompletableFuture<Void> connect(ConnectionMode mode) {
         disconnectIfConnected();
-        this.creds = creds;
         this.mode = mode;
 
         setConnectionStatus(ConnectionStatus.Connecting);
 
         YamcsConnectionProperties yprops = getConnectionProperties();
-        String user = creds != null ? creds.getUsername() : null;
-        String pass = creds != null ? creds.getPasswordS() : null;
-        if (user != null) {
-            yprops.setAuthenticationToken(new UsernamePasswordToken(user, pass));
-        } else {
-            yprops.setAuthenticationToken(null);
-        }
-
-        restClient = new RestClient(yprops, creds);
+        yamcsClient = new YamcsClient(yprops);
 
         // Future covering both the initial rest call, and the ws conn attempt
         CompletableFuture<Void> cf = new CompletableFuture<>();
@@ -142,7 +135,7 @@ public class ConnectionManager {
         // but for that we require more work on the websocket api,
         // which currently requires an instance to work with
         log.info("Retrieving server information for " + yprops.getUrl());
-        restClient.get("", null, GetApiOverviewResponse.newBuilder(), new ResponseHandler() {
+        yamcsClient.get("", null, GetApiOverviewResponse.newBuilder(), new ResponseHandler() {
 
             @Override
             public void onMessage(MessageLite responseMsg) {
@@ -218,10 +211,10 @@ public class ConnectionManager {
         webSocketClient = null;
 
         log.fine("Shutting down REST client");
-        if (restClient != null)
-            restClient.shutdown();
+        if (yamcsClient != null)
+            yamcsClient.shutdown();
 
-        restClient = null;
+        yamcsClient = null;
 
         log.fine("Notify downstream components of Studio disconnect");
         synchronized (studioConnectionListeners) {
@@ -270,7 +263,7 @@ public class ConnectionManager {
         }
 
         disconnect();
-        connect(creds, mode);
+        connect(mode);
     }
 
     public void onWebSocketDisconnected() {
@@ -282,11 +275,12 @@ public class ConnectionManager {
         // the creds are null, does not really mean anything. We could also send creds to an
         // unsecured yamcs server. It would just ignore it, and then our client state would
         // be wrong
-        return creds != null;
+        YamcsConnectionProperties yprops = getConnectionProperties();
+        return (yprops == null) ? false : yprops.getAuthenticationToken() != null;
     }
 
-    public RestClient getRestClient() {
-        return restClient;
+    public YamcsClient getYamcsClient() {
+        return yamcsClient;
     }
 
     public WebSocketRegistrar getWebSocketClient() {
@@ -294,7 +288,7 @@ public class ConnectionManager {
     }
 
     public YamcsConnectionProperties getConnectionProperties() {
-        return connectionInfo.getConnection(mode);
+        return (connectionInfo != null) ? connectionInfo.getConnection(mode) : null;
     }
 
     private void setConnectionStatus(ConnectionStatus connectionStatus) {
@@ -303,8 +297,8 @@ public class ConnectionManager {
     }
 
     public void shutdown() {
-        if (restClient != null)
-            restClient.shutdown();
+        if (yamcsClient != null)
+            yamcsClient.shutdown();
         if (webSocketClient != null)
             webSocketClient.shutdown();
     }

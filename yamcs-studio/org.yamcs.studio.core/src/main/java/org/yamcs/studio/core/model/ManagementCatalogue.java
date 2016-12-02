@@ -23,7 +23,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
@@ -220,7 +220,7 @@ public class ManagementCatalogue implements Catalogue {
 
     public void createProcessorRequest(String yamcsInstance, CreateProcessorRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.post("/processors/" + yamcsInstance, request, null, responseHandler);
         } else {
@@ -230,7 +230,7 @@ public class ManagementCatalogue implements Catalogue {
 
     public void editProcessorRequest(String yamcsInstance, String processor, EditProcessorRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.patch("/processors/" + yamcsInstance + "/" + processor, request, null, responseHandler);
         } else {
@@ -240,7 +240,7 @@ public class ManagementCatalogue implements Catalogue {
 
     public void editClientRequest(int clientId, EditClientRequest request, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.patch("/clients/" + clientId, request, null, responseHandler);
         } else {
@@ -250,7 +250,7 @@ public class ManagementCatalogue implements Catalogue {
 
     public void fetchInstanceInformationRequest(String yamcsInstance, ResponseHandler responseHandler) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        RestClient restClient = connectionManager.getRestClient();
+        YamcsClient restClient = connectionManager.getYamcsClient();
         if (restClient != null) {
             restClient.get("/instances/" + yamcsInstance + "?aggregate", null, YamcsInstance.newBuilder(), responseHandler);
         } else {

@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.yamcs.studio.core.security.YamcsCredentials;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
@@ -78,7 +77,6 @@ public class ConnectionsDialog extends Dialog {
     private Button savePasswordButton;
 
     private YamcsConfiguration chosenConfiguration;
-    private YamcsCredentials chosenCredentials;
 
     public ConnectionsDialog(Shell parentShell) {
         super(parentShell);
@@ -157,7 +155,7 @@ public class ConnectionsDialog extends Dialog {
             removeServerButton.setEnabled(false);
             if (ok != null) // It's null during initial creation
                 ok.setText("Save"); // Give opportunity to user to quit dialog
-                                    // without connecting and saving changes
+            // without connecting and saving changes
         } else {
             selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
@@ -171,7 +169,6 @@ public class ConnectionsDialog extends Dialog {
     protected void okPressed() {
         if (selectedConfiguration != null) {
             chosenConfiguration = selectedConfiguration;
-            chosenCredentials = selectedConfiguration.toYamcsCredentials();
         }
         ConnectionPreferences.setAutoConnect(autoConnect.getSelection());
         List<YamcsConfiguration> confs = new ArrayList<>();
@@ -483,10 +480,10 @@ public class ConnectionsDialog extends Dialog {
     public YamcsConfiguration getChosenConfiguration() {
         // Add our credentials back in (they could have been removed during
         // serialization)
-        if (chosenConfiguration != null && chosenCredentials != null) {
+        /*if (chosenConfiguration != null) {
             chosenConfiguration.setUser(chosenCredentials.getUsername());
             chosenConfiguration.setPassword(chosenCredentials.getPasswordS());
-        }
+        }*/
         return chosenConfiguration;
     }
 }

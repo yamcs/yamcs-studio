@@ -10,7 +10,7 @@ import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.utils.TimeEncoding;
 
@@ -52,7 +52,7 @@ public class EventCatalogue implements Catalogue {
 
     public void fetchLatestEvents(String instance, ResponseHandler responseHandler) {
         String resource = "/archive/" + instance + "/events";
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         if (restClient != null) {
             restClient.get(resource, null, ListEventsResponse.newBuilder(), responseHandler);
         } else {
@@ -71,7 +71,7 @@ public class EventCatalogue implements Catalogue {
         } else if (stop != TimeEncoding.INVALID_INSTANT) {
             resource += "?stop=" + stop;
         }
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         if (restClient != null) {
             restClient.streamGet(resource, null, () -> Event.newBuilder(), responseHandler);
         } else {

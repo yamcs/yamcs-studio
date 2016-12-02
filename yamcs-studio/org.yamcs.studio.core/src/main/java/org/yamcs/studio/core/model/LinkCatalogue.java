@@ -16,7 +16,7 @@ import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.RestClient;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 
 /**
@@ -100,13 +100,13 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
     }
 
     public void enableLink(String instance, String name, ResponseHandler responseHandler) {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("enabled").build();
         restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
     }
 
     public void disableLink(String instance, String name, ResponseHandler responseHandler) {
-        RestClient restClient = ConnectionManager.getInstance().getRestClient();
+        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("disabled").build();
         restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
     }

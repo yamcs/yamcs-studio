@@ -87,6 +87,7 @@ public class YamcsPlugin extends Plugin {
      */
     public <T extends ExtensionCatalogue> void registerExtensionCatalogue(int extensionType, T catalogue) {
         catalogues.put(catalogue.getClass(), catalogue);
+        extensionCatalogues.put(extensionType, catalogue);
         ManagementCatalogue managementCatalogue = getCatalogue(ManagementCatalogue.class);
         managementCatalogue.addInstanceListener(catalogue);
         connectionManager.addStudioConnectionListener(catalogue);
