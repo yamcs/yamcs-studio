@@ -2,7 +2,6 @@ package org.yamcs.studio.ui.commanding.cmdhist;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -18,15 +17,17 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.api.YamcsApiException;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ImportPastCommandsDialog extends TitleAreaDialog {
 
@@ -132,44 +133,23 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         TimeInterval interval = new TimeInterval(start, stop);
 
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.downloadCommands(interval, new BulkResponseHandler<CommandHistoryEntry>() {
-            @Override
-            public void onMessages(List<CommandHistoryEntry> commandHistoryEntries) {
-                if (commandHistoryEntries != null) {
-                    for (CommandHistoryEntry commandHistoryEntry : commandHistoryEntries) {
-                        Display.getDefault().asyncExec(() -> {
-                            cmdhistView.processCommandHistoryEntry(commandHistoryEntry);
-                        });
-                    }
-                } else {
-                    Display.getDefault().asyncExec(() -> {
-                        ImportPastCommandsDialog.super.okPressed();
-                    });
-                }
+        catalogue.downloadCommands(interval, data -> {
+            try {
+                CommandHistoryEntry commandHistoryEntry = CommandHistoryEntry.parseFrom(data);
+                Display.getDefault().asyncExec(() -> {
+                    cmdhistView.processCommandHistoryEntry(commandHistoryEntry);
+                });
+            } catch (InvalidProtocolBufferException e) {
+                throw new YamcsApiException("Failed to decode server message", e);
             }
-
-            @Override
-            public void onEndOfStream() {
+        }).whenComplete((data, exc) -> {
+            if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     ImportPastCommandsDialog.super.okPressed();
                 });
+            } else {
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
             }
-
-            volatile boolean showingMessageDialog = false;
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Error while fetching archived telecommands", e);
-                Display.getDefault().asyncExec(() -> {
-                    if (showingMessageDialog)
-                        return;
-                    showingMessageDialog = true;
-                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import commands", e.getMessage());
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-                    showingMessageDialog = false;
-                });
-            }
-
         });
     }
 

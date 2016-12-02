@@ -5,9 +5,8 @@ import java.util.logging.Logger;
 
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.web.ResponseHandler;
 
-import com.google.protobuf.MessageLite;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class YamcsAuthorizations {
 
@@ -31,15 +30,13 @@ public class YamcsAuthorizations {
 
     public void loadAuthorizations() {
         ConnectionManager manager = ConnectionManager.getInstance();
-        manager.requestAuthenticatedUser(new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                userInfo = (UserInfo) responseMsg;
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not get authorizations", e);
+        manager.requestAuthenticatedUser().whenComplete((data, exc) -> {
+            if (exc == null) {
+                try {
+                    userInfo = UserInfo.parseFrom(data);
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server message", e);
+                }
             }
         });
     }

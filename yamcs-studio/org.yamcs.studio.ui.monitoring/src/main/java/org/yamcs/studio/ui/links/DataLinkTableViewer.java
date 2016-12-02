@@ -20,9 +20,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.model.LinkCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
-
-import com.google.protobuf.MessageLite;
 
 public class DataLinkTableViewer extends TableViewer {
 
@@ -122,17 +119,10 @@ public class DataLinkTableViewer extends TableViewer {
                     return;
 
                 LinkCatalogue catalogue = LinkCatalogue.getInstance();
-                catalogue.enableLink(li.getInstance(), li.getName(), new ResponseHandler() {
-
-                    @Override
-                    public void onMessage(MessageLite responseMsg) {
-                        // success
-                    }
-
-                    @Override
-                    public void onException(Exception e) {
+                catalogue.enableLink(li.getInstance(), li.getName()).whenComplete((data, exc) -> {
+                    if (exc != null) {
                         getTable().getDisplay().asyncExec(() -> {
-                            showMessage(getTable().getShell(), e.getMessage());
+                            showMessage(getTable().getShell(), exc.getMessage());
                         });
                     }
                 });
@@ -154,17 +144,10 @@ public class DataLinkTableViewer extends TableViewer {
                     return;
 
                 LinkCatalogue catalogue = LinkCatalogue.getInstance();
-                catalogue.disableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName(), new ResponseHandler() {
-
-                    @Override
-                    public void onMessage(MessageLite responseMsg) {
-                        // success
-                    }
-
-                    @Override
-                    public void onException(Exception e) {
+                catalogue.disableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName()).whenComplete((data, exc) -> {
+                    if (exc != null) {
                         getTable().getDisplay().asyncExec(() -> {
-                            showMessage(getTable().getShell(), e.getMessage());
+                            showMessage(getTable().getShell(), exc.getMessage());
                         });
                     }
                 });

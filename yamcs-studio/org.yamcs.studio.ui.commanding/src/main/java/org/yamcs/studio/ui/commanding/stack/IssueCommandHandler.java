@@ -1,23 +1,18 @@
 package org.yamcs.studio.ui.commanding.stack;
 
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
-
-import com.google.protobuf.MessageLite;
 
 public class IssueCommandHandler extends AbstractHandler {
 
@@ -43,23 +38,17 @@ public class IssueCommandHandler extends AbstractHandler {
             throw new ExecutionException(e1.getMessage());
         }
 
-        catalogue.sendCommand("realtime", qname, req, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite response) {
+        catalogue.sendCommand("realtime", qname, req).whenComplete((data, exc) -> {
+            if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     log.info(String.format("Command issued. %s", req));
                     command.setStackedState(StackedState.ISSUED);
                     view.selectActiveCommand();
                     view.refreshState();
                 });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not issue command", e);
+            } else {
                 Display.getDefault().asyncExec(() -> {
                     command.setStackedState(StackedState.REJECTED);
-                    MessageDialog.openError(activeShell, "Could not issue command", e.getMessage());
                     view.refreshState();
                 });
             }

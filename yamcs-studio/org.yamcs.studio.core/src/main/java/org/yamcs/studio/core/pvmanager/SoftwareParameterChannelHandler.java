@@ -2,6 +2,7 @@ package org.yamcs.studio.core.pvmanager;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,15 +23,12 @@ import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.vtype.YamcsVTypeAdapter;
-import org.yamcs.studio.core.web.ResponseHandler;
-
-import com.google.protobuf.MessageLite;
 
 /**
  * Supports writable Software parameters
  */
 public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsPVReader, StudioConnectionListener, InstanceListener {
+implements YamcsPVReader, StudioConnectionListener, InstanceListener {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
@@ -125,25 +123,23 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
-
         try {
             ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
             Value v = toValue(p, newValue);
             ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
-            catalogue.setParameter("realtime", id, v, new ResponseHandler() {
-                @Override
-                public void onMessage(MessageLite responseMsg) {
+            catalogue.setParameter("realtime", id, v).whenComplete((data, e) -> {
+                if (e != null) {
+                    log.log(Level.SEVERE, "Could not write to parameter", e);
+                    if (e instanceof Exception) {
+                        callback.channelWritten((Exception) e);
+                    } else {
+                        callback.channelWritten(new ExecutionException(e));
+                    }
+                } else {
                     // Report success
                     callback.channelWritten(null);
                 }
-
-                @Override
-                public void onException(Exception e) {
-                    log.log(Level.SEVERE, "Could not write to parameter", e);
-                    callback.channelWritten(e);
-                }
             });
-
         } catch (Exception e) {
             log.log(Level.SEVERE, "Unable to write parameter value: " + newValue, e);
             return;

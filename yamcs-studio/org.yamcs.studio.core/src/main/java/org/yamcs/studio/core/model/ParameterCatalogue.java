@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,17 +18,15 @@ import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.pvmanager.LosTracker;
 import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.core.pvmanager.YamcsPVReader;
 import org.yamcs.studio.core.web.MergeableWebSocketRequest;
-import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.web.YamcsClient;
 
-import com.google.protobuf.MessageLite;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ParameterCatalogue implements Catalogue {
 
@@ -159,54 +158,36 @@ public class ParameterCatalogue implements Catalogue {
 
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/parameters", null, ListParameterInfoResponse.newBuilder(), new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                ListParameterInfoResponse response = (ListParameterInfoResponse) responseMsg;
-                processMetaParameters(response.getParameterList());
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not fetch available Yamcs parameters", e);
+        restClient.get("/mdb/" + instance + "/parameters", null, ListParameterInfoResponse.newBuilder()).whenComplete((data, exc) -> {
+            if (exc == null) {
+                try {
+                    ListParameterInfoResponse response = ListParameterInfoResponse.parseFrom(data);
+                    processMetaParameters(response.getParameterList());
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server response", e);
+                }
             }
         });
     }
 
-    public void requestParameterDetail(String qualifiedName, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> requestParameterDetail(String qualifiedName) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        return restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder());
     }
 
-    public void fetchParameterValue(String instance, String qualifiedName, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            restClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null, ParameterData.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> fetchParameterValue(String instance, String qualifiedName) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null, ParameterData.newBuilder());
     }
 
-    public void setParameter(String processor, NamedObjectId id, Value value, ResponseHandler responseHandler) {
+    public CompletableFuture<byte[]> setParameter(String processor, NamedObjectId id, Value value) {
         String pResource = toURISegments(id);
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            restClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null, responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        return yamcsClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null);
     }
 
     // TODO find usages. This will only provide condensed info

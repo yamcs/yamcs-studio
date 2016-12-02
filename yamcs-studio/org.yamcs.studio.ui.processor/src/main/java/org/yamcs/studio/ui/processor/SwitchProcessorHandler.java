@@ -1,7 +1,6 @@
 package org.yamcs.studio.ui.processor;
 
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -19,10 +18,7 @@ import org.yamcs.protobuf.Rest.EditClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.css.OPIUtils;
-
-import com.google.protobuf.MessageLite;
 
 public class SwitchProcessorHandler extends AbstractHandler implements IElementUpdater {
 
@@ -41,18 +37,10 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
         if (processorInfo != null) {
             ClientInfo clientInfo = catalogue.getCurrentClientInfo();
             EditClientRequest req = EditClientRequest.newBuilder().setProcessor(processorInfo.getName()).build();
-            catalogue.editClientRequest(clientInfo.getId(), req, new ResponseHandler() {
-                @Override
-                public void onMessage(MessageLite responseMsg) {
-                    Display.getDefault().asyncExec(() -> {
-                        OPIUtils.resetDisplays();
-                    });
-                }
-
-                @Override
-                public void onException(Exception e) {
-                    log.log(Level.SEVERE, "Could not switch processor", e);
-                }
+            catalogue.editClientRequest(clientInfo.getId(), req).thenRun(() -> {
+                Display.getDefault().asyncExec(() -> {
+                    OPIUtils.resetDisplays();
+                });
             });
         } else {
             log.warning("processor '" + radioParameter + "' not found in catalogue");

@@ -31,11 +31,8 @@ import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.MessageLite;
 
 public class CreateReplayDialog extends TitleAreaDialog {
 
@@ -164,20 +161,16 @@ public class CreateReplayDialog extends TitleAreaDialog {
         CreateProcessorRequest req = toCreateProcessorRequest(ci);
 
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        catalogue.createProcessorRequest(ci.getInstance(), req, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
+        catalogue.createProcessorRequest(ci.getInstance(), req).whenComplete((data, exc) -> {
+            if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     OPIUtils.resetDisplays();
                     CreateReplayDialog.super.okPressed();
                 });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not start replay", e);
+            } else {
+                log.log(Level.SEVERE, "Could not start replay", exc);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay", e.getMessage());
+                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay", exc.getMessage());
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 });
             }

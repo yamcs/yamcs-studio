@@ -1,11 +1,13 @@
 package org.yamcs.studio.ui.processor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -27,9 +29,8 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
-import org.yamcs.studio.core.web.ResponseHandler;
 
-import com.google.protobuf.MessageLite;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * Ensemble of information for the subscribed instance (and matching MDB), and
@@ -37,28 +38,27 @@ import com.google.protobuf.MessageLite;
  */
 public class ProcessingInfoDialogHandler extends AbstractHandler {
 
+    private static final Logger log = Logger.getLogger(ProcessingInfoDialogHandler.class.getName());
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Shell shell = HandlerUtil.getActiveShellChecked(event);
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
         ProcessorInfo processor = catalogue.getCurrentProcessorInfo();
         if (processor != null) {
-            catalogue.fetchInstanceInformationRequest(processor.getInstance(), new ResponseHandler() {
-
-                @Override
-                public void onMessage(MessageLite responseMsg) {
+            catalogue.fetchInstanceInformationRequest(processor.getInstance()).whenComplete((data, exc) -> {
+                if (exc == null) {
                     Display display = Display.getDefault();
                     if (!display.isDisposed()) {
                         display.asyncExec(() -> {
-                            YamcsInstance instance = (YamcsInstance) responseMsg;
-                            new ProcessingInfoDialog(shell, instance, processor).open();
+                            try {
+                                YamcsInstance instance = YamcsInstance.parseFrom(data);
+                                new ProcessingInfoDialog(shell, instance, processor).open();
+                            } catch (InvalidProtocolBufferException e) {
+                                log.log(Level.SEVERE, "Failed to decode server message", e);
+                            }
                         });
                     }
-                }
-
-                @Override
-                public void onException(Exception e) {
-                    MessageDialog.openError(shell, "Error while fetching info", e.getMessage());
                 }
             });
         }

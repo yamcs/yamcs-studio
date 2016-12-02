@@ -3,6 +3,7 @@ package org.yamcs.studio.ui.archive;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.api.YamcsApiException;
 import org.yamcs.protobuf.Rest.CreateTagRequest;
 import org.yamcs.protobuf.Rest.EditTagRequest;
 import org.yamcs.protobuf.Rest.ListTagsResponse;
@@ -10,10 +11,9 @@ import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
 
-import com.google.protobuf.MessageLite;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ArchiveIndexReceiver {
 
@@ -33,25 +33,21 @@ public class ArchiveIndexReceiver {
         }
 
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.downloadIndexes(interval, new ResponseHandler() {
-
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                if (responseMsg != null) {
-                    IndexResult response = (IndexResult) responseMsg;
-                    log.info(String.format("Received %d archive records", response.getRecordsCount()));
-                    archiveView.receiveArchiveRecords(response);
-                } else {
-                    log.info("Done receiving archive records.");
-                    archiveView.receiveArchiveRecordsFinished();
-                    receiving = false;
-                }
+        catalogue.downloadIndexes(interval, data -> {
+            try {
+                IndexResult response = IndexResult.parseFrom(data);
+                log.info(String.format("Received %d archive records", response.getRecordsCount()));
+                archiveView.receiveArchiveRecords(response);
+            } catch (InvalidProtocolBufferException e) {
+                throw new YamcsApiException("Failed to decode server message", e);
             }
-
-            @Override
-            public void onException(Exception e) {
-                e.printStackTrace();
-                archiveView.receiveArchiveRecordsError(e.toString());
+        }).whenComplete((data, exc) -> {
+            if (exc == null) {
+                log.info("Done receiving archive records.");
+                archiveView.receiveArchiveRecordsFinished();
+                receiving = false;
+            } else {
+                archiveView.receiveArchiveRecordsError(exc.toString());
             }
         });
     }
@@ -62,20 +58,17 @@ public class ArchiveIndexReceiver {
             return;
         }
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.listTags(interval, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                ListTagsResponse response = (ListTagsResponse) responseMsg;
-                archiveView.receiveTags(response.getTagList());
-                archiveView.receiveTagsFinished();
-                receiving = false;
+        catalogue.listTags(interval).whenComplete((data, exc) -> {
+            if (exc == null) {
+                try {
+                    ListTagsResponse response = ListTagsResponse.parseFrom(data);
+                    archiveView.receiveTags(response.getTagList());
+                    archiveView.receiveTagsFinished();
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server message", e);
+                }
             }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Failed to retreive tags", e);
-                receiving = false;
-            }
+            receiving = false;
         });
     }
 
@@ -92,16 +85,15 @@ public class ArchiveIndexReceiver {
         if (tag.hasStop())
             requestb.setStop(TimeEncoding.toString(tag.getStop()));
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.createTag(requestb.build(), new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                ArchiveTag response = (ArchiveTag) responseMsg;
-                archiveView.tagAdded(response);
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Failed to create tag", e);
+        catalogue.createTag(requestb.build()).whenComplete((data, exc) -> {
+            if (exc != null) {
+                ArchiveTag response;
+                try {
+                    response = ArchiveTag.parseFrom(data);
+                    archiveView.tagAdded(response);
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server message", e);
+                }
             }
         });
     }
@@ -121,16 +113,8 @@ public class ArchiveIndexReceiver {
         long tagTime = oldTag.hasStart() ? oldTag.getStart() : 0;
         int tagId = oldTag.getId();
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.editTag(tagTime, tagId, requestb.build(), new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                archiveView.tagChanged(oldTag, newTag);
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Failed to update tag", e);
-            }
+        catalogue.editTag(tagTime, tagId, requestb.build()).thenRun(() -> {
+            archiveView.tagChanged(oldTag, newTag);
         });
     }
 
@@ -138,16 +122,8 @@ public class ArchiveIndexReceiver {
         long tagTime = tag.hasStart() ? tag.getStart() : 0;
         int tagId = tag.getId();
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.deleteTag(tagTime, tagId, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                archiveView.tagRemoved(tag);
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Failed to remove tag", e);
-            }
+        catalogue.deleteTag(tagTime, tagId).thenRun(() -> {
+            archiveView.tagRemoved(tag);
         });
     }
 }

@@ -16,9 +16,8 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
 
-import com.google.protobuf.MessageLite;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * Show detailed information of a widget's PVs.
@@ -80,18 +79,17 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                     }
 
                     ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
-                    catalogue.requestParameterDetail(pvInfo.getYamcsQualifiedName(), new ResponseHandler() {
-                        @Override
-                        public void onMessage(MessageLite responseMsg) {
-                            ParameterInfo response = (ParameterInfo) responseMsg;
-                            pvInfo.setParameterInfo(response);
-                            latch.countDown();
-                        }
-
-                        @Override
-                        public void onException(Exception e) {
-                            log.log(Level.WARNING, "Could not fetch Yamcs parameter info", e);
-                            pvInfo.setParameterInfoException(e.getMessage());
+                    catalogue.requestParameterDetail(pvInfo.getYamcsQualifiedName()).whenComplete((data, exc) -> {
+                        if (exc == null) {
+                            try {
+                                ParameterInfo response = ParameterInfo.parseFrom(data);
+                                pvInfo.setParameterInfo(response);
+                                latch.countDown();
+                            } catch (InvalidProtocolBufferException e) {
+                                log.log(Level.SEVERE, "Failed to decode server message", e);
+                            }
+                        } else {
+                            pvInfo.setParameterInfoException(exc.getMessage());
                             latch.countDown();
                         }
                     });

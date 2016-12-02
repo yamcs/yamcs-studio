@@ -1,17 +1,17 @@
 package org.yamcs.studio.core.model;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.yamcs.api.rest.BulkRestDataReceiver;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class EventCatalogue implements Catalogue {
@@ -50,17 +50,13 @@ public class EventCatalogue implements Catalogue {
         eventListeners.forEach(l -> l.processEvent(event));
     }
 
-    public void fetchLatestEvents(String instance, ResponseHandler responseHandler) {
+    public CompletableFuture<byte[]> fetchLatestEvents(String instance) {
         String resource = "/archive/" + instance + "/events";
-        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
-        if (restClient != null) {
-            restClient.get(resource, null, ListEventsResponse.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.get(resource, null, ListEventsResponse.newBuilder());
     }
 
-    public void downloadEvents(long start, long stop, ResponseHandler responseHandler) {
+    public CompletableFuture<Void> downloadEvents(long start, long stop, BulkRestDataReceiver receiver) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         String resource = "/archive/" + instance + "/downloads/events";
         if (start != TimeEncoding.INVALID_INSTANT) {
@@ -71,11 +67,7 @@ public class EventCatalogue implements Catalogue {
         } else if (stop != TimeEncoding.INVALID_INSTANT) {
             resource += "?stop=" + stop;
         }
-        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
-        if (restClient != null) {
-            restClient.streamGet(resource, null, () -> Event.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.streamGet(resource, null, receiver);
     }
 }

@@ -46,11 +46,8 @@ import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryFilters.Filter;
 import org.yamcs.studio.ui.commanding.stack.CommandClipboard;
-
-import com.google.protobuf.MessageLite;
 
 public class CommandHistoryView extends ViewPart {
 
@@ -324,22 +321,15 @@ public class CommandHistoryView extends ViewPart {
                         if (chri == null)
                             continue;
 
-                        catalogue.updateCommandComment("realtime", chri.getCommandId(), newComment, new ResponseHandler() {
-
-                            @Override
-                            public void onMessage(MessageLite responseMsg) {
-                            }
-
-                            @Override
-                            public void onException(Exception e) {
-                                table.getDisplay().asyncExec(() -> {
-                                    MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-                                    dialog.setText("Comment Update");
-                                    dialog.setMessage("Comment has not been updated. Details: " + e.getMessage());
-                                    // open dialog and await user selection
-                                    dialog.open();
-                                });
-                            }
+                        catalogue.updateCommandComment("realtime", chri.getCommandId(), newComment).exceptionally(t -> {
+                            table.getDisplay().asyncExec(() -> {
+                                MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+                                dialog.setText("Comment Update");
+                                dialog.setMessage("Comment has not been updated. Details: " + t.getMessage());
+                                // open dialog and await user selection
+                                dialog.open();
+                            });
+                            return null;
                         });
                     }
 

@@ -11,11 +11,10 @@ import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.GetApiOverviewResponse;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.core.web.YamcsClient;
 
-import com.google.protobuf.MessageLite;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -78,12 +77,8 @@ public class ConnectionManager {
         return mode;
     }
 
-    public void requestAuthenticatedUser(ResponseHandler responseHandler) {
-        if (yamcsClient != null) {
-            yamcsClient.get("/user", null, UserInfo.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> requestAuthenticatedUser() {
+        return requireYamcsClient().get("/user", null, UserInfo.newBuilder());
     }
 
     /**
@@ -135,11 +130,17 @@ public class ConnectionManager {
         // but for that we require more work on the websocket api,
         // which currently requires an instance to work with
         log.info("Retrieving server information for " + yprops.getUrl());
-        yamcsClient.get("", null, GetApiOverviewResponse.newBuilder(), new ResponseHandler() {
-
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                GetApiOverviewResponse response = (GetApiOverviewResponse) responseMsg;
+        yamcsClient.get("", null, GetApiOverviewResponse.newBuilder()).whenComplete((data, exc) -> {
+            if (exc == null) {
+                GetApiOverviewResponse response;
+                try {
+                    response = GetApiOverviewResponse.parseFrom(data);
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server response", e);
+                    cf.completeExceptionally(e);
+                    onWebSocketConnectionFailed(e);
+                    return;
+                }
                 serverId = response.getServerId();
                 serverVersion = response.getYamcsVersion();
 
@@ -171,12 +172,9 @@ public class ConnectionManager {
                         }
                     }
                 });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                cf.completeExceptionally(e);
-                onWebSocketConnectionFailed(e);
+            } else {
+                cf.completeExceptionally(exc);
+                onWebSocketConnectionFailed(exc);
             }
         });
 
@@ -301,5 +299,14 @@ public class ConnectionManager {
             yamcsClient.shutdown();
         if (webSocketClient != null)
             webSocketClient.shutdown();
+    }
+
+    public static YamcsClient requireYamcsClient() {
+        ConnectionManager man = getInstance();
+        if (man.yamcsClient != null) {
+            return man.yamcsClient;
+        } else {
+            throw new RuntimeException("Not connected");
+        }
     }
 }

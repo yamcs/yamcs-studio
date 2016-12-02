@@ -1,20 +1,18 @@
 package org.yamcs.studio.core.model;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.api.rest.BulkRestDataReceiver;
 import org.yamcs.protobuf.Rest.CreateTagRequest;
 import org.yamcs.protobuf.Rest.EditTagRequest;
 import org.yamcs.protobuf.Rest.ListTagsResponse;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.URLBuilder;
+import org.yamcs.studio.core.web.YamcsClient;
 
 /**
  * Groups generic archive operations (index, tags).
@@ -37,7 +35,7 @@ public class ArchiveCatalogue implements Catalogue {
     public void onStudioDisconnect() {
     }
 
-    public void downloadCommands(TimeInterval interval, ResponseHandler responseHandler) {
+    public CompletableFuture<Void> downloadCommands(TimeInterval interval, BulkRestDataReceiver receiver) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/downloads/commands");
         if (interval.hasStart())
@@ -45,15 +43,11 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
-        if (restClient != null) {
-            restClient.streamGet(urlb.toString(), null, () -> CommandHistoryEntry.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.streamGet(urlb.toString(), null, receiver);
     }
 
-    public void downloadIndexes(TimeInterval interval, ResponseHandler responseHandler) {
+    public CompletableFuture<Void> downloadIndexes(TimeInterval interval, BulkRestDataReceiver receiver) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/indexes");
         urlb.setParam("filter", Arrays.asList("tm", "pp", "commands", "completeness"));
@@ -62,48 +56,29 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
-        if (restClient != null) {
-            restClient.streamGet(urlb.toString(), null, () -> IndexResult.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.streamGet(urlb.toString(), null, receiver);
     }
 
-    public void createTag(CreateTagRequest request, ResponseHandler responseHandler) {
-        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
-        if (restClient != null) {
-            String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            restClient.post("/archive/" + instance + "/tags", request, ArchiveTag.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> createTag(CreateTagRequest request) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        return restClient.post("/archive/" + instance + "/tags", request, ArchiveTag.newBuilder());
     }
 
-    public void editTag(long tagTime, int tagId, EditTagRequest request, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            restClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request, null, responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> editTag(long tagTime, int tagId, EditTagRequest request) {
+        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        return yamcsClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request, null);
     }
 
-    public void deleteTag(long tagTime, int tagId, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            restClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null, null, responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> deleteTag(long tagTime, int tagId) {
+        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        return yamcsClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null, null);
     }
 
-    public void listTags(TimeInterval interval, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
+    public CompletableFuture<byte[]> listTags(TimeInterval interval) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
 
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/tags");
@@ -112,11 +87,7 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            restClient.get(urlb.toString(), null, ListTagsResponse.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        return yamcsClient.get(urlb.toString(), null, ListTagsResponse.newBuilder());
     }
 }

@@ -34,10 +34,9 @@ import org.yamcs.studio.core.model.EventListener;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.utils.TimeEncoding;
 
-import com.google.protobuf.MessageLite;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class EventLogView extends ViewPart implements StudioConnectionListener, InstanceListener, EventListener {
 
@@ -75,8 +74,8 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         parent.setLayout(tcl);
 
         table = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION /*
-                                                                                    * | SWT.VIRTUAL
-                                                                                    */);
+         * | SWT.VIRTUAL
+         */);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
@@ -145,19 +144,14 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
 
     private void fetchLatestEvents() {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        EventCatalogue.getInstance().fetchLatestEvents(instance, new ResponseHandler() {
-
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                ListEventsResponse response = (ListEventsResponse) responseMsg;
+        EventCatalogue.getInstance().fetchLatestEvents(instance).whenComplete((data, exc) -> {
+            try {
+                ListEventsResponse response = ListEventsResponse.parseFrom(data);
                 Display.getDefault().asyncExec(() -> {
                     addEvents(response.getEventList());
                 });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Failed to retrieve latests events", e);
+            } catch (InvalidProtocolBufferException e) {
+                log.log(Level.SEVERE, "Failed to decode server message", e);
             }
         });
     }

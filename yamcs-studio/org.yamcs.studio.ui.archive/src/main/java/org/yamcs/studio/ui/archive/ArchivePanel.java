@@ -14,7 +14,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -24,7 +23,6 @@ import javax.swing.JScrollBar;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Rest.EditProcessorRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
@@ -34,11 +32,8 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.Prefs;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.MessageLite;
 
 /**
  * Main panel of the ArchiveBrowser
@@ -234,21 +229,10 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             String seekTime = TimeEncoding.toString(newPosition);
             EditProcessorRequest req = EditProcessorRequest.newBuilder().setSeek(seekTime).build();
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req, new ResponseHandler() {
-                @Override
-                public void onMessage(MessageLite responseMsg) {
-                    Display.getDefault().asyncExec(() -> {
-                        OPIUtils.resetDisplays();
-                    });
-                }
-
-                @Override
-                public void onException(Exception e) {
-                    log.log(Level.SEVERE, "Could not seek", e);
-                    Display.getDefault().asyncExec(() -> {
-                        MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", e.getMessage());
-                    });
-                }
+            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req).thenRun(() -> {
+                Display.getDefault().asyncExec(() -> {
+                    OPIUtils.resetDisplays();
+                });
             });
         });
     }

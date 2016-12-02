@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
@@ -20,11 +21,9 @@ import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.NotConnectedException;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.web.YamcsClient;
 
 /**
  * Provides access to aggregated state on yamcs management-type information.
@@ -218,43 +217,23 @@ public class ManagementCatalogue implements Catalogue {
         return new ArrayList<>(clientInfoById.values());
     }
 
-    public void createProcessorRequest(String yamcsInstance, CreateProcessorRequest request, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            restClient.post("/processors/" + yamcsInstance, request, null, responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> createProcessorRequest(String yamcsInstance, CreateProcessorRequest request) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.post("/processors/" + yamcsInstance, request, null);
     }
 
-    public void editProcessorRequest(String yamcsInstance, String processor, EditProcessorRequest request, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            restClient.patch("/processors/" + yamcsInstance + "/" + processor, request, null, responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> editProcessorRequest(String yamcsInstance, String processor, EditProcessorRequest request) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.patch("/processors/" + yamcsInstance + "/" + processor, request, null);
     }
 
-    public void editClientRequest(int clientId, EditClientRequest request, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            restClient.patch("/clients/" + clientId, request, null, responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> editClientRequest(int clientId, EditClientRequest request) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.patch("/clients/" + clientId, request, null);
     }
 
-    public void fetchInstanceInformationRequest(String yamcsInstance, ResponseHandler responseHandler) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        if (restClient != null) {
-            restClient.get("/instances/" + yamcsInstance + "?aggregate", null, YamcsInstance.newBuilder(), responseHandler);
-        } else {
-            responseHandler.onException(new NotConnectedException());
-        }
+    public CompletableFuture<byte[]> fetchInstanceInformationRequest(String yamcsInstance) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.get("/instances/" + yamcsInstance + "?aggregate", null, YamcsInstance.newBuilder());
     }
 }

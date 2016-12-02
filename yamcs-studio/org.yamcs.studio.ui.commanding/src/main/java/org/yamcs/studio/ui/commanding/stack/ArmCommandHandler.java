@@ -1,7 +1,6 @@
 package org.yamcs.studio.ui.commanding.stack;
 
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -16,10 +15,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.web.ResponseHandler;
 import org.yamcs.studio.ui.commanding.stack.StackedCommand.StackedState;
-
-import com.google.protobuf.MessageLite;
 
 public class ArmCommandHandler extends AbstractHandler {
 
@@ -50,9 +46,8 @@ public class ArmCommandHandler extends AbstractHandler {
             throw new ExecutionException(e1.getMessage());
         }
 
-        catalogue.sendCommand("realtime", qname, req, new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite response) {
+        catalogue.sendCommand("realtime", qname, req).whenComplete((data, exc) -> {
+            if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     boolean doArm = false;
                     SignificanceInfo significance = command.getMetaCommand().getSignificance();
@@ -63,7 +58,7 @@ public class ArmCommandHandler extends AbstractHandler {
                     case CRITICAL:
                     case SEVERE:
                         String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
-                                + significance.getConsequenceLevel().toString().substring(1);
+                        + significance.getConsequenceLevel().toString().substring(1);
                         if (MessageDialog.openConfirm(activeShell, "Confirm",
                                 level + ": Are you sure you want to arm this command?\n" +
                                         "    " + command.toStyledString(view).getString() + "\n\n" +
@@ -84,14 +79,9 @@ public class ArmCommandHandler extends AbstractHandler {
                         view.refreshState();
                     }
                 });
-            }
-
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not arm command", e);
+            } else {
                 Display.getDefault().asyncExec(() -> {
                     command.setStackedState(StackedState.REJECTED);
-                    MessageDialog.openError(activeShell, "Could not arm command", e.getMessage());
                     view.clearArm();
                     view.refreshState();
                 });

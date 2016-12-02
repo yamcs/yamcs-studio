@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
@@ -15,9 +16,8 @@ import org.yamcs.protobuf.YamcsManagement.LinkEvent;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.ResponseHandler;
-import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.web.YamcsClient;
 
 /**
  * Provides access to aggregated state on yamcs data link information.
@@ -99,16 +99,16 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
         }
     }
 
-    public void enableLink(String instance, String name, ResponseHandler responseHandler) {
-        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
+    public CompletableFuture<byte[]> enableLink(String instance, String name) {
+        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("enabled").build();
-        restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
+        return yamcsClient.patch("/links/" + instance + "/" + name, req, null);
     }
 
-    public void disableLink(String instance, String name, ResponseHandler responseHandler) {
-        YamcsClient restClient = ConnectionManager.getInstance().getYamcsClient();
+    public CompletableFuture<byte[]> disableLink(String instance, String name) {
+        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("disabled").build();
-        restClient.patch("/links/" + instance + "/" + name, req, null, responseHandler);
+        return yamcsClient.patch("/links/" + instance + "/" + name, req, null);
     }
 
     public List<LinkInfo> getLinks() {

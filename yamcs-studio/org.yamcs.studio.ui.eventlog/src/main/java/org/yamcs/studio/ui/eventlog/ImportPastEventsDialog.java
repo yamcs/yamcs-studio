@@ -2,11 +2,9 @@ package org.yamcs.studio.ui.eventlog;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -18,13 +16,15 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.api.YamcsApiException;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.core.web.BulkResponseHandler;
 import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
 
@@ -130,29 +130,23 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
         long stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
 
         EventCatalogue catalogue = EventCatalogue.getInstance();
-        catalogue.downloadEvents(start, stop, new BulkResponseHandler<Event>() {
-
-            @Override
-            public void onMessages(List<Event> events) {
+        catalogue.downloadEvents(start, stop, data -> {
+            try {
+                Event evt = Event.parseFrom(data);
                 Display.getDefault().asyncExec(() -> {
-                    eventLogView.addEvents(events);
+                    eventLogView.addEvent(evt);
                 });
+            } catch (InvalidProtocolBufferException e) {
+                throw new YamcsApiException("Failed to decode server response", e);
             }
-
-            @Override
-            public void onEndOfStream() {
+        }).whenComplete((data, exc) -> {
+            if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     eventLogView.addedAllEvents();
                     ImportPastEventsDialog.super.okPressed();
                 });
-            }
-
-            @Override
-            public void onException(Exception e) {
+            } else {
                 Display.getDefault().asyncExec(() -> {
-                    log.log(Level.SEVERE, "Could not import events", e);
-                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import events",
-                            e.getMessage());
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 });
             }
