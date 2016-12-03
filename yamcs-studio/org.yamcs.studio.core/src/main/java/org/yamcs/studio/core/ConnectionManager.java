@@ -188,10 +188,13 @@ public class ConnectionManager {
                     && (connectionStatus != ConnectionStatus.Disconnected);
         }
         if (doDisconnect)
-            disconnect();
+            disconnect(false);
     }
 
-    public void disconnect() {
+    /**
+     * Clean up state after a disconnect.
+     */
+    public void disconnect(boolean connectionLost) {
         log.fine("Start disconnect procedure (current state: " + connectionStatus + ")");
         synchronized (this) {
             if (connectionStatus == ConnectionStatus.Disconnected
@@ -229,6 +232,12 @@ public class ConnectionManager {
         serverId = null;
         serverVersion = null;
         setConnectionStatus(ConnectionStatus.Disconnected);
+
+        if (connectionLost) {
+            synchronized (studioConnectionListeners) {
+                studioConnectionListeners.forEach(l -> l.onStudioConnectionLost());
+            }
+        }
     }
 
     public void onWebSocketConnected() {
@@ -249,23 +258,6 @@ public class ConnectionManager {
         synchronized (studioConnectionListeners) {
             studioConnectionListeners.forEach(l -> l.onStudioConnectionFailure(t));
         }
-    }
-
-    public void switchNode() {
-        if (mode == ConnectionMode.PRIMARY) {
-            log.info("Switching to failover server");
-            mode = ConnectionMode.FAILOVER;
-        } else {
-            log.info("Switching back to primary server");
-            mode = ConnectionMode.PRIMARY;
-        }
-
-        disconnect();
-        connect(mode);
-    }
-
-    public void onWebSocketDisconnected() {
-        disconnect();
     }
 
     public boolean isPrivilegesEnabled() {

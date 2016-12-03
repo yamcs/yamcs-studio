@@ -8,6 +8,9 @@ public interface StudioConnectionListener {
     default void onStudioConnectionFailure(Throwable t) {
     }
 
+    default void onStudioConnectionLost() {
+    }
+
     /**
      * Called when we the global connection to yamcs was succesfully established
      */

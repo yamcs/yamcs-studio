@@ -87,7 +87,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         log.info("WebSocket disconnected. Inform ConnectionManager");
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         if (connectionManager != null) // null when workbench is closing
-            connectionManager.onWebSocketDisconnected();
+            connectionManager.disconnect(true /* lost */);
     }
 
     public void sendMessage(WebSocketRequest req) {

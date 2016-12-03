@@ -19,11 +19,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.core.ConnectionManager;
 
 /**
- * Pops up the connection manager dialog.
- *
- * TODO No path ever leads to opening the login dialog. That's good and all, but
- * it also means that we are not correctly setting the JAAS stuff. We must fix
- * this soon.
+ * Pops up the connection manager dialog
  */
 public class ConnectHandler extends AbstractHandler {
     private static final Logger log = Logger.getLogger(ConnectHandler.class.getName());
