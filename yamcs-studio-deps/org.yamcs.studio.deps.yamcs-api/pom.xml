@@ -65,16 +65,9 @@
 						<Export-Package>
 							com.csvreader,
 							com.google.protobuf,
-							io.netty.bootstrap,
-							io.netty.buffer,
 							io.netty.channel,
-							io.netty.channel.nio,
-							io.netty.channel.socket,
-							io.netty.channel.socket.nio,
-							io.netty.handler.codec,
 							io.netty.handler.codec.http,
-							io.netty.handler.codec.protobuf,
-							io.netty.util.concurrent,
+                            io.netty.util.concurrent,
 							io.protostuff,
 							org.yamcs,
 							org.yamcs.api,
@@ -84,7 +77,7 @@
 							org.yamcs.security,
 							org.yamcs.utils,
 							org.yamcs.xtce,
-							org.yamcs.xtce.xml
+                            org.yaml.snakeyaml
 						</Export-Package>
 					</instructions>
 				</configuration>
