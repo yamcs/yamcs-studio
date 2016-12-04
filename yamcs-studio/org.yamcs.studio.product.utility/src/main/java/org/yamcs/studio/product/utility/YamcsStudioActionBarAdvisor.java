@@ -43,6 +43,10 @@ import org.yamcs.studio.core.ui.ProcessorStatusLineContributionItem;
 @SuppressWarnings("restriction")
 public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
+    public static final String STATUS_CONN_ID = "ystudio.status.conn";
+    public static final String STATUS_PROCESSOR_ID = "ystudio.status.processor";
+    public static final String STATUS_MISSION_TIME_ID = "ystudio.status.missionTime";
+
     public static final String COOL_GROUP_PROCESSOR_INFO = "processorinfo";
     public static final String COOL_GROUP_BOOKMARK_SHORTCUTS = "bookmarkshortcuts";
     public static final String COOL_GROUP_PROCESSOR_CONTROLS = "processorcontrols";
@@ -151,6 +155,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolbar) {
         ///coolbar.setLockLayout(true);
 
+
         // Specific to Yamcs Studio
         IToolBarManager studioBar = new ToolBarManager();
         studioBar.add(new CoolItemGroupMarker(COOL_GROUP_PROCESSOR_INFO));
@@ -180,9 +185,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
-        statusLine.add(new ConnectionStringStatusLineContributionItem("ystudio.status.conn"));
-        statusLine.add(new ProcessorStatusLineContributionItem("ystudio.status.processor"));
-        statusLine.add(new MissionTimeStatusLineContributionItem("ystudio.status.missionTime", true));
+        statusLine.add(new ConnectionStringStatusLineContributionItem(STATUS_CONN_ID));
+        statusLine.add(new ProcessorStatusLineContributionItem(STATUS_PROCESSOR_ID));
+        statusLine.add(new MissionTimeStatusLineContributionItem(STATUS_MISSION_TIME_ID, true));
     }
 
     private void removeActionById(String actionSetId) {
