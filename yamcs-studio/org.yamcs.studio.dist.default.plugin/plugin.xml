@@ -248,10 +248,7 @@
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
          <!-- Not very useful with the navigator already there -->
          <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.pauseProcessor"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.forwardProcessor"/>
-         <hiddenToolBarItem id="org.yamcs.studio.toolbar.spacer40x32"/>
-         <hiddenToolBarItem id="studiocontributions.processorInfo"/>
+
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
          <view
                relative="org.eclipse.ui.console.ConsoleView"

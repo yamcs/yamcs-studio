@@ -12,7 +12,6 @@ public class SoftwareParameterDataSourceProvider extends DataSourceProvider {
 
     @Override
     public DataSource createInstance() {
-        System.out.println("Asked to create a new sw datasource");
         return new SoftwareParameterDataSource();
     }
 }
