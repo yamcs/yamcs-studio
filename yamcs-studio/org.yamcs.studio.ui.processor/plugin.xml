@@ -164,7 +164,13 @@
       <menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=edit">
          <menu 
                id="processor"
-               label="Processor" />
+               label="Processor">
+            <visibleWhen checkEnabled="false">
+               <with variable="activeWorkbenchWindow.activePerspective">
+                  <equals value="org.csstudio.opibuilder.OPIRuntime.perspective" />
+               </with>
+            </visibleWhen>
+         </menu>
       </menuContribution>
       
       <menuContribution locationURI="menu:processor">
