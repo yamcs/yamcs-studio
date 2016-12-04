@@ -19,7 +19,6 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
@@ -219,21 +218,21 @@ public class ManagementCatalogue implements Catalogue {
 
     public CompletableFuture<byte[]> createProcessorRequest(String yamcsInstance, CreateProcessorRequest request) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.post("/processors/" + yamcsInstance, request, null);
+        return restClient.post("/processors/" + yamcsInstance, request);
     }
 
     public CompletableFuture<byte[]> editProcessorRequest(String yamcsInstance, String processor, EditProcessorRequest request) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.patch("/processors/" + yamcsInstance + "/" + processor, request, null);
+        return restClient.patch("/processors/" + yamcsInstance + "/" + processor, request);
     }
 
     public CompletableFuture<byte[]> editClientRequest(int clientId, EditClientRequest request) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.patch("/clients/" + clientId, request, null);
+        return restClient.patch("/clients/" + clientId, request);
     }
 
     public CompletableFuture<byte[]> fetchInstanceInformationRequest(String yamcsInstance) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.get("/instances/" + yamcsInstance + "?aggregate", null, YamcsInstance.newBuilder());
+        return restClient.get("/instances/" + yamcsInstance + "?aggregate", null);
     }
 }

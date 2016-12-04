@@ -160,7 +160,7 @@ public class ParameterCatalogue implements Catalogue {
         log.fine("Fetching available parameters");
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/parameters", null, ListParameterInfoResponse.newBuilder()).whenComplete((data, exc) -> {
+        restClient.get("/mdb/" + instance + "/parameters", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 try {
                     ListParameterInfoResponse response = ListParameterInfoResponse.parseFrom(data);
@@ -175,19 +175,19 @@ public class ParameterCatalogue implements Catalogue {
     public CompletableFuture<byte[]> requestParameterDetail(String qualifiedName) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null, ParameterInfo.newBuilder());
+        return restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null);
     }
 
     public CompletableFuture<byte[]> fetchParameterValue(String instance, String qualifiedName) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null, ParameterData.newBuilder());
+        return restClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null);
     }
 
     public CompletableFuture<byte[]> setParameter(String processor, NamedObjectId id, Value value) {
         String pResource = toURISegments(id);
         YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return yamcsClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value, null);
+        return yamcsClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value);
     }
 
     // TODO find usages. This will only provide condensed info

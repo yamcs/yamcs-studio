@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import org.yamcs.ConfigurationException;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.GetApiOverviewResponse;
-import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.core.web.YamcsClient;
@@ -78,7 +77,7 @@ public class ConnectionManager {
     }
 
     public CompletableFuture<byte[]> requestAuthenticatedUser() {
-        return requireYamcsClient().get("/user", null, UserInfo.newBuilder());
+        return requireYamcsClient().get("/user", null);
     }
 
     /**
@@ -130,7 +129,7 @@ public class ConnectionManager {
         // but for that we require more work on the websocket api,
         // which currently requires an instance to work with
         log.info("Retrieving server information for " + yprops.getUrl());
-        yamcsClient.get("", null, GetApiOverviewResponse.newBuilder()).whenComplete((data, exc) -> {
+        yamcsClient.get("", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 GetApiOverviewResponse response;
                 try {

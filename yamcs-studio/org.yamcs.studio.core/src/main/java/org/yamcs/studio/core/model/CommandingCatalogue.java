@@ -25,7 +25,6 @@ import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Rest.EditCommandQueueEntryRequest;
 import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.protobuf.Rest.IssueCommandResponse;
 import org.yamcs.protobuf.Rest.ListCommandInfoResponse;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
@@ -141,22 +140,20 @@ public class CommandingCatalogue implements Catalogue {
     public CompletableFuture<byte[]> sendCommand(String processor, String commandName, IssueCommandRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request, IssueCommandResponse.newBuilder());
+        return restClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request);
     }
 
     public CompletableFuture<byte[]> editQueue(CommandQueueInfo queue, EditCommandQueueRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
-        return yamcsClient.patch("/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(),
-                request, null);
+        return yamcsClient.patch("/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(), request);
     }
 
     public CompletableFuture<byte[]> editQueuedCommand(CommandQueueEntry entry, EditCommandQueueEntryRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         return restClient.patch(
-                "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName() + "/entries/" + entry.getUuid(),
-                request, null);
+                "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName() + "/entries/" + entry.getUuid(), request);
     }
 
     public synchronized void processMetaCommands(List<CommandInfo> metaCommands) {
@@ -175,7 +172,7 @@ public class CommandingCatalogue implements Catalogue {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         YamcsClient restClient = connectionManager.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/commands", null, ListCommandInfoResponse.newBuilder()).whenComplete((data, exc) -> {
+        restClient.get("/mdb/" + instance + "/commands", null).whenComplete((data, exc) -> {
             try {
                 ListCommandInfoResponse response = ListCommandInfoResponse.parseFrom(data);
                 processMetaCommands(response.getCommandList());
@@ -200,6 +197,6 @@ public class CommandingCatalogue implements Catalogue {
         KeyValue keyValue = KeyValue.newBuilder().setKey("Comment").setValue(newComment).build();
         UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId).addHistoryEntry(keyValue).build();
 
-        return restClient.post("/processors/" + instance + "/" + processor + "/commandhistory" + cmdId.getCommandName(), request, null);
+        return restClient.post("/processors/" + instance + "/" + processor + "/commandhistory" + cmdId.getCommandName(), request);
     }
 }

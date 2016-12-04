@@ -6,8 +6,6 @@ import java.util.concurrent.CompletableFuture;
 import org.yamcs.api.rest.BulkRestDataReceiver;
 import org.yamcs.protobuf.Rest.CreateTagRequest;
 import org.yamcs.protobuf.Rest.EditTagRequest;
-import org.yamcs.protobuf.Rest.ListTagsResponse;
-import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -63,19 +61,19 @@ public class ArchiveCatalogue implements Catalogue {
     public CompletableFuture<byte[]> createTag(CreateTagRequest request) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return restClient.post("/archive/" + instance + "/tags", request, ArchiveTag.newBuilder());
+        return restClient.post("/archive/" + instance + "/tags", request);
     }
 
     public CompletableFuture<byte[]> editTag(long tagTime, int tagId, EditTagRequest request) {
         YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return yamcsClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request, null);
+        return yamcsClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request);
     }
 
     public CompletableFuture<byte[]> deleteTag(long tagTime, int tagId) {
         YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return yamcsClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null, null);
+        return yamcsClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null);
     }
 
     public CompletableFuture<byte[]> listTags(TimeInterval interval) {
@@ -88,6 +86,6 @@ public class ArchiveCatalogue implements Catalogue {
             urlb.setParam("stop", interval.getStopUTC());
 
         YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
-        return yamcsClient.get(urlb.toString(), null, ListTagsResponse.newBuilder());
+        return yamcsClient.get(urlb.toString(), null);
     }
 }

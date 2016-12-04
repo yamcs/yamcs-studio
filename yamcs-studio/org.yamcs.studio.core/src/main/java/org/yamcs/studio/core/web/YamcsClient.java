@@ -53,31 +53,31 @@ public class YamcsClient {
         }, 2000, 1000, TimeUnit.MILLISECONDS);
     }
 
-    public CompletableFuture<byte[]> get(String uri, MessageLite msg, MessageLite.Builder target) {
-        return requestAsync(HttpMethod.GET, uri, msg, target);
+    public CompletableFuture<byte[]> get(String uri, MessageLite msg) {
+        return requestAsync(HttpMethod.GET, uri, msg);
     }
 
     public CompletableFuture<Void> streamGet(String uri, MessageLite msg, BulkRestDataReceiver receiver) {
         return doRequestWithDelimitedResponse(HttpMethod.GET, uri, msg, receiver);
     }
 
-    public CompletableFuture<byte[]> post(String uri, MessageLite msg, MessageLite.Builder target) {
-        return requestAsync(HttpMethod.POST, uri, msg, target);
+    public CompletableFuture<byte[]> post(String uri, MessageLite msg) {
+        return requestAsync(HttpMethod.POST, uri, msg);
     }
 
-    public CompletableFuture<byte[]> patch(String uri, MessageLite msg, MessageLite.Builder target) {
-        return requestAsync(HttpMethod.PATCH, uri, msg, target);
+    public CompletableFuture<byte[]> patch(String uri, MessageLite msg) {
+        return requestAsync(HttpMethod.PATCH, uri, msg);
     }
 
-    public CompletableFuture<byte[]> put(String uri, MessageLite msg, MessageLite.Builder target) {
-        return requestAsync(HttpMethod.PUT, uri, msg, target);
+    public CompletableFuture<byte[]> put(String uri, MessageLite msg) {
+        return requestAsync(HttpMethod.PUT, uri, msg);
     }
 
-    public CompletableFuture<byte[]> delete(String uri, MessageLite msg, MessageLite.Builder target) {
-        return requestAsync(HttpMethod.DELETE, uri, msg, target);
+    public CompletableFuture<byte[]> delete(String uri, MessageLite msg) {
+        return requestAsync(HttpMethod.DELETE, uri, msg);
     }
 
-    private <S extends MessageLite> CompletableFuture<byte[]> requestAsync(HttpMethod method, String uri, MessageLite requestBody, MessageLite.Builder target) {
+    private <S extends MessageLite> CompletableFuture<byte[]> requestAsync(HttpMethod method, String uri, MessageLite requestBody) {
         CompletableFuture<byte[]> cf;
         if (requestBody != null) {
             cf = restClient.doRequest(uri, method, requestBody.toByteArray());

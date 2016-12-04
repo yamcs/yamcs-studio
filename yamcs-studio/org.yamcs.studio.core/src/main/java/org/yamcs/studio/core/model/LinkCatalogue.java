@@ -102,13 +102,13 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
     public CompletableFuture<byte[]> enableLink(String instance, String name) {
         YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("enabled").build();
-        return yamcsClient.patch("/links/" + instance + "/" + name, req, null);
+        return yamcsClient.patch("/links/" + instance + "/" + name, req);
     }
 
     public CompletableFuture<byte[]> disableLink(String instance, String name) {
         YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("disabled").build();
-        return yamcsClient.patch("/links/" + instance + "/" + name, req, null);
+        return yamcsClient.patch("/links/" + instance + "/" + name, req);
     }
 
     public List<LinkInfo> getLinks() {

@@ -6,7 +6,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.rest.BulkRestDataReceiver;
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -53,7 +52,7 @@ public class EventCatalogue implements Catalogue {
     public CompletableFuture<byte[]> fetchLatestEvents(String instance) {
         String resource = "/archive/" + instance + "/events";
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.get(resource, null, ListEventsResponse.newBuilder());
+        return restClient.get(resource, null);
     }
 
     public CompletableFuture<Void> downloadEvents(long start, long stop, BulkRestDataReceiver receiver) {
