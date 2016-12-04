@@ -79,9 +79,6 @@
    
    <extension point="org.eclipse.ui.activities">
       <activity id="yamcsstudio.disableextensions" name="Hidden activities"/>
-      <activityPatternBinding
-            activityId="yamcsstudio.disableextensions"
-            pattern="org.eclipse.team.*"/>
       <!-- Hide Edit OPI in popup menu, because it opens an editor stack in runtime as well as in editor... -->
       <activityPatternBinding
             activityId="yamcsstudio.disableextensions"
