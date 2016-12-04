@@ -9,6 +9,10 @@
          id="org.eclipse.rcp"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.fx.target.rcp.feature"
+         version="0.0.0"/>
+
    <plugin
          id="org.eclipse.core.resources"
          download-size="0"
@@ -394,20 +398,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.fx.ui.workbench3"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.fx.javafx"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.platform"
          download-size="0"
          install-size="0"
@@ -509,6 +499,14 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.osgi.compatibility.state"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
