@@ -506,6 +506,19 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.csstudio.opibuilder.examples"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.csstudio.examples"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.csstudio.ui.fx.util"
