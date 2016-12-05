@@ -64,7 +64,7 @@
       <view
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.eventlog.EventLogView"
-            icon="icons/eview16/event_log.png"
+            icon="icons/eview16/event-log.gif"
             id="org.yamcs.studio.ui.eventlog.EventLogView"
             name="Event Log"/>
    </extension>
