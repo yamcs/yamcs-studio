@@ -20,7 +20,10 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         TimeEncoding.setUp();
         ConnectionUIHelper.getInstance();
         YamcsVType.severityHandler = new SeverityHandlerSound();
+
+        // TODO should maybe move these two to eventlog-plugin, but verify lazy behaviour
         DisplayOpener.init();
+        EventLogViewActivator.init();
     }
 
     @Override

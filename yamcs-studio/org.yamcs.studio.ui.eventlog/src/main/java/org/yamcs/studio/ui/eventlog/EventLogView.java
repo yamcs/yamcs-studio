@@ -125,7 +125,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     public void onStudioConnect() {
         Display.getDefault().asyncExec(() -> {
             clear();
-            // TODO make optional? fetchLatestEvents();
+            fetchLatestEvents();
         });
     }
 
@@ -133,7 +133,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     public void instanceChanged(String oldInstance, String newInstance) {
         Display.getDefault().asyncExec(() -> {
             clear();
-            // TODO make optional? fetchLatestEvents();
+            fetchLatestEvents();
         });
     }
 

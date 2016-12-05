@@ -13,6 +13,7 @@ import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
+
 public class EventCatalogue implements Catalogue {
 
     private Set<EventListener> eventListeners = new CopyOnWriteArraySet<>();
