@@ -14,12 +14,8 @@ public class EventLogViewActivator implements EventListener {
 
     private static final Logger log = Logger.getLogger(EventLogViewActivator.class.getName());
 
-    private EventLogViewActivator() {
+    public EventLogViewActivator() {
         EventCatalogue.getInstance().addEventListener(this);
-    }
-
-    public static void init() {
-        new EventLogViewActivator();
     }
 
     @Override

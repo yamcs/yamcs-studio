@@ -13,6 +13,8 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
     public static final String CMD_CONNECT = "org.yamcs.studio.ui.connect";
 
+    private EventLogViewActivator eventLogActivator;
+
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
@@ -23,7 +25,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
         // TODO should maybe move these two to eventlog-plugin, but verify lazy behaviour
         DisplayOpener.init();
-        EventLogViewActivator.init();
+        eventLogActivator = new EventLogViewActivator();
     }
 
     @Override
