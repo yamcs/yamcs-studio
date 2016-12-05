@@ -20,6 +20,7 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.connections.ConnectionPreferences;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.processor.ProcessorStateProvider;
@@ -79,8 +80,10 @@ public class LifeCycleManager {
             });
 
             // request connection to Yamcs server
-            if(ConnectionPreferences.isAutoConnect())
+            boolean singleConnectionMode = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("singleConnectionMode");
+            if(!singleConnectionMode && ConnectionPreferences.isAutoConnect()) {
                 RCPUtils.runCommand("org.yamcs.studio.ui.autoconnect");
+            }
         });
     }
 
