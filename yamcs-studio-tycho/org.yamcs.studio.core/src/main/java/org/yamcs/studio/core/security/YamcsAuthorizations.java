@@ -30,18 +30,35 @@ public class YamcsAuthorizations {
     }
 
     public void loadAuthorizations() {
-        ConnectionManager manager = ConnectionManager.getInstance();
-        manager.requestAuthenticatedUser(new ResponseHandler() {
-            @Override
-            public void onMessage(MessageLite responseMsg) {
-                userInfo = (UserInfo) responseMsg;
-            }
 
-            @Override
-            public void onException(Exception e) {
-                log.log(Level.SEVERE, "Could not get authorizations", e);
+        ConnectionManager manager = ConnectionManager.getInstance();
+
+        synchronized (manager) {
+            manager.requestAuthenticatedUser(new ResponseHandler() {
+                @Override
+                public void onMessage(MessageLite responseMsg) {
+                    synchronized (manager) {
+                        userInfo = (UserInfo) responseMsg;
+                        manager.notify();
+                    }
+                }
+
+                @Override
+                public void onException(Exception e) {
+
+                    synchronized (manager) {
+                        log.log(Level.SEVERE, "Could not get authorizations", e);
+                        manager.notify();
+                    }
+                }
+            });
+
+            try {
+                manager.wait();
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
             }
-        });
+        }
     }
 
     public boolean hasSystemPrivilege(SystemPrivilege systemPrivilege) {
