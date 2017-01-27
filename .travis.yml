@@ -11,7 +11,7 @@ cache:
 
 install:
   - git clone --depth 1 --branch master https://github.com/yamcs/yamcs
-  - git checkout tags/v0.29.4
+  - git --git-dir yamcs/.git checkout tags/v0.29.4
   - mvn install -DskipTests -f yamcs/pom.xml
   - sed "s#REPLACE_WITH_LOCAL_P2_REPO#"`pwd`/css/local_p2_repository"#" css/settings_template.xml >css/settings.xml
 
