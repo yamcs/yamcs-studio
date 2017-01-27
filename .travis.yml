@@ -10,8 +10,7 @@ cache:
     - $HOME/.m2
 
 install:
-  - git clone --branch master https://github.com/yamcs/yamcs
-  - git --git-dir yamcs/.git checkout tags/v0.29.4
+  - git clone --depth 1 --branch v0.29.4 https://github.com/yamcs/yamcs
   - mvn install -DskipTests -f yamcs/pom.xml
   - sed "s#REPLACE_WITH_LOCAL_P2_REPO#"`pwd`/css/local_p2_repository"#" css/settings_template.xml >css/settings.xml
 
