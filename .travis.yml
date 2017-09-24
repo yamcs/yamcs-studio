@@ -9,7 +9,7 @@ cache:
     - $HOME/.m2
 
 install:
-  - git clone --depth 1 --branch master https://github.com/yamcs/yamcs
+  - git clone --depth 1 --branch v0.29.4 https://github.com/yamcs/yamcs
   - mvn install -DskipTests -f yamcs/pom.xml
 
 script:

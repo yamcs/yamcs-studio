@@ -241,12 +241,12 @@ public class ConnectionManager {
 
     public void onWebSocketConnected() {
         log.fine("WebSocket connected");
-        YamcsAuthorizations.getInstance().loadAuthorizations();
-
-        setConnectionStatus(ConnectionStatus.Connected);
-        synchronized (studioConnectionListeners) {
-            studioConnectionListeners.forEach(l -> l.onStudioConnect());
-        }
+        YamcsAuthorizations.getInstance().loadAuthorizations().thenRun(() -> {
+            setConnectionStatus(ConnectionStatus.Connected);
+            synchronized (studioConnectionListeners) {
+                studioConnectionListeners.forEach(l -> l.onStudioConnect());
+            }
+        });
     }
 
     public void onWebSocketConnectionFailed(Throwable t) {

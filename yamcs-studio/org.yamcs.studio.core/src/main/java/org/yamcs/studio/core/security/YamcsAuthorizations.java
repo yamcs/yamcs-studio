@@ -1,5 +1,6 @@
 package org.yamcs.studio.core.security;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,9 +29,9 @@ public class YamcsAuthorizations {
         return instance;
     }
 
-    public void loadAuthorizations() {
+    public CompletableFuture<byte[]> loadAuthorizations() {
         ConnectionManager manager = ConnectionManager.getInstance();
-        manager.requestAuthenticatedUser().whenComplete((data, exc) -> {
+        return manager.requestAuthenticatedUser().whenComplete((data, exc) -> {
             if (exc == null) {
                 try {
                     userInfo = UserInfo.parseFrom(data);
