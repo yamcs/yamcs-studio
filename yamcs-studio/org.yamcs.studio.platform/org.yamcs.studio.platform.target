@@ -469,7 +469,6 @@
 <unit id="org.csstudio.core.utility.rap.feature.feature.group" version="4.1.0.201610051314"/>
 <unit id="org.csstudio.applications.opibuilder.edm.feature.feature.group" version="5.0.0.201610051329"/>
 <unit id="org.epics.pvdata" version="4.0.3"/>
-<unit id="org.csstudio.product.feature.feature.group" version="4.3.3"/>
 <unit id="org.csstudio.core.platform.feature.source.feature.group" version="0.0.1.201610051314"/>
 <unit id="aopalliance" version="1.0.0"/>
 <unit id="org.csstudio.thirdparty.all.feature.source.feature.group" version="1.0.1.201603241454"/>
