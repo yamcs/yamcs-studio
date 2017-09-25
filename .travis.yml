@@ -8,23 +8,23 @@ cache:
   directories:
     - $HOME/.m2
 
-install:
-  - git clone --depth 1 --branch v0.29.4 https://github.com/yamcs/yamcs
-  - mvn install -DskipTests -f yamcs/pom.xml
+#install:
+#  - git clone --depth 1 --branch v0.29.4 https://github.com/yamcs/yamcs
+#  - mvn install -DskipTests -f yamcs/pom.xml
 
 script:
   - mvn verify -f yamcs-studio-deps/pom.xml
   - mvn verify -f yamcs-studio/pom.xml
 
-deploy:
-  provider: releases
-  api_key:
-    secure: wRRoOFh5iNtS6I6miZokq8IgGG8gNJV1D36mx46z7wacusOEA35TGLieegNzfTvwLMgLYZN4vbMyouwimaApokP+aJdhpHiGQ4pJLQ9Y1mEyjGAXiYcQ9qC6k2/mv4b3p/72cajtLfVeKT/0PIURQ6bAhiliBcUerq1Gx/9u8KU=
-  file_glob: true
-  file:
-    - yamcs-studio/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.zip
-    - yamcs-studio/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.tar.gz
-  skip_cleanup: true
-  on:
-    tags: true
+#deploy:
+#  provider: releases
+#  api_key:
+#    secure: wRRoOFh5iNtS6I6miZokq8IgGG8gNJV1D36mx46z7wacusOEA35TGLieegNzfTvwLMgLYZN4vbMyouwimaApokP+aJdhpHiGQ4pJLQ9Y1mEyjGAXiYcQ9qC6k2/mv4b3p/72cajtLfVeKT/0PIURQ6bAhiliBcUerq1Gx/9u8KU=
+#  file_glob: true
+#  file:
+#    - yamcs-studio/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.zip
+#    - yamcs-studio/org.yamcs.studio.dist.default.repository/target/products/yamcs-studio-*.tar.gz
+#  skip_cleanup: true
+#  on:
+#    tags: true
 
