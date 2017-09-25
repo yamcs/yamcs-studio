@@ -13,7 +13,7 @@
 	</prerequisites>
 
 	<properties>
-		<yamcs.version>0.30.0</yamcs.version>
+		<yamcs.version>3.2.2</yamcs.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -28,12 +28,12 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>2.5.3</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.3</version>
+					<version>3.7.0</version>
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
