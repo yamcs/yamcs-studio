@@ -23,9 +23,6 @@
                name="lifeCycleURI"
                value="bundleclass://org.yamcs.studio.product.utility/org.yamcs.studio.product.utility.LifeCycleManager"/>
          <property
-               name="applicationCSS"
-               value="platform:/plugin/org.yamcs.studio.product.utility/css/default.css"/>
-         <property
                name="applicationCSSResources"
                value="platform:/plugin/org.eclipse.platform/images/"/>
          <property

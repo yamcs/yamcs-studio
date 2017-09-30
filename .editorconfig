@@ -1,0 +1,9 @@
+root = true
+
+[{plugin.xml,feature.xml}]
+indent_style = space
+indent_size = 3
+
+[pom.xml]
+indent_style = space
+indent_size = 2
