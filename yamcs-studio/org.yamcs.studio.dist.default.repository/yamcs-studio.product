@@ -43,7 +43,6 @@ openFile
    <launcher name="Yamcs Studio">
       <linux icon="/org.yamcs.studio.dist.default.plugin/icons/css.xpm"/>
       <macosx icon="/org.yamcs.studio.dist.default.plugin/icons/css.icns"/>
-      <solaris/>
       <win useIco="true">
          <ico path="/org.yamcs.studio.dist.default.plugin/icons/css.ico"/>
          <bmp/>

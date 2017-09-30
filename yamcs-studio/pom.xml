@@ -34,6 +34,7 @@
 		<module>org.yamcs.studio.dist.feature.css</module>
 		<module>org.yamcs.studio.dist.feature.eclipse</module>
 		<module>org.yamcs.studio.dist.feature.p2</module>
+        <module>org.yamcs.studio.dist.feature.runtime</module>
 		<module>org.yamcs.studio.p2</module>
 		<module>org.yamcs.studio.platform</module>
 		<module>org.yamcs.studio.product.utility</module>
