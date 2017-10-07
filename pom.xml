@@ -19,6 +19,7 @@
   </organization>
 
   <properties>
+    <yamcs.version>3.2.2</yamcs.version>
     <tycho.version>1.0.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -182,7 +183,7 @@
   <repositories>
     <repository>
       <id>yamcs-studio-deps</id>
-      <url>${project.baseUri}/../../yamcs-studio-deps/org.yamcs.studio.deps.repository/target/repository</url>
+      <url>${project.baseUri}/../p2deps/org.yamcs.studio.deps.repository/target/repository</url>
       <layout>p2</layout>
     </repository>
   </repositories>

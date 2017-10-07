@@ -25,12 +25,11 @@ PRGDIR=`dirname "$PRG"`
 
 set -e
 if [ "$DEPS_REACTOR" = 1 ]; then
-  mvn -f $PRGDIR/yamcs-studio-deps/pom.xml clean verify
+  mvn -f $PRGDIR/p2deps/pom.xml clean install
 fi
-mvn -f $PRGDIR/yamcs-studio/pom.xml clean verify
+mvn -f $PRGDIR/pom.xml clean install
 set +e
 
 echo
 echo 'All done. These are your generated Yamcs Studio products:'
-find `cd $PRGDIR; pwd`/yamcs-studio/org.yamcs.studio.dist.default.repository/target/products -maxdepth 1 -type f -exec echo "{}" \;
-
+find `cd $PRGDIR; pwd`/org.yamcs.studio.dist.default.repository/target/products -maxdepth 1 -type f -exec echo "{}" \;

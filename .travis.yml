@@ -13,8 +13,8 @@ cache:
 #  - mvn install -DskipTests -f yamcs/pom.xml
 
 script:
-  - mvn verify -f yamcs-studio-deps/pom.xml
-  - mvn verify -f yamcs-studio/pom.xml
+  - mvn verify -f p2deps/pom.xml
+  - mvn verify
 
 #deploy:
 #  provider: releases
