@@ -85,6 +85,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
 
         addFixedColumns();
         tableContentProvider = new EventLogContentProvider(tableViewer.getTable());
+        tableViewer.setContentProvider(tableContentProvider);
         tableContentProvider.setNbLineToDisplay(nbMessageLineToDisplay);
 
         // Register context menu. Commands are added in plugin.xml
@@ -164,6 +165,8 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         Display.getDefault().asyncExec(() -> {
             log.finest("clear started");
             tableContentProvider.clearAll();
+            tableViewer.setInput(null);
+            tableViewer.setSelection(null);
             updateSummaryLine();
             log.finest("clear done");
         });

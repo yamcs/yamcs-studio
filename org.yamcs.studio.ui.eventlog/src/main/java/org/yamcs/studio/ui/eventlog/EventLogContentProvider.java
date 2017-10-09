@@ -27,7 +27,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private static final Logger log = Logger.getLogger(EventLogContentProvider.class.getName());
     private EventLogViewerComparator eventLogViewerComparator = new EventLogViewerComparator();
     private ArrayList<Event> sortedEvents = new ArrayList<>();
-    private Map<Long, Event> eventsBySequenceNumber = new LinkedHashMap<>();
+    private Map<EventId, Event> eventsById = new LinkedHashMap<>();
     private Table table;
     private boolean scrollLock;
     private int nbMessageLineToDisplay;
@@ -68,7 +68,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     @Override
     public Object[] getElements(Object inputElement) {
-        return eventsBySequenceNumber.values().toArray();
+        return eventsById.values().toArray();
     }
 
     public List<Event> getSortedEvents() {
@@ -76,14 +76,15 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     public void addEvent(Event event) {
-        if (eventsBySequenceNumber.containsKey(primaryKeyHash(event))) {
+        EventId eventId = new EventId(event);
+        if (eventsById.containsKey(eventId)) {
             // event is already loaded, ignoring it
         } else {
             sortedEvents.add(event); // add to local event list
             sortedEvents.sort(eventLogViewerComparator); // and sort the sorted list
             int index = sortedEvents.indexOf(event);
             addItemFromEvent(event, index); // add to table
-            eventsBySequenceNumber.put(primaryKeyHash(event), event); // add to the hash map
+            eventsById.put(eventId, event); // add to the hash map
 
             switch (event.getSeverity()) {
             case INFO:
@@ -112,10 +113,11 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
         table.setRedraw(false);
         events.forEach(event -> {
-            if (eventsBySequenceNumber.containsKey(primaryKeyHash(event))) {
+            EventId eventId = new EventId(event);
+            if (eventsById.containsKey(eventId)) {
                 // event is already loaded, ignoring it
             } else {
-                eventsBySequenceNumber.put(primaryKeyHash(event), event);
+                eventsById.put(eventId, event);
                 sortedEvents.add(event);
                 addItemFromEvent(event, -1);
                 switch (event.getSeverity()) {
@@ -171,7 +173,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         }
         item.setText(0, message);
         // Install a monospaced font, because it works better with logs
-        item.setFont(1, JFaceResources.getFont(JFaceResources.TEXT_FONT));
+        item.setFont(0, JFaceResources.getFont(JFaceResources.TEXT_FONT));
         item.setImage(getSeverityImage(event));
         item.setBackground(getSeverityColor(event));
 
@@ -227,7 +229,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     public int getNbEvents() {
-        return eventsBySequenceNumber.size();
+        return eventsById.size();
     }
 
     public int getNbWarnings() {
@@ -242,10 +244,6 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         return infoCount;
     }
 
-    private long primaryKeyHash(Event event) {
-        return event.getSource().hashCode() + event.getGenerationTime() + event.getSeqNumber();
-    }
-
     private void maybeSelectAndReveal(Event event) {
         if (!scrollLock) {
             table.setSelection(sortedEvents.indexOf(event));
@@ -258,7 +256,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             table.setRedraw(false);
             table.removeAll();
             sortedEvents.clear();
-            eventsBySequenceNumber.clear();
+            eventsById.clear();
             table.setRedraw(true);
             warningCount = 0;
             errorCount = 0;
