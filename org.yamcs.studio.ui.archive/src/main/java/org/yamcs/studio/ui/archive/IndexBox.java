@@ -11,16 +11,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
@@ -28,15 +23,11 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.ui.utils.Prefs;
 import org.yamcs.studio.ui.archive.ArchivePanel.IndexChunkSpec;
 
 /**
@@ -45,18 +36,14 @@ import org.yamcs.studio.ui.archive.ArchivePanel.IndexChunkSpec;
  * @author nm
  *
  */
-public class IndexBox extends Box implements MouseListener {
+public class IndexBox extends Box {
     private static final long serialVersionUID = 1L;
-    private static final Logger log = Logger.getLogger(IndexBox.class.getName());
 
     public static final Color BORDER_COLOR = new Color(216, 216, 216);
     private static final Color PACKET_LABEL_COLOR = new Color(102, 102, 102);
     DataView dataView;
 
     JLabel popupLabelItem;
-    JPopupMenu packetPopup;
-    JMenuItem removePacketMenuItem, removeExceptPacketMenuItem, removePayloadMenuItem;
-    IndexLineSpec selectedPacket;
     static final int tmRowHeight = 20;
 
     HashMap<String, IndexLineSpec> allPackets;
@@ -64,6 +51,7 @@ public class IndexBox extends Box implements MouseListener {
     HashMap<String, TreeSet<IndexChunkSpec>> tmData;
     private ZoomSpec zoom;
     private String name;
+
     /**
      * because the histogram contains regular splits each 3600 seconds, merge here the records that
      * are close enough to each other. -1 means no merging
@@ -73,7 +61,7 @@ public class IndexBox extends Box implements MouseListener {
 
     private JPanel topPanel;
     private JPanel centerPanel;
-    private List<IndexLine> indexLines = new ArrayList<IndexLine>();
+    private List<IndexLine> indexLines = new ArrayList<>();
 
     private JLabel titleLabel;
 
@@ -107,15 +95,12 @@ public class IndexBox extends Box implements MouseListener {
 
         add(centerPanel);
 
-        addMouseListener(this);
-
         this.dataView = dataView;
         this.name = name;
 
-        allPackets = new HashMap<String, IndexLineSpec>();
-        groups = new HashMap<String, ArrayList<IndexLineSpec>>();
-        tmData = new HashMap<String, TreeSet<IndexChunkSpec>>();
-        prefs = Preferences.userNodeForPackage(IndexBox.class).node(name);
+        allPackets = new HashMap<>();
+        groups = new HashMap<>();
+        tmData = new HashMap<>();
     }
 
     void removeIndexLines() {
@@ -132,263 +117,6 @@ public class IndexBox extends Box implements MouseListener {
         int panelHeight = getHeight();
         g2d.setPaint(new GradientPaint(0, topPanel.getHeight(), new Color(251, 251, 251), 0, panelHeight, Color.WHITE));
         g2d.fillRect(0, topPanel.getHeight(), panelWidth, panelHeight - topPanel.getHeight());
-    }
-
-    protected void buildPopup() {
-        if (groups.isEmpty()) {
-            packetPopup = null;
-        } else {
-            packetPopup = new JPopupMenu();
-
-            JMenuItem replayFromHere = new JMenuItem("New Replay From Here...");
-            replayFromHere.addActionListener(e -> {
-                /*
-                 * Point mousePosition = packetPopup.getMousePosition(); int popupX =
-                 * mousePosition.x; System.out.println("x is " + popupX);
-                 *
-                 * long mouseTime; if (!dataView.zoomStack.isEmpty()) { mouseTime =
-                 * dataView.zoomStack.peek().convertPixelToInstant(popupX); } else { mouseTime =
-                 * TimeEncoding.INVALID_INSTANT; } Display.getDefault().asyncExec(() -> {
-                 * System.out.println("time is " + mouseTime + " " +
-                 * TimeEncoding.toString(mouseTime)); });
-                 */
-            });
-            //packetPopup.add(replayFromHere);
-            //packetPopup.add(new JSeparator());
-
-            popupLabelItem = new JLabel();
-            popupLabelItem.setEnabled(false);
-            Box hbox = Box.createHorizontalBox();
-            hbox.add(Box.createHorizontalGlue());
-            hbox.add(popupLabelItem);
-            hbox.add(Box.createHorizontalGlue());
-            packetPopup.insert(hbox, 0);
-
-            JMenu packetmenu = new JMenu("Add Packets");
-            packetPopup.add(packetmenu);
-
-            removePacketMenuItem = new JMenuItem(); // text is set when showing the popup menu
-            removePacketMenuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    removeSelectedPacket();
-                }
-            });
-            packetPopup.add(removePacketMenuItem);
-
-            removeExceptPacketMenuItem = new JMenuItem("Hide Other Packets");
-            removeExceptPacketMenuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    removeAllButThisLine();
-                }
-            });
-            packetPopup.add(removeExceptPacketMenuItem);
-
-            removePayloadMenuItem = new JMenuItem(); // text is set when showing the popup menu
-            removePayloadMenuItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    removeGroupLines();
-                }
-            });
-            packetPopup.add(removePayloadMenuItem);
-
-            JMenuItem menuItem;
-            final String[] plkeys = groups.keySet().toArray(new String[0]);
-            Arrays.sort(plkeys);
-
-            for (final String key : plkeys) {
-                ArrayList<IndexLineSpec> tm = groups.get(key);
-                JMenu submenu = new JMenu(key);
-                packetmenu.add(submenu);
-
-                final IndexLineSpec[] tmarray = tm.toArray(new IndexLineSpec[0]);
-                Arrays.sort(tmarray);
-
-                for (final IndexLineSpec pkt : tmarray) {
-                    if (dataView.hideResponsePackets && pkt.lineName.contains("_Resp_"))
-                        continue;
-                    menuItem = new JMenuItem(pkt.toString());
-                    pkt.assocMenuItem = menuItem;
-                    if (pkt.enabled) {
-                        menuItem.setVisible(false);
-                    }
-                    menuItem.addActionListener(pkt);
-                    submenu.add(menuItem);
-                }
-
-                // "All Packets" item
-                submenu.addSeparator();
-                menuItem = new JMenuItem("All Packets");
-                menuItem.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        enableAllPackets(key);
-                    }
-                });
-                submenu.add(menuItem);
-            }
-        }
-    }
-
-    void updatePrefsVisiblePackets() {
-        ArrayList<String> visiblePackets = new ArrayList<String>();
-        for (ArrayList<IndexLineSpec> plvec : groups.values()) {
-            for (IndexLineSpec pkt : plvec) {
-                if (pkt.enabled) {
-                    visiblePackets.add(pkt.lineName);
-                }
-            }
-        }
-        Prefs.putObject(prefs, "indexLines", visiblePackets);
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        selectedPacket = null;
-        if (e.isPopupTrigger()) {
-            showPopup(e);
-        }
-    }
-
-    public void doMouseReleased(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-            showPopup(e);
-        }
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        doMouseReleased(e);
-    }
-
-    void showPopup(final MouseEvent e) {
-        if (packetPopup != null) {
-            if (selectedPacket != null) {
-                popupLabelItem.setVisible(true);
-                removePayloadMenuItem.setVisible(true);
-                removeExceptPacketMenuItem.setVisible(true);
-                removePacketMenuItem.setVisible(true);
-
-                popupLabelItem.setText(selectedPacket.lineName);
-                removePacketMenuItem.setText(String.format("Hide %s Packet", selectedPacket.lineName));
-                removePayloadMenuItem.setText(String.format("Hide All %s Packets", selectedPacket.grpName));
-            } else {
-                popupLabelItem.setVisible(false);
-                removePayloadMenuItem.setVisible(false);
-                removePacketMenuItem.setVisible(false);
-                removeExceptPacketMenuItem.setVisible(false);
-            }
-            packetPopup.validate();
-            packetPopup.show(e.getComponent(), e.getX(), e.getY());
-        }
-    }
-
-    void enableAllPackets(String plname) {
-        ArrayList<IndexLineSpec> pltm = groups.get(plname);
-        if (pltm != null) {
-            for (IndexLineSpec pkt : pltm) {
-                if (pkt.assocMenuItem != null) {
-                    // response packets might be hidden from the popup.
-                    // in this case, assocMenuItem is not set.
-
-                    // remove item from popup menu
-                    pkt.assocMenuItem.setVisible(false);
-
-                    // create entry in TM display
-                    pkt.enabled = true;
-                }
-            }
-            updatePrefsVisiblePackets();
-            dataView.refreshDisplay();
-        }
-        titleLabel.setText(name + " " + getPacketsStatus());
-    }
-
-    void enableTMPacket(IndexLineSpec pkt) {
-        // remove item from popup menu
-        pkt.assocMenuItem.setVisible(false);
-
-        // create entry in TM display
-        pkt.enabled = true;
-        dataView.refreshDisplay();
-        updatePrefsVisiblePackets();
-        titleLabel.setText(name + " " + getPacketsStatus());
-    }
-
-    void removeSelectedPacket() {
-        dataView.setBusyPointer();
-        selectedPacket.assocMenuItem.setVisible(true);
-        selectedPacket.enabled = false;
-        remove(selectedPacket.assocIndexLine);
-        selectedPacket.assocIndexLine = null;
-        updatePrefsVisiblePackets();
-        if (getComponents().length == 0) {
-            showEmptyLabel("Right click for " + name + " data");
-        }
-
-        dataView.refreshDisplay();
-        dataView.setNormalPointer();
-        titleLabel.setText(name + " " + getPacketsStatus());
-    }
-
-    void removeGroupLines() {
-        ArrayList<IndexLineSpec> pltm = groups.get(selectedPacket.grpName);
-        if (pltm != null) {
-            dataView.setBusyPointer();
-            for (IndexLineSpec pkt : pltm) {
-                if (pkt.assocMenuItem != null) {
-                    pkt.assocMenuItem.setVisible(true);
-                }
-                pkt.enabled = false;
-                if (pkt.assocIndexLine != null) {
-                    remove(pkt.assocIndexLine);
-                    pkt.assocIndexLine = null;
-                }
-            }
-            if (getComponents().length == 0) {
-                showEmptyLabel("Right click for " + name + " data");
-            }
-            updatePrefsVisiblePackets();
-            dataView.refreshDisplay();
-            dataView.setNormalPointer();
-        }
-        titleLabel.setText(name + " " + getPacketsStatus());
-    }
-
-    void removeAllButThisLine() {
-        dataView.setBusyPointer();
-        for (ArrayList<IndexLineSpec> plvec : groups.values()) {
-            for (IndexLineSpec pkt : plvec) {
-                if (selectedPacket != pkt) {
-                    if (pkt.assocMenuItem != null) {
-                        pkt.assocMenuItem.setVisible(true);
-                    }
-                    pkt.enabled = false;
-                    if (pkt.assocIndexLine != null) {
-                        remove(pkt.assocIndexLine);
-                        pkt.assocIndexLine = null;
-                    }
-                }
-            }
-        }
-        updatePrefsVisiblePackets();
-        dataView.refreshDisplay();
-        dataView.setNormalPointer();
-        titleLabel.setText(name + " " + getPacketsStatus());
     }
 
     public String getPacketsStatus() {
@@ -416,7 +144,6 @@ public class IndexBox extends Box implements MouseListener {
     public void setToZoom(ZoomSpec zoom) {
         this.zoom = zoom;
         removeIndexLines();
-        packetPopup = null;
         if (groups.isEmpty()) {
             showEmptyLabel("No " + name + " data loaded");
         } else {
@@ -438,8 +165,6 @@ public class IndexBox extends Box implements MouseListener {
             if (empty) {
                 showEmptyLabel("Right click for " + name + " data");
             }
-
-            buildPopup();
         }
     }
 
@@ -447,7 +172,6 @@ public class IndexBox extends Box implements MouseListener {
         JLabel nodata = new JLabel(msg);
         nodata.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, nodata.getFont().getSize()));
         nodata.setForeground(Color.lightGray);
-        nodata.addMouseListener(this);
         Box b = Box.createHorizontalBox();
         b.setBorder(BorderFactory.createEmptyBorder());
         b.add(nodata);
@@ -500,7 +224,7 @@ public class IndexBox extends Box implements MouseListener {
                     allPackets.put(id.getName(), pkt);
                     ArrayList<IndexLineSpec> plvec;
                     if ((plvec = groups.get(grpName)) == null) {
-                        plvec = new ArrayList<IndexLineSpec>();
+                        plvec = new ArrayList<>();
                         groups.put(grpName, plvec);
                     }
                     plvec.add(pkt);
@@ -517,7 +241,7 @@ public class IndexBox extends Box implements MouseListener {
     }
 
     public List<String> getPacketsForSelection(Selection selection) {
-        ArrayList<String> packets = new ArrayList<String>();
+        ArrayList<String> packets = new ArrayList<>();
         for (ArrayList<IndexLineSpec> plvec : groups.values()) {
             for (IndexLineSpec pkt : plvec) {
                 if (pkt.enabled) {
@@ -529,23 +253,12 @@ public class IndexBox extends Box implements MouseListener {
     }
 
     public void dataLoadFinished() {
-        Object o;
-        try {
-            o = Prefs.getObject(prefs, "indexLines");
-        } catch (ClassNotFoundException e) {
-            log.warning("Class not found while loading index lines from preferences. Assume not set");
-            o = null;
-        }
-        if (o == null)
-            return;
-
-        ArrayList<String> visibleLines = (ArrayList<String>) o;
-        for (String linename : visibleLines) {
-            IndexLineSpec pkt = allPackets.get(linename);
+        for (Entry<String, IndexLineSpec> entry : allPackets.entrySet()) {
+            IndexLineSpec pkt = entry.getValue();
             if (pkt != null) {
                 pkt.enabled = true;
             } else {
-                ArchivePanel.debugLog("could not enable packet '" + linename + "', removing line from view");
+                ArchivePanel.debugLog("could not enable packet '" + entry.getKey() + "', removing line from view");
             }
         }
         titleLabel.setText(name + " " + getPacketsStatus());
@@ -603,11 +316,10 @@ public class IndexBox extends Box implements MouseListener {
         //  System.out.println("indexLine.preferred size: "+indexLine.getPreferredSize());
     }
 
-    class IndexLineSpec implements Comparable<IndexLineSpec>, ActionListener {
+    class IndexLineSpec implements Comparable<IndexLineSpec> {
         String shortName, lineName;
         String grpName;
         boolean enabled;
-        JMenuItem assocMenuItem;
         JComponent assocLabel;
         IndexLine assocIndexLine;
 
@@ -615,8 +327,7 @@ public class IndexBox extends Box implements MouseListener {
             this.lineName = lineName;
             this.grpName = grpName;
             this.shortName = shortName;
-            enabled = false;
-            assocMenuItem = null;
+            enabled = true;
             assocIndexLine = null;
             assocLabel = null;
         }
@@ -629,11 +340,6 @@ public class IndexBox extends Box implements MouseListener {
         @Override
         public int compareTo(IndexLineSpec o) {
             return shortName.compareTo(o.shortName);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            enableTMPacket(this);
         }
     }
 

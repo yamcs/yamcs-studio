@@ -39,28 +39,10 @@ class IndexLine extends JPanel implements MouseInputListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-            indexBox.selectedPacket = pkt;
-            indexBox.showPopup(translateEvent(e));
-        }
-        ///tmBox.dataView.doMousePressed(translateEvent(e));
-        /*
-         * Action postTip = getActionMap().get("postTip");
-         * debugLog("tmpanel postTip src "+e.getSource
-         * ()+" this "+this+" actionmap "+getActionMap().size()+" inputmap "+getInputMap(0).size());
-         * if (postTip != null) { debugLog("tmpanel postTip"); postTip.actionPerformed(new
-         * ActionEvent(e.getSource(), ActionEvent.ACTION_PERFORMED, "")); }
-         */
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // Cross-platform popups
-        if (e.isPopupTrigger()) {
-            indexBox.selectedPacket = pkt;
-            indexBox.showPopup(translateEvent(e));
-        }
-        indexBox.doMouseReleased(translateEvent(e));
     }
 
     @Override
