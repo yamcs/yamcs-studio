@@ -17,7 +17,7 @@ public class ScrollLockHandler extends AbstractHandler {
         EventLogView view = (EventLogView) part;
 
         ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command command = service.getCommand("org.yamcs.studio.ui.eventlog.scrollLockCommand");
+        Command command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
         boolean oldState = HandlerUtil.toggleCommandState(command);
         view.enableScrollLock(!oldState);
         return null;

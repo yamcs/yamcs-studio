@@ -28,7 +28,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private EventLogViewerComparator eventLogViewerComparator = new EventLogViewerComparator();
     private ArrayList<Event> sortedEvents = new ArrayList<>();
     private Map<Long, Event> eventsBySequenceNumber = new LinkedHashMap<>();
-    private Table tableViewer;
+    private Table table;
     private boolean scrollLock;
     private int nbMessageLineToDisplay;
     private int warningCount = 0;
@@ -42,15 +42,15 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private Color errorColor;
     private Color warningColor;
 
-    public EventLogContentProvider(Table tableViewer) {
-        this.tableViewer = tableViewer;
+    public EventLogContentProvider(Table table) {
+        this.table = table;
         if (PlatformUI.isWorkbenchRunning()) {
             errorIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
             warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
             infoIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
         }
-        errorColor = new Color(tableViewer.getDisplay(), new RGB(255, 102, 102));
-        warningColor = new Color(tableViewer.getDisplay(), new RGB(255, 255, 102));
+        errorColor = new Color(table.getDisplay(), new RGB(255, 102, 102));
+        warningColor = new Color(table.getDisplay(), new RGB(255, 255, 102));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         if (events.size() == 0)
             return;
 
-        tableViewer.setRedraw(false);
+        table.setRedraw(false);
         events.forEach(event -> {
             if (eventsBySequenceNumber.containsKey(primaryKeyHash(event))) {
                 // event is already loaded, ignoring it
@@ -135,8 +135,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             }
         });
         lastAddedEvent = events.get(events.size() - 1);
-        tableViewer.setItemCount(sortedEvents.size());
-        tableViewer.setRedraw(true);
+        table.setItemCount(sortedEvents.size());
+        table.setRedraw(true);
     }
 
     public void addedAllEvents() {
@@ -148,9 +148,9 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private TableItem addItemFromEvent(Event event, int index) {
         TableItem item = null;
         if (index >= 0)
-            item = new TableItem(tableViewer, SWT.NULL, index);
+            item = new TableItem(table, SWT.NULL, index);
         else
-            item = new TableItem(tableViewer, SWT.NULL);
+            item = new TableItem(table, SWT.NULL);
 
         item.setText("Item " + event.getSeqNumber());
 
@@ -248,18 +248,18 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     private void maybeSelectAndReveal(Event event) {
         if (!scrollLock) {
-            tableViewer.setSelection(sortedEvents.indexOf(event));
+            table.setSelection(sortedEvents.indexOf(event));
         }
     }
 
     public void clearAll() {
         // TODO not sure if this is the recommended way to delete all. Need to verify
-        BusyIndicator.showWhile(tableViewer.getDisplay(), () -> {
-            tableViewer.setRedraw(false);
-            tableViewer.removeAll();
+        BusyIndicator.showWhile(table.getDisplay(), () -> {
+            table.setRedraw(false);
+            table.removeAll();
             sortedEvents.clear();
             eventsBySequenceNumber.clear();
-            tableViewer.setRedraw(true);
+            table.setRedraw(true);
             warningCount = 0;
             errorCount = 0;
             infoCount = 0;
@@ -279,22 +279,22 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         // sort the local copy of event according to the specified column
         eventLogViewerComparator.setColumn(column);
 
-        tableViewer.setSortColumn(column);
-        tableViewer.setSortDirection(eventLogViewerComparator.getDirection());
+        table.setSortColumn(column);
+        table.setSortDirection(eventLogViewerComparator.getDirection());
 
         sort();
     }
 
     public void sort() {
-        tableViewer.setRedraw(false);
+        table.setRedraw(false);
         sortedEvents.sort(eventLogViewerComparator);
 
         // remove rows from table
-        tableViewer.removeAll();
+        table.removeAll();
 
         // insert sorted rows
         for (Event event : sortedEvents)
             addItemFromEvent(event, -1);
-        tableViewer.setRedraw(true);
+        table.setRedraw(true);
     }
 }

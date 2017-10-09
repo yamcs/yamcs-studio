@@ -2,7 +2,6 @@ package org.yamcs.studio.ui.eventlog;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -27,8 +26,6 @@ import org.yamcs.utils.TimeEncoding;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
-
-    private static final Logger log = Logger.getLogger(ImportPastEventsDialog.class.getName());
 
     private EventLogView eventLogView;
 

@@ -30,6 +30,20 @@
             id="org.yamcs.studio.ui.eventlog.exportCommand"
             name="Export Events as CSV">
       </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.propertiesCommand"
+            name="Event Properties">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+            name="Copy Event Details">
+         <commandParameter
+               id="org.yamcs.studio.ui.eventlog.copyDetails.property"
+               name="Property"
+               optional="false" />
+       </command>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
@@ -44,7 +58,7 @@
       </handler>
       <handler
             class="org.yamcs.studio.ui.eventlog.ExportEventsHandler"
-            commandId="org.yamcs.studio.ui.eventlog.exportCommand">        
+            commandId="org.yamcs.studio.ui.eventlog.exportCommand">
       </handler>
       <handler
             class="org.yamcs.studio.ui.eventlog.ClearEventLogHandler"
@@ -53,6 +67,38 @@
       <handler
             class="org.yamcs.studio.ui.eventlog.ScrollLockHandler"
             commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.CopyEventHandler"
+            commandId="org.eclipse.ui.edit.copy">
+         <activeWhen>
+            <with variable="activePartId">
+               <equals value="org.yamcs.studio.ui.eventlog.EventLogView"/>
+            </with>
+         </activeWhen>
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.CopyEventDetailsHandler"
+            commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand">
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.EventPropertiesHandler"
+            commandId="org.yamcs.studio.ui.eventlog.propertiesCommand">
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
       </handler>
    </extension>
    
@@ -98,6 +144,72 @@
                label="Import Events from Yamcs"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
+      </menuContribution>
+      
+      <menuContribution locationURI="popup:org.yamcs.studio.ui.eventlog.EventLogView">
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.propertiesCommand"
+               label="Properties"/>
+         <separator name="org.yamcs.studio.ui.eventlog.separator1" visible="true"/>
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               icon="icons/etool16/copy_edit.gif"
+               disabledIcon="icons/dtool16/copy_edit.gif"/>
+         <menu
+               id="org.yamcs.studio.ui.eventlog.copyDetails.menu"
+               label="Copy Details">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <not>
+                     <count value="0"/>
+                  </not>   
+               </with>
+            </visibleWhen>
+            <command
+                  commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+                  label="Message">
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="MESSAGE" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+                  label="Source">
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="SOURCE" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+                  label="Type">
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="TYPE" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+                  label="Generation Time">
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="GENTIME" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+                  label="Reception Time">
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="RECTIME" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+                  label="Severity">
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="SEVERITY" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.eventlog.copyDetailsCommand"
+                  label="Sequence Number">
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="SEQNO" />
+            </command>
+         </menu>
       </menuContribution>
    </extension>
 </plugin>
