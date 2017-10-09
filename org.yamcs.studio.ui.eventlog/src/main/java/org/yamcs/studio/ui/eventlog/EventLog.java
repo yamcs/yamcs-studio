@@ -7,4 +7,5 @@ public class EventLog {
 
     public static final String CMDPARAM_EVENT_PROPERTY = "org.yamcs.studio.ui.eventlog.copyDetails.property";
 
+    public static final String STATE_SCROLL_LOCK = "org.eclipse.ui.commands.toggleState";
 }

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
@@ -23,7 +25,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
@@ -97,16 +100,22 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
 
         updateSummaryLine();
 
-        IViewSite site = getViewSite();
-        if (site != null) {
-            site.setSelectionProvider(tableViewer);
-        }
+        getViewSite().setSelectionProvider(tableViewer);
 
         if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null) {
             EventCatalogue.getInstance().addEventListener(this);
         }
         ConnectionManager.getInstance().addStudioConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
+
+        updateState();
+    }
+
+    private void updateState() {
+        ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        Command command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
+        State state = command.getState(EventLog.STATE_SCROLL_LOCK);
+        enableScrollLock((Boolean) state.getValue());
     }
 
     @Override
@@ -209,7 +218,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         gererationColumn.getColumn().addListener(SWT.Selection, sortListener);
         tcl.setColumnData(gererationColumn.getColumn(), new ColumnPixelData(150));
 
-        if (!showColumnSeqNum) {
+        /*if (!showColumnSeqNum) {
             tcl.setColumnData(seqNumColum.getColumn(), new ColumnPixelData(0));
             seqNumColum.getColumn().setResizable(false);
         }
@@ -220,7 +229,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         if (!showColumnGeneration) {
             tcl.setColumnData(gererationColumn.getColumn(), new ColumnPixelData(0));
             gererationColumn.getColumn().setResizable(false);
-        }
+        }*/
 
         for (TableColumn tableColumn : tableViewer.getTable().getColumns()) {
             tableColumn.setMoveable(true);
