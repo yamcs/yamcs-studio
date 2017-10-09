@@ -22,16 +22,18 @@ public class CopyEventHandler extends AbstractHandler {
         if (sel != null && sel instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) sel;
 
-            StringBuilder text = new StringBuilder("Severity\tMessage\tSource\tGeneration\tReception\n");
+            StringBuilder text = new StringBuilder("Severity\tMessage\tType\tSource\tGeneration\tReception\nSequence Number\n");
             Iterator<?> it = selection.iterator();
             while (it.hasNext()) {
                 Event rec = (Event) it.next();
 
                 text.append(rec.getSeverity())
                 .append("\t").append(rec.getMessage())
+                .append("\t").append(rec.getType())
                 .append("\t").append(rec.getSource())
                 .append("\t").append(rec.getGenerationTimeUTC())
                 .append("\t").append(rec.getReceptionTimeUTC())
+                .append("\t").append(rec.getSeqNumber())
                 .append("\n");
             }
 

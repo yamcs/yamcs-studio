@@ -2,7 +2,6 @@ package org.yamcs.studio.ui.clients;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -21,12 +20,6 @@ public class ClientsView extends ViewPart implements ManagementListener {
 
     @Override
     public void createPartControl(Composite parent) {
-        // Build the tables
-        FillLayout fl = new FillLayout();
-        fl.marginHeight = 0;
-        fl.marginWidth = 0;
-        parent.setLayout(fl);
-
         Composite tableWrapper = new Composite(parent, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         TableColumnLayout tcl = new TableColumnLayout();

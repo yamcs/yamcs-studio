@@ -15,7 +15,7 @@ public class EventLogViewerComparator implements Comparator<Event> {
     private boolean ascending;
 
     public EventLogViewerComparator() {
-        currentColumn = EventLogView.COL_RECEIVED;
+        currentColumn = EventLogView.COL_RECEPTION;
         ascending = true;
     }
 
@@ -40,11 +40,11 @@ public class EventLogViewerComparator implements Comparator<Event> {
             // compare seq number
             rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             break;
-        case EventLogView.COL_DESCRIPTION:
+        case EventLogView.COL_MESSAGE:
             // compare message
             rc = STRING_COMPARATOR.compare(r1.getMessage(), r2.getMessage());
             break;
-        case EventLogView.COL_RECEIVED:
+        case EventLogView.COL_RECEPTION:
             // compare reception time, seq number
             rc = LONG_COMPARATOR.compare(r1.getReceptionTime(), r2.getReceptionTime());
             if (rc == 0)

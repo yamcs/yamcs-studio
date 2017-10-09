@@ -154,9 +154,6 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
         item.setText("Item " + event.getSeqNumber());
 
-        // seq number
-        item.setText(0, event.getSeqNumber() + "");
-
         // description
         String message = event.getMessage();
         if (nbMessageLineToDisplay > 0) {
@@ -172,7 +169,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             if (i + 1 < messageLines.length)
                 message += " [...]";
         }
-        item.setText(1, message);
+        item.setText(0, message);
         // Install a monospaced font, because it works better with logs
         item.setFont(1, JFaceResources.getFont(JFaceResources.TEXT_FONT));
         item.setImage(getSeverityImage(event));
@@ -184,13 +181,16 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             source = event.getSource() + " :: " + event.getType();
         else
             source = event.getSource();
-        item.setText(2, source);
+        item.setText(1, source);
 
         // reception time
-        item.setText(3, TimeEncoding.toString(event.getReceptionTime()));
+        item.setText(2, TimeEncoding.toString(event.getReceptionTime()));
 
         // generation time
-        item.setText(4, TimeEncoding.toString(event.getGenerationTime()));
+        item.setText(3, TimeEncoding.toString(event.getGenerationTime()));
+
+        // seq number
+        item.setText(4, event.getSeqNumber() + "");
 
         // store the original event
         item.setData(event);
