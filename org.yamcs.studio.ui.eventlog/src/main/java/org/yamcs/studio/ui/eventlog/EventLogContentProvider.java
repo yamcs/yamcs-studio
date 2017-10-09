@@ -49,13 +49,13 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
             infoIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
         }
-        errorColor = new Color(table.getDisplay(), new RGB(255, 102, 102));
-        warningColor = new Color(table.getDisplay(), new RGB(255, 255, 102));
+        errorColor = new Color(table.getDisplay(), new RGB(255, 221, 221));
+        warningColor = new Color(table.getDisplay(), new RGB(248, 238, 199));
     }
 
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // TODO could happen when switching channels
+        // TODO could happen when switching processors
     }
 
     @Override
