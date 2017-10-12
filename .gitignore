@@ -4,6 +4,3 @@
 .recommenders/
 .settings/
 target/
-
-# Generated when building the CSS submodules
-contrib/css/settings.xml

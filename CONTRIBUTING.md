@@ -8,32 +8,16 @@ Note that you do need to go through the headless build first as this sets up you
 
 
 ### Prerequisites
-* Eclipse for RCP and RAP developers (Mars recommended)
+* Eclipse for RCP and RAP developers
 * Oracle JDK 8
 * Maven
 
-### Build Yamcs
-Yamcs Studio depends on Yamcs API. Therefore, you must first build the Yamcs repository from source.
-```
-git clone https://github.com/yamcs/yamcs
-cd yamcs
-mvn clean install -DskipTests
-cd ..
-```
-
-### Generate Yamcs Studio Products
-Clone the Yamcs Studio repository.
-```
-git clone https://github.com/yamcs/yamcs-studio
-cd yamcs-studio
-```
+### Headless build
 
 There are two different maven reactors (one bundles up non-OSGI friendly dependencies), so use this simple wrapper script to build both:
 ```
 ./make-product.sh
 ```
-
-The generated products can be found in `org.yamcs.studio.dist.default.repository/target/products/`. There are 64-bit versions for Mac, Linux and Windows.
 
 ### Next up, Eclipse
 
