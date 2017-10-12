@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.yamcs.studio</groupId>
+    <artifactId>org.yamcs.studio.p2deps</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>org.yamcs.studio.p2deps.repository</artifactId>
+  <packaging>pom</packaging>
+
+  <build>
+    <plugins>
+      <!-- Non-Tycho dependencies of Yamcs Studio EGSE -->
+      <!-- 1. Output to target/repository -->
+      <plugin>
+        <groupId>org.reficio</groupId>
+        <artifactId>p2-maven-plugin</artifactId>
+        <version>1.3.0</version>
+        <executions>
+          <execution>
+            <id>default-cli</id>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <id>org.yamcs.studio:org.yamcs.studio.p2deps.yamcs-api:${project.version}</id>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- 2. Zip p2 repository -->
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-repository-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>archive-repository</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- 3. Hook zipped p2 repository to maven install/deploy phases -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>target/${project.artifactId}-${project.version}.zip</file>
+                  <type>zip</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

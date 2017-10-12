@@ -25,29 +25,11 @@
   </properties>
 
   <modules>
-    <module>org.yamcs.studio.core</module>
-    <module>org.yamcs.studio.core.test</module>
-    <module>org.yamcs.studio.core.ui</module>
-    <module>org.yamcs.studio.dist.default.feature</module>
-    <module>org.yamcs.studio.dist.default.plugin</module>
-    <module>org.yamcs.studio.dist.default.repository</module>
-    <module>org.yamcs.studio.dist.feature.core</module>
-    <module>org.yamcs.studio.dist.feature.css</module>
-    <module>org.yamcs.studio.dist.feature.eclipse</module>
-    <module>org.yamcs.studio.dist.feature.p2</module>
-    <module>org.yamcs.studio.dist.feature.runtime</module>
-    <module>org.yamcs.studio.p2</module>
-    <module>org.yamcs.studio.platform</module>
-    <module>org.yamcs.studio.product.utility</module>
-    <module>org.yamcs.studio.script</module>
-    <module>org.yamcs.studio.theming</module>
-    <module>org.yamcs.studio.ui.archive</module>
-    <module>org.yamcs.studio.ui.commanding</module>
-    <module>org.yamcs.studio.ui.commanding.test</module>
-    <module>org.yamcs.studio.ui.css</module>
-    <module>org.yamcs.studio.ui.eventlog</module>
-    <module>org.yamcs.studio.ui.monitoring</module>
-    <module>org.yamcs.studio.ui.processor</module>
+    <module>bundles</module>
+    <module>features</module>
+    <module>platform</module>
+    <module>releng</module>
+    <module>tests</module>
   </modules>
 
   <build>
@@ -183,7 +165,7 @@
   <repositories>
     <repository>
       <id>yamcs-studio-deps</id>
-      <url>${project.baseUri}/../p2deps/org.yamcs.studio.deps.repository/target/repository</url>
+      <url>${project.baseUri}/../../p2deps/org.yamcs.studio.p2deps.repository/target/repository</url>
       <layout>p2</layout>
     </repository>
   </repositories>

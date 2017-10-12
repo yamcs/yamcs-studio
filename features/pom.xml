@@ -6,12 +6,15 @@
     <artifactId>yamcs-studio</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-
-  <artifactId>org.yamcs.studio.p2deps</artifactId>
+  
+  <artifactId>org.yamcs.studio.features</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.p2deps.yamcs-api</module>
-    <module>org.yamcs.studio.p2deps.repository</module>
+    <module>org.yamcs.studio.dist.feature.core</module>
+    <module>org.yamcs.studio.dist.feature.css</module>
+    <module>org.yamcs.studio.dist.feature.eclipse</module>
+    <module>org.yamcs.studio.dist.feature.p2</module>
+    <module>org.yamcs.studio.dist.feature.runtime</module>
   </modules>
 </project>

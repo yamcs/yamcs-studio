@@ -7,11 +7,12 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.studio.p2deps</artifactId>
+  <artifactId>org.yamcs.studio.releng</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.p2deps.yamcs-api</module>
-    <module>org.yamcs.studio.p2deps.repository</module>
+    <module>org.yamcs.studio.dist.default.feature</module>
+    <module>org.yamcs.studio.dist.default.plugin</module>
+    <module>org.yamcs.studio.dist.default.repository</module>
   </modules>
 </project>

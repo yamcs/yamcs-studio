@@ -32,4 +32,4 @@ set +e
 
 echo
 echo 'All done. These are your generated Yamcs Studio products:'
-find `cd $PRGDIR; pwd`/org.yamcs.studio.dist.default.repository/target/products -maxdepth 1 -type f -exec echo "{}" \;
+find `cd $PRGDIR; pwd`/releng/org.yamcs.studio.dist.default.repository/target/products -maxdepth 1 -type f -exec echo "{}" \;

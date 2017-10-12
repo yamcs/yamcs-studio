@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.yamcs.studio</groupId>
+    <artifactId>org.yamcs.studio.releng</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>org.yamcs.studio.dist.default.repository</artifactId>
+  <packaging>eclipse-repository</packaging>
+
+  <build>
+    <plugins>
+      <!-- Icons are in ../org.yamcs.studio.dist.default.plugin/icons, but Tycho wants them in
+        ../org.yamcs.studio.dist.default.repository/org.yamcs.studio.dist.default.plugin/icons
+        (Adapted from SNS-product build)
+        -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <configuration>
+              <failOnError>true</failOnError>
+              <target>
+                <echo message="Copying icons into tycho-preferred directory ${project.basedir}" />
+                <copy todir="${project.basedir}" overwrite="true" verbose="false">
+                  <fileset dir="${project.basedir}/..">
+                    <include name="org.yamcs.studio.dist.default.plugin/icons/**" />
+                  </fileset>
+                </copy>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <dependency-resolution>
+            <optionalDependencies>ignore</optionalDependencies>
+          </dependency-resolution>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-director-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <products>
+            <product>
+              <id>yamcs-studio</id> <!-- 'uid' in the *.product -->
+              <rootFolder>yamcs-studio-${project.version}</rootFolder>
+              <archiveFileName>yamcs-studio-${project.version}</archiveFileName>
+            </product>
+          </products>
+          <formats>
+            <linux>tar.gz</linux>
+          </formats>
+        </configuration>
+        <executions>
+          <execution>
+            <id>create-distribution</id>
+            <goals>
+              <goal>materialize-products</goal>
+              <goal>archive-products</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-repository-plugin</artifactId>
+        <version>${tycho.version}</version>
+        <configuration>
+          <includeAllDependencies>true</includeAllDependencies>
+          <repositoryName>Yamcs Studio</repositoryName>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -3,15 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.yamcs.studio</groupId>
-    <artifactId>yamcs-studio</artifactId>
+    <artifactId>org.yamcs.studio.bundles</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.studio.p2deps</artifactId>
-  <packaging>pom</packaging>
-
-  <modules>
-    <module>org.yamcs.studio.p2deps.yamcs-api</module>
-    <module>org.yamcs.studio.p2deps.repository</module>
-  </modules>
+  <artifactId>org.yamcs.studio.platform</artifactId>
+  <packaging>eclipse-target-definition</packaging>
+  <description>
+    Target Platform Definition for use in both PDE and Tycho
+  </description>
 </project>
