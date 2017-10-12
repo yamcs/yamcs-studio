@@ -1,13 +1,16 @@
-## Yamcs Studio
+Below instructions are targeted at Yamcs Studio core contributors.
 
-These instructions are for Yamcs Studio contributors. End-User documentation is available at: [http://www.yamcs.org/docs/studio/](http://www.yamcs.org/docs/studio/)
+* **End-User documentation** is available at: [http://www.yamcs.org/docs/studio/](http://www.yamcs.org/docs/studio/)
+* Extension development is not currently documented.
+
+## Yamcs Studio
 
 ### Prerequisites
 * Oracle JDK 8
 * Maven
 
 
-### Headless build
+### Headless Build
 
 There are two different maven reactors (the first bundles up non-OSGI friendly dependencies):
 
@@ -28,7 +31,7 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The big adva
 
 - Import the Yamcs Studio maven projects into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.
 
-- Repeat the previous step by importing found directly under the `p2deps` subfolder. These modules are detached from the main maven build, and need to be imported separately.
+- Repeat the previous step by importing the projects found directly under the `p2deps` subfolder. These are detached from the main maven build, and need to be imported separately.
 
 - Open the `*.platform` file found in the project `org.yamcs.studio.platform`. Click the upper right link `Set as target platform`. This operation may take a while, as it will attempt to resolve and download third-party dependencies.
 
