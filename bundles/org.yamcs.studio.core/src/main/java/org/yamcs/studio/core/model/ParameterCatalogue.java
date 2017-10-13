@@ -91,7 +91,7 @@ public class ParameterCatalogue implements Catalogue {
     }
 
     public synchronized void unregister(YamcsPVReader pvReader) {
-        pvReadersById.remove(pvReader);
+        pvReadersById.remove(pvReader.getId());
         NamedObjectList idList = pvReader.toNamedObjectList();
         if (ConnectionManager.getInstance().isConnected()) {
             WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
