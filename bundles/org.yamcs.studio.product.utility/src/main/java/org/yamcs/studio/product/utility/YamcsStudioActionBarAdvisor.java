@@ -71,9 +71,6 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         removeActionById("org.eclipse.ui.edit.text.actionSet.navigation");
         removeActionById("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
         removeActionById("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
-
-        // Redefined in our own plugin.xml for improved customization
-        removeActionById("org.csstudio.opibuilder.actionSet");
     }
 
     /**

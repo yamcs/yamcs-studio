@@ -302,38 +302,6 @@
       </perspectiveExtension>
    </extension>
    
-   <extension point="org.eclipse.ui.actionSets">
-      <!-- Redefines the actionSet from the opibuilder plugin, so that we can customize it a bit -->
-      <actionSet
-            id="org.yamcs.studio.opibuilder.actionSet"
-            label="Bookmark Actions"
-            visible="true">
-         <action
-               class="org.yamcs.studio.ui.css.OpenFavouritesAction"
-               id="org.csstudio.opibuilder.openTopFileAction"
-               label="&#9733; Bookmarks"
-               pulldown="true"
-               style="pulldown"
-               toolbarPath="studiocoolbar/bookmarkshortcuts"
-               mode="FORCE_TEXT">
-         </action>
-         <action
-               class="org.csstudio.opibuilder.actions.CompactModeAction"
-               definitionId="org.csstudio.opibuilder.actions.compactMode"
-               id="org.csstudio.opibuilder.compactModeAction"
-               label="Compact Mode"
-               style="push">
-         </action>
-         <action
-               class="org.csstudio.opibuilder.actions.FullScreenAction"
-               definitionId="org.csstudio.opibuilder.actions.fullscreen"
-               id="org.csstudio.opibuilder.fullScreenAction"
-               label="Full Screen"
-               style="push">
-         </action>
-      </actionSet>
-   </extension>
-   
    <extension point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="true"
