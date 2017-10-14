@@ -15,15 +15,11 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.api.YamcsApiException;
-import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
 
@@ -127,15 +123,8 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
         long stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
 
         EventCatalogue catalogue = EventCatalogue.getInstance();
-        catalogue.downloadEvents(start, stop, data -> {
-            try {
-                Event evt = Event.parseFrom(data);
-                Display.getDefault().asyncExec(() -> {
-                    eventLogView.addEvent(evt);
-                });
-            } catch (InvalidProtocolBufferException e) {
-                throw new YamcsApiException("Failed to decode server response", e);
-            }
+        catalogue.downloadEvents(start, stop, batch -> {
+            Display.getDefault().asyncExec(() -> eventLogView.addEvents(batch));
         }).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {

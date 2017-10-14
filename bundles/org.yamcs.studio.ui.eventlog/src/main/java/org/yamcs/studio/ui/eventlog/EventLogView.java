@@ -79,7 +79,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         tcl = new TableColumnLayout();
         tableWrapper.setLayout(tcl);
 
-        tableViewer = new TableViewer(tableWrapper, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
+        tableViewer = new TableViewer(tableWrapper, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.getTable().setLinesVisible(true);
 
