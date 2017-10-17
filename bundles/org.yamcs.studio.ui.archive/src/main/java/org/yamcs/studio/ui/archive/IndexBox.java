@@ -119,28 +119,6 @@ public class IndexBox extends Box {
         g2d.fillRect(0, topPanel.getHeight(), panelWidth, panelHeight - topPanel.getHeight());
     }
 
-    public String getPacketsStatus() {
-        // this appears in the "packets" status label
-
-        StringBuffer txt = new StringBuffer();
-        String tmp;
-        for (String plname : groups.keySet()) {
-            final ArrayList<IndexLineSpec> plvec = groups.get(plname);
-            int count = 0;
-            for (IndexLineSpec pkt : plvec) {
-                if (pkt.enabled)
-                    ++count;
-            }
-            tmp = plname + " (" + count + "/" + plvec.size() + ")";
-            if (txt.length() > 0)
-                txt.append(", ");
-            txt.append(tmp);
-        }
-        if (txt.length() == 0)
-            txt.append("(none)");
-        return txt.toString();
-    }
-
     public void setToZoom(ZoomSpec zoom) {
         this.zoom = zoom;
         removeIndexLines();
@@ -230,7 +208,7 @@ public class IndexBox extends Box {
                     plvec.add(pkt);
                 }
             }
-            titleLabel.setText(name + " " + getPacketsStatus());
+            titleLabel.setText(name);
         }
     }
 
@@ -261,7 +239,7 @@ public class IndexBox extends Box {
                 ArchivePanel.debugLog("could not enable packet '" + entry.getKey() + "', removing line from view");
             }
         }
-        titleLabel.setText(name + " " + getPacketsStatus());
+        titleLabel.setText(name);
     }
 
     void redrawTmPanel(IndexLineSpec pkt) {

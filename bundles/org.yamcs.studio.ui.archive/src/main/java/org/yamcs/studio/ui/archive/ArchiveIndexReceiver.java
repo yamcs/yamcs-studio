@@ -36,7 +36,7 @@ public class ArchiveIndexReceiver {
         catalogue.downloadIndexes(interval, data -> {
             try {
                 IndexResult response = IndexResult.parseFrom(data);
-                log.info(String.format("Received %d archive records", response.getRecordsCount()));
+                log.fine(String.format("Received %d archive records", response.getRecordsCount()));
                 archiveView.receiveArchiveRecords(response);
             } catch (InvalidProtocolBufferException e) {
                 throw new YamcsApiException("Failed to decode server message", e);
