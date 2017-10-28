@@ -19,7 +19,6 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.pvmanager.LosTracker;
 import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.core.pvmanager.YamcsPVReader;
 import org.yamcs.studio.core.web.MergeableWebSocketRequest;
@@ -41,8 +40,6 @@ public class ParameterCatalogue implements Catalogue {
 
     // Index for faster repeat access
     private Map<NamedObjectId, String> unitsById = new ConcurrentHashMap<>();
-
-    private LosTracker losTracker = new LosTracker();
 
     public static ParameterCatalogue getInstance() {
         YamcsPlugin plugin = YamcsPlugin.getDefault();
@@ -136,7 +133,6 @@ public class ParameterCatalogue implements Catalogue {
                 if (log.isLoggable(Level.FINER)) {
                     log.finer(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(), pval.getEngValue()));
                 }
-                losTracker.updatePv(pvReader, pval);
                 pvReader.processParameterValue(pval);
             } else {
                 log.warning("No pvreader for incoming update of " + pval.getId().getName());
@@ -201,11 +197,6 @@ public class ParameterCatalogue implements Catalogue {
 
     public List<ParameterInfo> getMetaParameters() {
         return new ArrayList<>(metaParameters);
-    }
-
-    @Override
-    public void shutdown() {
-        losTracker.shutdown();
     }
 
     private String toURISegments(NamedObjectId id) {

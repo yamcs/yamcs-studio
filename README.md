@@ -12,7 +12,7 @@ Below instructions are targeted at Yamcs Studio core contributors.
 
 ### Headless Build
 
-There are two different maven reactors (the first bundles up non-OSGI friendly dependencies):
+There are two different maven reactors (the first bundles up non-OSGI dependencies):
 
 ```
 mvn -f p2deps/pom.xml clean install
@@ -21,7 +21,7 @@ mvn clean install
 
 ### Eclipse Development
 
-Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The big advantage over the headless build is that Eclipse can launch snapshot copies of Yamcs Studio in seconds instead of minutes. Follow these steps to prepare your Eclipse development environment:
+Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantage over the headless build is that Eclipse can launch snapshot copies of Yamcs Studio in seconds instead of minutes. Follow these steps to prepare your Eclipse development environment:
 
 - Ensure you successfully ran the headless build first, because this will generate artefacts needed in the Eclipse build.
 

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Web.ParameterSubscriptionRequest;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 
@@ -37,7 +38,14 @@ public class MergeableWebSocketRequest extends WebSocketRequest {
      */
     @Override
     public Message getRequestData() {
-        return NamedObjectList.newBuilder().addAllList(ids).build();
+        if ("subscribe".equals(getOperation())) {
+            return ParameterSubscriptionRequest.newBuilder()
+                    .setSendFromCache(true)
+                    .setUpdateOnExpiration(true)
+                    .addAllId(ids).build();
+        } else {
+            return NamedObjectList.newBuilder().addAllList(ids).build();
+        }
     }
 
     public MergeableWebSocketRequest mergeWith(MergeableWebSocketRequest other) {
