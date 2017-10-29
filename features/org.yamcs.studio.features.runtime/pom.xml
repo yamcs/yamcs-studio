@@ -8,7 +8,7 @@
     <artifactId>org.yamcs.studio.features</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-
-  <artifactId>org.yamcs.studio.dist.feature.core</artifactId>
+  
+  <artifactId>org.yamcs.studio.features.runtime</artifactId>
   <packaging>eclipse-feature</packaging>
 </project>
