@@ -26,7 +26,6 @@
 
   <modules>
     <module>bundles</module>
-    <module>features</module>
     <module>platform</module>
     <module>releng</module>
     <module>tests</module>

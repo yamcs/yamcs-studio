@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.yamcs.studio</groupId>
-    <artifactId>org.yamcs.studio.features</artifactId>
+    <artifactId>org.yamcs.studio.releng</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   

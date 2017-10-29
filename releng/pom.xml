@@ -11,10 +11,17 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>org.yamcs.studio.features.core</module>
+    <module>org.yamcs.studio.features.css</module>
+    <module>org.yamcs.studio.features.eclipse</module>
+    <module>org.yamcs.studio.features.p2</module>
+    <module>org.yamcs.studio.features.runtime</module>
+
     <module>org.yamcs.studio.products.studio</module>
     <module>org.yamcs.studio.products.studio.feature</module>
     <module>org.yamcs.studio.products.eventviewer</module>
     <module>org.yamcs.studio.products.eventviewer.feature</module>
+
     <module>org.yamcs.studio.repository</module>
   </modules>
 </project>
