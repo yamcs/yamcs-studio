@@ -9,47 +9,11 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.studio.dist.default.repository</artifactId>
+  <artifactId>org.yamcs.studio.repository</artifactId>
   <packaging>eclipse-repository</packaging>
 
   <build>
     <plugins>
-      <!-- Icons are in ../org.yamcs.studio.dist.default.plugin/icons, but Tycho wants them in
-        ../org.yamcs.studio.dist.default.repository/org.yamcs.studio.dist.default.plugin/icons
-        (Adapted from SNS-product build)
-        -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>process-resources</phase>
-            <configuration>
-              <failOnError>true</failOnError>
-              <target>
-                <echo message="Copying icons into tycho-preferred directory ${project.basedir}" />
-                <copy todir="${project.basedir}" overwrite="true" verbose="false">
-                  <fileset dir="${project.basedir}/..">
-                    <include name="org.yamcs.studio.dist.default.plugin/icons/**" />
-                  </fileset>
-                </copy>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-          <dependency-resolution>
-            <optionalDependencies>ignore</optionalDependencies>
-          </dependency-resolution>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-director-plugin</artifactId>
@@ -57,7 +21,14 @@
         <configuration>
           <products>
             <product>
+              <id>yamcs-event-viewer</id> <!-- 'uid' in the *.product -->
+              <attachId>yamcs-event-viewer</attachId>
+              <rootFolder>yamcs-event-viewer-${project.version}</rootFolder>
+              <archiveFileName>yamcs-event-viewer-${project.version}</archiveFileName>
+            </product>
+            <product>
               <id>yamcs-studio</id> <!-- 'uid' in the *.product -->
+              <attachId>yamcs-studio</attachId>
               <rootFolder>yamcs-studio-${project.version}</rootFolder>
               <archiveFileName>yamcs-studio-${project.version}</archiveFileName>
             </product>

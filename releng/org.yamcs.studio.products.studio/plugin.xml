@@ -5,17 +5,17 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.yamcs.studio.dist.default.plugin.application"
+            application="org.yamcs.studio.products.studio.application"
             name="Yamcs Studio">
          <property
                name="windowImages"
-               value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png,icons/css256.png"/>
+               value="/icons/css16.png,/icons/css32.png,/icons/css48.png,/icons/css64.png,/icons/css128.png,/icons/css256.png"/>
          <property
                name="aboutText"
                value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
          <property
                name="aboutImage"
-               value="icons/aboutSide.png"/>
+               value="/icons/aboutSide.png"/>
          <property
                name="appName"
                value="Yamcs Studio"/>

@@ -11,8 +11,10 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.dist.default.feature</module>
-    <module>org.yamcs.studio.dist.default.plugin</module>
-    <module>org.yamcs.studio.dist.default.repository</module>
+    <module>org.yamcs.studio.products.studio</module>
+    <module>org.yamcs.studio.products.studio.feature</module>
+    <module>org.yamcs.studio.products.eventviewer</module>
+    <module>org.yamcs.studio.products.eventviewer.feature</module>
+    <module>org.yamcs.studio.repository</module>
   </modules>
 </project>

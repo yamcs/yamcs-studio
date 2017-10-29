@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.dist.default.plugin.product" application="org.yamcs.studio.dist.default.plugin.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.products.studio.product" application="org.yamcs.studio.products.studio.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.yamcs.studio.dist.default.plugin/icons/aboutSide.png"/>
+      <image path="/org.yamcs.studio.products.studio/icons/aboutSide.png"/>
       <text>
          Rich desktop client for Yamcs - The Open Source Mission Control System
 
@@ -33,18 +33,18 @@ openFile
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.yamcs.studio.dist.default.plugin/icons/css16.png" i32="/org.yamcs.studio.dist.default.plugin/icons/css32.png" i48="/org.yamcs.studio.dist.default.plugin/icons/css48.png" i64="/org.yamcs.studio.dist.default.plugin/icons/css64.png" i128="/org.yamcs.studio.dist.default.plugin/icons/css128.png" i256="/org.yamcs.studio.dist.default.plugin/icons/css256.png"/>
+   <windowImages i16="/org.yamcs.studio.products.studio/icons/css16.png" i32="/org.yamcs.studio.products.studio/icons/css32.png" i48="/org.yamcs.studio.products.studio/icons/css48.png" i64="/org.yamcs.studio.products.studio/icons/css64.png" i128="/org.yamcs.studio.products.studio/icons/css128.png" i256="/org.yamcs.studio.products.studio/icons/css256.png"/>
 
    <splash
-      location="org.yamcs.studio.dist.default.plugin"
+      location="org.yamcs.studio.products.studio"
       startupProgressRect="20,215,560,15"
       startupMessageRect="20,195,560,20"
       startupForegroundColor="2F376D" />
    <launcher name="Yamcs Studio">
-      <linux icon="/org.yamcs.studio.dist.default.plugin/icons/css.xpm"/>
-      <macosx icon="/org.yamcs.studio.dist.default.plugin/icons/css.icns"/>
+      <linux icon="/launcher/css.xpm"/>
+      <macosx icon="/launcher/css.icns"/>
       <win useIco="true">
-         <ico path="/org.yamcs.studio.dist.default.plugin/icons/css.ico"/>
+         <ico path="/launcher/css.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -75,7 +75,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
       <feature id="org.yamcs.studio.dist.feature.core" version="1.0.0.qualifier"/>
       <feature id="org.yamcs.studio.dist.feature.css" version="1.0.0.qualifier"/>
       <feature id="org.yamcs.studio.dist.feature.eclipse" version="1.0.0.qualifier"/>
-      <feature id="org.yamcs.studio.dist.default.feature" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.products.studio.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>

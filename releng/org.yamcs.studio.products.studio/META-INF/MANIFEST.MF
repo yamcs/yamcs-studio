@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.yamcs.studio.product.ProductPlugin
 Bundle-Description: Yamcs Studio Default Product
 Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs Studio Default Product
-Bundle-SymbolicName: org.yamcs.studio.dist.default.plugin;singleton:=true
+Bundle-SymbolicName: org.yamcs.studio.products.studio;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.0.qualifier

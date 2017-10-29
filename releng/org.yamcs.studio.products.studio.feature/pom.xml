@@ -7,7 +7,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.studio.dist.default.feature</artifactId>
+  <artifactId>org.yamcs.studio.products.studio.feature</artifactId>
   <packaging>eclipse-feature</packaging>
   <description>
     This feature contains only the product plugin
