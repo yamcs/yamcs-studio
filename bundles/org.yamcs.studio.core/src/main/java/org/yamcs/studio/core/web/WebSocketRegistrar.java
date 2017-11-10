@@ -14,6 +14,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueEvent;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.Web.WebSocketExtensionData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
@@ -131,6 +132,10 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
     @Override
     public void onMessage(WebSocketSubscriptionData data) {
         switch (data.getType()) {
+        case CONNECTION_INFO:
+            ConnectionInfo connectionInfo = data.getConnectionInfo();
+            ManagementCatalogue.getInstance().processConnectionInfo(connectionInfo);
+            break;
         case TIME_INFO:
             TimeInfo timeInfo = data.getTimeInfo();
             TimeCatalogue.getInstance().processTimeInfo(timeInfo);

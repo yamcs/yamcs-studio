@@ -27,6 +27,11 @@
             id="org.yamcs.studio.ui.login"
             name="Login">
       </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.restartInstance"
+            name="Restart Instance">
+      </command>
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
@@ -48,5 +53,35 @@
             </with>
          </activeWhen>
       </handler>
+      <handler
+            commandId="org.yamcs.studio.ui.restartInstance"
+            class="org.yamcs.studio.core.ui.RestartInstanceHandler">
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+   </extension>
+   
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+         <menu 
+               id="yamcs"
+               label="Yamcs">
+            <visibleWhen checkEnabled="false">
+               <with variable="activeWorkbenchWindow.activePerspective">
+                  <equals value="org.csstudio.opibuilder.OPIRuntime.perspective" />
+               </with>
+            </visibleWhen>
+            <separator
+                  name="additions"
+                  visible="true"/>
+            <command
+                  commandId="org.yamcs.studio.ui.restartInstance"
+                  label="Restart Instance"
+                  style="push"/>
+         </menu>
+      </menuContribution>
    </extension>
 </plugin>

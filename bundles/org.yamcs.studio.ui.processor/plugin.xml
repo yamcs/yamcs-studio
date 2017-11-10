@@ -161,19 +161,7 @@
    </extension>
    
    <extension point="org.eclipse.ui.menus">
-      <menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=edit">
-         <menu 
-               id="processor"
-               label="Processor">
-            <visibleWhen checkEnabled="false">
-               <with variable="activeWorkbenchWindow.activePerspective">
-                  <equals value="org.csstudio.opibuilder.OPIRuntime.perspective" />
-               </with>
-            </visibleWhen>
-         </menu>
-      </menuContribution>
-      
-      <menuContribution locationURI="menu:processor">
+      <menuContribution locationURI="menu:yamcs?before=additions">
          <command
                commandId="org.yamcs.studio.ui.processor.infoCommand"
                label="Processing Info"

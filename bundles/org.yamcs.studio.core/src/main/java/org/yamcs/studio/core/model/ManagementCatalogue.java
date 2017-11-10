@@ -14,6 +14,7 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
 import org.yamcs.protobuf.Rest.EditClientRequest;
 import org.yamcs.protobuf.Rest.EditProcessorRequest;
+import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -234,5 +235,14 @@ public class ManagementCatalogue implements Catalogue {
     public CompletableFuture<byte[]> fetchInstanceInformationRequest(String yamcsInstance) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         return restClient.get("/instances/" + yamcsInstance + "?aggregate", null);
+    }
+    
+    public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
+        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        return restClient.post("/instances/" + yamcsInstance + "?state=restarted", null);
+    }
+
+    public void processConnectionInfo(ConnectionInfo connectionInfo) {
+        System.out.println("CONN INFO " + connectionInfo.getClientId() + ", " + connectionInfo.getInstance() + ", "+connectionInfo.getProcessor());
     }
 }
