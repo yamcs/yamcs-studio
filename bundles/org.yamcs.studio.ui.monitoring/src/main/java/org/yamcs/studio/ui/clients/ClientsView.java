@@ -6,6 +6,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -79,6 +80,10 @@ public class ClientsView extends ViewPart implements ManagementListener {
                 currentClientsModel.removeClient(clientInfo);
             }
         });
+    }
+    
+    @Override
+    public void instanceUpdated(ConnectionInfo connectionInfo) {
     }
 
     @Override

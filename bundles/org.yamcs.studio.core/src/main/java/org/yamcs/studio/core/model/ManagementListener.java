@@ -1,5 +1,6 @@
 package org.yamcs.studio.core.model;
 
+import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -9,6 +10,11 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
  * YamcsPlugin
  */
 public interface ManagementListener {
+    
+    /**
+     * Called when the state of the connected instance has changed.
+     */
+    public void instanceUpdated(ConnectionInfo connectionInfo);
 
     /**
      * Called when *any* processor is updated. Includes 'replay state', 'replay configuration'.

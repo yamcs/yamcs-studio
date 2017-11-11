@@ -20,6 +20,7 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.WebSocketRegistrar;
@@ -244,5 +245,8 @@ public class ManagementCatalogue implements Catalogue {
 
     public void processConnectionInfo(ConnectionInfo connectionInfo) {
         System.out.println("CONN INFO " + connectionInfo.getClientId() + ", " + connectionInfo.getInstance() + ", "+connectionInfo.getProcessor());
+        YamcsInstance instance = connectionInfo.getInstance();
+        log.info("Instance " + instance.getName() + ": " + instance.getState());
+        managementListeners.forEach(l -> l.instanceUpdated(connectionInfo));
     }
 }

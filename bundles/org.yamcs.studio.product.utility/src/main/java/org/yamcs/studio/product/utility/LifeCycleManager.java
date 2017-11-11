@@ -15,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.ISourceProviderService;
+import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
@@ -72,6 +73,10 @@ public class LifeCycleManager {
                 @Override
                 public void clientDisconnected(ClientInfo clientInfo) {
                     updateGlobalProcessingState(clientInfo);
+                }
+                
+                @Override
+                public void instanceUpdated(ConnectionInfo connectionInfo) {
                 }
 
                 @Override

@@ -37,7 +37,8 @@ public class StatusLineContributionItem extends ContributionItem {
     private CLabel label;
     private String tooltip;
     private Image image;
-    private String errorMessage;
+    private String errorText;
+    private String errorDetail;
 
     /**
      * The composite into which this contribution item has been placed. This
@@ -139,21 +140,23 @@ public class StatusLineContributionItem extends ContributionItem {
     private void updateMessageLabel() {
         if (label != null && !label.isDisposed()) {
             Display display = label.getDisplay();
-            if (errorMessage != null && errorMessage.length() > 0) {
+            if (errorText != null && errorText.length() > 0) {
                 label.setForeground(JFaceColors.getErrorText(display));
-                label.setText(errorMessage);
+                label.setText(escape(errorText));
                 label.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK));
-                if (tooltip != null)
-                    label.setToolTipText(tooltip);
+                if (errorDetail != null)
+                    label.setToolTipText(escape(errorDetail));
+                else if (tooltip != null)
+                    label.setToolTipText(escape(tooltip));
                 else
                     label.setToolTipText(null);
                 
             } else {
                 label.setForeground(label.getParent().getForeground());
-                label.setText(text);
+                label.setText(escape(text));
                 label.setImage(image);
                 if (tooltip != null)
-                    label.setToolTipText(tooltip);
+                    label.setToolTipText(escape(tooltip));
                 else
                     label.setToolTipText(null);
             }
@@ -187,8 +190,9 @@ public class StatusLineContributionItem extends ContributionItem {
         updateManager();
     }
     
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setErrorText(String errorText, String errorDetail) {
+        this.errorText = errorText;
+        this.errorDetail = errorDetail;
         updateMessageLabel();
         updateManager();
     }
@@ -218,7 +222,7 @@ public class StatusLineContributionItem extends ContributionItem {
      *            the text to be displayed, must not be <code>null</code>
      */
     public void setText(String text) {
-        this.text = LegacyActionTools.escapeMnemonics(text);
+        this.text = text;
         updateMessageLabel();
         updateManager();
     }
@@ -244,5 +248,11 @@ public class StatusLineContributionItem extends ContributionItem {
                 }
             }
         }
+    }
+    
+    private String escape(String text) {
+        if (text == null)
+            return text;
+        return LegacyActionTools.escapeMnemonics(text);
     }
 }

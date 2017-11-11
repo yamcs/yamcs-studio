@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.MissionDatabase;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -207,6 +208,10 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
 
         @Override
         public void statisticsUpdated(Statistics stats) {
+        }
+        
+        @Override
+        public void instanceUpdated(ConnectionInfo connectionInfo) {
         }
 
         /**

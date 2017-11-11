@@ -82,7 +82,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
     private void updateLabel() {
         if (yprops != null) {
-            setErrorMessage(null);
+            setErrorText(null, null);
             String host = yprops.getHost();
             if (isBlank(subjectName))
                 setText(String.format("anonymous@%s", host));
@@ -90,7 +90,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
                 setText(String.format("%s@%s", subjectName, host));
             setImage(null);
         } else {
-            setErrorMessage(DEFAULT_TEXT);
+            setErrorText(DEFAULT_TEXT, null);
         }
     }
 }
