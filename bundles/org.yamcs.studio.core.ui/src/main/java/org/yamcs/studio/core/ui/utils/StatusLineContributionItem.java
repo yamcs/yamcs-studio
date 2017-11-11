@@ -1,19 +1,23 @@
 package org.yamcs.studio.core.ui.utils;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.action.StatusLineLayoutData;
+import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A contribution item to be used with status line managers. Forked and modified
@@ -32,6 +36,8 @@ public class StatusLineContributionItem extends ContributionItem {
     private int charWidth;
     private CLabel label;
     private String tooltip;
+    private Image image;
+    private String errorMessage;
 
     /**
      * The composite into which this contribution item has been placed. This
@@ -92,10 +98,8 @@ public class StatusLineContributionItem extends ContributionItem {
 
         Label sep = new Label(parent, SWT.SEPARATOR);
         label = new CLabel(statusLine, SWT.SHADOW_NONE);
-        label.setText(text);
-        if (tooltip != null) {
-            label.setToolTipText(tooltip);
-        }
+        updateMessageLabel();
+        
         if (clickListener != null) {
             label.addListener(SWT.MouseDown, clickListener);
         }
@@ -131,6 +135,30 @@ public class StatusLineContributionItem extends ContributionItem {
             sep.setLayoutData(data);
         }
     }
+    
+    private void updateMessageLabel() {
+        if (label != null && !label.isDisposed()) {
+            Display display = label.getDisplay();
+            if (errorMessage != null && errorMessage.length() > 0) {
+                label.setForeground(JFaceColors.getErrorText(display));
+                label.setText(errorMessage);
+                label.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK));
+                if (tooltip != null)
+                    label.setToolTipText(tooltip);
+                else
+                    label.setToolTipText(null);
+                
+            } else {
+                label.setForeground(label.getParent().getForeground());
+                label.setText(text);
+                label.setImage(image);
+                if (tooltip != null)
+                    label.setToolTipText(tooltip);
+                else
+                    label.setToolTipText(null);
+            }
+        }
+    }
 
     /**
      * An accessor for the current location of this status line contribution
@@ -140,7 +168,7 @@ public class StatusLineContributionItem extends ContributionItem {
      *         not yet initialized.
      */
     public Point getDisplayLocation() {
-        if ((label != null) && (statusLine != null)) {
+        if (label != null && statusLine != null) {
             return statusLine.toDisplay(label.getLocation());
         }
 
@@ -149,10 +177,19 @@ public class StatusLineContributionItem extends ContributionItem {
 
     public void setToolTipText(String tooltip) {
         this.tooltip = tooltip;
-        if (label != null && !label.isDisposed()) {
-            label.setToolTipText(tooltip);
-        }
-
+        updateMessageLabel();
+        updateManager();
+    }
+    
+    public void setImage(Image image) {
+        this.image = image;
+        updateMessageLabel();
+        updateManager();
+    }
+    
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+        updateMessageLabel();
         updateManager();
     }
 
@@ -181,14 +218,8 @@ public class StatusLineContributionItem extends ContributionItem {
      *            the text to be displayed, must not be <code>null</code>
      */
     public void setText(String text) {
-        Assert.isNotNull(text);
-
         this.text = LegacyActionTools.escapeMnemonics(text);
-
-        if (label != null && !label.isDisposed()) {
-            label.setText(this.text);
-        }
-
+        updateMessageLabel();
         updateManager();
     }
 

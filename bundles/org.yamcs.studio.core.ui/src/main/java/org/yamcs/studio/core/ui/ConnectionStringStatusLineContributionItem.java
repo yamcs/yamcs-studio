@@ -82,13 +82,15 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
     private void updateLabel() {
         if (yprops != null) {
+            setErrorMessage(null);
             String host = yprops.getHost();
             if (isBlank(subjectName))
                 setText(String.format("anonymous@%s", host));
             else
                 setText(String.format("%s@%s", subjectName, host));
+            setImage(null);
         } else {
-            setText(DEFAULT_TEXT);
+            setErrorMessage(DEFAULT_TEXT);
         }
     }
 }
