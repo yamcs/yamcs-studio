@@ -15,6 +15,7 @@ import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
     protected ParameterValue pval;
@@ -148,30 +149,39 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     /**
      * Converts a yamcs ParameterValue to a VType.
      */
-    public static YamcsVType fromYamcs(ParameterValue pval) {
-        switch (pval.getEngValue().getType()) {
-        case UINT32:
-            return new Uint32VType(pval);
-        case SINT32:
-            return new Sint32VType(pval);
-        case UINT64:
-            return new Uint64VType(pval);
-        case SINT64:
-            return new Sint64VType(pval);
-        case FLOAT:
-            return new FloatVType(pval);
-        case DOUBLE:
-            return new DoubleVType(pval);
-        case BOOLEAN:
-            return new BooleanVType(pval);
-        case STRING:
-            return new StringVType(pval);
-        case BINARY:
-            return new BinaryVType(pval);
-        case TIMESTAMP:
-            throw new UnsupportedOperationException("No support for timestamp pvals");
-        default:
-            throw new IllegalStateException("Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
+    public static YamcsVType fromYamcs(PVConnectionInfo info, ParameterValue pval) {
+        if (pval.hasEngValue()
+                && info != null
+                && info.parameter != null
+                && info.parameter.getType() != null
+                && "enumeration".equals(info.parameter.getType().getEngType())) {
+            return new EnumeratedVType(info, pval);
+        } else {
+            switch (pval.getEngValue().getType()) {
+            case UINT32:
+                return new Uint32VType(pval);
+            case SINT32:
+                return new Sint32VType(pval);
+            case UINT64:
+                return new Uint64VType(pval);
+            case SINT64:
+                return new Sint64VType(pval);
+            case FLOAT:
+                return new FloatVType(pval);
+            case DOUBLE:
+                return new DoubleVType(pval);
+            case BOOLEAN:
+                return new BooleanVType(pval);
+            case STRING:
+                return new StringVType(pval);
+            case BINARY:
+                return new BinaryVType(pval);
+            case TIMESTAMP:
+                throw new UnsupportedOperationException("No support for timestamp pvals");
+            default:
+                throw new IllegalStateException(
+                        "Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
+            }
         }
     }
 }

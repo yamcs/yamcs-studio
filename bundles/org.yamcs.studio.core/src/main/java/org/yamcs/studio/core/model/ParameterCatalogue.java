@@ -131,7 +131,8 @@ public class ParameterCatalogue implements Catalogue {
             YamcsPVReader pvReader = pvReadersById.get(pval.getId());
             if (pvReader != null) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(), pval.getEngValue()));
+                    log.finer(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(),
+                            pval.getEngValue()));
                 }
                 pvReader.processParameterValue(pval);
             } else {
@@ -142,7 +143,7 @@ public class ParameterCatalogue implements Catalogue {
 
     public void processInvalidIdentification(NamedObjectId id) {
         log.fine("No pv for id " + id);
-        //pvReadersById.get(id).reportException(new InvalidIdentification(id));
+        // pvReadersById.get(id).reportException(new InvalidIdentification(id));
     }
 
     private void reportConnectionState() {
@@ -156,7 +157,7 @@ public class ParameterCatalogue implements Catalogue {
         log.fine("Fetching available parameters");
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/parameters", null).whenComplete((data, exc) -> {
+        restClient.get("/mdb/" + instance + "/parameters?details", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 try {
                     ListParameterInfoResponse response = ListParameterInfoResponse.parseFrom(data);
