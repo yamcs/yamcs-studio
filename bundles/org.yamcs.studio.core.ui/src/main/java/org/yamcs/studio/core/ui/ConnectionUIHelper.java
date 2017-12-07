@@ -52,7 +52,12 @@ public class ConnectionUIHelper implements StudioConnectionListener {
 
     @Override
     public void onStudioConnectionLost() {
-
+        // TODO enable reconnect, when it works properly. Currently still uses
+        // with websocket returning 404 while a connection attempt is made and
+        // Yamcs is not fully started yet.
+        if (true) {
+            return;
+        }
 
         Display.getDefault().asyncExec(() -> {
             reconnecting = true;

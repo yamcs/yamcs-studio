@@ -56,6 +56,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
     public WebSocketRegistrar(YamcsConnectionProperties yprops) {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setConnectionTimeoutMs(3000);
+        wsclient.enableReconnection(false);
         wsclient.setUserAgent(YamcsPlugin.getDefault().getProductIdentifier());
         requestSender = new Thread(() -> {
             try {
@@ -103,8 +104,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
             Thread.sleep(100); // Wait for more events, before going into synchronized block
             synchronized (pendingRequests) {
 
-                while (pendingRequests.peek() != null
-                        && evt instanceof MergeableWebSocketRequest
+                while (pendingRequests.peek() != null && evt instanceof MergeableWebSocketRequest
                         && pendingRequests.peek() instanceof MergeableWebSocketRequest
                         && evt.getResource().equals(pendingRequests.peek().getResource())
                         && evt.getOperation().equals(pendingRequests.peek().getOperation())) {
@@ -120,7 +120,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
     }
 
     public void shutdown() {
-        //wsclient.disconnect();
+        // wsclient.disconnect();
         wsclient.shutdown();
     }
 
