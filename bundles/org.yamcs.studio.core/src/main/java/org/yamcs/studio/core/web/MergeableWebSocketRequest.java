@@ -11,12 +11,12 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import com.google.protobuf.Message;
 
 /**
- * Wraps a yamcs web socket request and provides a mechanism to combine multiple requests together.
- * The purpose of this is to act against request bursts that could occur when opening for example a
- * display with many parameters on it.
+ * Wraps a yamcs web socket request and provides a mechanism to combine multiple
+ * requests together. The purpose of this is to act against request bursts that
+ * could occur when opening for example a display with many parameters on it.
  * <p>
- * Note that only web socket requests with the same resource/operation pair should be merged
- * together.
+ * Note that only web socket requests with the same resource/operation pair
+ * should be merged together.
  */
 public class MergeableWebSocketRequest extends WebSocketRequest {
 
@@ -39,10 +39,8 @@ public class MergeableWebSocketRequest extends WebSocketRequest {
     @Override
     public Message getRequestData() {
         if ("subscribe".equals(getOperation())) {
-            return ParameterSubscriptionRequest.newBuilder()
-                    .setSendFromCache(true)
-                    .setUpdateOnExpiration(true)
-                    .addAllId(ids).build();
+            return ParameterSubscriptionRequest.newBuilder().setAbortOnInvalid(false).setSendFromCache(true)
+                    .setUpdateOnExpiration(true).addAllId(ids).build();
         } else {
             return NamedObjectList.newBuilder().addAllList(ids).build();
         }
