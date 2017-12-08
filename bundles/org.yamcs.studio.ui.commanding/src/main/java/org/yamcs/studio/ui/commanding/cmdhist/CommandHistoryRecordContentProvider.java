@@ -14,19 +14,20 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.studio.ui.commanding.PTVInfo;
+import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryRecord.CommandState;
 
 public class CommandHistoryRecordContentProvider implements IStructuredContentProvider {
 
     public static final String GREEN = "icons/obj16/ok.png";
     public static final String RED = "icons/obj16/nok.png";
 
-    private static final String VERIFIER_COMPLETE = "CommandComplete";
-    private static final String VERIFIER_PREFIX = "Verifier_";
-    private static final String ACKNOWLEDGE_PREFIX = "Acknowledge_";
-    private static final String STATUS_SUFFIX = "_Status";
-    private static final String TIME_SUFFIX = "_Time";
+    public static final String ACKNOWLEDGE_PREFIX = "Acknowledge_";
+    public static final String VERIFIER_PREFIX = "Verifier_";
+    public static final String VERIFIER_STATUS_SUFFIX = "_Status";
+    public static final String VERIFIER_TIME_SUFFIX = "_Time";
 
     public static final String ATTR_TRANSMISSION_CONSTRAINTS = "TransmissionConstraints";
+    public static final String ATTR_COMMAND_COMPLETE = "CommandComplete";
     public static final String ATTR_COMMAND_FAILED = "CommandFailed";
     public static final String ATTR_FINAL_SEQUENCE_COUNT = "Final_Sequence_Count";
     public static final String ATTR_SOURCE = "source";
@@ -54,6 +55,14 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         return recordsByCommandId.values().toArray();
     }
 
+    public static String toHumanReadableName(CommandHistoryAttribute attribute) {
+        return attribute.getName()
+                .replace(ACKNOWLEDGE_PREFIX, "")
+                .replace(VERIFIER_PREFIX, "")
+                .replace(VERIFIER_STATUS_SUFFIX, "")
+                .replace(VERIFIER_TIME_SUFFIX, "");
+    }
+
     public void processCommandHistoryEntry(CommandHistoryEntry entry) {
         CommandId commandId = entry.getCommandId();
         CommandHistoryRecord rec;
@@ -69,18 +78,22 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
         // Autoprocess attributes for additional columns
         for (CommandHistoryAttribute attr : entry.getAttrList()) {
-            String shortName = attr.getName()
-                    //  .replace(VERIFIER_PREFIX, "")
-                    .replace(ACKNOWLEDGE_PREFIX, "")
-                    .replace(STATUS_SUFFIX, "")
-                    .replace(TIME_SUFFIX, "");
-            if (attr.getName().endsWith(STATUS_SUFFIX)
-                    || attr.getName().startsWith(VERIFIER_PREFIX)
-                    || attr.getName().equals(VERIFIER_COMPLETE)) {
-                if (attr.getValue().getStringValue().contains("OK"))
+            String shortName = toHumanReadableName(attr);
+            if (attr.getName().startsWith(VERIFIER_PREFIX)
+                    && attr.getName().endsWith(VERIFIER_STATUS_SUFFIX)) {
+                if (attr.getValue().getStringValue().contains("OK")) {
                     rec.addCellImage(shortName, GREEN);
-                else
+                } else {
                     rec.addCellImage(shortName, RED);
+                }
+            }
+
+            if (attr.getName().equals(ATTR_COMMAND_COMPLETE)) {
+                if (attr.getValue().getStringValue().equals("OK")) {
+                    rec.setCommandState(CommandState.COMPLETED);
+                } else {
+                    rec.setCommandState(CommandState.FAILED);
+                }
             } else if (attr.getName().equals(ATTR_FINAL_SEQUENCE_COUNT)) {
                 rec.setFinalSequenceCount(attr.getValue());
             } else if (attr.getName().equals(ATTR_SOURCE)) {

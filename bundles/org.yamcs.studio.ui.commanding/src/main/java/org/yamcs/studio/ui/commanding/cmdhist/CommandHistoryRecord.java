@@ -20,6 +20,10 @@ import org.yamcs.utils.TimeEncoding;
  */
 public class CommandHistoryRecord {
 
+    public enum CommandState {
+        UNKNOWN, COMPLETED, FAILED
+    }
+
     private static final String KEY_RAW_VALUE = "RAW_VALUE";
     private static final String KEY_ACK_DURATION = "ACK_DURATION";
     private static final String KEY_VALUE = "VALUE";
@@ -27,8 +31,6 @@ public class CommandHistoryRecord {
     private static final String KEY_TOOLTIP = "TOOLTIP";
 
     private static final Logger log = Logger.getLogger(CommandHistoryRecord.class.getName());
-    public static final String STATUS_SUFFIX = "_Status";
-    public static final String TIME_SUFFIX = "_Time";
 
     private static final long ONE_SECOND = 1000; // millis
     private static final long ONE_MINUTE = 60 * ONE_SECOND;
@@ -36,6 +38,7 @@ public class CommandHistoryRecord {
     private static final long ONE_DAY = 24 * ONE_HOUR;
 
     private CommandId id;
+    private CommandState commandState = CommandState.UNKNOWN;
     private String source;
     private String username = "anonymous";
     private String finalSequenceCount;
@@ -63,6 +66,10 @@ public class CommandHistoryRecord {
         this.username = valueToString(username);
     }
 
+    public void setCommandState(CommandState commandState) {
+        this.commandState = commandState;
+    }
+
     public void addCellValue(String columnName, Value value) {
         if (!cellPropsByColumn.containsKey(columnName)) {
             cellPropsByColumn.put(columnName, new HashMap<>());
@@ -71,7 +78,8 @@ public class CommandHistoryRecord {
         cellPropsByColumn.get(columnName).put(KEY_RAW_VALUE, valueToRawValue(value));
         if (value.getType() == Value.Type.TIMESTAMP) {
             cellPropsByColumn.get(columnName).put(KEY_ACK_DURATION, id.getGenerationTime() - value.getTimestampValue());
-            cellPropsByColumn.get(columnName).put(KEY_VALUE, toHumanTimeDiff(value.getTimestampValue(), id.getGenerationTime()));
+            cellPropsByColumn.get(columnName).put(KEY_VALUE,
+                    toHumanTimeDiff(value.getTimestampValue(), id.getGenerationTime()));
             cellPropsByColumn.get(columnName).put(KEY_TOOLTIP, TimeEncoding.toString(value.getTimestampValue()));
         } else {
             cellPropsByColumn.get(columnName).put(KEY_VALUE, valueToString(value));
@@ -125,6 +133,10 @@ public class CommandHistoryRecord {
         return username;
     }
 
+    public CommandState getCommandState() {
+        return commandState;
+    }
+
     public String getGenerationTime() {
         return TimeEncoding.toString(id.getGenerationTime());
     }
@@ -170,8 +182,7 @@ public class CommandHistoryRecord {
     }
 
     /**
-     * How long it took before the ACK for this dynamic column arrived. (relative to generationtime
-     * for the row)
+     * How long it took before the ACK for this dynamic column arrived. (relative to generationtime for the row)
      */
     public long getAckDurationForColumn(String columnName) {
         Map<String, Object> props = cellPropsByColumn.get(columnName);

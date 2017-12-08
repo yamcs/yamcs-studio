@@ -26,7 +26,9 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -44,9 +46,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryFilters.Filter;
+import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryRecord.CommandState;
 import org.yamcs.studio.ui.commanding.stack.CommandClipboard;
 
 public class CommandHistoryView extends ViewPart {
@@ -62,15 +64,13 @@ public class CommandHistoryView extends ViewPart {
 
     public static final int MAX_WIDTH = 500;
 
-    // Prefix used in command attribute names
-    private static final String ACK_PREFIX = "Acknowledge_";
-
     // Ignored for dynamic columns, most of these are actually considered fixed columns.
     private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName", "binary",
             CommandHistoryRecordContentProvider.ATTR_USERNAME,
             CommandHistoryRecordContentProvider.ATTR_SOURCE,
             CommandHistoryRecordContentProvider.ATTR_FINAL_SEQUENCE_COUNT,
             CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS,
+            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE,
             CommandHistoryRecordContentProvider.ATTR_COMMAND_FAILED);
 
     private LocalResourceManager resourceManager;
@@ -78,6 +78,9 @@ public class CommandHistoryView extends ViewPart {
     private Image redBubble;
     private Image grayBubble;
     private Image waitingImage;
+
+    private Color palidGreen;
+    private Color palidRed;
 
     private Composite parent;
     private TableViewer tableViewer;
@@ -96,15 +99,23 @@ public class CommandHistoryView extends ViewPart {
         this.parent = parent;
         instance = this;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        greenBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/ok.png"));
-        redBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/nok.png"));
-        grayBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/undef.png"));
-        waitingImage = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/waiting.png"));
+        greenBubble = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/ok.png"));
+        redBubble = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/nok.png"));
+        grayBubble = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/undef.png"));
+        waitingImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/waiting.png"));
+
+        palidGreen = resourceManager.createColor(new RGB(230, 255, 237));
+        palidRed = resourceManager.createColor(new RGB(255, 238, 240));
 
         TableColumnLayout tcl = new TableColumnLayout();
         parent.setLayout(tcl);
 
-        tableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.MULTI);
+        tableViewer = new TableViewer(parent,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.MULTI);
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.getTable().setLinesVisible(true);
 
@@ -142,7 +153,7 @@ public class CommandHistoryView extends ViewPart {
         gentimeColumn.getColumn().setText(COL_T);
         gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
         gentimeColumn.getColumn().setToolTipText("Generation Time");
-        gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
+        gentimeColumn.setLabelProvider(new CommandHistoryColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return ((CommandHistoryRecord) element).getGenerationTime();
@@ -153,10 +164,27 @@ public class CommandHistoryView extends ViewPart {
         TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
         nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
-        nameColumn.setLabelProvider(new ColumnLabelProvider() {
+        nameColumn.setLabelProvider(new CommandHistoryColumnLabelProvider() {
+
+            @Override
+            public Image getImage(Object element) {
+                switch (((CommandHistoryRecord) element).getCommandState()) {
+                case COMPLETED:
+                    return greenBubble;
+                case FAILED:
+                    return redBubble;
+                default:
+                    return grayBubble;
+                }
+            }
+
             @Override
             public String getText(Object element) {
-                return ((CommandHistoryRecord) element).getSource();
+                CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                if (rec.getPTVInfo().getFailureMessage() != null)
+                    return rec.getPTVInfo().getFailureMessage();
+                else
+                    return super.getToolTipText(element);
             }
         });
         layoutDataByColumn.put(nameColumn.getColumn(), new ColumnPixelData(500));
@@ -164,7 +192,7 @@ public class CommandHistoryView extends ViewPart {
         TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         originColumn.getColumn().setText(COL_SRC);
         originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
-        originColumn.setLabelProvider(new ColumnLabelProvider() {
+        originColumn.setLabelProvider(new CommandHistoryColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) element;
@@ -177,7 +205,7 @@ public class CommandHistoryView extends ViewPart {
         seqIdColumn.getColumn().setText(COL_SRC_ID);
         seqIdColumn.getColumn().addSelectionListener(getSelectionAdapter(seqIdColumn.getColumn()));
         seqIdColumn.getColumn().setToolTipText("Client ID");
-        seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
+        seqIdColumn.setLabelProvider(new CommandHistoryColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 return String.valueOf(((CommandHistoryRecord) element).getSequenceNumber());
@@ -189,7 +217,8 @@ public class CommandHistoryView extends ViewPart {
         ptvColumn.getColumn().setText(COL_PTV);
         ptvColumn.getColumn().addSelectionListener(getSelectionAdapter(ptvColumn.getColumn()));
         ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
-        ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
+        ptvColumn.setLabelProvider(new CommandHistoryColumnLabelProvider() {
+
             @Override
             public Image getImage(Object element) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) element;
@@ -210,6 +239,11 @@ public class CommandHistoryView extends ViewPart {
             }
 
             @Override
+            public String getText(Object element) {
+                return null;
+            }
+
+            @Override
             public String getToolTipText(Object element) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) element;
                 if (rec.getPTVInfo().getFailureMessage() != null)
@@ -224,7 +258,7 @@ public class CommandHistoryView extends ViewPart {
         finalSeqColumn.getColumn().setText(COL_SEQ_ID);
         finalSeqColumn.getColumn().addSelectionListener(getSelectionAdapter(finalSeqColumn.getColumn()));
         finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
-        finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
+        finalSeqColumn.setLabelProvider(new CommandHistoryColumnLabelProvider() {
             @Override
             public String getText(Object element) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) element;
@@ -289,15 +323,16 @@ public class CommandHistoryView extends ViewPart {
                 String cmdComment = "";
                 if (selection.length == 1)
                     cmdComment = chr.getTextForColumn("Comment");
-                InputDialog commentDialog = new InputDialog(tableViewer.getTable().getShell(), "Add Comment", "Add a comment for the command",
+                InputDialog commentDialog = new InputDialog(tableViewer.getTable().getShell(), "Add Comment",
+                        "Add a comment for the command",
                         cmdComment,
                         new IInputValidator() {
 
-                    @Override
-                    public String isValid(String newText) {
-                        return null;
-                    }
-                }) {
+                            @Override
+                            public String isValid(String newText) {
+                                return null;
+                            }
+                        }) {
                     @Override
                     protected int getInputTextStyle() {
                         return SWT.MULTI | SWT.BORDER | SWT.V_SCROLL;
@@ -391,15 +426,12 @@ public class CommandHistoryView extends ViewPart {
             if (IGNORED_ATTRIBUTES.contains(attr.getName()))
                 continue;
 
-            String shortName = attr.getName()
-                    .replace(ACK_PREFIX, "")
-                    .replace(CommandHistoryRecord.STATUS_SUFFIX, "")
-                    .replace(CommandHistoryRecord.TIME_SUFFIX, "");
+            String shortName = CommandHistoryRecordContentProvider.toHumanReadableName(attr);
             if (!dynamicColumns.contains(shortName)) {
                 TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
                 column.getColumn().setText(shortName);
                 column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
-                column.setLabelProvider(new ColumnLabelProvider() {
+                column.setLabelProvider(new CommandHistoryColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
                         String text = ((CommandHistoryRecord) element).getTextForColumn(shortName);
@@ -492,4 +524,18 @@ public class CommandHistoryView extends ViewPart {
         return this.tableViewer;
     }
 
+    private class CommandHistoryColumnLabelProvider extends ColumnLabelProvider {
+
+        @Override
+        public Color getBackground(Object element) {
+            CommandHistoryRecord rec = (CommandHistoryRecord) element;
+            if (rec.getCommandState() == CommandState.COMPLETED) {
+                return palidGreen;
+            } else if (rec.getCommandState() == CommandState.FAILED) {
+                return palidRed;
+            } else {
+                return null;
+            }
+        }
+    }
 }
