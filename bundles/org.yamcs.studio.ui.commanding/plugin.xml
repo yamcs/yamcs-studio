@@ -82,7 +82,21 @@
       <command
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
-            name="Import Commands">
+            name="Fetch Commands">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.cmdhist.copyDetailsCommand"
+            name="Copy Command Details">
+         <commandParameter
+               id="org.yamcs.studio.ui.commanding.cmdhist.copyDetails.property"
+               name="Property"
+               optional="false" />
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.cmdhist.addCommentCommand"
+            name="Add Comment">
       </command>
    </extension>
    
@@ -221,6 +235,38 @@
             </with>
          </activeWhen>
       </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.cmdhist.AddCommentHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhist.addCommentCommand">
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.cmdhist.CopyCommandHistoryEntryHandler"
+            commandId="org.eclipse.ui.edit.copy">
+         <activeWhen>
+            <with variable="activePartId">
+               <equals value="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
+            </with>
+         </activeWhen>
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.cmdhist.CopyCommandHistoryEntryDetailsHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhist.copyDetailsCommand">
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
    </extension>
    
    <extension point="org.eclipse.ui.views">
@@ -250,6 +296,19 @@
 
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.stack.CommandStackView">
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.export"
+               icon="icons/elcl16/export_log.png"
+               disabledIcon="icons/dlcl16/export_log.png"
+               label="Export Stack"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.commanding.stack.import"
+               icon="icons/elcl16/import_log.png"
+               disabledIcon="icons/dlcl16/import_log.png"
+               label="Import a Stack"
+               style="push"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.stack.add"
                icon="icons/elcl16/new_command.png"
@@ -282,22 +341,16 @@
                label="Clear Execution State"
                style="push"/>
          <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.export"
-               icon="icons/elcl16/export_wiz.png"
-               disabledIcon="icons/dlcl16/export_wiz.png"
-               label="Export Stack"
-               style="push"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.stack.import"
-               icon="icons/elcl16/import_wiz.gif"
-               disabledIcon="icons/dlcl16/import_wiz.gif"
-               label="Import a Stack"
-               style="push"/>
-         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
+         <command
+               commandId="org.yamcs.studio.ui.commanding.cmdhist.exportCommand"
+               icon="icons/elcl16/export_log.png"
+               disabledIcon="icons/dlcl16/export_log.png"
+               label="Export Commands to CSV"
+               style="push"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.cmdhist.clearCommand"
                icon="icons/elcl16/clear.png"
@@ -310,19 +363,60 @@
                disabledIcon="icons/dlcl16/lock_co.png"
                label="Scroll Lock"
                style="toggle"/>
-         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
-         <command
-               commandId="org.yamcs.studio.ui.commanding.cmdhist.exportCommand"
-               icon="icons/elcl16/export_wiz.png"
-               disabledIcon="icons/dlcl16/export_wiz.png"
-               label="Export Commands to CSV"
-               style="push"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.cmdhist.importCommand"
-               icon="icons/elcl16/import_wiz.gif"
-               disabledIcon="icons/dlcl16/import_wiz.gif"
-               label="Import Commands"
+               icon="icons/obj16/fetch.png"
+               label="Fetch Commands"
                style="push"/>
+      </menuContribution>
+      
+      <menuContribution locationURI="popup:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
+         <command
+               commandId="org.yamcs.studio.ui.commanding.cmdhist.addCommentCommand"
+               icon="icons/obj16/note.png"
+               label="Add Comment"/>
+         <separator name="org.yamcs.studio.ui.commanding.cmdhist.separator1" visible="true"/>
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               icon="icons/etool16/copy_edit.gif"
+               disabledIcon="icons/dtool16/copy_edit.gif"/>
+         <menu
+               id="org.yamcs.studio.ui.commanding.cmdhist.copyDetails.menu"
+               label="Copy Details">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <not>
+                     <count value="0"/>
+                  </not>   
+               </with>
+            </visibleWhen>
+            <command
+                  commandId="org.yamcs.studio.ui.commanding.cmdhist.copyDetailsCommand"
+                  label="Generation Time">
+               <parameter
+                     name="org.yamcs.studio.ui.commanding.cmdhist.copyDetails.property" value="GENTIME" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.commanding.cmdhist.copyDetailsCommand"
+                  label="Command">
+               <parameter
+                     name="org.yamcs.studio.ui.commanding.cmdhist.copyDetails.property" value="COMMAND" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.commanding.cmdhist.copyDetailsCommand"
+                  label="Source">
+               <parameter
+                     name="org.yamcs.studio.ui.commanding.cmdhist.copyDetails.property" value="SOURCE" />
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.commanding.cmdhist.copyDetailsCommand"
+                  label="Sequence Number">
+               <parameter
+                     name="org.yamcs.studio.ui.commanding.cmdhist.copyDetails.property" value="SEQNO" />
+            </command>
+         </menu>
       </menuContribution>
    </extension>
 </plugin>

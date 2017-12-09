@@ -40,7 +40,7 @@ public class CommandHistoryViewerComparator extends ViewerComparator {
         int rc;
         switch (currentColumn) {
         case CommandHistoryView.COL_COMMAND:
-            rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
+            rc = STRING_COMPARATOR.compare(r1.getCommandString(), r2.getCommandString());
             break;
         case CommandHistoryView.COL_SRC_ID:
             rc = INTEGER_COMPARATOR.compare(r1.getSequenceNumber(), r2.getSequenceNumber());

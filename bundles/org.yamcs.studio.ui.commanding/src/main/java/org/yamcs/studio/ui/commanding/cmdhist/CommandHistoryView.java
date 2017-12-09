@@ -13,8 +13,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -23,30 +22,20 @@ import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
@@ -56,7 +45,6 @@ import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryFilters.Filter;
 import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryRecord.CommandState;
-import org.yamcs.studio.ui.commanding.stack.CommandClipboard;
 
 public class CommandHistoryView extends ViewPart {
 
@@ -156,7 +144,6 @@ public class CommandHistoryView extends ViewPart {
 
         addFixedColumns();
         applyColumnLayoutData(tcl);
-        addPopupMenu();
 
         tableContentProvider = new CommandHistoryRecordContentProvider(tableViewer);
         tableViewer.setContentProvider(tableContentProvider);
@@ -164,6 +151,19 @@ public class CommandHistoryView extends ViewPart {
 
         tableViewerComparator = new CommandHistoryViewerComparator();
         tableViewer.setComparator(tableViewerComparator);
+
+        // Register context menu. Commands are added in plugin.xml
+        MenuManager menuManager = new MenuManager();
+        Menu menu = menuManager.createContextMenu(tableViewer.getTable());
+        tableViewer.getTable().setMenu(menu);
+        getSite().registerContextMenu(menuManager, tableViewer);
+
+        // Default action is to open Command properties
+        tableViewer.getTable().addListener(SWT.MouseDoubleClick, evt -> {
+            RCPUtils.runCommand(CommandHistory.CMD_EVENT_PROPERTIES);
+        });
+
+        getViewSite().setSelectionProvider(tableViewer);
 
         CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
@@ -234,6 +234,7 @@ public class CommandHistoryView extends ViewPart {
 
         TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
+        nameColumn.getColumn().setToolTipText("Command String");
         nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
 
@@ -252,7 +253,7 @@ public class CommandHistoryView extends ViewPart {
             @Override
             public String getText(Object element) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                return rec.getCommandName();
+                return rec.getCommandString();
             }
 
             @Override
@@ -268,6 +269,7 @@ public class CommandHistoryView extends ViewPart {
 
         TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         originColumn.getColumn().setText(COL_SRC);
+        originColumn.getColumn().setToolTipText("Source (user@origin)");
         originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
         originColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -369,127 +371,6 @@ public class CommandHistoryView extends ViewPart {
 
     private void applyColumnLayoutData(TableColumnLayout tcl) {
         layoutDataByColumn.forEach((k, v) -> tcl.setColumnData(k, v));
-    }
-
-    private void addPopupMenu() {
-        // add popup menu
-        Table table = tableViewer.getTable();
-        Shell shell = table.getShell();
-        Menu contextMenu = new Menu(tableViewer.getTable());
-        table.setMenu(contextMenu);
-        MenuItem mItem1 = new MenuItem(contextMenu, SWT.None);
-        mItem1.setText("Add a Comment...");
-        mItem1.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetDefaultSelected(SelectionEvent arg0) {
-                widgetSelected(arg0);
-            }
-
-            @Override
-            public void widgetSelected(SelectionEvent arg0) {
-                CommandHistoryRecord chr = (CommandHistoryRecord) (tableViewer.getTable().getSelection()[0].getData());
-                if (chr == null)
-                    return;
-                TableItem[] selection = tableViewer.getTable().getSelection();
-
-                String cmdComment = "";
-                if (selection.length == 1)
-                    cmdComment = chr.getTextForColumn("Comment");
-                InputDialog commentDialog = new InputDialog(tableViewer.getTable().getShell(), "Add Comment",
-                        "Add a comment for the command",
-                        cmdComment,
-                        new IInputValidator() {
-
-                            @Override
-                            public String isValid(String newText) {
-                                return null;
-                            }
-                        }) {
-                    @Override
-                    protected int getInputTextStyle() {
-                        return SWT.MULTI | SWT.BORDER | SWT.V_SCROLL;
-                    }
-
-                    @Override
-                    protected Control createDialogArea(Composite parent) {
-                        Control res = super.createDialogArea(parent);
-                        ((GridData) this.getText().getLayoutData()).heightHint = 4 * this.getText().getLineHeight();
-                        return res;
-                    }
-                };
-                int commentResult = commentDialog.open();
-                if (commentResult == Window.OK) {
-                    String newComment = commentDialog.getValue();
-                    CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-
-                    for (TableItem ti : selection) {
-
-                        CommandHistoryRecord chri = (CommandHistoryRecord) ti.getData();
-                        if (chri == null)
-                            continue;
-
-                        catalogue.updateCommandComment("realtime", chri.getCommandId(), newComment).exceptionally(t -> {
-                            table.getDisplay().asyncExec(() -> {
-                                MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-                                dialog.setText("Comment Update");
-                                dialog.setMessage("Comment has not been updated. Details: " + t.getMessage());
-                                // open dialog and await user selection
-                                dialog.open();
-                            });
-                            return null;
-                        });
-                    }
-
-                }
-            }
-        });
-
-        MenuItem mItemCopySrc = new MenuItem(contextMenu, SWT.None);
-        mItemCopySrc.setText("Copy");
-        mItemCopySrc.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-
-                // check something is selected
-                TableItem[] selection = tableViewer.getTable().getSelection();
-                if (selection == null || selection.length == 0)
-                    return;
-
-                // copy each selected items
-                List<CommandHistoryRecord> chrs = new ArrayList<>();
-                for (TableItem ti : selection) {
-                    CommandHistoryRecord chr = (CommandHistoryRecord) (ti.getData());
-                    if (chr == null)
-                        continue;
-                    chrs.add(chr);
-
-                }
-                CommandClipboard.addCommandHistoryRecords(chrs, tableViewer.getTable().getDisplay());
-
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-
-        });
-
-        tableViewer.getTable().addListener(SWT.MouseDown, new Listener() {
-
-            @Override
-            public void handleEvent(Event event) {
-                TableItem[] selection = tableViewer.getTable().getSelection();
-                if (selection.length != 0 && (event.button == 3)) {
-                    contextMenu.setVisible(true);
-                } else {
-                    contextMenu.setVisible(false);
-                }
-
-            }
-
-        });
-
     }
 
     public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {

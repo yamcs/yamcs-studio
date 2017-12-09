@@ -9,29 +9,20 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryRecord;
 
-/*
- *        CommandClipboard
- *        Store command entries copied from the command history or the command stack
- *        Copy command sources to system clipboard
- *
+/**
+ * Store command entries copied from the command history or the command stack. Copy command strings to system clipboard
  */
 public class CommandClipboard {
 
-    static private List<CommandHistoryRecord> copiedCommandHistoryRecords = new ArrayList<>();
-    static private List<StackedCommand> copiedStackedCommands = new ArrayList<>();
-    static private List<StackedCommand> cutStackedCommands = new ArrayList<>();
+    private static List<CommandHistoryRecord> copiedCommandHistoryRecords = new ArrayList<>();
+    private static List<StackedCommand> copiedStackedCommands = new ArrayList<>();
+    private static List<StackedCommand> cutStackedCommands = new ArrayList<>();
 
-    static public void addCommandHistoryRecords(List<CommandHistoryRecord> chrs, Display display) {
+    public static void addCommandHistoryRecords(List<CommandHistoryRecord> chrs) {
         copiedStackedCommands.clear();
         cutStackedCommands.clear();
         copiedCommandHistoryRecords.clear();
         copiedCommandHistoryRecords.addAll(chrs);
-
-        String source = "";
-        for (CommandHistoryRecord chr : chrs) {
-            source += chr.getSource() + "\n";
-        }
-        textToClipboard(source, display);
     }
 
     public static void addStackedCommands(List<StackedCommand> scs, boolean cut, Display display) {
@@ -51,11 +42,11 @@ public class CommandClipboard {
     }
 
     public static List<StackedCommand> getCopiedCommands() throws Exception {
-        List<StackedCommand> result = new ArrayList<StackedCommand>();
+        List<StackedCommand> result = new ArrayList<>();
 
         // convert CommandHistoryRecord to new Stacked Command
         for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
-            StackedCommand pastedCommand = StackedCommand.buildCommandFromSource(chr.getSource());
+            StackedCommand pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommandString());
             pastedCommand.setComment(chr.getTextForColumn("Comment"));
             result.add(pastedCommand);
         }

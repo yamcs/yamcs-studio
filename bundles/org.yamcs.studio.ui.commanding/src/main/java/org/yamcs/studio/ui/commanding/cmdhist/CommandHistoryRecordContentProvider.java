@@ -97,7 +97,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
             } else if (attr.getName().equals(ATTR_FINAL_SEQUENCE_COUNT)) {
                 rec.setFinalSequenceCount(attr.getValue());
             } else if (attr.getName().equals(ATTR_SOURCE)) {
-                rec.setSource(attr.getValue());
+                rec.setCommandString(attr.getValue());
             } else if (attr.getName().equals(ATTR_USERNAME)) {
                 rec.setUsername(attr.getValue());
             } else if (attr.getName().equals(ATTR_TRANSMISSION_CONSTRAINTS)) {

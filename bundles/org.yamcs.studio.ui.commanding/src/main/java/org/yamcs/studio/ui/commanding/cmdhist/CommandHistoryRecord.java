@@ -39,7 +39,7 @@ public class CommandHistoryRecord {
 
     private CommandId id;
     private CommandState commandState = CommandState.UNKNOWN;
-    private String source;
+    private String commandString;
     private String username = "anonymous";
     private String finalSequenceCount;
     private PTVInfo ptvInfo;
@@ -58,8 +58,8 @@ public class CommandHistoryRecord {
         this.finalSequenceCount = valueToString(finalSequenceCount);
     }
 
-    public void setSource(Value source) {
-        this.source = valueToString(source);
+    public void setCommandString(Value commandString) {
+        this.commandString = valueToString(commandString);
     }
 
     public void setUsername(Value username) {
@@ -125,8 +125,8 @@ public class CommandHistoryRecord {
         return id.getCommandName();
     }
 
-    public String getSource() {
-        return source;
+    public String getCommandString() {
+        return commandString;
     }
 
     public String getUsername() {
