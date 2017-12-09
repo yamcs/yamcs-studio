@@ -298,10 +298,6 @@
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
-        <control
-              class="org.yamcs.studio.ui.commanding.cmdhist.ComboFilterContribution"
-              label="View Profile">
-        </control>
          <command
                commandId="org.yamcs.studio.ui.commanding.cmdhist.clearCommand"
                icon="icons/elcl16/clear.png"
@@ -327,7 +323,6 @@
                disabledIcon="icons/dlcl16/import_wiz.gif"
                label="Import Commands"
                style="push"/>
-         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
       </menuContribution>
    </extension>
 </plugin>

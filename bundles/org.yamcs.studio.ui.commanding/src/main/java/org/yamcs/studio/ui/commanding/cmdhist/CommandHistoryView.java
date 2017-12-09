@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -43,6 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
@@ -113,6 +118,8 @@ public class CommandHistoryView extends ViewPart {
         palidGreen = resourceManager.createColor(new RGB(230, 255, 237));
         palidRed = resourceManager.createColor(new RGB(255, 238, 240));
 
+        createActions();
+
         TableColumnLayout tcl = new TableColumnLayout();
         parent.setLayout(tcl);
 
@@ -173,6 +180,42 @@ public class CommandHistoryView extends ViewPart {
 
     public void enableScrollLock(boolean enabled) {
         tableContentProvider.enableScrollLock(enabled);
+    }
+
+    private void createActions() {
+        IActionBars bars = getViewSite().getActionBars();
+        IMenuManager mgr = bars.getMenuManager();
+
+        Filter allColumnsFilter = new Filter("Full");
+        allColumnsFilter.filterFields.add(Pattern.compile(".*"));
+        Action allColumnsAction = new Action("Show all columns", IAction.AS_RADIO_BUTTON) {
+            @Override
+            public void run() {
+                if (isChecked()) {
+                    applyFilter(allColumnsFilter);
+                }
+            }
+        };
+        allColumnsAction.setChecked(true);
+        mgr.add(allColumnsAction);
+
+        Filter keyColumnsFilter = new Filter("Brief");
+        keyColumnsFilter.filterFields.add(Pattern.compile("^Command$"));
+        keyColumnsFilter.filterFields.add(Pattern.compile("^PTV$"));
+        keyColumnsFilter.filterFields.add(Pattern.compile("^Seq.ID$"));
+        keyColumnsFilter.filterFields.add(Pattern.compile("^FRC$"));
+        keyColumnsFilter.filterFields.add(Pattern.compile("^DASS$"));
+        keyColumnsFilter.filterFields.add(Pattern.compile("^MCS$"));
+        keyColumnsFilter.filterFields.add(Pattern.compile("^[A-Z]$"));
+        keyColumnsFilter.filterFields.add(Pattern.compile("^Comment$"));
+        mgr.add(new Action("Show key columns", IAction.AS_RADIO_BUTTON) {
+            @Override
+            public void run() {
+                if (isChecked()) {
+                    applyFilter(keyColumnsFilter);
+                }
+            }
+        });
     }
 
     private void addFixedColumns() {
