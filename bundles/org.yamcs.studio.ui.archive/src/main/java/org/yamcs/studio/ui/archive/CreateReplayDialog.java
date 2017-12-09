@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.archive;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -21,6 +23,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
+import org.yamcs.protobuf.SchemaYamcs;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -28,6 +32,8 @@ import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
+
+import io.protostuff.JsonIOUtil;
 
 public class CreateReplayDialog extends TitleAreaDialog {
 
@@ -78,8 +84,10 @@ public class CreateReplayDialog extends TitleAreaDialog {
         startDate = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
+            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH),
+                    startTimeValue.get(Calendar.DAY_OF_MONTH));
+            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE),
+                    startTimeValue.get(Calendar.SECOND));
         }
 
         lbl = new Label(container, SWT.NONE);
@@ -108,7 +116,8 @@ public class CreateReplayDialog extends TitleAreaDialog {
             } else {
                 log.log(Level.SEVERE, "Could not start replay", exc);
                 Display.getDefault().asyncExec(() -> {
-                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay", exc.getMessage());
+                    MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not start replay",
+                            exc.getMessage());
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 });
             }
@@ -125,10 +134,22 @@ public class CreateReplayDialog extends TitleAreaDialog {
     }
 
     public CreateProcessorRequest toCreateProcessorRequest(ClientInfo ci) {
+        ReplayRequest spec = ReplayRequest.newBuilder()
+                .setStart(TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime)))
+                .build();
+
+        StringWriter writer = new StringWriter();
+        try {
+            JsonIOUtil.writeTo(writer, spec, SchemaYamcs.ReplayRequest.WRITE, false);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not encode replay request", e);
+        }
+        String specJson = writer.toString();
+
         CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
                 .setName(name.getText())
-                .setStart(TimeEncoding.toString(TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime))))
-                .setLoop(false)
+                .setType("Archive")
+                .setConfig(specJson)
                 .addClientId(ci.getId());
 
         return resultb.build();
