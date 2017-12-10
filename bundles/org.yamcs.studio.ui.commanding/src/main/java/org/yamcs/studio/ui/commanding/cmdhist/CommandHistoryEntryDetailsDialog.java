@@ -64,7 +64,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     @Override
     public void create() {
         super.create();
-        getShell().setSize(600, 450);
+        getShell().setSize(600, 550);
 
         applyDialogFont(buttonBar);
         getButton(IDialogConstants.OK_ID).setFocus();

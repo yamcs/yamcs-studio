@@ -54,10 +54,10 @@ public class CommandHistoryView extends ViewPart {
 
     public static final int MAX_WIDTH = 500;
 
-    // Ignored for dynamic columns, most of these are actually considered fixed columns.
+    // Ignored for dynamic columns, most of these are actually considered fixed
+    // columns.
     private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName",
-            CommandHistoryRecordContentProvider.ATTR_BINARY,
-            CommandHistoryRecordContentProvider.ATTR_USERNAME,
+            CommandHistoryRecordContentProvider.ATTR_BINARY, CommandHistoryRecordContentProvider.ATTR_USERNAME,
             CommandHistoryRecordContentProvider.ATTR_SOURCE,
             CommandHistoryRecordContentProvider.ATTR_FINAL_SEQUENCE_COUNT,
             CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS,
@@ -111,8 +111,7 @@ public class CommandHistoryView extends ViewPart {
 
         tableLayout = new TableLayout();
 
-        tableViewer = new TableViewer(parent,
-                SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.MULTI);
+        tableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
         tableViewer.getTable().setLayout(tableLayout);
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.getTable().setLinesVisible(true);
@@ -160,6 +159,7 @@ public class CommandHistoryView extends ViewPart {
 
     public void clear() {
         tableContentProvider.clearAll();
+        updateSummaryLine();
     }
 
     public void enableScrollLock(boolean enabled) {

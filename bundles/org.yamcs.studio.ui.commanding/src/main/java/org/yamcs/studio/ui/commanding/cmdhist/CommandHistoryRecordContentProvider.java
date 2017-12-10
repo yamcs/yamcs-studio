@@ -22,6 +22,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
     public static final String RED = "icons/obj16/nok.png";
 
     public static final String ACKNOWLEDGE_PREFIX = "Acknowledge_";
+    public static final String ACKNOWLEDGE_STATUS_SUFFIX = "_Status";
     public static final String VERIFIER_PREFIX = "Verifier_";
     public static final String VERIFIER_STATUS_SUFFIX = "_Status";
     public static final String VERIFIER_TIME_SUFFIX = "_Time";
@@ -80,6 +81,17 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         // Autoprocess attributes for additional columns
         for (CommandHistoryAttribute attr : entry.getAttrList()) {
             String shortName = toHumanReadableName(attr);
+
+            if (attr.getName().startsWith(ACKNOWLEDGE_PREFIX)) {
+                if (attr.getName().endsWith(ACKNOWLEDGE_STATUS_SUFFIX)) {
+                    if (attr.getValue().getStringValue().contains("OK")) {
+                        rec.addCellImage(shortName, GREEN);
+                    } else {
+                        rec.addCellImage(shortName, RED);
+                    }
+                }
+            }
+
             if (attr.getName().startsWith(VERIFIER_PREFIX)) {
                 if (attr.getName().endsWith(VERIFIER_STATUS_SUFFIX)) {
                     rec.addVerificationStep(new VerificationStep(rec, shortName, attr));

@@ -163,14 +163,11 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
 
     public void clear() {
         Display.getDefault().asyncExec(() -> {
-            log.finest("clear started");
             tableContentProvider.clearAll();
             tableViewer.setInput(null);
             tableViewer.setSelection(null);
             updateSummaryLine();
-            log.finest("clear done");
         });
-        log.finest("clear queued");
     }
 
     public void enableScrollLock(boolean enabled) {
