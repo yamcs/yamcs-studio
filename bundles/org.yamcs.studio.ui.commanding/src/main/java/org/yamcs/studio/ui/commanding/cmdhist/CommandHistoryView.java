@@ -69,6 +69,8 @@ public class CommandHistoryView extends ViewPart {
     private Image grayBubble;
     private Image waitingImage;
     private Image headerCompleteImage;
+    Image checkmarkImage;
+    Image errorImage;
 
     private TableViewer tableViewer;
     private TableLayout tableLayout;
@@ -93,6 +95,10 @@ public class CommandHistoryView extends ViewPart {
                 .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/waiting.png"));
         headerCompleteImage = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/header_complete.png"));
+        checkmarkImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/checkmark.gif"));
+        errorImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/error_tsk.png"));
 
         createActions();
 
@@ -121,7 +127,7 @@ public class CommandHistoryView extends ViewPart {
 
         // Default action is to open Command properties
         tableViewer.getTable().addListener(SWT.MouseDoubleClick, evt -> {
-            RCPUtils.runCommand(CommandHistory.CMD_EVENT_PROPERTIES);
+            RCPUtils.runCommand(CommandHistory.CMD_COMMAND_PROPERTIES);
         });
 
         updateSummaryLine();
@@ -210,17 +216,17 @@ public class CommandHistoryView extends ViewPart {
         TableViewerColumn stateColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         stateColumn.getColumn().setImage(headerCompleteImage);
         stateColumn.getColumn().addSelectionListener(getSelectionAdapter(stateColumn.getColumn()));
-        stateColumn.getColumn().setToolTipText("Command State");
+        stateColumn.getColumn().setToolTipText("Completion");
         stateColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public Image getImage(Object element) {
                 switch (((CommandHistoryRecord) element).getCommandState()) {
                 case COMPLETED:
-                    return greenBubble;
+                    return checkmarkImage;
                 case FAILED:
-                    return redBubble;
+                    return errorImage;
                 default:
-                    return grayBubble;
+                    return null;
                 }
             }
 

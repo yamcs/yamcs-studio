@@ -32,7 +32,7 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.eventlog.propertiesCommand"
+            id="org.yamcs.studio.ui.eventlog.showDetailsCommand"
             name="Event Properties">
       </command>
       <command
@@ -92,8 +92,8 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.yamcs.studio.ui.eventlog.EventPropertiesHandler"
-            commandId="org.yamcs.studio.ui.eventlog.propertiesCommand">
+            class="org.yamcs.studio.ui.eventlog.ShowEventDetailsHandler"
+            commandId="org.yamcs.studio.ui.eventlog.showDetailsCommand">
          <enabledWhen>
             <not>
                <count value="0"/>
@@ -146,7 +146,7 @@
       
       <menuContribution locationURI="popup:org.yamcs.studio.ui.eventlog.EventLogView">
          <command
-               commandId="org.yamcs.studio.ui.eventlog.propertiesCommand"
+               commandId="org.yamcs.studio.ui.eventlog.showDetailsCommand"
                label="Properties"/>
          <separator name="org.yamcs.studio.ui.eventlog.separator1" visible="true"/>
          <command

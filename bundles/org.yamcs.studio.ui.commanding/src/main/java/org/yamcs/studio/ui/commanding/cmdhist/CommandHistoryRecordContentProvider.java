@@ -31,6 +31,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
     public static final String ATTR_COMMAND_FAILED = "CommandFailed";
     public static final String ATTR_FINAL_SEQUENCE_COUNT = "Final_Sequence_Count";
     public static final String ATTR_SOURCE = "source";
+    public static final String ATTR_BINARY = "binary";
     public static final String ATTR_USERNAME = "username";
 
     private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
@@ -104,6 +105,8 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
                 rec.getPTVInfo().setState(PTVInfo.State.fromYamcsValue(attr.getValue()));
             } else if (attr.getName().equals(ATTR_COMMAND_FAILED)) {
                 rec.getPTVInfo().setFailureMessage(attr.getValue().getStringValue());
+            } else if (attr.getName().equals(ATTR_BINARY)) {
+                rec.setBinary(attr.getValue().getBinaryValue());
             } else {
                 rec.addCellValue(shortName, attr.getValue());
             }

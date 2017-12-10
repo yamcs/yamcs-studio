@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Yamcs.Event;
 
-public class EventPropertiesHandler extends AbstractHandler {
+public class ShowEventDetailsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {

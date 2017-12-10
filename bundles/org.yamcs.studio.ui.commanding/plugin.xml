@@ -98,6 +98,11 @@
             id="org.yamcs.studio.ui.commanding.cmdhist.addCommentCommand"
             name="Add Comment">
       </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.commanding.cmdhist.showDetailsCommand"
+            name="Command History Entry Properties">
+      </command>
    </extension>
    
    <extension point="org.eclipse.core.expressions.propertyTesters">
@@ -267,6 +272,15 @@
             </not>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.yamcs.studio.ui.commanding.cmdhist.ShowCommandHistoryEntryDetailsHandler"
+            commandId="org.yamcs.studio.ui.commanding.cmdhist.showDetailsCommand">
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
    </extension>
    
    <extension point="org.eclipse.ui.views">
@@ -371,6 +385,9 @@
       </menuContribution>
       
       <menuContribution locationURI="popup:org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
+         <command
+               commandId="org.yamcs.studio.ui.commanding.cmdhist.showDetailsCommand"
+               label="Properties"/>
          <command
                commandId="org.yamcs.studio.ui.commanding.cmdhist.addCommentCommand"
                icon="icons/obj16/note.png"

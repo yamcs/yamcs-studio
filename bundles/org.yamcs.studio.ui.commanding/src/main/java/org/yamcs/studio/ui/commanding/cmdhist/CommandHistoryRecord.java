@@ -15,6 +15,8 @@ import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.ui.commanding.PTVInfo;
 import org.yamcs.utils.TimeEncoding;
 
+import com.google.protobuf.ByteString;
+
 /**
  * Keeps an assembled state of multiple events related to one CommandId
  */
@@ -41,6 +43,7 @@ public class CommandHistoryRecord {
     private CommandId id;
     private CommandState commandState = CommandState.UNKNOWN;
     private String commandString;
+    private ByteString binary;
     private String username = "anonymous";
     private String finalSequenceCount;
     private PTVInfo ptvInfo;
@@ -69,6 +72,10 @@ public class CommandHistoryRecord {
 
     public void setCommandState(CommandState commandState) {
         this.commandState = commandState;
+    }
+
+    public void setBinary(ByteString binary) {
+        this.binary = binary;
     }
 
     public void addCellValue(String columnName, Value value) {
@@ -153,6 +160,10 @@ public class CommandHistoryRecord {
 
     public String getOrigin() {
         return id.getOrigin();
+    }
+
+    public ByteString getBinary() {
+        return binary;
     }
 
     public PTVInfo getPTVInfo() {

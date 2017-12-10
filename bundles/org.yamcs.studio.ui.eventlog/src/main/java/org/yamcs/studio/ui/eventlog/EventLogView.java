@@ -9,9 +9,8 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -47,8 +46,8 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     private static final Logger log = Logger.getLogger(EventLogView.class.getName());
 
     public static final String COL_SOURCE = "Source";
-    public static final String COL_RECEPTION = "Received";
     public static final String COL_GENERATION = "Generation";
+    public static final String COL_RECEPTION = "Reception";
     public static final String COL_MESSAGE = "Message";
     public static final String COL_SEQNUM = "Seq.Nr.";
 
@@ -58,7 +57,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     private int nbMessageLineToDisplay = 1;
 
     private TableViewer tableViewer;
-    private TableColumnLayout tcl;
+    private TableLayout tableLayout;
 
     private EventLogContentProvider tableContentProvider;
 
@@ -68,20 +67,21 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         // get preference from plugin
         if (YamcsUIPlugin.getDefault() != null) {
             showColumnSeqNum = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumSeqNum");
-            showColumnReception = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumReception");
-            //showColumnGeneration = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumnGeneration");
-            nbMessageLineToDisplay = YamcsUIPlugin.getDefault().getPreferenceStore().getInt("events.nbMessageLineToDisplay");
+            showColumnReception = YamcsUIPlugin.getDefault().getPreferenceStore()
+                    .getBoolean("events.showColumReception");
+            // showColumnGeneration =
+            // YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumnGeneration");
+            nbMessageLineToDisplay = YamcsUIPlugin.getDefault().getPreferenceStore()
+                    .getInt("events.nbMessageLineToDisplay");
         }
 
-
-        Composite tableWrapper = new Composite(parent, SWT.NONE);
-
-        tcl = new TableColumnLayout();
-        tableWrapper.setLayout(tcl);
-
-        tableViewer = new TableViewer(tableWrapper, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
+        tableViewer = new TableViewer(parent,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
         tableViewer.getTable().setHeaderVisible(true);
         tableViewer.getTable().setLinesVisible(true);
+
+        tableLayout = new TableLayout();
+        tableViewer.getTable().setLayout(tableLayout);
 
         addFixedColumns();
         tableContentProvider = new EventLogContentProvider(tableViewer.getTable());
@@ -187,39 +187,39 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         TableViewerColumn messageColumn = new TableViewerColumn(tableViewer, SWT.NULL);
         messageColumn.getColumn().setText(COL_MESSAGE);
         messageColumn.getColumn().addListener(SWT.Selection, sortListener);
-        tcl.setColumnData(messageColumn.getColumn(), new ColumnWeightData(200));
+        tableLayout.addColumnData(new ColumnPixelData(300));
 
         TableViewerColumn sourceColumn = new TableViewerColumn(tableViewer, SWT.NULL);
         sourceColumn.getColumn().setText(COL_SOURCE);
         sourceColumn.getColumn().addListener(SWT.Selection, sortListener);
-        tcl.setColumnData(sourceColumn.getColumn(), new ColumnPixelData(150));
-
-        TableViewerColumn receptionColumn = new TableViewerColumn(tableViewer, SWT.NULL);
-        receptionColumn.getColumn().setText(COL_RECEPTION);
-        receptionColumn.getColumn().addListener(SWT.Selection, sortListener);
-        tcl.setColumnData(receptionColumn.getColumn(), new ColumnPixelData(150));
+        tableLayout.addColumnData(new ColumnPixelData(150));
 
         TableViewerColumn generationColumn = new TableViewerColumn(tableViewer, SWT.NULL);
         generationColumn.getColumn().setText(COL_GENERATION);
         generationColumn.getColumn().addListener(SWT.Selection, sortListener);
-        tcl.setColumnData(generationColumn.getColumn(), new ColumnPixelData(150));
+        tableLayout.addColumnData(new ColumnPixelData(150));
+
+        TableViewerColumn receptionColumn = new TableViewerColumn(tableViewer, SWT.NULL);
+        receptionColumn.getColumn().setText(COL_RECEPTION);
+        receptionColumn.getColumn().addListener(SWT.Selection, sortListener);
+        tableLayout.addColumnData(new ColumnPixelData(150));
 
         TableViewerColumn seqNumColum = new TableViewerColumn(tableViewer, SWT.RIGHT);
         seqNumColum.getColumn().setText(COL_SEQNUM);
         seqNumColum.getColumn().addListener(SWT.Selection, sortListener);
-        tcl.setColumnData(seqNumColum.getColumn(), new ColumnPixelData(80));
+        tableLayout.addColumnData(new ColumnPixelData(80));
 
         if (!showColumnSeqNum) {
-            tcl.setColumnData(seqNumColum.getColumn(), new ColumnPixelData(0));
+            tableLayout.addColumnData(new ColumnPixelData(0));
             seqNumColum.getColumn().setResizable(false);
         }
-        if (!showColumnReception) {
-            tcl.setColumnData(receptionColumn.getColumn(), new ColumnPixelData(0));
-            receptionColumn.getColumn().setResizable(false);
-        }
         if (!showColumnGeneration) {
-            tcl.setColumnData(generationColumn.getColumn(), new ColumnPixelData(0));
+            tableLayout.addColumnData(new ColumnPixelData(0));
             generationColumn.getColumn().setResizable(false);
+        }
+        if (!showColumnReception) {
+            tableLayout.addColumnData(new ColumnPixelData(0));
+            receptionColumn.getColumn().setResizable(false);
         }
 
         for (TableColumn tableColumn : tableViewer.getTable().getColumns()) {
@@ -311,7 +311,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
         shell.pack();
 
         // insert and clear a lot of events
-        //final int NB_TEST_EVENTS = 10;
+        // final int NB_TEST_EVENTS = 10;
         final int NB_TEST_EVENTS = 100000;
         final int BLOCK_SIZE = 500;
         for (int i = 0; i < 1; i++) {
@@ -322,10 +322,10 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
             Display.getDefault().asyncExec(() -> lv.addedAllEvents());
             log.info("sort queued");
         }
-        //         insert a batch without clearing the previous one
-        //         should include only a few events with a different primary key
-        //        insertTestEvents(lv, NB_TEST_EVENTS, BLOCK_SIZE);
-        //        Display.getDefault().asyncExec(() -> lv.addedAllEvents());
+        // insert a batch without clearing the previous one
+        // should include only a few events with a different primary key
+        // insertTestEvents(lv, NB_TEST_EVENTS, BLOCK_SIZE);
+        // Display.getDefault().asyncExec(() -> lv.addedAllEvents());
 
         // insert special events
         Event event = Event.newBuilder()
