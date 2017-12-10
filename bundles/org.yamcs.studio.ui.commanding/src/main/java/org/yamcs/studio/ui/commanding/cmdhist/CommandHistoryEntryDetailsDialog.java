@@ -152,6 +152,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     private void createVerificationSection(Composite parent) {
         Composite verificationContainer = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
+        layout.marginWidth = 0;
         verificationContainer.setLayout(layout);
         verificationContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
