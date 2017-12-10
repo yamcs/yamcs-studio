@@ -42,6 +42,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryFilters.Filter;
@@ -166,11 +167,25 @@ public class CommandHistoryView extends ViewPart {
             RCPUtils.runCommand(CommandHistory.CMD_EVENT_PROPERTIES);
         });
 
+        updateSummaryLine();
+
         getViewSite().setSelectionProvider(tableViewer);
 
         CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
         });
+    }
+
+    private void updateSummaryLine() {
+        String yamcsInstance = ManagementCatalogue.getCurrentYamcsInstance();
+        String summaryLine = "";
+        if (yamcsInstance != null) {
+            summaryLine = "Showing commands for Yamcs instance " + yamcsInstance + ". ";
+        }
+        setContentDescription(summaryLine + String.format("%d completed, %d failed, %d others (no filter)",
+                tableContentProvider.getCommandCount(CommandState.COMPLETED),
+                tableContentProvider.getCommandCount(CommandState.FAILED),
+                tableContentProvider.getCommandCount(CommandState.UNKNOWN)));
     }
 
     public static CommandHistoryView getInstance() {
@@ -448,6 +463,7 @@ public class CommandHistoryView extends ViewPart {
 
         // Now add content
         tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+        updateSummaryLine();
     }
 
     private void checkMinWidth(TableColumn column) {

@@ -116,7 +116,6 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         } else {
             tableViewer.update(rec, null); // Null, means all properties
             maybeSelectAndReveal(rec);
-
         }
     }
 
@@ -129,6 +128,16 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
     public void enableScrollLock(boolean enabled) {
         scrollLock = enabled;
+    }
+
+    public int getCommandCount(CommandState commandState) {
+        int count = 0;
+        for (CommandHistoryRecord rec : recordsByCommandId.values()) {
+            if (rec.getCommandState() == commandState) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void clearAll() {
