@@ -55,7 +55,8 @@ public class CommandHistoryView extends ViewPart {
     public static final int MAX_WIDTH = 500;
 
     // Ignored for dynamic columns, most of these are actually considered fixed columns.
-    private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName", "binary",
+    private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName",
+            CommandHistoryRecordContentProvider.ATTR_BINARY,
             CommandHistoryRecordContentProvider.ATTR_USERNAME,
             CommandHistoryRecordContentProvider.ATTR_SOURCE,
             CommandHistoryRecordContentProvider.ATTR_FINAL_SEQUENCE_COUNT,
@@ -71,6 +72,8 @@ public class CommandHistoryView extends ViewPart {
     private Image headerCompleteImage;
     Image checkmarkImage;
     Image errorImage;
+    Image prevImage;
+    Image nextImage;
 
     private TableViewer tableViewer;
     private TableLayout tableLayout;
@@ -99,6 +102,10 @@ public class CommandHistoryView extends ViewPart {
                 .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/checkmark.gif"));
         errorImage = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/error_tsk.png"));
+        prevImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/event_prev.png"));
+        nextImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandHistoryView.class, "icons/obj16/event_next.png"));
 
         createActions();
 
@@ -161,6 +168,29 @@ public class CommandHistoryView extends ViewPart {
 
     public void setShowRelativeTime(boolean enabled) {
         this.showRelativeTime = enabled;
+    }
+
+    public CommandHistoryRecord getPreviousRecord(CommandHistoryRecord rec) {
+        if (tableViewer.getTable().getSelectionCount() > 0) {
+            int[] indices = tableViewer.getTable().getSelectionIndices();
+            if (indices[0] > 0) {
+                int prevIndex = indices[0] - 1;
+                return (CommandHistoryRecord) tableViewer.getElementAt(prevIndex);
+            }
+        }
+        return null;
+    }
+
+    public CommandHistoryRecord getNextRecord(CommandHistoryRecord rec) {
+        if (tableViewer.getTable().getSelectionCount() > 0) {
+            int[] indices = tableViewer.getTable().getSelectionIndices();
+            if (indices[0] < tableViewer.getTable().getItemCount() - 1) {
+                int nextIndex = indices[0] + 1;
+                System.out.println(".. next index " + nextIndex);
+                return (CommandHistoryRecord) tableViewer.getElementAt(nextIndex);
+            }
+        }
+        return null;
     }
 
     private void createActions() {
