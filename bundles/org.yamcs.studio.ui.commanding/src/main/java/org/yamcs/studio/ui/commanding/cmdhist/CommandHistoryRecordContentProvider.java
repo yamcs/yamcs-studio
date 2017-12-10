@@ -80,12 +80,16 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         // Autoprocess attributes for additional columns
         for (CommandHistoryAttribute attr : entry.getAttrList()) {
             String shortName = toHumanReadableName(attr);
-            if (attr.getName().startsWith(VERIFIER_PREFIX)
-                    && attr.getName().endsWith(VERIFIER_STATUS_SUFFIX)) {
-                if (attr.getValue().getStringValue().contains("OK")) {
-                    rec.addCellImage(shortName, GREEN);
-                } else {
-                    rec.addCellImage(shortName, RED);
+            if (attr.getName().startsWith(VERIFIER_PREFIX)) {
+                if (attr.getName().endsWith(VERIFIER_STATUS_SUFFIX)) {
+                    rec.addVerificationStep(new VerificationStep(rec, shortName, attr));
+                    if (attr.getValue().getStringValue().contains("OK")) {
+                        rec.addCellImage(shortName, GREEN);
+                    } else {
+                        rec.addCellImage(shortName, RED);
+                    }
+                } else if (attr.getName().endsWith(VERIFIER_TIME_SUFFIX)) {
+                    rec.updateVerificationStepTime(shortName, attr);
                 }
             }
 

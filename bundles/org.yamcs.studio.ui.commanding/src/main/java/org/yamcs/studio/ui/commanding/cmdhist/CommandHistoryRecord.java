@@ -4,12 +4,15 @@ import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.ui.commanding.PTVInfo;
@@ -49,6 +52,8 @@ public class CommandHistoryRecord {
     private PTVInfo ptvInfo;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
+    private Map<String, VerificationStep> verificationStepsByName = new LinkedHashMap<>();
+
     public CommandHistoryRecord(CommandId id) {
         this.id = id;
         ptvInfo = new PTVInfo();
@@ -76,6 +81,15 @@ public class CommandHistoryRecord {
 
     public void setBinary(ByteString binary) {
         this.binary = binary;
+    }
+
+    public void addVerificationStep(VerificationStep step) {
+        verificationStepsByName.put(step.getName(), step);
+    }
+
+    public void updateVerificationStepTime(String shortName, CommandHistoryAttribute timeAttribute) {
+        VerificationStep step = verificationStepsByName.get(shortName);
+        step.setTime(timeAttribute);
     }
 
     public void addCellValue(String columnName, Value value) {
@@ -168,6 +182,10 @@ public class CommandHistoryRecord {
 
     public PTVInfo getPTVInfo() {
         return ptvInfo;
+    }
+
+    public List<VerificationStep> getVerificationSteps() {
+        return new ArrayList<>(verificationStepsByName.values());
     }
 
     public String getTextForColumn(String columnName, boolean showRelativeTime) {

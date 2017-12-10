@@ -6,6 +6,8 @@ import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -17,6 +19,8 @@ import org.eclipse.swt.widgets.Text;
 import org.yamcs.utils.StringConverter;
 
 public class CommandHistoryEntryDetailsDialog extends TrayDialog {
+
+    private SashForm sashForm;
 
     private Label sourceLabel;
     private Label dateLabel;
@@ -35,6 +39,8 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     private CommandHistoryRecord previousRec;
     private CommandHistoryRecord nextRec;
 
+    private VerificationStepsTableViewer tableViewer;
+
     public CommandHistoryEntryDetailsDialog(Shell shell, CommandHistoryView commandHistoryView,
             CommandHistoryRecord rec) {
         super(shell);
@@ -50,9 +56,15 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     @Override
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText("Command Details");
+    }
+
+    @Override
     public void create() {
         super.create();
-        getShell().setSize(500, 550);
+        getShell().setSize(600, 450);
 
         applyDialogFont(buttonBar);
         getButton(IDialogConstants.OK_ID).setFocus();
@@ -101,13 +113,26 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         GridData gd = new GridData(GridData.FILL_BOTH);
         container.setLayoutData(gd);
 
-        createDetailsSection(container);
+        createSashForm(container);
+        createDetailsSection(sashForm);
+        createVerificationSection(sashForm);
+
+        sashForm.setWeights(new int[] { 300, 400 });
 
         updateProperties();
         updateButtonState();
 
         Dialog.applyDialogFont(container);
         return container;
+    }
+
+    private void createSashForm(Composite parent) {
+        sashForm = new SashForm(parent, SWT.VERTICAL);
+        GridLayout layout = new GridLayout();
+        layout.marginHeight = layout.marginWidth = 0;
+        sashForm.setLayout(layout);
+        sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+        sashForm.setSashWidth(10);
     }
 
     private void createDetailsSection(Composite parent) {
@@ -122,6 +147,26 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
         createTextSection(container);
         createToolbarButtonBar(container);
+    }
+
+    private void createVerificationSection(Composite parent) {
+        Composite verificationContainer = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        verificationContainer.setLayout(layout);
+        verificationContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Label verificationLabel = new Label(verificationContainer, SWT.NONE);
+        verificationLabel.setText("Verification Steps:");
+
+        createVerificationTable(verificationContainer);
+    }
+
+    private void createVerificationTable(Composite parent) {
+        Composite tableContainer = new Composite(parent, SWT.NONE);
+        tableContainer.setLayout(new FillLayout());
+        tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        tableViewer = new VerificationStepsTableViewer(tableContainer, commandHistoryView);
     }
 
     private void createTextSection(Composite parent) {
@@ -140,7 +185,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         dateLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
-        label.setText("Completed");
+        label.setText("Completion");
         completedImageLabel = new Label(textContainer, SWT.NONE);
         completedLabel = new Label(textContainer, SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -236,6 +281,8 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         } else {
             binaryLabel.setText("");
         }
+
+        tableViewer.setInput(rec.getVerificationSteps().toArray());
     }
 
     private void updateButtonState() {

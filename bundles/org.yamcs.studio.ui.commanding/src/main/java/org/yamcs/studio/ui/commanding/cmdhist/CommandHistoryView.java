@@ -65,9 +65,9 @@ public class CommandHistoryView extends ViewPart {
             CommandHistoryRecordContentProvider.ATTR_COMMAND_FAILED);
 
     private LocalResourceManager resourceManager;
-    private Image greenBubble;
-    private Image redBubble;
-    private Image grayBubble;
+    Image greenBubble;
+    Image redBubble;
+    Image grayBubble;
     private Image waitingImage;
     private Image headerCompleteImage;
     Image checkmarkImage;
@@ -186,7 +186,6 @@ public class CommandHistoryView extends ViewPart {
             int[] indices = tableViewer.getTable().getSelectionIndices();
             if (indices[0] < tableViewer.getTable().getItemCount() - 1) {
                 int nextIndex = indices[0] + 1;
-                System.out.println(".. next index " + nextIndex);
                 return (CommandHistoryRecord) tableViewer.getElementAt(nextIndex);
             }
         }
