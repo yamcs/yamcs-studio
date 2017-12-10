@@ -47,7 +47,7 @@ public class CommandClipboard {
         // convert CommandHistoryRecord to new Stacked Command
         for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
             StackedCommand pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommandString());
-            pastedCommand.setComment(chr.getTextForColumn("Comment"));
+            pastedCommand.setComment(chr.getTextForColumn("Comment", false));
             result.add(pastedCommand);
         }
 

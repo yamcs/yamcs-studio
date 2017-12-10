@@ -14,6 +14,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -86,6 +87,8 @@ public class CommandHistoryView extends ViewPart {
 
     private CommandHistoryRecordContentProvider tableContentProvider;
     private Set<String> dynamicColumns = new HashSet<>();
+
+    private boolean showRelativeTime = true;
 
     private static CommandHistoryView instance;
 
@@ -182,6 +185,10 @@ public class CommandHistoryView extends ViewPart {
         tableContentProvider.enableScrollLock(enabled);
     }
 
+    public void setShowRelativeTime(boolean enabled) {
+        this.showRelativeTime = enabled;
+    }
+
     private void createActions() {
         IActionBars bars = getViewSite().getActionBars();
         IMenuManager mgr = bars.getMenuManager();
@@ -216,6 +223,18 @@ public class CommandHistoryView extends ViewPart {
                 }
             }
         });
+
+        mgr.add(new Separator());
+
+        Action showRelativeTimeAction = new Action("Show relative time", IAction.AS_CHECK_BOX) {
+            @Override
+            public void run() {
+                showRelativeTime = isChecked();
+                tableViewer.refresh();
+            }
+        };
+        showRelativeTimeAction.setChecked(showRelativeTime);
+        mgr.add(showRelativeTimeAction);
     }
 
     private void addFixedColumns() {
@@ -387,8 +406,7 @@ public class CommandHistoryView extends ViewPart {
                 column.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        String text = ((CommandHistoryRecord) element).getTextForColumn(shortName);
-                        return (text != null) ? text : null;
+                        return ((CommandHistoryRecord) element).getTextForColumn(shortName, showRelativeTime);
                     }
 
                     @Override

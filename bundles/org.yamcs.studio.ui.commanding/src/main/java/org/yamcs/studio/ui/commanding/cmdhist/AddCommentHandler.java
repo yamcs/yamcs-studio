@@ -36,7 +36,7 @@ public class AddCommentHandler extends AbstractHandler {
             String initialValue = "";
             if (selection.size() == 1) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) selection.getFirstElement();
-                String existingComment = rec.getTextForColumn("Comment");
+                String existingComment = rec.getTextForColumn("Comment", false);
                 if (existingComment != null) {
                     initialValue = existingComment;
                 }

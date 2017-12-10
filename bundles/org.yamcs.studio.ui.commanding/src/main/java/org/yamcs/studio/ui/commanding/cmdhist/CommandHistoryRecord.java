@@ -27,6 +27,7 @@ public class CommandHistoryRecord {
     private static final String KEY_RAW_VALUE = "RAW_VALUE";
     private static final String KEY_ACK_DURATION = "ACK_DURATION";
     private static final String KEY_VALUE = "VALUE";
+    private static final String KEY_RELATIVE_VALUE = "RELATIVE_VALUE";
     private static final String KEY_IMAGE = "IMAGE";
     private static final String KEY_TOOLTIP = "TOOLTIP";
 
@@ -78,7 +79,8 @@ public class CommandHistoryRecord {
         cellPropsByColumn.get(columnName).put(KEY_RAW_VALUE, valueToRawValue(value));
         if (value.getType() == Value.Type.TIMESTAMP) {
             cellPropsByColumn.get(columnName).put(KEY_ACK_DURATION, id.getGenerationTime() - value.getTimestampValue());
-            cellPropsByColumn.get(columnName).put(KEY_VALUE,
+            cellPropsByColumn.get(columnName).put(KEY_VALUE, TimeEncoding.toString(value.getTimestampValue()));
+            cellPropsByColumn.get(columnName).put(KEY_RELATIVE_VALUE,
                     toHumanTimeDiff(value.getTimestampValue(), id.getGenerationTime()));
             cellPropsByColumn.get(columnName).put(KEY_TOOLTIP, TimeEncoding.toString(value.getTimestampValue()));
         } else {
@@ -157,10 +159,14 @@ public class CommandHistoryRecord {
         return ptvInfo;
     }
 
-    public String getTextForColumn(String columnName) {
+    public String getTextForColumn(String columnName, boolean showRelativeTime) {
         Map<String, Object> props = cellPropsByColumn.get(columnName);
-        if (props != null && props.get(KEY_VALUE) != null) {
-            return String.valueOf(props.get(KEY_VALUE));
+        if (props != null) {
+            if (showRelativeTime && props.get(KEY_RELATIVE_VALUE) != null) {
+                return String.valueOf(props.get(KEY_RELATIVE_VALUE));
+            } else if (props.get(KEY_VALUE) != null) {
+                return String.valueOf(props.get(KEY_VALUE));
+            }
         }
         return null;
     }
