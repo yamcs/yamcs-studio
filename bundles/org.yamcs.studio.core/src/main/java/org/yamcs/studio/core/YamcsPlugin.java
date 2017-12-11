@@ -39,22 +39,20 @@ public class YamcsPlugin extends Plugin {
         log.info(getProductIdentifier());
         TimeEncoding.setUp();
 
-        ManagementCatalogue managementCatalogue = new ManagementCatalogue();
-
-        catalogues.put(TimeCatalogue.class, new TimeCatalogue());
-        catalogues.put(ParameterCatalogue.class, new ParameterCatalogue());
-        catalogues.put(ManagementCatalogue.class, managementCatalogue);
-        catalogues.put(CommandingCatalogue.class, new CommandingCatalogue());
-        catalogues.put(AlarmCatalogue.class, new AlarmCatalogue());
-        catalogues.put(EventCatalogue.class, new EventCatalogue());
-        catalogues.put(LinkCatalogue.class, new LinkCatalogue());
-        catalogues.put(ArchiveCatalogue.class, new ArchiveCatalogue());
-
         connectionManager = new ConnectionManager();
-        catalogues.values().forEach(c -> {
-            managementCatalogue.addInstanceListener(c);
-            connectionManager.addStudioConnectionListener(c);
-        });
+
+        ManagementCatalogue managementCatalogue = new ManagementCatalogue();
+        catalogues.put(ManagementCatalogue.class, managementCatalogue);
+
+        connectionManager.addStudioConnectionListener(managementCatalogue);
+
+        registerCatalogue(new TimeCatalogue());
+        registerCatalogue(new ParameterCatalogue());
+        registerCatalogue(new CommandingCatalogue());
+        registerCatalogue(new AlarmCatalogue());
+        registerCatalogue(new EventCatalogue());
+        registerCatalogue(new LinkCatalogue());
+        registerCatalogue(new ArchiveCatalogue());
     }
 
     public static void setProductIdentifier(String productIdentifier) {
@@ -81,9 +79,15 @@ public class YamcsPlugin extends Plugin {
         return extensionCatalogues.get(extensionType);
     }
 
+    public <T extends Catalogue> void registerCatalogue(T catalogue) {
+        catalogues.put(catalogue.getClass(), catalogue);
+        ManagementCatalogue managementCatalogue = getCatalogue(ManagementCatalogue.class);
+        managementCatalogue.addInstanceListener(catalogue);
+        connectionManager.addStudioConnectionListener(catalogue);
+    }
+
     /**
-     * Hook to register a catalogue that will be provided with
-     * incoming websocket data of the specified extension type.
+     * Hook to register a catalogue that will be provided with incoming websocket data of the specified extension type.
      */
     public <T extends ExtensionCatalogue> void registerExtensionCatalogue(int extensionType, T catalogue) {
         catalogues.put(catalogue.getClass(), catalogue);

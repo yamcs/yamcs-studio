@@ -9,8 +9,9 @@ Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
- org.yamcs.studio.core,
  org.eclipse.core.runtime,
+ org.yamcs.studio.core,
+ org.yamcs.studio.css,
  org.yamcs.studio.p2deps.yamcs-api,
  org.csstudio.security,
  org.eclipse.core.resources,

@@ -131,6 +131,13 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
 
     @Override
     public void onMessage(WebSocketSubscriptionData data) {
+
+        // Stop processing messages on shutdown
+        YamcsPlugin plugin = YamcsPlugin.getDefault();
+        if (plugin == null) {
+            return;
+        }
+
         switch (data.getType()) {
         case CONNECTION_INFO:
             ConnectionInfo connectionInfo = data.getConnectionInfo();
@@ -182,7 +189,6 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
             break;
         case EXTENSION_DATA:
             WebSocketExtensionData extData = data.getExtensionData();
-            YamcsPlugin plugin = YamcsPlugin.getDefault();
             int extType = extData.getType();
             ExtensionCatalogue catalogue = plugin.getExtensionCatalogue(extType);
             if (catalogue != null) {

@@ -24,8 +24,12 @@ public class ActiveAlarmsContentProvider implements ITreeContentProvider {
 
     @Override
     public Object[] getChildren(Object parentElement) {
-        XtceSubSystemNode subSystem = (XtceSubSystemNode) parentElement;
-        return subSystem.getChildren().toArray();
+        if (parentElement instanceof XtceSubSystemNode) {
+            XtceSubSystemNode subSystem = (XtceSubSystemNode) parentElement;
+            return subSystem.getChildren().toArray();
+        } else {
+            return new Object[0];
+        }
     }
 
     @Override

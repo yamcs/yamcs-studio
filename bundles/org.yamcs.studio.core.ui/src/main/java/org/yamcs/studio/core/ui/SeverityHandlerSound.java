@@ -5,13 +5,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.yamcs.protobuf.Pvalue.MonitoringResult;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.core.vtype.SeverityHandler;
+import org.yamcs.studio.css.vtype.SeverityHandler;
 
 public class SeverityHandlerSound implements SeverityHandler {
 
     static String triggerCondition = "NONE";
     static int beepLevel = 0;
-    static Map<String, ParameterValue> pvals = new ConcurrentHashMap<String, ParameterValue>();
+    static Map<String, ParameterValue> pvals = new ConcurrentHashMap<>();
 
     public SeverityHandlerSound() {
         updatePrefence();

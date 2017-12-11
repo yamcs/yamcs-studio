@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.yamcs.studio.css.Activator
+Bundle-Description: Yamcs Studio CS-Studio Interfacing
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs Studio: CS-Studio Interfacing
+Bundle-SymbolicName: org.yamcs.studio.css;singleton:=true
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.yamcs.studio.p2deps.yamcs-api,
+ org.yamcs.studio.core,
+ org.diirt.vtype,
+ org.diirt.util,
+ org.diirt.datasource,
+ org.diirt.datasource-vtype
+Export-Package: org.yamcs.studio.css.vtype,
+ org.yamcs.studio.css.pvmanager
+Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Import-Package: org.yamcs.studio.core,
+ org.yamcs.studio.core.model

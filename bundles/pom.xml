@@ -13,6 +13,7 @@
   <modules>
     <module>org.yamcs.studio.core</module>
     <module>org.yamcs.studio.core.ui</module>
+    <module>org.yamcs.studio.css</module>
     <module>org.yamcs.studio.p2</module>
     <module>org.yamcs.studio.product.utility</module>
     <module>org.yamcs.studio.script</module>
