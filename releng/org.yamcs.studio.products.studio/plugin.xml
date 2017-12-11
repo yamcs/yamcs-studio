@@ -204,6 +204,13 @@
                relationship="stack"
                visible="true"
                closeable="true"
+               id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
                id="org.yamcs.studio.ui.commanding.stack.CommandStackView">
          </view>
          <view
