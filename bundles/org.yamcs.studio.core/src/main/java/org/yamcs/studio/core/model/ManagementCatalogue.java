@@ -29,9 +29,9 @@ import org.yamcs.studio.core.web.YamcsClient;
 /**
  * Provides access to aggregated state on yamcs management-type information.
  * <p>
- * There should be only one long-lived instance of this class, which goes down together with the
- * application (same lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining
- * correct state accross connection-reconnects, so listeners only need to register once.
+ * There should be only one long-lived instance of this class, which goes down together with the application (same
+ * lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining correct state accross connection-reconnects,
+ * so listeners only need to register once.
  */
 public class ManagementCatalogue implements Catalogue {
 
@@ -69,6 +69,8 @@ public class ManagementCatalogue implements Catalogue {
         clientInfoById.clear();
         processorInfoByInstance.clear();
         currentClientId = -1;
+
+        managementListeners.forEach(ManagementListener::clearAllManagementData);
     }
 
     public void addManagementListener(ManagementListener listener) {
@@ -223,7 +225,8 @@ public class ManagementCatalogue implements Catalogue {
         return restClient.post("/processors/" + yamcsInstance, request);
     }
 
-    public CompletableFuture<byte[]> editProcessorRequest(String yamcsInstance, String processor, EditProcessorRequest request) {
+    public CompletableFuture<byte[]> editProcessorRequest(String yamcsInstance, String processor,
+            EditProcessorRequest request) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         return restClient.patch("/processors/" + yamcsInstance + "/" + processor, request);
     }
@@ -237,14 +240,15 @@ public class ManagementCatalogue implements Catalogue {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         return restClient.get("/instances/" + yamcsInstance + "?aggregate", null);
     }
-    
+
     public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
         YamcsClient restClient = ConnectionManager.requireYamcsClient();
         return restClient.post("/instances/" + yamcsInstance + "?state=restarted", null);
     }
 
     public void processConnectionInfo(ConnectionInfo connectionInfo) {
-        System.out.println("CONN INFO " + connectionInfo.getClientId() + ", " + connectionInfo.getInstance() + ", "+connectionInfo.getProcessor());
+        System.out.println("CONN INFO " + connectionInfo.getClientId() + ", " + connectionInfo.getInstance() + ", "
+                + connectionInfo.getProcessor());
         YamcsInstance instance = connectionInfo.getInstance();
         log.info("Instance " + instance.getName() + ": " + instance.getState());
         managementListeners.forEach(l -> l.instanceUpdated(connectionInfo));

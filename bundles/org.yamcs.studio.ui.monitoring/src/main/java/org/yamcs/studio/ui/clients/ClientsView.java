@@ -1,8 +1,5 @@
 package org.yamcs.studio.ui.clients;
 
-import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
@@ -15,26 +12,23 @@ import org.yamcs.studio.core.model.ManagementListener;
 
 public class ClientsView extends ViewPart implements ManagementListener {
 
-    private ClientsTableViewer clientsTableViewer;
-    private ClientsContentProvider clientsContentProvider;
-    private ClientsTableModel currentClientsModel;
+    private ClientsTableViewer viewer;
+    private ClientsTableViewerContentProvider contentProvider;
 
     @Override
     public void createPartControl(Composite parent) {
-        Composite tableWrapper = new Composite(parent, SWT.NONE);
-        tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        TableColumnLayout tcl = new TableColumnLayout();
-        tableWrapper.setLayout(tcl);
-        clientsTableViewer = new ClientsTableViewer(this, tableWrapper, tcl);
-        clientsContentProvider = new ClientsContentProvider(clientsTableViewer);
-        clientsTableViewer.setContentProvider(clientsContentProvider);
-        clientsTableViewer.setInput(clientsContentProvider);
+        viewer = new ClientsTableViewer(parent);
 
-        if (getViewSite() != null)
-            getViewSite().setSelectionProvider(clientsTableViewer);
+        contentProvider = new ClientsTableViewerContentProvider();
+        viewer.setContentProvider(contentProvider);
+        viewer.setInput(contentProvider);
+
+        if (getViewSite() != null) {
+            getViewSite().setSelectionProvider(viewer);
+        }
 
         // Set initial state
-        clientsTableViewer.refresh();
+        viewer.refresh();
 
         ManagementCatalogue.getInstance().addManagementListener(this);
     }
@@ -47,7 +41,7 @@ public class ClientsView extends ViewPart implements ManagementListener {
 
     @Override
     public void setFocus() {
-        clientsTableViewer.getTable().setFocus();
+        viewer.getTable().setFocus();
     }
 
     @Override
@@ -64,24 +58,20 @@ public class ClientsView extends ViewPart implements ManagementListener {
 
     @Override
     public void clientUpdated(ClientInfo clientInfo) {
-        if (currentClientsModel == null) {
-            currentClientsModel = new ClientsTableModel(clientsTableViewer);
-        }
         Display.getDefault().asyncExec(() -> {
-            currentClientsModel.updateClient(clientInfo);
+            contentProvider.processClientUpdate(clientInfo);
+            viewer.refresh();
         });
-
     }
 
     @Override
     public void clientDisconnected(ClientInfo clientInfo) {
         Display.getDefault().asyncExec(() -> {
-            if (currentClientsModel != null && clientInfo != null) {
-                currentClientsModel.removeClient(clientInfo);
-            }
+            contentProvider.processClientDisconnect(clientInfo);
+            viewer.refresh();
         });
     }
-    
+
     @Override
     public void instanceUpdated(ConnectionInfo connectionInfo) {
     }
@@ -89,8 +79,8 @@ public class ClientsView extends ViewPart implements ManagementListener {
     @Override
     public void clearAllManagementData() {
         Display.getDefault().asyncExec(() -> {
-            clientsTableViewer.getTable().removeAll();
-            currentClientsModel = null;
+            contentProvider.clearAll();
+            viewer.refresh();
         });
     }
 }

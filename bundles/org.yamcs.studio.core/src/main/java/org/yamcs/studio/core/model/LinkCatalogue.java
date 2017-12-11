@@ -22,9 +22,9 @@ import org.yamcs.studio.core.web.YamcsClient;
 /**
  * Provides access to aggregated state on yamcs data link information.
  * <p>
- * There should be only one long-lived instance of this class, which goes down together with the
- * application (same lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining
- * correct state accross connection-reconnects, so listeners only need to register once.
+ * There should be only one long-lived instance of this class, which goes down together with the application (same
+ * lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining correct state accross connection-reconnects,
+ * so listeners only need to register once.
  */
 public class LinkCatalogue implements Catalogue, InstanceListener {
 
@@ -55,7 +55,7 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
 
     private void clearState() {
         linksById.clear();
-        linkListeners.forEach(l -> l.clearDataLinkData());
+        linkListeners.forEach(LinkListener::clearDataLinkData);
     }
 
     public void addLinkListener(LinkListener listener) {

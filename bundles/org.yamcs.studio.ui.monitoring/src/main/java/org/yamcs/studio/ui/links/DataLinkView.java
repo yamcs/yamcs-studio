@@ -40,8 +40,9 @@ public class DataLinkView extends ViewPart implements StudioConnectionListener, 
             }
         });
 
-        if (getViewSite() != null)
+        if (getViewSite() != null) {
             getViewSite().setSelectionProvider(tableViewer);
+        }
 
         // Set initial state
         tableViewer.refresh();
