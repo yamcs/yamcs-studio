@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Yamcs Studio Editor" uid="yamcs-studio-editor" id="org.yamcs.studio.products.editor.product" application="org.yamcs.studio.products.editor.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/org.yamcs.studio.products.editor/icons/aboutSide.png"/>
+      <text>
+         Rich desktop client for Yamcs - The Open Source Mission Control System
+
+See http://www.yamcs.org
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>--launcher.defaultAction
+openFile
+      </programArgs>
+      <vmArgs>-Xmx1024m
+-Dpython.cachedir.skip=true
+-Declipse.p2.unsignedPolicy=allow
+-Duser.timezone=GMT
+-Dorg.osgi.framework.bundle.parent=ext
+-Dosgi.framework.extensions=org.eclipse.fx.osgi
+-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
+-Dorg.apache.commons.logging.simplelog.defaultlog=fatal
+      </vmArgs>
+      <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
+-XstartOnFirstThread
+      </vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/org.yamcs.studio.products.editor/icons/css16.png" i32="/org.yamcs.studio.products.editor/icons/css32.png" i48="/org.yamcs.studio.products.editor/icons/css48.png" i64="/org.yamcs.studio.products.editor/icons/css64.png" i128="/org.yamcs.studio.products.editor/icons/css128.png" i256="/org.yamcs.studio.products.editor/icons/css256.png"/>
+
+   <splash
+      location="org.yamcs.studio.products.editor"
+      startupProgressRect="20,215,560,15"
+      startupMessageRect="20,195,560,20"
+      startupForegroundColor="2F376D" />
+   <launcher name="Yamcs Studio Editor">
+      <linux icon="/launcher/css.xpm"/>
+      <macosx icon="/launcher/css.icns"/>
+      <win useIco="true">
+         <ico path="/launcher/css.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <intro introId="org.eclipse.ui.intro.universal"/>
+
+   <vm>
+   </vm>
+
+   <license>
+        <url>http://www.eclipse.org/legal/epl-v10.html</url>
+        <text>
+   You must accept this license agreement in order to install and
+use this software.
+THIS SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN &quot;../AS IS&quot;
+BASIS. 
+WITHOUT WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+For details, see http://www.eclipse.org/legal/epl-v10.html
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.yamcs.studio.features.core" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.features.css" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.features.eclipse" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.products.editor.feature" version="1.0.0.qualifier"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+   </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
+
+</product>

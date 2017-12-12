@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.yamcs.studio.products.editor.application"
+            name="Yamcs Studio Editor">
+         <property
+               name="windowImages"
+               value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png,icons/css256.png"/>
+         <property
+               name="aboutText"
+               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+         <property
+               name="aboutImage"
+               value="icons/aboutSide.png"/>
+         <property
+               name="appName"
+               value="Yamcs Studio Editor"/>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://org.yamcs.studio.product.utility/org.yamcs.studio.product.utility.LifeCycleManager"/>
+         <property
+               name="applicationCSSResources"
+               value="platform:/plugin/org.eclipse.platform/images/"/>
+         <property
+               name="startupForegroundColor"
+               value="2F376D"/>
+         <property
+               name="startupMessageRect"
+               value="20,195,560,20"/>
+         <property
+               name="startupProgressRect"
+               value="20,215,560,15"/>
+         <property
+               name="introTitle"
+               value="Yamcs Studio"/>
+         <property
+               name="introBrandingImage"
+               value="product:icons/css64.png"/>
+         <property
+               name="introBrandingImageText"
+               value="Yamcs Studio Editor"/>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+      </product>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.runtime.applications"
+         id="application"
+         name="Yamcs Studio Editor">
+      <application>
+         <run
+               class="org.csstudio.startup.application.Application">
+         </run>
+      </application>
+   </extension>
+   
+   <!-- Note that the classes listed in here should be in plugins
+        that can be loaded without locking the workspace.
+        This means the plugins loaded for these classes
+        should not use preferences or anything else that
+        triggers initialization of the workspace
+     -->
+   <extension point="org.csstudio.startup.module">
+      <startupParameters class="org.yamcs.studio.product.utility.StartupParameters"/>
+      <workspace class="org.yamcs.studio.product.utility.WorkspacePrompt"/>
+      <workbench class="org.yamcs.studio.product.utility.Workbench"/>
+      <project class="org.yamcs.studio.product.utility.DefaultYamcsStudioProject"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.activities">
+      <activity id="yamcsstudio.disableextensions" name="Hidden activities"/>
+      <!-- Hide Edit OPI in popup menu, because it opens an editor stack in runtime as well as in editor... -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern=".*/org\.csstudio\.opibuilder\.commands\.editopi"/>
+      <!-- Hide the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.
+        We have our own richer modal for that. -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
+      <!-- Hide CS-Studio perspective from perspective switcher and friends -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern=".*/org\.csstudio\.utility\.product\.CSStudioPerspective"/>
+   </extension>   
+   
+   <!--
+   	This extension point is actually considered deprecated now, in favor of the
+   	"common navigator framework". We'll use this one until we have time to figure
+   	out the other one.
+   -->
+   <extension point="org.eclipse.ui.ide.resourceFilters">
+      
+      <!-- Hide files that should by default be hidden (.project, .pydevproject, ..) -->
+      <filter
+            selected="true"
+            pattern=".**"> <!-- Not using .* because that one is declared by org.eclipse.ui.ide as selected="false" -->
+      </filter>
+   </extension>
+   
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.csstudio.opibuilder.preferences.CommonPreferencePage"
+            id="org.yamcs.studio.opibuilder.preferences"
+            name="OPI Editor">
+      </page>
+      <page
+            class="org.csstudio.opibuilder.preferences.OPIRuntimePreferencePage"
+            id="org.yamcs.studio.opibuilder.preferences.opiruntime"
+            name="OPI Runtime">
+      </page>
+      <page
+            class="org.yamcs.studio.css.prefs.SoundPreferencePage"
+            id="org.yamcs.studio.css.prefs.SoundPreferencePage"
+            name="Sound">
+      </page>
+      <page
+            class="org.yamcs.studio.css.prefs.EventsPreferencePage"
+            id="org.yamcs.studio.css.prefs.EventsPreferencePage"
+            name="Events">
+      </page>
+      <page
+            class="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
+            id="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
+            name="Yamcs Server">
+      </page>
+   </extension>
+   
+   <extension point="org.eclipse.ui.services">   
+      <sourceProvider provider="org.yamcs.studio.core.ui.AuthorizationStateProvider">
+         <variable name="org.yamcs.studio.ui.authorization.mayCommandPayload" priorityLevel="workbench" />
+      </sourceProvider>
+      <sourceProvider provider="org.yamcs.studio.core.ui.connections.ConnectionStateProvider">
+         <variable name="org.yamcs.studio.ui.state.connected" priorityLevel="workbench" />
+      </sourceProvider>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="*">
+         <!-- Don't need this, views are accessible through Window menu -->
+         <hiddenMenuItem id="css"/>
+         <!-- Don't need this, don't know many apps that do this. just quit and re-open -->
+         <hiddenMenuItem id="org.csstudio.ui.menu.app.restart"/>
+         <!-- Hide possiblity to jump to other perspectives that we unwillingly
+              inherited from other plugin.xml's -->
+         <hiddenMenuItem id="org.csstudio.ui.menu.app.open_perspective"/>
+         <!-- This is only marginally useful and can be done by other means (ctrl-f / ctrl-h) -->
+         <hiddenMenuItem id="textSearchSubMenu"/>
+         <hiddenMenuItem id="org.eclipse.search.ui.openFileSearchPage"/>
+         <!-- Already accessible from toolbar in Runtime perspective -->
+         <hiddenMenuItem id="org.csstudio.opibuilder.topfiles"/>
+         <!-- Already in menu which seems enough for this type of stuff -->
+         <hiddenToolBarItem id="org.csstudio.security.login"/>
+         <hiddenToolBarItem id="org.csstudio.security.logout"/>
+         <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>         
+         <hiddenMenuItem id="org.csstudio.security.login"/>
+         <hiddenMenuItem id="org.csstudio.security.logout"/>
+         <!-- Looks weird with the '...' in the label. Want to replace to sth in file-menu instead, like eclipse -->
+         <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
+         <!-- Hide this loaded help menu, with something simpler defined in action bar advisor -->
+         <hiddenMenuItem id="help"/>
+         <hiddenMenuItem id="org.eclipse.ui.window.preferences"/>
+      </perspectiveExtension>
+      
+      <!-- OPI Runtime Perspective -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
+         <!-- Probably doesn't make sense in runtime perspective -->
+         <hiddenMenuItem id="org.eclipse.ui.newWizard"/>
+         <hiddenMenuItem id="org.eclipse.ui.file.save"/>
+         <hiddenMenuItem id="org.eclipse.ui.file.saveAll"/>
+         <hiddenMenuItem id="org.eclipse.ui.file.saveAs"/>
+         <hiddenMenuItem id="org.eclipse.ui.file.import"/>
+         <hiddenMenuItem id="org.eclipse.ui.file.export"/>
+         <hiddenMenuItem id="org.eclipse.search.menu"/>
+         <hiddenMenuItem id="org.eclipse.ui.edit.findReplace"/>
+         <!-- Trying to keep this perspective editor-free -->
+         <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
+         <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
+         <hiddenToolBarItem id="org.eclipse.ui.file.saveAll"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.archive.ArchiveView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.eventlog.EventLogView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.commanding.stack.CommandStackView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="right"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.links.LinksView">
+         </view>
+         <view
+               relative="org.yamcs.studio.ui.links.LinksView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.clients.ClientsView">
+         </view> 
+         <view
+               relative="org.yamcs.studio.ui.clients.ClientsView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
+         </view>
+         <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView"/>
+         <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
+         <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
+      </perspectiveExtension>
+      
+      <!-- OPI Editor Perspective -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
+         <!-- Not very useful with the navigator already there -->
+         <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
+
+      	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.archive.ArchiveView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.eventlog.EventLogView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.links.LinksView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               id="org.yamcs.studio.ui.clients.ClientsView"/>
+         <!-- Yamcs -->
+         <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView"/>
+         <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
+         <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
+         <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
+         <!-- CS-Studio -->
+         <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
+      </perspectiveExtension>
+   </extension>
+   
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
+         <toolbar id="additions"/>
+      </menuContribution>
+
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:file?before=user">
+            <command
+                  commandId="org.yamcs.studio.ui.connect"
+                  label="Connect...">
+            </command>
+            <command
+                  commandId="org.yamcs.studio.ui.disconnect" 
+                  label="Disconnect">
+            </command>
+      </menuContribution>
+   </extension>
+</plugin>

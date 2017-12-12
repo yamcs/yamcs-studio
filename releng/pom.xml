@@ -17,10 +17,10 @@
     <module>org.yamcs.studio.features.p2</module>
     <module>org.yamcs.studio.features.runtime</module>
 
-    <module>org.yamcs.studio.products.studio</module>
-    <module>org.yamcs.studio.products.studio.feature</module>
-    <module>org.yamcs.studio.products.eventviewer</module>
-    <module>org.yamcs.studio.products.eventviewer.feature</module>
+    <module>org.yamcs.studio.products.runtime</module>
+    <module>org.yamcs.studio.products.runtime.feature</module>
+    <module>org.yamcs.studio.products.editor</module>
+    <module>org.yamcs.studio.products.editor.feature</module>
 
     <module>org.yamcs.studio.repository</module>
   </modules>

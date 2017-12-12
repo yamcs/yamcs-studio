@@ -21,16 +21,16 @@
         <configuration>
           <products>
             <product>
-              <id>yamcs-event-viewer</id> <!-- 'uid' in the *.product -->
-              <attachId>yamcs-event-viewer</attachId>
-              <rootFolder>yamcs-event-viewer-${project.version}</rootFolder>
-              <archiveFileName>yamcs-event-viewer-${project.version}</archiveFileName>
+              <id>yamcs-studio-runtime</id> <!-- 'uid' in the *.product -->
+              <attachId>yamcs-studio-runtime</attachId>
+              <rootFolder>yamcs-studio-runtime-${project.version}</rootFolder>
+              <archiveFileName>yamcs-studio-runtime-${project.version}</archiveFileName>
             </product>
             <product>
-              <id>yamcs-studio</id> <!-- 'uid' in the *.product -->
-              <attachId>yamcs-studio</attachId>
-              <rootFolder>yamcs-studio-${project.version}</rootFolder>
-              <archiveFileName>yamcs-studio-${project.version}</archiveFileName>
+              <id>yamcs-studio-editor</id> <!-- 'uid' in the *.product -->
+              <attachId>yamcs-studio-editor</attachId>
+              <rootFolder>yamcs-studio-editor-${project.version}</rootFolder>
+              <archiveFileName>yamcs-studio-editor-${project.version}</archiveFileName>
             </product>
           </products>
           <formats>
