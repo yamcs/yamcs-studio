@@ -62,7 +62,7 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
     @Override
     public String getInitialWindowPerspectiveId() {
-        return IDs.OPI_RUNTIME_PERSPECTIVE;
+        return IDs.OPI_EDITOR_PERSPECTIVE;
     }
 
     @Override
