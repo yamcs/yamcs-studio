@@ -15,7 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.yamcs.studio.p2deps.yamcs-api,
  org.yamcs.studio.css,
- org.csstudio.autocomplete,
  org.csstudio.security,
  org.csstudio.utility.product,
  org.eclipse.core.resources,
@@ -36,11 +35,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.osgi.services,
  org.eclipse.e4.core.di,
  org.eclipse.e4.ui.di,
- org.eclipse.e4.ui.model.workbench,
- org.eclipse.platform,
- javax.inject,
  org.csstudio.opibuilder,
- org.eclipse.ui.forms,
- org.eclipse.gef
+ org.eclipse.ui.forms
 Export-Package: org.yamcs.studio.product.utility
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
