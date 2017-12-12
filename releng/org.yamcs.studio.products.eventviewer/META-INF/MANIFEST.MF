@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.equinox.common,
  org.eclipse.ui,
  org.eclipse.equinox.app,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.yamcs.studio.core.ui

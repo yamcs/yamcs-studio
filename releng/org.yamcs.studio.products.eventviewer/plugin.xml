@@ -50,8 +50,8 @@
       </view>
    </extension>
    
-   <!--extension point="org.eclipse.ui.preferencePages">
-      <page
+   <extension point="org.eclipse.ui.preferencePages">
+      <!--page
             class="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"
             id="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"
             name="Sound">
@@ -60,24 +60,24 @@
             class="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
             id="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
             name="Events">
-      </page>
+      </page-->
       <page
             class="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
             id="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
             name="Yamcs Server">
       </page>
-   </extension-->
+   </extension>
    
-   <!--extension point="org.eclipse.ui.services">   
+   <extension point="org.eclipse.ui.services">   
       <sourceProvider provider="org.yamcs.studio.core.ui.AuthorizationStateProvider">
          <variable name="org.yamcs.studio.ui.authorization.mayCommandPayload" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.core.ui.connections.ConnectionStateProvider">
          <variable name="org.yamcs.studio.ui.state.connected" priorityLevel="workbench" />
       </sourceProvider>
-   </extension-->
+   </extension>
 
-   <!--extension point="org.eclipse.ui.menus">
+   <extension point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="true"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
@@ -96,5 +96,5 @@
                   label="Disconnect">
             </command>
       </menuContribution>
-   </extension-->
+   </extension>
 </plugin>
