@@ -14,10 +14,10 @@
     <module>org.yamcs.studio.core</module>
     <module>org.yamcs.studio.core.ui</module>
     <module>org.yamcs.studio.css.core</module>
+    <module>org.yamcs.studio.css.script</module>
+    <module>org.yamcs.studio.css.theming</module>
+    <module>org.yamcs.studio.css.utility</module>
     <module>org.yamcs.studio.p2</module>
-    <module>org.yamcs.studio.product.utility</module>
-    <module>org.yamcs.studio.script</module>
-    <module>org.yamcs.studio.theming</module>
     <module>org.yamcs.studio.ui.alarms</module>
     <module>org.yamcs.studio.ui.archive</module>
     <module>org.yamcs.studio.ui.commanding</module>

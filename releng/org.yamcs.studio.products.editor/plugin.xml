@@ -21,7 +21,7 @@
                value="Yamcs Studio Editor"/>
          <property
                name="lifeCycleURI"
-               value="bundleclass://org.yamcs.studio.product.utility/org.yamcs.studio.product.utility.LifeCycleManager"/>
+               value="bundleclass://org.yamcs.studio.css.utility/org.yamcs.studio.css.utility.LifeCycleManager"/>
          <property
                name="applicationCSSResources"
                value="platform:/plugin/org.eclipse.platform/images/"/>
@@ -68,10 +68,10 @@
         triggers initialization of the workspace
      -->
    <extension point="org.csstudio.startup.module">
-      <startupParameters class="org.yamcs.studio.product.utility.StartupParameters"/>
-      <workspace class="org.yamcs.studio.product.utility.WorkspacePrompt"/>
-      <workbench class="org.yamcs.studio.product.utility.Workbench"/>
-      <project class="org.yamcs.studio.product.utility.DefaultYamcsStudioProject"/>
+      <startupParameters class="org.yamcs.studio.css.utility.StartupParameters"/>
+      <workspace class="org.yamcs.studio.css.utility.WorkspacePrompt"/>
+      <workbench class="org.yamcs.studio.css.utility.Workbench"/>
+      <project class="org.yamcs.studio.css.utility.DefaultYamcsStudioProject"/>
    </extension>
    
    <extension point="org.eclipse.ui.activities">

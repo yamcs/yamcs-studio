@@ -543,14 +543,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.theming"
+         id="org.yamcs.studio.css.theming"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.script"
+         id="org.yamcs.studio.css.script"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -558,7 +558,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.product.utility"
+         id="org.yamcs.studio.css.utility"
          download-size="0"
          install-size="0"
          version="0.0.0"

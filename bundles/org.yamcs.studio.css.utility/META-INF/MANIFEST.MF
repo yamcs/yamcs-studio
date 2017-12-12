@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
-Bundle-Description: Yamcs Studio Default Product
+Bundle-Activator: org.yamcs.studio.css.utility.Activator
+Bundle-Description: Yamcs Studio Product Utilities
 Bundle-ManifestVersion: 2
-Bundle-Name: Yamcs Studio Default Product
-Bundle-SymbolicName: org.yamcs.studio.products.editor;singleton:=true
+Bundle-Name: Yamcs Studio Product Utilities
+Bundle-SymbolicName: org.yamcs.studio.css.utility;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.0.qualifier
@@ -14,8 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.yamcs.studio.p2deps.yamcs-api,
  org.yamcs.studio.css.core,
- org.yamcs.studio.css.utility,
- org.csstudio.autocomplete,
  org.csstudio.security,
  org.csstudio.utility.product,
  org.eclipse.core.resources,
@@ -36,10 +35,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.osgi.services,
  org.eclipse.e4.core.di,
  org.eclipse.e4.ui.di,
- org.eclipse.e4.ui.model.workbench,
- org.eclipse.platform,
- javax.inject,
  org.csstudio.opibuilder,
- org.eclipse.ui.forms,
- org.eclipse.gef
+ org.eclipse.ui.forms
+Export-Package: org.yamcs.studio.css.utility
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
