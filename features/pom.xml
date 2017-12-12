@@ -6,15 +6,15 @@
     <artifactId>yamcs-studio</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-
-  <artifactId>org.yamcs.studio.releng</artifactId>
+  
+  <artifactId>org.yamcs.studio.features</artifactId>
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.products.editor</module>
-    <module>org.yamcs.studio.products.editor.feature</module>
-    <module>org.yamcs.studio.products.runtime</module>
-    <module>org.yamcs.studio.products.runtime.feature</module>
-    <module>org.yamcs.studio.repository</module>
+    <module>org.yamcs.studio.features.core</module>
+    <module>org.yamcs.studio.features.css.editor</module>
+    <module>org.yamcs.studio.features.css.runtime</module>
+    <module>org.yamcs.studio.features.eclipse</module>
+    <module>org.yamcs.studio.features.p2</module>
   </modules>
 </project>
