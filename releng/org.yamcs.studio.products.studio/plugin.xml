@@ -117,13 +117,13 @@
             name="OPI Runtime">
       </page>
       <page
-            class="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"
-            id="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"
+            class="org.yamcs.studio.css.prefs.SoundPreferencePage"
+            id="org.yamcs.studio.css.prefs.SoundPreferencePage"
             name="Sound">
       </page>
       <page
-            class="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
-            id="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
+            class="org.yamcs.studio.css.prefs.EventsPreferencePage"
+            id="org.yamcs.studio.css.prefs.EventsPreferencePage"
             name="Events">
       </page>
       <page
@@ -242,6 +242,7 @@
                id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
          </view>
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
@@ -298,6 +299,7 @@
                id="org.yamcs.studio.ui.clients.ClientsView"/>
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>

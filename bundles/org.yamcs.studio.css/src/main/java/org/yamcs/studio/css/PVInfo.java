@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.css;
+package org.yamcs.studio.css;
 
 import org.csstudio.simplepv.IPV;
 import org.yamcs.protobuf.Mdb.ParameterInfo;

@@ -1,4 +1,4 @@
-package org.yamcs.studio.ui.css;
+package org.yamcs.studio.css;
 
 import java.util.ArrayList;
 import java.util.Collections;

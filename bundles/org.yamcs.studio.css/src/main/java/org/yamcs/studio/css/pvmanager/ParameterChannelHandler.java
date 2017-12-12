@@ -51,7 +51,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         // The server will normally transfer our parameter subscription,
         // but don't necessarily trust that right now. So reconnect all pvs
         // manually
-        // (probably handled by OPIUtils.refresh in org.yamcs.studio.ui.css.Activator)
+        // (probably handled by OPIUtils.refresh in org.yamcs.studio.css.Activator)
         /// disconnect();
         /// connect();
     }

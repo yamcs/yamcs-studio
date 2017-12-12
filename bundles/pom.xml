@@ -21,7 +21,6 @@
     <module>org.yamcs.studio.ui.alarms</module>
     <module>org.yamcs.studio.ui.archive</module>
     <module>org.yamcs.studio.ui.commanding</module>
-    <module>org.yamcs.studio.ui.css</module>
     <module>org.yamcs.studio.ui.eventlog</module>
     <module>org.yamcs.studio.ui.monitoring</module>
     <module>org.yamcs.studio.ui.processor</module>
