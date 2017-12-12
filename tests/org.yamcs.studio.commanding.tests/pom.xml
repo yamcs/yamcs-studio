@@ -9,6 +9,6 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.studio.commanding.test</artifactId>
+  <artifactId>org.yamcs.studio.commanding.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
 </project>

@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.core.test</module>
-    <module>org.yamcs.studio.commanding.test</module>
+    <module>org.yamcs.studio.commanding.tests</module>
+    <module>org.yamcs.studio.core.tests</module>
   </modules>
 </project>

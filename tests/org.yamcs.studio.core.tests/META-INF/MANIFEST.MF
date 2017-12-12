@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Yamcs Studio Core Test
+Bundle-Name: Yamcs Studio Core Tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-SymbolicName: org.yamcs.studio.core.test
+Bundle-SymbolicName: org.yamcs.studio.core.tests
 Bundle-Vendor: Space Applications Services
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: org.yamcs.studio.core
