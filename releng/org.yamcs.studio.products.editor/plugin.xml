@@ -117,13 +117,13 @@
             name="OPI Runtime">
       </page>
       <page
-            class="org.yamcs.studio.css.prefs.SoundPreferencePage"
-            id="org.yamcs.studio.css.prefs.SoundPreferencePage"
+            class="org.yamcs.studio.css.core.prefs.SoundPreferencePage"
+            id="org.yamcs.studio.css.core.prefs.SoundPreferencePage"
             name="Sound">
       </page>
       <page
-            class="org.yamcs.studio.css.prefs.EventsPreferencePage"
-            id="org.yamcs.studio.css.prefs.EventsPreferencePage"
+            class="org.yamcs.studio.css.core.prefs.EventsPreferencePage"
+            id="org.yamcs.studio.css.core.prefs.EventsPreferencePage"
             name="Events">
       </page>
       <page
