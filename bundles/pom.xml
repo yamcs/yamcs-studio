@@ -24,5 +24,8 @@
     <module>org.yamcs.studio.monitoring</module>
     <module>org.yamcs.studio.p2</module>
     <module>org.yamcs.studio.processor</module>
+
+    <module>org.yamcs.studio.editor</module>
+    <module>org.yamcs.studio.runtime</module>
   </modules>
 </project>

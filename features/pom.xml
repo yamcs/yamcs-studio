@@ -16,5 +16,8 @@
     <module>org.yamcs.studio.features.css.runtime</module>
     <module>org.yamcs.studio.features.eclipse</module>
     <module>org.yamcs.studio.features.p2</module>
+
+    <module>org.yamcs.studio.editor.feature</module>
+    <module>org.yamcs.studio.runtime.feature</module>
   </modules>
 </project>
