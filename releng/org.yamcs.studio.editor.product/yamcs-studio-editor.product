@@ -72,9 +72,9 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
    </plugins>
 
    <features>
-      <feature id="org.yamcs.studio.features.core" version="1.0.0.qualifier"/>
-      <feature id="org.yamcs.studio.features.css.editor" version="1.0.0.qualifier"/>
-      <feature id="org.yamcs.studio.features.eclipse" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.core.feature" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.css.editor.feature" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.eclipse.feature" version="1.0.0.qualifier"/>
       <feature id="org.yamcs.studio.editor.feature" version="1.0.0.qualifier"/>
    </features>
 

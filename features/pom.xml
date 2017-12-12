@@ -11,11 +11,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.features.core</module>
-    <module>org.yamcs.studio.features.css.editor</module>
-    <module>org.yamcs.studio.features.css.runtime</module>
-    <module>org.yamcs.studio.features.eclipse</module>
-    <module>org.yamcs.studio.features.p2</module>
+    <module>org.yamcs.studio.core.feature</module>
+    <module>org.yamcs.studio.css.editor.feature</module>
+    <module>org.yamcs.studio.css.runtime.feature</module>
+    <module>org.yamcs.studio.eclipse.feature</module>
+    <module>org.yamcs.studio.p2.feature</module>
 
     <module>org.yamcs.studio.editor.feature</module>
     <module>org.yamcs.studio.runtime.feature</module>

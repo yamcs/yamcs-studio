@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.yamcs.studio.features.p2"
+      id="org.yamcs.studio.p2.feature"
       label="Yamcs P2 Update Components"
       version="1.0.0.qualifier"
       provider-name="Space Applications Services">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.yamcs.studio.features.css.runtime"
-      label="Yamcs CS-Studio Runtime Components"
+      id="org.yamcs.studio.css.editor.feature"
+      label="Yamcs CS-Studio Editor Components"
       version="1.0.0.qualifier"
       provider-name="Space Applications Services">
 
@@ -342,6 +342,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.csstudio.opibuilder.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.csstudio.opibuilder.imagelib"
          download-size="0"
          install-size="0"
@@ -526,6 +533,35 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.css.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.css.theming"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.css.script"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.css.utility"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
