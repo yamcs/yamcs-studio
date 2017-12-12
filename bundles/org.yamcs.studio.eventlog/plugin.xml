@@ -210,4 +210,12 @@
          </menu>
       </menuContribution>
    </extension>
+   
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.yamcs.studio.eventlog.PreferencePage"
+            id="org.yamcs.studio.eventlog.PreferencePage"
+            name="Event Log">
+      </page>
+   </extension>
 </plugin>

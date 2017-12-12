@@ -1,4 +1,4 @@
-package org.yamcs.studio.css.core.prefs;
+package org.yamcs.studio.eventlog;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -9,17 +9,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.yamcs.studio.css.core.Activator;
-import org.yamcs.studio.css.core.SeverityHandlerSound;
 
-public class EventsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     private BooleanFieldEditor showColumSeqNum;
     private BooleanFieldEditor showColumReception;
     private BooleanFieldEditor showColumnGeneration;
     private IntegerFieldEditor nbMessageLineToDisplay;
 
-    public EventsPreferencePage() {
+    public PreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
         setDescription("Set properties for Event Log");
@@ -40,13 +38,10 @@ public class EventsPreferencePage extends FieldEditorPreferencePage implements I
         Label label = new Label(getFieldEditorParent(), SWT.NONE);
         label.setText("Columns to be displayed:");
 
-        showColumSeqNum = new BooleanFieldEditor("events.showColumSeqNum",
-                "Sequence Number", getFieldEditorParent());
-        showColumReception = new BooleanFieldEditor(
-                "events.showColumReception", "Reception Time",
+        showColumSeqNum = new BooleanFieldEditor("events.showColumSeqNum", "Sequence Number", getFieldEditorParent());
+        showColumReception = new BooleanFieldEditor("events.showColumReception", "Reception Time",
                 getFieldEditorParent());
-        showColumnGeneration = new BooleanFieldEditor(
-                "events.showColumnGeneration", "Generation Time",
+        showColumnGeneration = new BooleanFieldEditor("events.showColumnGeneration", "Generation Time",
                 getFieldEditorParent());
         addField(showColumSeqNum);
         addField(showColumReception);
@@ -65,9 +60,6 @@ public class EventsPreferencePage extends FieldEditorPreferencePage implements I
 
         // Save to store
         boolean ret = super.performOk();
-
-        // Apply preference in Severity Handler Sound class
-        SeverityHandlerSound.updatePrefence();
 
         if (propertiesChanged) {
             warningApply();

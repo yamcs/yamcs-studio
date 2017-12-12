@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Bundle-Activator: org.yamcs.studio.eventlog.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Description: Yamcs Studio Event Log
 Bundle-ManifestVersion: 2

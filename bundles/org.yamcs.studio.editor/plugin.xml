@@ -112,21 +112,6 @@
             id="org.yamcs.studio.opibuilder.preferences.opiruntime"
             name="OPI Runtime">
       </page>
-      <page
-            class="org.yamcs.studio.css.core.prefs.SoundPreferencePage"
-            id="org.yamcs.studio.css.core.prefs.SoundPreferencePage"
-            name="Sound">
-      </page>
-      <page
-            class="org.yamcs.studio.css.core.prefs.EventsPreferencePage"
-            id="org.yamcs.studio.css.core.prefs.EventsPreferencePage"
-            name="Events">
-      </page>
-      <page
-            class="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
-            id="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
-            name="Yamcs Server">
-      </page>
    </extension>
    
    <extension point="org.eclipse.ui.services">   

@@ -35,28 +35,10 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Yamcs Event Viewer"
+            name="Event Log"
             class="org.yamcs.studio.runtime.Perspective"
             id="org.yamcs.studio.runtime.perspective">
       </perspective>
-   </extension>
-   
-   <extension point="org.eclipse.ui.preferencePages">
-      <!--page
-            class="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"
-            id="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"
-            name="Sound">
-      </page>
-      <page
-            class="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
-            id="org.yamcs.studio.core.ui.prefs.EventsPreferencePage"
-            name="Events">
-      </page-->
-      <page
-            class="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
-            id="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
-            name="Yamcs Server">
-      </page>
    </extension>
    
    <extension point="org.eclipse.ui.services">   

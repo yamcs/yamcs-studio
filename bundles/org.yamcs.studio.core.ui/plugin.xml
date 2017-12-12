@@ -84,4 +84,12 @@
          </menu>
       </menuContribution>
    </extension>
+   
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
+            id="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
+            name="Yamcs Server">
+      </page>
+   </extension>
 </plugin>
