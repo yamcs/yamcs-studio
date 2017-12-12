@@ -76,10 +76,6 @@
    
    <extension point="org.eclipse.ui.activities">
       <activity id="yamcsstudio.disableextensions" name="Hidden activities"/>
-      <!-- Hide Edit OPI in popup menu, because it opens an editor stack in runtime as well as in editor... -->
-      <activityPatternBinding
-            activityId="yamcsstudio.disableextensions"
-            pattern=".*/org\.csstudio\.opibuilder\.commands\.editopi"/>
       <!-- Hide the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.
         We have our own richer modal for that. -->
       <activityPatternBinding
@@ -89,7 +85,7 @@
       <activityPatternBinding
             activityId="yamcsstudio.disableextensions"
             pattern=".*/org\.csstudio\.utility\.product\.CSStudioPerspective"/>
-   </extension>   
+   </extension>
    
    <!--
    	This extension point is actually considered deprecated now, in favor of the
@@ -152,19 +148,11 @@
          <!-- Hide possiblity to jump to other perspectives that we unwillingly
               inherited from other plugin.xml's -->
          <hiddenMenuItem id="org.csstudio.ui.menu.app.open_perspective"/>
-         <!-- This is only marginally useful and can be done by other means (ctrl-f / ctrl-h) -->
-         <hiddenMenuItem id="textSearchSubMenu"/>
-         <hiddenMenuItem id="org.eclipse.search.ui.openFileSearchPage"/>
-         <!-- Already accessible from toolbar in Runtime perspective -->
-         <hiddenMenuItem id="org.csstudio.opibuilder.topfiles"/>
          <!-- Already in menu which seems enough for this type of stuff -->
          <hiddenToolBarItem id="org.csstudio.security.login"/>
-         <hiddenToolBarItem id="org.csstudio.security.logout"/>
-         <hiddenToolBarItem id="org.eclipse.search.OpenSearchDialogPage"/>         
+         <hiddenToolBarItem id="org.csstudio.security.logout"/>         
          <hiddenMenuItem id="org.csstudio.security.login"/>
          <hiddenMenuItem id="org.csstudio.security.logout"/>
-         <!-- Looks weird with the '...' in the label. Want to replace to sth in file-menu instead, like eclipse -->
-         <hiddenMenuItem id="org.csstudio.ui.menu.app.reopen_editors"/>
          <!-- Hide this loaded help menu, with something simpler defined in action bar advisor -->
          <hiddenMenuItem id="help"/>
          <hiddenMenuItem id="org.eclipse.ui.window.preferences"/>
