@@ -41,15 +41,6 @@
       </perspective>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            id="org.yamcs.studio.products.eventviewer.sample"
-            name="an example"
-            class="org.yamcs.studio.products.eventviewer.MyView">
-      </view>
-   </extension>
-   
    <extension point="org.eclipse.ui.preferencePages">
       <!--page
             class="org.yamcs.studio.core.ui.prefs.SoundPreferencePage"

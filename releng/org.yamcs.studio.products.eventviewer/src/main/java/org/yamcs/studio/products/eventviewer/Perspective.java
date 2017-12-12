@@ -8,7 +8,7 @@ public class Perspective implements IPerspectiveFactory {
 
     @Override
     public void createInitialLayout(IPageLayout layout) {
-        String viewId = "org.yamcs.studio.products.eventviewer.sample";
+        String viewId = "org.yamcs.studio.ui.eventlog.EventLogView";
         layout.setEditorAreaVisible(false);
         layout.setFixed(true);
         layout.addStandaloneView(viewId, false, IPageLayout.TOP, 1, IPageLayout.ID_EDITOR_AREA);
