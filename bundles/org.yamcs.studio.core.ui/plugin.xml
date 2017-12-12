@@ -9,17 +9,17 @@
       </category>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.autoconnect"
+            id="org.yamcs.studio.core.ui.autoconnect"
             name="Autoconnect">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.connect"
+            id="org.yamcs.studio.core.ui.connect"
             name="Connect">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.ui.disconnect"
+            id="org.yamcs.studio.core.ui.disconnect"
             name="Disconnect">
       </command>
       <command
@@ -39,13 +39,13 @@
             commandId="org.yamcs.studio.ui.login"
             class="org.yamcs.studio.core.ui.connections.LoginHandler"/>
       <handler 
-            commandId="org.yamcs.studio.ui.autoconnect" 
+            commandId="org.yamcs.studio.core.ui.autoconnect" 
             class="org.yamcs.studio.core.ui.connections.AutoConnectHandler"/>
       <handler
-            commandId="org.yamcs.studio.ui.connect"
+            commandId="org.yamcs.studio.core.ui.connect"
             class="org.yamcs.studio.core.ui.connections.ConnectHandler"/>
       <handler
-            commandId="org.yamcs.studio.ui.disconnect"
+            commandId="org.yamcs.studio.core.ui.disconnect"
             class="org.yamcs.studio.core.ui.connections.DisconnectHandler">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.state.connected">

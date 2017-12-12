@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.equinox.security,
  com.google.gson
 Export-Package: org.yamcs.studio.core.ui,
- org.yamcs.studio.core.ui.utils,
+ org.yamcs.studio.core.ui.actions,
+ org.yamcs.studio.core.ui.connections,
  org.yamcs.studio.core.ui.prefs,
- org.yamcs.studio.core.ui.connections
+ org.yamcs.studio.core.ui.utils
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

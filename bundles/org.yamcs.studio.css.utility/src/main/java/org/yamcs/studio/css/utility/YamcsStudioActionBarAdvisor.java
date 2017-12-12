@@ -25,20 +25,19 @@ import org.eclipse.ui.part.CoolItemGroupMarker;
 import org.yamcs.studio.core.ui.ConnectionStringStatusLineContributionItem;
 import org.yamcs.studio.core.ui.MissionTimeStatusLineContributionItem;
 import org.yamcs.studio.core.ui.ProcessorStatusLineContributionItem;
+import org.yamcs.studio.core.ui.actions.OnlineHelpAction;
+import org.yamcs.studio.core.ui.actions.RaiseIssueAction;
 
 /**
  * Forked from org.csstudio.utility.product.ApplicationActionBarAdvisor
  * <p>
- * {@link ActionBarAdvisor} that can be called by CSS application startup code to create the menu
- * and tool bar.
+ * {@link ActionBarAdvisor} that can be called by CSS application startup code to create the menu and tool bar.
  * <p>
- * The menu bar is mostly empty, only providing the "additions" section that is used by the
- * contributions in plugin.xml.
+ * The menu bar is mostly empty, only providing the "additions" section that is used by the contributions in plugin.xml.
  * <p>
  * The toolbar also mostly defines sections used by contributions from plugin.xml.
  * <p>
- * Some actions are created for Eclipse command names in the help menu that have no default
- * implementation.
+ * Some actions are created for Eclipse command names in the help menu that have no default implementation.
  */
 @SuppressWarnings("restriction")
 public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
@@ -67,19 +66,17 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         super(configurer);
         window = configurer.getWindowConfigurer().getWindow();
 
-        // Remove menu items that are not suitable in CS-Studio
-        removeActionById("org.eclipse.ui.edit.text.actionSet.navigation");
-        removeActionById("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
-        removeActionById("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
+        removeAction("org.eclipse.ui.edit.text.actionSet.navigation");
+        removeAction("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
+        removeAction("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
     }
 
     /**
      * Create actions.
      * <p>
-     * Some of these actions are created to programmatically add them to the toolbar. Other actions
-     * like save_as are not used at all in here, but they need to be created because the plugin.xml
-     * registers their command ID in the menu bar, and the action actually implements the handler.
-     * The actions also provide the dynamic enablement.
+     * Some of these actions are created to programmatically add them to the toolbar. Other actions like save_as are not
+     * used at all in here, but they need to be created because the plugin.xml registers their command ID in the menu
+     * bar, and the action actually implements the handler. The actions also provide the dynamic enablement.
      */
     @Override
     protected void makeActions(final IWorkbenchWindow window) {
@@ -150,8 +147,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
 
     @Override
     protected void fillCoolBar(ICoolBarManager coolbar) {
-        ///coolbar.setLockLayout(true);
-
+        /// coolbar.setLockLayout(true);
 
         // Specific to Yamcs Studio
         IToolBarManager studioBar = new ToolBarManager();
@@ -175,7 +171,8 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         coolbar.add(new ToolBarContributionItem(user_bar, TOOLBAR_USER));
 
         // Explicitly add "additions" and "editor" to work around https://bugs.eclipse.org/bugs/show_bug.cgi?id=422651
-        // After a restart, merging of persisted model, PerspectiveSpacer, contributions resulted in re-arranged toolbar with E4.
+        // After a restart, merging of persisted model, PerspectiveSpacer, contributions resulted in re-arranged toolbar
+        // with E4.
         coolbar.add(new CoolItemGroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         coolbar.add(new CoolItemGroupMarker(IWorkbenchActionConstants.GROUP_EDITOR));
     }
@@ -187,16 +184,16 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         statusLine.add(new MissionTimeStatusLineContributionItem(STATUS_MISSION_TIME_ID, true));
     }
 
-    private void removeActionById(String actionSetId) {
-        // Use of an internal API is required to remove actions that are provided
-        // by including Eclipse bundles.
+    /**
+     * Remove an unnecessary action
+     */
+    private void removeAction(String id) {
         ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
         IActionSetDescriptor[] actionSets = reg.getActionSets();
-        for (int i = 0; i < actionSets.length; i++) {
-            if (actionSets[i].getId().equals(actionSetId)) {
-                IExtension ext = actionSets[i].getConfigurationElement().getDeclaringExtension();
-                reg.removeExtension(ext, new Object[] { actionSets[i] });
-                return;
+        for (IActionSetDescriptor actionSet : actionSets) {
+            if (actionSet.getId().equals(id)) {
+                IExtension ext = actionSet.getConfigurationElement().getDeclaringExtension();
+                reg.removeExtension(ext, new Object[] { actionSet });
             }
         }
     }

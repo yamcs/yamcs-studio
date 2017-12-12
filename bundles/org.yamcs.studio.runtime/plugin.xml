@@ -77,13 +77,13 @@
 
       <menuContribution
             allPopups="false"
-            locationURI="menu:file?before=user">
+            locationURI="menu:file?after=additions">
             <command
-                  commandId="org.yamcs.studio.ui.connect"
+                  commandId="org.yamcs.studio.core.ui.connect"
                   label="Connect...">
             </command>
             <command
-                  commandId="org.yamcs.studio.ui.disconnect" 
+                  commandId="org.yamcs.studio.core.ui.disconnect" 
                   label="Disconnect">
             </command>
       </menuContribution>

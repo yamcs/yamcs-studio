@@ -10,7 +10,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
     private static YamcsUIPlugin plugin;
 
-    public static final String CMD_CONNECT = "org.yamcs.studio.ui.connect";
+    public static final String CMD_CONNECT = "org.yamcs.studio.core.ui.connect";
 
     // private EventLogViewActivator eventLogActivator; // TODO remove? very annoying actually
 

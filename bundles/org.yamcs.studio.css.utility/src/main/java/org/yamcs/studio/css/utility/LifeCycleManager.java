@@ -87,7 +87,7 @@ public class LifeCycleManager {
             // request connection to Yamcs server
             boolean singleConnectionMode = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("singleConnectionMode");
             if(!singleConnectionMode && ConnectionPreferences.isAutoConnect()) {
-                RCPUtils.runCommand("org.yamcs.studio.ui.autoconnect");
+                RCPUtils.runCommand("org.yamcs.studio.core.ui.autoconnect");
             }
         });
     }

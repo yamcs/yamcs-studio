@@ -20,9 +20,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     @Override
     public void preWindowOpen() {
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-        configurer.setInitialSize(new Point(1024, 768));
+        configurer.setInitialSize(new Point(1920, 1200));
+        configurer.setShowMenuBar(true);
         configurer.setShowCoolBar(true);
+        configurer.setShowProgressIndicator(true);
+        configurer.setShowPerspectiveBar(false);
         configurer.setShowStatusLine(true);
-        configurer.setTitle("Yamcs Studio");
+        configurer.setTitle("Yamcs Studio Runtime");
     }
 }

@@ -1,4 +1,4 @@
-package org.yamcs.studio.css.utility;
+package org.yamcs.studio.core.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.program.Program;
@@ -6,7 +6,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 public class RaiseIssueAction extends Action implements IWorkbenchAction {
 
-    public static final String ID = "org.yamcs.studio.ui.actions.raiseIssue";
+    public static final String ID = "org.yamcs.studio.core.ui.actions.raiseIssue";
 
     public RaiseIssueAction() {
         super("Raise an Issue");
