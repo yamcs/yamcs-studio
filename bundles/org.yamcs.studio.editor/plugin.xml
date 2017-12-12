@@ -172,19 +172,6 @@
       
       <!-- OPI Runtime Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
-         <!-- Probably doesn't make sense in runtime perspective -->
-         <hiddenMenuItem id="org.eclipse.ui.newWizard"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.save"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.saveAll"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.saveAs"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.import"/>
-         <hiddenMenuItem id="org.eclipse.ui.file.export"/>
-         <hiddenMenuItem id="org.eclipse.search.menu"/>
-         <hiddenMenuItem id="org.eclipse.ui.edit.findReplace"/>
-         <!-- Trying to keep this perspective editor-free -->
-         <hiddenToolBarItem id="org.eclipse.ui.newWizard"/>
-         <hiddenToolBarItem id="org.eclipse.ui.file.save"/>
-         <hiddenToolBarItem id="org.eclipse.ui.file.saveAll"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -253,9 +240,6 @@
       
       <!-- OPI Editor Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
-         <!-- Not very useful with the navigator already there -->
-         <hiddenToolBarItem id="org.csstudio.opibuilder.openTopFileAction"/>
-
       	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
          <view
                relative="org.eclipse.ui.console.ConsoleView"
