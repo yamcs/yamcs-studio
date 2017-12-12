@@ -1,13 +1,16 @@
 package org.yamcs.studio.css;
 
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
-public class Activator extends Plugin {
+public class Activator extends AbstractUIPlugin {
 
     private static Activator plugin;
+
+    @SuppressWarnings("unused")
+    private SeverityHandlerSound severityHandler;
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -17,6 +20,9 @@ public class Activator extends Plugin {
         PVCatalogue pvCatalogue = new PVCatalogue();
         YamcsPlugin.getDefault().registerCatalogue(pvCatalogue);
         ParameterCatalogue.getInstance().addParameterListener(pvCatalogue);
+
+        severityHandler = new SeverityHandlerSound();
+        DisplayOpener.init();
     }
 
     @Override

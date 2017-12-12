@@ -2,7 +2,6 @@ package org.yamcs.studio.core.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.yamcs.studio.css.vtype.YamcsVType;
 import org.yamcs.utils.TimeEncoding;
 
 public class YamcsUIPlugin extends AbstractUIPlugin {
@@ -18,13 +17,12 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+
         plugin = this;
         TimeEncoding.setUp();
         ConnectionUIHelper.getInstance();
-        YamcsVType.severityHandler = new SeverityHandlerSound();
 
-        // TODO should maybe move these two to eventlog-plugin, but verify lazy behaviour
-        DisplayOpener.init();
+        // TODO should maybe move this to eventlog-plugin, but verify lazy behaviour
         // eventLogActivator = new EventLogViewActivator(); // TODO remove? very annoying actually
     }
 

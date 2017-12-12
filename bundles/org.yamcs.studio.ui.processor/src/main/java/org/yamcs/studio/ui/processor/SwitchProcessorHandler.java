@@ -8,7 +8,6 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -18,7 +17,6 @@ import org.yamcs.protobuf.Rest.EditClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.ui.css.OPIUtils;
 
 public class SwitchProcessorHandler extends AbstractHandler implements IElementUpdater {
 
@@ -37,13 +35,9 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
         if (processorInfo != null) {
             ClientInfo clientInfo = catalogue.getCurrentClientInfo();
             EditClientRequest req = EditClientRequest.newBuilder().setProcessor(processorInfo.getName()).build();
-            catalogue.editClientRequest(clientInfo.getId(), req).thenRun(() -> {
-                Display.getDefault().asyncExec(() -> {
-                    OPIUtils.resetDisplays();
-                });
-            });
+            catalogue.editClientRequest(clientInfo.getId(), req);
         } else {
-            log.warning("processor '" + radioParameter + "' not found in catalogue");
+            log.warning("Processor '" + radioParameter + "' not found in catalogue");
         }
 
         return null;

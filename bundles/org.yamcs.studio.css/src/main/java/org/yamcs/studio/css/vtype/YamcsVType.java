@@ -19,12 +19,9 @@ import org.yamcs.studio.css.pvmanager.PVConnectionInfo;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
     protected ParameterValue pval;
-    public static SeverityHandler severityHandler = null;
 
     public YamcsVType(ParameterValue pval) {
         this.pval = pval;
-        if (severityHandler != null)
-            severityHandler.handle(pval);
     }
 
     @Override

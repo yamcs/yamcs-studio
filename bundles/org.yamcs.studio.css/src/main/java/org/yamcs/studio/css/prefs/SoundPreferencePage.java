@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.ui.prefs;
+package org.yamcs.studio.css.prefs;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
@@ -8,19 +8,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.yamcs.studio.core.ui.SeverityHandlerSound;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.css.Activator;
+import org.yamcs.studio.css.SeverityHandlerSound;
 
-public class SoundPreferencePage extends FieldEditorPreferencePage implements
-        IWorkbenchPreferencePage {
+public class SoundPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    BooleanFieldEditor beepWarning;
-    BooleanFieldEditor beepCritical;
-    ComboFieldEditor triggerBeep;
+    private BooleanFieldEditor beepWarning;
+    private BooleanFieldEditor beepCritical;
+    private ComboFieldEditor triggerBeep;
 
     public SoundPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
-        setPreferenceStore(YamcsUIPlugin.getDefault().getPreferenceStore());
+        setPreferenceStore(Activator.getDefault().getPreferenceStore());
         setDescription("Set sound properties for Yamcs Studio");
     }
 

@@ -2,11 +2,6 @@ package org.yamcs.studio.core.ui;
 
 import static org.yamcs.studio.core.ui.utils.TextUtils.isBlank;
 
-import javax.security.auth.Subject;
-
-import org.csstudio.security.SecurityListener;
-import org.csstudio.security.SecuritySupport;
-import org.csstudio.security.authorization.Authorizations;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.ConnectionManager;
@@ -15,7 +10,7 @@ import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
 public class ConnectionStringStatusLineContributionItem extends StatusLineContributionItem
-        implements StudioConnectionListener, SecurityListener {
+        implements StudioConnectionListener {
 
     private static final String DEFAULT_TEXT = "Not Connected";
     private ConnectionManager connectionManager;
@@ -40,27 +35,14 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
             }
         });
 
-        // Initial text
-        changedSecurity(SecuritySupport.getSubject(), true, null);
-
         // Listen to changes
         connectionManager = ConnectionManager.getInstance();
         connectionManager.addStudioConnectionListener(this);
-        SecuritySupport.addListener(this);
     }
 
     @Override
     public void dispose() {
         connectionManager.removeStudioConnectionListener(this);
-        SecuritySupport.removeListener(this);
-    }
-
-    @Override
-    public void changedSecurity(Subject subject, boolean isCurrentUser, Authorizations authz) {
-        Display.getDefault().asyncExec(() -> {
-            subjectName = (subject != null) ? SecuritySupport.getSubjectName(subject) : null;
-            updateLabel();
-        });
     }
 
     @Override

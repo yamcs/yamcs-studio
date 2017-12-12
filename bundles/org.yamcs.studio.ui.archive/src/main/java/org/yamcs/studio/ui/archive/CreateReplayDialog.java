@@ -30,7 +30,6 @@ import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
 
 import io.protostuff.JsonIOUtil;
@@ -110,7 +109,6 @@ public class CreateReplayDialog extends TitleAreaDialog {
         catalogue.createProcessorRequest(ci.getInstance(), req).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
-                    OPIUtils.resetDisplays();
                     CreateReplayDialog.super.okPressed();
                 });
             } else {

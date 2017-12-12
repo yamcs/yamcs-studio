@@ -32,7 +32,6 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.Prefs;
-import org.yamcs.studio.ui.css.OPIUtils;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -77,7 +76,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
                 if (!(event.getSource() instanceof JScrollBar)
                         && !(event.getSource() instanceof TagTimeline)
                         && SwingUtilities.isDescendingFrom((Component) event.getSource(), dataView)) {
-                    MouseEvent me = SwingUtilities.convertMouseEvent((Component) event.getSource(), (MouseEvent) event, dataView.indexPanel);
+                    MouseEvent me = SwingUtilities.convertMouseEvent((Component) event.getSource(), (MouseEvent) event,
+                            dataView.indexPanel);
                     if (event.getID() == MouseEvent.MOUSE_DRAGGED) {
                         dataView.doMouseDragged(me);
                     } else if (event.getID() == MouseEvent.MOUSE_PRESSED) {
@@ -155,7 +155,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             return Long.signum(startInstant - a.startInstant);
         }
 
-        //merge two records if close enough to eachother
+        // merge two records if close enough to eachother
         public boolean merge(IndexChunkSpec t, long mergeTime) {
             boolean merge = false;
             if (tmcount == 1) {
@@ -229,11 +229,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             String seekTime = TimeEncoding.toString(newPosition);
             EditProcessorRequest req = EditProcessorRequest.newBuilder().setSeek(seekTime).build();
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req).thenRun(() -> {
-                Display.getDefault().asyncExec(() -> {
-                    OPIUtils.resetDisplays();
-                });
-            });
+            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req);
         });
     }
 

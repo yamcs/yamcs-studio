@@ -1,28 +1,28 @@
-package org.yamcs.studio.core.ui.prefs;
+package org.yamcs.studio.css.prefs;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.yamcs.studio.core.ui.SeverityHandlerSound;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.css.Activator;
+import org.yamcs.studio.css.SeverityHandlerSound;
 
-public class EventsPreferencePage extends FieldEditorPreferencePage implements
-        IWorkbenchPreferencePage {
+public class EventsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    BooleanFieldEditor showColumSeqNum;
-    BooleanFieldEditor showColumReception;
-    BooleanFieldEditor showColumnGeneration;
-    IntegerFieldEditor nbMessageLineToDisplay;
+    private BooleanFieldEditor showColumSeqNum;
+    private BooleanFieldEditor showColumReception;
+    private BooleanFieldEditor showColumnGeneration;
+    private IntegerFieldEditor nbMessageLineToDisplay;
 
     public EventsPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
-        setPreferenceStore(YamcsUIPlugin.getDefault().getPreferenceStore());
-        setDescription("Set properties for Events Log");
+        setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        setDescription("Set properties for Event Log");
     }
 
     @Override
@@ -31,7 +31,6 @@ public class EventsPreferencePage extends FieldEditorPreferencePage implements
 
     @Override
     protected void createFieldEditors() {
-
         nbMessageLineToDisplay = new IntegerFieldEditor(
                 "events.nbMessageLineToDisplay",
                 "Number of lines per event message (0: unlimited)",
@@ -57,19 +56,12 @@ public class EventsPreferencePage extends FieldEditorPreferencePage implements
 
     @Override
     public boolean performOk() {
+        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
-        boolean propertiesChanged = showColumSeqNum.getBooleanValue() != YamcsUIPlugin
-                .getDefault().getPreferenceStore()
-                .getBoolean("events.showColumSeqNum");
-        propertiesChanged |= showColumReception.getBooleanValue() != YamcsUIPlugin
-                .getDefault().getPreferenceStore()
-                .getBoolean("events.showColumReception");
-        propertiesChanged |= showColumnGeneration.getBooleanValue() != YamcsUIPlugin
-                .getDefault().getPreferenceStore()
-                .getBoolean("events.showColumnGeneration");
-        propertiesChanged |= nbMessageLineToDisplay.getIntValue() != YamcsUIPlugin
-                .getDefault().getPreferenceStore()
-                .getInt("events.nbMessageLineToDisplay");
+        boolean propertiesChanged = showColumSeqNum.getBooleanValue() != store.getBoolean("events.showColumSeqNum");
+        propertiesChanged |= showColumReception.getBooleanValue() != store.getBoolean("events.showColumReception");
+        propertiesChanged |= showColumnGeneration.getBooleanValue() != store.getBoolean("events.showColumnGeneration");
+        propertiesChanged |= nbMessageLineToDisplay.getIntValue() != store.getInt("events.nbMessageLineToDisplay");
 
         // Save to store
         boolean ret = super.performOk();

@@ -9,12 +9,17 @@ Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.jface,
+ org.eclipse.ui.ide,
  org.yamcs.studio.p2deps.yamcs-api,
  org.yamcs.studio.core,
  org.diirt.vtype,
  org.diirt.util,
  org.diirt.datasource,
- org.diirt.datasource-vtype
+ org.diirt.datasource-vtype,
+ org.yamcs.studio.core.ui
 Export-Package: org.yamcs.studio.css.vtype,
  org.yamcs.studio.css.pvmanager
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

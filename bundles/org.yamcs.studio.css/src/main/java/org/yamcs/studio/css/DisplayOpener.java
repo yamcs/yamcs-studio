@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.ui;
+package org.yamcs.studio.css;
 
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -70,7 +70,7 @@ public class DisplayOpener implements EventListener {
         }
 
         // check if hostname matches the event request
-        String workstationName = YamcsUIPlugin.getDefault().getPreferenceStore().getString("events.workstationName");
+        String workstationName = Activator.getDefault().getPreferenceStore().getString("events.workstationName");
         if (hostname != null && !hostname.equals(workstationName)) {
             log.fine("OpenDisplay not targetted for this hostname.");
             return;
