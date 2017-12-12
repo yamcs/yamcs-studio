@@ -5,20 +5,20 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            name="Event Viewer"
+            name="Yamcs Studio Runtime"
             application="org.yamcs.studio.runtime.application">
          <property
                name="windowImages"
                value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png,icons/css256.png"/>
          <property
                name="aboutText"
-               value="Event Viewer for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
          <property
                name="aboutImage"
                value="icons/aboutSide.png"/>
          <property
                name="appName"
-               value="Event Viewer"/>
+               value="Yamcs Studio Runtime"/>
       </product>
    </extension>
    
