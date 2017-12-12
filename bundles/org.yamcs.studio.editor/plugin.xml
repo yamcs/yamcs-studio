@@ -175,56 +175,56 @@
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.archive.ArchiveView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.eventlog.EventLogView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.alarms.active.ActiveAlarmsView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.commanding.stack.CommandStackView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
-               relationship="right"
-               visible="true"
+               relationship="stack"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.monitoring.links.LinksView">
          </view>
          <view
-               relative="org.yamcs.studio.monitoring.links.LinksView"
+               relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView">
          </view> 
          <view
-               relative="org.yamcs.studio.monitoring.clients.ClientsView"
+               relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.commanding.queue.CommandQueueView">
          </view>
@@ -245,41 +245,56 @@
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.yamcs.studio.archive.ArchiveView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.yamcs.studio.eventlog.EventLogView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
+               id="org.yamcs.studio.alarms.active.ActiveAlarmsView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
                id="org.yamcs.studio.commanding.stack.CommandStackView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.yamcs.studio.monitoring.links.LinksView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
+               closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView"/>
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
