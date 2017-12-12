@@ -37,7 +37,7 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 
 - All error signs should now be resolved. If not, try right-clicking the yamcs-studio project and choose `Maven > Update Project Configuration`.
 
-- Open one of the `*.product` files found in the project `org.yamcs.studio.repository`.
+- Open one of the `*.product` files found under `org.yamcs.studio.releng`.
 
 - Click `Synchronize` followed by `Launch an Eclipse Application`.
 
