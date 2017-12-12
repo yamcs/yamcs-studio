@@ -12,16 +12,14 @@
 
   <modules>
     <module>org.yamcs.studio.features.core</module>
-    <module>org.yamcs.studio.features.css</module>
+    <module>org.yamcs.studio.features.css.editor</module>
+    <module>org.yamcs.studio.features.css.runtime</module>
     <module>org.yamcs.studio.features.eclipse</module>
     <module>org.yamcs.studio.features.p2</module>
-    <module>org.yamcs.studio.features.runtime</module>
-
-    <module>org.yamcs.studio.products.runtime</module>
-    <module>org.yamcs.studio.products.runtime.feature</module>
     <module>org.yamcs.studio.products.editor</module>
     <module>org.yamcs.studio.products.editor.feature</module>
-
+    <module>org.yamcs.studio.products.runtime</module>
+    <module>org.yamcs.studio.products.runtime.feature</module>
     <module>org.yamcs.studio.repository</module>
   </modules>
 </project>

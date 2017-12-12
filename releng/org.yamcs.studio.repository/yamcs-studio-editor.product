@@ -73,7 +73,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
 
    <features>
       <feature id="org.yamcs.studio.features.core" version="1.0.0.qualifier"/>
-      <feature id="org.yamcs.studio.features.css" version="1.0.0.qualifier"/>
+      <feature id="org.yamcs.studio.features.css.editor" version="1.0.0.qualifier"/>
       <feature id="org.yamcs.studio.features.eclipse" version="1.0.0.qualifier"/>
       <feature id="org.yamcs.studio.products.editor.feature" version="1.0.0.qualifier"/>
    </features>
