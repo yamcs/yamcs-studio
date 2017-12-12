@@ -24,7 +24,7 @@ import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.connections.ConnectionPreferences;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.ui.processor.ProcessorStateProvider;
+import org.yamcs.studio.processor.ProcessorStateProvider;
 
 @SuppressWarnings("restriction")
 public class LifeCycleManager {

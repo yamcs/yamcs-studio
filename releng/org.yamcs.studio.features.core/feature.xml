@@ -37,28 +37,28 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.ui.commanding"
+         id="org.yamcs.studio.commanding"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.ui.archive"
+         id="org.yamcs.studio.archive"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.ui.monitoring"
+         id="org.yamcs.studio.monitoring"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.ui.eventlog"
+         id="org.yamcs.studio.eventlog"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -72,14 +72,14 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.ui.processor"
+         id="org.yamcs.studio.processor"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.ui.alarms"
+         id="org.yamcs.studio.alarms"
          download-size="0"
          install-size="0"
          version="0.0.0"

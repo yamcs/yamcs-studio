@@ -2,8 +2,8 @@ package org.yamcs.studio.script;
 
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.ui.commanding.CommandParser;
-import org.yamcs.studio.ui.commanding.CommandParser.ParseResult;
+import org.yamcs.studio.commanding.CommandParser;
+import org.yamcs.studio.commanding.CommandParser.ParseResult;
 
 /**
  * Sample use:

@@ -190,65 +190,65 @@
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.archive.ArchiveView">
+               id="org.yamcs.studio.archive.ArchiveView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.eventlog.EventLogView">
+               id="org.yamcs.studio.eventlog.EventLogView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView">
+               id="org.yamcs.studio.alarms.active.ActiveAlarmsView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.commanding.stack.CommandStackView">
+               id="org.yamcs.studio.commanding.stack.CommandStackView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView">
+               id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView">
          </view>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="right"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.links.LinksView">
+               id="org.yamcs.studio.monitoring.links.LinksView">
          </view>
          <view
-               relative="org.yamcs.studio.ui.links.LinksView"
+               relative="org.yamcs.studio.monitoring.links.LinksView"
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.clients.ClientsView">
+               id="org.yamcs.studio.monitoring.clients.ClientsView">
          </view> 
          <view
-               relative="org.yamcs.studio.ui.clients.ClientsView"
+               relative="org.yamcs.studio.monitoring.clients.ClientsView"
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
+               id="org.yamcs.studio.commanding.queue.CommandQueueView">
          </view>
-         <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
-         <viewShortcut id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView"/>
-         <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
-         <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
-         <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
+         <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
+         <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
@@ -261,27 +261,27 @@
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.archive.ArchiveView"/>
+               id="org.yamcs.studio.archive.ArchiveView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.eventlog.EventLogView"/>
+               id="org.yamcs.studio.eventlog.EventLogView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
+               id="org.yamcs.studio.commanding.stack.CommandStackView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
+               id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
+               id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -291,21 +291,21 @@
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.links.LinksView"/>
+               id="org.yamcs.studio.monitoring.links.LinksView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
-               id="org.yamcs.studio.ui.clients.ClientsView"/>
+               id="org.yamcs.studio.monitoring.clients.ClientsView"/>
          <!-- Yamcs -->
-         <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
-         <viewShortcut id="org.yamcs.studio.ui.alarms.active.ActiveAlarmsView"/>
-         <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
-         <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
-         <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
-         <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
+         <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
+         <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
