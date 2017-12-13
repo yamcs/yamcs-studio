@@ -31,38 +31,29 @@ public class ExportCommandsHandler extends AbstractHandler {
         Shell shell = HandlerUtil.getActiveShell(event);
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
         CommandHistoryView view = (CommandHistoryView) part;
-        doExecute(view, shell);
-        return null;
-    }
-
-    public void doExecute(CommandHistoryView commandHistoryView, Shell shell) {
 
         // Ask for file to export
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.csv" });
-        String exportFile = dialog.open();
-        if (exportFile == null) {
-            // cancelled
-            return;
+        String targetFile = dialog.open();
+        if (targetFile == null) { // cancelled
+            return null;
         }
 
         // Write CSV
         try {
-            exportEventToCsv(exportFile, commandHistoryView.getTableViewer().getTable());
+            writeEvents(new File(targetFile), view.getTableViewer().getTable());
+            MessageDialog.openInformation(shell, "Export Command History", "Command History exported successfully.");
         } catch (Exception e) {
             MessageDialog.openError(shell, "Export Command History",
                     "Unable to perform command history export.\nDetails:" + e.getMessage());
-            return;
         }
 
-        MessageDialog.openInformation(shell, "Export Command History", "Command History exported successfully.");
-
+        return null;
     }
 
-    private void exportEventToCsv(String exportFile, Table table) throws IOException {
-        char fs = '\t';
+    private void writeEvents(File targetFile, Table table) throws IOException {
         CsvWriter writer = null;
-        File file = new File(exportFile);
 
         List<String> columnNames = new ArrayList<>();
         for (TableColumn tc : table.getColumns()) {
@@ -70,7 +61,7 @@ public class ExportCommandsHandler extends AbstractHandler {
         }
 
         try {
-            writer = new CsvWriter(new FileOutputStream(file), fs, Charset.forName("UTF-8"));
+            writer = new CsvWriter(new FileOutputStream(targetFile), '\t', Charset.forName("UTF-8"));
 
             // write header
             writer.writeRecord(columnNames.toArray(new String[columnNames.size()]));
@@ -78,12 +69,11 @@ public class ExportCommandsHandler extends AbstractHandler {
 
             // write content
             for (TableItem item : table.getItems()) {
-                ArrayList<String> row = new ArrayList<>();
-
+                String[] rec = new String[table.getColumnCount()];
                 for (int i = 0; i < table.getColumnCount(); i++) {
-                    row.add(item.getText(i));
+                    rec[i] = item.getText(i);
                 }
-                writer.writeRecord(row.toArray(new String[row.size()]));
+                writer.writeRecord(rec);
             }
         } finally {
             writer.close();

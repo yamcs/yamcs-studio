@@ -2,7 +2,6 @@ package org.yamcs.studio.commanding.cmdhist;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -30,8 +29,6 @@ import org.yamcs.utils.TimeEncoding;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ImportPastCommandsDialog extends TitleAreaDialog {
-
-    private static final Logger log = Logger.getLogger(ImportPastCommandsDialog.class.getName());
 
     private CommandHistoryView cmdhistView;
 
@@ -91,8 +88,10 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         startTime.addListener(SWT.Selection, e -> validate());
         if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
+            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH),
+                    startTimeValue.get(Calendar.DAY_OF_MONTH));
+            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE),
+                    startTimeValue.get(Calendar.SECOND));
         }
 
         lbl = new Label(container, SWT.NONE);
@@ -110,8 +109,10 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         stopTime.addListener(SWT.Selection, e -> validate());
         if (stopTimeValue != null) {
-            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH), stopTimeValue.get(Calendar.DAY_OF_MONTH));
-            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE), stopTimeValue.get(Calendar.SECOND));
+            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH),
+                    stopTimeValue.get(Calendar.DAY_OF_MONTH));
+            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE),
+                    stopTimeValue.get(Calendar.SECOND));
         }
 
         return container;
