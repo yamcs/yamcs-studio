@@ -12,7 +12,7 @@ public class ClearEventLogHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
         EventLogView view = (EventLogView) part;
-        view.clear();
+        view.getEventLog().clear();
         return null;
     }
 }

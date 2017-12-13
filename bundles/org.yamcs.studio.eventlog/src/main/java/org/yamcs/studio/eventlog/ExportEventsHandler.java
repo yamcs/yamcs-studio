@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -24,50 +25,39 @@ public class ExportEventsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-
-        // get related event view
         Shell shell = HandlerUtil.getActiveShell(event);
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
         EventLogView eventLogView = (EventLogView) part;
-        doExecute(eventLogView, shell);
-        return null;
-    }
-
-    public void doExecute(EventLogView eventLogView, Shell shell) {
 
         // Ask for file to export
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.csv" });
-        String exportFile = dialog.open();
-        System.out.println("export file choosen: " + exportFile);
-        if (exportFile == null) {
-            // cancelled
-            return;
+        String targetFile = dialog.open();
+        if (targetFile == null) { // cancelled
+            return null;
         }
 
         // Write CSV
         try {
-            exportEventToCsv(exportFile, eventLogView.getTableContentProvider());
+            List<Event> events = eventLogView.getEventLog().getEvents();
+            writeEvents(new File(targetFile), events);
+            MessageDialog.openInformation(shell, "Export Events", "Events exported successfully.");
         } catch (Exception e) {
             MessageDialog.openError(shell, "Export Events",
                     "Unable to perform events export.\nDetails:" + e.getMessage());
-            return;
         }
 
-        MessageDialog.openInformation(shell, "Export Events", "Events exported successfully.");
-
+        return null;
     }
 
-    private void exportEventToCsv(String exportFile, EventLogContentProvider eventLogContentProvider) throws IOException {
-        char fs = '\t';
+    private void writeEvents(File targetFile, List<Event> events) throws IOException {
         CsvWriter writer = null;
-        File file = new File(exportFile);
         try {
-            writer = new CsvWriter(new FileOutputStream(file), fs, Charset.forName("UTF-8"));
-            writer.writeRecord(new String[] { "Sequence Number", "Severity", "Message", "Source", "Type", "Reception Time", "Generation Time" });
+            writer = new CsvWriter(new FileOutputStream(targetFile), '\t', Charset.forName("UTF-8"));
+            writer.writeRecord(new String[] { "Sequence Number", "Severity", "Message", "Source", "Type",
+                    "Reception Time", "Generation Time" });
             writer.setForceQualifier(true);
-            for (Event event : eventLogContentProvider.getSortedEvents()) {
-
+            for (Event event : events) {
                 writer.writeRecord(new String[] {
                         event.getSeqNumber() + "",
                         event.getSeverity().name(),

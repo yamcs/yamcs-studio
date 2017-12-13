@@ -41,7 +41,6 @@ public class ExportCommandsHandler extends AbstractHandler {
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.csv" });
         String exportFile = dialog.open();
-        System.out.println("export file choosen: " + exportFile);
         if (exportFile == null) {
             // cancelled
             return;

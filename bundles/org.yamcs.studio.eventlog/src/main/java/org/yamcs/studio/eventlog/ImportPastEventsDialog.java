@@ -23,7 +23,7 @@ import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
 
-    private EventLogView eventLogView;
+    private EventLog eventLog;
 
     private DateTime startDate;
     private DateTime startTime;
@@ -35,7 +35,7 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     public ImportPastEventsDialog(Shell parentShell, EventLogView eventLogView) {
         super(parentShell);
-        this.eventLogView = eventLogView;
+        eventLog = eventLogView.getEventLog();
     }
 
     @Override
@@ -124,11 +124,11 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
         EventCatalogue catalogue = EventCatalogue.getInstance();
         catalogue.downloadEvents(start, stop, batch -> {
-            Display.getDefault().asyncExec(() -> eventLogView.addEvents(batch));
+            Display.getDefault().asyncExec(() -> eventLog.addEvents(batch));
         }).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
-                    eventLogView.addedAllEvents();
+                    eventLog.addedAllEvents();
                     ImportPastEventsDialog.super.okPressed();
                 });
             } else {

@@ -15,7 +15,7 @@ public class EventLogViewerComparator implements Comparator<Event> {
     private boolean ascending;
 
     public EventLogViewerComparator() {
-        currentColumn = EventLogView.COL_RECEPTION;
+        currentColumn = EventLogTableViewer.COL_RECEPTION;
         ascending = true;
     }
 
@@ -36,15 +36,15 @@ public class EventLogViewerComparator implements Comparator<Event> {
     public int compare(Event r1, Event r2) {
         int rc;
         switch (currentColumn) {
-        case EventLogView.COL_SEQNUM:
+        case EventLogTableViewer.COL_SEQNUM:
             // compare seq number
             rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             break;
-        case EventLogView.COL_MESSAGE:
+        case EventLogTableViewer.COL_MESSAGE:
             // compare message
             rc = STRING_COMPARATOR.compare(r1.getMessage(), r2.getMessage());
             break;
-        case EventLogView.COL_RECEPTION:
+        case EventLogTableViewer.COL_RECEPTION:
             // compare reception time, seq number
             rc = LONG_COMPARATOR.compare(r1.getReceptionTime(), r2.getReceptionTime());
             if (rc == 0)
@@ -52,13 +52,13 @@ public class EventLogViewerComparator implements Comparator<Event> {
             if (rc == 0)
                 rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             break;
-        case EventLogView.COL_GENERATION:
+        case EventLogTableViewer.COL_GENERATION:
             // compare generation time, seq number
             rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             if (rc == 0)
                 rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             break;
-        case EventLogView.COL_SOURCE:
+        case EventLogTableViewer.COL_SOURCE:
             // compare source, type, generation time, seq number
             rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
             if (rc == 0)

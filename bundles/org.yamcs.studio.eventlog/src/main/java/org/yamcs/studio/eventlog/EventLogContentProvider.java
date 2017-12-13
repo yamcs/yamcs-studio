@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.utils.TimeEncoding;
 
 public class EventLogContentProvider implements IStructuredContentProvider {
 
@@ -51,6 +50,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         }
         errorColor = new Color(table.getDisplay(), new RGB(255, 221, 221));
         warningColor = new Color(table.getDisplay(), new RGB(248, 238, 199));
+
+        nbMessageLineToDisplay = EventLogPreferences.getMessageLineCount();
     }
 
     @Override
@@ -60,10 +61,12 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     @Override
     public void dispose() {
-        if (errorColor != null)
+        if (errorColor != null) {
             errorColor.dispose();
-        if (warningColor != null)
+        }
+        if (warningColor != null) {
             warningColor.dispose();
+        }
     }
 
     @Override
@@ -186,10 +189,10 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         item.setText(1, source);
 
         // reception time
-        item.setText(2, TimeEncoding.toString(event.getReceptionTime()));
+        item.setText(2, event.getReceptionTimeUTC());
 
         // generation time
-        item.setText(3, TimeEncoding.toString(event.getGenerationTime()));
+        item.setText(3, event.getGenerationTimeUTC());
 
         // seq number
         item.setText(4, event.getSeqNumber() + "");
@@ -266,10 +269,6 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     public void enableScrollLock(boolean enabled) {
         scrollLock = enabled;
-    }
-
-    public void setNbLineToDisplay(int nb) {
-        nbMessageLineToDisplay = nb;
     }
 
     public void sort(TableColumn column) {
