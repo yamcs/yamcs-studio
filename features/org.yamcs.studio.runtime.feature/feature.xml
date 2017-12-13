@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.yamcs.studio.runtime.feature"
-      label="Yamcs Event Viewer"
+      label="Yamcs Studio Runtime"
       version="1.0.0.qualifier"
       provider-name="Space Applications Services">
 
