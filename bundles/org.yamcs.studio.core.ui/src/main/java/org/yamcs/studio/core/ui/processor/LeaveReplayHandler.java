@@ -1,4 +1,4 @@
-package org.yamcs.studio.processor;
+package org.yamcs.studio.core.ui.processor;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

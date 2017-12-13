@@ -45,8 +45,8 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
+import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.processor.ProcessorStateProvider;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart

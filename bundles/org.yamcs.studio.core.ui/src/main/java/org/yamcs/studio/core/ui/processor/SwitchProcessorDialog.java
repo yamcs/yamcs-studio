@@ -1,4 +1,4 @@
-package org.yamcs.studio.processor;
+package org.yamcs.studio.core.ui.processor;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;

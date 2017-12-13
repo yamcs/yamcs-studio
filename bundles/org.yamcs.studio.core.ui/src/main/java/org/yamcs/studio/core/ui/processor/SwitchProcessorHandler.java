@@ -1,4 +1,4 @@
-package org.yamcs.studio.processor;
+package org.yamcs.studio.core.ui.processor;
 
 import java.util.Map;
 import java.util.logging.Logger;

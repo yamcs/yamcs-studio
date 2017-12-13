@@ -10,7 +10,6 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.yamcs.studio.core.ui,
- org.yamcs.studio.processor,
  org.eclipse.core.runtime,
  org.yamcs.studio.p2deps.yamcs-api,
  org.yamcs.studio.css.core,

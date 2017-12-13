@@ -12,7 +12,6 @@ public class EventLogView extends ViewPart {
 
     @Override
     public void createPartControl(Composite parent) {
-
         eventlog = new EventLog(parent, SWT.NONE);
         eventlog.setLayoutData(new GridData(GridData.FILL_BOTH));
 

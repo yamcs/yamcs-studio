@@ -1,4 +1,4 @@
-package org.yamcs.studio.processor;
+package org.yamcs.studio.core.ui.processor;
 
 import java.util.ArrayList;
 import java.util.Collections;
