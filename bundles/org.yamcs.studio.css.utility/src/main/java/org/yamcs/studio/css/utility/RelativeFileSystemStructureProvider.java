@@ -6,15 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
 
 /**
  * Copied from nodeclipse, but could not find a license, so assuming public domain, or EPL
  */
-@SuppressWarnings({ "restriction" })
+
 public class RelativeFileSystemStructureProvider implements IImportStructureProvider {
+
+    private static Logger log = Logger.getLogger(RelativeFileSystemStructureProvider.class.getName());
+
     private File root;
 
     public RelativeFileSystemStructureProvider(File root) {
@@ -34,7 +37,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
         File folder = (File) element;
         String[] children = folder.list();
         int childrenLength = children == null ? 0 : children.length;
-        List<File> result = new ArrayList<File>(childrenLength);
+        List<File> result = new ArrayList<>(childrenLength);
 
         for (int i = 0; i < childrenLength; i++) {
             result.add(new File(folder, children[i]));
@@ -44,7 +47,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
     }
 
     public List<File> collectFiles(Object element) {
-        List<File> result = new ArrayList<File>();
+        List<File> result = new ArrayList<>();
 
         File root = (File) element;
         if (root.isDirectory()) {
@@ -72,7 +75,7 @@ public class RelativeFileSystemStructureProvider implements IImportStructureProv
         try {
             return new FileInputStream((File) element);
         } catch (FileNotFoundException e) {
-            IDEWorkbenchPlugin.log(e.getLocalizedMessage(), e);
+            log.warning("Could not find " + element);
         }
         return null;
     }
