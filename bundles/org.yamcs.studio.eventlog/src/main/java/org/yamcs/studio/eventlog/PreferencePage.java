@@ -6,11 +6,17 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
+    public static final String PREF_LINECOUNT = "events.nbMessageLineToDisplay";
+    public static final String PREF_SHOW_SEQNUM_COL = "events.showColumnSeqNum";
+    public static final String PREF_SHOW_GENTIME_COL = "events.showColumnGeneration";
+    public static final String PREF_SHOW_RECTIME_COL = "events.showColumnReception";
 
     private BooleanFieldEditor showColumSeqNum;
     private BooleanFieldEditor showColumReception;
@@ -20,7 +26,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
     public PreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        setDescription("Set properties for Event Log");
+        // setDescription("Set properties for Event Log");
     }
 
     @Override
@@ -29,20 +35,17 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
     @Override
     protected void createFieldEditors() {
-        nbMessageLineToDisplay = new IntegerFieldEditor(
-                "events.nbMessageLineToDisplay",
-                "Number of lines per event message (0: unlimited)",
-                getFieldEditorParent());
+        Composite parent = getFieldEditorParent();
+        nbMessageLineToDisplay = new IntegerFieldEditor(PREF_LINECOUNT,
+                "Number of lines per event message (0: unlimited)", parent);
         addField(nbMessageLineToDisplay);
 
-        Label label = new Label(getFieldEditorParent(), SWT.NONE);
+        Label label = new Label(parent, SWT.NONE);
         label.setText("Columns to be displayed:");
 
-        showColumSeqNum = new BooleanFieldEditor("events.showColumSeqNum", "Sequence Number", getFieldEditorParent());
-        showColumReception = new BooleanFieldEditor("events.showColumReception", "Reception Time",
-                getFieldEditorParent());
-        showColumnGeneration = new BooleanFieldEditor("events.showColumnGeneration", "Generation Time",
-                getFieldEditorParent());
+        showColumSeqNum = new BooleanFieldEditor(PREF_SHOW_SEQNUM_COL, "Sequence Number", parent);
+        showColumReception = new BooleanFieldEditor(PREF_SHOW_RECTIME_COL, "Reception Time", parent);
+        showColumnGeneration = new BooleanFieldEditor(PREF_SHOW_GENTIME_COL, "Generation Time", parent);
         addField(showColumSeqNum);
         addField(showColumReception);
         addField(showColumnGeneration);
@@ -53,10 +56,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
     public boolean performOk() {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
-        boolean propertiesChanged = showColumSeqNum.getBooleanValue() != store.getBoolean("events.showColumSeqNum");
-        propertiesChanged |= showColumReception.getBooleanValue() != store.getBoolean("events.showColumReception");
-        propertiesChanged |= showColumnGeneration.getBooleanValue() != store.getBoolean("events.showColumnGeneration");
-        propertiesChanged |= nbMessageLineToDisplay.getIntValue() != store.getInt("events.nbMessageLineToDisplay");
+        boolean propertiesChanged = showColumSeqNum.getBooleanValue() != store.getBoolean(PREF_SHOW_SEQNUM_COL);
+        propertiesChanged |= showColumReception.getBooleanValue() != store.getBoolean(PREF_SHOW_RECTIME_COL);
+        propertiesChanged |= showColumnGeneration.getBooleanValue() != store.getBoolean(PREF_SHOW_GENTIME_COL);
+        propertiesChanged |= nbMessageLineToDisplay.getIntValue() != store.getInt(PREF_LINECOUNT);
 
         // Save to store
         boolean ret = super.performOk();

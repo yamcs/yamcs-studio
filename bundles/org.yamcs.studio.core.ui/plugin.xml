@@ -114,6 +114,9 @@
                commandId="org.yamcs.studio.core.ui.disconnect" 
                label="Disconnect">
          </command>
+         <separator
+               name="connect"
+               visible="true"/>
       </menuContribution>
    </extension>
 </plugin>

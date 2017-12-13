@@ -36,7 +36,7 @@
                value="20,215,560,15"/>
          <property
                name="introTitle"
-               value="Yamcs Studio"/>
+               value="Yamcs Studio Editor"/>
          <property
                name="introBrandingImage"
                value="product:icons/css64.png"/>
@@ -132,79 +132,7 @@
          <!-- Hide this loaded help menu, with something simpler defined in action bar advisor -->
          <hiddenMenuItem id="help"/>
          <hiddenMenuItem id="org.eclipse.ui.window.preferences"/>
-      </perspectiveExtension>
-      
-      <!-- OPI Runtime Perspective -->
-      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.archive.ArchiveView">
-         </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.eventlog.EventLogView">
-         </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.alarms.active.ActiveAlarmsView">
-         </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.commanding.stack.CommandStackView">
-         </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView">
-         </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.monitoring.links.LinksView">
-         </view>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.monitoring.clients.ClientsView">
-         </view> 
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.commanding.queue.CommandQueueView">
-         </view>
-         <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
-         <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
-         <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
-         <viewShortcut id="org.yamcs.studio.commanding.stack.CommandStackView"/>
-         <viewShortcut id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
-         <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
-         <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
-         <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
-      </perspectiveExtension>
-      
-      <!-- OPI Editor Perspective -->
-      <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
-      	 <!-- Just some placeholders, in case the user wants to open this in the Editor -->
+         
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -260,7 +188,7 @@
                visible="false"
                closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView"/>
-         <!-- Yamcs -->
+               
          <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
          <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
@@ -269,7 +197,15 @@
          <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
          <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
          <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
-         <!-- CS-Studio -->
+      </perspectiveExtension>
+      
+      <!-- OPI Runtime Perspective -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
+
+      </perspectiveExtension>
+      
+      <!-- OPI Editor Perspective -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
    </extension>

@@ -1,7 +1,5 @@
 package org.yamcs.studio.eventlog;
 
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +7,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -20,14 +19,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -35,9 +32,7 @@ import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.EventListener;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -51,10 +46,10 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     public static final String COL_MESSAGE = "Message";
     public static final String COL_SEQNUM = "Seq.Nr.";
 
-    private boolean showColumnSeqNum = true;
-    private boolean showColumnReception = true;
-    private boolean showColumnGeneration = true;
-    private int nbMessageLineToDisplay = 1;
+    private boolean showColumnSeqNum;
+    private boolean showColumnReception;
+    private boolean showColumnGeneration;
+    private int nbMessageLineToDisplay;
 
     private TableViewer tableViewer;
     private TableLayout tableLayout;
@@ -64,16 +59,11 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
     @Override
     public void createPartControl(Composite parent) {
 
-        // get preference from plugin
-        if (YamcsUIPlugin.getDefault() != null) {
-            showColumnSeqNum = YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumSeqNum");
-            showColumnReception = YamcsUIPlugin.getDefault().getPreferenceStore()
-                    .getBoolean("events.showColumReception");
-            // showColumnGeneration =
-            // YamcsUIPlugin.getDefault().getPreferenceStore().getBoolean("events.showColumnGeneration");
-            nbMessageLineToDisplay = YamcsUIPlugin.getDefault().getPreferenceStore()
-                    .getInt("events.nbMessageLineToDisplay");
-        }
+        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        showColumnSeqNum = store.getBoolean(PreferencePage.PREF_SHOW_SEQNUM_COL);
+        showColumnReception = store.getBoolean(PreferencePage.PREF_SHOW_RECTIME_COL);
+        showColumnGeneration = store.getBoolean(PreferencePage.PREF_SHOW_GENTIME_COL);
+        nbMessageLineToDisplay = store.getInt(PreferencePage.PREF_LINECOUNT);
 
         tableViewer = new TableViewer(parent,
                 SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
@@ -274,9 +264,7 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
 
     // This method should be called when the stream of events to be imported is ended
     public void addedAllEvents() {
-        log.finest("sort started");
         tableContentProvider.addedAllEvents();
-        log.finest("sort done");
     }
 
     public EventLogContentProvider getTableContentProvider() {
@@ -294,128 +282,4 @@ public class EventLogView extends ViewPart implements StudioConnectionListener, 
                 tableContentProvider.getNbWarnings(),
                 tableContentProvider.getNbInfo()));
     }
-
-    // test function
-    public static void main(String args[]) throws InterruptedException {
-        TimeEncoding.setUp();
-        Display display = new Display();
-        Shell shell = new Shell();
-        shell.setText("Event Log test");
-        shell.open();
-
-        EventLogView lv = new EventLogView();
-        lv.createPartControl(shell);
-        shell.pack();
-
-        // insert and clear a lot of events
-        // final int NB_TEST_EVENTS = 10;
-        final int NB_TEST_EVENTS = 100000;
-        final int BLOCK_SIZE = 500;
-        for (int i = 0; i < 1; i++) {
-            // clear events
-            lv.clear();
-            insertTestEvents(lv, NB_TEST_EVENTS, BLOCK_SIZE);
-
-            Display.getDefault().asyncExec(() -> lv.addedAllEvents());
-            log.info("sort queued");
-        }
-        // insert a batch without clearing the previous one
-        // should include only a few events with a different primary key
-        // insertTestEvents(lv, NB_TEST_EVENTS, BLOCK_SIZE);
-        // Display.getDefault().asyncExec(() -> lv.addedAllEvents());
-
-        // insert special events
-        Event event = Event.newBuilder()
-                .setGenerationTime(new Date().getTime() - 10000)
-                .setReceptionTime(new Date().getTime())
-                .setMessage("test event\nline 2\nline 3")
-                .setSeqNumber(1)
-                .setSeverity(EventSeverity.INFO)
-                .setSource("test_source")
-                .setType("test_type")
-                .build();
-
-        Event event2 = Event.newBuilder()
-                .setGenerationTime(new Date().getTime() - 20000)
-                .setReceptionTime(new Date().getTime())
-                .setMessage("test event2\nline a\nline b")
-                .setSeqNumber(2)
-                .setSeverity(EventSeverity.ERROR)
-                .setSource("test_source2")
-                .setType("test_type2")
-                .build();
-
-        Event event3 = Event
-                .newBuilder()
-                .setGenerationTime(new Date().getTime() - 20000)
-                .setReceptionTime(new Date().getTime())
-                .setMessage(
-                        "test event3\nline *\nline ** - very\"looooooooooooooooooooooooooooooooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnggggggggggggggg")
-                .setSeqNumber(2)
-                .setSeverity(EventSeverity.ERROR)
-                .setSource("test_source3")
-                .setType("test_type3")
-                .build();
-
-        Event event4 = Event
-                .newBuilder()
-                .setGenerationTime(event2.getGenerationTime())
-                .setReceptionTime(new Date().getTime())
-                .setMessage(
-                        "should not replace event2")
-                .setSeqNumber(event2.getSeqNumber())
-                .setSeverity(EventSeverity.ERROR)
-                .setSource(event2.getSource())
-                .setType("test_type4")
-                .build();
-
-        lv.processEvent(event);
-        lv.processEvent(event2);
-        lv.processEvent(event3);
-        lv.processEvent(event4);
-
-        // export to csv
-        Display.getDefault().asyncExec(() -> {
-            ExportEventsHandler eeh = new ExportEventsHandler();
-            try {
-                eeh.doExecute(lv, shell);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
-        display.dispose();
-    }
-
-    private static void insertTestEvents(EventLogView lv, int nbEvents, int blockSize) {
-
-        int eventId = 0;
-        while (eventId < nbEvents) {
-            List<Event> events = new LinkedList<>();
-            for (int j = 0; j < blockSize; j++) {
-                eventId++;
-                if (eventId > nbEvents)
-                    break;
-                Event event = Event.newBuilder()
-                        .setGenerationTime(new Date().getTime())
-                        .setReceptionTime(new Date().getTime())
-                        .setMessage("test event " + eventId)
-                        .setSeqNumber(eventId)
-                        .setSeverity(EventSeverity.WARNING)
-                        .setSource("test_source")
-                        .setType("test_type")
-                        .build();
-                events.add(event);
-            }
-            Display.getDefault().asyncExec(() -> lv.addEvents(events));
-        }
-        log.info("addEvents queued");
-
-    }
-
 }
