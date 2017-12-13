@@ -17,36 +17,12 @@
          id="org.eclipse.emf.ecore"
          version="0.0.0"/>
 
+   <includes
+         id="org.yamcs.studio.core.feature"
+         version="0.0.0"/>
+
    <plugin
          id="org.yamcs.studio.runtime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.yamcs.studio.eventlog"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.yamcs.studio.p2deps.yamcs-api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.yamcs.studio.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.yamcs.studio.core.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -61,6 +37,13 @@
 
    <plugin
          id="org.eclipse.equinox.security"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.forms"
          download-size="0"
          install-size="0"
          version="0.0.0"
