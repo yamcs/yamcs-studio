@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -21,6 +22,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
@@ -190,10 +192,14 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
     @Override
     public void postStartup() {
-        PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
+        IWorkbench workbench = PlatformUI.getWorkbench();
+
+        PreferenceManager pm = workbench.getPreferenceManager();
         pm.remove("org.eclipse.help.ui.browsersPreferencePage");
         pm.remove("org.eclipse.team.ui.TeamPreferences");
         pm.remove("org.csstudio.platform.ui.css.applications");
         pm.remove("org.csstudio.platform.ui.css.platform");
+
+        YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
     }
 }

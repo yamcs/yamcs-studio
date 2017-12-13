@@ -20,12 +20,6 @@
                name="appName"
                value="Yamcs Studio Editor"/>
          <property
-               name="lifeCycleURI"
-               value="bundleclass://org.yamcs.studio.css.utility/org.yamcs.studio.css.utility.LifeCycleManager"/>
-         <property
-               name="applicationCSSResources"
-               value="platform:/plugin/org.eclipse.platform/images/"/>
-         <property
                name="startupForegroundColor"
                value="2F376D"/>
          <property

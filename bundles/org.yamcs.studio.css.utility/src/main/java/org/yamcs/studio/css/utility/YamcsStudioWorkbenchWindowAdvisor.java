@@ -6,7 +6,6 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 
-
 public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindowAdvisor {
 
     public YamcsStudioWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
@@ -14,6 +13,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void preWindowOpen() {
         super.preWindowOpen();
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
