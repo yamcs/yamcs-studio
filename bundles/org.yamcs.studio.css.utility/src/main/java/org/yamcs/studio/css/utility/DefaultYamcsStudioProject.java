@@ -61,12 +61,11 @@ public class DefaultYamcsStudioProject extends DefaultProject {
     }
 
     /**
-     * Creates and imports the project files, for a sample project included
-     * in the core Yamcs Studio plugins.
+     * Creates and imports the project files, for a sample project included in the core Yamcs Studio plugins.
      */
     public IProject createDefaultProject(String projectName) throws IOException, CoreException {
         Bundle bundle = Activator.getDefault().getBundle();
-        URL location = FileLocator.toFileURL(bundle.getEntry("/"));
+        URL location = FileLocator.toFileURL(bundle.getEntry("/sample-projects/"));
         return createProject(location, projectName);
     }
 
@@ -83,14 +82,15 @@ public class DefaultYamcsStudioProject extends DefaultProject {
 
         try {
             File templateRoot = new File(location.getPath(), sourceFolder);
-            RelativeFileSystemStructureProvider structureProvider = new RelativeFileSystemStructureProvider(templateRoot);
+            RelativeFileSystemStructureProvider structureProvider = new RelativeFileSystemStructureProvider(
+                    templateRoot);
             ImportOperation operation = new ImportOperation(project.getFullPath(), templateRoot, structureProvider,
                     new IOverwriteQuery() {
-                @Override
-                public String queryOverwrite(String pathString) {
-                    return ALL;
-                }
-            }, structureProvider.getChildren(templateRoot));
+                        @Override
+                        public String queryOverwrite(String pathString) {
+                            return ALL;
+                        }
+                    }, structureProvider.getChildren(templateRoot));
 
             operation.setContext(Display.getDefault().getActiveShell());
             operation.run(null);
