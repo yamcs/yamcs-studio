@@ -35,8 +35,8 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            name="Event Log"
-            class="org.yamcs.studio.runtime.Perspective"
+            name="Runtime"
+            class="org.yamcs.studio.runtime.RuntimePerspective"
             id="org.yamcs.studio.runtime.perspective">
       </perspective>
    </extension>
@@ -47,5 +47,17 @@
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
          <toolbar id="additions"/>
       </menuContribution>
+   </extension>
+   
+   <extension point="org.eclipse.ui.views">
+      <category
+            name="Yamcs Studio"
+            id="org.yamcs.studio">
+      </category>
+      <view
+            category="org.yamcs.studio"
+            class="org.yamcs.studio.runtime.RuntimeView"
+            id="org.yamcs.studio.runtime.RuntimeView"
+            name="Runtime"/>
    </extension>
 </plugin>

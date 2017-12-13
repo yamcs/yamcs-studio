@@ -20,6 +20,7 @@ import org.yamcs.studio.core.ui.MissionTimeStatusLineContributionItem;
 import org.yamcs.studio.core.ui.ProcessorStatusLineContributionItem;
 import org.yamcs.studio.core.ui.actions.OnlineHelpAction;
 import org.yamcs.studio.core.ui.actions.RaiseIssueAction;
+import org.yamcs.studio.runtime.actions.BringAllToFrontAction;
 
 @SuppressWarnings("restriction")
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
@@ -29,6 +30,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     public static final String STATUS_MISSION_TIME_ID = "ystudio.status.missionTime";
 
     private IWorkbenchAction exitAction;
+
+    private IWorkbenchAction bringAllToFrontAction;
 
     private IWorkbenchAction onlineHelpAction;
     private IWorkbenchAction raiseIssueAction;
@@ -42,6 +45,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void makeActions(IWorkbenchWindow window) {
         exitAction = ActionFactory.QUIT.create(window);
         register(exitAction);
+
+        bringAllToFrontAction = new BringAllToFrontAction();
+        register(bringAllToFrontAction);
 
         onlineHelpAction = new OnlineHelpAction();
         register(onlineHelpAction);
@@ -61,8 +67,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager helpMenu = new MenuManager("Help", IWorkbenchActionConstants.M_HELP);
 
         menuBar.add(fileMenu);
-        menuBar.add(windowMenu);
         menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        menuBar.add(windowMenu);
         menuBar.add(helpMenu);
 
         // File
@@ -70,6 +76,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         fileMenu.add(new Separator());
         // fileMenu.add(exitAction);
+
+        // Window
+        windowMenu.add(bringAllToFrontAction);
 
         // Help
         helpMenu.add(onlineHelpAction);
