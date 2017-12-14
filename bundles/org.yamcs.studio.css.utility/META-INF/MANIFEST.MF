@@ -25,6 +25,8 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.apputil.ui,
  org.csstudio.ui.menu.app,
  org.csstudio.startup.helper,
- org.csstudio.opibuilder
+ org.csstudio.opibuilder,
+ org.csstudio.diirt.util,
+ org.diirt.datasource
 Export-Package: org.yamcs.studio.css.utility
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

@@ -20,7 +20,6 @@ See http://www.yamcs.org
 openFile
       </programArgs>
       <vmArgs>-Xmx1024m
--Dpython.cachedir.skip=true
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
 -Dorg.osgi.framework.bundle.parent=ext

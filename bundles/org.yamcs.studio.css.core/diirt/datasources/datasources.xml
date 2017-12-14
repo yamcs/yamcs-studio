@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<dataSources version="1">
-  <compositeDataSource delimiter="://" />
-  <compositeDataSource defaultDataSource="para" />
-</dataSources>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<ca version="1">
-    <dataSourceOptions dbePropertySupported="false" honorZeroPrecision="true" monitorMask="VALUE" rtypeValueOnly="false" varArraySupported="auto"/>
-    <jcaContext addr_list="localhost" auto_addr_list="true" beacon_period="30.0" connection_timeout="30.0" max_array_bytes="16384" pureJava="true" repeater_port="5065" server_port="5064"/>
-</ca>
