@@ -6,6 +6,4 @@ Bundle-SymbolicName: org.yamcs.studio.commanding.tests
 Bundle-Vendor: Space Applications Services
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: org.yamcs.studio.commanding
-Require-Bundle: org.junit,
- org.mockito.mockito-core,
- org.objenesis
+Require-Bundle: org.junit
