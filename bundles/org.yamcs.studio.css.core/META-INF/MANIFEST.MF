@@ -34,4 +34,7 @@ Export-Package: org.yamcs.studio.css.core.prefs,
  org.yamcs.studio.css.core.pvmanager.autocomplete,
  org.yamcs.studio.css.core.vtype
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
-Service-Component: OSGI-INF/autocomplete/*.xml
+Service-Component: OSGI-INF/ds_para.xml,
+ OSGI-INF/ds_sw.xml,
+ OSGI-INF/autocomplete/para-parser.xml,
+ OSGI-INF/autocomplete/para-provider.xml
