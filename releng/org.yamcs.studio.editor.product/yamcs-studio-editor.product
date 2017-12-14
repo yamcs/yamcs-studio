@@ -16,16 +16,11 @@ See http://www.yamcs.org
    </configIni>
 
    <launcherArgs>
-      <programArgs>--launcher.defaultAction
-openFile
-      </programArgs>
       <vmArgs>-Xmx1024m
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
 -Dorg.osgi.framework.bundle.parent=ext
 -Dosgi.framework.extensions=org.eclipse.fx.osgi
--Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
--Dorg.apache.commons.logging.simplelog.defaultlog=fatal
       </vmArgs>
       <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
 -XstartOnFirstThread

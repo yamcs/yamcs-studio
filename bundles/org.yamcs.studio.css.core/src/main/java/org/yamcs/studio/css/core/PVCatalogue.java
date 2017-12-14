@@ -81,8 +81,6 @@ public class PVCatalogue implements Catalogue, ParameterListener {
                             pval.getEngValue()));
                 }
                 pvReader.processParameterValue(pval);
-            } else {
-                log.warning("No pvreader for incoming update of " + pval.getId().getName());
             }
         }
     }
