@@ -24,7 +24,6 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.startup,
  org.csstudio.apputil.ui,
  org.csstudio.ui.menu.app,
- org.csstudio.startup.helper,
  org.csstudio.opibuilder,
  org.csstudio.diirt.util,
  org.diirt.datasource

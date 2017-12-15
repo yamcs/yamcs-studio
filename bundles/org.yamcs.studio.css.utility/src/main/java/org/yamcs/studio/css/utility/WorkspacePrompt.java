@@ -5,67 +5,29 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
-import org.csstudio.platform.workspace.WorkspaceIndependentStore;
 import org.csstudio.platform.workspace.WorkspaceInfo;
-import org.csstudio.startup.module.LoginExtPoint;
 import org.csstudio.startup.module.WorkspaceExtPoint;
-import org.csstudio.startuphelper.StartupHelper;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * Forked from org.csstudio.utility.product.WorkspacePrompt to remove dependency on utility.product
- * <p>
- * <code>WorkspacePromptExtPointImpl</code> uses the startup parameters which define the default
- * workspace and tries to set that url as the workspace for the application. This implementation
- * expects the following parameters {@value LoginExtPoint#USERNAME}, {@value LoginExtPoint#PASSWORD}
- * , {@value StartupParameters#FORCE_WORKSPACE_PROMPT_PARAM}, and
- * {@link WorkspaceExtPoint#WORKSPACE}.
- */
 public class WorkspacePrompt implements WorkspaceExtPoint {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.csstudio.startup.extensions.WorkspacePromptExtPoint#promptForWorkspace(org.eclipse.swt
-     * .widgets.Display, org.eclipse.equinox.app.IApplicationContext, java.util.Map)
-     */
     @Override
-    public Object promptForWorkspace(Display display,
-            IApplicationContext context, Map<String, Object> parameters)
-    {
+    public Object promptForWorkspace(Display display, IApplicationContext context, Map<String, Object> parameters) {
+        boolean promptForWorkspace = (Boolean) parameters.get(StartupParameters.PARAM_PROMPT_FOR_WORKSPACE);
+        URL suggestedWorkspace = (URL) parameters.get(StartupParameters.PARAM_SUGGESTED_WORKSPACE);
 
-        Object o = parameters.get(StartupParameters.LOGIN_PROMPT_PARAM);
-        final boolean login = o != null ? (Boolean) o : false;
-
-        o = parameters.get(LoginExtPoint.USERNAME);
-        final String username = o != null ? (String) o : null;
-
-        o = parameters.get(LoginExtPoint.PASSWORD);
-        final String password = o != null ? (String) o : null;
-
-        o = parameters.get(StartupParameters.FORCE_WORKSPACE_PROMPT_PARAM);
-        final boolean force_workspace_prompt = o != null ? (Boolean) o : false;
-
-        o = parameters.get(WorkspaceExtPoint.WORKSPACE);
-        final URL default_workspace = o != null ? (URL) o : null;
-
-        if (!checkInstanceLocation(login, force_workspace_prompt,
-                default_workspace, username, password, parameters)) {
-            // The <code>stop()</code> routine of many UI plugins writes
-            // the current settings to the workspace.
-            // Even though we have not yet opened any workspace, that would
-            // open, even create the default workspace.
-            // So exit right away:
+        if (!checkInstanceLocation(promptForWorkspace, suggestedWorkspace, parameters)) {
+            // The stop() routine of many UI plugins writes the current settings to the workspace.
+            // Even though we have not yet opened any workspace, that would open, even create
+            // the default workspace. So exit right away:
             System.exit(0);
             // .. instead of:
-            //Platform.endSplash();
+            // Platform.endSplash();
             return IApplication.EXIT_OK;
         }
         return null;
@@ -74,138 +36,88 @@ public class WorkspacePrompt implements WorkspaceExtPoint {
     /**
      * Check or select the workspace.
      * <p>
-     * See IDEApplication code from org.eclipse.ui.internal.ide.application in version 3.3. That
-     * example uses a "Shell" argument, but also has a comment about bug 84881 and thus not using
-     * the shell to force the dialogs to be top-level, so we skip the shell altogether.
+     * See IDEApplication code from org.eclipse.ui.internal.ide.application in version 3.3. That example uses a "Shell"
+     * argument, but also has a comment about bug 84881 and thus not using the shell to force the dialogs to be
+     * top-level, so we skip the shell altogether.
      * <p>
-     * Note that we must be very careful with anything that sets the workspace. For example,
-     * initializing a logger from preferences activates the default workspace, after which we can no
-     * longer change it...
+     * Note that we must be very careful with anything that sets the workspace. For example, initializing a logger from
+     * preferences activates the default workspace, after which we can no longer change it...
      *
-     * @param show_login
-     *            Show the login (user/password) dialog?
-     * @param force_prompt
-     *            Set <code>true</code> in a Control Room setting where the initial suggestion is
-     *            always the "default" workspace, and there is no way to suppress the "ask again"
-     *            option. Set <code>false</code> in an Office setting where users can uncheck the
-     *            "ask again" option and use the last workspace as a default.
-     * @param default_workspace
-     *            Default to use
-     * @param username
-     *            the username to access the workspace
-     * @param password
-     *            the password for the given username
      * @return <code>true</code> if all OK
      */
-    private boolean checkInstanceLocation(boolean show_login,
-            final boolean force_prompt,
-            URL default_workspace, String username, String password,
-            Map<String, Object> parameters)
-    {
+    private boolean checkInstanceLocation(boolean forcePrompt, URL defaultWorkspace, Map<String, Object> parameters) {
         // Was "-data @none" specified on command line?
-        final Location instanceLoc = Platform.getInstanceLocation();
+        Location instanceLoc = Platform.getInstanceLocation();
 
-        if (instanceLoc == null)
-        {
-            MessageDialog.openError(null, "No workspace", //$NON-NLS-1$
-                    "Cannot run without a workspace"); //$NON-NLS-1$
+        if (instanceLoc == null) {
+            MessageDialog.openError(null, "No workspace", "Cannot run without a workspace");
             return false;
         }
 
         // -data "/some/path" was provided...
-        if (instanceLoc.isSet())
-        {
-            try
-            { // Lock
-                if (instanceLoc.lock())
+        if (instanceLoc.isSet()) {
+            try { // Lock
+                if (instanceLoc.lock()) {
                     return true;
+                }
                 // Two possibilities:
                 // 1. directory is already in use
                 // 2. directory could not be created
-                final File ws_dir = new File(instanceLoc.getURL().getFile());
-                if (ws_dir.exists())
-                    MessageDialog.openError(null,
-                            org.csstudio.platform.workspace.Messages.Workspace_InUseErrorTitle,
-                            NLS.bind(org.csstudio.platform.workspace.Messages.Workspace_InUseError,
+                File ws_dir = new File(instanceLoc.getURL().getFile());
+                if (ws_dir.exists()) {
+                    MessageDialog.openError(null, "Workspace in use",
+                            String.format("Workspace %s is in use. Select a different workspace",
                                     ws_dir.getCanonicalPath()));
-                else
-                    MessageDialog.openError(null,
-                            org.csstudio.platform.workspace.Messages.Workspace_DirectoryErrorTitle,
-                            org.csstudio.platform.workspace.Messages.Workspace_DirectoryError);
-            } catch (IOException ex)
-            {
-                MessageDialog.openError(null,
-                        org.csstudio.platform.workspace.Messages.Workspace_LockErrorTitle,
-                        org.csstudio.platform.workspace.Messages.Workspace_LockError
-                                + ex.getMessage());
+                } else {
+                    MessageDialog.openError(null, "Directory error", "File permission error with workspace directory");
+                }
+            } catch (IOException ex) {
+                MessageDialog.openError(null, "Workspace lock error", "Cannot lock workspace: " + ex.getMessage());
             }
             return false;
         }
 
         // -data @noDefault or -data not specified, prompt and set
-        if (default_workspace == null)
-            default_workspace = instanceLoc.getDefault();
+        if (defaultWorkspace == null) {
+            defaultWorkspace = instanceLoc.getDefault();
+        }
 
-        final WorkspaceInfo workspace_info =
-                new WorkspaceInfo(default_workspace, !force_prompt);
+        WorkspaceInfo workspaceInfo = new WorkspaceInfo(defaultWorkspace, !forcePrompt);
 
         // Prompt in any case? Or did user decide to be asked again?
-        boolean show_Workspace = force_prompt | workspace_info.getShowDialog();
+        boolean showWorkspace = forcePrompt | workspaceInfo.getShowDialog();
 
-        //if no user name provided, display last login user.
-        if (username == null)
-            username = WorkspaceIndependentStore.readLastLoginUser();
+        while (true) {
+            if (showWorkspace) {
+                String message = String.format(
+                        "Select your %s workspace, where your files, preferences etc. will be stored.",
+                        Platform.getProduct().getName());
 
-        //initialize startupHelper
-        StartupHelper startupHelper = new StartupHelper(null, force_prompt,
-                workspace_info, username, password, show_login, show_Workspace);
-
-        while (true)
-        {
-            startupHelper.setShow_Login(show_login);
-            startupHelper.setShow_Workspace(show_Workspace);
-
-            if (show_Workspace || show_login)
-            {
-                if (!startupHelper.openStartupDialog())
-                    return false; // canceled
-
-                //get user name and password from startup dialog
-                if (show_login) {
-                    username = startupHelper.getUserName();
-                    password = startupHelper.getPassword();
+                WorkspaceDialog dialog = new WorkspaceDialog("Select Workspace", message, workspaceInfo, !forcePrompt);
+                if (dialog.open() == WorkspaceDialog.CANCEL) {
+                    return false;
                 }
             }
-            // In case of errors, we will have to ask the workspace,
-            // but don't bother to ask user name and password again.
-            show_Workspace = true;
-            show_login = false;
+            // In case of errors, we will have to ask the workspace
+            showWorkspace = true;
 
-            try
-            {
+            try {
                 // the operation will fail if the url is not a valid
                 // instance data area, so other checking is unneeded
-                URL workspaceUrl = new URL("file:" + workspace_info.getSelectedWorkspace()); //$NON-NLS-1$
-                if (instanceLoc.set(workspaceUrl, true)) // set & lock
-                {
-                    workspace_info.writePersistedData();
+                URL workspaceUrl = new URL("file:" + workspaceInfo.getSelectedWorkspace());
+                if (instanceLoc.set(workspaceUrl, true)) { // set & lock
+                    workspaceInfo.writePersistedData();
                     parameters.put(WORKSPACE, workspaceUrl);
                     return true;
                 }
-            } catch (Exception ex)
-            {
-                MessageDialog.openError(null,
-                        org.csstudio.platform.workspace.Messages.Workspace_GenericErrorTitle,
-                        org.csstudio.platform.workspace.Messages.Workspace_GenericError + ex.getMessage());
+            } catch (Exception e) {
+                MessageDialog.openError(null, "Workspace error", "Cannot set workspace: " + e.getMessage());
                 return false;
             }
             // by this point it has been determined that the workspace is
             // already in use -- force the user to choose again
-            show_login = false;
-            MessageDialog.openError(null,
-                    org.csstudio.platform.workspace.Messages.Workspace_InUseErrorTitle,
-                    NLS.bind(org.csstudio.platform.workspace.Messages.Workspace_InUseError,
-                            workspace_info.getSelectedWorkspace()));
+            MessageDialog.openError(null, "Workspace in use", String.format(
+                    "Workspace %s is in use. Select a different workspace", workspaceInfo.getSelectedWorkspace()));
         }
     }
 }
