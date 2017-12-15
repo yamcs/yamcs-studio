@@ -2,10 +2,17 @@ package org.yamcs.studio.css.utility;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.csstudio.diirt.util.DiirtStartup;
+import org.csstudio.logging.LogFormatDetail;
+import org.csstudio.logging.LogFormatter;
+import org.csstudio.logging.ui.ConsoleViewHandler;
 import org.csstudio.utility.product.ApplicationWorkbenchWindowAdvisor;
 import org.csstudio.utility.product.IWorkbenchWindowAdvisorExtPoint;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
@@ -29,6 +36,26 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
                 hooks.set(i, new PatchedDiirtStartup());
             }
         }
+    }
+
+    @Override
+    public void postWindowCreate() {
+        // The inherited implementation adds a JUL handler that sends
+        // output to the Console View
+        super.postWindowCreate();
+
+        // Modify the newly added JUL handler with custom config.
+        for (Handler handler : Logger.getLogger("").getHandlers()) {
+            if (handler instanceof ConsoleViewHandler) {
+                handler.setLevel(Level.INFO);
+                handler.setFormatter(new LogFormatter(LogFormatDetail.LOW));
+            }
+        }
+
+        // Now that we now that the user will see it:
+        Logger log = Logger.getLogger(getClass().getName());
+        log.info(Platform.getProduct().getName() + " v" + Platform.getProduct().getDefiningBundle().getVersion());
+        log.info("Workspace: " + Platform.getInstanceLocation().getURL().getPath());
     }
 
     @Override
@@ -64,7 +91,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
     }
 
     public String getDefaultTitle() {
-        return "Yamcs Studio";
+        return Platform.getProduct().getName();
     }
 
     /**

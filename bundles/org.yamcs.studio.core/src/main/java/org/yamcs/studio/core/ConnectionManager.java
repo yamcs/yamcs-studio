@@ -81,9 +81,9 @@ public class ConnectionManager {
     }
 
     /**
-     * This returns the Yamcs instance that was used to set up the connection. You probably don't
-     * need this in any views. Instead use {@link ManagementCatalogue.getCurrentYamcsInstance()}
-     * instead which reflects instance changes within the same connection.
+     * This returns the Yamcs instance that was used to set up the connection. You probably don't need this in any
+     * views. Instead use {@link ManagementCatalogue.getCurrentYamcsInstance()} instead which reflects instance changes
+     * within the same connection.
      */
     public String getInitialYamcsInstance() {
         if (connectionInfo != null) {
@@ -128,7 +128,7 @@ public class ConnectionManager {
         // This 'defaultInstance' should really be moved to Server,
         // but for that we require more work on the websocket api,
         // which currently requires an instance to work with
-        log.info("Retrieving server information for " + yprops.getUrl());
+        log.fine("Retrieving server information for " + yprops.getUrl());
         yamcsClient.get("", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 GetApiOverviewResponse response;
@@ -143,7 +143,7 @@ public class ConnectionManager {
                 serverId = response.getServerId();
                 serverVersion = response.getYamcsVersion();
 
-                log.info(String.format("Detected Yamcs Server v%s (id: '%s')", serverVersion, serverId));
+                log.fine(String.format("Detected Yamcs Server v%s (id: '%s')", serverVersion, serverId));
                 if (yprops.getInstance() == null || "".equals(yprops.getInstance())) {
                     if (response.hasDefaultYamcsInstance()) {
                         yprops.setInstance(response.getDefaultYamcsInstance());
@@ -159,7 +159,7 @@ public class ConnectionManager {
                     }
                 }
 
-                log.info("Connecting WebSocket to instance " + yprops.getInstance());
+                log.info("Connecting to " + yprops.getUrl());
                 webSocketClient = new WebSocketRegistrar(yprops);
                 webSocketClient.connect().addListener(new ChannelFutureListener() {
                     @Override
@@ -281,7 +281,7 @@ public class ConnectionManager {
     }
 
     private void setConnectionStatus(ConnectionStatus connectionStatus) {
-        log.info(String.format("[%s] %s", mode, connectionStatus));
+        log.fine(String.format("[%s] %s", mode, connectionStatus));
         this.connectionStatus = connectionStatus;
     }
 

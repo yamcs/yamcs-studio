@@ -1,30 +1,20 @@
 package org.yamcs.studio.css.utility;
 
 import java.util.Map;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.logging.LogConfigurator;
+import org.csstudio.logging.LogFormatDetail;
+import org.csstudio.logging.LogFormatter;
 import org.csstudio.platform.workspace.RelaunchConstants;
 import org.csstudio.startup.module.WorkbenchExtPoint;
-import org.csstudio.utility.product.ApplicationWorkbenchAdvisor;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 
-/**
- * Forked from org.csstudio.utility.product.Workbench
- * <p>
- * If StartupParameters#SHARE_LINK_PARAM and ProjectExtPoint#PROJECTS parameters are provided, a link to that shared
- * folder will be created.
- * <p>
- * Uses LoginExtPoint#USERNAME and LoginExtPoint#PASSWORD to attempt authentication.
- * <p>
- * Runs workbench using the {@link ApplicationWorkbenchAdvisor}.
- *
- * @see YamcsStudioStartupParameters for startup parameters as well as class loader notes.
- */
 public class YamcsStudioWorkbench implements WorkbenchExtPoint {
 
     @Override
@@ -44,13 +34,8 @@ public class YamcsStudioWorkbench implements WorkbenchExtPoint {
 
     @Override
     public Object runWorkbench(Display display, IApplicationContext context, Map<String, Object> parameters) {
-        // Configure Logging
-        try {
-            LogConfigurator.configureFromPreferences();
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Continue without customized log configuration
-        }
+        configureLogging();
+
         Logger log = Logger.getLogger(getClass().getName());
 
         // Run the workbench
@@ -70,5 +55,28 @@ public class YamcsStudioWorkbench implements WorkbenchExtPoint {
         }
         // RESTART without changes
         return IApplication.EXIT_RESTART;
+    }
+
+    protected void configureLogging() {
+        Logger root = Logger.getLogger("");
+
+        // We use the convention where INFO goes to end-user (via 'Console View' inside Yamcs Studio)
+        // And FINE goes to stdout (--> debuggable by end-user if needed, and visible in PDE/UI)
+
+        // By default only allow WARNING messages
+        root.setLevel(Level.WARNING);
+
+        // Exceptions only for plugins that do not flood the Console View with INFO messages:
+        Logger.getLogger("org.csstudio").setLevel(Level.FINE);
+        Logger.getLogger("org.yamcs.studio").setLevel(Level.FINE);
+
+        // At this point in the startup there should be only one handler (for stdout)
+        for (Handler handler : root.getHandlers()) {
+            handler.setLevel(Level.FINE);
+            handler.setFormatter(new LogFormatter(LogFormatDetail.HIGH));
+        }
+
+        // A second handler will be created by the workbench window advisor when the ConsoleView
+        // is available.
     }
 }
