@@ -62,12 +62,12 @@
         triggers initialization of the workspace
      -->
    <extension point="org.csstudio.startup.module">
-      <startupParameters class="org.yamcs.studio.css.utility.StartupParameters"/>
-      <workspace class="org.yamcs.studio.css.utility.WorkspacePrompt"/>
-      <workbench class="org.yamcs.studio.css.utility.Workbench"/>
-      <project class="org.yamcs.studio.css.utility.DefaultYamcsStudioProject"/>
+      <startupParameters class="org.yamcs.studio.css.utility.YamcsStudioStartupParameters"/>
+      <workspace class="org.yamcs.studio.css.utility.YamcsStudioWorkspace"/>
+      <workbench class="org.yamcs.studio.css.utility.YamcsStudioWorkbench"/>
+      <project class="org.yamcs.studio.css.utility.YamcsStudioProject"/>
    </extension>
-   
+
    <extension point="org.eclipse.ui.activities">
       <activity id="yamcsstudio.disableextensions" name="Hidden activities"/>
       <!-- Hide the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.csstudio.platform.workspace.Messages;
-import org.csstudio.platform.workspace.WorkspaceInfo;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.osgi.util.NLS;
@@ -20,57 +20,33 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class WorkspaceDialog extends TitleAreaDialog {
+public class SelectWorkspaceDialog extends TitleAreaDialog {
 
-    private String _title;
-    private String _message;
-
-    /** Workspace information */
-    private WorkspaceInfo info;
-
-    /** Include the "show again" checkbox? */
-    private boolean with_show_again_option;
-
-    /** Combo with selected and recent workspaces */
+    private String[] recentWorkspaces;
     private Combo workspaces;
 
-    private Button showDialog;
+    private String selectedWorkspace;
 
-    /**
-     * Creates a new login dialog.
-     *
-     * @param title
-     *            the dialog title.
-     * @param message
-     *            the message that is displayed in the dialog.
-     * @param info
-     *            WorkspaceInfo
-     * @param with_show_again_option
-     *            Include the "show again" checkbox?
-     */
-    public WorkspaceDialog(String title, String message, WorkspaceInfo info, boolean with_show_again_option) {
+    public SelectWorkspaceDialog(String... recentWorkspaces) {
         super(null);
-        _title = title;
-        _message = message;
-        this.info = info;
-        this.with_show_again_option = with_show_again_option;
+        this.recentWorkspaces = recentWorkspaces;
 
-        // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }
 
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(_title);
+        newShell.setText(Platform.getProduct().getName());
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite parentComposite = (Composite) super.createDialogArea(parent);
 
-        setTitle(_title);
-        setMessage(_message);
+        setTitle("Select Workspace");
+        setMessage("The workspace directory is where " + Platform.getProduct().getName()
+                + " will store your files and preferences.");
 
         // Create the layout
         Composite contents = new Composite(parent, SWT.NONE);
@@ -89,9 +65,6 @@ public class WorkspaceDialog extends TitleAreaDialog {
     }
 
     private void createWorkspaceSection(Composite parent) {
-        // ____workspaces________ [Browse]
-        // [x] ask again
-        // final Composite composite = new Composite(parent_composite, 0);
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
         parent.setLayout(layout);
@@ -99,26 +72,22 @@ public class WorkspaceDialog extends TitleAreaDialog {
         parent.setLayoutData(gd);
 
         workspaces = new Combo(parent, SWT.DROP_DOWN);
-        workspaces.setToolTipText(Messages.Workspace_ComboTT);
         gd = new GridData();
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalAlignment = SWT.FILL;
         workspaces.setLayoutData(gd);
         // Fill w/ current workspace history, select the first one
-        for (int i = 0; i < info.getWorkspaceCount(); i++) {
-            workspaces.add(info.getWorkspace(i));
-        }
+        workspaces.setItems(recentWorkspaces);
         workspaces.select(0);
 
         Button browse = new Button(parent, SWT.PUSH);
-        browse.setText(Messages.Workspace_Browse);
-        browse.setToolTipText(Messages.Workspace_BrowseTT);
+        browse.setText("Browse");
         browse.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 DirectoryDialog dialog = new DirectoryDialog(getShell());
-                dialog.setText(Messages.Workspace_BrowseDialogTitle);
-                dialog.setMessage(Messages.Workspace_BrowseDialogMessage);
+                dialog.setText("Select Workspace");
+                dialog.setMessage("Select existing workspace");
                 dialog.setFilterPath(getInitialBrowsePath());
                 String dir = dialog.open();
                 if (dir != null) {
@@ -126,23 +95,18 @@ public class WorkspaceDialog extends TitleAreaDialog {
                 }
             }
         });
-
-        // Pro choice, allow to _not_ show the dialog the next time around?
-        if (with_show_again_option) {
-            createShowDialogButton(parent);
-        } else { // Always show
-            info.setShowDialog(true);
-        }
     }
 
     @Override
     protected void okPressed() {
         if (!checkWorkspace()) {
             return;
-        } else if (with_show_again_option) {
-            info.setShowDialog(showDialog.getSelection());
         }
         super.okPressed();
+    }
+
+    public String getSelectedWorkspace() {
+        return selectedWorkspace;
     }
 
     /**
@@ -161,20 +125,6 @@ public class WorkspaceDialog extends TitleAreaDialog {
             return System.getProperty("user.dir");
         }
         return dir.getAbsolutePath();
-    }
-
-    /**
-     * Add 'show dialog?' button
-     */
-    private void createShowDialogButton(Composite composite) {
-        showDialog = new Button(composite, SWT.CHECK);
-        showDialog.setText(Messages.Workspace_AskAgain);
-        showDialog.setToolTipText(Messages.Workspace_AskAgainTT);
-        showDialog.setSelection(true);
-        GridData gd = new GridData();
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalAlignment = SWT.LEFT;
-        showDialog.setLayoutData(gd);
     }
 
     /**
@@ -216,8 +166,7 @@ public class WorkspaceDialog extends TitleAreaDialog {
             return false;
         }
 
-        // Looks good so far, so report the selected workspace.
-        info.setSelectedWorkspace(workspace);
+        selectedWorkspace = workspace;
         return true;
     }
 
@@ -244,12 +193,6 @@ public class WorkspaceDialog extends TitleAreaDialog {
             } catch (Exception ex) {
                 // Ignore errors. If there's a workspace we can't read, don't worry.
             }
-            // Could recurse further down, but that means when somebody tries
-            // "/" as the workspace, it would search the whole hard drive!
-            // So don't do that...
-            // final String nested = checkForWorkspacesInSubdirs(subdir);
-            // if (nested != null)
-            // return nested;
         }
         return null;
     }

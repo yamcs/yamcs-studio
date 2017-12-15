@@ -26,9 +26,9 @@ import org.osgi.framework.Bundle;
 /**
  * Creates default projects. We should instead do this only through a menu option though
  */
-public class DefaultYamcsStudioProject extends DefaultProject {
+public class YamcsStudioProject extends DefaultProject {
 
-    private static final Logger log = Logger.getLogger(DefaultYamcsStudioProject.class.getName());
+    private static final Logger log = Logger.getLogger(YamcsStudioProject.class.getName());
 
     @Override
     public Object openProjects(Display display, IApplicationContext context, Map<String, Object> parameters) {

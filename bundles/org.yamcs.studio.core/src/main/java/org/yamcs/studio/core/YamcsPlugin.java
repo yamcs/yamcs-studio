@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.yamcs.studio.core.model.AlarmCatalogue;
@@ -24,7 +25,6 @@ public class YamcsPlugin extends Plugin {
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());
 
     private static YamcsPlugin plugin;
-    private static String productIdentifier;
 
     private ConnectionManager connectionManager;
     private Map<Class<? extends Catalogue>, Catalogue> catalogues = new HashMap<>();
@@ -36,7 +36,7 @@ public class YamcsPlugin extends Plugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        log.info(getProductIdentifier());
+        log.info(Platform.getProduct().getName() + " v" + Platform.getProduct().getDefiningBundle().getVersion());
         TimeEncoding.setUp();
 
         connectionManager = new ConnectionManager();
@@ -53,17 +53,6 @@ public class YamcsPlugin extends Plugin {
         registerCatalogue(new EventCatalogue());
         registerCatalogue(new LinkCatalogue());
         registerCatalogue(new ArchiveCatalogue());
-    }
-
-    public static void setProductIdentifier(String productIdentifier) {
-        YamcsPlugin.productIdentifier = productIdentifier;
-    }
-
-    public String getProductIdentifier() {
-        if (productIdentifier == null) {
-            productIdentifier = "Yamcs Studio v" + getBundle().getVersion().toString();
-        }
-        return productIdentifier;
     }
 
     public ConnectionManager getConnectionManager() {

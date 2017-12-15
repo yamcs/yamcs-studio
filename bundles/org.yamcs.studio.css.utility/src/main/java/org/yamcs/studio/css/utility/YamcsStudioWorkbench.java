@@ -1,7 +1,6 @@
 package org.yamcs.studio.css.utility;
 
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.logging.LogConfigurator;
@@ -24,9 +23,9 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
  * <p>
  * Runs workbench using the {@link ApplicationWorkbenchAdvisor}.
  *
- * @see StartupParameters for startup parameters as well as class loader notes.
+ * @see YamcsStudioStartupParameters for startup parameters as well as class loader notes.
  */
-public class Workbench implements WorkbenchExtPoint {
+public class YamcsStudioWorkbench implements WorkbenchExtPoint {
 
     @Override
     public Object afterWorkbenchCreation(Display display, IApplicationContext context, Map<String, Object> parameters) {
@@ -48,29 +47,25 @@ public class Workbench implements WorkbenchExtPoint {
         // Configure Logging
         try {
             LogConfigurator.configureFromPreferences();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             // Continue without customized log configuration
         }
-        final Logger logger = Logger.getLogger(getClass().getName());
-
-        // authenticate user
-        // LoginJob.forCurrentUser().schedule();
+        Logger log = Logger.getLogger(getClass().getName());
 
         // Run the workbench
-        final int returnCode = PlatformUI.createAndRunWorkbench(display,
-                createWorkbenchAdvisor(parameters));
+        int returnCode = PlatformUI.createAndRunWorkbench(display, createWorkbenchAdvisor(parameters));
 
         // Plain exit from IWorkbench.close()
-        if (returnCode != PlatformUI.RETURN_RESTART)
+        if (returnCode != PlatformUI.RETURN_RESTART) {
             return IApplication.EXIT_OK;
+        }
 
-        // Something called IWorkbench.restart().
-        // Is this supposed to be a RESTART or RELAUNCH?
-        final Integer exit_code = Integer.getInteger(RelaunchConstants.PROP_EXIT_CODE);
-        if (IApplication.EXIT_RELAUNCH.equals(exit_code)) { // RELAUCH with new command line
-            logger.log(Level.FINE, "RELAUNCH, command line: {0}",
-                    System.getProperty(RelaunchConstants.PROP_EXIT_DATA));
+        // IWorkbench.restart() was called.
+        Integer exitCode = Integer.getInteger(RelaunchConstants.PROP_EXIT_CODE);
+        if (IApplication.EXIT_RELAUNCH.equals(exitCode)) { // RELAUCH with new command line
+            log.fine(String.format("RELAUNCH, command line: %s",
+                    System.getProperty(RelaunchConstants.PROP_EXIT_DATA)));
             return IApplication.EXIT_RELAUNCH;
         }
         // RESTART without changes

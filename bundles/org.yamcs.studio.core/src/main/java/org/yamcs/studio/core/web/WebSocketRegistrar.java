@@ -5,6 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.Platform;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
@@ -57,7 +58,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setConnectionTimeoutMs(3000);
         wsclient.enableReconnection(false);
-        wsclient.setUserAgent(YamcsPlugin.getDefault().getProductIdentifier());
+        wsclient.setUserAgent(Platform.getProduct() + "v" + Platform.getProduct().getDefiningBundle().getVersion());
         requestSender = new Thread(() -> {
             try {
                 sendMergedRequests();
