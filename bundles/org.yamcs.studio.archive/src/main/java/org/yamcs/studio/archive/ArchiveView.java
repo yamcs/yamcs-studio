@@ -182,16 +182,16 @@ public class ArchiveView extends ViewPart
         playButton.setToolTipText("Play");
         playButton.addListener(SWT.Selection, evt -> {
             if (playButton.getImage().equals(playImage))
-                RCPUtils.runCommand("org.yamcs.studio.processor.playCommand");
+                RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.playCommand");
             else
-                RCPUtils.runCommand("org.yamcs.studio.processor.pauseCommand");
+                RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.pauseCommand");
         });
 
         forwardButton = new Button(controlsComposite, SWT.PUSH);
         forwardButton.setImage(forwardImage);
         forwardButton.setToolTipText("Forward");
         forwardButton.addListener(SWT.Selection, evt -> {
-            RCPUtils.runCommand("org.yamcs.studio.processor.forwardCommand");
+            RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.forwardCommand");
         });
 
         Composite buttonWrapper = new Composite(replayComposite, SWT.NONE);
@@ -211,7 +211,7 @@ public class ArchiveView extends ViewPart
         leaveReplayButton.setImage(leaveReplayImage);
         leaveReplayButton.setToolTipText("Back to Realtime");
         leaveReplayButton.addListener(SWT.Selection, evt -> {
-            RCPUtils.runCommand("org.yamcs.studio.processor.leaveReplay");
+            RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.leaveReplay");
         });
         gd = new GridData();
         gd.horizontalAlignment = SWT.RIGHT;

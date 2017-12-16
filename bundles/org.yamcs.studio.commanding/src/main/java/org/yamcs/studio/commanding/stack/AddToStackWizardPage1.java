@@ -52,7 +52,7 @@ public class AddToStackWizardPage1 extends WizardPage {
     TreeViewer commandsTreeTable;
     TreeColumnLayout tcl;
 
-    List<String> namespaces = new ArrayList();
+    List<String> namespaces = new ArrayList<>();
 
     public AddToStackWizardPage1(StackedCommand command) {
         super("Choose a Command");
@@ -103,11 +103,16 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         // build tree table
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), composite);
-        level1Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level1s.png"));
-        level2Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level2s.png"));
-        level3Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level3s.png"));
-        level4Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level4s.png"));
-        level5Image = resourceManager.createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level5s.png"));
+        level1Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level1s.png"));
+        level2Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level2s.png"));
+        level3Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level3s.png"));
+        level4Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level4s.png"));
+        level5Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level5s.png"));
 
         Composite tableWrapper = new Composite(composite, SWT.NONE);
         tcl = new TreeColumnLayout();

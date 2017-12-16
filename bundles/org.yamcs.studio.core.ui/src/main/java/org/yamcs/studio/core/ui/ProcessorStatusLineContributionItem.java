@@ -38,7 +38,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
         addClickListener(evt -> {
             if (ConnectionManager.getInstance().isConnected()) {
                 // Hmm should probably move processor plugin back in core.ui
-                RCPUtils.runCommand("org.yamcs.studio.processor.infoCommand");
+                RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.infoCommand");
             }
         });
         ManagementCatalogue.getInstance().addManagementListener(this);

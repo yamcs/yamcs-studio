@@ -34,32 +34,32 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.processor.pauseCommand"
+            id="org.yamcs.studio.core.ui.processor.pauseCommand"
             name="Pause">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.processor.playCommand"
+            id="org.yamcs.studio.core.ui.processor.playCommand"
             name="Play">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.processor.forwardCommand"
+            id="org.yamcs.studio.core.ui.processor.forwardCommand"
             name="Step to Next Update">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.processor.infoCommand"
+            id="org.yamcs.studio.core.ui.processor.infoCommand"
             name="Connection Context Info">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.processor.choose"
+            id="org.yamcs.studio.core.ui.processor.choose"
             name="Switch Processor">
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.processor.switch"
+            id="org.yamcs.studio.core.ui.processor.switch"
             name="Switch Processor">
          <commandParameter
                id="org.eclipse.ui.commands.radioStateParameter"
@@ -71,7 +71,7 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.processor.leaveReplay"
+            id="org.yamcs.studio.core.ui.processor.leaveReplay"
             name="Leave Replay">
       </command>
    </extension>
@@ -106,7 +106,7 @@
       </handler>
       <handler
             class="org.yamcs.studio.core.ui.processor.ChooseProcessorDialogHandler"
-            commandId="org.yamcs.studio.processor.choose">
+            commandId="org.yamcs.studio.core.ui.processor.choose">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
@@ -117,7 +117,7 @@
       </handler>
       <handler
             class="org.yamcs.studio.core.ui.processor.SwitchProcessorHandler"
-            commandId="org.yamcs.studio.processor.switch">
+            commandId="org.yamcs.studio.core.ui.processor.switch">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
@@ -128,7 +128,7 @@
       </handler>
       <handler
             class="org.yamcs.studio.core.ui.processor.LeaveReplayHandler"
-            commandId="org.yamcs.studio.processor.leaveReplay">
+            commandId="org.yamcs.studio.core.ui.processor.leaveReplay">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
@@ -139,16 +139,16 @@
       </handler>
       <handler
             class="org.yamcs.studio.core.ui.processor.PauseHandler"
-            commandId="org.yamcs.studio.processor.pauseCommand">
+            commandId="org.yamcs.studio.core.ui.processor.pauseCommand">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
-               <with variable="org.yamcs.studio.processor.state.processing">
+               <with variable="org.yamcs.studio.core.ui.processor.state.processing">
                   <equals value="RUNNING"/>
                </with>
-               <with variable="org.yamcs.studio.processor.state.replay">
+               <with variable="org.yamcs.studio.core.ui.processor.state.replay">
                   <equals value="true"/>
                </with>
             </and>
@@ -156,21 +156,21 @@
       </handler>
       <handler
             class="org.yamcs.studio.core.ui.processor.PlayHandler"
-            commandId="org.yamcs.studio.processor.playCommand">
+            commandId="org.yamcs.studio.core.ui.processor.playCommand">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
                <or>
-                  <with variable="org.yamcs.studio.processor.state.processing">
+                  <with variable="org.yamcs.studio.core.ui.processor.state.processing">
                      <equals value="PAUSED"/>
                   </with>
-                  <with variable="org.yamcs.studio.processor.state.processing">
+                  <with variable="org.yamcs.studio.core.ui.processor.state.processing">
                      <equals value="STOPPED"/>
                   </with>
                </or>
-               <with variable="org.yamcs.studio.processor.state.replay">
+               <with variable="org.yamcs.studio.core.ui.processor.state.replay">
                   <equals value="true"/>
                </with>
             </and>
@@ -178,16 +178,16 @@
       </handler>
       <handler
             class="org.yamcs.studio.core.ui.processor.ForwardHandler"
-            commandId="org.yamcs.studio.processor.forwardCommand">
+            commandId="org.yamcs.studio.core.ui.processor.forwardCommand">
          <activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
-               <with variable="org.yamcs.studio.processor.state.processing">
+               <with variable="org.yamcs.studio.core.ui.processor.state.processing">
                   <equals value="RUNNING"/>
                </with>
-               <with variable="org.yamcs.studio.processor.state.replay">
+               <with variable="org.yamcs.studio.core.ui.processor.state.replay">
                   <equals value="true"/>
                </with>
             </and>
@@ -195,7 +195,7 @@
       </handler>
       <handler
             class="org.yamcs.studio.core.ui.processor.ProcessingInfoDialogHandler"
-            commandId="org.yamcs.studio.processor.infoCommand">
+            commandId="org.yamcs.studio.core.ui.processor.infoCommand">
          <activeWhen>
             <with variable="org.yamcs.studio.ui.state.connected">
                <equals value="true"/>
@@ -241,9 +241,9 @@
          <variable name="org.yamcs.studio.ui.state.connected" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.core.ui.processor.ProcessorStateProvider">
-         <variable name="org.yamcs.studio.processor.state.processing" priorityLevel="workbench" />
-         <variable name="org.yamcs.studio.processor.state.replay" priorityLevel="workbench" />
-         <variable name="org.yamcs.studio.processor.state.speed" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.core.ui.processor.state.processing" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.core.ui.processor.state.replay" priorityLevel="workbench" />
+         <variable name="org.yamcs.studio.core.ui.processor.state.speed" priorityLevel="workbench" />
       </sourceProvider>
    </extension>
    
@@ -268,11 +268,11 @@
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="menu:yamcs?before=additions">
          <command
-               commandId="org.yamcs.studio.processor.infoCommand"
+               commandId="org.yamcs.studio.core.ui.processor.infoCommand"
                label="Processing Info"
                style="push"/>
          <command
-               commandId="org.yamcs.studio.processor.choose"
+               commandId="org.yamcs.studio.core.ui.processor.choose"
                label="Switch Processor..."
                style="push"/>
       </menuContribution>

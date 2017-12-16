@@ -37,7 +37,7 @@ public class TagBox extends Box implements MouseListener {
     JMenuItem removeTagMenuItem, editTagMenuItem;
     int selectedRow = -1, selectedIndex = -1;
 
-    List<List<ArchiveTag>> tags = new ArrayList<>();//all tags loaded from yarch
+    List<List<ArchiveTag>> tags = new ArrayList<>();// all tags loaded from yarch
 
     ZoomSpec zoom;
 
@@ -52,17 +52,14 @@ public class TagBox extends Box implements MouseListener {
         buildPopup();
         addMouseListener(this);
         /*
-         * insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build());
-         * insertTag
+         * insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build()); insertTag
          * (ArchiveTag.newBuilder().setName("cucucurigo long laaaaaaabel").setStart(100).setStop
-         * (300).setColor("red").build());
-         * insertTag(ArchiveTag.newBuilder().setName("tag2").setStart
+         * (300).setColor("red").build()); insertTag(ArchiveTag.newBuilder().setName("tag2").setStart
          * (TimeEncoding.parse("2009-04-15T05:18:00"
          * )).setStop(TimeEncoding.parse("2009-06-03T18:40:37")).setColor("blue").build());
          * insertTag(ArchiveTag.newBuilder().setName("minus infinity").setStop(150).build());
          * insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build()); //
-         * insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build());
-         * insertTag
+         * insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build()); insertTag
          * (ArchiveTag.newBuilder().setName("tag3").setStart(TimeEncoding.parse("2009-07-07T12:29:44"
          * )).setStop(TimeEncoding.parse("2009-07-07T13:28:26")).setColor("orange").build());
          */
@@ -85,7 +82,7 @@ public class TagBox extends Box implements MouseListener {
                 } else if (tag.hasStart() && midtag.hasStop() && tag.getStart() > midtag.getStop()) {
                     min = mid + 1;
                 } else {
-                    break; //overlap
+                    break; // overlap
                 }
             }
             if (min > max) {
@@ -120,7 +117,8 @@ public class TagBox extends Box implements MouseListener {
                 if (dialog.open() == Window.OK) {
                     SwingUtilities.invokeLater(() -> {
                         System.out.println("signal update to " + dialog.buildArchiveTag());
-                        dataView.emitActionEvent(new TagEvent(this, "update-tag", selectedTag, dialog.buildArchiveTag()));
+                        dataView.emitActionEvent(
+                                new TagEvent(this, "update-tag", selectedTag, dialog.buildArchiveTag()));
                     });
                 }
             });
@@ -130,7 +128,8 @@ public class TagBox extends Box implements MouseListener {
         removeTagMenuItem = new JMenuItem("Remove Annotation");
         removeTagMenuItem.addActionListener(evt -> {
             ArchiveTag selectedTag = tags.get(selectedRow).get(selectedIndex);
-            int answer = JOptionPane.showConfirmDialog(null, "Remove " + selectedTag.getName() + " ?", "Are you sure?", JOptionPane.YES_NO_OPTION);
+            int answer = JOptionPane.showConfirmDialog(null, "Remove " + selectedTag.getName() + " ?", "Are you sure?",
+                    JOptionPane.YES_NO_OPTION);
             if (answer == JOptionPane.YES_OPTION) {
                 dataView.emitActionEvent(new TagEvent(this, "delete-tag", selectedTag, null));
             }
@@ -172,11 +171,10 @@ public class TagBox extends Box implements MouseListener {
     }
 
     /*
-     * void hidePopup(final MouseEvent e) { if(true)return; if (e.isPopupTrigger()) { if
-     * ((packetPopup != null) && (popupLabelItem != null)) { popupLabelItem.setVisible(false);
-     * removePayloadMenuItem.setVisible(false); removePacketMenuItem.setVisible(false);
-     * removeExceptPacketMenuItem.setVisible(false); copyOpsnameMenuItem.setVisible(false);
-     * changeColorMenuItem.setVisible(false); packetPopup.validate();
+     * void hidePopup(final MouseEvent e) { if(true)return; if (e.isPopupTrigger()) { if ((packetPopup != null) &&
+     * (popupLabelItem != null)) { popupLabelItem.setVisible(false); removePayloadMenuItem.setVisible(false);
+     * removePacketMenuItem.setVisible(false); removeExceptPacketMenuItem.setVisible(false);
+     * copyOpsnameMenuItem.setVisible(false); changeColorMenuItem.setVisible(false); packetPopup.validate();
      * packetPopup.show(e.getComponent(), e.getX(), e.getY()); } } }
      */
 
@@ -227,21 +225,16 @@ public class TagBox extends Box implements MouseListener {
         frame.setSize(new Dimension(1000, 100));
         TagBox atb = new TagBox(null);
         /*
-         * atb.insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build());
-         * atb
+         * atb.insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build()); atb
          * .insertTag(ArchiveTag.newBuilder().setName("cucucurigo long laaaaaaabel").setStart(100)
-         * .setStop(300).setColor("red").build());
-         * atb.insertTag(ArchiveTag.newBuilder().setName("tag2"
+         * .setStop(300).setColor("red").build()); atb.insertTag(ArchiveTag.newBuilder().setName("tag2"
          * ).setStart(500).setStop(700).setColor("blue").build());
          * 
          * atb.insertTag(ArchiveTag.newBuilder().setName("minus infinity").setStop(150).build());
-         * atb.insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build());
-         * atb
-         * .insertTag(ArchiveTag.newBuilder().setName("tag3").setStart(701).setStop(800).setColor(
-         * "orange").build());
+         * atb.insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build()); atb
+         * .insertTag(ArchiveTag.newBuilder().setName("tag3").setStart(701).setStop(800).setColor( "orange").build());
          * atb.insertTag(ArchiveTag.newBuilder().setName("tag4").setStart(800).setStop
-         * (900).setColor("magenta").build());
-         * atb.insertTag(ArchiveTag.newBuilder().setName("tag5").
+         * (900).setColor("magenta").build()); atb.insertTag(ArchiveTag.newBuilder().setName("tag5").
          * setStart(801).setStop(1000).setColor("gray").build());
          */
         atb.setToZoom(new ZoomSpec(0, 3600 * 1000, 3600 * 1000, 3 * 3600 * 1000));
@@ -297,7 +290,8 @@ public class TagBox extends Box implements MouseListener {
         JOptionPane.showMessageDialog(null, "Could not find  " + oldTag.toString() + " to remove");
     }
 
-    static public class TagEvent extends ActionEvent {
+    @SuppressWarnings("serial")
+    public static class TagEvent extends ActionEvent {
         public ArchiveTag newTag;
         public ArchiveTag oldTag;
 

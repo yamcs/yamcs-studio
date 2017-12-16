@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Access point for UI preferences related to yamcs connections
  */
+@SuppressWarnings("deprecation")
 public class ConnectionPreferences {
 
     private static final String KEY_AUTO_CONNECT = "autoConnect";

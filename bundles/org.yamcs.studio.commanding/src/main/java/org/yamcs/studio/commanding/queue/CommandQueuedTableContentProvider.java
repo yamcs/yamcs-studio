@@ -6,11 +6,9 @@ import org.eclipse.jface.viewers.Viewer;
 
 /*contains all the queues and corresponding commands for one channel*/
 public class CommandQueuedTableContentProvider implements IStructuredContentProvider {
-    //   private CommandQueues queues = CommandQueues.getInstance();
-    private TableViewer tableViewer;
+    // private CommandQueues queues = CommandQueues.getInstance();
 
     public CommandQueuedTableContentProvider(TableViewer tableViewer) {
-        this.tableViewer = tableViewer;
     }
 
     @Override
@@ -25,5 +23,4 @@ public class CommandQueuedTableContentProvider implements IStructuredContentProv
     public Object[] getElements(Object inputElement) {
         return new Object[0];
     }
-
 }

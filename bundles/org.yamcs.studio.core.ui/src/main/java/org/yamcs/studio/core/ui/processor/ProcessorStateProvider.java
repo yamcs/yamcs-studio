@@ -16,9 +16,9 @@ public class ProcessorStateProvider extends AbstractSourceProvider {
 
     private static final Logger log = Logger.getLogger(ProcessorStateProvider.class.getName());
 
-    public static final String STATE_KEY_PROCESSING = "org.yamcs.studio.processor.state.processing";
-    public static final String STATE_KEY_REPLAY = "org.yamcs.studio.processor.state.replay";
-    public static final String STATE_KEY_REPLAY_SPEED = "org.yamcs.studio.processor.state.speed";
+    public static final String STATE_KEY_PROCESSING = "org.yamcs.studio.core.ui.processor.state.processing";
+    public static final String STATE_KEY_REPLAY = "org.yamcs.studio.core.ui.processor.state.replay";
+    public static final String STATE_KEY_REPLAY_SPEED = "org.yamcs.studio.core.ui.processor.state.speed";
     private static final String[] SOURCE_NAMES = { STATE_KEY_REPLAY, STATE_KEY_PROCESSING, STATE_KEY_REPLAY_SPEED };
 
     private boolean replay = false;

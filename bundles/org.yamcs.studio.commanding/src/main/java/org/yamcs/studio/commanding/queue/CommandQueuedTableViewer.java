@@ -40,13 +40,8 @@ public class CommandQueuedTableViewer extends TableViewer {
     public static final String COL_STRING = "Command String";
     public static final String COL_TIME = "Time";
 
-    private CommandQueuesTableContentProvider contentProvider;
-    private CommandQueueView commandQueueView;
-
     public CommandQueuedTableViewer(CommandQueueView commandQueueView, Composite parent, TableColumnLayout tcl) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
-        //   this.styleProvider = styleProvider;
-        this.commandQueueView = commandQueueView;
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -75,17 +70,17 @@ public class CommandQueuedTableViewer extends TableViewer {
                 if (timeinthequeue > CommandQueueView.oldCommandWarningTime * 1000L) {
                     int res = CommandFateDialog.showDialog(parent.getShell(), cqe.getCmdId());
                     switch (res) {
-                    case -1: //cancel
+                    case -1: // cancel
                         return;
-                    case 0: //rebuild the command
+                    case 0: // rebuild the command
                         log.info("sending command with updated time: " + cqe.getSource());
                         updateQueueEntryState(cqe, "released", true);
                         break;
-                    case 1: //send the command with the old generation time
+                    case 1: // send the command with the old generation time
                         log.info("sending command: " + cqe);
                         updateQueueEntryState(cqe, "released", false);
                         break;
-                    case 2: //rejecting command
+                    case 2: // rejecting command
                         log.info("rejecting command: " + cqe.getSource());
                         updateQueueEntryState(cqe, "rejected", false);
                     }
@@ -185,7 +180,7 @@ public class CommandQueuedTableViewer extends TableViewer {
 
     // Command Queue Entry label provider
     class CqeLabelProvider extends LabelProvider implements
-    ITableLabelProvider {
+            ITableLabelProvider {
 
         @Override
         public Image getColumnImage(Object element, int columnIndex) {

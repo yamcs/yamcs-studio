@@ -25,7 +25,6 @@ public class AddToStackWizardPage2 extends WizardPage {
     ArgumentTableBuilder atb;
     private Composite controlComposite;
     private Combo namespaceCombo;
-    private Label desc;
     TableViewer argumentTable;
     List<String> aliases;
 
@@ -64,7 +63,7 @@ public class AddToStackWizardPage2 extends WizardPage {
 
         // populate namespace combo
         // (switching ops name and qualified name)
-        aliases = new ArrayList<String>();
+        aliases = new ArrayList<>();
         aliases.add(command.getMetaCommand().getQualifiedName());
         for (NamedObjectId noi : command.getMetaCommand().getAliasList()) {
             String alias = noi.getNamespace() + "/" + noi.getName();

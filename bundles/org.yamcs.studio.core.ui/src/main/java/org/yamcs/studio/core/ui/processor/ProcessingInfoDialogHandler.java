@@ -34,8 +34,7 @@ import org.yamcs.studio.core.model.TimeListener;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- * Ensemble of information for the subscribed instance (and matching MDB), and
- * processor.
+ * Ensemble of information for the subscribed instance (and matching MDB), and processor.
  */
 public class ProcessingInfoDialogHandler extends AbstractHandler {
 
@@ -209,16 +208,15 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         @Override
         public void statisticsUpdated(Statistics stats) {
         }
-        
+
         @Override
         public void instanceUpdated(ConnectionInfo connectionInfo) {
         }
 
         /**
-         * With this dialog currently only being reindered on load, it does not
-         * have capability to follow the client's processor after load.
-         * Therefore, update runtime information using the shown processor,
-         * rather than the current.
+         * With this dialog currently only being reindered on load, it does not have capability to follow the client's
+         * processor after load. Therefore, update runtime information using the shown processor, rather than the
+         * current.
          */
         private void refreshProcessorState() {
             if (processorStateTxt.isDisposed())
@@ -275,6 +273,7 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             header.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT));
         }
 
+        @SuppressWarnings("unused")
         private static String capitalize(String string) {
             char[] chars = string.toLowerCase().toCharArray();
             boolean found = false;

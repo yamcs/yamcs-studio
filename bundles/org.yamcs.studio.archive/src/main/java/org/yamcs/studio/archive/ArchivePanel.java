@@ -14,7 +14,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -42,7 +41,6 @@ import org.yamcs.utils.TimeEncoding;
  */
 public class ArchivePanel extends JPanel implements PropertyChangeListener {
     private static final long serialVersionUID = 1L;
-    private static final Logger log = Logger.getLogger(ArchivePanel.class.getName());
 
     ProgressMonitor progressMonitor;
 

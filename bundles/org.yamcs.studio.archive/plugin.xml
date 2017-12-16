@@ -186,8 +186,8 @@
       <menuContribution
             locationURI="menu:org.yamcs.studio.archive.toolbar.createReplay.dropdown">
          <dynamic
-               id="org.yamcs.studio.processor.menu.switchProcessor"
-               class="org.yamcs.studio.processor.SwitchProcessorCompoundContributionItem"/>
+               id="org.yamcs.studio.core.ui.processor.menu.switchProcessor"
+               class="org.yamcs.studio.core.ui.processor.SwitchProcessorCompoundContributionItem"/>
       </menuContribution>
    </extension>
 </plugin>

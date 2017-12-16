@@ -32,19 +32,18 @@ import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.utils.TimeEncoding;
 
 /**
- * Shows a number of IndexBoxes together. A timeline and a tag bar is shared among all included
- * IndexBoxes. Range selections can be made which visually span all included IndexBoxes
+ * Shows a number of IndexBoxes together. A timeline and a tag bar is shared among all included IndexBoxes. Range
+ * selections can be made which visually span all included IndexBoxes
  */
 public class DataView extends JScrollPane {
 
     private static final long serialVersionUID = 1L;
-    private static final Color GRAY = new Color(102, 102, 102);
     HeaderPanel headerPanel;
     IndexPanel indexPanel;
     Map<String, IndexBox> indexBoxes = new HashMap<>();
     private boolean showTagBox = true;
     Stack<ZoomSpec> zoomStack = new Stack<>();
-    private List<ActionListener> actionListeners = new ArrayList<ActionListener>();
+    private List<ActionListener> actionListeners = new ArrayList<>();
 
     private DataViewer dataViewer;
     ArchivePanel archivePanel;
@@ -101,7 +100,6 @@ public class DataView extends JScrollPane {
                     if (getComponentCount() > 0) {
                         final int y = getComponent(0).getLocation().y;
                         final int h = getSize().height - y;
-                        int x, y2;
                         if (currentSelection != null) {
                             if (++antsOffset >= antsLength) {
                                 antsOffset = 0;
@@ -247,7 +245,8 @@ public class DataView extends JScrollPane {
             final JViewport vp = getViewport();
             int x = (int) ((currentZoom.viewLocation - currentZoom.startInstant) / currentZoom.pixelRatio);
             vp.setViewPosition(new Point(x, vp.getViewPosition().y));
-            //debugLog("zoom out, view width " + vp.getView().getSize().width + " location " + x + " = " + currentZoom.viewLocation);
+            // debugLog("zoom out, view width " + vp.getView().getSize().width + " location " + x + " = " +
+            // currentZoom.viewLocation);
         });
     }
 
@@ -310,8 +309,10 @@ public class DataView extends JScrollPane {
         if (zoomStack.size() > 1) {
             zoomStack.pop();
             ZoomSpec zoom = zoomStack.peek();
-            if (zoom.selectionStart != TimeEncoding.INVALID_INSTANT && zoom.selectionStop != TimeEncoding.INVALID_INSTANT) {
-                // Restore selection as it was made before zoom in (to make it easier to go back and forth between zoom in/out)
+            if (zoom.selectionStart != TimeEncoding.INVALID_INSTANT
+                    && zoom.selectionStop != TimeEncoding.INVALID_INSTANT) {
+                // Restore selection as it was made before zoom in (to make it easier to go back and forth between zoom
+                // in/out)
                 updateSelection(zoom.selectionStart, zoom.selectionStop);
                 dataViewer.signalSelectionChange(currentSelection);
             }
@@ -365,8 +366,8 @@ public class DataView extends JScrollPane {
     }
 
     /**
-     * Called after the mouse dragging selection is updated on the boxes to update the
-     * selectionStart/Stop fields We use the passiveUpdate to avoid a ping pong effect
+     * Called after the mouse dragging selection is updated on the boxes to update the selectionStart/Stop fields We use
+     * the passiveUpdate to avoid a ping pong effect
      */
     void updateSelectionFields() {
         archivePanel.passiveUpdate = true;
@@ -485,6 +486,7 @@ public class DataView extends JScrollPane {
         }
     }
 
+    @SuppressWarnings("serial")
     public class HeaderPanel extends Box {
         TagBox tagBox;
         TMScale scale;
@@ -516,13 +518,14 @@ public class DataView extends JScrollPane {
             if (mouseLocatorX > 0) {
                 // follow mouse for better timeline positioning
                 g.setColor(Color.LIGHT_GRAY);
-                //int tagBoxHeight = tagBox.getHeight();
+                // int tagBoxHeight = tagBox.getHeight();
                 g.drawLine(mouseLocatorX, getHeight() - 8, mouseLocatorX, getHeight());
 
             }
         }
     }
 
+    @SuppressWarnings("serial")
     public class IndexPanel extends Box {
 
         public IndexPanel() {
@@ -544,11 +547,13 @@ public class DataView extends JScrollPane {
                     archivePanel.seekReplay(previewLocator);
                     repaint();
                 } else {
-                    if ((currentSelection != null) && (Math.abs(e.getX() - currentSelection.getStartX()) <= cursorSnap)) {
+                    if ((currentSelection != null)
+                            && (Math.abs(e.getX() - currentSelection.getStartX()) <= cursorSnap)) {
                         deltaX = e.getX() - currentSelection.getStartX();
                         startX = currentSelection.getStopX();
                         doMouseDragged(e);
-                    } else if ((currentSelection != null) && (Math.abs(e.getX() - currentSelection.getStopX()) <= cursorSnap)) {
+                    } else if ((currentSelection != null)
+                            && (Math.abs(e.getX() - currentSelection.getStopX()) <= cursorSnap)) {
                         deltaX = e.getX() - currentSelection.getStopX();
                         startX = currentSelection.getStartX();
                         doMouseDragged(e);
@@ -580,9 +585,9 @@ public class DataView extends JScrollPane {
         void doMouseDragged(MouseEvent e) {
             if (!zoomStack.isEmpty()) {
                 if (dragButton == MouseEvent.BUTTON1) {
-                    //final JViewport vp = tmscrollpane.getViewport();
-                    //stopX = Math.max(e.getX(), vp.getViewPosition().x);
-                    //stopX = Math.min(stopX, vp.getViewPosition().x + vp.getExtentSize().width - 1);
+                    // final JViewport vp = tmscrollpane.getViewport();
+                    // stopX = Math.max(e.getX(), vp.getViewPosition().x);
+                    // stopX = Math.min(stopX, vp.getViewPosition().x + vp.getExtentSize().width - 1);
                     stopX = e.getX() - deltaX;
                     if (startX == -1)
                         startX = stopX;
@@ -645,11 +650,12 @@ public class DataView extends JScrollPane {
                     // draw the current position
                     if (currentLocator != DO_NOT_DRAW) {
                         x = zoom.convertInstantToPixel(currentLocator);
-                        //debugLog("currentLocator (" + x + "," + y + ") box width " + getSize().width);
+                        // debugLog("currentLocator (" + x + "," + y + ") box width " + getSize().width);
                         if ((x >= 0) && (x < xmax)) {
                             g.setColor(Color.RED);
                             Stroke oldStroke = g2d.getStroke();
-                            Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
+                            Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0,
+                                    new float[] { 9 }, 0);
                             g2d.setStroke(dashed);
                             g2d.drawLine(x, 0, x, h - 1);
                             g2d.setStroke(oldStroke);
@@ -662,7 +668,8 @@ public class DataView extends JScrollPane {
                         if ((x >= 0) && (x < xmax)) {
                             g.setColor(Color.LIGHT_GRAY);
                             Stroke oldStroke = g2d.getStroke();
-                            Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
+                            Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0,
+                                    new float[] { 9 }, 0);
                             g2d.setStroke(dashed);
                             g2d.drawLine(x, 0, x, h - 1);
                             g2d.setStroke(oldStroke);
@@ -688,7 +695,7 @@ public class DataView extends JScrollPane {
             g.setColor(Color.WHITE);
             mouseX++;
             g.fillRect(mouseX, offsetY, fontWidth + 2 * boxPadding, fontHeight + 2 * boxPadding);
-            //g.setColor(Color.LIGHT_GRAY);
+            // g.setColor(Color.LIGHT_GRAY);
             g.setColor(Color.BLACK);
             g.drawString(dateTimeText, mouseX + boxPadding, offsetY + fontHeight + boxPadding);
 

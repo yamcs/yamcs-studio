@@ -61,9 +61,8 @@ public class TMScale extends JSlider {
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 
         /*
-         * final TMScale me = this; addComponentListener(new java.awt.event.ComponentAdapter() {
-         * public void componentResized(ComponentEvent e) { debugLogComponent("scale resized", me);
-         * } });
+         * final TMScale me = this; addComponentListener(new java.awt.event.ComponentAdapter() { public void
+         * componentResized(ComponentEvent e) { debugLogComponent("scale resized", me); } });
          */
     }
 
@@ -84,7 +83,8 @@ public class TMScale extends JSlider {
         Calendar cal = getTruncatedCal(zoom.stopInstant);
         long instant;
         long measure = (long) (500 * zoom.pixelRatio / 1000); // number of seconds covered by 500 pixels
-        //debugLog("setToZoom: measure " + measure + " ratio " + zoom.pixelRatio + " viewTimeWindow " + zoom.viewTimeWindow);
+        // debugLog("setToZoom: measure " + measure + " ratio " + zoom.pixelRatio + " viewTimeWindow " +
+        // zoom.viewTimeWindow);
         if (measure > 1 * 365 * 86400) {
             // the view is showing more than 2 years
             // align calendar to 1st of month, 00:00:00
@@ -153,8 +153,6 @@ public class TMScale extends JSlider {
 
             // the view is showing more than 8 days
             // draw 1 day per major tick, and DoY 001 + every 10th day displays the year
-
-            int doy;
 
             // align calendar to 00:00:00
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -262,7 +260,7 @@ public class TMScale extends JSlider {
 
         TwoLineLabel(TMScale scale, String text) {
             super(text);
-            //setForeground(UiColors.BORDER_COLOR);
+            // setForeground(UiColors.BORDER_COLOR);
             setFont(scale.getLabelFont());
             lineHeight = getPreferredSize().height;
             textlines = text.toUpperCase().split("\\n");
@@ -353,11 +351,11 @@ public class TMScale extends JSlider {
         @Override
         public void paintTicks(Graphics g) {
             if (slider.getOrientation() == JSlider.HORIZONTAL) {
-                Dictionary dict = slider.getLabelTable();
+                Dictionary<?, ?> dict = slider.getLabelTable();
                 if (dict != null) {
                     g.setColor(Color.BLACK);
                     g.translate(0, tickRect.y);
-                    for (Enumeration e = dict.keys(); e.hasMoreElements();) {
+                    for (Enumeration<?> e = dict.keys(); e.hasMoreElements();) {
                         Integer tsint = (Integer) (e.nextElement());
                         int ts = tsint.intValue();
                         int labelCenter = xPositionForValue(ts);

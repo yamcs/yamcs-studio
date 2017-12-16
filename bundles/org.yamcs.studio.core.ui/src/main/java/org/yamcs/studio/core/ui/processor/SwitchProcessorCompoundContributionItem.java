@@ -27,7 +27,7 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
  */
 public class SwitchProcessorCompoundContributionItem extends CompoundContributionItem {
 
-    public static final String SWITCH_PROCESSOR_COMMAND = "org.yamcs.studio.processor.switch";
+    public static final String SWITCH_PROCESSOR_COMMAND = "org.yamcs.studio.core.ui.processor.switch";
 
     private static final Logger log = Logger.getLogger(SwitchProcessorCompoundContributionItem.class.getName());
 
