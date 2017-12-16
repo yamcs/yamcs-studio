@@ -11,7 +11,7 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.yamcs.studio.core,
- org.yamcs.studio.p2deps.yamcs-api,
+ org.yamcs.client,
  org.eclipse.core.expressions,
  org.eclipse.equinox.security,
  com.google.gson

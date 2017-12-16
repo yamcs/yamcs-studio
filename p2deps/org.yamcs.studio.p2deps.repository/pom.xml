@@ -14,7 +14,7 @@
 
   <build>
     <plugins>
-      <!-- Non-Tycho dependencies of Yamcs Studio EGSE -->
+      <!-- Non-Tycho dependencies of Yamcs Studio -->
       <!-- 1. Output to target/repository -->
       <plugin>
         <groupId>org.reficio</groupId>
@@ -29,7 +29,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <id>org.yamcs.studio:org.yamcs.studio.p2deps.yamcs-api:${project.version}</id>
+                  <id>org.yamcs.studio:org.yamcs.client:${project.version}</id>
                 </artifact>
               </artifacts>
             </configuration>

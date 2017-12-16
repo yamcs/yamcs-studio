@@ -9,7 +9,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.studio.p2deps.yamcs-api</artifactId>
+  <artifactId>org.yamcs.client</artifactId>
   <packaging>bundle</packaging>
 
   <dependencies>
@@ -32,7 +32,7 @@
           <unpackBundle>true</unpackBundle>
           <instructions>
             <Bundle-Name>Yamcs OSGI Client</Bundle-Name>
-            <Bundle-SymbolicName>org.yamcs.studio.p2deps.yamcs-api;singleton:=true</Bundle-SymbolicName>
+            <Bundle-SymbolicName>org.yamcs.client;singleton:=true</Bundle-SymbolicName>
             <Bundle-Vendor>Space Applications Services</Bundle-Vendor>
             <Bundle-Description>OSGI-friendly repackaging of yamcs-api</Bundle-Description>
             <Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>

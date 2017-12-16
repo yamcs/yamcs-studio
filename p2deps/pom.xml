@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.p2deps.yamcs-api</module>
+    <module>org.yamcs.client</module>
     <module>org.yamcs.studio.p2deps.repository</module>
   </modules>
 </project>
