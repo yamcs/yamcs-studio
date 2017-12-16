@@ -22,7 +22,7 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.MergeableWebSocketRequest;
+import org.yamcs.studio.core.client.ParameterWebSocketRequest;
 import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -134,9 +134,9 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public void subscribeParameters(NamedObjectList idList) {
-        if (ConnectionManager.getInstance().isConnected()) {
-            YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-            yamcsClient.subscribe(new MergeableWebSocketRequest("parameter", "subscribe", idList), this);
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        if (yamcsClient.isConnected()) {
+            yamcsClient.subscribe(new ParameterWebSocketRequest("subscribe", idList), this);
         }
     }
 
@@ -157,9 +157,9 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public void unsubscribeParameters(NamedObjectList idList) {
-        if (ConnectionManager.getInstance().isConnected()) {
-            YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-            yamcsClient.sendWebSocketMessage(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        if (yamcsClient.isConnected()) {
+            yamcsClient.sendWebSocketMessage(new ParameterWebSocketRequest("unsubscribe", idList));
         }
     }
 

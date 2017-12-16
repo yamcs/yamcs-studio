@@ -28,7 +28,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         setToolTipText("Yamcs Server Connection String");
 
         addClickListener(evt -> {
-            if (ConnectionManager.getInstance().isConnected()) {
+            if (connectionManager.getYamcsClient().isConnected()) {
                 // TODO show server info (version string etc)
             } else {
                 RCPUtils.runCommand(YamcsUIPlugin.CMD_CONNECT);
@@ -47,8 +47,12 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
     @Override
     public void onStudioConnect() {
-        yprops = connectionManager.getConnectionProperties();
-        subjectName = connectionManager.getUsername();
+        yprops = connectionManager.getYamcsClient().getYamcsConnectionProperties();
+        if (yprops.getAuthenticationToken() != null) {
+            subjectName = "" + yprops.getAuthenticationToken().getPrincipal();
+        } else {
+            subjectName = null;
+        }
         Display.getDefault().asyncExec(() -> updateLabel());
     }
 

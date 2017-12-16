@@ -16,13 +16,12 @@ import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
 /**
- * TODO current processor info should be maintained in ManagementCatalogue, and
- * less iffy As a result we should no longer need to implement the
- * studioconnectionlistener
+ * TODO current processor info should be maintained in ManagementCatalogue, and less iffy As a result we should no
+ * longer need to implement the studioconnectionlistener
  */
 public class ProcessorStatusLineContributionItem extends StatusLineContributionItem
         implements ManagementListener, StudioConnectionListener {
-    
+
     private static final Logger log = Logger.getLogger(ProcessorStatusLineContributionItem.class.getName());
 
     private static final String DEFAULT_TEXT = "---";
@@ -36,7 +35,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
         setText(DEFAULT_TEXT);
         setToolTipText("Subscribed Yamcs Processor");
         addClickListener(evt -> {
-            if (ConnectionManager.getInstance().isConnected()) {
+            if (ConnectionManager.getInstance().getYamcsClient().isConnected()) {
                 // Hmm should probably move processor plugin back in core.ui
                 RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.infoCommand");
             }
@@ -81,7 +80,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
     @Override
     public void processorUpdated(ProcessorInfo updatedInfo) {
     }
-    
+
     @Override
     public void instanceUpdated(ConnectionInfo connectionInfo) {
         Display.getDefault().asyncExec(() -> {

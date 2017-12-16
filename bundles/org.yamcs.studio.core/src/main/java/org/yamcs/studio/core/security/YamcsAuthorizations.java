@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
 import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -14,12 +15,7 @@ public class YamcsAuthorizations {
     private static final Logger log = Logger.getLogger(YamcsAuthorizations.class.getName());
 
     public enum SystemPrivilege {
-        MayControlYProcessor,
-        MayModifyCommandHistory,
-        MayControlCommandQueue,
-        MayCommandPayload,
-        MayGetMissionDatabase,
-        MayControlArchiving
+        MayControlYProcessor, MayModifyCommandHistory, MayControlCommandQueue, MayCommandPayload, MayGetMissionDatabase, MayControlArchiving
     }
 
     private static YamcsAuthorizations instance = new YamcsAuthorizations();
@@ -30,8 +26,8 @@ public class YamcsAuthorizations {
     }
 
     public CompletableFuture<byte[]> loadAuthorizations() {
-        ConnectionManager manager = ConnectionManager.getInstance();
-        return manager.requestAuthenticatedUser().whenComplete((data, exc) -> {
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        return yamcsClient.get("/user", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 try {
                     userInfo = UserInfo.parseFrom(data);
@@ -43,10 +39,12 @@ public class YamcsAuthorizations {
     }
 
     public boolean hasSystemPrivilege(SystemPrivilege systemPrivilege) {
-        if (!isAuthorizationEnabled())
+        if (!isAuthorizationEnabled()) {
             return true;
-        if (userInfo == null)
+        }
+        if (userInfo == null) {
             return false;
+        }
         return userInfo.getSystemPrivilegesList().contains(systemPrivilege.name());
     }
 

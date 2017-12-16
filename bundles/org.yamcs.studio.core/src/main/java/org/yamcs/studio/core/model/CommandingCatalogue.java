@@ -127,7 +127,18 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     private void initialiseState() {
-        loadMetaCommands();
+        log.fine("Fetching available commands");
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        YamcsClient restClient = connectionManager.getYamcsClient();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        restClient.get("/mdb/" + instance + "/commands", null).whenComplete((data, exc) -> {
+            try {
+                ListCommandInfoResponse response = ListCommandInfoResponse.parseFrom(data);
+                processMetaCommands(response.getCommandList());
+            } catch (InvalidProtocolBufferException e) {
+                log.log(Level.SEVERE, "Failed to decode server response", e);
+            }
+        });
     }
 
     private void clearState() {
@@ -175,21 +186,6 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
         for (CommandInfo cmd : this.metaCommands) {
             commandsByQualifiedName.put(cmd.getQualifiedName(), cmd);
         }
-    }
-
-    private void loadMetaCommands() {
-        log.fine("Fetching available commands");
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/commands", null).whenComplete((data, exc) -> {
-            try {
-                ListCommandInfoResponse response = ListCommandInfoResponse.parseFrom(data);
-                processMetaCommands(response.getCommandList());
-            } catch (InvalidProtocolBufferException e) {
-                log.log(Level.SEVERE, "Failed to decode server response", e);
-            }
-        });
     }
 
     public String getCommandOrigin() {

@@ -1,31 +1,34 @@
 package org.yamcs.studio.core.client;
 
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.yamcs.YamcsException;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.api.rest.BulkRestDataReceiver;
 import org.yamcs.api.rest.RestClient;
+import org.yamcs.api.ws.ConnectionListener;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.protobuf.MessageLite;
@@ -34,41 +37,37 @@ import io.netty.channel.ChannelFuture;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
- * Provides passage to Yamcs. This covers both the REST and WebSocket API
+ * Provides passage to Yamcs. This covers both the REST and WebSocket API.
  */
 public class YamcsClient implements WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
 
-    private final RestClient restClient;
-    private final WebSocketClient wsclient;
+    private YamcsConnectionProperties yprops;
+    private String userAgent;
 
-    private CopyOnWriteArrayList<WebSocketClientCallback> subscribers = new CopyOnWriteArrayList<>();
+    private volatile boolean connecting;
+    private volatile boolean connected;
 
-    // Order all subscribe/unsubscribe events
-    private final BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
+    private RestClient restClient;
+    private WebSocketClient wsclient;
 
-    private final Thread requestSender;
+    private boolean retry = true;
+    private boolean reconnecting = false;
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private List<YamcsInstance> instances;
+
+    private List<ConnectionListener> connectionListeners = new CopyOnWriteArrayList<>();
+    private List<WebSocketClientCallback> subscribers = new CopyOnWriteArrayList<>();
+
+    private MessageBundler messageBundler;
 
     // Keep track of ongoing jobs, to respond to user cancellation requests.
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
     private Map<IProgressMonitor, CompletableFuture<?>> cancellableJobs = new ConcurrentHashMap<>();
 
-    public YamcsClient(YamcsConnectionProperties yprops) {
-        restClient = new RestClient(yprops);
-        restClient.setAutoclose(false);
-
-        wsclient = new WebSocketClient(yprops, this);
-        wsclient.setConnectionTimeoutMs(3000);
-        wsclient.enableReconnection(false);
-        wsclient.setUserAgent(Platform.getProduct() + "v" + Platform.getProduct().getDefiningBundle().getVersion());
-        requestSender = new Thread(() -> {
-            try {
-                sendMergedRequests();
-            } catch (InterruptedException e) {
-                log.log(Level.SEVERE, "OOPS, got interrupted", e);
-            }
-        });
+    public YamcsClient(String userAgent) {
+        this.userAgent = userAgent;
 
         canceller.scheduleWithFixedDelay(() -> {
             cancellableJobs.forEach((monitor, future) -> {
@@ -80,65 +79,165 @@ public class YamcsClient implements WebSocketClientCallback {
                 }
             });
         }, 2000, 1000, TimeUnit.MILLISECONDS);
+
+        messageBundler = new MessageBundler(this);
+        executor.scheduleWithFixedDelay(messageBundler, 200, 400, TimeUnit.MILLISECONDS);
     }
 
-    @Override
-    public void connectionFailed(Throwable t) {
-        log.fine("Connection Failed. " + t.getMessage());
-        ConnectionManager.getInstance().onWebSocketConnectionFailed(t);
+    public void addConnectionListener(ConnectionListener connectionListener) {
+        this.connectionListeners.add(connectionListener);
+    }
+
+    private FutureTask<YamcsConnectionProperties> doConnect() {
+        if (connected) {
+            disconnect();
+        }
+
+        restClient = new RestClient(yprops);
+        restClient.setAutoclose(false);
+        wsclient = new WebSocketClient(yprops, this);
+        // wsclient.setConnectionTimeoutMs(3000);
+        wsclient.setUserAgent(userAgent);
+        // wsclient.enableReconnection(false);
+
+        FutureTask<YamcsConnectionProperties> future = new FutureTask<>(new Runnable() {
+            @Override
+            public void run() {
+                String connectingTo = yprops.getHost() + ":" + yprops.getPort();
+                int maxAttempts = 10;
+                try {
+                    if (reconnecting && !retry) {
+                        log.warning("Retries are disabled, cancelling reconnection");
+                        reconnecting = false;
+                        return;
+                    }
+
+                    connecting = true;
+
+                    for (ConnectionListener cl : connectionListeners) {
+                        cl.connecting(connectingTo);
+                    }
+                    for (int i = 0; i < maxAttempts; i++) {
+                        try {
+                            log.fine(String.format("Connecting to %s attempt %s", connectingTo, i));
+                            instances = restClient.blockingGetYamcsInstances();
+                            if (instances == null || instances.isEmpty()) {
+                                log.warning("No configured yamcs instance");
+                                return;
+                            }
+                            String defaultInstanceName = instances.get(0).getName();
+                            String instanceName = defaultInstanceName;
+                            if (yprops.getInstance() != null) { // check if the instance saved in properties exists,
+                                                                // otherwise use the default one
+                                instanceName = instances.stream().map(yi -> yi.getName())
+                                        .filter(s -> s.equals(yprops.getInstance()))
+                                        .findFirst()
+                                        .orElse(defaultInstanceName);
+                            }
+                            yprops.setInstance(instanceName);
+
+                            ChannelFuture future = wsclient.connect();
+                            future.get(5000, TimeUnit.MILLISECONDS);
+                            // now the TCP connection is established but we have to wait for the websocket to be setup
+                            // the connected callback will handle that
+
+                            return;
+                        } catch (Exception e) {
+                            // For anything other than a security exception, re-try
+                            for (ConnectionListener cl : connectionListeners) {
+                                cl.log("Connection to " + yprops.getHost() + ":" + yprops.getPort() + " failed :"
+                                        + e.getMessage());
+                            }
+                            log.log(Level.WARNING,
+                                    "Connection to " + yprops.getHost() + ":" + yprops.getPort() + " failed :", e);
+                            Thread.sleep(5000);
+                        }
+                    }
+                    connecting = false;
+                    for (ConnectionListener cl : connectionListeners) {
+                        cl.log(maxAttempts + " connection attempts failed, giving up.");
+                        cl.connectionFailed(connectingTo,
+                                new YamcsException(maxAttempts + " connection attempts failed, giving up."));
+                    }
+                    log.warning(maxAttempts + " connection attempts failed, giving up.");
+                } catch (InterruptedException e) {
+                    for (ConnectionListener cl : connectionListeners) {
+                        cl.connectionFailed(connectingTo, new YamcsException("Thread interrupted", e));
+                    }
+                }
+            };
+        }, yprops);
+        executor.submit(future);
+        return future;
     }
 
     @Override
     public void connected() {
-        log.fine("WebSocket established. Notifying listeners");
-        ConnectionManager.getInstance().onWebSocketConnected();
-        requestSender.start(); // Go over pending subscription requests
+        messageBundler.clearQueue();
+
+        connected = true;
+        String connectingTo = yprops.getHost() + ":" + yprops.getPort();
+        for (ConnectionListener listener : connectionListeners) {
+            listener.connected(connectingTo);
+        }
     }
 
     @Override
     public void disconnected() {
-        log.info("WebSocket disconnected. Inform ConnectionManager");
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        if (connectionManager != null) // null when workbench is closing
-            connectionManager.disconnect(true /* lost */);
+        String msg = "Connection to " + yprops + " lost";
+        if (connected) {
+            log.warning(msg);
+        }
+        for (ConnectionListener listener : connectionListeners) {
+            if (connected) {
+                listener.log(msg);
+            }
+            listener.disconnected();
+        }
     }
 
-    public ChannelFuture connect() {
-        return wsclient.connect();
+    public void disconnect() {
+        log.info("Disconnection requested");
+        if (!connected) {
+            return;
+        }
+        wsclient.disconnect();
+        connected = false;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public boolean isConnecting() {
+        return connecting;
+    }
+
+    public Future<YamcsConnectionProperties> connect(YamcsConnectionProperties yprops) {
+        this.yprops = yprops;
+        return doConnect();
+    }
+
+    public YamcsConnectionProperties getYamcsConnectionProperties() {
+        return yprops;
+    }
+
+    public List<String> getYamcsInstances() {
+        if (instances == null) {
+            return null;
+        }
+        return instances.stream().map(r -> r.getName()).collect(Collectors.toList());
     }
 
     public void subscribe(WebSocketRequest req, WebSocketClientCallback messageHandler) {
         if (!subscribers.contains(messageHandler)) {
             subscribers.add(messageHandler);
         }
-        pendingRequests.offer(req);
+        messageBundler.queue(req);
     }
 
     public void sendWebSocketMessage(WebSocketRequest req) {
-        pendingRequests.offer(req);
-    }
-
-    private void sendMergedRequests() throws InterruptedException {
-        while (true) {
-            WebSocketRequest evt = pendingRequests.take();
-
-            // We now have at least one event to handle
-            Thread.sleep(100); // Wait for more events, before going into synchronized block
-            synchronized (pendingRequests) {
-
-                while (pendingRequests.peek() != null && evt instanceof MergeableWebSocketRequest
-                        && pendingRequests.peek() instanceof MergeableWebSocketRequest
-                        && evt.getResource().equals(pendingRequests.peek().getResource())
-                        && evt.getOperation().equals(pendingRequests.peek().getOperation())) {
-                    MergeableWebSocketRequest otherEvt = (MergeableWebSocketRequest) pendingRequests.poll();
-                    evt = ((MergeableWebSocketRequest) evt).mergeWith(otherEvt); // This is to counter bursts.
-                }
-            }
-
-            // Good, send the merged result
-            log.fine(String.format("Sending request %s", evt));
-            wsclient.sendRequest(evt);
-        }
+        messageBundler.queue(req);
     }
 
     @Override
@@ -150,9 +249,7 @@ public class YamcsClient implements WebSocketClientCallback {
             return;
         }
 
-        for (WebSocketClientCallback client : subscribers) {
-            client.onMessage(data);
-        }
+        subscribers.forEach(s -> s.onMessage(data));
     }
 
     public CompletableFuture<byte[]> get(String uri, MessageLite msg) {
@@ -225,12 +322,15 @@ public class YamcsClient implements WebSocketClientCallback {
         job.schedule();
     }
 
+    public WebSocketClient getWebSocketClient() {
+        return wsclient;
+    }
+
     /**
      * Performs an orderly shutdown of this service
      */
     public void shutdown() {
         restClient.close(); // Shuts down the thread pool
-        // wsclient.disconnect();
         wsclient.shutdown();
         canceller.shutdown();
     }

@@ -11,13 +11,13 @@ public class PVConnectionInfo {
     public boolean connected;
 
     /**
-     * The parameter matching the default namespace in combination with the pvname. (this
-     * information comes from a rest call)
+     * The parameter matching the default namespace in combination with the pvname. (this information comes from a rest
+     * call)
      */
     public ParameterInfo parameter;
 
     public PVConnectionInfo(ParameterInfo parameter) {
-        this.connected = ConnectionManager.getInstance().isConnected();
+        this.connected = ConnectionManager.getInstance().getYamcsClient().isConnected();
         this.parameter = parameter;
     }
 

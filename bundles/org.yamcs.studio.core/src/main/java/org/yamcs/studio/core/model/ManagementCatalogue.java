@@ -187,19 +187,8 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public static String getCurrentYamcsInstance() {
-        ManagementCatalogue catalogue = getInstance();
-        if (catalogue == null)
-            return null;
-        ClientInfo ci = catalogue.clientInfoById.get(catalogue.currentClientId);
-        if (ci != null) {
-            return ci.getInstance();
-        } else {
-            // We must still be initializing, return instance provided to ws client
-            // Not the most elegant thing, but for time reasons, this will do for now
-            // should return null if we're not connected. Preferably by maintaing a
-            // local field in this class.
-            return ConnectionManager.getInstance().getInitialYamcsInstance();
-        }
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        return yamcsClient.getYamcsConnectionProperties().getInstance();
     }
 
     public ProcessorInfo getCurrentProcessorInfo() {
