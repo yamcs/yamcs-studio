@@ -10,8 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.EditLinkRequest;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.LinkEvent;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.ConnectionManager;
@@ -25,7 +27,7 @@ import org.yamcs.studio.core.client.YamcsClient;
  * lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining correct state accross connection-reconnects,
  * so listeners only need to register once.
  */
-public class LinkCatalogue implements Catalogue, InstanceListener {
+public class LinkCatalogue implements Catalogue, WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(LinkCatalogue.class.getName());
 
@@ -39,7 +41,42 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
     @Override
     public void onStudioConnect() {
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-        yamcsClient.sendMessage(new WebSocketRequest("links", "subscribe"));
+        yamcsClient.subscribe(new WebSocketRequest("links", "subscribe"), this);
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasLinkEvent()) {
+            LinkEvent linkEvent = msg.getLinkEvent();
+            LinkInfo incoming = linkEvent.getLinkInfo();
+
+            LinkId id = new LinkId(incoming);
+            switch (linkEvent.getType()) {
+            case REGISTERED:
+                linksById.put(id, incoming);
+                linkListeners.forEach(l -> l.linkRegistered(incoming));
+                break;
+            case UNREGISTERED:
+                LinkInfo linkInfo = linksById.get(id);
+                if (linkInfo == null) {
+                    log.warning(
+                            "Request to unregister unknown link " + incoming.getInstance() + "/" + incoming.getName());
+                } else {
+                    linksById.remove(id);
+                    linkListeners.forEach(l -> l.linkUnregistered(incoming));
+                }
+                break;
+            case UPDATED:
+                LinkInfo oldLinkInfo = linksById.put(id, incoming);
+                if (oldLinkInfo == null) {
+                    log.warning("Request to update unknown link " + incoming.getInstance() + "/" + incoming.getName());
+                }
+                linkListeners.forEach(l -> l.linkUpdated(linkEvent.getLinkInfo()));
+                break;
+            default:
+                log.warning("Unexpected link event " + linkEvent.getType());
+            }
+        }
     }
 
     @Override
@@ -66,36 +103,6 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
 
     public void removeLinkListener(LinkListener listener) {
         linkListeners.remove(listener);
-    }
-
-    public void processLinkEvent(LinkEvent linkEvent) {
-        LinkInfo incoming = linkEvent.getLinkInfo();
-
-        LinkId id = new LinkId(incoming);
-        switch (linkEvent.getType()) {
-        case REGISTERED:
-            linksById.put(id, incoming);
-            linkListeners.forEach(l -> l.linkRegistered(incoming));
-            break;
-        case UNREGISTERED:
-            LinkInfo linkInfo = linksById.get(id);
-            if (linkInfo == null) {
-                log.warning("Request to unregister unknown link " + incoming.getInstance() + "/" + incoming.getName());
-            } else {
-                linksById.remove(id);
-                linkListeners.forEach(l -> l.linkUnregistered(incoming));
-            }
-            break;
-        case UPDATED:
-            LinkInfo oldLinkInfo = linksById.put(id, incoming);
-            if (oldLinkInfo == null) {
-                log.warning("Request to update unknown link " + incoming.getInstance() + "/" + incoming.getName());
-            }
-            linkListeners.forEach(l -> l.linkUpdated(linkEvent.getLinkInfo()));
-            break;
-        default:
-            log.warning("Unexpected link event " + linkEvent.getType());
-        }
     }
 
     public CompletableFuture<byte[]> enableLink(String instance, String name) {

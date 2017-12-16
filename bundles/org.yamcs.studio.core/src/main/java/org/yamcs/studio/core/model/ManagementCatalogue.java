@@ -10,11 +10,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
 import org.yamcs.protobuf.Rest.EditClientRequest;
 import org.yamcs.protobuf.Rest.EditProcessorRequest;
 import org.yamcs.protobuf.Web.ConnectionInfo;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
@@ -32,7 +34,7 @@ import org.yamcs.studio.core.client.YamcsClient;
  * lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining correct state accross connection-reconnects,
  * so listeners only need to register once.
  */
-public class ManagementCatalogue implements Catalogue {
+public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(ManagementCatalogue.class.getName());
 
@@ -53,7 +55,54 @@ public class ManagementCatalogue implements Catalogue {
     @Override
     public void onStudioConnect() {
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-        yamcsClient.sendMessage(new WebSocketRequest("management", "subscribe"));
+        yamcsClient.subscribe(new WebSocketRequest("management", "subscribe"), this);
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasConnectionInfo()) {
+            ConnectionInfo connectionInfo = msg.getConnectionInfo();
+            YamcsInstance instance = connectionInfo.getInstance();
+            log.fine("Instance " + instance.getName() + ": " + instance.getState());
+            managementListeners.forEach(l -> l.instanceUpdated(connectionInfo));
+        }
+
+        if (msg.hasClientInfo()) {
+            ClientInfo clientInfo = msg.getClientInfo();
+            if (clientInfo.getState() == ClientState.DISCONNECTED) {
+                ClientInfo previousClientInfo = clientInfoById.remove(clientInfo.getId());
+                checkOwnClientState(previousClientInfo, clientInfo);
+
+                managementListeners.forEach(l -> l.clientDisconnected(clientInfo));
+            } else {
+                ClientInfo previousClientInfo = clientInfoById.put(clientInfo.getId(), clientInfo);
+                checkOwnClientState(previousClientInfo, clientInfo);
+
+                managementListeners.forEach(l -> l.clientUpdated(clientInfo));
+            }
+        }
+
+        if (msg.hasProcessorInfo()) {
+            ProcessorInfo processorInfo = msg.getProcessorInfo();
+            String instance = processorInfo.getInstance();
+            Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(instance);
+            if (instanceProcessors == null) {
+                instanceProcessors = new ConcurrentHashMap<>();
+                processorInfoByInstance.put(instance, instanceProcessors);
+            }
+            if (processorInfo.getState() == ServiceState.TERMINATED) {
+                instanceProcessors.remove(processorInfo.getName());
+            } else {
+                instanceProcessors.put(processorInfo.getName(), processorInfo);
+            }
+
+            managementListeners.forEach(l -> l.processorUpdated(processorInfo));
+        }
+
+        if (msg.hasStatistics()) {
+            Statistics statistics = msg.getStatistics();
+            managementListeners.forEach(l -> l.statisticsUpdated(statistics));
+        }
     }
 
     @Override
@@ -94,36 +143,6 @@ public class ManagementCatalogue implements Catalogue {
         instanceListeners.remove(listener);
     }
 
-    public void processClientInfo(ClientInfo clientInfo) {
-        if (clientInfo.getState() == ClientState.DISCONNECTED) {
-            ClientInfo previousClientInfo = clientInfoById.remove(clientInfo.getId());
-            checkOwnClientState(previousClientInfo, clientInfo);
-
-            managementListeners.forEach(l -> l.clientDisconnected(clientInfo));
-        } else {
-            ClientInfo previousClientInfo = clientInfoById.put(clientInfo.getId(), clientInfo);
-            checkOwnClientState(previousClientInfo, clientInfo);
-
-            managementListeners.forEach(l -> l.clientUpdated(clientInfo));
-        }
-    }
-
-    public void processProcessorInfo(ProcessorInfo processorInfo) {
-        String instance = processorInfo.getInstance();
-        Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(instance);
-        if (instanceProcessors == null) {
-            instanceProcessors = new ConcurrentHashMap<>();
-            processorInfoByInstance.put(instance, instanceProcessors);
-        }
-        if (processorInfo.getState() == ServiceState.TERMINATED) {
-            instanceProcessors.remove(processorInfo.getName());
-        } else {
-            instanceProcessors.put(processorInfo.getName(), processorInfo);
-        }
-
-        managementListeners.forEach(l -> l.processorUpdated(processorInfo));
-    }
-
     private void checkOwnClientState(ClientInfo old, ClientInfo incoming) {
         if (incoming.getCurrentClient()) {
             if (incoming.getState() == ClientState.DISCONNECTED) {
@@ -141,10 +160,6 @@ public class ManagementCatalogue implements Catalogue {
                 }
             }
         }
-    }
-
-    public void processStatistics(Statistics stats) {
-        managementListeners.forEach(l -> l.statisticsUpdated(stats));
     }
 
     /**
@@ -243,11 +258,5 @@ public class ManagementCatalogue implements Catalogue {
     public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
         return yamcsClient.post("/instances/" + yamcsInstance + "?state=restarted", null);
-    }
-
-    public void processConnectionInfo(ConnectionInfo connectionInfo) {
-        YamcsInstance instance = connectionInfo.getInstance();
-        log.fine("Instance " + instance.getName() + ": " + instance.getState());
-        managementListeners.forEach(l -> l.instanceUpdated(connectionInfo));
     }
 }

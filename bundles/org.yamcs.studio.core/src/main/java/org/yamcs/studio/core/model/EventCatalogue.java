@@ -8,7 +8,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.YamcsApiException;
 import org.yamcs.api.rest.BulkRestDataReceiver;
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -17,7 +19,7 @@ import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class EventCatalogue implements Catalogue {
+public class EventCatalogue implements Catalogue, WebSocketClientCallback {
 
     private Set<EventListener> eventListeners = new CopyOnWriteArraySet<>();
 
@@ -36,7 +38,14 @@ public class EventCatalogue implements Catalogue {
     @Override
     public void onStudioConnect() {
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-        yamcsClient.sendMessage(new WebSocketRequest("events", "subscribe"));
+        yamcsClient.subscribe(new WebSocketRequest("events", "subscribe"), this);
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasEvent()) {
+            processEvent(msg.getEvent());
+        }
     }
 
     @Override

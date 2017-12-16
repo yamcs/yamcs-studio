@@ -5,6 +5,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,33 +24,10 @@ import org.yamcs.api.rest.RestClient;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Alarms.AlarmData;
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Commanding.CommandQueueEvent;
-import org.yamcs.protobuf.Commanding.CommandQueueInfo;
-import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Web.ConnectionInfo;
-import org.yamcs.protobuf.Web.WebSocketExtensionData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.protobuf.Yamcs.TimeInfo;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.LinkEvent;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.AlarmCatalogue;
-import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.model.EventCatalogue;
-import org.yamcs.studio.core.model.ExtensionCatalogue;
-import org.yamcs.studio.core.model.LinkCatalogue;
-import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.TimeCatalogue;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 
 import io.netty.channel.ChannelFuture;
@@ -64,6 +42,8 @@ public class YamcsClient implements WebSocketClientCallback {
 
     private final RestClient restClient;
     private final WebSocketClient wsclient;
+
+    private CopyOnWriteArrayList<WebSocketClientCallback> subscribers = new CopyOnWriteArrayList<>();
 
     // Order all subscribe/unsubscribe events
     private final BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();
@@ -127,7 +107,14 @@ public class YamcsClient implements WebSocketClientCallback {
         return wsclient.connect();
     }
 
-    public void sendMessage(WebSocketRequest req) {
+    public void subscribe(WebSocketRequest req, WebSocketClientCallback messageHandler) {
+        if (!subscribers.contains(messageHandler)) {
+            subscribers.add(messageHandler);
+        }
+        pendingRequests.offer(req);
+    }
+
+    public void sendWebSocketMessage(WebSocketRequest req) {
         pendingRequests.offer(req);
     }
 
@@ -155,11 +142,6 @@ public class YamcsClient implements WebSocketClientCallback {
     }
 
     @Override
-    public void onInvalidIdentification(NamedObjectId id) {
-        ParameterCatalogue.getInstance().processInvalidIdentification(id);
-    }
-
-    @Override
     public void onMessage(WebSocketSubscriptionData data) {
 
         // Stop processing messages on shutdown
@@ -168,71 +150,8 @@ public class YamcsClient implements WebSocketClientCallback {
             return;
         }
 
-        switch (data.getType()) {
-        case CONNECTION_INFO:
-            ConnectionInfo connectionInfo = data.getConnectionInfo();
-            ManagementCatalogue.getInstance().processConnectionInfo(connectionInfo);
-            break;
-        case TIME_INFO:
-            TimeInfo timeInfo = data.getTimeInfo();
-            TimeCatalogue.getInstance().processTimeInfo(timeInfo);
-            break;
-        case PARAMETER:
-            ParameterData pdata = data.getParameterData();
-            ParameterCatalogue.getInstance().processParameterData(pdata);
-            break;
-        case CLIENT_INFO:
-            ClientInfo clientInfo = data.getClientInfo();
-            ManagementCatalogue.getInstance().processClientInfo(clientInfo);
-            break;
-        case PROCESSOR_INFO:
-            ProcessorInfo processorInfo = data.getProcessorInfo();
-            ManagementCatalogue.getInstance().processProcessorInfo(processorInfo);
-            break;
-        case CMD_HISTORY:
-            CommandHistoryEntry cmdhistEntry = data.getCommand();
-            CommandingCatalogue.getInstance().processCommandHistoryEntry(cmdhistEntry);
-            break;
-        case PROCESSING_STATISTICS:
-            Statistics statistics = data.getStatistics();
-            ManagementCatalogue.getInstance().processStatistics(statistics);
-            break;
-        case EVENT:
-            Event event = data.getEvent();
-            EventCatalogue.getInstance().processEvent(event);
-            break;
-        case ALARM_DATA:
-            AlarmData alarm = data.getAlarmData();
-            AlarmCatalogue.getInstance().processAlarmData(alarm);
-            break;
-        case LINK_EVENT:
-            LinkEvent linkEvent = data.getLinkEvent();
-            LinkCatalogue.getInstance().processLinkEvent(linkEvent);
-            break;
-        case COMMAND_QUEUE_INFO:
-            CommandQueueInfo queueInfo = data.getCommandQueueInfo();
-            CommandingCatalogue.getInstance().processCommandQueueInfo(queueInfo);
-            break;
-        case COMMAND_QUEUE_EVENT:
-            CommandQueueEvent queueEvent = data.getCommandQueueEvent();
-            CommandingCatalogue.getInstance().processCommandQueueEvent(queueEvent);
-            break;
-        case EXTENSION_DATA:
-            WebSocketExtensionData extData = data.getExtensionData();
-            int extType = extData.getType();
-            ExtensionCatalogue catalogue = plugin.getExtensionCatalogue(extType);
-            if (catalogue != null) {
-                try {
-                    catalogue.processMessage(extType, extData.getData());
-                } catch (InvalidProtocolBufferException e) {
-                    log.log(Level.SEVERE, "Invalid message", e);
-                }
-            } else {
-                log.warning("Unexpected message of extension type " + extType);
-            }
-            break;
-        default:
-            throw new IllegalArgumentException("Unexpected data type " + data.getType());
+        for (WebSocketClientCallback client : subscribers) {
+            client.onMessage(data);
         }
     }
 

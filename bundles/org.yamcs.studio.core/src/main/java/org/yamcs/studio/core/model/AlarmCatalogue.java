@@ -5,13 +5,15 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Alarms.AlarmData;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 
-public class AlarmCatalogue implements Catalogue {
+public class AlarmCatalogue implements Catalogue, WebSocketClientCallback {
 
     private Set<AlarmListener> alarmListeners = new CopyOnWriteArraySet<>();
 
@@ -24,7 +26,15 @@ public class AlarmCatalogue implements Catalogue {
     @Override
     public void onStudioConnect() {
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-        yamcsClient.sendMessage(new WebSocketRequest("alarms", "subscribe"));
+        yamcsClient.subscribe(new WebSocketRequest("alarms", "subscribe"), this);
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasAlarmData()) {
+            AlarmData alarmData = msg.getAlarmData();
+            alarmListeners.forEach(l -> l.processAlarmData(alarmData));
+        }
     }
 
     @Override
@@ -47,9 +57,5 @@ public class AlarmCatalogue implements Catalogue {
 
     public void removeAlarmListener(AlarmListener listener) {
         alarmListeners.remove(listener);
-    }
-
-    public void processAlarmData(AlarmData alarmData) {
-        alarmListeners.forEach(l -> l.processAlarmData(alarmData));
     }
 }

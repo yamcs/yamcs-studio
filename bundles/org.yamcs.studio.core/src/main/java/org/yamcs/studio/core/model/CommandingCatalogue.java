@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
@@ -28,13 +29,14 @@ import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.protobuf.Rest.ListCommandInfoResponse;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class CommandingCatalogue implements Catalogue {
+public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(CommandingCatalogue.class.getName());
 
@@ -77,9 +79,40 @@ public class CommandingCatalogue implements Catalogue {
     @Override
     public void onStudioConnect() {
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-        yamcsClient.sendMessage(new WebSocketRequest("cmdhistory", "subscribe"));
-        yamcsClient.sendMessage(new WebSocketRequest("cqueues", "subscribe"));
+        yamcsClient.subscribe(new WebSocketRequest("cmdhistory", "subscribe"), this);
+        yamcsClient.subscribe(new WebSocketRequest("cqueues", "subscribe"), this);
         initialiseState();
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasCommand()) {
+            CommandHistoryEntry cmdhistEntry = msg.getCommand();
+            cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
+        }
+
+        if (msg.hasCommandQueueEvent()) {
+            CommandQueueEvent queueEvent = msg.getCommandQueueEvent();
+            switch (queueEvent.getType()) {
+            case COMMAND_ADDED:
+                queueListeners.forEach(l -> l.commandAdded(queueEvent.getData()));
+                break;
+            case COMMAND_REJECTED:
+                queueListeners.forEach(l -> l.commandRejected(queueEvent.getData()));
+                break;
+            case COMMAND_SENT:
+                queueListeners.forEach(l -> l.commandSent(queueEvent.getData()));
+                break;
+            default:
+                log.log(Level.SEVERE, "Unsupported queue event type " + queueEvent.getType());
+            }
+        }
+
+        if (msg.hasCommandQueueInfo()) {
+            CommandQueueInfo queueInfo = msg.getCommandQueueInfo();
+            queuesByName.put(queueInfo.getName(), queueInfo);
+            queueListeners.forEach(l -> l.updateQueue(queueInfo));
+        }
     }
 
     @Override
@@ -101,31 +134,6 @@ public class CommandingCatalogue implements Catalogue {
         metaCommands = Collections.emptyList();
         queuesByName.clear();
         commandsByQualifiedName.clear();
-    }
-
-    public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
-        cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
-    }
-
-    public void processCommandQueueInfo(CommandQueueInfo queueInfo) {
-        queuesByName.put(queueInfo.getName(), queueInfo);
-        queueListeners.forEach(l -> l.updateQueue(queueInfo));
-    }
-
-    public void processCommandQueueEvent(CommandQueueEvent queueEvent) {
-        switch (queueEvent.getType()) {
-        case COMMAND_ADDED:
-            queueListeners.forEach(l -> l.commandAdded(queueEvent.getData()));
-            break;
-        case COMMAND_REJECTED:
-            queueListeners.forEach(l -> l.commandRejected(queueEvent.getData()));
-            break;
-        case COMMAND_SENT:
-            queueListeners.forEach(l -> l.commandSent(queueEvent.getData()));
-            break;
-        default:
-            log.log(Level.SEVERE, "Unsupported queue event type " + queueEvent.getType());
-        }
     }
 
     public List<CommandInfo> getMetaCommands() {

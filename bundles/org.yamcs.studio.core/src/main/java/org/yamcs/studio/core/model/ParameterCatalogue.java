@@ -12,9 +12,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Rest.ListParameterInfoResponse;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
@@ -28,7 +30,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 /**
  * Keeps track of the parameter model. This does not currently include parameter values.
  */
-public class ParameterCatalogue implements Catalogue {
+public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(ParameterCatalogue.class.getName());
 
@@ -97,17 +99,6 @@ public class ParameterCatalogue implements Catalogue {
         parameterListeners.forEach(ParameterListener::mdbUpdated);
     }
 
-    public void processParameterData(ParameterData pdata) {
-        log.finest(String.format("Sending %s parameters to %s listeners",
-                pdata.getParameterCount(), parameterListeners.size()));
-        parameterListeners.forEach(l -> l.onParameterData(pdata));
-    }
-
-    public void processInvalidIdentification(NamedObjectId id) {
-        log.fine("No parameter for id " + id);
-        parameterListeners.forEach(l -> l.onInvalidIdentification(id));
-    }
-
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
@@ -145,14 +136,30 @@ public class ParameterCatalogue implements Catalogue {
     public void subscribeParameters(NamedObjectList idList) {
         if (ConnectionManager.getInstance().isConnected()) {
             YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-            yamcsClient.sendMessage(new MergeableWebSocketRequest("parameter", "subscribe", idList));
+            yamcsClient.subscribe(new MergeableWebSocketRequest("parameter", "subscribe", idList), this);
         }
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasParameterData()) {
+            ParameterData pdata = msg.getParameterData();
+            log.finest(String.format("Sending %s parameters to %s listeners",
+                    pdata.getParameterCount(), parameterListeners.size()));
+            parameterListeners.forEach(l -> l.onParameterData(pdata));
+        }
+    }
+
+    @Override
+    public void onInvalidIdentification(NamedObjectId id) {
+        log.fine("No parameter for id " + id);
+        parameterListeners.forEach(l -> l.onInvalidIdentification(id));
     }
 
     public void unsubscribeParameters(NamedObjectList idList) {
         if (ConnectionManager.getInstance().isConnected()) {
             YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-            yamcsClient.sendMessage(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
+            yamcsClient.sendWebSocketMessage(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
         }
     }
 

@@ -7,14 +7,16 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
-public class TimeCatalogue implements Catalogue {
+public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
 
     private volatile long currentTime = TimeEncoding.INVALID_INSTANT;
     private Set<TimeListener> timeListeners = new CopyOnWriteArraySet<>();
@@ -41,8 +43,9 @@ public class TimeCatalogue implements Catalogue {
 
     public long getMissionTime(boolean wallClockIfUnset) {
         long t = currentTime;
-        if (wallClockIfUnset && t == TimeEncoding.INVALID_INSTANT)
+        if (wallClockIfUnset && t == TimeEncoding.INVALID_INSTANT) {
             t = TimeEncoding.getWallclockTime();
+        }
         return t;
     }
 
@@ -80,12 +83,16 @@ public class TimeCatalogue implements Catalogue {
     @Override
     public void onStudioConnect() {
         YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
-        yamcsClient.sendMessage(new WebSocketRequest("time", "subscribe"));
+        yamcsClient.subscribe(new WebSocketRequest("time", "subscribe"), this);
         distributeTime(TimeEncoding.INVALID_INSTANT);
     }
 
-    public void processTimeInfo(TimeInfo timeInfo) {
-        distributeTime(timeInfo.getCurrentTime());
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasTimeInfo()) {
+            TimeInfo timeInfo = msg.getTimeInfo();
+            distributeTime(timeInfo.getCurrentTime());
+        }
     }
 
     @Override
