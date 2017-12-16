@@ -113,8 +113,7 @@ public class YamcsPlugin extends Plugin {
 
         @Override
         public void connecting(String url) {
-            // TODO Auto-generated method stub
-
+            connectionListeners.forEach(l -> l.onYamcsConnecting());
         }
 
         @Override

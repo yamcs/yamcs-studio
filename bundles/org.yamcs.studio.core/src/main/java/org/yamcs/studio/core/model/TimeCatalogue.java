@@ -19,7 +19,7 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
 
     private volatile long currentTime = TimeEncoding.INVALID_INSTANT;
     private Set<TimeListener> timeListeners = new CopyOnWriteArraySet<>();
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
     public static TimeCatalogue getInstance() {
         return YamcsPlugin.getDefault().getCatalogue(TimeCatalogue.class);

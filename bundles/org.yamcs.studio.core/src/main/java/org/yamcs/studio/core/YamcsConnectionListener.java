@@ -5,6 +5,9 @@ package org.yamcs.studio.core;
  */
 public interface YamcsConnectionListener {
 
+    default void onYamcsConnecting() {
+    }
+
     default void onYamcsConnectionFailed(Throwable t) {
     }
 

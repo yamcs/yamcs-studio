@@ -18,9 +18,12 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
 
     private static final Logger log = Logger.getLogger(ConnectionStateProvider.class.getName());
 
+    public static final String STATE_KEY_CONNECTING = "org.yamcs.studio.ui.state.connecting";
     public static final String STATE_KEY_CONNECTED = "org.yamcs.studio.ui.state.connected";
-    private static final String[] SOURCE_NAMES = { STATE_KEY_CONNECTED };
 
+    private static final String[] SOURCE_NAMES = { STATE_KEY_CONNECTING, STATE_KEY_CONNECTED };
+
+    private boolean connecting = false;
     private boolean connected = false;
 
     public ConnectionStateProvider() {
@@ -29,7 +32,8 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
 
     @Override
     public Map getCurrentState() {
-        Map map = new HashMap(1);
+        Map map = new HashMap(2);
+        map.put(STATE_KEY_CONNECTING, connecting);
         map.put(STATE_KEY_CONNECTED, connected);
         return map;
     }
@@ -45,8 +49,19 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
     }
 
     @Override
+    public void onYamcsConnecting() {
+        Display.getDefault().asyncExec(() -> {
+            connecting = true;
+            Map newState = getCurrentState();
+            log.fine(String.format("Fire new connection state %s", newState));
+            fireSourceChanged(ISources.WORKBENCH, newState);
+        });
+    }
+
+    @Override
     public void onYamcsConnected() {
         Display.getDefault().asyncExec(() -> {
+            connecting = false;
             connected = true;
             Map newState = getCurrentState();
             log.fine(String.format("Fire new connection state %s", newState));

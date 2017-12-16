@@ -238,6 +238,7 @@
          <variable name="org.yamcs.studio.ui.authorization.mayCommandPayload" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.core.ui.connections.ConnectionStateProvider">
+         <variable name="org.yamcs.studio.ui.state.connecting" priorityLevel="workbench" />
          <variable name="org.yamcs.studio.ui.state.connected" priorityLevel="workbench" />
       </sourceProvider>
       <sourceProvider provider="org.yamcs.studio.core.ui.processor.ProcessorStateProvider">

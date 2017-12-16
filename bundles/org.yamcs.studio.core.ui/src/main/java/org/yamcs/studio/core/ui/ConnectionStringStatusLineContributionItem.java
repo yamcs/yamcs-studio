@@ -44,6 +44,17 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
     }
 
     @Override
+    public void onYamcsConnecting() {
+        yprops = YamcsPlugin.getYamcsClient().getYamcsConnectionProperties();
+        if (yprops.getAuthenticationToken() != null) {
+            subjectName = "" + yprops.getAuthenticationToken().getPrincipal();
+        } else {
+            subjectName = null;
+        }
+        Display.getDefault().asyncExec(() -> updateLabel(true));
+    }
+
+    @Override
     public void onYamcsConnected() {
         yprops = YamcsPlugin.getYamcsClient().getYamcsConnectionProperties();
         if (yprops.getAuthenticationToken() != null) {
@@ -51,21 +62,24 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         } else {
             subjectName = null;
         }
-        Display.getDefault().asyncExec(() -> updateLabel());
+        Display.getDefault().asyncExec(() -> updateLabel(false));
     }
 
     @Override
     public void onYamcsDisconnected() {
         yprops = null;
-        Display display = Display.getDefault();
-        if (display.isDisposed())
-            return;
 
-        display.asyncExec(() -> updateLabel());
+        Display display = Display.getDefault();
+        if (display.isDisposed()) {
+            return;
+        }
+        display.asyncExec(() -> updateLabel(false));
     }
 
-    private void updateLabel() {
-        if (yprops != null) {
+    private void updateLabel(boolean connecting) {
+        if (connecting) {
+            setErrorText("Connecting...", null);
+        } else if (yprops != null) {
             setErrorText(null, null);
             String host = yprops.getHost();
             if (isBlank(subjectName))

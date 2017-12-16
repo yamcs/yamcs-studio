@@ -96,9 +96,8 @@ public class YamcsClient implements WebSocketClientCallback {
         restClient = new RestClient(yprops);
         restClient.setAutoclose(false);
         wsclient = new WebSocketClient(yprops, this);
-        // wsclient.setConnectionTimeoutMs(3000);
         wsclient.setUserAgent(userAgent);
-        // wsclient.enableReconnection(false);
+        wsclient.enableReconnection(true);
 
         FutureTask<YamcsConnectionProperties> future = new FutureTask<>(new Runnable() {
             @Override
@@ -113,10 +112,7 @@ public class YamcsClient implements WebSocketClientCallback {
                     }
 
                     connecting = true;
-
-                    for (ConnectionListener cl : connectionListeners) {
-                        cl.connecting(connectingTo);
-                    }
+                    connecting();
                     for (int i = 0; i < maxAttempts; i++) {
                         try {
                             log.fine(String.format("Connecting to %s attempt %s", connectingTo, i));
@@ -144,12 +140,8 @@ public class YamcsClient implements WebSocketClientCallback {
                             return;
                         } catch (Exception e) {
                             // For anything other than a security exception, re-try
-                            for (ConnectionListener cl : connectionListeners) {
-                                cl.log("Connection to " + yprops.getHost() + ":" + yprops.getPort() + " failed :"
-                                        + e.getMessage());
-                            }
                             log.log(Level.WARNING,
-                                    "Connection to " + yprops.getHost() + ":" + yprops.getPort() + " failed :", e);
+                                    "Connection to " + yprops.getHost() + ":" + yprops.getPort() + " failed", e);
                             Thread.sleep(5000);
                         }
                     }
@@ -172,26 +164,28 @@ public class YamcsClient implements WebSocketClientCallback {
     }
 
     @Override
+    public void connecting() {
+        for (ConnectionListener cl : connectionListeners) {
+            cl.connecting(null);
+        }
+    }
+
+    @Override
     public void connected() {
         messageBundler.clearQueue();
 
         connected = true;
-        String connectingTo = yprops.getHost() + ":" + yprops.getPort();
         for (ConnectionListener listener : connectionListeners) {
-            listener.connected(connectingTo);
+            listener.connected(null);
         }
     }
 
     @Override
     public void disconnected() {
-        String msg = "Connection to " + yprops + " lost";
         if (connected) {
-            log.warning(msg);
+            log.warning("Connection to " + yprops + " lost");
         }
         for (ConnectionListener listener : connectionListeners) {
-            if (connected) {
-                listener.log(msg);
-            }
             listener.disconnected();
         }
     }
@@ -332,6 +326,7 @@ public class YamcsClient implements WebSocketClientCallback {
     public void shutdown() {
         restClient.close(); // Shuts down the thread pool
         wsclient.shutdown();
+        executor.shutdown();
         canceller.shutdown();
     }
 }
