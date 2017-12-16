@@ -7,8 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.diirt.util.DiirtStartup;
-import org.csstudio.logging.LogFormatDetail;
-import org.csstudio.logging.LogFormatter;
 import org.csstudio.logging.ui.ConsoleViewHandler;
 import org.csstudio.utility.product.ApplicationWorkbenchWindowAdvisor;
 import org.csstudio.utility.product.IWorkbenchWindowAdvisorExtPoint;
@@ -48,7 +46,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
         for (Handler handler : Logger.getLogger("").getHandlers()) {
             if (handler instanceof ConsoleViewHandler) {
                 handler.setLevel(Level.INFO);
-                handler.setFormatter(new LogFormatter(LogFormatDetail.LOW));
+                handler.setFormatter(new UserLogFormatter());
             }
         }
 
