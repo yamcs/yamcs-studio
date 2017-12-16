@@ -10,7 +10,6 @@ import org.yamcs.ConfigurationException;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.Rest.GetApiOverviewResponse;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.core.web.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -35,7 +34,6 @@ public class ConnectionManager {
 
     // Below are not-null after connect, null again after disconnect
     private YamcsClient yamcsClient;
-    private WebSocketRegistrar webSocketClient;
     private String serverId;
     private String serverVersion;
 
@@ -51,8 +49,9 @@ public class ConnectionManager {
     public void addStudioConnectionListener(StudioConnectionListener listener) {
         synchronized (studioConnectionListeners) {
             studioConnectionListeners.add(listener);
-            if (isConnected())
+            if (isConnected()) {
                 listener.onStudioConnect();
+            }
         }
     }
 
@@ -64,8 +63,9 @@ public class ConnectionManager {
 
     public void setConnectionInfo(ConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
-        if (mode == null)
+        if (mode == null) {
             mode = ConnectionMode.PRIMARY;
+        }
     }
 
     public ConnectionInfo getConnectionInfo() {
@@ -77,7 +77,7 @@ public class ConnectionManager {
     }
 
     public CompletableFuture<byte[]> requestAuthenticatedUser() {
-        return requireYamcsClient().get("/user", null);
+        return getYamcsClient().get("/user", null);
     }
 
     /**
@@ -160,8 +160,7 @@ public class ConnectionManager {
                 }
 
                 log.info("Connecting to " + yprops.getUrl());
-                webSocketClient = new WebSocketRegistrar(yprops);
-                webSocketClient.connect().addListener(new ChannelFutureListener() {
+                yamcsClient.connect().addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (future.isSuccess()) {
@@ -204,16 +203,10 @@ public class ConnectionManager {
             setConnectionStatus(ConnectionStatus.Disconnecting);
         }
 
-        log.fine("Shutting down WebSocket client");
-        if (webSocketClient != null)
-            webSocketClient.shutdown();
-
-        webSocketClient = null;
-
-        log.fine("Shutting down REST client");
-        if (yamcsClient != null)
+        log.fine("Shutting down Yamcs client");
+        if (yamcsClient != null) {
             yamcsClient.shutdown();
-
+        }
         yamcsClient = null;
 
         log.fine("Notify downstream components of Studio disconnect");
@@ -272,10 +265,6 @@ public class ConnectionManager {
         return yamcsClient;
     }
 
-    public WebSocketRegistrar getWebSocketClient() {
-        return webSocketClient;
-    }
-
     public YamcsConnectionProperties getConnectionProperties() {
         return (connectionInfo != null) ? connectionInfo.getConnection(mode) : null;
     }
@@ -286,18 +275,8 @@ public class ConnectionManager {
     }
 
     public void shutdown() {
-        if (yamcsClient != null)
+        if (yamcsClient != null) {
             yamcsClient.shutdown();
-        if (webSocketClient != null)
-            webSocketClient.shutdown();
-    }
-
-    public static YamcsClient requireYamcsClient() {
-        ConnectionManager man = getInstance();
-        if (man.yamcsClient != null) {
-            return man.yamcsClient;
-        } else {
-            throw new RuntimeException("Not connected");
         }
     }
 }

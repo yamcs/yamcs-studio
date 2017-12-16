@@ -21,7 +21,6 @@ import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.web.MergeableWebSocketRequest;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.core.web.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -111,9 +110,9 @@ public class ParameterCatalogue implements Catalogue {
 
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/parameters?details", null).whenComplete((data, exc) -> {
+        yamcsClient.get("/mdb/" + instance + "/parameters?details", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 try {
                     ListParameterInfoResponse response = ListParameterInfoResponse.parseFrom(data);
@@ -126,34 +125,34 @@ public class ParameterCatalogue implements Catalogue {
     }
 
     public CompletableFuture<byte[]> requestParameterDetail(String qualifiedName) {
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return restClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null);
+        return yamcsClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null);
     }
 
     public CompletableFuture<byte[]> fetchParameterValue(String instance, String qualifiedName) {
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null);
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        return yamcsClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null);
     }
 
     public CompletableFuture<byte[]> setParameter(String processor, NamedObjectId id, Value value) {
         String pResource = toURISegments(id);
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value);
     }
 
     public void subscribeParameters(NamedObjectList idList) {
         if (ConnectionManager.getInstance().isConnected()) {
-            WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-            webSocketClient.sendMessage(new MergeableWebSocketRequest("parameter", "subscribe", idList));
+            YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+            yamcsClient.sendMessage(new MergeableWebSocketRequest("parameter", "subscribe", idList));
         }
     }
 
     public void unsubscribeParameters(NamedObjectList idList) {
         if (ConnectionManager.getInstance().isConnected()) {
-            WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-            webSocketClient.sendMessage(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
+            YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+            yamcsClient.sendMessage(new MergeableWebSocketRequest("parameter", "unsubscribe", idList));
         }
     }
 

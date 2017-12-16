@@ -11,7 +11,7 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class TimeCatalogue implements Catalogue {
@@ -79,8 +79,8 @@ public class TimeCatalogue implements Catalogue {
 
     @Override
     public void onStudioConnect() {
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("time", "subscribe"));
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        yamcsClient.sendMessage(new WebSocketRequest("time", "subscribe"));
         distributeTime(TimeEncoding.INVALID_INSTANT);
     }
 

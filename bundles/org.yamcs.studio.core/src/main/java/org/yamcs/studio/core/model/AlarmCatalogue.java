@@ -9,7 +9,7 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Alarms.AlarmData;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
+import org.yamcs.studio.core.web.YamcsClient;
 
 public class AlarmCatalogue implements Catalogue {
 
@@ -23,8 +23,8 @@ public class AlarmCatalogue implements Catalogue {
 
     @Override
     public void onStudioConnect() {
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("alarms", "subscribe"));
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        yamcsClient.sendMessage(new WebSocketRequest("alarms", "subscribe"));
     }
 
     @Override

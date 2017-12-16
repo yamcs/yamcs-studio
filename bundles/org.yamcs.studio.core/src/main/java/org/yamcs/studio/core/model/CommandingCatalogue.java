@@ -30,7 +30,6 @@ import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.core.web.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -77,9 +76,9 @@ public class CommandingCatalogue implements Catalogue {
 
     @Override
     public void onStudioConnect() {
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("cmdhistory", "subscribe"));
-        webSocketClient.sendMessage(new WebSocketRequest("cqueues", "subscribe"));
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        yamcsClient.sendMessage(new WebSocketRequest("cmdhistory", "subscribe"));
+        yamcsClient.sendMessage(new WebSocketRequest("cqueues", "subscribe"));
         initialiseState();
     }
 
@@ -139,21 +138,24 @@ public class CommandingCatalogue implements Catalogue {
 
     public CompletableFuture<byte[]> sendCommand(String processor, String commandName, IssueCommandRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request);
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        return yamcsClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request);
     }
 
     public CompletableFuture<byte[]> editQueue(CommandQueueInfo queue, EditCommandQueueRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
-        return yamcsClient.patch("/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(), request);
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        return yamcsClient.patch(
+                "/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(), request);
     }
 
     public CompletableFuture<byte[]> editQueuedCommand(CommandQueueEntry entry, EditCommandQueueEntryRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.patch(
-                "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName() + "/entries/" + entry.getUuid(), request);
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        return yamcsClient.patch(
+                "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName()
+                        + "/entries/" + entry.getUuid(),
+                request);
     }
 
     public synchronized void processMetaCommands(List<CommandInfo> metaCommands) {
@@ -192,11 +194,14 @@ public class CommandingCatalogue implements Catalogue {
 
     public CompletableFuture<byte[]> updateCommandComment(String processor, CommandId cmdId, String newComment) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
 
         KeyValue keyValue = KeyValue.newBuilder().setKey("Comment").setValue(newComment).build();
-        UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId).addHistoryEntry(keyValue).build();
+        UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId)
+                .addHistoryEntry(keyValue).build();
 
-        return restClient.post("/processors/" + instance + "/" + processor + "/commandhistory" + cmdId.getCommandName(), request);
+        return yamcsClient.post(
+                "/processors/" + instance + "/" + processor + "/commandhistory" + cmdId.getCommandName(),
+                request);
     }
 }
