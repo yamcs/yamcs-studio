@@ -12,7 +12,6 @@ import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
@@ -36,8 +35,8 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     @Override
-    public void onStudioConnect() {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+    public void onYamcsConnected() {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("events", "subscribe"), this);
     }
 
@@ -55,7 +54,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
     }
 
     public void processEvent(Event event) {
@@ -64,7 +63,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> fetchLatestEvents(String instance) {
         String resource = "/archive/" + instance + "/events";
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get(resource, null);
     }
 
@@ -83,7 +82,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
         } else if (stop != TimeEncoding.INVALID_INSTANT) {
             resource += "?stop=" + stop;
         }
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         EventBatchGenerator batchGenerator = new EventBatchGenerator(listener);
         return yamcsClient.streamGet(resource, null, batchGenerator).whenComplete((data, exc) -> {
             if (!batchGenerator.events.isEmpty()) {

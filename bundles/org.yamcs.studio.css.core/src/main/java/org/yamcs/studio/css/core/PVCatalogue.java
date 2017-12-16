@@ -5,19 +5,22 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.Catalogue;
+import org.yamcs.studio.core.model.InstanceListener;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.css.core.pvmanager.YamcsPVReader;
 
-public class PVCatalogue implements Catalogue, ParameterListener {
+public class PVCatalogue implements YamcsConnectionListener, InstanceListener, ParameterListener {
 
     private static final Logger log = Logger.getLogger(PVCatalogue.class.getName());
 
@@ -26,21 +29,32 @@ public class PVCatalogue implements Catalogue, ParameterListener {
     private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
 
     public static PVCatalogue getInstance() {
-        return YamcsPlugin.getDefault().getCatalogue(PVCatalogue.class);
+        return Activator.getDefault().getPVCatalogue();
+    }
+
+    public PVCatalogue() {
+        ManagementCatalogue.getInstance().addInstanceListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
+        ParameterCatalogue.getInstance().addParameterListener(this);
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         reportConnectionState();
     }
 
     @Override
     public void instanceChanged(String oldInstance, String newInstance) {
+        // TODO verify behaviour. Maybe we should have a beforeInstanceChange
+        // and an after to get the correct pv connection state
+        Display.getDefault().asyncExec(() -> {
+            OPIUtils.resetDisplays();
+        });
         reportConnectionState();
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         reportConnectionState();
     }
 

@@ -8,14 +8,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.LinkListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
-public class DataLinkView extends ViewPart implements StudioConnectionListener, InstanceListener, LinkListener {
+public class DataLinkView extends ViewPart implements YamcsConnectionListener, InstanceListener, LinkListener {
 
     private DataLinkTableViewer tableViewer;
     private DataLinkTableViewerContentProvider contentProvider;
@@ -48,12 +48,12 @@ public class DataLinkView extends ViewPart implements StudioConnectionListener, 
         tableViewer.refresh();
 
         LinkCatalogue.getInstance().addLinkListener(this);
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         Display.getDefault().asyncExec(() -> updateYamcsInstance());
     }
 
@@ -63,7 +63,7 @@ public class DataLinkView extends ViewPart implements StudioConnectionListener, 
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         // remove-all handled through LinkListener
     }
 
@@ -81,7 +81,7 @@ public class DataLinkView extends ViewPart implements StudioConnectionListener, 
     public void dispose() {
         LinkCatalogue.getInstance().removeLinkListener(this);
         ManagementCatalogue.getInstance().removeInstanceListener(this);
-        ConnectionManager.getInstance().removeStudioConnectionListener(this);
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
         super.dispose();
     }
 

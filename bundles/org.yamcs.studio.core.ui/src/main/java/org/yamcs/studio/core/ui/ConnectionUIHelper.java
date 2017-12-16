@@ -3,17 +3,17 @@ package org.yamcs.studio.core.ui;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
-public class ConnectionUIHelper implements StudioConnectionListener {
+public class ConnectionUIHelper implements YamcsConnectionListener {
 
     private static ConnectionUIHelper instance = new ConnectionUIHelper();
 
     public ConnectionUIHelper() {
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
     }
 
     public static ConnectionUIHelper getInstance() {
@@ -21,9 +21,9 @@ public class ConnectionUIHelper implements StudioConnectionListener {
     }
 
     @Override
-    public void onStudioConnectionFailure(Throwable t) {
+    public void onYamcsConnectionFailed(Throwable t) {
 
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
         Display.getDefault().asyncExec(() -> {
 
@@ -39,10 +39,10 @@ public class ConnectionUIHelper implements StudioConnectionListener {
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
     }
 }

@@ -4,8 +4,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -26,7 +27,7 @@ public class YamcsAuthorizations {
     }
 
     public CompletableFuture<byte[]> loadAuthorizations() {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get("/user", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 try {
@@ -49,6 +50,12 @@ public class YamcsAuthorizations {
     }
 
     private boolean isAuthorizationEnabled() {
-        return ConnectionManager.getInstance().isPrivilegesEnabled();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        // TODO we should probably control this from the server, rather than here. Just because
+        // the creds are null, does not really mean anything. We could also send creds to an
+        // unsecured yamcs server. It would just ignore it, and then our client state would
+        // be wrong
+        YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
+        return (yprops == null) ? false : yprops.getAuthenticationToken() != null;
     }
 }

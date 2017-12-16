@@ -4,16 +4,15 @@ import static org.yamcs.studio.core.ui.utils.TextUtils.isBlank;
 
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
 public class ConnectionStringStatusLineContributionItem extends StatusLineContributionItem
-        implements StudioConnectionListener {
+        implements YamcsConnectionListener {
 
     private static final String DEFAULT_TEXT = "Not Connected";
-    private ConnectionManager connectionManager;
 
     private YamcsConnectionProperties yprops;
     private String subjectName;
@@ -28,7 +27,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         setToolTipText("Yamcs Server Connection String");
 
         addClickListener(evt -> {
-            if (connectionManager.getYamcsClient().isConnected()) {
+            if (YamcsPlugin.getYamcsClient().isConnected()) {
                 // TODO show server info (version string etc)
             } else {
                 RCPUtils.runCommand(YamcsUIPlugin.CMD_CONNECT);
@@ -36,18 +35,17 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         });
 
         // Listen to changes
-        connectionManager = ConnectionManager.getInstance();
-        connectionManager.addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
     }
 
     @Override
     public void dispose() {
-        connectionManager.removeStudioConnectionListener(this);
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
     }
 
     @Override
-    public void onStudioConnect() {
-        yprops = connectionManager.getYamcsClient().getYamcsConnectionProperties();
+    public void onYamcsConnected() {
+        yprops = YamcsPlugin.getYamcsClient().getYamcsConnectionProperties();
         if (yprops.getAuthenticationToken() != null) {
             subjectName = "" + yprops.getAuthenticationToken().getPrincipal();
         } else {
@@ -57,7 +55,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         yprops = null;
         Display display = Display.getDefault();
         if (display.isDisposed())

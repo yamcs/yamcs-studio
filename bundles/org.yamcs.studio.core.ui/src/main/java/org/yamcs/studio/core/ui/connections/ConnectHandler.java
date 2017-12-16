@@ -18,8 +18,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ConnectionMode;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
@@ -61,7 +60,7 @@ public class ConnectHandler extends AbstractHandler {
         // FIXME get the password out before doing this
         ConnectionPreferences.setLastUsedConfiguration(conf);
 
-        YamcsConnectionProperties yprops = conf.toConnectionInfo().getConnection(ConnectionMode.PRIMARY);
+        YamcsConnectionProperties yprops = conf.getPrimaryConnectionProperties();
         log.info("Will connect to " + yprops);
         doConnectWithProgress(shell, yprops);
     }
@@ -73,7 +72,7 @@ public class ConnectHandler extends AbstractHandler {
         try {
             IRunnableWithProgress op = monitor -> {
                 monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
-                YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+                YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
                 try {
                     log.info("Blocking connect...");
                     yamcsClient.connect(yprops).get();

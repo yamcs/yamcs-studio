@@ -17,8 +17,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.EventListener;
@@ -28,7 +27,7 @@ import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class EventLog extends Composite implements StudioConnectionListener, InstanceListener, EventListener {
+public class EventLog extends Composite implements YamcsConnectionListener, InstanceListener, EventListener {
 
     public static final String CMD_SCROLL_LOCK = "org.yamcs.studio.eventlog.scrollLockCommand";
     public static final String CMD_EVENT_PROPERTIES = "org.yamcs.studio.eventlog.showDetailsCommand";
@@ -80,7 +79,7 @@ public class EventLog extends Composite implements StudioConnectionListener, Ins
         if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null) {
             EventCatalogue.getInstance().addEventListener(this);
         }
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
@@ -90,7 +89,7 @@ public class EventLog extends Composite implements StudioConnectionListener, Ins
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         Display.getDefault().asyncExec(() -> {
             clear();
             fetchLatestEvents();
@@ -106,7 +105,7 @@ public class EventLog extends Composite implements StudioConnectionListener, Ins
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         // NOP for now
     }
 
@@ -188,7 +187,7 @@ public class EventLog extends Composite implements StudioConnectionListener, Ins
     @Override
     public void dispose() {
         EventCatalogue.getInstance().addEventListener(this);
-        ConnectionManager.getInstance().removeStudioConnectionListener(this);
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().removeInstanceListener(this);
         super.dispose();
     }

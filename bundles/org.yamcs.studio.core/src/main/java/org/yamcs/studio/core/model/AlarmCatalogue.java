@@ -9,7 +9,6 @@ import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Alarms.AlarmData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 
@@ -24,8 +23,8 @@ public class AlarmCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     @Override
-    public void onStudioConnect() {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+    public void onYamcsConnected() {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("alarms", "subscribe"), this);
     }
 
@@ -43,7 +42,7 @@ public class AlarmCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         // Clear state
         alarmDataByName.clear();
     }

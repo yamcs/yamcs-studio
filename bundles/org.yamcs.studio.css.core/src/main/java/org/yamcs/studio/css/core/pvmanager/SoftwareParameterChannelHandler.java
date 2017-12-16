@@ -17,8 +17,8 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
@@ -29,7 +29,7 @@ import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
  * Supports writable Software parameters
  */
 public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsPVReader, StudioConnectionListener, InstanceListener {
+        implements YamcsPVReader, YamcsConnectionListener, InstanceListener {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(SoftwareParameterChannelHandler.class.getName());
@@ -41,12 +41,12 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
 
         super(channelName);
         id = NamedObjectId.newBuilder().setName(channelName).build();
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         log.fine("connect called on " + getChannelName());
         connect();
     }
@@ -62,7 +62,7 @@ public class SoftwareParameterChannelHandler extends MultiplexedChannelHandler<P
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         disconnect(); // Unregister PV
     }
 

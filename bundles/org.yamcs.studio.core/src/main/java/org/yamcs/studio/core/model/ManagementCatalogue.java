@@ -23,7 +23,6 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 
@@ -53,8 +52,8 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     @Override
-    public void onStudioConnect() {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+    public void onYamcsConnected() {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("management", "subscribe"), this);
     }
 
@@ -112,7 +111,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         // Clear everything, we'll get a fresh set upon connect
         clientInfoById.clear();
         processorInfoByInstance.clear();
@@ -187,7 +186,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public static String getCurrentYamcsInstance() {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.getYamcsConnectionProperties().getInstance();
     }
 
@@ -224,28 +223,28 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public CompletableFuture<byte[]> createProcessorRequest(String yamcsInstance, CreateProcessorRequest request) {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.post("/processors/" + yamcsInstance, request);
     }
 
     public CompletableFuture<byte[]> editProcessorRequest(String yamcsInstance, String processor,
             EditProcessorRequest request) {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.patch("/processors/" + yamcsInstance + "/" + processor, request);
     }
 
     public CompletableFuture<byte[]> editClientRequest(int clientId, EditClientRequest request) {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.patch("/clients/" + clientId, request);
     }
 
     public CompletableFuture<byte[]> fetchInstanceInformationRequest(String yamcsInstance) {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get("/instances/" + yamcsInstance + "?aggregate", null);
     }
 
     public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
-        YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.post("/instances/" + yamcsInstance + "?state=restarted", null);
     }
 }

@@ -37,9 +37,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
 import org.yamcs.studio.core.TimeInterval;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -50,7 +50,7 @@ import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart
-        implements StudioConnectionListener, InstanceListener, TimeListener, ISourceProviderListener {
+        implements YamcsConnectionListener, InstanceListener, TimeListener, ISourceProviderListener {
 
     private static final Logger log = Logger.getLogger(ArchiveView.class.getName());
 
@@ -89,11 +89,16 @@ public class ArchiveView extends ViewPart
         playImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/play.png"));
         pauseImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/pause.png"));
         forwardImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward.png"));
-        forward2xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward2x.png"));
-        forward4xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward4x.png"));
-        forward8xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward8x.png"));
-        forward16xImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward16x.png"));
-        leaveReplayImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/redo.png"));
+        forward2xImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward2x.png"));
+        forward4xImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward4x.png"));
+        forward8xImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward8x.png"));
+        forward16xImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward16x.png"));
+        leaveReplayImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/redo.png"));
 
         createActions();
 
@@ -134,12 +139,12 @@ public class ArchiveView extends ViewPart
         gl.horizontalSpacing = 0;
         replayComposite.setLayout(gl);
 
-        //   current time / jump date / jump time / jump button
+        // current time / jump date / jump time / jump button
         Composite timeComposite = new Composite(replayComposite, SWT.NONE);
         GridData gd = new GridData();
         gd.horizontalAlignment = SWT.LEFT;
-        //  gd.widthHint = 140;
-        //   gd.grabExcessHorizontalSpace = true;
+        // gd.widthHint = 140;
+        // gd.grabExcessHorizontalSpace = true;
         timeComposite.setLayoutData(gd);
         gl = new GridLayout(4, false);
         gl.marginHeight = 0;
@@ -218,14 +223,16 @@ public class ArchiveView extends ViewPart
         buttonWrapper.setLayoutData(gd);
 
         ISourceProviderService service = (ISourceProviderService) getSite().getService(ISourceProviderService.class);
-        processorState = (ProcessorStateProvider) service.getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
+        processorState = (ProcessorStateProvider) service
+                .getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         processorState.addSourceProviderListener(this);
-        connectionState = (ConnectionStateProvider) service.getSourceProvider(ConnectionStateProvider.STATE_KEY_CONNECTED);
+        connectionState = (ConnectionStateProvider) service
+                .getSourceProvider(ConnectionStateProvider.STATE_KEY_CONNECTED);
         connectionState.addSourceProviderListener(this);
 
         indexReceiver.setIndexListener(this);
         TimeCatalogue.getInstance().addTimeListener(this);
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
 
         updateState();
@@ -238,7 +245,7 @@ public class ArchiveView extends ViewPart
         TimeCatalogue.getInstance().removeTimeListener(this);
         processorState.removeSourceProviderListener(this);
         connectionState.removeSourceProviderListener(this);
-        ConnectionManager.getInstance().removeStudioConnectionListener(this);
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
     }
 
     private void toggleReplayComposite(boolean enabled) {
@@ -248,7 +255,7 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         SwingUtilities.invokeLater(() -> {
             setRefreshEnabled(true);
             refreshData();
@@ -261,7 +268,7 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         clearInstanceSpecificState();
     }
 
@@ -391,10 +398,12 @@ public class ArchiveView extends ViewPart
     }
 
     public boolean isRefreshEnabled() {
-        // Not necessarily on the SWT thread. This is a bit of a risk. Maybe we should do a blocking Display.getDefault().syncExec
+        // Not necessarily on the SWT thread. This is a bit of a risk. Maybe we should do a blocking
+        // Display.getDefault().syncExec
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        RefreshStateProvider commandState = (RefreshStateProvider) service.getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
+        RefreshStateProvider commandState = (RefreshStateProvider) service
+                .getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
         return (Boolean) commandState.getCurrentState().get(RefreshStateProvider.STATE_KEY_ENABLED);
     }
 
@@ -403,7 +412,8 @@ public class ArchiveView extends ViewPart
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            RefreshStateProvider commandState = (RefreshStateProvider) service.getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
+            RefreshStateProvider commandState = (RefreshStateProvider) service
+                    .getSourceProvider(RefreshStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -411,7 +421,8 @@ public class ArchiveView extends ViewPart
     public boolean isZoomInEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ZoomInStateProvider commandState = (ZoomInStateProvider) service.getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
+        ZoomInStateProvider commandState = (ZoomInStateProvider) service
+                .getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
         return (Boolean) commandState.getCurrentState().get(ZoomInStateProvider.STATE_KEY_ENABLED);
     }
 
@@ -420,7 +431,8 @@ public class ArchiveView extends ViewPart
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            ZoomInStateProvider commandState = (ZoomInStateProvider) service.getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
+            ZoomInStateProvider commandState = (ZoomInStateProvider) service
+                    .getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -428,7 +440,8 @@ public class ArchiveView extends ViewPart
     public boolean isZoomOutEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ZoomOutStateProvider commandState = (ZoomOutStateProvider) service.getSourceProvider(ZoomOutStateProvider.STATE_KEY_ENABLED);
+        ZoomOutStateProvider commandState = (ZoomOutStateProvider) service
+                .getSourceProvider(ZoomOutStateProvider.STATE_KEY_ENABLED);
         return (Boolean) commandState.getCurrentState().get(ZoomOutStateProvider.STATE_KEY_ENABLED);
     }
 
@@ -437,7 +450,8 @@ public class ArchiveView extends ViewPart
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            ZoomOutStateProvider commandState = (ZoomOutStateProvider) service.getSourceProvider(ZoomOutStateProvider.STATE_KEY_ENABLED);
+            ZoomOutStateProvider commandState = (ZoomOutStateProvider) service
+                    .getSourceProvider(ZoomOutStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -445,7 +459,8 @@ public class ArchiveView extends ViewPart
     public boolean isZoomClearEnabled() {
         IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
         ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ClearZoomStateProvider commandState = (ClearZoomStateProvider) service.getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
+        ClearZoomStateProvider commandState = (ClearZoomStateProvider) service
+                .getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
         return (Boolean) commandState.getCurrentState().get(ClearZoomStateProvider.STATE_KEY_ENABLED);
     }
 
@@ -454,7 +469,8 @@ public class ArchiveView extends ViewPart
         Display.getDefault().asyncExec(() -> {
             IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
             ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-            ClearZoomStateProvider commandState = (ClearZoomStateProvider) service.getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
+            ClearZoomStateProvider commandState = (ClearZoomStateProvider) service
+                    .getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
     }
@@ -480,17 +496,17 @@ public class ArchiveView extends ViewPart
 
     protected void showMessage(String msg) {
         System.out.println(msg);
-        //JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.PLAIN_MESSAGE);
+        // JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.PLAIN_MESSAGE);
     }
 
     protected void showInfo(String msg) {
         System.out.println(msg);
-        //JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.INFORMATION_MESSAGE);
+        // JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.INFORMATION_MESSAGE);
     }
 
     protected void showError(String msg) {
         System.out.println(msg);
-        //JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.ERROR_MESSAGE);
+        // JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.ERROR_MESSAGE);
     }
 
     public void popup(String text) {
@@ -557,13 +573,14 @@ public class ArchiveView extends ViewPart
     }
 
     /*
-     * We use the state available in the workbench-level state provider, which may have a need in
-     * the future. This way we avoid duplicating similar logic here.
+     * We use the state available in the workbench-level state provider, which may have a need in the future. This way
+     * we avoid duplicating similar logic here.
      */
     private void updateState() {
 
         // Refresh the current states
-        Boolean connected = (Boolean) connectionState.getCurrentState().get(ConnectionStateProvider.STATE_KEY_CONNECTED);
+        Boolean connected = (Boolean) connectionState.getCurrentState()
+                .get(ConnectionStateProvider.STATE_KEY_CONNECTED);
         String processing = (String) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_PROCESSING);
         Boolean replay = (Boolean) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY);
         Float replaySpeed = (Float) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY_SPEED);

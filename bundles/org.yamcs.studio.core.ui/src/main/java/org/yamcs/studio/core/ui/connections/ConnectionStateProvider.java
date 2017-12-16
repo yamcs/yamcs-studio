@@ -7,14 +7,14 @@ import java.util.logging.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Used in plugin.xml core-expressions to keep track of connection state
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class ConnectionStateProvider extends AbstractSourceProvider implements StudioConnectionListener {
+public class ConnectionStateProvider extends AbstractSourceProvider implements YamcsConnectionListener {
 
     private static final Logger log = Logger.getLogger(ConnectionStateProvider.class.getName());
 
@@ -24,7 +24,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     private boolean connected = false;
 
     public ConnectionStateProvider() {
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         Display.getDefault().asyncExec(() -> {
             connected = true;
             Map newState = getCurrentState();
@@ -55,7 +55,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         Display.getDefault().asyncExec(() -> {
             connected = false;
             Map newState = getCurrentState();
@@ -66,6 +66,6 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements S
 
     @Override
     public void dispose() {
-        ConnectionManager.getInstance().removeStudioConnectionListener(this);
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
     }
 }

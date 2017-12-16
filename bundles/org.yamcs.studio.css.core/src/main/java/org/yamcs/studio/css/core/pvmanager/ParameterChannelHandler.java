@@ -10,8 +10,8 @@ import org.diirt.datasource.ValueCache;
 import org.yamcs.protobuf.Mdb.DataSourceType;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.css.core.PVCatalogue;
@@ -22,7 +22,7 @@ import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
  * Datasource level. Then we wouldn't have to split out the software parameters under a different scheme.
  */
 public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsPVReader, StudioConnectionListener, InstanceListener {
+        implements YamcsPVReader, YamcsConnectionListener, InstanceListener {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
@@ -31,7 +31,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     public ParameterChannelHandler(String channelName) {
         super(channelName);
         id = NamedObjectId.newBuilder().setName(channelName).build();
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
@@ -41,7 +41,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         log.fine("onStudioConnect called on " + getChannelName());
         connect();
     }
@@ -57,7 +57,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         disconnect(); // Unregister PV
     }
 

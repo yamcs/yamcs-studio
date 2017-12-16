@@ -16,8 +16,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.ConnectionMode;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 
 /**
@@ -57,7 +56,7 @@ public class AutoConnectHandler extends AbstractHandler {
         ConnectionPreferences.setLastUsedConfiguration(conf);
 
         // Check if authentication is needed
-        YamcsConnectionProperties yprops = conf.toConnectionInfo().getConnection(ConnectionMode.PRIMARY);
+        YamcsConnectionProperties yprops = conf.getPrimaryConnectionProperties();
         if (conf.isAnonymous()) {
             log.fine("Will connect anonymously to " + yprops);
             doConnectWithProgress(shell, yprops);
@@ -83,7 +82,7 @@ public class AutoConnectHandler extends AbstractHandler {
         try {
             IRunnableWithProgress op = monitor -> {
                 monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
-                YamcsClient yamcsClient = ConnectionManager.getInstance().getYamcsClient();
+                YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
                 try {
                     log.info("Blocking connect...");
                     yamcsClient.connect(yprops).get();
