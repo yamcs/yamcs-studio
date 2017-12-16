@@ -23,7 +23,7 @@ import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 
 /**
  * Provides access to aggregated state on yamcs management-type information.

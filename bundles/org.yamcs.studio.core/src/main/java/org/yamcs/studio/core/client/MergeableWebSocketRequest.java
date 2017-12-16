@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.web;
+package org.yamcs.studio.core.client;
 
 import java.util.HashSet;
 import java.util.Set;

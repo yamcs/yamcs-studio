@@ -11,7 +11,7 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class TimeCatalogue implements Catalogue {

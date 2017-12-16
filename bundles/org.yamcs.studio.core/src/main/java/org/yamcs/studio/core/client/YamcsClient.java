@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.web;
+package org.yamcs.studio.core.client;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -56,16 +56,14 @@ import io.netty.channel.ChannelFuture;
 import io.netty.handler.codec.http.HttpMethod;
 
 /**
- * Wraps the yamcs-core REST client with extra functionality, such as job monitoring.
- * <p>
- * Intended to in the future also provide passage to the websocket api
+ * Provides passage to Yamcs. This covers both the REST and WebSocket API
  */
 public class YamcsClient implements WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
 
     private final RestClient restClient;
-    private WebSocketClient wsclient;
+    private final WebSocketClient wsclient;
 
     // Order all subscribe/unsubscribe events
     private final BlockingQueue<WebSocketRequest> pendingRequests = new LinkedBlockingQueue<>();

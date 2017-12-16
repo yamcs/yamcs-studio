@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.web;
+package org.yamcs.studio.core.client;
 
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 

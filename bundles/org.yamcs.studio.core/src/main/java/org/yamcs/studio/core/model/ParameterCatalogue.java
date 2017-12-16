@@ -20,8 +20,8 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.MergeableWebSocketRequest;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.MergeableWebSocketRequest;
+import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 

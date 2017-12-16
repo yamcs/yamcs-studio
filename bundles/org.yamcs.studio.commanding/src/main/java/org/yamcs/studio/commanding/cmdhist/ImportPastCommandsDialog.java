@@ -20,10 +20,10 @@ import org.yamcs.api.YamcsApiException;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.TimeInterval;
+import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.core.web.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.InvalidProtocolBufferException;

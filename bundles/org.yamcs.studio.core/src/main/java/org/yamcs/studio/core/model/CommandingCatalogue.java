@@ -30,7 +30,7 @@ import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 

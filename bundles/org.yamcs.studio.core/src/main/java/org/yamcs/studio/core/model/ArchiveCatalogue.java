@@ -9,8 +9,8 @@ import org.yamcs.protobuf.Rest.EditTagRequest;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.URLBuilder;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.URLBuilder;
+import org.yamcs.studio.core.client.YamcsClient;
 
 /**
  * Groups generic archive operations (index, tags).

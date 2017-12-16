@@ -9,7 +9,7 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Alarms.AlarmData;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 
 public class AlarmCatalogue implements Catalogue {
 
