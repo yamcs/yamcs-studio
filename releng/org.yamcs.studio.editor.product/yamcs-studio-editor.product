@@ -19,8 +19,6 @@ See http://www.yamcs.org
       <vmArgs>-Xmx1024m
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
--Dorg.osgi.framework.bundle.parent=ext
--Dosgi.framework.extensions=org.eclipse.fx.osgi
       </vmArgs>
       <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
 -XstartOnFirstThread

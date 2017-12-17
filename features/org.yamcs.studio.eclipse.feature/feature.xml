@@ -9,10 +9,6 @@
          id="org.eclipse.rcp"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.fx.target.rcp.feature"
-         version="0.0.0"/>
-
    <plugin
          id="org.eclipse.core.resources"
          download-size="0"
