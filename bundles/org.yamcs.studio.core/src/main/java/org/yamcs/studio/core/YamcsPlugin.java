@@ -45,7 +45,7 @@ public class YamcsPlugin extends Plugin {
         TimeEncoding.setUp();
 
         yamcsClient = new YamcsClient(getProductString());
-        yamcsClient.addConnectionListener(new CentralConnectionListener());
+        yamcsClient.addConnectionListener(new UIConnectionListener());
 
         ManagementCatalogue managementCatalogue = new ManagementCatalogue();
         catalogues.put(ManagementCatalogue.class, managementCatalogue);
@@ -109,7 +109,10 @@ public class YamcsPlugin extends Plugin {
         return productName + " v" + productVersion;
     }
 
-    private class CentralConnectionListener implements ConnectionListener {
+    /**
+     * Connection listener that maps the connection events from Yamcs API to the slightly different Studio API.
+     */
+    private class UIConnectionListener implements ConnectionListener {
 
         @Override
         public void connecting(String url) {
@@ -125,7 +128,6 @@ public class YamcsPlugin extends Plugin {
 
         @Override
         public void connectionFailed(String url, YamcsException exception) {
-            log.severe("Could not connect: " + exception.getMessage());
             connectionListeners.forEach(l -> l.onYamcsConnectionFailed(exception));
         }
 
@@ -140,7 +142,6 @@ public class YamcsPlugin extends Plugin {
 
         @Override
         public void log(String message) {
-            System.out.println("log message: " + message);
         }
     }
 }

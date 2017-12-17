@@ -44,7 +44,7 @@ public class YamcsClient implements WebSocketClientCallback {
     private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
 
     private YamcsConnectionProperties yprops;
-    private String userAgent;
+    private String application;
 
     private volatile boolean connecting;
     private volatile boolean connected;
@@ -64,10 +64,10 @@ public class YamcsClient implements WebSocketClientCallback {
 
     // Keep track of ongoing jobs, to respond to user cancellation requests.
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
-    private Map<IProgressMonitor, CompletableFuture<?>> cancellableJobs = new ConcurrentHashMap<>();
+    private Map<IProgressMonitor, Future<?>> cancellableJobs = new ConcurrentHashMap<>();
 
-    public YamcsClient(String userAgent) {
-        this.userAgent = userAgent;
+    public YamcsClient(String application) {
+        this.application = application;
 
         canceller.scheduleWithFixedDelay(() -> {
             cancellableJobs.forEach((monitor, future) -> {
@@ -96,13 +96,13 @@ public class YamcsClient implements WebSocketClientCallback {
         restClient = new RestClient(yprops);
         restClient.setAutoclose(false);
         wsclient = new WebSocketClient(yprops, this);
-        wsclient.setUserAgent(userAgent);
+        wsclient.setUserAgent(application);
         wsclient.enableReconnection(true);
 
         FutureTask<YamcsConnectionProperties> future = new FutureTask<>(new Runnable() {
             @Override
             public void run() {
-                String connectingTo = yprops.getHost() + ":" + yprops.getPort();
+                log.info("Connecting to " + yprops);
                 int maxAttempts = 10;
                 try {
                     if (reconnecting && !retry) {
@@ -115,7 +115,7 @@ public class YamcsClient implements WebSocketClientCallback {
                     connecting();
                     for (int i = 0; i < maxAttempts; i++) {
                         try {
-                            log.fine(String.format("Connecting to %s attempt %s", connectingTo, i));
+                            log.fine(String.format("Connecting to %s attempt %d", yprops, i));
                             instances = restClient.blockingGetYamcsInstances();
                             if (instances == null || instances.isEmpty()) {
                                 log.warning("No configured yamcs instance");
@@ -140,26 +140,30 @@ public class YamcsClient implements WebSocketClientCallback {
                             return;
                         } catch (Exception e) {
                             // For anything other than a security exception, re-try
-                            log.log(Level.WARNING,
-                                    "Connection to " + yprops.getHost() + ":" + yprops.getPort() + " failed", e);
+                            log.log(Level.WARNING, String.format("Connection to %s failed (attempt %d of %d)",
+                                    yprops, i + 1, maxAttempts), e);
                             Thread.sleep(5000);
                         }
                     }
                     connecting = false;
                     for (ConnectionListener cl : connectionListeners) {
-                        cl.log(maxAttempts + " connection attempts failed, giving up.");
-                        cl.connectionFailed(connectingTo,
+                        cl.connectionFailed(null,
                                 new YamcsException(maxAttempts + " connection attempts failed, giving up."));
                     }
                     log.warning(maxAttempts + " connection attempts failed, giving up.");
                 } catch (InterruptedException e) {
                     for (ConnectionListener cl : connectionListeners) {
-                        cl.connectionFailed(connectingTo, new YamcsException("Thread interrupted", e));
+                        cl.connectionFailed(null, new YamcsException("Thread interrupted", e));
                     }
                 }
             };
         }, yprops);
         executor.submit(future);
+
+        // Add Progress indicator in status bar
+        String jobName = "Connecting to " + yprops;
+        scheduleAsJob(jobName, future, Job.SHORT);
+
         return future;
     }
 
@@ -172,6 +176,7 @@ public class YamcsClient implements WebSocketClientCallback {
 
     @Override
     public void connected() {
+        log.info("Connected to " + yprops);
         messageBundler.clearQueue();
 
         connected = true;
@@ -191,7 +196,7 @@ public class YamcsClient implements WebSocketClientCallback {
     }
 
     public void disconnect() {
-        log.info("Disconnection requested");
+        log.info("Disconnecting from " + yprops);
         if (!connected) {
             return;
         }
@@ -298,7 +303,7 @@ public class YamcsClient implements WebSocketClientCallback {
         return cf;
     }
 
-    private void scheduleAsJob(String jobName, CompletableFuture<?> cf, int priority) {
+    private void scheduleAsJob(String jobName, Future<?> cf, int priority) {
         Job job = Job.create(jobName, monitor -> {
             cancellableJobs.put(monitor, cf);
 

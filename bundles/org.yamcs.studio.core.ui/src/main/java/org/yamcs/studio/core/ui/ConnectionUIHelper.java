@@ -1,7 +1,18 @@
 package org.yamcs.studio.core.ui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -9,6 +20,8 @@ import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class ConnectionUIHelper implements YamcsConnectionListener {
+
+    private static final Logger log = Logger.getLogger(ConnectionUIHelper.class.getName());
 
     private static ConnectionUIHelper instance = new ConnectionUIHelper();
 
@@ -22,18 +35,11 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
 
     @Override
     public void onYamcsConnectionFailed(Throwable t) {
-
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
-        YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
         Display.getDefault().asyncExec(() -> {
 
             if (t.getMessage() != null && t.getMessage().contains("401")) {
                 // Show Login Pane
                 RCPUtils.runCommand("org.yamcs.studio.ui.login");
-            } else {
-                String detail = (t.getMessage() != null) ? t.getMessage() : t.getClass().getSimpleName();
-                MessageDialog.openError(Display.getDefault().getActiveShell(), yprops.getUrl(),
-                        "Could not connect. " + detail);
             }
         });
     }
@@ -44,5 +50,50 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
 
     @Override
     public void onYamcsDisconnected() {
+    }
+
+    public static void connectWithProgressDialog(Shell shell, YamcsConnectionProperties yprops) {
+        try {
+            YamcsUIConnector connector = new YamcsUIConnector(shell, yprops);
+            new ProgressMonitorDialog(shell).run(true, true, connector);
+        } catch (InvocationTargetException e) {
+            MessageDialog.openError(shell, "Failed to connect", e.getMessage());
+        } catch (InterruptedException e) {
+            log.info("Connection attempt cancelled");
+        }
+    }
+
+    private static class YamcsUIConnector implements IRunnableWithProgress {
+
+        private Shell shell;
+        private YamcsConnectionProperties yprops;
+
+        YamcsUIConnector(Shell shell, YamcsConnectionProperties yprops) {
+            this.shell = shell;
+            this.yprops = yprops;
+        }
+
+        @Override
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+            monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
+            YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+            try {
+                Future<YamcsConnectionProperties> future = yamcsClient.connect(yprops);
+                while (!monitor.isCanceled() && !future.isDone()) {
+                    try {
+                        future.get(200, TimeUnit.MILLISECONDS);
+                    } catch (TimeoutException e) {
+                        // Keep trying until cancelled or connected
+                    }
+                }
+
+                if (monitor.isCanceled()) {
+                    future.cancel(true);
+                }
+            } catch (ExecutionException e) {
+                MessageDialog.openError(shell, "Failed to connect", e.getMessage());
+            }
+            monitor.done();
+        }
     }
 }

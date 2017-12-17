@@ -1,6 +1,5 @@
 package org.yamcs.studio.core.ui.connections;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,18 +7,13 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.ui.ConnectionUIHelper;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 /**
@@ -38,10 +32,11 @@ public class ConnectHandler extends AbstractHandler {
         if (singleConnectionMode) {
             String connectionString = YamcsUIPlugin.getDefault().getPreferenceStore().getString("connectionString");
             try {
+                Shell shell = HandlerUtil.getActiveShell(event);
                 YamcsConnectionProperties yprops = YamcsConnectionProperties.parse(connectionString);
-                doConnectWithProgress(HandlerUtil.getActiveShell(event), yprops);
+                ConnectionUIHelper.connectWithProgressDialog(shell, yprops);
             } catch (URISyntaxException e) {
-                log.log(Level.SEVERE, "Invalid URL", e);
+                log.log(Level.SEVERE, "Invalid URL " + connectionString, e);
                 return null;
             }
         } else {
@@ -61,32 +56,6 @@ public class ConnectHandler extends AbstractHandler {
         ConnectionPreferences.setLastUsedConfiguration(conf);
 
         YamcsConnectionProperties yprops = conf.getPrimaryConnectionProperties();
-        log.info("Will connect to " + yprops);
-        doConnectWithProgress(shell, yprops);
-    }
-
-    /*
-     * TODO make this job cancellable
-     */
-    private void doConnectWithProgress(Shell shell, YamcsConnectionProperties yprops) {
-        try {
-            IRunnableWithProgress op = monitor -> {
-                monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
-                YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
-                try {
-                    log.info("Blocking connect...");
-                    yamcsClient.connect(yprops).get();
-                } catch (java.util.concurrent.ExecutionException e) {
-                    MessageDialog.openError(shell, "Failed to connect", e.getMessage());
-                }
-                monitor.done();
-            };
-            // should not need to fork, but ws client currently blocks a bit :(
-            new ProgressMonitorDialog(shell).run(true /* fork */, false /* cancel */, op);
-        } catch (InvocationTargetException e) {
-            MessageDialog.openError(shell, "Failed to connect", e.getMessage());
-        } catch (InterruptedException e) {
-            log.info("Connection attempt cancelled");
-        }
+        ConnectionUIHelper.connectWithProgressDialog(shell, yprops);
     }
 }

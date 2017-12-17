@@ -3,6 +3,7 @@ package org.yamcs.studio.core.ui.connections;
 import java.util.Objects;
 
 import org.yamcs.api.YamcsConnectionProperties;
+import org.yamcs.api.YamcsConnectionProperties.Protocol;
 import org.yamcs.security.UsernamePasswordToken;
 
 /**
@@ -124,6 +125,7 @@ public class YamcsConfiguration {
 
     public YamcsConnectionProperties getPrimaryConnectionProperties() {
         YamcsConnectionProperties yprops = new YamcsConnectionProperties(primaryHost, primaryPort, instance);
+        yprops.setProtocol(Protocol.http);
         if (!isAnonymous()) {
             yprops.setAuthenticationToken(new UsernamePasswordToken(user, password));
         }
@@ -133,6 +135,7 @@ public class YamcsConfiguration {
     public YamcsConnectionProperties getFailoverConnectionProperties() {
         if (failoverHost != null) {
             YamcsConnectionProperties yprops = new YamcsConnectionProperties(failoverHost, failoverPort, instance);
+            yprops.setProtocol(Protocol.http);
             if (!isAnonymous()) {
                 yprops.setAuthenticationToken(new UsernamePasswordToken(user, password));
             }

@@ -12,11 +12,6 @@ import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 public class ConnectionStringStatusLineContributionItem extends StatusLineContributionItem
         implements YamcsConnectionListener {
 
-    private static final String DEFAULT_TEXT = "Not Connected";
-
-    private YamcsConnectionProperties yprops;
-    private String subjectName;
-
     public ConnectionStringStatusLineContributionItem(String id) {
         this(id, CALC_TRUE_WIDTH);
     }
@@ -24,7 +19,8 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
     public ConnectionStringStatusLineContributionItem(String id, int charWidth) {
         super(id, charWidth);
 
-        setToolTipText("Yamcs Server Connection String");
+        setText("Offline");
+        setToolTipText("Yamcs Connection Status");
 
         addClickListener(evt -> {
             if (YamcsPlugin.getYamcsClient().isConnected()) {
@@ -45,50 +41,45 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
     @Override
     public void onYamcsConnecting() {
-        yprops = YamcsPlugin.getYamcsClient().getYamcsConnectionProperties();
-        if (yprops.getAuthenticationToken() != null) {
-            subjectName = "" + yprops.getAuthenticationToken().getPrincipal();
-        } else {
-            subjectName = null;
-        }
-        Display.getDefault().asyncExec(() -> updateLabel(true));
+        Display.getDefault().asyncExec(() -> {
+            setErrorText(null, null);
+            setImage(null);
+            setText("Connecting...");
+        });
     }
 
     @Override
     public void onYamcsConnected() {
-        yprops = YamcsPlugin.getYamcsClient().getYamcsConnectionProperties();
-        if (yprops.getAuthenticationToken() != null) {
-            subjectName = "" + yprops.getAuthenticationToken().getPrincipal();
-        } else {
-            subjectName = null;
-        }
-        Display.getDefault().asyncExec(() -> updateLabel(false));
+        YamcsConnectionProperties yprops = YamcsPlugin.getYamcsClient().getYamcsConnectionProperties();
+        Display.getDefault().asyncExec(() -> {
+            setErrorText(null, null);
+            setImage(null);
+            setText(getConnectionString(yprops));
+        });
     }
 
     @Override
     public void onYamcsDisconnected() {
-        yprops = null;
-
         Display display = Display.getDefault();
         if (display.isDisposed()) {
             return;
         }
-        display.asyncExec(() -> updateLabel(false));
+        display.asyncExec(() -> {
+            setErrorText(null, null);
+            setImage(null);
+            setText("Offline");
+        });
     }
 
-    private void updateLabel(boolean connecting) {
-        if (connecting) {
-            setErrorText("Connecting...", null);
-        } else if (yprops != null) {
-            setErrorText(null, null);
-            String host = yprops.getHost();
-            if (isBlank(subjectName))
-                setText(String.format("anonymous@%s", host));
-            else
-                setText(String.format("%s@%s", subjectName, host));
-            setImage(null);
-        } else {
-            setErrorText(DEFAULT_TEXT, null);
+    private String getConnectionString(YamcsConnectionProperties yprops) {
+        String subjectName = null;
+        if (yprops.getAuthenticationToken() != null) {
+            subjectName = "" + yprops.getAuthenticationToken().getPrincipal();
         }
+        if (subjectName == null || isBlank(subjectName)) {
+            subjectName = "anonymous";
+        }
+
+        return String.format("%s@%s", subjectName, yprops.getHost());
     }
 }
