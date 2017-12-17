@@ -11,7 +11,9 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>org.csstudio.apputil.ui</module>
     <module>org.csstudio.examples</module>
+    <module>org.csstudio.logging</module>
     <module>org.csstudio.opibuilder</module>
     <module>org.csstudio.opibuilder.editor</module>
     <module>org.csstudio.opibuilder.examples</module>

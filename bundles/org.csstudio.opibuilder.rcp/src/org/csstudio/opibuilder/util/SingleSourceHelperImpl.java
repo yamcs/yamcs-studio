@@ -4,11 +4,8 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.logging.Level;
 
-import org.csstudio.email.EMailSender;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.PrintDisplayAction;
-import org.csstudio.opibuilder.actions.SendEMailAction;
-import org.csstudio.opibuilder.actions.SendToElogAction;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.runmode.IOPIRuntime;
 import org.csstudio.opibuilder.runmode.OPIShell;
@@ -44,68 +41,60 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.progress.UIJob;
 
-public class SingleSourceHelperImpl extends SingleSourceHelper{
+public class SingleSourceHelperImpl extends SingleSourceHelper {
 
     @Override
     protected GC iGetImageGC(Image image) {
         return new GC(image);
     }
 
-    /** Open the file in its associated editor,
-     *  supporting workspace files, local file system files or URLs
-     *  @param openFileAction Action for opening a file
+    /**
+     * Open the file in its associated editor, supporting workspace files, local file system files or URLs
+     * 
+     * @param openFileAction
+     *            Action for opening a file
      */
     @Override
     @SuppressWarnings("nls")
-    protected void iOpenFileActionRun(final OpenFileAction openFileAction)
-    {
-        final UIJob job = new UIJob(openFileAction.getDescription()){
+    protected void iOpenFileActionRun(final OpenFileAction openFileAction) {
+        final UIJob job = new UIJob(openFileAction.getDescription()) {
             @Override
             public IStatus runInUIThread(final IProgressMonitor monitor) {
                 // Open editor on new file.
                 final IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                 if (dw == null)
                     return Status.OK_STATUS; // Not really OK..
-                try
-                {
+                try {
                     final IWorkbenchPage page = Objects.requireNonNull(dw.getActivePage());
 
                     IPath absolutePath = openFileAction.getPath();
                     if (!absolutePath.isAbsolute())
                         absolutePath = ResourceUtil.buildAbsolutePath(
-                                    openFileAction.getWidgetModel(), absolutePath);
+                                openFileAction.getWidgetModel(), absolutePath);
 
                     // Workspace file?
                     IFile file = ResourceUtilSSHelperImpl.getIFileFromIPath(absolutePath);
-                    if (file != null)
-                    {   // Clear the last-used-editor info to always get the default editor,
-                        // the one configurable via Preferences, General, Editors, File Associations,
-                        // and not whatever one user may have used last via Navigator's "Open With..".
-                        // Other cases below use a new, local file that won't have last-used-editor info, yet
+                    if (file != null) { // Clear the last-used-editor info to always get the default editor,
+                                        // the one configurable via Preferences, General, Editors, File Associations,
+                                        // and not whatever one user may have used last via Navigator's "Open With..".
+                                        // Other cases below use a new, local file that won't have last-used-editor
+                                        // info, yet
                         file.setPersistentProperty(IDE.EDITOR_KEY, null);
                         IDE.openEditor(page, file, true);
-                    }
-                    else if (ResourceUtil.isExistingLocalFile(absolutePath))
-                    {   // Local file system
-                        try
-                        {
+                    } else if (ResourceUtil.isExistingLocalFile(absolutePath)) { // Local file system
+                        try {
                             IFileStore localFile = EFS.getLocalFileSystem().getStore(absolutePath);
                             IDE.openEditorOnFileStore(page, localFile);
+                        } catch (Exception e) {
+                            throw new Exception("Cannot open local file system location " + openFileAction.getPath(),
+                                    e);
                         }
-                        catch (Exception e)
-                        {
-                            throw new Exception("Cannot open local file system location " + openFileAction.getPath(), e);
-                        }
-                    }
-                    else
-                    {   // Attempt to download URL into local file (since IDE.openEditor needs local file)
+                    } else { // Attempt to download URL into local file (since IDE.openEditor needs local file)
                         final URI uri = new URI(openFileAction.getPath().toString());
                         file = IFileUtil.getInstance().createURLFileResource(uri);
                         IDE.openEditor(page, file, true);
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     final String message = "Failed to open file " + openFileAction.getPath();
                     ExceptionDetailsErrorDialog.openError(dw.getShell(), "Failed to open file", message, e);
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
@@ -135,24 +124,12 @@ public class SingleSourceHelperImpl extends SingleSourceHelper{
     protected void iRegisterRCPRuntimeActions(ActionRegistry actionRegistry,
             IOPIRuntime opiRuntime) {
         actionRegistry.registerAction(new PrintDisplayAction(opiRuntime));
-        if (SendToElogAction.isElogAvailable())
-            actionRegistry
-                    .registerAction(new SendToElogAction(opiRuntime));
-        if (EMailSender.isEmailSupported())
-            actionRegistry.registerAction(new SendEMailAction(opiRuntime));
-
     }
 
     @Override
     protected void iappendRCPRuntimeActionsToMenu(
             ActionRegistry actionRegistry, IMenuManager menu) {
-        IAction action = actionRegistry.getAction(SendToElogAction.ID);
-        if (action != null)
-            menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
-        action = actionRegistry.getAction(SendEMailAction.ID);
-        if (action != null)
-            menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
-        action = actionRegistry.getAction(ActionFactory.PRINT.getId());
+        IAction action = actionRegistry.getAction(ActionFactory.PRINT.getId());
         if (action != null) {
             menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
         }
@@ -164,18 +141,16 @@ public class SingleSourceHelperImpl extends SingleSourceHelper{
             String[] extensions) {
         ResourceSelectionDialog rsDialog = new ResourceSelectionDialog(
                 Display.getCurrent().getActiveShell(), "Choose File", extensions);
-        if(startPath != null)
+        if (startPath != null)
             rsDialog.setSelectedResource(startPath);
 
-        if(rsDialog.open() == Window.OK){
+        if (rsDialog.open() == Window.OK) {
             return rsDialog.getSelectedResource();
         }
         return null;
     }
 
-
     //////////////////////////// RAP Related Stuff ///////////////////////////////
-
 
     @Override
     protected void iRapActivatebaseEditPart(AbstractBaseEditPart editPart) {
@@ -214,8 +189,6 @@ public class SingleSourceHelperImpl extends SingleSourceHelper{
 
     }
 
-
-
     @Override
     protected void iRapOpenWebPage(String hyperLink) {
 
@@ -236,7 +209,6 @@ public class SingleSourceHelperImpl extends SingleSourceHelper{
             throws Exception {
         SingleSourcePlugin.getUIHelper().openEditor(page, path);
     }
-
 
     @Override
     protected void iOpenOPIShell(IPath path, MacrosInput input) {

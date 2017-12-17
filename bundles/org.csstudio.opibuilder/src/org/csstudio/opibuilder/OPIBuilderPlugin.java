@@ -79,8 +79,6 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
 
-        System.out.println("FQQB IS INSIDE");
-
         // set this to resolve Xincludes in XMLs
         System.setProperty("org.apache.xerces.xni.parser.XMLParserConfiguration",
                 "org.apache.xerces.parsers.XIncludeParserConfiguration");

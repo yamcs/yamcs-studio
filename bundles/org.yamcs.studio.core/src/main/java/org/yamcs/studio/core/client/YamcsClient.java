@@ -329,8 +329,12 @@ public class YamcsClient implements WebSocketClientCallback {
      * Performs an orderly shutdown of this service
      */
     public void shutdown() {
-        restClient.close(); // Shuts down the thread pool
-        wsclient.shutdown();
+        if (restClient != null) {
+            restClient.close(); // Shuts down the thread pool
+        }
+        if (wsclient != null) {
+            wsclient.shutdown();
+        }
         executor.shutdown();
         canceller.shutdown();
     }
