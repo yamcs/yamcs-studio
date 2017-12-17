@@ -11,6 +11,8 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>org.csstudio.opibuilder</module>
+  
     <module>org.yamcs.studio.alarms</module>
     <module>org.yamcs.studio.archive</module>
     <module>org.yamcs.studio.commanding</module>
