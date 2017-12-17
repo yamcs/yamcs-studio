@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SimplePV implementation on top of PVManager
+Bundle-SymbolicName: org.csstudio.simplepv.pvmanager;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.csstudio.simplepv.pvmanager.Activator
+Bundle-Vendor: Xihui Chen <chenx1@ornl.gov>
+Require-Bundle: org.eclipse.core.runtime,
+ org.csstudio.simplepv,
+ org.diirt.util;bundle-version="0.2.2",
+ org.diirt.vtype;bundle-version="2.7.1",
+ org.diirt.datasource;bundle-version="3.0.1",
+ org.diirt.datasource-formula;bundle-version="3.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

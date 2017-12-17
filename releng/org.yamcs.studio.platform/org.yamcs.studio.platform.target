@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="117">
+<?pde version="3.8"?><target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="119">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.gef.sdk.feature.group" version="3.11.0.201606061308"/>
@@ -189,11 +189,6 @@
             <unit id="org.csstudio.applications.channelfinder.feature.feature.group" version="1.1.2.201712121448"/>
             <unit id="org.csstudio.applications.diag.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.applications.logbook.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.applications.opibuilder.edm.feature.feature.group" version="5.0.0.201712121448"/>
-            <unit id="org.csstudio.applications.opibuilder.feature.feature.group" version="5.0.0.201712121448"/>
-            <unit id="org.csstudio.applications.opibuilder.medm.feature.feature.group" version="5.0.0.201712121448"/>
-            <unit id="org.csstudio.applications.opibuilder.rap.feature.feature.group" version="1.1.2.201712121448"/>
-            <unit id="org.csstudio.applications.opibuilder.widgets.detailpanel.feature.feature.group" version="0.0.1.201712121448"/>
             <unit id="org.csstudio.applications.pvmanager.diag.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.applications.shift.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.applications.utility.feature.feature.group" version="1.0.0.201712121448"/>
@@ -356,6 +351,8 @@
             <unit id="org.apache.poi.source" version="3.9.0.v201405241750"/>
             <unit id="org.hamcrest.core" version="1.3.0.v201303031735"/>
             <unit id="org.hamcrest.core.source" version="1.3.0.v201303031735"/>
+            <unit id="org.jdom" version="1.1.1.v201101151400"/>
+            <unit id="org.jdom.source" version="1.1.1.v201101151400"/>
             <unit id="org.junit" version="4.12.0.v201504281640"/>
             <unit id="org.junit.source" version="4.12.0.v201504281640"/>
             <unit id="org.mockito" version="1.9.5.v201605172210"/>
