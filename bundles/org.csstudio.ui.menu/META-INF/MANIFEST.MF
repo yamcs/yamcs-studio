@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CSS Menu skeleton definitions
+Bundle-SymbolicName: org.csstudio.ui.menu;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Description: Defines the common menus and popup menus
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui;resolution:=optional,
+ org.csstudio.csdata
+Bundle-Vendor: Gabriele Carcassi <carcassi@bnl.gov> - BNL

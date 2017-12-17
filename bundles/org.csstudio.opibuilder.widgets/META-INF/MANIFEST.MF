@@ -8,16 +8,16 @@ Bundle-Activator: org.csstudio.opibuilder.widgets.Activator
 Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui;resolution:=optional,
- org.eclipse.ui.views;bundle-version="3.7.0";resolution:=optional,
- org.eclipse.gef;bundle-version="3.9.100";resolution:=optional,
- org.csstudio.ui.util;bundle-version="3.0.0";resolution:=optional,
+ org.eclipse.ui.views;resolution:=optional,
+ org.eclipse.gef;resolution:=optional,
+ org.csstudio.ui.util,
  org.csstudio.opibuilder,
- org.csstudio.swt.xygraph;bundle-version="2.0.3",
+ org.csstudio.swt.xygraph,
  org.csstudio.swt.widgets,
  org.diirt.vtype;bundle-version="2.7.1",
- org.csstudio.simplepv;bundle-version="1.0.0",
+ org.csstudio.simplepv,
  org.diirt.util;bundle-version="0.3.2",
- org.csstudio.csdata;bundle-version="3.2.0",
+ org.csstudio.csdata,
  org.jdom,
  org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Application menu (File, Edit, Window, Help)
+Bundle-Description: Provide common application menu entries (File, Edit, Window, Help)
+Bundle-SymbolicName: org.csstudio.ui.menu.app;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kay Kasemir <kasemirk@ornl.gov> - SNS
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.csstudio.ui.menu,
+ org.csstudio.workspace
+Export-Package: org.csstudio.ui.menu.app

@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Application Utilities
+Bundle-SymbolicName: org.csstudio.apputil
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kay Kasemir <kasemirk@ornl.gov>, Xihui Chen <chenx1@ornl.gov> - SNS
+Export-Package: org.csstudio.apputil.args,
+ org.csstudio.apputil.formula,
+ org.csstudio.apputil.macros,
+ org.csstudio.apputil.ringbuffer,
+ org.csstudio.apputil.test,
+ org.csstudio.apputil.text,
+ org.csstudio.apputil.time,
+ org.csstudio.apputil.xml
+Require-Bundle: org.csstudio.java
+Bundle-Description: Application utilities for Arguments, Strings, Formulas, Time stamps, ... 
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

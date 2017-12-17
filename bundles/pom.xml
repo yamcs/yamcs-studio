@@ -11,10 +11,26 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>org.csstudio.apputil</module>
     <module>org.csstudio.apputil.ui</module>
+    <module>org.csstudio.autocomplete</module>
+    <module>org.csstudio.autocomplete.pvmanager.formula</module>
+    <module>org.csstudio.autocomplete.pvmanager.loc</module>
+    <module>org.csstudio.autocomplete.pvmanager.sim</module>
+    <module>org.csstudio.autocomplete.pvmanager.sys</module>
+    <module>org.csstudio.autocomplete.ui</module>
+    <module>org.csstudio.autocomplete.ui.rcp</module>
+    <module>org.csstudio.csdata</module>
+    <module>org.csstudio.csdata.clipboard</module>
+    <module>org.csstudio.data</module>
     <module>org.csstudio.diirt.util</module>
+    <module>org.csstudio.diirt.util.core.preferences</module>
+    <module>org.csstudio.diirt.util.preferences</module>
     <module>org.csstudio.examples</module>
+    <module>org.csstudio.java</module>
     <module>org.csstudio.logging</module>
+    <module>org.csstudio.logging.ui</module>
+    <module>org.csstudio.openfile</module>
     <module>org.csstudio.opibuilder</module>
     <module>org.csstudio.opibuilder.editor</module>
     <module>org.csstudio.opibuilder.examples</module>
@@ -22,13 +38,26 @@
     <module>org.csstudio.opibuilder.rcp</module>
     <module>org.csstudio.opibuilder.widgets</module>
     <module>org.csstudio.opibuilder.widgets.rcp</module>
+    <module>org.csstudio.security</module>
     <module>org.csstudio.simplepv</module>
     <module>org.csstudio.simplepv.pvmanager</module>
+    <module>org.csstudio.startup</module>
+    <module>org.csstudio.startup.helper</module>
     <module>org.csstudio.swt.widgets</module>
     <module>org.csstudio.swt.widgets.rcp</module>
+    <module>org.csstudio.swt.xygraph</module>
+    <module>org.csstudio.swt.xygraph.rcp</module>
+    <module>org.csstudio.ui.menu</module>
+    <module>org.csstudio.ui.menu.app</module>
+    <module>org.csstudio.ui.preferences</module>
+    <module>org.csstudio.ui.util</module>
+    <module>org.csstudio.utility.batik</module>
     <module>org.csstudio.utility.file</module>
     <module>org.csstudio.utility.product</module>
     <module>org.csstudio.utility.product.default</module>
+    <module>org.csstudio.utility.singlesource</module>
+    <module>org.csstudio.utility.singlesource.rcp</module>
+    <module>org.csstudio.workspace</module>
 
     <module>org.yamcs.studio.alarms</module>
     <module>org.yamcs.studio.archive</module>

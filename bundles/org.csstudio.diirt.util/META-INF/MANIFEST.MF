@@ -16,8 +16,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.csstudio.diirt.util.Activator
 Require-Bundle: org.eclipse.equinox.preferences;bundle-version="3.5.200",
  org.eclipse.osgi,
- org.csstudio.startup;bundle-version="3.2.1",
+ org.csstudio.startup,
  org.csstudio.utility.product,
- org.csstudio.diirt.util.core.preferences;bundle-version="1.0.2",
+ org.csstudio.diirt.util.core.preferences,
  org.diirt.util;bundle-version="3.0.1"
 Export-Package: org.csstudio.diirt.util

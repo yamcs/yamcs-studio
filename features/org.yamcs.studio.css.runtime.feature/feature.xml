@@ -6,13 +6,6 @@
       provider-name="Space Applications Services">
 
    <plugin
-         id="org.csstudio.platform.libs.jms"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.workspace"
          download-size="0"
          install-size="0"
@@ -196,13 +189,6 @@
 
    <plugin
          id="org.csstudio.startup.helper"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.activation"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -473,13 +459,6 @@
 
    <plugin
          id="org.csstudio.examples"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.ui.fx.util"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -10,9 +10,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.help;bundle-version="3.4.1",
  org.eclipse.ui;resolution:=optional,
  org.eclipse.equinox.security;bundle-version="1.0.0",
- org.csstudio.apputil;bundle-version="3.0.0",
- org.csstudio.ui.util;bundle-version="3.1.0";resolution:=optional,
- org.csstudio.utility.singlesource;bundle-version="1.0.0"
+ org.csstudio.apputil,
+ org.csstudio.ui.util,
+ org.csstudio.utility.singlesource
 Export-Package: org.csstudio.apputil.ui.dialog,
  org.csstudio.apputil.ui.formula,
  org.csstudio.apputil.ui.swt,

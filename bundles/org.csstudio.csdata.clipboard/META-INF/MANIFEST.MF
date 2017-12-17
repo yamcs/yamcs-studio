@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: (TO REVIEW) CS Data Clipboard
+Bundle-SymbolicName: org.csstudio.csdata.clipboard;singleton:=true
+Bundle-Description: (TO REVIEW) Allow copying CS data like PV names to the clipboard
+Bundle-Localization: plugin
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kay Kasemir <kasemirk@ornl.gov> - SNS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.ui,
+ org.csstudio.csdata,
+ org.csstudio.ui.util
