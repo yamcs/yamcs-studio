@@ -133,6 +133,12 @@ public class YamcsPlugin extends Plugin {
 
         @Override
         public void disconnected() {
+            if (plugin == null) {
+                // Plugin is shutting down
+                // Prevent downstream exceptions
+                return;
+            }
+
             log.fine("Notify downstream components of Studio disconnect");
             for (YamcsConnectionListener l : connectionListeners) {
                 log.fine(String.format(" -> Inform %s", l.getClass().getSimpleName()));
