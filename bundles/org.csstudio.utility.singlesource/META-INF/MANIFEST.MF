@@ -5,9 +5,15 @@ Bundle-SymbolicName: org.csstudio.utility.singlesource;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.csstudio.utility.singlesource.SingleSourcePlugin
 Bundle-Vendor: Kay Kasemir <kasemirk@ornl.gov> - SNS
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui;resolution:=optional,
- org.eclipse.ui.workbench;bundle-version="3.7.0";resolution:=optional
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.console,
+ org.eclipse.ui,
+ org.eclipse.core.filesystem,
+ org.csstudio.ui.util,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.e4.ui.workbench,
+ org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Description: Abstraction to support both RCP and RAP

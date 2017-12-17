@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: RCP related implementation for XYGraph
-Bundle-SymbolicName: org.csstudio.swt.xygraph.rcp
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: org.csstudio.swt.xygraph
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
-Require-Bundle: org.eclipse.draw2d

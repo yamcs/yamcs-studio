@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Export-Package: org.csstudio.swt.xygraph.dataprovider,org.csstudio.swt
  .xygraph.figures,org.csstudio.swt.xygraph.linearscale,org.csstudio.sw
  t.xygraph.undo,org.csstudio.swt.xygraph.util
-Require-Bundle: org.eclipse.ui;resolution:=optional,
+Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.draw2d;resolution:=optional,
- org.csstudio.ui.util;resolution:=optional
+ org.eclipse.draw2d,
+ org.csstudio.ui.util
 Bundle-Vendor: Xihui Chen - SNS
 Bundle-ActivationPolicy: lazy
 Bundle-Version: 1.0.0.qualifier

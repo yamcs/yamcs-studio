@@ -13,4 +13,10 @@
       </page>
    </extension>
 
+   <extension
+         point="org.csstudio.autocomplete.ui.helpers">
+      <helpers
+         ui="org.csstudio.autocomplete.ui.rcp.RCPUIHelper">
+      </helpers>
+   </extension>
 </plugin>
