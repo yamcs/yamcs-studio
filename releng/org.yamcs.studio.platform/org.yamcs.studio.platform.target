@@ -114,7 +114,6 @@
             <unit id="com.miglayout.core" version="4.2.0"/>
             <unit id="com.miglayout.swing" version="4.2.0"/>
             <unit id="com.miglayout.swt" version="4.2.0"/>
-            <unit id="com.mysql.jdbc" version="5.1.36"/>
             <unit id="com.squareup.moshi" version="1.4.0"/>
             <unit id="com.squareup.okhttp3.logging-interceptor" version="3.8.0"/>
             <unit id="com.squareup.okhttp3.okhttp" version="3.8.0"/>
@@ -125,7 +124,6 @@
             <unit id="com.sun.jersey.client" version="1.1.5.1"/>
             <unit id="com.sun.jersey.contribs.jersey-multipart" version="1.19.0"/>
             <unit id="com.sun.jersey.core" version="1.19.0"/>
-            <unit id="com.sun.mail.javax.mail" version="1.5.2"/>
             <unit id="commons-io" version="1.3.1"/>
             <unit id="commons-logging" version="1.1.1"/>
             <unit id="de.codecentric.centerdevice.javafxsvg" version="1.2.1"/>
@@ -180,28 +178,12 @@
             <unit id="org.apache.xmlgraphics.batik-xml" version="1.8.0"/>
             <unit id="org.apache.xmlgraphics.commons" version="2.1.0"/>
             <unit id="org.controlsfx" version="8.40.12"/>
-            <unit id="org.csstudio.alarm.beast.tools.feature.feature.group" version="4.0.1.201712121448"/>
-            <unit id="org.csstudio.alarm.beast.ui.alarmtable.opiwidget.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.alarm.beast.ui.feature.feature.group" version="4.1.0.201712121448"/>
             <unit id="org.csstudio.alarm.beast.ui.rap.feature.feature.group" version="1.1.0.201712121448"/>
-            <unit id="org.csstudio.alarm.diirt.datasource.feature.feature.group" version="0.0.1.201712121448"/>
-            <unit id="org.csstudio.applications.channel.feature.feature.group" version="1.1.3.201712121448"/>
-            <unit id="org.csstudio.applications.channelfinder.feature.feature.group" version="1.1.2.201712121448"/>
             <unit id="org.csstudio.applications.diag.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.applications.logbook.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.applications.pvmanager.diag.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.applications.shift.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.applications.utility.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.applications.utility.menu.pvscript.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.applications.utility.navigator.applaunch.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.archive.diirt.datasource.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.archive.influxdb.tools.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.archive.reader.appliance.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.archive.reader.channelarchiver.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.archive.reader.ea4.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.archive.reader.influxdb.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.archive.reader.rdb.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.archive.tools.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.batik.dom.fragment" version="1.0.0"/>
             <unit id="org.csstudio.batik.dom.svg.fragment" version="1.0.0"/>
             <unit id="org.csstudio.core.base.feature.feature.group" version="0.0.1.201712121440"/>
@@ -209,32 +191,18 @@
             <unit id="org.csstudio.core.diirt.feature.feature.group" version="0.0.1.201712121440"/>
             <unit id="org.csstudio.core.platform.feature.feature.group" version="0.0.1.201712121440"/>
             <unit id="org.csstudio.core.platform.feature.source.feature.group" version="0.0.1.201712121440"/>
-            <unit id="org.csstudio.core.platform.rap.feature.feature.group" version="0.0.1.201712121440"/>
-            <unit id="org.csstudio.core.platform.rap.feature.source.feature.group" version="0.0.1.201712121440"/>
-            <unit id="org.csstudio.core.trayicon.feature.feature.group" version="4.1.0.201712121440"/>
-            <unit id="org.csstudio.core.trayicon.feature.source.feature.group" version="4.1.0.201712121440"/>
             <unit id="org.csstudio.core.ui.feature.feature.group" version="4.1.0.201712121440"/>
             <unit id="org.csstudio.core.ui.feature.source.feature.group" version="4.1.0.201712121440"/>
-            <unit id="org.csstudio.core.ui.rap.feature.feature.group" version="4.1.0.201712121440"/>
-            <unit id="org.csstudio.core.ui.rap.feature.source.feature.group" version="4.1.0.201712121440"/>
             <unit id="org.csstudio.core.utility.feature.feature.group" version="4.1.0.201712121440"/>
             <unit id="org.csstudio.core.utility.feature.source.feature.group" version="4.1.0.201712121440"/>
-            <unit id="org.csstudio.core.utility.rap.feature.feature.group" version="4.1.0.201712121440"/>
-            <unit id="org.csstudio.core.utility.rap.feature.source.feature.group" version="4.1.0.201712121440"/>
             <unit id="org.csstudio.desy.language.core.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.desy.snl.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.display.pace.feature.feature.group" version="4.1.0.201712121448"/>
             <unit id="org.csstudio.display.pvtable.feature.feature.group" version="4.1.0.201712121448"/>
-            <unit id="org.csstudio.display.rdbtable.feature.feature.group" version="4.1.0.201712121448"/>
-            <unit id="org.csstudio.email.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.graphene.feature.feature.group" version="3.0.1.201712121448"/>
             <unit id="org.csstudio.graphene.opiwidgets.feature.feature.group" version="0.0.1.201712121448"/>
             <unit id="org.csstudio.logbook.fault.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.logbook.shift.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.logbook.viewer.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.olog.feature.feature.group" version="1.2.0.201712121448"/>
-            <unit id="org.csstudio.perspectives.feature.feature.group" version="0.0.1.201712121440"/>
-            <unit id="org.csstudio.perspectives.feature.source.feature.group" version="0.0.1.201712121440"/>
             <unit id="org.csstudio.platform.libs.epics" version="4.5.0.20171129152727"/>
             <unit id="org.csstudio.pretune.feature.feature.group" version="0.0.1.201712121448"/>
             <unit id="org.csstudio.product.feature.feature.group" version="4.5.3"/>
@@ -244,23 +212,16 @@
             <unit id="org.csstudio.saverestore.git.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.saverestore.masar.feature.feature.group" version="2.0.0.201712121448"/>
             <unit id="org.csstudio.saverestore.periodictable.feature.feature.group" version="1.0.0.201712121448"/>
-            <unit id="org.csstudio.scan.diirt.datasource.feature.feature.group" version="0.0.1.201712121448"/>
-            <unit id="org.csstudio.scan.server.feature.feature.group" version="4.0.205.201712121448"/>
-            <unit id="org.csstudio.scan.ui.feature.feature.group" version="4.0.204.201712121448"/>
             <unit id="org.csstudio.thirdparty.all.feature.feature.group" version="1.0.1.201712131137"/>
             <unit id="org.csstudio.thirdparty.all.feature.source.feature.group" version="1.0.1.201712131137"/>
-            <unit id="org.csstudio.trends.databrowser2.feature.feature.group" version="4.1.0.201712121448"/>
-            <unit id="org.csstudio.trends.databrowser2.opiwidget.feature.feature.group" version="3.2.0.201712121448"/>
             <unit id="org.csstudio.trends.databrowser2.rap.feature.feature.group" version="1.1.1.201712121448"/>
             <unit id="org.csstudio.utilities.debugging.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.csstudio.utilities.feature.feature.group" version="3.2.1.201712121448"/>
-            <unit id="org.csstudio.utilities.rap.feature.feature.group" version="3.2.1.201712121448"/>
             <unit id="org.eclipse.nebula.widgets.grid.feature.feature.group" version="1.0.0.201712121448"/>
             <unit id="org.eclipse.paho.client.mqttv3" version="1.1.0"/>
             <unit id="org.eclipse.swt.gtk.linux.x86_64" version="3.3.0.v3346"/>
             <unit id="org.epics.caj" version="1.1.15"/>
             <unit id="org.epics.caj.source" version="1.1.15"/>
-            <unit id="org.epics.channelfinder.cf-client-api" version="3.0.3"/>
             <unit id="org.epics.jca" version="2.3.6"/>
             <unit id="org.epics.jca.source" version="2.3.6"/>
             <unit id="org.epics.pvAccessJava" version="4.1.3"/>
@@ -277,7 +238,6 @@
             <unit id="org.javassist" version="3.15.0.GA"/>
             <unit id="org.jboss.logging.jboss-logging" version="3.1.0.GA"/>
             <unit id="org.jboss.spec.javax.transaction.jboss-transaction-api_1.1_spec" version="1.0.0.Final"/>
-            <unit id="org.jdom" version="1.1.0"/>
             <unit id="org.jfxtras.agenda" version="8.0.0.r5"/>
             <unit id="org.jfxtras.agenda.source" version="8.0.0.r5"/>
             <unit id="org.jfxtras.common" version="8.0.0.r5"/>
@@ -291,9 +251,6 @@
             <unit id="org.mockito.mockito-core" version="1.9.5"/>
             <unit id="org.objectweb.asm.all.debug" version="5.0.3"/>
             <unit id="org.objenesis" version="1.0.0"/>
-            <unit id="org.postgresql.jdbc42" version="42.1.4"/>
-            <unit id="org.python.jython" version="2.7.0.release"/>
-            <unit id="org.python.jython.source" version="2.7.0.release"/>
             <unit id="org.terracotta.internal.statistics" version="1.0.1"/>
             <unit id="org.unbescape" version="1.1.3.RELEASE"/>
             <unit id="slf4j.api" version="1.7.14"/>

@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="3.4.0",
  org.csstudio.utility.singlesource;bundle-version="1.0.0",
  org.csstudio.ui.util,
  org.csstudio.utility.file;bundle-version="1.0.0",
- org.csstudio.utility.product;bundle-version="1.2.2"
+ org.csstudio.utility.product
 Import-Package: javafx.beans.property;version="2.2.0",
  javafx.collections;version="2.2.0",
  javafx.event;version="2.2.0",

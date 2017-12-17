@@ -12,6 +12,7 @@
 
   <modules>
     <module>org.csstudio.apputil.ui</module>
+    <module>org.csstudio.diirt.util</module>
     <module>org.csstudio.examples</module>
     <module>org.csstudio.logging</module>
     <module>org.csstudio.opibuilder</module>
@@ -25,6 +26,9 @@
     <module>org.csstudio.simplepv.pvmanager</module>
     <module>org.csstudio.swt.widgets</module>
     <module>org.csstudio.swt.widgets.rcp</module>
+    <module>org.csstudio.utility.file</module>
+    <module>org.csstudio.utility.product</module>
+    <module>org.csstudio.utility.product.default</module>
 
     <module>org.yamcs.studio.alarms</module>
     <module>org.yamcs.studio.archive</module>
