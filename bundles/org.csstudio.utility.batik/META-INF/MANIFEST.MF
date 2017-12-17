@@ -16,7 +16,6 @@ Require-Bundle: org.apache.batik.bridge;bundle-version="1.7.0",
  org.w3c.dom.svg,
  org.eclipse.core.runtime,
  org.eclipse.ui;resolution:=optional,
- org.eclipse.rap.ui;resolution:=optional,
  org.apache.commons.lang,
  org.csstudio.java
 Export-Package: org.csstudio.utility.batik
