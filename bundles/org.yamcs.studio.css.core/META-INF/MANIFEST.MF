@@ -28,13 +28,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.csstudio.apputil.ui,
  org.csstudio.ui.menu.app,
  org.csstudio.simplepv,
- org.csstudio.opibuilder
+ org.csstudio.opibuilder,
+ org.csstudio.startup,
+ org.csstudio.utility.product
 Export-Package: org.yamcs.studio.css.core.prefs,
  org.yamcs.studio.css.core.pvmanager,
  org.yamcs.studio.css.core.pvmanager.autocomplete,
  org.yamcs.studio.css.core.vtype
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
-Service-Component: OSGI-INF/ds_para.xml,
- OSGI-INF/ds_sw.xml,
- OSGI-INF/autocomplete/para-parser.xml,
+Service-Component: OSGI-INF/autocomplete/para-parser.xml,
  OSGI-INF/autocomplete/para-provider.xml

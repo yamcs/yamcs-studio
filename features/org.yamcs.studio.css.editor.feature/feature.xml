@@ -437,20 +437,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.diirt.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.diirt.util.preferences"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.diirt.service"
          download-size="0"
          install-size="0"
@@ -503,20 +489,6 @@
 
    <plugin
          id="org.yamcs.studio.css.utility"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.diirt.util.core.preferences"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.epics.jca"
          download-size="0"
          install-size="0"
          version="0.0.0"
