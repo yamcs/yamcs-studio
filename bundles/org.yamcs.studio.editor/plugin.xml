@@ -9,7 +9,7 @@
             name="Yamcs Studio Editor">
          <property
                name="windowImages"
-               value="icons/css16.png,icons/css32.png,icons/css48.png,icons/css64.png,icons/css128.png,icons/css256.png"/>
+               value="icons/logo16.png,icons/logo32.png,icons/logo48.png,icons/logo64.png,icons/logo128.png,icons/logo256.png"/>
          <property
                name="aboutText"
                value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
@@ -33,7 +33,7 @@
                value="Yamcs Studio Editor"/>
          <property
                name="introBrandingImage"
-               value="product:icons/css64.png"/>
+               value="product:icons/logo64.png"/>
          <property
                name="introBrandingImageText"
                value="Yamcs Studio Editor"/>
@@ -50,22 +50,9 @@
          name="Yamcs Studio Editor">
       <application>
          <run
-               class="org.csstudio.startup.application.Application">
+               class="org.yamcs.studio.editor.Application">
          </run>
       </application>
-   </extension>
-   
-   <!-- Note that the classes listed in here should be in plugins
-        that can be loaded without locking the workspace.
-        This means the plugins loaded for these classes
-        should not use preferences or anything else that
-        triggers initialization of the workspace
-     -->
-   <extension point="org.csstudio.startup.module">
-      <startupParameters class="org.yamcs.studio.css.utility.YamcsStudioStartupParameters"/>
-      <workspace class="org.yamcs.studio.css.utility.YamcsStudioWorkspace"/>
-      <workbench class="org.yamcs.studio.css.utility.YamcsStudioWorkbench"/>
-      <project class="org.yamcs.studio.css.utility.YamcsStudioProject"/>
    </extension>
 
    <extension point="org.eclipse.ui.activities">
@@ -75,10 +62,6 @@
       <activityPatternBinding
             activityId="yamcsstudio.disableextensions"
             pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
-      <!-- Hide CS-Studio perspective from perspective switcher and friends -->
-      <activityPatternBinding
-            activityId="yamcsstudio.disableextensions"
-            pattern=".*/org\.csstudio\.utility\.product\.CSStudioPerspective"/>
    </extension>
    
    <!--

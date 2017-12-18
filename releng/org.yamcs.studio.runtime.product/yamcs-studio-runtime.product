@@ -21,7 +21,7 @@ See http://www.yamcs.org
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.yamcs.studio.runtime/icons/css16.png" i32="/org.yamcs.studio.runtime/icons/css32.png" i48="/org.yamcs.studio.runtime/icons/css48.png" i64="/org.yamcs.studio.runtime/icons/css64.png" i128="/org.yamcs.studio.runtime/icons/css128.png" i256="/org.yamcs.studio.runtime/icons/css256.png"/>
+   <windowImages i16="/org.yamcs.studio.runtime/icons/logo16.png" i32="/org.yamcs.studio.runtime/icons/logo32.png" i48="/org.yamcs.studio.runtime/icons/logo48.png" i64="/org.yamcs.studio.runtime/icons/logo64.png" i128="/org.yamcs.studio.runtime/icons/logo128.png" i256="/org.yamcs.studio.runtime/icons/logo256.png"/>
 
 
    <launcher name="Yamcs Studio Runtime">

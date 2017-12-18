@@ -13,13 +13,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.startup"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.apputil"
          download-size="0"
          install-size="0"
@@ -140,13 +133,6 @@
 
    <plugin
          id="org.csstudio.simplepv.pvmanager"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.startup.helper"
          download-size="0"
          install-size="0"
          version="0.0.0"

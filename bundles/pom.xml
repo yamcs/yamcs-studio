@@ -32,8 +32,6 @@
     <module>org.csstudio.security</module>
     <module>org.csstudio.simplepv</module>
     <module>org.csstudio.simplepv.pvmanager</module>
-    <module>org.csstudio.startup</module>
-    <module>org.csstudio.startup.helper</module>
     <module>org.csstudio.swt.widgets</module>
     <module>org.csstudio.swt.xygraph</module>
     <module>org.csstudio.ui.menu</module>
@@ -53,7 +51,6 @@
     <module>org.yamcs.studio.css.core</module>
     <module>org.yamcs.studio.css.script</module>
     <module>org.yamcs.studio.css.theming</module>
-    <module>org.yamcs.studio.css.utility</module>
     <module>org.yamcs.studio.eventlog</module>
     <module>org.yamcs.studio.monitoring</module>
     <module>org.yamcs.studio.p2</module>

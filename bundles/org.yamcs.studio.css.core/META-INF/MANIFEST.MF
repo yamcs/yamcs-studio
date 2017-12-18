@@ -23,12 +23,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.diirt.datasource-vtype,
  org.csstudio.autocomplete,
  org.csstudio.workspace,
- org.csstudio.startup,
  org.csstudio.apputil.ui,
  org.csstudio.ui.menu.app,
  org.csstudio.simplepv,
- org.csstudio.opibuilder,
- org.csstudio.startup
+ org.csstudio.opibuilder
 Export-Package: org.yamcs.studio.css.core.prefs,
  org.yamcs.studio.css.core.pvmanager,
  org.yamcs.studio.css.core.pvmanager.autocomplete,
