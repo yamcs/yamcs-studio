@@ -5,8 +5,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.logging.LogFormatDetail;
-import org.csstudio.logging.LogFormatter;
 import org.csstudio.platform.workspace.RelaunchConstants;
 import org.csstudio.startup.module.WorkbenchExtPoint;
 import org.eclipse.equinox.app.IApplication;
@@ -14,6 +12,7 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
+import org.yamcs.CompactFormatter;
 
 public class YamcsStudioWorkbench implements WorkbenchExtPoint {
 
@@ -73,7 +72,7 @@ public class YamcsStudioWorkbench implements WorkbenchExtPoint {
         // At this point in the startup there should be only one handler (for stdout)
         for (Handler handler : root.getHandlers()) {
             handler.setLevel(Level.FINE);
-            handler.setFormatter(new LogFormatter(LogFormatDetail.HIGH));
+            handler.setFormatter(new CompactFormatter());
         }
 
         // A second handler will be created by the workbench window advisor when the ConsoleView

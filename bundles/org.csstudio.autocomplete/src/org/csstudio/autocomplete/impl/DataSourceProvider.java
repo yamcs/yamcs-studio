@@ -23,8 +23,8 @@ import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 
 /**
- * DataSource prefix (loc://, sim://, ...) provider. Provides only top
- * proposals if the content match a defined data source.
+ * DataSource prefix (loc://, sim://, ...) provider. Provides only top proposals if the content match a defined data
+ * source.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -38,10 +38,9 @@ public class DataSourceProvider implements IAutoCompleteProvider {
     }
 
     private void loadDataSources() {
-        Set<String> supportedTypes = new HashSet<String>();
-        supportedTypes.addAll(AutoCompleteHelper.retrieveVTypePVSupported());
+        Set<String> supportedTypes = new HashSet<>();
         supportedTypes.addAll(AutoCompleteHelper.retrievePVManagerSupported());
-        dataSources = new ArrayList<String>();
+        dataSources = new ArrayList<>();
         for (String supportedType : supportedTypes)
             dataSources.add(supportedType + AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR);
         Collections.sort(dataSources);

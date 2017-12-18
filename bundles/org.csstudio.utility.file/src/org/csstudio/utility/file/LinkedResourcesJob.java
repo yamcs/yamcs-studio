@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
-package org.csstudio.utility.product;
+package org.csstudio.utility.file;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,38 +25,46 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-/** Eclipse Job that creates linked resources
- *  @author Kay Kasemir
+/**
+ * Eclipse Job that creates linked resources
+ * 
+ * @author Kay Kasemir
  */
 @SuppressWarnings("nls")
-public class LinkedResourcesJob extends Job
-{
+public class LinkedResourcesJob extends Job {
     final private String settings;
     private static Logger log = Logger.getLogger("org.csstudio.utility.product.LinkedResourcesJob");
 
-    /** Initialize
-     *  @param settings "-share_link" settings, see {@link LinkedResource}
+    /**
+     * Initialize
+     * 
+     * @param settings
+     *            "-share_link" settings, see {@link LinkedResource}
      */
-    public LinkedResourcesJob(final String settings)
-    {
+    public LinkedResourcesJob(final String settings) {
         super(Messages.CreateLinkedResources);
         this.settings = settings;
     }
 
-    /** Assert that a project is available in the workspace
-     *  @param monitor Progress monitor
-     *  @param project_name Name of the project
-     *  @param location File system location. <code>null</code> to use project name within workspace
-     *  @return {@link IProject}, opened
-     *  @throws Exception on error
+    /**
+     * Assert that a project is available in the workspace
+     * 
+     * @param monitor
+     *            Progress monitor
+     * @param project_name
+     *            Name of the project
+     * @param location
+     *            File system location. <code>null</code> to use project name within workspace
+     * @return {@link IProject}, opened
+     * @throws Exception
+     *             on error
      */
-    private IProject assertProject(final IProgressMonitor monitor, final String project_name, final IPath location) throws Exception
-    {
+    private IProject assertProject(final IProgressMonitor monitor, final String project_name, final IPath location)
+            throws Exception {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProject project = workspace.getRoot().getProject(project_name);
         // Assert that it exists...
-        if (!project.exists())
-        {
+        if (!project.exists()) {
             IProjectDescription description = workspace.newProjectDescription(project_name);
             description.setLocation(location);
             project.create(description, monitor);
@@ -67,47 +75,50 @@ public class LinkedResourcesJob extends Job
         return project;
     }
 
-    /** @param path Path, may be <code>null</code> to start with a new Path
-     *  @param new_segment Path segment to add to the end of the path
-     *  @return Path with new segment added
+    /**
+     * @param path
+     *            Path, may be <code>null</code> to start with a new Path
+     * @param new_segment
+     *            Path segment to add to the end of the path
+     * @return Path with new segment added
      */
-    private IPath extendPath(final IPath path, final String new_segment)
-    {
+    private IPath extendPath(final IPath path, final String new_segment) {
         if (path == null)
             return new Path(new_segment);
         return path.append(new_segment);
     }
 
-    /** Assert/update a lined resource
-     *  @param monitor Progress monitor
-     *  @param link Description of the desired linked resource
-     *  @throws Exception on error
+    /**
+     * Assert/update a lined resource
+     * 
+     * @param monitor
+     *            Progress monitor
+     * @param link
+     *            Description of the desired linked resource
+     * @throws Exception
+     *             on error
      */
-    private void linkResource(final IProgressMonitor monitor, final LinkedResource link) throws Exception
-    {
+    private void linkResource(final IProgressMonitor monitor, final LinkedResource link) throws Exception {
         final Path resource_path = new Path(link.getResourceName());
-        if (link.isProject())
-        {
+        if (link.isProject()) {
             assertProject(monitor, resource_path.segment(0), new Path(link.getFileSystemName()));
-        }
-        else
-        {
+        } else {
             final String[] segments = resource_path.segments();
             if (segments.length < 2)
-                throw new Exception("Expecting at least /Project/Share for linked resource name, got '" + link.getResourceName() + "'");
+                throw new Exception("Expecting at least /Project/Share for linked resource name, got '"
+                        + link.getResourceName() + "'");
             // Get project
             final IProject project = assertProject(monitor, segments[0], null);
             // Create folders for intermediate path segments
             IPath folder_path = null;
-            for (int i=1; i<segments.length-1; ++i)
-            {
+            for (int i = 1; i < segments.length - 1; ++i) {
                 folder_path = extendPath(folder_path, segments[i]);
-                 final IFolder folder = project.getFolder(folder_path);
-                 if (! folder.exists())
-                     folder.create(true, true, monitor);
+                final IFolder folder = project.getFolder(folder_path);
+                if (!folder.exists())
+                    folder.create(true, true, monitor);
             }
             // Create linked folder
-            folder_path = extendPath(folder_path, segments[segments.length-1]);
+            folder_path = extendPath(folder_path, segments[segments.length - 1]);
             final IFolder folder = project.getFolder(folder_path);
             try {
                 // if (folder.exists()) ...?
@@ -122,22 +133,17 @@ public class LinkedResourcesJob extends Job
 
     /** {@inheritDoc} */
     @Override
-    protected IStatus run(final IProgressMonitor monitor)
-    {
-        try
-        {
+    protected IStatus run(final IProgressMonitor monitor) {
+        try {
             final LinkedResource[] links = LinkedResource.fromString(settings);
             monitor.beginTask(Messages.CreateLinkedResources, links.length);
-            for (LinkedResource link : links)
-            {
+            for (LinkedResource link : links) {
                 linkResource(monitor, link);
                 monitor.worked(1);
             }
             monitor.done();
-        }
-        catch (Exception ex)
-        {
-            return new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Linked Resource problem", ex);
+        } catch (Exception ex) {
+            return new Status(IStatus.WARNING, "org.csstudio.utility.file", "Linked Resource problem", ex);
         }
         return Status.OK_STATUS;
     }

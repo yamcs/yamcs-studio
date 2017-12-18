@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.autocomplete;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -55,26 +54,13 @@ public class AutoCompleteHelper {
         return cleaned;
     }
 
-    public static Set<String> retrieveVTypePVSupported() {
-        Set<String> items = new HashSet<String>();
-        try {
-            Class<?> clazz = Class.forName("org.csstudio.vtype.pv.PVPool");
-            String[] parameters = (String[]) clazz.getMethod("getSupportedPrefixes").invoke(null);
-            items.addAll(Arrays.asList(parameters));
-            AutoCompletePlugin.getLogger().config("Loading vtype.pv supported types: " + items);
-            return items;
-        } catch (Exception ex) {
-            AutoCompletePlugin.getLogger().config("vtype.pv not found: " + ex.getMessage());
-            return Collections.emptySet();
-        }
-    }
-
     public static Set<String> retrievePVManagerSupported() {
-        Set<String> items = new HashSet<String>();
+        Set<String> items = new HashSet<>();
         try {
             Class<?> clazz = Class.forName("org.csstudio.utility.pvmanager.ConfigurationHelper");
             @SuppressWarnings("unchecked")
-            Map<String, Object> parameters = (Map<String, Object>) clazz.getMethod("configuredDataSources").invoke(null);
+            Map<String, Object> parameters = (Map<String, Object>) clazz.getMethod("configuredDataSources")
+                    .invoke(null);
             items.addAll(parameters.keySet());
             AutoCompletePlugin.getLogger().config("Loading PVManager supported types: " + items);
             return items;

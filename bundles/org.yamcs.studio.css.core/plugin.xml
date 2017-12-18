@@ -3,13 +3,6 @@
 <plugin>
 
    <extension
-         point="org.csstudio.utility.product.module">
-      <workbench
-            class="org.yamcs.studio.css.core.DiirtStartup">
-      </workbench>
-   </extension>
-
-   <extension
          point="org.eclipse.ui.commands">
       <category
             id="org.yamcs.studio"

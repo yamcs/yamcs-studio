@@ -5,18 +5,19 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
-package org.csstudio.logging;
+package org.csstudio.utility.file;
 
 import org.eclipse.osgi.util.NLS;
 
-/** Localized texts
- *  @author Kay Kasemir
- */
 public class Messages extends NLS
 {
-    private static final String BUNDLE_NAME = "org.csstudio.logging.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.csstudio.utility.product.messages"; //$NON-NLS-1$
 
-    public static String ApplicationID;
+    public static String CreateLinkedResources;
+
+    public static String StartupAuthenticationHelper_Login;
+    public static String StartupAuthenticationHelper_LoginTip;
+    public static String Window_Title;
 
     static
     {
@@ -25,7 +26,5 @@ public class Messages extends NLS
     }
 
     private Messages()
-    {
-        // Prevent instantiation
-    }
+    { /* prevent instantiation */ }
 }

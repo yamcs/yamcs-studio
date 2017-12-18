@@ -1,21 +1,31 @@
 package org.yamcs.studio.css.utility;
 
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.logging.ui.ConsoleViewHandler;
-import org.csstudio.utility.product.ApplicationWorkbenchWindowAdvisor;
-import org.csstudio.utility.product.IWorkbenchWindowAdvisorExtPoint;
+import org.csstudio.utility.file.IFileUtil;
+import org.diirt.datasource.CompositeDataSource;
+import org.diirt.datasource.CompositeDataSourceConfiguration;
+import org.diirt.datasource.PVManager;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
+import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
+import org.yamcs.studio.css.core.pvmanager.ParameterDataSourceProvider;
+import org.yamcs.studio.css.core.pvmanager.SoftwareParameterDataSourceProvider;
 
 @SuppressWarnings("restriction")
-public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindowAdvisor {
+public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     public YamcsStudioWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -23,16 +33,12 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
 
     @Override
     public void postWindowCreate() {
-        // The inherited implementation adds a JUL handler that sends
-        // output to the Console View
-        super.postWindowCreate();
 
-        // Modify the newly added JUL handler with custom config.
-        for (Handler handler : Logger.getLogger("").getHandlers()) {
-            if (handler instanceof ConsoleViewHandler) {
-                handler.setLevel(Level.INFO);
-                handler.setFormatter(new UserLogFormatter());
-            }
+        // Add console view to the logger
+        ConsoleViewHandler handler = ConsoleViewHandler.install();
+        if (handler != null) {
+            handler.setLevel(Level.INFO);
+            handler.setFormatter(new UserLogFormatter());
         }
 
         // Now that we now that the user will see it:
@@ -59,13 +65,56 @@ public class YamcsStudioWorkbenchWindowAdvisor extends ApplicationWorkbenchWindo
         configurer.configureEditorAreaDropListener(
                 new EditorAreaDropAdapter(configurer.getWindow()));
 
-        for (IWorkbenchWindowAdvisorExtPoint hook : hooks) {
-            try {
-                hook.preWindowOpen();
-            } catch (Throwable t) {
-                t.printStackTrace();
+        // Bootstrap DIIRT
+        CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
+        defaultDs.putDataSource(new ParameterDataSourceProvider());
+        defaultDs.putDataSource(new SoftwareParameterDataSourceProvider());
+        defaultDs.setConfiguration(new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
+        PVManager.setDefaultDataSource(defaultDs);
+    }
+
+    @Override
+    public void postWindowRestore() throws WorkbenchException {
+    }
+
+    @Override
+    public void postWindowOpen() {
+    }
+
+    @Override
+    public boolean preWindowShellClose() {
+        return super.preWindowShellClose();
+    }
+
+    @Override
+    public void postWindowClose() {
+        if (PlatformUI.getWorkbench().getWorkbenchWindowCount() > 0 && !PlatformUI.getWorkbench().isClosing()) {
+            // This is required in order to at least partially clean up the mess that RCP leaves behind.
+            // The code below will dispose of unused actions and a few other stuff that are not disposed from the
+            // memory after the workbench window closes.
+            IWorkbenchWindow win = getWindowConfigurer().getWindow();
+            IWorkbenchPage[] pages = win.getPages();
+            for (IWorkbenchPage p : pages) {
+                try {
+                    p.close();
+                } catch (Exception e) {
+                    // ignore
+                }
             }
+            win.setActivePage(null);
         }
+    }
+
+    @Override
+    public IStatus saveState(IMemento memento) {
+        IFileUtil.getInstance().saveState(memento);
+        return Status.OK_STATUS;
+    }
+
+    @Override
+    public IStatus restoreState(IMemento memento) {
+        IFileUtil.getInstance().restoreState(memento);
+        return Status.OK_STATUS;
     }
 
     @Override

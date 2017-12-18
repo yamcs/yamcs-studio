@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
-package org.csstudio.utility.product;
+package org.csstudio.utility.file;
 
 import java.util.ArrayList;
 import java.util.List;

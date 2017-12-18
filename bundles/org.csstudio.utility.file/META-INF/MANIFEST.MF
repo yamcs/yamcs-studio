@@ -3,14 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: File
 Bundle-SymbolicName: org.csstudio.utility.file;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.csstudio.utility.file.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.ui.util,
+ org.csstudio.java,
  org.eclipse.core.resources,
- org.csstudio.utility.product,
  org.eclipse.search,
  org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.csstudio.utility.file
-Import-Package: org.eclipse.ui.part
