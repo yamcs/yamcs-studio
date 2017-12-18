@@ -29,7 +29,6 @@
     <module>org.csstudio.opibuilder.examples</module>
     <module>org.csstudio.opibuilder.imagelib</module>
     <module>org.csstudio.opibuilder.widgets</module>
-    <module>org.csstudio.security</module>
     <module>org.csstudio.simplepv</module>
     <module>org.csstudio.simplepv.pvmanager</module>
     <module>org.csstudio.swt.widgets</module>

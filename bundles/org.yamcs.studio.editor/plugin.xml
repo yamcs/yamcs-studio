@@ -94,22 +94,6 @@
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension targetID="*">
-         <!-- Don't need this, views are accessible through Window menu -->
-         <hiddenMenuItem id="css"/>
-         <!-- Don't need this, don't know many apps that do this. just quit and re-open -->
-         <hiddenMenuItem id="org.csstudio.ui.menu.app.restart"/>
-         <!-- Hide possiblity to jump to other perspectives that we unwillingly
-              inherited from other plugin.xml's -->
-         <hiddenMenuItem id="org.csstudio.ui.menu.app.open_perspective"/>
-         <!-- Already in menu which seems enough for this type of stuff -->
-         <hiddenToolBarItem id="org.csstudio.security.login"/>
-         <hiddenToolBarItem id="org.csstudio.security.logout"/>         
-         <hiddenMenuItem id="org.csstudio.security.login"/>
-         <hiddenMenuItem id="org.csstudio.security.logout"/>
-         <!-- Hide this loaded help menu, with something simpler defined in action bar advisor -->
-         <hiddenMenuItem id="help"/>
-         <hiddenMenuItem id="org.eclipse.ui.window.preferences"/>
-         
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
