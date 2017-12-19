@@ -10,7 +10,7 @@
   </context>
   <context id="script" title="Script">
     <description>For complex dynamic behaviors which cannot be achieved by rules,
-you can attach one or more scripts to widget or display to get desired behaviors. The script can be either JavaScript or Python script.</description>
+you can attach one or more scripts to widget or display to get desired behaviors.</description>
     <topic href="html/Script.html" label="Script"/>
   </context>
   <context id="action" title="Action">

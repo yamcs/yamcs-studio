@@ -153,15 +153,6 @@
             id="org.csstudio.opibuilder.wizards.newJSWizard"
             name="JavaScript">
       </wizard>
-      <wizard
-            canFinishEarly="false"
-            category="org.csstudio.opibuilder.wizards"
-            class="org.csstudio.opibuilder.wizards.NewPythonScriptWizard"
-            hasPages="true"
-            icon="icons/python_file.gif"
-            id="org.csstudio.opibuilder.wizards.newPyWizard"
-            name="Python Script">
-      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">

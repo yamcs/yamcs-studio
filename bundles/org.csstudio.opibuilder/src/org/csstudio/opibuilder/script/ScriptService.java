@@ -48,7 +48,6 @@ public class ScriptService {
     }
 
     public static final String DEFAULT_JS_HEADER = "importPackage(Packages.org.csstudio.opibuilder.scriptUtil);\n"; //$NON-NLS-1$
-    public static final String DEFAULT_PYTHONSCRIPT_HEADER = "from org.csstudio.opibuilder.scriptUtil import PVUtil\n"; //$NON-NLS-1$
 
     public static final String PVS = "pvs"; //$NON-NLS-1$
 
