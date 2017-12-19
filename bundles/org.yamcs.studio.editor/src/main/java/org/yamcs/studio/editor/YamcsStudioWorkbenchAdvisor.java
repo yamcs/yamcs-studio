@@ -178,10 +178,10 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         IWorkbench workbench = PlatformUI.getWorkbench();
 
         PreferenceManager pm = workbench.getPreferenceManager();
-        pm.remove("org.eclipse.help.ui.browsersPreferencePage");
-        pm.remove("org.eclipse.team.ui.TeamPreferences");
-        pm.remove("org.csstudio.platform.ui.css.applications");
-        pm.remove("org.csstudio.platform.ui.css.platform");
+        // pm.remove("org.eclipse.help.ui.browsersPreferencePage");
+        // pm.remove("org.eclipse.team.ui.TeamPreferences");
+        // pm.remove("org.csstudio.platform.ui.css.applications");
+        // pm.remove("org.csstudio.platform.ui.css.platform");
 
         YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
     }

@@ -76,7 +76,7 @@ public class YamcsStudioWorkspace {
         }
     }
 
-    private static String[] getRecentWorkspaces(WorkspaceInfo workspaceInfo) {
+    public static String[] getRecentWorkspaces(WorkspaceInfo workspaceInfo) {
         String[] recentWorkspaces = new String[workspaceInfo.getWorkspaceCount()];
         for (int i = 0; i < recentWorkspaces.length; i++) {
             recentWorkspaces[i] = workspaceInfo.getWorkspace(i);

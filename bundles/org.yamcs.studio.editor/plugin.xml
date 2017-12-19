@@ -29,15 +29,6 @@
                name="startupProgressRect"
                value="20,215,560,15"/>
          <property
-               name="introTitle"
-               value="Yamcs Studio Editor"/>
-         <property
-               name="introBrandingImage"
-               value="product:icons/logo64.png"/>
-         <property
-               name="introBrandingImageText"
-               value="Yamcs Studio Editor"/>
-         <property
                name="preferenceCustomization"
                value="plugin_customization.ini">
          </property>
@@ -45,9 +36,8 @@
    </extension>
    
    <extension
-         point="org.eclipse.core.runtime.applications"
          id="application"
-         name="Yamcs Studio Editor">
+         point="org.eclipse.core.runtime.applications">
       <application>
          <run
                class="org.yamcs.studio.editor.Application">
@@ -69,27 +59,14 @@
    	"common navigator framework". We'll use this one until we have time to figure
    	out the other one.
    -->
-   <extension point="org.eclipse.ui.ide.resourceFilters">
+   <!--extension point="org.eclipse.ui.ide.resourceFilters">
       
-      <!-- Hide files that should by default be hidden (.project, .pydevproject, ..) -->
+      <!- - Hide files that should by default be hidden (.project, .pydevproject, ..) - ->
       <filter
             selected="true"
-            pattern=".**"> <!-- Not using .* because that one is declared by org.eclipse.ui.ide as selected="false" -->
+            pattern=".**"> <!- - Not using .* because that one is declared by org.eclipse.ui.ide as selected="false" - ->
       </filter>
-   </extension>
-   
-   <extension point="org.eclipse.ui.preferencePages">
-      <page
-            class="org.csstudio.opibuilder.preferences.CommonPreferencePage"
-            id="org.yamcs.studio.opibuilder.preferences"
-            name="OPI Editor">
-      </page>
-      <page
-            class="org.csstudio.opibuilder.preferences.OPIRuntimePreferencePage"
-            id="org.yamcs.studio.opibuilder.preferences.opiruntime"
-            name="OPI Runtime">
-      </page>
-   </extension>
+   </extension-->
 
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -171,11 +148,50 @@
       </perspectiveExtension>
    </extension>
    
-   <extension point="org.eclipse.ui.menus">
+   <extension
+         point="org.eclipse.ui.menus">
       <menuContribution
-            allPopups="true"
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
-         <toolbar id="additions"/>
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <separator
+               name="css"
+               visible="true">
+         </separator>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=css">
+         <menu
+               icon="platform:/plugin/org.csstudio.csdata/icons/processVariable.png"
+               id="org.csstudio.ui.menu.popup.processvariable"
+               label="Process Variable">
+            <visibleWhen>
+            <or>
+               <with variable="activeMenuSelection">
+                  <iterate>
+                     <adapt type="org.csstudio.csdata.ProcessVariable"/>
+                  </iterate>
+                  <and>
+                     <count value="+"/>
+                  </and>
+               </with>
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <adapt
+                           type="[Lorg.csstudio.csdata.ProcessVariable;">
+                     </adapt>
+                  </iterate>
+                  <and>
+                     <count value="+"/>
+                  </and>
+               </with>
+            </or>
+            </visibleWhen>
+            <separator
+                  name="main">
+            </separator>
+         </menu>
       </menuContribution>
    </extension>
 </plugin>

@@ -21,6 +21,8 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
+import org.yamcs.studio.core.ui.logging.ConsoleViewHandler;
+import org.yamcs.studio.core.ui.logging.UserLogFormatter;
 import org.yamcs.studio.css.core.pvmanager.ParameterDataSourceProvider;
 import org.yamcs.studio.css.core.pvmanager.SoftwareParameterDataSourceProvider;
 
@@ -48,22 +50,24 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
+        return new YamcsStudioActionBarAdvisor(configurer);
+    }
+
+    @Override
     public void preWindowOpen() {
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         configurer.setInitialSize(new Point(1920, 1200));
         configurer.setShowMenuBar(true);
         configurer.setShowCoolBar(true);
-        configurer.setShowFastViewBars(true);
         configurer.setShowProgressIndicator(true);
-        configurer.setShowPerspectiveBar(true);
+        configurer.setShowPerspectiveBar(false);
         configurer.setShowStatusLine(true);
-        configurer.setTitle(getDefaultTitle());
+        configurer.setTitle(Platform.getProduct().getName());
 
         // Workaround for text editor DND bug.
         // See http://www.eclipse.org/forums/index.php/m/333816/
-        configurer.configureEditorAreaDropListener(
-                new EditorAreaDropAdapter(configurer.getWindow()));
+        configurer.configureEditorAreaDropListener(new EditorAreaDropAdapter(configurer.getWindow()));
 
         // Bootstrap DIIRT
         CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
@@ -115,14 +119,5 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public IStatus restoreState(IMemento memento) {
         IFileUtil.getInstance().restoreState(memento);
         return Status.OK_STATUS;
-    }
-
-    @Override
-    public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
-        return new YamcsStudioActionBarAdvisor(configurer);
-    }
-
-    public String getDefaultTitle() {
-        return Platform.getProduct().getName();
     }
 }

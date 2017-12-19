@@ -24,7 +24,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.csstudio.autocomplete,
  org.csstudio.workspace,
  org.csstudio.apputil.ui,
- org.csstudio.ui.menu.app,
  org.csstudio.simplepv,
  org.csstudio.opibuilder
 Export-Package: org.yamcs.studio.css.core.prefs,

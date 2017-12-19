@@ -1,4 +1,4 @@
-package org.yamcs.studio.editor;
+package org.yamcs.studio.core.ui.logging;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
