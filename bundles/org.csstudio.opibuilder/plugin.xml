@@ -6,10 +6,6 @@
    <extension
          point="org.eclipse.ui.perspectives">
 
-      <!-- Perspective used be have same ID as Editor (..OPIRunner),
-           but in Eclipse 4 that caused problems,
-           so perspective now has this somewhat odd name
-       -->
       <perspective
             class="org.csstudio.opibuilder.runmode.OPIRunnerPerspective"
             icon="icons/OPIBuilder.png"
@@ -67,7 +63,6 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.csstudio.platform.ui.css.applications.display"
             class="org.csstudio.opibuilder.preferences.CommonPreferencePage"
             id="org.csstudio.opibuilder.preferences"
             name="Displays">
@@ -380,34 +375,21 @@
    
    <extension
          point="org.eclipse.ui.editors">
-      <!-- Note regarding name:
-           In Navigator, the "Open With.." context menu lists *.opi 'editors'
-           in alphabetical order:
-           OPI Display (Workspace)
-           OPI Editor
-       -->
       <editor
-            default="true"
+            default="false"
             extensions="opi"
             icon="icons/OPIRunner.png"
             id="org.csstudio.opibuilder.DisplayLauncher"
             launcher="org.csstudio.opibuilder.runmode.DisplayLauncher"
-            name="OPI Display (Workbench)">
+            name="OPI Runner">
       </editor>
-      <editor
+      <!--editor
             default="false"
             extensions="opi"
             icon="icons/OPIRunner.png"
             id="org.csstudio.opibuilder.ShellLauncher"
             launcher="org.csstudio.opibuilder.runmode.ShellLauncher"
-            name="OPI Display (Standalone Window)">
-      </editor>
-   </extension>
-   <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            content="intro/firststeps.xml"
-            configId="org.eclipse.ui.intro.universalConfig">
-      </configExtension>
+            name="OPI Runner (New Window)">
+      </editor-->
    </extension>
 </plugin>

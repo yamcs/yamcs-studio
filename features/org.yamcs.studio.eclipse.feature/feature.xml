@@ -329,13 +329,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.intro.universal"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.tukaani.xz"
          download-size="0"
          install-size="0"
@@ -422,13 +415,6 @@
 
    <plugin
          id="org.apache.commons.io"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.intro.quicklinks"
          download-size="0"
          install-size="0"
          version="0.0.0"

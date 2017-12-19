@@ -4,12 +4,13 @@
   <extension
          point="org.eclipse.ui.editors">
       <editor
+            default="true"
             class="org.csstudio.opibuilder.editor.OPIEditor"
             contributorClass="org.csstudio.opibuilder.editor.OPIEditorActionBarContributor"
             extensions="opi"
-            icon="icons/OPIBuilder.png"
+            icon="icons/placeholder.gif"
             id="org.csstudio.opibuilder.OPIEditor"
-            name="OPI Editor">
+            name="OPI Builder">
       </editor>
       <editor
             class="org.eclipse.ui.editors.text.TextEditor"
@@ -24,9 +25,9 @@
       point="org.eclipse.ui.perspectives">
       <perspective
             class="org.csstudio.opibuilder.editor.OPIEditorPerspective"
-            icon="icons/OPIBuilder.png"
+            icon="icons/placeholder.gif"
             id="org.csstudio.opibuilder.opieditor"
-            name="OPI Editor">
+            name="OPI Builder">
       </perspective>
    </extension>
    <extension
@@ -75,11 +76,6 @@
             id="org.csstudio.opibuilder.actions.layoutWidgets"
             name="Layout Widgets">
       </command>
-      <command
-            description="Open current OPI in editor"
-            id="org.csstudio.opibuilder.commands.editopi"
-            name="Edit OPI">
-      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -126,21 +122,21 @@
             category="org.csstudio.opibuilder.preferences"
             class="org.csstudio.opibuilder.preferences.OPIEditorPreferencePage"
             id="org.csstudio.opibuilder.preferences.opieditor"
-            name="OPI Editor">
+            name="OPI Builder">
       </page>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
       <category
             id="org.csstudio.opibuilder.wizards"
-            name="BOY">
+            name="OPI">
       </category>
       <wizard
             canFinishEarly="false"
             category="org.csstudio.opibuilder.wizards"
             class="org.csstudio.opibuilder.wizards.NewOPIFileWizard"
             hasPages="true"
-            icon="icons/OPIBuilder.png"
+            icon="icons/placeholder.gif"
             id="org.csstudio.opibuilder.wizards.newOPIWizard"
             name="OPI File">
       </wizard>
@@ -158,7 +154,7 @@
          point="org.eclipse.ui.contexts">
       <context
             id="org.csstudio.opibuilder.opiEditor"
-            name="OPI Editor Context"
+            name="OPI Builder Context"
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
@@ -166,7 +162,7 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.csstudio.opibuilder.editor.actionSet"
-            label="BOY Editor Actions"
+            label="OPI Builder Actions"
             visible="true">
          <action
                class="org.csstudio.opibuilder.actions.RunOPIAction"
@@ -227,23 +223,6 @@
             </and>
          </visibility>
       </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="org.csstudio.opibuilder.editor.openPerspective"
-            objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
-         <action
-               class="org.csstudio.opibuilder.actions.OpenOPIPerspectiveAction"
-               icon="icons/OPIBuilder.png"
-               id="org.csstudio.opibuilder.editor.openPerspective"
-               label="OPI Editor Perspective">
-         </action>
-         <visibility>
-            <objectState
-                  name="executionMode"
-                  value="EDIT_MODE">
-            </objectState>
-         </visibility>
-      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.ui.decorators">
@@ -266,32 +245,5 @@
             </or>
          </enablement>
       </decorator>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-         <command
-               commandId="org.csstudio.opibuilder.commands.editopi"
-               icon="icons/edit.gif"
-               label="Edit OPI"
-               style="push">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
-         </command>
-      </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="org.csstudio.opibuilder.actions.EditOPIHandler"
-            commandId="org.csstudio.opibuilder.commands.editopi">
-      </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.startup">
-      <startup class="org.csstudio.opibuilder.editor.PerspectiveChecker"> </startup>
    </extension>
 </plugin>

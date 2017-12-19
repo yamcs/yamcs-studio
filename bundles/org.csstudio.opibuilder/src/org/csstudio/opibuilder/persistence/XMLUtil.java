@@ -248,7 +248,7 @@ public class XMLUtil {
              XMLElementToWidgetSub(root, displayModel, trace, macrosInput_);
 
              //check version
-             if(compareVersion(displayModel.getBOYVersion(),
+             if(false && compareVersion(displayModel.getBOYVersion(),
                      OPIBuilderPlugin.getDefault().getBundle().getVersion()) > 0){
                 final String message = displayModel.getOpiFilePath() == null ? "This OPI"
                         : displayModel.getOpiFilePath().lastSegment()
