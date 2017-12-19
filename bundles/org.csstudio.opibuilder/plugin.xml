@@ -70,7 +70,7 @@
             category="org.csstudio.platform.ui.css.applications.display"
             class="org.csstudio.opibuilder.preferences.CommonPreferencePage"
             id="org.csstudio.opibuilder.preferences"
-            name="BOY">
+            name="Displays">
       </page>
       <page
             category="org.csstudio.opibuilder.preferences"
@@ -83,7 +83,7 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.csstudio.opibuilder.actionSet"
-            label="BOY Actions"
+            label="OPI Actions"
             visible="true">
          <action
                class="org.csstudio.opibuilder.actions.OpenTopOPIsAction"
@@ -265,7 +265,7 @@
          point="org.eclipse.ui.views">
       <category
             id="org.csstudio.opibuilder.views"
-            name="BOY">
+            name="OPI">
       </category>
       <view
             allowMultiple="true"
