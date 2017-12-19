@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -52,7 +51,7 @@ public class IFileUtil {
     private static final String TAG_PART = "part"; //$NON-NLS-1$
     private static final String TAG_PATH = "path"; //$NON-NLS-1$
     private static final String TAG_COUNT = "count"; //$NON-NLS-1$
-    final ConcurrentMap<IFile, AtomicLong> map = new ConcurrentHashMap<IFile, AtomicLong>();
+    final ConcurrentMap<IFile, AtomicLong> map = new ConcurrentHashMap<>();
     private final SyncShutdown syncShutdown = new SyncShutdown();
 
     private class SyncShutdown {
@@ -77,7 +76,7 @@ public class IFileUtil {
 
     private IFileUtil() {
 
-        PlatformUI.getWorkbench().addWindowListener(new IWindowListener(){
+        PlatformUI.getWorkbench().addWindowListener(new IWindowListener() {
 
             @Override
             public void windowActivated(IWorkbenchWindow window) {
@@ -99,19 +98,19 @@ public class IFileUtil {
 
             @Override
             public void windowOpened(IWorkbenchWindow window) {
-                for(IWorkbenchPage page: window.getPages()){
+                for (IWorkbenchPage page : window.getPages()) {
                     page.addPartListener(new IPartListener2() {
 
                         @Override
                         public void partClosed(IWorkbenchPartReference partRef) {
                             IFile iFile = null;
-                            if(!syncShutdown.status()){
+                            if (!syncShutdown.status()) {
                                 IWorkbenchPart part = partRef.getPart(false);
                                 if (partRef instanceof IEditorReference) {
-                                    IEditorInput input = ((IEditorPart)part) == null ? null : ((IEditorPart)part).getEditorInput();
-                                    if (input instanceof NoResourceEditorInput)
-                                        input = ((NoResourceEditorInput)input).getOriginEditorInput();
-                                    iFile = input instanceof FileEditorInput ? ((FileEditorInput)input).getFile(): null;
+                                    IEditorInput input = ((IEditorPart) part) == null ? null
+                                            : ((IEditorPart) part).getEditorInput();
+                                    iFile = input instanceof FileEditorInput ? ((FileEditorInput) input).getFile()
+                                            : null;
 
                                 } else {
                                     try {
@@ -152,55 +151,56 @@ public class IFileUtil {
 
                         @Override
                         public void partActivated(IWorkbenchPartReference partRef) {
-                        // TODO Auto-generated method stub
+                            // TODO Auto-generated method stub
 
                         }
 
                         @Override
                         public void partBroughtToTop(IWorkbenchPartReference partRef) {
-                        // TODO Auto-generated method stub
+                            // TODO Auto-generated method stub
 
                         }
 
                         @Override
                         public void partDeactivated(IWorkbenchPartReference partRef) {
-                        // TODO Auto-generated method stub
+                            // TODO Auto-generated method stub
 
                         }
 
                         @Override
                         public void partOpened(IWorkbenchPartReference partRef) {
-                        // TODO Auto-generated method stub
+                            // TODO Auto-generated method stub
 
                         }
 
                         @Override
                         public void partHidden(IWorkbenchPartReference partRef) {
-                        // TODO Auto-generated method stub
+                            // TODO Auto-generated method stub
 
                         }
 
                         @Override
                         public void partVisible(IWorkbenchPartReference partRef) {
-                        // TODO Auto-generated method stub
+                            // TODO Auto-generated method stub
 
                         }
 
                         @Override
                         public void partInputChanged(IWorkbenchPartReference partRef) {
-                        // TODO Auto-generated method stub
+                            // TODO Auto-generated method stub
 
                         }
                     });
 
                 }
 
-            }} );
+            }
+        });
 
         attachShutdownListener();
     }
 
-    private void attachShutdownListener(){
+    private void attachShutdownListener() {
         PlatformUI.getWorkbench().addWorkbenchListener(
                 new IWorkbenchListener() {
 
@@ -222,47 +222,47 @@ public class IFileUtil {
     }
 
     public IFile createFileResource(String fileName, InputStream inputStream)
-        throws IOException {
-    if (fileName != null && !fileName.isEmpty()) {
-        File file = new File(fileName);
-        OutputStream out = new FileOutputStream(file);
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = inputStream.read(buf)) > 0) {
-        out.write(buf, 0, len);
+            throws IOException {
+        if (fileName != null && !fileName.isEmpty()) {
+            File file = new File(fileName);
+            OutputStream out = new FileOutputStream(file);
+            // Transfer bytes from in to out
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            inputStream.close();
+            out.close();
+            IFile ifile = createFileResource(file);
+            file.delete();
+            return ifile;
+        } else {
+            return null;
         }
-        inputStream.close();
-        out.close();
-        IFile ifile = createFileResource(file);
-        file.delete();
-        return ifile;
-    } else {
-        return null;
-    }
     }
 
     public IFile createFileResource(File file) {
-    IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    IProject project = workspace.getRoot().getProject("External Files");
-    IFile ifile = project.getFile(file.getName());
-    try {
-        if (!project.exists())
-        project.create(null);
-        if (!project.isOpen())
-        project.open(null);
-        project.setHidden(true);
-        if (!ifile.exists())
-        ifile.create(new FileInputStream(file), IResource.NONE, null);
-        map.putIfAbsent(ifile, new AtomicLong(0));
-        map.get(ifile).incrementAndGet();
-        return ifile;
-    } catch (CoreException e) {
-        e.printStackTrace();
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    }
-    return null;
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IProject project = workspace.getRoot().getProject("External Files");
+        IFile ifile = project.getFile(file.getName());
+        try {
+            if (!project.exists())
+                project.create(null);
+            if (!project.isOpen())
+                project.open(null);
+            project.setHidden(true);
+            if (!ifile.exists())
+                ifile.create(new FileInputStream(file), IResource.NONE, null);
+            map.putIfAbsent(ifile, new AtomicLong(0));
+            map.get(ifile).incrementAndGet();
+            return ifile;
+        } catch (CoreException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public IFile createFileResource(InputStream inputStream, String fileName) {
@@ -305,23 +305,19 @@ public class IFileUtil {
     }
 
     /**
-     * This will do the cleanup once the editor associated with the temporary
-     * file has been closed
+     * This will do the cleanup once the editor associated with the temporary file has been closed
      *
      * @param part
      * @param file
      */
     @Deprecated
     public void registerPart(IWorkbenchPart part, IFile file) {
-        //fileMap.put("F"+String.valueOf(part.hashCode()), file);
+        // fileMap.put("F"+String.valueOf(part.hashCode()), file);
     }
-
-
-
 
     public void saveState(IMemento memento) {
         IMemento path = memento.createChild(TAG_PLUGIN);
-        for(Map.Entry<IFile, AtomicLong> entry: map.entrySet()){
+        for (Map.Entry<IFile, AtomicLong> entry : map.entrySet()) {
             AtomicLong count = entry.getValue();
             String filePath = entry.getKey().getFullPath().toString();
             IMemento part = path.createChild(TAG_PART);
@@ -330,7 +326,6 @@ public class IFileUtil {
         }
 
     }
-
 
     public void restoreState(IMemento memento) {
         for (IMemento child : memento.getChildren(TAG_PLUGIN)) {
@@ -349,4 +344,3 @@ public class IFileUtil {
     }
 
 }
-

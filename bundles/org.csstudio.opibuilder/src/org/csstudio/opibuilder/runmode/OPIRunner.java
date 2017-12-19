@@ -11,7 +11,6 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.CompactModeAction;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.util.WorkbenchWindowService;
-import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -27,8 +26,8 @@ import org.eclipse.ui.part.EditorPart;
  * @author Xihui Chen
  *
  */
-//DO NOT REMOVE. RAP NEEDS THIS!
-public class OPIRunner extends EditorPart implements IOPIRuntime{
+// DO NOT REMOVE. RAP NEEDS THIS!
+public class OPIRunner extends EditorPart implements IOPIRuntime {
 
     public static final String ID = "org.csstudio.opibuilder.OPIRunner"; //$NON-NLS-1$
 
@@ -60,16 +59,14 @@ public class OPIRunner extends EditorPart implements IOPIRuntime{
             throws PartInitException {
         setSite(site);
 
-        setInput(!(input instanceof IRunnerInput) && !(input instanceof NoResourceEditorInput) ?
-                        new NoResourceEditorInput(input) : input);
-        opiRuntimeDelegate.init(site, input instanceof NoResourceEditorInput ?
-                ((NoResourceEditorInput)input).getOriginEditorInput() : input);
+        setInput(input);
+        opiRuntimeDelegate.init(site, input);
     }
 
+    @Override
     public void setOPIInput(IEditorInput input) throws PartInitException {
         init(getEditorSite(), input);
     }
-
 
     @Override
     public boolean isDirty() {
@@ -84,9 +81,9 @@ public class OPIRunner extends EditorPart implements IOPIRuntime{
     @Override
     public void createPartControl(final Composite parent) {
         opiRuntimeDelegate.createGUI(parent);
-        //if this is the first OPI in this window, resize the window to match the OPI size.
-        //Make it in compact mode if it is configured.
-        if(OPIBuilderPlugin.isRAP())
+        // if this is the first OPI in this window, resize the window to match the OPI size.
+        // Make it in compact mode if it is configured.
+        if (OPIBuilderPlugin.isRAP())
             return;
         Display.getCurrent().asyncExec(new Runnable() {
 
@@ -94,12 +91,12 @@ public class OPIRunner extends EditorPart implements IOPIRuntime{
             public void run() {
                 if (getSite().getWorkbenchWindow().getActivePage()
                         .getEditorReferences().length == 1 &&
-                        getSite().getWorkbenchWindow().getActivePage().getViewReferences().length ==0) {
+                        getSite().getWorkbenchWindow().getActivePage().getViewReferences().length == 0) {
                     int trimWidth = 45, trimHeight = 165;
                     CompactModeAction action = WorkbenchWindowService.getInstance().getCompactModeAction(
                             getSite().getWorkbenchWindow());
                     if (WorkbenchWindowService.isInCompactMode()) {
-                        if(!action.isInCompactMode())
+                        if (!action.isInCompactMode())
                             action.run();
                         trimHeight = 65;
                     }
@@ -120,13 +117,14 @@ public class OPIRunner extends EditorPart implements IOPIRuntime{
     }
 
     @Override
-    public void setFocus() {}
+    public void setFocus() {
+    }
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
         if (opiRuntimeDelegate != null) {
             T obj = opiRuntimeDelegate.getAdapter(adapter);
-            if(obj != null)
+            if (obj != null)
                 return obj;
         }
         return super.getAdapter(adapter);

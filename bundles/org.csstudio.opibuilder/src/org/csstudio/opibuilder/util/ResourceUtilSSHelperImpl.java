@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.ui.util.NoResourceEditorInput;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.URIUtil;
@@ -72,13 +71,14 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.csstudio.opibuilder.util.ResourceUtilSSHelper#getFile(org.eclipse.core.runtime.IPath)
      */
     @Override
     public File getFile(IPath path) throws Exception {
         final IFile workspace_file = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
-        if (workspace_file != null  &&  workspace_file.exists())
+        if (workspace_file != null && workspace_file.exists())
             return workspace_file.getLocation().toFile().getAbsoluteFile();
 
         // Not a workspace file. Try local file system
@@ -91,8 +91,9 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
 
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.csstudio.opibuilder.util.ResourceUtilSSHelper#pathToInputStream(org.eclipse.core.runtime.IPath, boolean)
      */
     @Override
@@ -102,7 +103,7 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
         // Try workspace location
         final IFile workspace_file = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
-        if (workspace_file != null  &&  workspace_file.exists())
+        if (workspace_file != null && workspace_file.exists())
             return workspace_file.getContents();
 
         // Not a workspace file. Try local file system
@@ -111,21 +112,18 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
         if (local_file.getPath().startsWith("file:"))
             local_file = new File(local_file.getPath().substring(5));
         String urlString;
-        try
-        {
+        try {
             return new FileInputStream(local_file);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             // Could not open as local file.
             // Does it look like a URL?
-            //TODO:
-             // Eclipse Path collapses "//" into "/", revert that: Is this true? Need test on Mac.
-             urlString = path.toString();
-//             if(!urlString.startsWith("platform") && !urlString.contains("://")) //$NON-NLS-1$ //$NON-NLS-2$
-//                 urlString = urlString.replaceFirst(":/", "://"); //$NON-NLS-1$ //$NON-NLS-2$
-        // Does it now look like a URL? If not, report the original local file problem
-            if (! ResourceUtil.isURL(urlString))
+            // TODO:
+            // Eclipse Path collapses "//" into "/", revert that: Is this true? Need test on Mac.
+            urlString = path.toString();
+            // if(!urlString.startsWith("platform") && !urlString.contains("://")) //$NON-NLS-1$ //$NON-NLS-2$
+            // urlString = urlString.replaceFirst(":/", "://"); //$NON-NLS-1$ //$NON-NLS-2$
+            // Does it now look like a URL? If not, report the original local file problem
+            if (!ResourceUtil.isURL(urlString))
                 throw new Exception("Cannot open " + ex.getMessage(), ex);
         }
 
@@ -136,7 +134,9 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.csstudio.opibuilder.util.ResourceUtilSSHelper#getInputStreamFromEditorInput(org.eclipse.ui.IEditorInput)
      */
     @Override
@@ -156,14 +156,16 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
             try {
                 result = new FileInputStream(path.toFile());
             } catch (FileNotFoundException e) {
-                //ignore
+                // ignore
             }
         }
 
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.csstudio.opibuilder.util.ResourceUtilSSHelper#isExistingWorkspaceFile(org.eclipse.core.runtime.IPath)
      */
     @Override
@@ -171,26 +173,28 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
         return getIFileFromIPath(path) != null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.csstudio.opibuilder.util.ResourceUtilSSHelper#getPathInEditor(org.eclipse.ui.IEditorInput)
      */
     @Override
     public IPath getPathInEditor(IEditorInput input) {
-        if(input instanceof NoResourceEditorInput)
-            input = ((NoResourceEditorInput)input).getOriginEditorInput();
-        if(input instanceof FileEditorInput)
-            return ((FileEditorInput)input).getFile().getFullPath();
-        else if(input instanceof IPathEditorInput)
-            return ((IPathEditorInput)input).getPath();
-        else if(input instanceof FileStoreEditorInput) {
+        if (input instanceof FileEditorInput)
+            return ((FileEditorInput) input).getFile().getFullPath();
+        else if (input instanceof IPathEditorInput)
+            return ((IPathEditorInput) input).getPath();
+        else if (input instanceof FileStoreEditorInput) {
             IPath path = URIUtil.toPath(((FileStoreEditorInput) input)
                     .getURI());
             return path;
         }
-            return null;
+        return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.csstudio.opibuilder.util.ResourceUtilSSHelper#workspacePathToSysPath(org.eclipse.core.runtime.IPath)
      */
     @Override
@@ -198,49 +202,49 @@ public class ResourceUtilSSHelperImpl extends ResourceUtilSSHelper {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IWorkspaceRoot root = workspace.getRoot();
         IResource resource = root.findMember(path);
-        if(resource != null)
-            return resource.getLocation();  //existing resource
+        if (resource != null)
+            return resource.getLocation(); // existing resource
         else
-            return root.getFile(path).getLocation(); //for not existing resource
+            return root.getFile(path).getLocation(); // for not existing resource
     }
 
-
-
-    /**Get the IFile from IPath.
-     * @param path Path to file in workspace
+    /**
+     * Get the IFile from IPath.
+     * 
+     * @param path
+     *            Path to file in workspace
      * @return the IFile. <code>null</code> if no IFile on the path, file does not exist, internal error.
      */
-    public static IFile getIFileFromIPath(final IPath path)
-    {
-        try
-        {
+    public static IFile getIFileFromIPath(final IPath path) {
+        try {
             final IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(
                     path, false);
-            if (r!= null && r instanceof IFile)
-            {
+            if (r != null && r instanceof IFile) {
                 final IFile file = (IFile) r;
                 if (file.exists())
                     return file;
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             // Ignored
         }
         return null;
     }
 
-    /**Get screenshot image from GraphicalViewer
-     * @param viewer the GraphicalViewer
+    /**
+     * Get screenshot image from GraphicalViewer
+     * 
+     * @param viewer
+     *            the GraphicalViewer
      * @return the screenshot image
      */
     @Override
-    public Image getScreenShotImage(GraphicalViewer viewer){
+    public Image getScreenShotImage(GraphicalViewer viewer) {
         GC gc = new GC(viewer.getControl());
         final Image image = new Image(Display.getDefault(), viewer.getControl()
                 .getSize().x, viewer.getControl().getSize().y);
         gc.copyArea(image, 0, 0);
-        /* This is a workaround for issue 2345 - empty screenshot
+        /*
+         * This is a workaround for issue 2345 - empty screenshot
          * https://github.com/ControlSystemStudio/cs-studio/issues/2345
          *
          * The workaround is calling gc.copyArea twice.
