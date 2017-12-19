@@ -46,7 +46,7 @@ import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory;
 import org.apache.batik.gvt.renderer.ImageRenderer;
 import org.apache.batik.gvt.renderer.ImageRendererFactory;
 import org.apache.batik.util.SVGConstants;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.csstudio.utility.batik.util.ICSSHandler;
 import org.csstudio.utility.batik.util.SVGAnimateElementValuesHandler;
 import org.csstudio.utility.batik.util.SVGAnimationEngine;
@@ -344,6 +344,7 @@ public class SVGHandler {
 
     private void alignTimeToNearestSecond() {
         Runnable startTask = new Runnable() {
+            @Override
             public void run() {
                 if (disposed) {
                     return;
@@ -425,6 +426,7 @@ public class SVGHandler {
             doRender();
         }
         Runnable startTask = new Runnable() {
+            @Override
             public void run() {
                 try {
                     if (disposed) {
@@ -487,7 +489,8 @@ public class SVGHandler {
     /**
      * Sets the animation limiting mode to a percentage of CPU.
      *
-     * @param pc the maximum percentage of CPU to use (0 &lt; pc ≤ 1)
+     * @param pc
+     *            the maximum percentage of CPU to use (0 &lt; pc ≤ 1)
      */
     public void setAnimationLimitingCPU(float pc) {
         animationLimitingMode = 1;
@@ -500,7 +503,8 @@ public class SVGHandler {
     /**
      * Sets the animation limiting mode to a number of frames per second.
      *
-     * @param fps the maximum number of frames per second (fps &gt; 0)
+     * @param fps
+     *            the maximum number of frames per second (fps &gt; 0)
      */
     public void setAnimationLimitingFPS(float fps) {
         animationLimitingMode = 2;
@@ -518,15 +522,15 @@ public class SVGHandler {
             return;
         }
         switch (animationLimitingMode) {
-            case 0: // unlimited
-                bridgeContext.setAnimationLimitingNone();
-                break;
-            case 1: // %cpu
-                bridgeContext.setAnimationLimitingCPU(animationLimitingAmount);
-                break;
-            case 2: // fps
-                bridgeContext.setAnimationLimitingFPS(animationLimitingAmount);
-                break;
+        case 0: // unlimited
+            bridgeContext.setAnimationLimitingNone();
+            break;
+        case 1: // %cpu
+            bridgeContext.setAnimationLimitingCPU(animationLimitingAmount);
+            break;
+        case 2: // fps
+            bridgeContext.setAnimationLimitingFPS(animationLimitingAmount);
+            break;
         }
     }
 
@@ -728,9 +732,10 @@ public class SVGHandler {
 
     protected void addToBuffer(Image image) {
         if (imageBuffer.size() == maxBufferSize) {
-            final List<Image> entriesCopy = new ArrayList<Image>(imageBuffer);
+            final List<Image> entriesCopy = new ArrayList<>(imageBuffer);
             imageBuffer.clear();
             Runnable flushTask = new Runnable() {
+                @Override
                 public void run() {
                     try {
                         Thread.sleep(1000);
@@ -751,6 +756,7 @@ public class SVGHandler {
     protected void notifyNewImage(final Image newImage) {
         if (handlerListener != null && newImage != null && !suspended) {
             swtDisplay.asyncExec(new Runnable() {
+                @Override
                 public void run() {
                     if (suspended) {
                         return;
@@ -768,7 +774,7 @@ public class SVGHandler {
     // Change color & matrix private methods
     // //////////////////////////////////////////////////////////////////////
 
-    private List<ICSSHandler> elementsToUpdate = new ArrayList<ICSSHandler>();
+    private List<ICSSHandler> elementsToUpdate = new ArrayList<>();
 
     private void changeColor(Color colorToChange, Color newColor) {
         Iterator<ICSSHandler> it = elementsToUpdate.iterator();

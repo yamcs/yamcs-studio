@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 import org.apache.batik.anim.timing.TimedDocumentRoot;
 import org.apache.batik.anim.timing.TimedElement;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -103,13 +103,14 @@ public class AnimatedSVGCache {
     public void flush() {
         stopProcessing();
         // Asynchronously dispose all cached images
-        final List<Entry> entriesCopy = new ArrayList<Entry>(entries);
+        final List<Entry> entriesCopy = new ArrayList<>(entries);
         timeHandlers.clear();
         entries.clear();
         filled = false;
         repeatCount = 0;
         initialized = false;
         Runnable flushTask = new Runnable() {
+            @Override
             public void run() {
                 for (Entry entry : entriesCopy) {
                     entry.dispose();
@@ -218,6 +219,7 @@ public class AnimatedSVGCache {
             private long lastUpdateTime = 0;
             private int currentIndex = 0;
 
+            @Override
             public void run() {
                 long currentTime = System.currentTimeMillis();
                 Entry currentEntry = entries.get(currentIndex);

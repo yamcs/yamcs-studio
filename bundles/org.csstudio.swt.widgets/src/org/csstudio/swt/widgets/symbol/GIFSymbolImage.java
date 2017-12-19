@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.csstudio.java.thread.ExecutionService;
 import org.csstudio.swt.widgets.Activator;
 import org.csstudio.swt.widgets.symbol.util.ImageUtils;
@@ -87,6 +87,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         }
     }
 
+    @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible)
@@ -99,6 +100,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
     // Image color & paint
     // ************************************************************
 
+    @Override
     public void paintFigure(final Graphics gfx) {
         if (disposed || loadingImage || originalImageData == null)
             return;
@@ -167,20 +169,20 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         ImageData imageData = imageDataArray[index];
         Image refresh_image = new Image(Display.getDefault(), imageData);
         switch (imageData.disposalMethod) {
-            case SWT.DM_FILL_BACKGROUND:
-                /* Fill with the background color before drawing. */
-                if (backgroundColor != null) {
-                    offScreenImageGC.setBackground(backgroundColor);
-                }
-                offScreenImageGC.fillRectangle(imageData.x, imageData.y, imageData.width, imageData.height);
-                break;
-            case SWT.DM_FILL_PREVIOUS:
-                /* Restore the previous image before drawing. */
-                Image startImage = new Image(Display.getDefault(), imageDataArray[0]);
-                offScreenImageGC.drawImage(startImage, 0, 0, imageData.width, imageData.height, imageData.x,
-                        imageData.y, imageData.width, imageData.height);
-                startImage.dispose();
-                break;
+        case SWT.DM_FILL_BACKGROUND:
+            /* Fill with the background color before drawing. */
+            if (backgroundColor != null) {
+                offScreenImageGC.setBackground(backgroundColor);
+            }
+            offScreenImageGC.fillRectangle(imageData.x, imageData.y, imageData.width, imageData.height);
+            break;
+        case SWT.DM_FILL_PREVIOUS:
+            /* Restore the previous image before drawing. */
+            Image startImage = new Image(Display.getDefault(), imageDataArray[0]);
+            offScreenImageGC.drawImage(startImage, 0, 0, imageData.width, imageData.height, imageData.x,
+                    imageData.y, imageData.width, imageData.height);
+            startImage.dispose();
+            break;
         }
         offScreenImageGC.drawImage(refresh_image, 0, 0, imageData.width, imageData.height, imageData.x, imageData.y,
                 imageData.width, imageData.height);
@@ -239,6 +241,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
     // Image size calculation
     // ************************************************************
 
+    @Override
     public void resizeImage() {
         super.resizeImage();
         if (refreshing && animated) {
@@ -247,6 +250,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         }
     }
 
+    @Override
     public Dimension getAutoSizedDimension() {
         // if (imgDimension == null)
         // generateAnimatedData();
@@ -257,6 +261,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
     // Animated images
     // ************************************************************
 
+    @Override
     public void setAnimationDisabled(final boolean stop) {
         super.setAnimationDisabled(stop);
         if (stop) {
@@ -266,6 +271,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         }
     }
 
+    @Override
     public void setAlignedToNearestSecond(boolean aligned) {
         super.setAlignedToNearestSecond(aligned);
         if (refreshing && animated) {
@@ -306,9 +312,11 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             interval_ms = 0;
             refreshing = true;
             Runnable animationTask = new Runnable() {
+                @Override
                 public void run() {
                     UIBundlingThread.getInstance().addRunnable(new Runnable() {
 
+                        @Override
                         public void run() {
                             synchronized (GIFSymbolImage.this) {
                                 if (refreshing && (loader.repeatCount == 0 || repeatCount > 0)) {
@@ -373,6 +381,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
     // Image loading
     // ************************************************************
 
+    @Override
     public void syncLoadImage() {
         if (imagePath == null)
             return;
@@ -413,6 +422,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             startAnimation();
     }
 
+    @Override
     public void asyncLoadImage() {
         if (imagePath == null)
             return;
@@ -426,6 +436,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         loadAnimatedImage(new IJobErrorHandler() {
             private int maxAttempts = 5;
 
+            @Override
             public void handleError(Exception e) {
                 if (maxAttempts-- > 0) {
                     try {
@@ -462,6 +473,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
                     if (animated)
                         startAnimation();
                     Display.getDefault().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             fireSymbolImageLoaded();
                         }
