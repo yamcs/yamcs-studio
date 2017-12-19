@@ -2,23 +2,19 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.importWizards">
-      <category
-            id="org.csstudio.opibuilder.examples.BOYcategory"
-            name="BOY">
-      </category>
+         point="org.eclipse.ui.newWizards">
       <wizard
-            category="org.csstudio.opibuilder.examples.BOYcategory"
+            category="org.eclipse.ui.Examples"
             class="org.csstudio.opibuilder.examples.ImportWizard"
             icon="icons/OPIBuilder.png"
             id="org.csstudio.opibuilder.examples.importwizard"
-            name="BOY Examples">
+            name="Generic OPI Examples">
       </wizard>
    </extension>
    <extension
          point="org.csstudio.examples.sampleset">
       <sampleset
-            name="BOY Examples"
+            name="Generic OPI Examples"
             sampleset="org.csstudio.opibuilder.examples.Basic">
       </sampleset>
    </extension>

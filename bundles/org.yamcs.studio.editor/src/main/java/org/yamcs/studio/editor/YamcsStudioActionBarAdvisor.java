@@ -257,6 +257,11 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         editMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
         /*
+         * NAVIGATE
+         */
+        navigateMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+
+        /*
          * WINDOW
          */
         if (isMac()) {
@@ -285,6 +290,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         windowMenu.add(new Separator());
         windowMenu.add(new OpenWindowMenu());
 
+        /*
+         * HELP
+         */
         helpMenu.add(onlineHelp);
         helpMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         helpMenu.add(new Separator());
@@ -321,7 +329,8 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
     protected void fillStatusLine(IStatusLineManager statusLine) {
         statusLine.add(new ConnectionStringStatusLineContributionItem(STATUS_CONN_ID));
         statusLine.add(new ProcessorStatusLineContributionItem(STATUS_PROCESSOR_ID));
-        statusLine.add(new MissionTimeStatusLineContributionItem(STATUS_MISSION_TIME_ID, true));
+        statusLine.add(new MissionTimeStatusLineContributionItem(STATUS_MISSION_TIME_ID,
+                false /* progress indicator already adds one */));
     }
 
     @Override
