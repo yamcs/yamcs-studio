@@ -5,7 +5,7 @@
 * which accompanies this distribution, and is available at
 * http://www.eclipse.org/legal/epl-v10.html
 ******************************************************************************/
-package org.csstudio.opibuilder.imagelib;
+package org.csstudio.opibuilder.examples;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -20,22 +20,16 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
 /**
- * The import wizard of BOY Symbol Images Library.
+ * The import wizard of OPI Symbol Images Library.
  */
-public class ImportWizard extends Wizard implements IImportWizard {
+public class NewOPIImageLibExampleWizard extends Wizard implements IImportWizard {
 
-    private static final String WINDOW_TITLE = "Import BOY Image Library";
-    private static final String WIZARD_PAGE = "BOY Image Library";
-    private static final String WIZARD_PAGE_TITLE = "Import BOY Image Library";
-    private static final String WIZARD_PAGE_DESCRIPTION = "Import the library of images come with BOY. "
-            + "It contains more than 200 electrical and fluid symbols.";
+    private static final String WINDOW_TITLE = "Install OPI Image Library";
+    private static final String WIZARD_PAGE = "OPI Image Library";
+    private static final String WIZARD_PAGE_TITLE = "Install OPI Image Library";
+    private static final String WIZARD_PAGE_DESCRIPTION = "Creates a new project containing electrical and fluid symbols.";
 
     @Override
-    public boolean performFinish() {
-        new InstallLibraryAction().run(null);
-        return true;
-    }
-
     public void init(IWorkbench workbench, IStructuredSelection selection) {
         // NOP
     }
@@ -46,6 +40,7 @@ public class ImportWizard extends Wizard implements IImportWizard {
         setWindowTitle(WINDOW_TITLE);
         addPage(new WizardPage(WIZARD_PAGE) {
 
+            @Override
             public void createControl(Composite parent) {
                 setTitle(WIZARD_PAGE_TITLE);
                 setDescription(WIZARD_PAGE_DESCRIPTION);
@@ -58,13 +53,19 @@ public class ImportWizard extends Wizard implements IImportWizard {
                 gd.widthHint = 500;
                 label.setLayoutData(gd);
 
-                label.setText("BOY Symbol Images Library will be imported to your workspace. "
+                label.setText("OPI Image Library will be imported to your workspace. "
                         + NLS.bind(
                                 "If there is already a project named \"{0}\" in your workspace,"
                                         + "the import will fail. ",
-                                InstallLibraryAction.PROJECT_NAME)
+                                InstallOPIImageLibraryAction.PROJECT_NAME)
                         + "Please rename or delete it and import again.");
             }
         });
+    }
+
+    @Override
+    public boolean performFinish() {
+        new InstallOPIImageLibraryAction().run(null);
+        return true;
     }
 }

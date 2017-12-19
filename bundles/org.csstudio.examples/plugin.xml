@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.csstudio.examples.sampleset" name="Sample Set" schema="schema/org.csstudio.examples.sampleset.exsd"/>
    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:utility">
-         <command
-               commandId="org.csstudio.opibuilder.samples.install"
-               icon="icons/samples-16.png"
-               label="Install Samples"
-               style="push">
-         </command>
-      </menuContribution>
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.ui.Examples"
+            class="org.csstudio.opibuilder.examples.ImportOPIExamplesWizard"
+            icon="icons/OPIBuilder.png"
+            id="org.csstudio.opibuilder.examples.examplesWizard"
+            name="OPI Examples">
+      </wizard>
+      <wizard
+            category="org.eclipse.ui.Examples"
+            class="org.csstudio.opibuilder.examples.NewOPIImageLibExampleWizard"
+            icon="icons/symbol-image.png"
+            id="org.csstudio.opibuilder.examples.imageLibWizard"
+            name="OPI Image Library">
+      </wizard>
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="org.csstudio.examples.Install"
-            id="org.csstudio.opibuilder.samples.install"
-            name="Install Examples">
-      </command>
-   </extension>
-
 </plugin>

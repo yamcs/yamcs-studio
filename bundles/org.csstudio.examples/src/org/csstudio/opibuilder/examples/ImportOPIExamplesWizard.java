@@ -19,47 +19,50 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
-/**The import wizard to import BOY Examples.
+/**
+ * The import wizard to import OPI Examples.
+ * 
  * @author Xihui Chen
  *
  */
-public class ImportWizard extends Wizard implements IImportWizard {
-    @Override
-    public boolean performFinish() {
-        new InstallExamplesAction().run(null);
-        return true;
-    }
+public class ImportOPIExamplesWizard extends Wizard implements IImportWizard {
 
+    @Override
     public void init(IWorkbench workbench, IStructuredSelection selection) {
         // NOP
     }
 
-
     @Override
     public void addPages() {
         super.addPages();
-        setWindowTitle("Import BOY Examples");
-        addPage(new WizardPage("BOY Examples") {
+        setWindowTitle("Install OPI Examples");
+        addPage(new WizardPage("OPI Examples") {
 
+            @Override
             public void createControl(Composite parent) {
-                setTitle("Import BOY Examples");
-                setDescription("Import the OPI Examples come with BOY");
+                setTitle("Install OPI Examples");
+                setDescription("Creates a new project with sample OPI displays");
                 Composite container = new Composite(parent, SWT.None);
                 container.setLayout(new GridLayout());
                 setControl(container);
-
 
                 Label label = new Label(container, SWT.WRAP);
                 GridData gd = new GridData();
                 gd.widthHint = 500;
                 label.setLayoutData(gd);
 
-                label.setText("BOY Examples will be imported to your workspace. " +
+                label.setText("OPI Examples will be imported to your workspace. " +
                         NLS.bind("If there is already a project named \"{0}\" in your workspace," +
                                 "the import will fail. ",
-                                InstallExamplesAction.PROJECT_NAME) +
-                                "Please rename or delete it and import again.");
+                                InstallOPIExamplesAction.PROJECT_NAME)
+                        + "Please rename or delete it and import again.");
             }
         });
+    }
+
+    @Override
+    public boolean performFinish() {
+        new InstallOPIExamplesAction().run(null);
+        return true;
     }
 }

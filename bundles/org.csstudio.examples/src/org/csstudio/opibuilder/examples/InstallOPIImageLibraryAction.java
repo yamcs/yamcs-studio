@@ -5,13 +5,14 @@
 * which accompanies this distribution, and is available at
 * http://www.eclipse.org/legal/epl-v10.html
 ******************************************************************************/
-package org.csstudio.opibuilder.imagelib;
+package org.csstudio.opibuilder.examples;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.csstudio.examples.Activator;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -37,34 +38,36 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.osgi.framework.Bundle;
 
 /**
- * The action to install BOY symbol images library.
+ * The action to install OPI symbol images library.
  */
-public class InstallLibraryAction extends Action implements
-        IWorkbenchWindowActionDelegate {
+public class InstallOPIImageLibraryAction extends Action implements IWorkbenchWindowActionDelegate {
 
-    public static final String PROJECT_NAME = "BOY Image Library";
+    public static final String PROJECT_NAME = "OPI Image Library";
     private static final String SRC_FOLDER_TOCOPY = "./SymbolLibrary/";
-    private static final String JOB_NAME = "Import BOY image library";
-    private static final String TASK_NAME = "Copying BOY image library";
+    private static final String JOB_NAME = "Import OPI image library";
+    private static final String TASK_NAME = "Copying OPI image library";
 
+    @Override
     public void dispose() {
         // NOP
     }
 
+    @Override
     public void init(IWorkbenchWindow window) {
         // NOP
     }
 
+    @Override
     public void run(IAction action) {
         final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         if (root.getProject(PROJECT_NAME).exists()) {
             MessageDialog.openError(
-                            null,
-                            "Failed",
-                            NLS.bind(
-                                    "There is already a project named \"{0}\"."
-                                            + "Please make sure there is no project named {0} in the workspace.",
-                                    PROJECT_NAME));
+                    null,
+                    "Failed",
+                    NLS.bind(
+                            "There is already a project named \"{0}\"."
+                                    + "Please make sure there is no project named {0} in the workspace.",
+                            PROJECT_NAME));
             return;
         }
         Job job = new Job(JOB_NAME) {
@@ -115,13 +118,11 @@ public class InstallLibraryAction extends Action implements
             for (File file : files) {
                 monitor.subTask("Copying " + file.getName());
                 if (file.isDirectory()) {
-                    if (!file.getName().equals("CVS")) {//$NON-NLS-1$
-                        IFolder folder = container.getFolder(new Path(file
-                                .getName()));
-                        if (!folder.exists()) {
-                            folder.create(true, true, null);
-                            copy(file.listFiles(), folder, monitor);
-                        }
+                    IFolder folder = container.getFolder(new Path(file
+                            .getName()));
+                    if (!folder.exists()) {
+                        folder.create(true, true, null);
+                        copy(file.listFiles(), folder, monitor);
                     }
                 } else {
                     IFile pFile = container.getFile(new Path(file.getName()));
@@ -138,6 +139,7 @@ public class InstallLibraryAction extends Action implements
         }
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection) {
         // NOP
     }

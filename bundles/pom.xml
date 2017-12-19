@@ -26,15 +26,11 @@
     <module>org.csstudio.openfile</module>
     <module>org.csstudio.opibuilder</module>
     <module>org.csstudio.opibuilder.editor</module>
-    <module>org.csstudio.opibuilder.examples</module>
-    <module>org.csstudio.opibuilder.imagelib</module>
     <module>org.csstudio.opibuilder.widgets</module>
     <module>org.csstudio.simplepv</module>
     <module>org.csstudio.simplepv.pvmanager</module>
     <module>org.csstudio.swt.widgets</module>
     <module>org.csstudio.swt.xygraph</module>
-    <module>org.csstudio.ui.menu</module>
-    <module>org.csstudio.ui.menu.app</module>
     <module>org.csstudio.ui.preferences</module>
     <module>org.csstudio.ui.util</module>
     <module>org.csstudio.utility.batik</module>
