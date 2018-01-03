@@ -186,10 +186,10 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         item.setText(1, source);
 
         // reception time
-        item.setText(2, TimeEncoding.toString(event.getReceptionTime()));
+        item.setText(2, TimeEncoding.toString(event.getGenerationTime()));
 
         // generation time
-        item.setText(3, TimeEncoding.toString(event.getGenerationTime()));
+        item.setText(3, TimeEncoding.toString(event.getReceptionTime()));
 
         // seq number
         item.setText(4, event.getSeqNumber() + "");

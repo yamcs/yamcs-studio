@@ -11,6 +11,7 @@ Require-Bundle: org.yamcs.studio.core,
  org.yamcs.studio.core.ui,
  org.yamcs.studio.p2deps.yamcs-api,
  org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.swt
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Import-Package: com.csvreader

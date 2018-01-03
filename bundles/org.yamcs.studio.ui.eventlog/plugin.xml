@@ -9,6 +9,11 @@
       </category>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.ui.eventlog.addManualEventCommand"
+            name="Add a Manual Event">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.clearCommand"
             name="Clear View">
       </command>
@@ -56,14 +61,27 @@
             </with>
          </activeWhen>
       </handler>
+      
+      
+      
+      
       <handler
             class="org.yamcs.studio.ui.eventlog.ExportEventsHandler"
             commandId="org.yamcs.studio.ui.eventlog.exportCommand">
       </handler>
       <handler
+            class="org.yamcs.studio.ui.eventlog.AddManualEventHandler"
+            commandId="org.yamcs.studio.ui.eventlog.addManualEventCommand">            
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
             class="org.yamcs.studio.ui.eventlog.ClearEventLogHandler"
             commandId="org.yamcs.studio.ui.eventlog.clearCommand">
-      </handler>
+      </handler>      
       <handler
             class="org.yamcs.studio.ui.eventlog.ScrollLockHandler"
             commandId="org.yamcs.studio.ui.eventlog.scrollLockCommand">
@@ -116,7 +134,13 @@
    </extension>
 
    <extension point="org.eclipse.ui.menus">
-      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.eventlog.EventLogView">
+      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.eventlog.EventLogView">      
+         <command
+               commandId="org.yamcs.studio.ui.eventlog.addManualEventCommand"
+               icon="icons/elcl16/add_obj.gif"
+               disabledIcon="icons/elcl16/add_obj.gif"
+               label="Add a Manual Event"
+               style="push"/>
          <command
                commandId="org.yamcs.studio.ui.eventlog.exportCommand"
                icon="icons/elcl16/export_log.png"
