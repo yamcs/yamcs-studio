@@ -34,18 +34,25 @@ import org.yamcs.utils.TimeEncoding;
 public class AddManualEventDialog extends TitleAreaDialog {
 
 
-	static int sequenceNumber = 0;
+	static int sequenceNumber = 0;	
+	Calendar generationTimeValue = null;
 	
 	private Text messageText;
 	private DateTime generationDatePicker;
 	private DateTime generationTimePicker;
-	Calendar generationTimeValue;
 	Label userLbl=null;
 	Text userText=null;
 	Combo severityCombo;
 	
+
 	protected AddManualEventDialog(Shell shell) {
 		super(shell);
+	}
+	
+	protected AddManualEventDialog(Shell shell, long generationTime) {
+		super(shell);
+		generationTimeValue = TimeEncoding.toCalendar(generationTime);
+		//defaultGenerationTime = generationTime;
 	}
 
 	@Override

@@ -11,7 +11,11 @@
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.addManualEventCommand"
             name="Add a Manual Event">
-      </command>
+         <commandParameter
+               id="org.yamcs.studio.ui.eventlog.addEvent.action"
+               name="Action"
+               optional="false" />
+       </command>
       <command
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.ui.eventlog.clearCommand"
@@ -118,6 +122,15 @@
             </not>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.yamcs.studio.ui.eventlog.InsertManualEventHandler"
+            commandId="org.yamcs.studio.ui.eventlog.insertManualEventCommand">
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
    </extension>
    
    <extension point="org.eclipse.ui.views">
@@ -140,7 +153,10 @@
                icon="icons/elcl16/add_obj.gif"
                disabledIcon="icons/elcl16/add_obj.gif"
                label="Add a Manual Event"
-               style="push"/>
+               style="push">               
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.addEvent.action" value="ADD" />
+        </command>
          <command
                commandId="org.yamcs.studio.ui.eventlog.exportCommand"
                icon="icons/elcl16/export_log.png"
@@ -232,6 +248,13 @@
                      name="org.yamcs.studio.ui.eventlog.copyDetails.property" value="SEQNO" />
             </command>
          </menu>
+        <separator name="org.yamcs.studio.ui.eventlog.separator2" visible="true"/>
+        <command
+               commandId="org.yamcs.studio.ui.eventlog.addManualEventCommand"
+               label="Insert a Manual Event">               
+               <parameter
+                     name="org.yamcs.studio.ui.eventlog.addEvent.action" value="INSERT" />
+        </command>
       </menuContribution>
    </extension>
 </plugin>
