@@ -259,6 +259,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         /*
          * NAVIGATE
          */
+        navigateMenu.add(new GroupMarker(IWorkbenchActionConstants.OPEN_EXT));
         navigateMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 
         /*
