@@ -15,9 +15,9 @@ Require-Bundle: org.apache.batik.bridge;bundle-version="1.7.0",
  org.apache.batik.ext.awt;bundle-version="1.7.0",
  org.w3c.dom.svg,
  org.eclipse.core.runtime,
- org.eclipse.ui;resolution:=optional,
+ org.eclipse.ui,
  org.apache.commons.lang3,
- org.csstudio.java
+ org.csstudio.ui.util
 Export-Package: org.csstudio.utility.batik
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

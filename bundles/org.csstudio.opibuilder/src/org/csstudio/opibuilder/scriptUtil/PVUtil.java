@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-import org.csstudio.java.time.TimestampFormats;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.util.BOYPVFactory;
 import org.csstudio.opibuilder.util.DisplayUtils;
@@ -21,6 +20,7 @@ import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.simplepv.IPV;
 import org.csstudio.simplepv.VTypeHelper;
 import org.csstudio.ui.util.thread.UIBundlingThread;
+import org.diirt.datasource.PV;
 import org.diirt.util.array.ListInt;
 import org.diirt.util.array.ListNumber;
 import org.diirt.vtype.AlarmSeverity;
@@ -46,19 +46,20 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PVUtil {
 
-    private static final DateTimeFormatter timeFormat = TimestampFormats.FULL_FORMAT;
+    private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.nnnnnnnnn")
+            .withZone(ZoneId.systemDefault());
 
     /**
-     * Create a PV and start it. PVListener can be added to the PV to monitor its value change, but please note that the listener
-     * is executed in non-UI thread. If the code need be executed in UI thread, please use
-     * {@link ScriptUtil#execInUI(Runnable, AbstractBaseEditPart)}. The monitor's maximum update rate is 50hz. If the PV updates
-     * faster than this rate, some updates will be discarded.
+     * Create a PV and start it. PVListener can be added to the PV to monitor its value change, but please note that the
+     * listener is executed in non-UI thread. If the code need be executed in UI thread, please use
+     * {@link ScriptUtil#execInUI(Runnable, AbstractBaseEditPart)}. The monitor's maximum update rate is 50hz. If the PV
+     * updates faster than this rate, some updates will be discarded.
      *
      * @param name
      *            name of the PV.
      * @param widget
-     *            the reference widget. The PV will stop when the widget is deactivated, so it is not needed to stop the pv in
-     *            script.
+     *            the reference widget. The PV will stop when the widget is deactivated, so it is not needed to stop the
+     *            pv in script.
      * @return the PV.
      * @throws Exception
      *             the exception that might happen while creating the pv.
@@ -81,12 +82,14 @@ public class PVUtil {
     /**
      * Try to get a double number from the PV.
      * <p>
-     * Some applications only deal with numeric data, so they want to interprete integer, enum and double values all the same.
+     * Some applications only deal with numeric data, so they want to interprete integer, enum and double values all the
+     * same.
      *
      * @param pv
      *            the PV.
      * @return A double, or <code>Double.NaN</code> in case the value type does not decode into a number, or
-     *         <code>Double.NEGATIVE_INFINITY</code> if the value's severity indicates that there happens to be no useful value.
+     *         <code>Double.NEGATIVE_INFINITY</code> if the value's severity indicates that there happens to be no
+     *         useful value.
      */
     public final static double getDouble(IPV pv) {
         return VTypeHelper.getDouble(checkPVValue(pv));
@@ -108,7 +111,8 @@ public class PVUtil {
     /**
      * Try to get a long integer number from the PV.
      * <p>
-     * Some applications only deal with numeric data, so they want to interprete integer, enum and double values all the same.
+     * Some applications only deal with numeric data, so they want to interprete integer, enum and double values all the
+     * same.
      *
      * @param pv
      *            the PV.
@@ -128,7 +132,8 @@ public class PVUtil {
      * @see #getSize(PV)
      * @see #getDouble(PV)
      * @return A double, or <code>Double.NaN</code> in case the value type does not decode into a number, or
-     *         <code>Double.NEGATIVE_INFINITY</code> if the value's severity indicates that there happens to be no useful value.
+     *         <code>Double.NEGATIVE_INFINITY</code> if the value's severity indicates that there happens to be no
+     *         useful value.
      */
     public final static double getDouble(IPV pv, int index) {
         return VTypeHelper.getDouble(checkPVValue(pv), index);
@@ -141,8 +146,8 @@ public class PVUtil {
      *            the pv.
      * @see #getSize(IPV)
      * @see #getDouble(IPV)
-     * @return A double array, or an empty double array in case the value type does not decode into a number, or if the value's
-     *         severity indicates that there happens to be no useful value.
+     * @return A double array, or an empty double array in case the value type does not decode into a number, or if the
+     *         value's severity indicates that there happens to be no useful value.
      */
     public final static double[] getDoubleArray(IPV pv) {
         return VTypeHelper.getDoubleArray(checkPVValue(pv));
@@ -153,8 +158,9 @@ public class PVUtil {
      *
      * @param pv
      *            The PV.
-     * @return String array. For string array, it's the actual strings. For numeric arrays, the numbers are formatted as strings.
-     *         For enum array, the labels are returned. For scalar PVs, an array with a single string is returned.
+     * @return String array. For string array, it's the actual strings. For numeric arrays, the numbers are formatted as
+     *         strings. For enum array, the labels are returned. For scalar PVs, an array with a single string is
+     *         returned.
      */
     public final static String[] getStringArray(IPV pv) {
         final VType value = checkPVValue(pv);
@@ -197,8 +203,8 @@ public class PVUtil {
      *            the pv.
      * @see #getSize(IPV)
      * @see #getLong(IPV)
-     * @return A long integer array, or an empty long integer array in case the value type does not decode into a number, or if
-     *         the value's severity indicates that there happens to be no useful value.
+     * @return A long integer array, or an empty long integer array in case the value type does not decode into a
+     *         number, or if the value's severity indicates that there happens to be no useful value.
      */
     public final static long[] getLongArray(IPV pv) {
         final VType value = checkPVValue(pv);
@@ -226,9 +232,10 @@ public class PVUtil {
     }
 
     /**
-     * Converts the given pv's value into a string representation. For string values, returns the value. For numeric (double and
-     * long) values, returns a non-localized string representation. Double values use a point as the decimal separator. For other
-     * types of values, the value's {@link IValue#format()} method is called and its result returned.
+     * Converts the given pv's value into a string representation. For string values, returns the value. For numeric
+     * (double and long) values, returns a non-localized string representation. Double values use a point as the decimal
+     * separator. For other types of values, the value's {@link IValue#format()} method is called and its result
+     * returned.
      *
      * @param pv
      *            the pv.
@@ -290,9 +297,9 @@ public class PVUtil {
     /**
      * Get milliseconds since epoch, i.e. 1 January 1970 0:00 UTC.
      * <p>
-     * Note that we always return milliseconds relative to this UTC epoch, even if the original control system data source might
-     * use a different epoch (example: EPICS uses 1990), because the 1970 epoch is most compatible with existing programming
-     * environments.
+     * Note that we always return milliseconds relative to this UTC epoch, even if the original control system data
+     * source might use a different epoch (example: EPICS uses 1990), because the 1970 epoch is most compatible with
+     * existing programming environments.
      *
      * @param pv
      *            the pv
@@ -356,8 +363,8 @@ public class PVUtil {
     }
 
     /**
-     * Write a PV in a background job. It will first creates and connects to the PV. After PV is connected, it will set the PV
-     * with the value. If it fails to write, an error dialog will pop up.
+     * Write a PV in a background job. It will first creates and connects to the PV. After PV is connected, it will set
+     * the PV with the value. If it fails to write, an error dialog will pop up.
      *
      * @param pvName
      *            name of the PV.
@@ -401,8 +408,9 @@ public class PVUtil {
     }
 
     /**
-     * Write a PV in a background job. It will first creates and connects to the PV. After PV is connected, it will set the PV
-     * with the value. If it fails to write, an error dialog will pop up. The maximum time to try connection is 10 second.
+     * Write a PV in a background job. It will first creates and connects to the PV. After PV is connected, it will set
+     * the PV with the value. If it fails to write, an error dialog will pop up. The maximum time to try connection is
+     * 10 second.
      *
      * @param pvName
      *            name of the PV.

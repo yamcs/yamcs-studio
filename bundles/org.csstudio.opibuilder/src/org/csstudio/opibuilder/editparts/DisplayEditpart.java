@@ -15,7 +15,6 @@ import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.ui.util.ColorConstants;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
-import org.csstudio.ui.util.SWTConstants;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -36,6 +35,7 @@ import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.rulers.RulerProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -270,7 +270,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
                 if (getExecutionMode() == ExecutionMode.EDIT_MODE &&
                         ((DisplayModel) getModel()).isShowEditRange()) {
                     graphics.pushState();
-                    graphics.setLineStyle(SWTConstants.LINE_DASH);
+                    graphics.setLineStyle(SWT.LINE_DASH);
                     graphics.setForegroundColor(ColorConstants.black);
                     graphics.drawRectangle(
                             new Rectangle(new Point(0, 0), getWidgetModel().getSize()));

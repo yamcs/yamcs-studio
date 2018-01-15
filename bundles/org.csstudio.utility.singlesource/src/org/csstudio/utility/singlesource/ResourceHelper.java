@@ -27,7 +27,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -48,54 +47,6 @@ import org.eclipse.ui.IPathEditorInput;
  * @author Xihui Chen, Abadie Lana, Eric Berryman - ResourceUtil of BOY, contributions to PV Table
  */
 public class ResourceHelper {
-    /**
-     * Create {@link IPath} for string
-     * 
-     * @param path
-     *            Path to workspace file, file system file or URL
-     * @return {@link IPath}
-     */
-    public IPath newPath(final String path) {
-        try {
-            if (isURL(path))
-                return new URLPath(path);
-        } catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.WARNING, "Cannot handle URL path " + path, ex);
-        }
-        return new Path(path);
-    }
-
-    /**
-     * Obtain path for editor input
-     * 
-     * @param input
-     *            IEditorInput
-     * @return IPath or <code>null</code>
-     */
-    public IPath getPath(final IEditorInput input) {
-        final IFile ws_file = (IFile) input.getAdapter(IFile.class);
-        if (ws_file != null)
-            return ws_file.getFullPath();
-        if (input instanceof IPathEditorInput)
-            return ((IPathEditorInput) input).getPath();
-        return null;
-    }
-
-    /**
-     * Check if a path is actually a URL (http://, ftp://, ..)
-     * 
-     * @param url
-     *            Possible URL
-     * @return <code>true</code> if considered a URL, <code>false</code> for file path
-     */
-    private boolean isURL(final String path) {
-        try {
-            new URL(path);
-        } catch (Exception ex) { // Not a valid URL
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Check if a path exists

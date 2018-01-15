@@ -26,7 +26,6 @@ import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.csstudio.ui.util.ColorConstants;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
-import org.csstudio.ui.util.SWTConstants;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
@@ -56,10 +55,11 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * A re-written action button figure which can pass mouse event state to action listener.
+ * 
  * @author Xihui Chen
  *
  */
-public class ActionButtonFigure extends Figure implements Introspectable, ITextFigure{
+public class ActionButtonFigure extends Figure implements Introspectable, ITextFigure {
 
     /**
      * When it was set as armed, action will be fired when mouse released.
@@ -70,7 +70,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * The status of mouse button.
      */
     private boolean mousePressed = false;
-
 
     /**
      * Default label font.
@@ -87,12 +86,13 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     private boolean selected = false;
 
-    private boolean toggled =false;
+    private boolean toggled = false;
 
     /**
      * An Array, which contains the PositionConstants for Center, Top, Bottom, Left, Right.
      */
-    private final int[] alignments = new int[] {PositionConstants.CENTER, PositionConstants.TOP, PositionConstants.BOTTOM, PositionConstants.LEFT, PositionConstants.RIGHT};
+    private final int[] alignments = new int[] { PositionConstants.CENTER, PositionConstants.TOP,
+            PositionConstants.BOTTOM, PositionConstants.LEFT, PositionConstants.RIGHT };
 
     private boolean runMode = false;
 
@@ -100,21 +100,20 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     private Image image, grayImage;
 
-
     private IPath imagePath;
 
     private int textAlignment;
+
     public ActionButtonFigure(boolean runMode) {
         setEnabled(false);
         this.runMode = runMode;
         armed = false;
         mousePressed = false;
-        listeners = new ArrayList<ButtonActionListener>();
+        listeners = new ArrayList<>();
 
         setLayoutManager(new StackLayout());
 
-
-        label = new Label(){
+        label = new Label() {
             @Override
             public boolean isOpaque() {
                 return true;
@@ -123,7 +122,8 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             /**
              * If this button has focus, this method paints a focus rectangle.
              *
-             * @param graphics Graphics handle for painting
+             * @param graphics
+             *            Graphics handle for painting
              */
             @Override
             protected void paintBorder(Graphics graphics) {
@@ -134,17 +134,16 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                     graphics.setBackgroundColor(ColorConstants.white);
 
                     Rectangle area = getClientArea();
-                    graphics.drawFocus(area.x, area.y, area.width-1, area.height-1);
+                    graphics.drawFocus(area.x, area.y, area.width - 1, area.height - 1);
 
                 }
             }
-
 
         };
         label.setBorder(new ButtonBorder());
         add(label);
 
-        if(runMode){
+        if (runMode) {
             hookEventHandler(new ButtonEventHandler());
             label.setCursor(Cursors.HAND);
         }
@@ -157,7 +156,8 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     /**
      * Registers the given listener as an {@link ButtonActionListener}.
      *
-     * @param listener The {@link ButtonActionListener} to add
+     * @param listener
+     *            The {@link ButtonActionListener} to add
      */
     public void addActionListener(ButtonActionListener listener) {
         if (listener == null)
@@ -170,23 +170,22 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      */
     public void dispose() {
 
-        if(image != null){
+        if (image != null) {
             image.dispose();
             image = null;
         }
-        if(grayImage != null){
+        if (grayImage != null) {
             grayImage.dispose();
             grayImage = null;
         }
     }
 
     /**
-     * Notifies any {@link ButtonActionListener} on this button
-     * that an action has been performed.
+     * Notifies any {@link ButtonActionListener} on this button that an action has been performed.
      *
      */
     protected void fireActionPerformed(int i) {
-        for(ButtonActionListener listener : listeners)
+        for (ButtonActionListener listener : listeners)
             listener.actionPerformed(i);
     }
 
@@ -205,11 +204,11 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     }
 
     /**
-     * Adds the given {@link ButtonEventHandler} to this button. A {@link ButtonEventHandler}
-     * should be a MouseListener, MouseMotionListener, KeyListener,  and
-     * FocusListener.
+     * Adds the given {@link ButtonEventHandler} to this button. A {@link ButtonEventHandler} should be a MouseListener,
+     * MouseMotionListener, KeyListener, and FocusListener.
      *
-     * @param handler  The new event handler
+     * @param handler
+     *            The new event handler
      * @since 2.0
      */
     protected void hookEventHandler(ButtonEventHandler handler) {
@@ -233,8 +232,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     public boolean isOpaque() {
         return false;
     }
-
-
 
     /**
      * @return the runMode
@@ -262,10 +259,11 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     }
 
     /**
-     * Paints the area of this figure excluded by the borders. Induces a (1,1) pixel shift in
-     * the painting if the  mouse is armed, giving it the pressed appearance.
+     * Paints the area of this figure excluded by the borders. Induces a (1,1) pixel shift in the painting if the mouse
+     * is armed, giving it the pressed appearance.
      *
-     * @param graphics  Graphics handle for painting
+     * @param graphics
+     *            Graphics handle for painting
      * @since 2.0
      */
     @Override
@@ -280,18 +278,19 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             super.paintClientArea(graphics);
     }
 
-    public void removeActionListener(ButtonActionListener listener){
-        if(listener != null && listeners.contains(listener))
+    public void removeActionListener(ButtonActionListener listener) {
+        if (listener != null && listeners.contains(listener))
             listeners.remove(listener);
     }
 
-    /**Set the armed status of the button.
+    /**
+     * Set the armed status of the button.
+     * 
      * @param armed
      */
     protected void setArmed(boolean armed) {
         this.armed = armed;
     }
-
 
     @Override
     public void setCursor(Cursor cursor) {
@@ -301,20 +300,20 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     @Override
     public void setEnabled(boolean value) {
-        if(label != null){
+        if (label != null) {
             label.setEnabled(value);
-            //update the icon
-            if(image != null){
-                if(value)
+            // update the icon
+            if (image != null) {
+                if (value)
                     label.setIcon(image);
                 else {
-                    if(grayImage == null)
-                        grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
+                    if (grayImage == null)
+                        grayImage = new Image(null, image, SWT.IMAGE_GRAY);
                     label.setIcon(grayImage);
                 }
             }
         }
-        if(runMode)
+        if (runMode)
             super.setEnabled(value);
         repaint();
     }
@@ -327,7 +326,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     }
 
     @SuppressWarnings("nls")
-    public void setImagePath(final IPath path){
+    public void setImagePath(final IPath path) {
         dispose();
         AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
 
@@ -338,17 +337,17 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                     stream.close();
                 } catch (IOException e) {
                 }
-                if(label.isEnabled())
+                if (label.isEnabled())
                     label.setIcon(image);
-                else{
-                    if(grayImage == null && image != null)
-                        grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
+                else {
+                    if (grayImage == null && image != null)
+                        grayImage = new Image(null, image, SWT.IMAGE_GRAY);
                     label.setIcon(grayImage);
                 }
                 calculateTextPosition();
             }
         };
-        if(path != null && !path.isEmpty()){
+        if (path != null && !path.isEmpty()) {
             this.imagePath = path;
             ResourceUtil.pathToInputStreamInJob(path, uiTask, "Load Action Button Icon...", new IJobErrorHandler() {
 
@@ -356,73 +355,69 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                 public void handleError(Exception exception) {
                     image = null;
                     Activator.getLogger().log(Level.WARNING,
-                        "Failed to load image from path" + path, exception);
+                            "Failed to load image from path" + path, exception);
                 }
             });
         }
 
-        if(label.isEnabled())
+        if (label.isEnabled())
             label.setIcon(image);
-        else{
-            if(grayImage == null && image != null)
-                grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
+        else {
+            if (grayImage == null && image != null)
+                grayImage = new Image(null, image, SWT.IMAGE_GRAY);
             label.setIcon(grayImage);
         }
         calculateTextPosition();
     }
 
     protected void setMousePressed(boolean mousePressed) {
-            this.mousePressed = mousePressed;
+        this.mousePressed = mousePressed;
     }
 
-
     /**
-     * @param runMode the runMode to set
+     * @param runMode
+     *            the runMode to set
      */
     public void setRunMode(boolean runMode) {
         this.runMode = runMode;
     }
 
-
     public void setSelected(boolean selected) {
-        if(this.selected == selected)
+        if (this.selected == selected)
             return;
         this.selected = selected;
         repaint();
     }
 
-
-
-
     /**
      * Sets the text for the Button.
+     * 
      * @param s
-     *             The text for the button
+     *            The text for the button
      */
     public void setText(final String s) {
         label.setText(s);
     }
 
-
     /**
      * @return the label text.
      */
     @Override
-    public String getText(){
+    public String getText() {
         return label.getText();
     }
 
-
     /**
-     * Sets the alignment of the buttons text.
-     * The parameter is a {@link PositionConstants} (LEFT, RIGHT, TOP, CENTER, BOTTOM)
+     * Sets the alignment of the buttons text. The parameter is a {@link PositionConstants} (LEFT, RIGHT, TOP, CENTER,
+     * BOTTOM)
+     * 
      * @param alignment
-     *             The alignment for the text
+     *            The alignment for the text
      */
     public void setTextAlignment(final int alignment) {
         this.textAlignment = alignment;
-        if (alignment>=0 && alignment<alignments.length) {
-            if (alignments[alignment]==PositionConstants.LEFT || alignments[alignment]==PositionConstants.RIGHT) {
+        if (alignment >= 0 && alignment < alignments.length) {
+            if (alignments[alignment] == PositionConstants.LEFT || alignments[alignment] == PositionConstants.RIGHT) {
                 label.setTextPlacement(PositionConstants.NORTH);
             } else {
                 label.setTextPlacement(PositionConstants.EAST);
@@ -464,10 +459,12 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     /**
      * Set the style of the Button.
-     * @param style false = Push, true=Toggle.
+     * 
+     * @param style
+     *            false = Push, true=Toggle.
      */
-    public void setToggleStyle(final boolean style){
-          toggleStyle = style;
+    public void setToggleStyle(final boolean style) {
+        toggleStyle = style;
 
     }
 
@@ -484,7 +481,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         return new ActionButtonIntrospector().getBeanInfo(this.getClass());
     }
 
-    public interface ButtonActionListener extends EventListener{
+    public interface ButtonActionListener extends EventListener {
         public void actionPerformed(int i);
     }
 
@@ -492,202 +489,200 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * The border for a button which has different paint based on the button pressed status.
      */
     class ButtonBorder
-        extends SchemeBorder
-    {
-
-
-    /**
-     * Provides for a scheme to represent the borders of clickable figures like buttons.
-     * Though similar to the {@link SchemeBorder.Scheme Scheme} it supports an extra set of
-     * borders for the pressed states.
-     */
-     class ButtonScheme
-        extends Scheme
-    {
-        private Color
-            highlightPressed[] = null,
-            shadowPressed[] = null;
+            extends SchemeBorder {
 
         /**
-         * Constructs a new button scheme where the input colors are the colors for the
-         * top-left and bottom-right sides of the  border. These colors serve as the colors
-         * when the border is in a pressed state too. The width of each side is determined by
-         * the number of colors passed in as input.
-         *
-         * @param highlight  Colors for the top-left sides of the border
-         * @param shadow     Colors for the bottom-right sides of the border
-         * @since 2.0
+         * Provides for a scheme to represent the borders of clickable figures like buttons. Though similar to the
+         * {@link SchemeBorder.Scheme Scheme} it supports an extra set of borders for the pressed states.
          */
-        public ButtonScheme(Color[] highlight, Color[] shadow) {
-            highlightPressed = this.highlight = highlight;
-            shadowPressed = this.shadow = shadow;
-            init();
-        }
+        class ButtonScheme
+                extends Scheme {
+            private Color highlightPressed[] = null,
+                    shadowPressed[] = null;
 
-        /**
-         * Constructs a new button scheme where the input colors are the colors for the
-         * top-left and bottom-right sides of the  border, for the normal and pressed states.
-         * The width of  each side is determined by the number of colors passed in  as input.
-         *
-         * @param hl   Colors for the top-left sides of the border
-         * @param sh   Colors for the bottom-right sides of the border
-         * @param hlp  Colors for the top-left sides of the border when figure is pressed
-         * @param shp  Colors for the bottom-right sides of the border when figure is pressed
-         * @since 2.0
-         */
-        public ButtonScheme(Color[] hl, Color[] sh, Color[] hlp, Color[] shp) {
-            highlight = hl;
-            shadow = sh;
-            highlightPressed = hlp;
-            shadowPressed = shp;
-            init();
-        }
+            /**
+             * Constructs a new button scheme where the input colors are the colors for the top-left and bottom-right
+             * sides of the border. These colors serve as the colors when the border is in a pressed state too. The
+             * width of each side is determined by the number of colors passed in as input.
+             *
+             * @param highlight
+             *            Colors for the top-left sides of the border
+             * @param shadow
+             *            Colors for the bottom-right sides of the border
+             * @since 2.0
+             */
+            public ButtonScheme(Color[] highlight, Color[] shadow) {
+                highlightPressed = this.highlight = highlight;
+                shadowPressed = this.shadow = shadow;
+                init();
+            }
 
-        /**
-         * Calculates and returns the Insets for this border. The calculations are based on
-         * the number of normal and pressed, highlight and shadow colors.
-         *
-         * @return  The insets for this border
-         * @since 2.0
-         */
-        @Override
-        protected Insets calculateInsets() {
-            int br = 1 + Math.max(getShadow().length, getHighlightPressed().length);
-            int tl = Math.max(getHighlight().length, getShadowPressed().length);
-            return new Insets(tl, tl, br, br);
-        }
+            /**
+             * Constructs a new button scheme where the input colors are the colors for the top-left and bottom-right
+             * sides of the border, for the normal and pressed states. The width of each side is determined by the
+             * number of colors passed in as input.
+             *
+             * @param hl
+             *            Colors for the top-left sides of the border
+             * @param sh
+             *            Colors for the bottom-right sides of the border
+             * @param hlp
+             *            Colors for the top-left sides of the border when figure is pressed
+             * @param shp
+             *            Colors for the bottom-right sides of the border when figure is pressed
+             * @since 2.0
+             */
+            public ButtonScheme(Color[] hl, Color[] sh, Color[] hlp, Color[] shp) {
+                highlight = hl;
+                shadow = sh;
+                highlightPressed = hlp;
+                shadowPressed = shp;
+                init();
+            }
 
-        /**
-         * Calculates and returns the opaque state of this border.
-         * <p>
-         * Returns false in the following conditions:
-         * <ul>
-         *         <li> The number of highlight colors is different than the the number of
-         *         shadow colors.
-         *         <li> The number of pressed highlight colors is different than the number of
-         *         pressed shadow colors.
-         *         <li> Any of the highlight and shadow colors are set to <code>null</code>
-         *         <li> Any of the pressed highlight and shadow colors are set to
-         *         <code>null</code>
-         * </ul>
-         * This is done so that the entire region under the figure is properly covered.
-         *
-         * @return  The opaque state of this border
-         * @since 2.0
-         */
-        @Override
-        protected boolean calculateOpaque() {
-            if (!super.calculateOpaque())
-                return false;
-            if (getHighlight().length != getShadowPressed().length)
-                return false;
-            if (getShadow().length != getHighlightPressed().length)
-                return false;
-            Color [] colors = getHighlightPressed();
-            for (int i = 0; i < colors.length; i++)
-                if (colors[i] == null)
+            /**
+             * Calculates and returns the Insets for this border. The calculations are based on the number of normal and
+             * pressed, highlight and shadow colors.
+             *
+             * @return The insets for this border
+             * @since 2.0
+             */
+            @Override
+            protected Insets calculateInsets() {
+                int br = 1 + Math.max(getShadow().length, getHighlightPressed().length);
+                int tl = Math.max(getHighlight().length, getShadowPressed().length);
+                return new Insets(tl, tl, br, br);
+            }
+
+            /**
+             * Calculates and returns the opaque state of this border.
+             * <p>
+             * Returns false in the following conditions:
+             * <ul>
+             * <li>The number of highlight colors is different than the the number of shadow colors.
+             * <li>The number of pressed highlight colors is different than the number of pressed shadow colors.
+             * <li>Any of the highlight and shadow colors are set to <code>null</code>
+             * <li>Any of the pressed highlight and shadow colors are set to <code>null</code>
+             * </ul>
+             * This is done so that the entire region under the figure is properly covered.
+             *
+             * @return The opaque state of this border
+             * @since 2.0
+             */
+            @Override
+            protected boolean calculateOpaque() {
+                if (!super.calculateOpaque())
                     return false;
-            colors = getShadowPressed();
-            for (int i = 0; i < colors.length; i++)
-                if (colors[i] == null)
+                if (getHighlight().length != getShadowPressed().length)
                     return false;
-            return true;
+                if (getShadow().length != getHighlightPressed().length)
+                    return false;
+                Color[] colors = getHighlightPressed();
+                for (int i = 0; i < colors.length; i++)
+                    if (colors[i] == null)
+                        return false;
+                colors = getShadowPressed();
+                for (int i = 0; i < colors.length; i++)
+                    if (colors[i] == null)
+                        return false;
+                return true;
+            }
+
+            /**
+             * Returns the pressed highlight colors of this border.
+             *
+             * @return Colors as an array of Colors
+             * @since 2.0
+             */
+            protected Color[] getHighlightPressed() {
+                return highlightPressed;
+            }
+
+            /**
+             * Returns the pressed highlight colors of this border.
+             *
+             * @return Colors as an array of Colors
+             * @since 2.0
+             */
+            protected Color[] getHighlightReleased() {
+                return getHighlight();
+            }
+
+            /**
+             * Returns the pressed shadow colors of this border.
+             *
+             * @return Colors as an array of Colors
+             * @since 2.0
+             */
+            protected Color[] getShadowPressed() {
+                return shadowPressed;
+            }
+
+            /**
+             * Returns the pressed shadow colors of this border.
+             *
+             * @return Colors as an array of Colors
+             * @since 2.0
+             */
+            protected Color[] getShadowReleased() {
+                return getShadow();
+            }
         }
 
         /**
-         * Returns the pressed highlight colors of this border.
-         *
-         * @return  Colors as an array of Colors
-         * @since 2.0
-         */
-        protected Color[] getHighlightPressed() {
-            return highlightPressed;
-        }
-
-        /**
-         * Returns the pressed highlight colors of this border.
-         *
-         * @return  Colors as an array of Colors
-         * @since 2.0
-         */
-        protected Color[] getHighlightReleased() {
-            return getHighlight();
-        }
-
-        /**
-         * Returns the pressed shadow colors of this border.
-         *
-         * @return  Colors as an array of Colors
-         * @since 2.0
-         */
-        protected Color[] getShadowPressed() {
-            return shadowPressed;
-        }
-
-        /**
-         * Returns the pressed shadow colors of this border.
-         *
-         * @return  Colors as an array of Colors
-         * @since 2.0
-         */
-        protected Color[] getShadowReleased() {
-            return getShadow();
-        }
-    }
-
-     /**
          * Regular button scheme
-     */
-    ButtonScheme BUTTON = new ButtonScheme(
-            new Color[] {ColorConstants.buttonLightest},
-            new Color[] {ColorConstants.black, ColorConstants.buttonDarker}
-    );
-    /**
-     * Constructs a ButtonBorder with a predefined button scheme set as its default.
-     *
-     * @since 2.0
-     */
-    public ButtonBorder() {
-        setScheme(BUTTON);
-    }
+         */
+        ButtonScheme BUTTON = new ButtonScheme(
+                new Color[] { ColorConstants.buttonLightest },
+                new Color[] { ColorConstants.black, ColorConstants.buttonDarker });
 
-
-    /**
-     * Paints this border with the help of the set scheme, the model of the clickable figure,
-     * and other inputs. The scheme is used in conjunction with the state of the model to get
-     * the appropriate colors for the border.
-     *
-     * @param figure The Clickable that this border belongs to
-     * @param graphics The graphics used for painting
-     * @param insets The insets
-     */
-    @Override
-    public void paint(IFigure figure, Graphics graphics, Insets insets) {
-
-        ButtonScheme colorScheme = (ButtonScheme)getScheme();
-
-        Color tl[], br[];
-        if (isSelected()) {
-            tl = colorScheme.getShadowPressed();
-            br = colorScheme.getHighlightPressed();
-        } else {
-            tl = colorScheme.getHighlightReleased();
-            br = colorScheme.getShadowReleased();
+        /**
+         * Constructs a ButtonBorder with a predefined button scheme set as its default.
+         *
+         * @since 2.0
+         */
+        public ButtonBorder() {
+            setScheme(BUTTON);
         }
 
-        paint(graphics, figure, insets, tl, br);
-    }
+        /**
+         * Paints this border with the help of the set scheme, the model of the clickable figure, and other inputs. The
+         * scheme is used in conjunction with the state of the model to get the appropriate colors for the border.
+         *
+         * @param figure
+         *            The Clickable that this border belongs to
+         * @param graphics
+         *            The graphics used for painting
+         * @param insets
+         *            The insets
+         */
+        @Override
+        public void paint(IFigure figure, Graphics graphics, Insets insets) {
+
+            ButtonScheme colorScheme = (ButtonScheme) getScheme();
+
+            Color tl[], br[];
+            if (isSelected()) {
+                tl = colorScheme.getShadowPressed();
+                br = colorScheme.getHighlightPressed();
+            } else {
+                tl = colorScheme.getHighlightReleased();
+                br = colorScheme.getShadowReleased();
+            }
+
+            paint(graphics, figure, insets, tl, br);
+        }
 
     }
 
     class ButtonEventHandler extends MouseMotionListener.Stub
-        implements
+            implements
             MouseListener,
             KeyListener,
-            FocusListener
-    {
+            FocusListener {
 
         private int mouseState;
+
         @Override
         public void focusGained(FocusEvent fe) {
             repaint();
@@ -698,7 +693,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             repaint();
             setArmed(false);
             setMousePressed(false);
-            if(isToggleStyle())
+            if (isToggleStyle())
                 setSelected(isToggled());
             else
                 setSelected(false);
@@ -715,8 +710,8 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         @Override
         public void keyReleased(KeyEvent ke) {
             if (ke.character == ' ' || ke.character == '\r') {
-                if(isArmed()){
-                    if(isToggleStyle())
+                if (isArmed()) {
+                    if (isToggleStyle())
                         setToggled(!isToggled());
                     else
                         setSelected(false);
@@ -728,17 +723,18 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         }
 
         @Override
-        public void mouseDoubleClicked(MouseEvent me) {}
+        public void mouseDoubleClicked(MouseEvent me) {
+        }
 
         @Override
         public void mouseDragged(MouseEvent me) {
             if (isArmed()) {
-                if(!containsPoint(me.getLocation())){
+                if (!containsPoint(me.getLocation())) {
                     setArmed(false);
-                    if(!isToggled())
+                    if (!isToggled())
                         setSelected(false);
                 }
-            }else if(containsPoint(me.getLocation())){
+            } else if (containsPoint(me.getLocation())) {
                 setArmed(true);
                 setSelected(true);
             }
@@ -750,7 +746,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                 return;
             // Ignore bogus mouse clicks,
             // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-            if (! containsPoint(me.getLocation()))
+            if (!containsPoint(me.getLocation()))
                 return;
             mouseState = me.getState();
             requestFocus();
@@ -766,13 +762,12 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                 return;
             // Ignore bogus mouse clicks,
             // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-            if (! containsPoint(me.getLocation()))
+            if (!containsPoint(me.getLocation()))
                 return;
-            if(isArmed()){
-                if(isToggleStyle()){
+            if (isArmed()) {
+                if (isToggleStyle()) {
                     setToggled(!isToggled());
-                }
-                else
+                } else
                     setSelected(false);
                 fireActionPerformed(mouseState);
             }
@@ -784,16 +779,16 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
         @Override
         public void mouseEntered(MouseEvent me) {
-                Color backColor = getBackgroundColor();
-                RGB darkColor = GraphicsUtil.mixColors(backColor.getRGB(),
-                        new RGB(255, 255, 255), 0.5);
-                label.setBackgroundColor(CustomMediaFactory.getInstance()
-                        .getColor(darkColor));
+            Color backColor = getBackgroundColor();
+            RGB darkColor = GraphicsUtil.mixColors(backColor.getRGB(),
+                    new RGB(255, 255, 255), 0.5);
+            label.setBackgroundColor(CustomMediaFactory.getInstance()
+                    .getColor(darkColor));
         }
 
         @Override
         public void mouseExited(MouseEvent me) {
-                label.setBackgroundColor(getBackgroundColor());
+            label.setBackgroundColor(getBackgroundColor());
 
         }
     }

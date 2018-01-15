@@ -9,7 +9,6 @@ package org.csstudio.opibuilder.visualparts;
 
 import org.csstudio.ui.util.CSSSchemeBorder;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.csstudio.ui.util.SWTConstants;
 import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.AbstractLabeledBorder;
 import org.eclipse.draw2d.Graphics;
@@ -18,24 +17,27 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.SchemeBorder.Scheme;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.TitleBarBorder;
+import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-/**The factory to create borders for {@link IFigure}
+/**
+ * The factory to create borders for {@link IFigure}
+ * 
  * @author Xihui Chen
  *
  */
 public class BorderFactory {
 
     public static AbstractBorder createBorder(BorderStyle style, int width, RGB rgbColor,
-            String text){
+            String text) {
         Color color = CustomMediaFactory.getInstance().getColor(rgbColor);
 
         switch (style) {
         case LINE:
-            return createLineBorder(SWTConstants.LINE_SOLID, width, color);
+            return createLineBorder(SWT.LINE_SOLID, width, color);
         case RAISED:
             return createSchemeBorder(CSSSchemeBorder.SCHEMES.RAISED);
         case LOWERED:
@@ -49,13 +51,13 @@ public class BorderFactory {
         case BUTTON_PRESSED:
             return createSchemeBorder(CSSSchemeBorder.SCHEMES.BUTTON_PRESSED);
         case DASH_DOT:
-            return createLineBorder(SWTConstants.LINE_DASHDOT, width, color);
+            return createLineBorder(SWT.LINE_DASHDOT, width, color);
         case DASHED:
-            return createLineBorder(SWTConstants.LINE_DASH, width, color);
+            return createLineBorder(SWT.LINE_DASH, width, color);
         case DOTTED:
-            return createLineBorder(SWTConstants.LINE_DOT, width, color);
+            return createLineBorder(SWT.LINE_DOT, width, color);
         case DASH_DOT_DOT:
-            return createLineBorder(SWTConstants.LINE_DASHDOTDOT, width, color);
+            return createLineBorder(SWT.LINE_DASHDOTDOT, width, color);
         case GROUP_BOX:
             return createGroupBoxBorder(text, color);
         case TITLE_BAR:
@@ -72,11 +74,13 @@ public class BorderFactory {
 
     /**
      * Creates an empty border.
-     * @param width width of the border.
+     * 
+     * @param width
+     *            width of the border.
      * @return AbstractBorder The requested Border
      */
     private static AbstractBorder createEmptyBorder(final int width) {
-        if (width>0) {
+        if (width > 0) {
             return new AbstractBorder() {
 
                 @Override
@@ -98,15 +102,18 @@ public class BorderFactory {
      * @return AbstractBorder The requested Border
      */
     private static AbstractBorder createLineBorder(int style, int width, Color color) {
-        if (width>0) {
+        if (width > 0) {
             LineBorder border = new VersatileLineBorder(color, width, style);
             return border;
         }
         return null;
     }
+
     /**
      * Creates a SchemeBorder.
-     * @param scheme the scheme for the {@link SchemeBorder}
+     * 
+     * @param scheme
+     *            the scheme for the {@link SchemeBorder}
      * @return AbstractBorder The requested Border
      */
     private static AbstractBorder createSchemeBorder(final Scheme scheme) {
@@ -122,11 +129,11 @@ public class BorderFactory {
 
     private static AbstractBorder createTitleBarBorder(String text, Color color) {
         WidgetFrameBorder border = new WidgetFrameBorder(text);
-        ((TitleBarBorder)border.getInnerBorder()).setBackgroundColor(color);
+        ((TitleBarBorder) border.getInnerBorder()).setBackgroundColor(color);
         return border;
     }
 
-    private static AbstractBorder createRoundRectangleBorder(int width, Color color){
+    private static AbstractBorder createRoundRectangleBorder(int width, Color color) {
         RoundRectangleBackgroundBorder border = new RoundRectangleBackgroundBorder(color, width);
         return border;
     }

@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.ui.util,
- org.csstudio.java,
  org.eclipse.core.resources,
  org.eclipse.search,
  org.eclipse.ui.ide
