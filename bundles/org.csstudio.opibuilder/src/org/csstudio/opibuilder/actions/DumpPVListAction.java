@@ -9,7 +9,6 @@ package org.csstudio.opibuilder.actions;
 
 import java.util.Arrays;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
 import org.eclipse.jface.action.IAction;
@@ -34,7 +33,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Dump all PVs in the OPI.
+/**
+ * Dump all PVs in the OPI.
+ * 
  * @author Xihui Chen
  *
  */
@@ -43,13 +44,12 @@ public class DumpPVListAction implements IObjectActionDelegate {
     private IStructuredSelection selection;
     private IWorkbenchPart targetPart;
 
-
     @Override
     public void run(IAction action) {
         Object o = getSelectedWidget().getViewer().getEditPartRegistry().get(
                 getSelectedWidget().getWidgetModel().getRootDisplayModel());
-        if(o instanceof DisplayEditpart){
-            Object[] allRuntimePVNames = ((DisplayEditpart)o).getAllRuntimePVNames().toArray();
+        if (o instanceof DisplayEditpart) {
+            Object[] allRuntimePVNames = ((DisplayEditpart) o).getAllRuntimePVNames().toArray();
 
             Arrays.sort(allRuntimePVNames);
             new PVListDialog(targetPart.getSite().getShell(), allRuntimePVNames).open();
@@ -68,12 +68,10 @@ public class DumpPVListAction implements IObjectActionDelegate {
         this.targetPart = targetPart;
     }
 
-
-
-    private AbstractBaseEditPart getSelectedWidget(){
-        if(selection.getFirstElement() instanceof AbstractBaseEditPart){
-            return (AbstractBaseEditPart)selection.getFirstElement();
-        }else
+    private AbstractBaseEditPart getSelectedWidget() {
+        if (selection.getFirstElement() instanceof AbstractBaseEditPart) {
+            return (AbstractBaseEditPart) selection.getFirstElement();
+        } else
             return null;
     }
 
@@ -85,12 +83,12 @@ public class DumpPVListAction implements IObjectActionDelegate {
         protected PVListDialog(Shell parentShell, Object[] allRuntimePVNames) {
             super(parentShell);
             this.allPVNames = allRuntimePVNames;
-            setShellStyle(getShellStyle()|SWT.RESIZE);
+            setShellStyle(getShellStyle() | SWT.RESIZE);
             StringBuilder sb = new StringBuilder();
-            int i=0;
-            for(Object pv:allPVNames){
+            int i = 0;
+            for (Object pv : allPVNames) {
                 sb.append(pv);
-                if(i<allPVNames.length-1)
+                if (i < allPVNames.length - 1)
                     sb.append("\n"); //$NON-NLS-1$
                 i++;
             }
@@ -102,40 +100,37 @@ public class DumpPVListAction implements IObjectActionDelegate {
         protected Control createDialogArea(Composite parent) {
             getShell().setText("PV List");
             getShell().setMinimumSize(200, 300);
-            Composite container = (Composite)super.createDialogArea(parent);
+            Composite container = (Composite) super.createDialogArea(parent);
             FillLayout layout = new FillLayout();
             layout.marginHeight = 10;
             layout.marginWidth = 5;
             container.setLayout(layout);
-            Text text = new Text(container, SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
+            Text text = new Text(container, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
             text.setText(pvsText);
             return container;
         }
 
         @Override
         protected void createButtonsForButtonBar(final Composite parent) {
-            if(!OPIBuilderPlugin.isRAP()){
-                Button copyButton = createButton(parent,
-                        IDialogConstants.DETAILS_ID, "Copy to Clipboard", false);
-                copyButton.addSelectionListener(new SelectionAdapter() {
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        final Clipboard cb = new Clipboard(parent.getDisplay());
-                        TextTransfer textTransfer = TextTransfer.getInstance();
-                        cb.setContents(new Object[] { pvsText },
-                                new Transfer[] { textTransfer });
+            Button copyButton = createButton(parent,
+                    IDialogConstants.DETAILS_ID, "Copy to Clipboard", false);
+            copyButton.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    final Clipboard cb = new Clipboard(parent.getDisplay());
+                    TextTransfer textTransfer = TextTransfer.getInstance();
+                    cb.setContents(new Object[] { pvsText },
+                            new Transfer[] { textTransfer });
 
-                    }
-                });
-                if (pvsText.isEmpty())
-                    copyButton.setEnabled(false);
-            }
+                }
+            });
+            if (pvsText.isEmpty())
+                copyButton.setEnabled(false);
 
             // create OK button
             createButton(parent, IDialogConstants.OK_ID, JFaceResources.getString(IDialogLabelKeys.OK_LABEL_KEY),
                     true);
         }
-
 
     }
 }

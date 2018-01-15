@@ -10,9 +10,9 @@ package org.csstudio.swt.xygraph.linearscale;
 import java.util.ArrayList;
 
 import org.csstudio.swt.xygraph.linearscale.AbstractScale.LabelSide;
-import org.csstudio.swt.xygraph.util.SWTConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.swt.SWT;
 
 /**
  * Linear scale tick marks.
@@ -58,6 +58,7 @@ public class LinearScaleTickMarks extends Figure {
         return scale;
     }
 
+    @Override
     protected void paintClientArea(Graphics graphics) {
         graphics.translate(bounds.x, bounds.y);
         ArrayList<Integer> tickLabelPositions = scale.getScaleTickLabels().getTickLabelPositions();
@@ -121,7 +122,7 @@ public class LinearScaleTickMarks extends Figure {
 
         updateMinorTickParas();
         // draw tick marks
-        gc.setLineStyle(SWTConstants.LINE_SOLID);
+        gc.setLineStyle(SWT.LINE_SOLID);
 
         if (scale.isLogScaleEnabled()) {
             ArrayList<Boolean> tickLabelVisibilities = scale.getScaleTickLabels()
@@ -223,7 +224,7 @@ public class LinearScaleTickMarks extends Figure {
             LabelSide tickLabelSide, int width, int height) {
         updateMinorTickParas();
         // draw tick marks
-        gc.setLineStyle(SWTConstants.LINE_SOLID);
+        gc.setLineStyle(SWT.LINE_SOLID);
         int x = 0;
         int y = 0;
         if (scale.isLogScaleEnabled()) {

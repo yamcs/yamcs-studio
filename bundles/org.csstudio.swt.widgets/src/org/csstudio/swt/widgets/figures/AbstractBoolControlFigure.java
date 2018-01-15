@@ -114,8 +114,7 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
                         }else
                             canceled = true;
                     }
-                     if(!isOpen || !SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                         me.consume();
+                    me.consume();
                     repaint();
                 }
             }

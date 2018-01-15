@@ -46,12 +46,9 @@ public class OpenWebpageAction extends AbstractWidgetAction {
             hyperLink = "http://" + hyperLink; //$NON-NLS-1$
         }
         try {
-            if (SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                SingleSourceHelper.rapOpenWebPage(hyperLink);
-            else
-                PlatformUI.getWorkbench().getBrowserSupport()
-                        .createBrowser("opi_web_browser").openURL( //$NON-NLS-1$
-                                new URL(hyperLink));
+            PlatformUI.getWorkbench().getBrowserSupport()
+                    .createBrowser("opi_web_browser").openURL( //$NON-NLS-1$
+                            new URL(hyperLink));
         } catch (Exception e) {
             String message = NLS.bind("Failed to open the hyperlink: {0}\n{1}",
                     hyperLink, e);

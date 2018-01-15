@@ -9,7 +9,6 @@ import javax.script.ScriptEngineManager;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
-import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.simplepv.IPV;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.Platform;
@@ -66,13 +65,6 @@ public class ScriptStoreFactory {
         Context scriptContext = Context.enter();
         final Display display = Display.getCurrent();
         displayContextMap.put(display, scriptContext);
-        SingleSourceHelper.rapAddDisplayDisposeListener(display, new Runnable() {
-
-            @Override
-            public void run() {
-                displayContextMap.remove(display);
-            }
-        });
     }
 
     /**
@@ -84,13 +76,6 @@ public class ScriptStoreFactory {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("javascript");
         final Display display = Display.getCurrent();
         displayScriptEngineMap.put(display, engine);
-        SingleSourceHelper.rapAddDisplayDisposeListener(display, new Runnable() {
-
-            @Override
-            public void run() {
-                displayContextMap.remove(display);
-            }
-        });
     }
 
     /**

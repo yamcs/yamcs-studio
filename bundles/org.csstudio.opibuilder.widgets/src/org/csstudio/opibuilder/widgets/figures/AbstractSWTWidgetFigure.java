@@ -9,7 +9,6 @@ package org.csstudio.opibuilder.widgets.figures;
 
 import java.util.Map;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.datadefinition.WidgetIgnorableUITask;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
@@ -38,21 +37,20 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * The abstract figure for all SWT widget based figure. Note that there are
-some known issues regarding using SWT native widget in draw2D figure:
-<ul>
-<li>The order of SWT widget is always on top of draw2D figures.
-The order between between SWT widgets works but it is initialized during OPI startup,
-so change its order with change order action will only be reflected after reopen/run the opi. </li>
-<li>Moving/Resizing a SWT widget is much slower than draw2D figure</li>
-</ul>
-
+ * The abstract figure for all SWT widget based figure. Note that there are some known issues regarding using SWT native
+ * widget in draw2D figure:
+ * <ul>
+ * <li>The order of SWT widget is always on top of draw2D figures. The order between between SWT widgets works but it is
+ * initialized during OPI startup, so change its order with change order action will only be reflected after reopen/run
+ * the opi.</li>
+ * <li>Moving/Resizing a SWT widget is much slower than draw2D figure</li>
+ * </ul>
  *
+ * 
  * @author Xihui Chen
  *
  */
@@ -71,16 +69,16 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             control.setToolTipText(getConnectionText() + editPart.getWidgetModel()
                     .getTooltip());
         };
-        private String getConnectionText(){
-            if (editPart == null || editPart.getConnectionHandler() == null || editPart.getConnectionHandler().getToolTipText() == null){
-            return "";
+
+        private String getConnectionText() {
+            if (editPart == null || editPart.getConnectionHandler() == null
+                    || editPart.getConnectionHandler().getToolTipText() == null) {
+                return "";
             }
             return editPart.getConnectionHandler().getToolTipText();
         }
 
-
     }
-
 
     protected boolean runmode;
     protected AbstractBaseEditPart editPart;
@@ -102,35 +100,33 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
     private T swtWidget;
 
-    //The scale factor when it was last scaled.
-    private double lastScale =0;
+    // The scale factor when it was last scaled.
+    private double lastScale = 0;
 
-    /**Construct the figure with SWT.NONE as style bit.
-     * @param editpart the editpart that holds this figure
+    /**
+     * Construct the figure with SWT.NONE as style bit.
+     * 
+     * @param editpart
+     *            the editpart that holds this figure
      */
-    public AbstractSWTWidgetFigure(final AbstractBaseEditPart editpart){
+    public AbstractSWTWidgetFigure(final AbstractBaseEditPart editpart) {
         this(editpart, SWT.NONE);
     }
 
-    /**Construct the figure.
-     * @param editpart the editpart that holds this figure.
-     * @param style style of the SWT widget,
-     * which will be passed to {@link #createSWTWidget(Composite, int)}.
+    /**
+     * Construct the figure.
+     * 
+     * @param editpart
+     *            the editpart that holds this figure.
+     * @param style
+     *            style of the SWT widget, which will be passed to {@link #createSWTWidget(Composite, int)}.
      */
     public AbstractSWTWidgetFigure(final AbstractBaseEditPart editpart, final int style) {
         super();
         this.editPart = editpart;
         this.composite = (Composite) editpart.getViewer().getControl();
         // Disable tab traversal
-        this.composite.setTabList(new Control[]{});
-        //In RAP, FigureCanvas has an inner canvas wrapped, so everything should be on the inner canvas.
-        if(OPIBuilderPlugin.isRAP()){
-            Control[] children = composite.getChildren();
-             for(Control control : children){
-                 if(control instanceof Canvas)
-                     composite = (Composite) control;
-             }
-        }
+        this.composite.setTabList(new Control[] {});
         this.parentEditPart = editpart.getParent();
         this.runmode = editpart.getExecutionMode() == ExecutionMode.RUN_MODE;
 
@@ -141,9 +137,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             wrapComposite.moveAbove(null);
         }
 
-        swtWidget=createSWTWidget(getParentComposite(), style);
+        swtWidget = createSWTWidget(getParentComposite(), style);
 
-        editpart.addEditPartListener(new EditPartListener.Stub(){
+        editpart.addEditPartListener(new EditPartListener.Stub() {
             @Override
             public void partDeactivated(EditPart editpart) {
                 dispose();
@@ -168,24 +164,24 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             }
         });
 
-        //hook swt widget with GEF
+        // hook swt widget with GEF
         composite.getDisplay().asyncExec(new Runnable() {
 
             @Override
             public void run() {
-//                final Control swtWidget = getSWTWidget();
+                // final Control swtWidget = getSWTWidget();
                 if (swtWidget == null || swtWidget.isDisposed() || !editpart.isActive()) {
                     return;
-//                    throw new RuntimeException("getSWTWidget() is null or disposed!");
+                    // throw new RuntimeException("getSWTWidget() is null or disposed!");
                 }
-                //newly created widget on top
-                if(wrapComposite==null)
+                // newly created widget on top
+                if (wrapComposite == null)
                     swtWidget.moveAbove(null);
-//                if(!runmode)
-//                    swtWidget.setEnabled(false);
+                // if(!runmode)
+                // swtWidget.setEnabled(false);
                 // select the swt widget when menu about to show
 
-                MenuDetectListener menuDetectListener  = new MenuDetectListener() {
+                MenuDetectListener menuDetectListener = new MenuDetectListener() {
 
                     @Override
                     public void menuDetected(MenuDetectEvent e) {
@@ -201,7 +197,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                         .createContextMenu(composite));
             }
 
-            /**Add menu detect listener recursively to all children widgets inside the SWT Widget.
+            /**
+             * Add menu detect listener recursively to all children widgets inside the SWT Widget.
+             * 
              * @param swtWidget
              * @param menuDetectListener
              * @param toolTipListener
@@ -209,10 +207,10 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             private void hookGEFToSWTWidget(final Control swtWidget,
                     MenuDetectListener menuDetectListener) {
                 swtWidget.addMenuDetectListener(menuDetectListener);
-                SingleSourceHelper.swtWidgetAddMouseTrackListener(swtWidget,new ToolTipListener(swtWidget));
-                //hack for composite widget with multiple children.
-                if(swtWidget instanceof Composite){
-                    for(Control control : ((Composite)swtWidget).getChildren()){
+                SingleSourceHelper.swtWidgetAddMouseTrackListener(swtWidget, new ToolTipListener(swtWidget));
+                // hack for composite widget with multiple children.
+                if (swtWidget instanceof Composite) {
+                    for (Control control : ((Composite) swtWidget).getChildren()) {
                         hookGEFToSWTWidget(control, menuDetectListener);
                     }
                 }
@@ -224,32 +222,37 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
     /**
      * @return true if this widget is directly put on a display.
      */
-    private boolean isDirectlyOnDisplay(){
+    private boolean isDirectlyOnDisplay() {
         return parentEditPart instanceof DisplayEditpart;
     }
+
     @Override
     protected void layout() {
         super.layout();
         relocateWidget();
     }
 
-    /**Get the SWT widget on this figure.
+    /**
+     * Get the SWT widget on this figure.
+     * 
      * @return the SWT widget.
      */
-    public T getSWTWidget(){
+    public T getSWTWidget() {
         return swtWidget;
     }
 
-    /**Create the SWT widget.This method will be call in constructor
-     *  {@link #AbstractSWTWidgetFigure(AbstractBaseEditPart, int)}
-     * @param parent the parent composite.
-     * @param style style of the SWT widget,
-     * which is passed from the constructor
+    /**
+     * Create the SWT widget.This method will be call in constructor
      * {@link #AbstractSWTWidgetFigure(AbstractBaseEditPart, int)}
+     * 
+     * @param parent
+     *            the parent composite.
+     * @param style
+     *            style of the SWT widget, which is passed from the constructor
+     *            {@link #AbstractSWTWidgetFigure(AbstractBaseEditPart, int)}
      * @return the SWT widget.
      */
     abstract protected T createSWTWidget(Composite parent, int style);
-
 
     /**
      * @return the composite
@@ -264,7 +267,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
     @Override
     public void setCursor(Cursor cursor) {
         super.setCursor(cursor);
-        if (getSWTWidget() != null && !getSWTWidget().isDisposed()){
+        if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             getSWTWidget().setCursor(cursor);
         }
     }
@@ -272,9 +275,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
     @Override
     public void setEnabled(boolean value) {
         super.setEnabled(value);
-        if (getSWTWidget() != null && !getSWTWidget().isDisposed()){
+        if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             getSWTWidget().setEnabled(runmode && value);
-            if(wrapComposite != null)
+            if (wrapComposite != null)
                 wrapComposite.setEnabled(runmode && value);
         }
     }
@@ -314,7 +317,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
     @Override
     public void setForegroundColor(Color fg) {
-        if(!runmode)
+        if (!runmode)
             super.setForegroundColor(fg);
         if (getSWTWidget() != null && !getSWTWidget().isDisposed())
             getSWTWidget().setForeground(fg);
@@ -322,7 +325,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
     @Override
     public void setBackgroundColor(Color bg) {
-        if(!runmode)
+        if (!runmode)
             super.setBackgroundColor(bg);
         if (getSWTWidget() != null && !getSWTWidget().isDisposed())
             getSWTWidget().setBackground(bg);
@@ -335,18 +338,20 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         super.paintClientArea(graphics);
     }
 
-    /**Paint an outline figure so it can be viewed in outline view in edit mode.
-     * It is a white filled rectangle with gray border by default. Subclass may override it
-     * accordingly.
-     * @param graphics The Graphics used to paint
+    /**
+     * Paint an outline figure so it can be viewed in outline view in edit mode. It is a white filled rectangle with
+     * gray border by default. Subclass may override it accordingly.
+     * 
+     * @param graphics
+     *            The Graphics used to paint
      */
-    protected void paintOutlineFigure(Graphics graphics){
+    protected void paintOutlineFigure(Graphics graphics) {
         // draw this so that it can be seen in the outline view
         if (!runmode) {
             graphics.pushState();
             graphics.setBackgroundColor(ColorConstants.white);
             graphics.fillRectangle(getClientArea());
-            if(getBorder() == null){
+            if (getBorder() == null) {
                 graphics.setForegroundColor(ColorConstants.gray);
                 graphics.drawRectangle(getBounds());
             }
@@ -395,8 +400,8 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             getParent().translateToAbsolute(viewPortArea);
             translateToAbsolute(clientArea);
             isIntersectViewPort = viewPortArea.intersects(clientArea);
-//            isIntersectViewPort = getParent().getParent().getClientArea()
-//                    .intersects(getClientArea());
+            // isIntersectViewPort = getParent().getParent().getClientArea()
+            // .intersects(getClientArea());
         }
 
         GUIRefreshThread.getInstance(runmode).addIgnorableTask(
@@ -404,7 +409,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
 
                     @Override
                     public void run() {
-                        if(!getSWTWidget().isDisposed() && getParent() != null)
+                        if (!getSWTWidget().isDisposed() && getParent() != null)
                             doRelocateWidget();
                     }
                 }, composite.getDisplay()));
@@ -416,51 +421,51 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         Rectangle clientArea = getClientArea();
         Rectangle rect = clientArea.getCopy();
         translateToAbsolute(rect);
-        //scale the font if necessary
-        double scale = (double)rect.height/(double)clientArea.height;
-        if(Math.abs(scale-1) >0.05){
-            if(Math.abs(scale-lastScale) >=0.05){
+        // scale the font if necessary
+        double scale = (double) rect.height / (double) clientArea.height;
+        if (Math.abs(scale - 1) > 0.05) {
+            if (Math.abs(scale - lastScale) >= 0.05) {
                 FontData fontData = getFont().getFontData()[0];
                 FontData newFontData = new FontData(fontData.getName(),
-                        Math.max((int)(fontData.getHeight()*scale),0), fontData.getStyle());
+                        Math.max((int) (fontData.getHeight() * scale), 0), fontData.getStyle());
                 getSWTWidget().setFont(CustomMediaFactory.getInstance().getFont(newFontData));
-                lastScale=scale;
+                lastScale = scale;
             }
-        }else if(getSWTWidget().getFont() != getFont())
+        } else if (getSWTWidget().getFont() != getFont())
             getSWTWidget().setFont(getFont());
 
-        //The trim should not be added here
-//        if(getSWTWidget() instanceof Scrollable){
-//            org.eclipse.swt.graphics.Rectangle trim = ((Scrollable)getSWTWidget()).computeTrim(0,
-//                    0, 0, 0);
-//            rect.translate(trim.x, trim.y);
-//            rect.width += trim.width;
-//            rect.height += trim.height;
-//        }
+        // The trim should not be added here
+        // if(getSWTWidget() instanceof Scrollable){
+        // org.eclipse.swt.graphics.Rectangle trim = ((Scrollable)getSWTWidget()).computeTrim(0,
+        // 0, 0, 0);
+        // rect.translate(trim.x, trim.y);
+        // rect.width += trim.width;
+        // rect.height += trim.height;
+        // }
         if (wrapComposite != null
                 && getParent().getParent() instanceof Viewport) {
             Rectangle viewPortArea = getParent().getParent().getClientArea();
             getParent().translateToAbsolute(viewPortArea);
-            clientArea=rect;
+            clientArea = rect;
             isIntersectViewPort = viewPortArea.intersects(clientArea);
             if (isIntersectViewPort) {
                 // if the SWT widget is cut by viewPort
                 if (!viewPortArea.contains(clientArea)) {
                     Rectangle intersection = viewPortArea.getIntersection(clientArea);
                     org.eclipse.swt.graphics.Rectangle oldBounds = wrapComposite.getBounds();
-                    if (oldBounds.x != (rect.x + intersection.x    - clientArea.x) ||
-                            oldBounds.y != (rect.y + intersection.y    - clientArea.y) ||
-                            oldBounds.width != intersection.width || oldBounds.height != intersection.height){
+                    if (oldBounds.x != (rect.x + intersection.x - clientArea.x) ||
+                            oldBounds.y != (rect.y + intersection.y - clientArea.y) ||
+                            oldBounds.width != intersection.width || oldBounds.height != intersection.height) {
                         wrapComposite.setBounds(
-                                rect.x + intersection.x    - clientArea.x,
-                                rect.y + intersection.y    - clientArea.y,
+                                rect.x + intersection.x - clientArea.x,
+                                rect.y + intersection.y - clientArea.y,
                                 intersection.width,
                                 intersection.height);
                     }
                     oldBounds = getSWTWidget().getBounds();
                     if (oldBounds.x != (clientArea.x - intersection.x) ||
                             oldBounds.y != (clientArea.y - intersection.y) ||
-                            oldBounds.width != rect.width || oldBounds.height != rect.height){
+                            oldBounds.width != rect.width || oldBounds.height != rect.height) {
                         getSWTWidget().setBounds(clientArea.x - intersection.x,
                                 clientArea.y - intersection.y, rect.width, rect.height);
                     }
@@ -499,8 +504,8 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
     }
 
     /**
-     * Dispose SWT widget. The SWT widget will be automatically disposed when widget
-     * editpart is deactivated. Subclass should not dispose the SWT widget again.
+     * Dispose SWT widget. The SWT widget will be automatically disposed when widget editpart is deactivated. Subclass
+     * should not dispose the SWT widget again.
      */
     protected void dispose() {
         if (updateFlag && updateManagerListener != null)
@@ -525,13 +530,13 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                     if (!getSWTWidget().isDisposed()) {
                         getSWTWidget().setMenu(null);
                         getSWTWidget().dispose();
-//                        composite.update();
+                        // composite.update();
                     }
                 }
             };
         }
-        //On windows, dispose the widget right away will cause a redraw which may redraw some widgets that
-        //have been deactivated, so this should be called in next UI event.
+        // On windows, dispose the widget right away will cause a redraw which may redraw some widgets that
+        // have been deactivated, so this should be called in next UI event.
         composite.getDisplay().asyncExec(task);
     }
 

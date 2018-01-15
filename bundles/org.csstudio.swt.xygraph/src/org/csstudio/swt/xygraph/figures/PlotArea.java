@@ -14,7 +14,6 @@ import org.csstudio.swt.xygraph.linearscale.Range;
 import org.csstudio.swt.xygraph.undo.SaveStateCommand;
 import org.csstudio.swt.xygraph.undo.ZoomCommand;
 import org.csstudio.swt.xygraph.undo.ZoomType;
-import org.csstudio.swt.xygraph.util.SWTConstants;
 import org.csstudio.swt.xygraph.util.XYGraphMediaFactory;
 import org.csstudio.swt.xygraph.util.XYGraphMediaFactory.CURSOR_TYPE;
 import org.eclipse.draw2d.Figure;
@@ -24,6 +23,7 @@ import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.RGB;
@@ -40,9 +40,9 @@ public class PlotArea extends Figure {
 
     public static final String BACKGROUND_COLOR = "backgroundColor"; //$NON-NLS-1$
     final private XYGraph xyGraph;
-    final private List<Trace> traceList = new ArrayList<Trace>();
-    final private List<Grid> gridList = new ArrayList<Grid>();
-    final private List<Annotation> annotationList = new ArrayList<Annotation>();
+    final private List<Trace> traceList = new ArrayList<>();
+    final private List<Grid> gridList = new ArrayList<>();
+    final private List<Annotation> annotationList = new ArrayList<>();
     final private HoverLabels hoverLabels;
     final private AxisTrace axisTrace;
 
@@ -86,7 +86,7 @@ public class PlotArea extends Figure {
 
     @Override
     public void setBackgroundColor(final Color bg) {
-        //System.out.println("**** PlotArea.setBackgroundColor() ****");
+        // System.out.println("**** PlotArea.setBackgroundColor() ****");
         RGB backRGB = bg.getRGB();
         revertBackColor = XYGraphMediaFactory.getInstance().getColor(
                 255 - backRGB.red, 255 - backRGB.green, 255 - backRGB.blue);
@@ -178,8 +178,8 @@ public class PlotArea extends Figure {
         add(annotation);
         revalidate();
 
-        //Laurent PHILIPPE send event
-        firePropertyChange("annotationList", null , annotation);
+        // Laurent PHILIPPE send event
+        firePropertyChange("annotationList", null, annotation);
     }
 
     /**
@@ -198,7 +198,7 @@ public class PlotArea extends Figure {
             remove(annotation);
             revalidate();
 
-            //Laurent PHILIPPE send event
+            // Laurent PHILIPPE send event
             firePropertyChange("annotationList", annotation, null);
         }
         return result;
@@ -217,11 +217,11 @@ public class PlotArea extends Figure {
             if (grid != null && grid.isVisible())
                 grid.setBounds(clientArea);
         }
-        if(hoverLabels.isVisible()) {
+        if (hoverLabels.isVisible()) {
             hoverLabels.setBounds(clientArea);
         }
 
-        if(axisTrace.isVisible()) {
+        if (axisTrace.isVisible()) {
             axisTrace.setBounds(clientArea);
         }
 
@@ -248,7 +248,7 @@ public class PlotArea extends Figure {
             case RUBBERBAND_ZOOM:
             case HORIZONTAL_ZOOM:
             case VERTICAL_ZOOM:
-                graphics.setLineStyle(SWTConstants.LINE_DOT);
+                graphics.setLineStyle(SWT.LINE_DOT);
                 graphics.setLineWidth(1);
                 graphics.setForegroundColor(revertBackColor);
                 graphics.drawRectangle(start.x, start.y, end.x - start.x, end.y
@@ -311,25 +311,23 @@ public class PlotArea extends Figure {
             }
     }
 
-    /** _If_ this is a time-based plot, disabled scrolling
+    /**
+     * _If_ this is a time-based plot, disabled scrolling
      *
-     *  <p>Checks if there's any time-based X axis.
-     *  If so, disable scrolling.
+     * <p>
+     * Checks if there's any time-based X axis. If so, disable scrolling.
      *
-     *  <p>For plots that don't have a time axis,
-     *  scrolling doesn't really apply but it is used
-     *  internally to allow display updates, which should
-     *  continue for a non-time-based plot.
+     * <p>
+     * For plots that don't have a time axis, scrolling doesn't really apply but it is used internally to allow display
+     * updates, which should continue for a non-time-based plot.
      */
-    private void disableTimebasedScrolling()
-    {
-       for (Axis axis : xyGraph.getXAxisList())
-           if (axis.isDateEnabled())
-           {
-               xyGraph.getEventManager().setScrollingDisabled(false);
-               return;
-           }
-       // No time axis found, leave scrolling untouched
+    private void disableTimebasedScrolling() {
+        for (Axis axis : xyGraph.getXAxisList())
+            if (axis.isDateEnabled()) {
+                xyGraph.getEventManager().setScrollingDisabled(false);
+                return;
+            }
+        // No time axis found, leave scrolling untouched
     }
 
     /**
@@ -347,17 +345,17 @@ public class PlotArea extends Figure {
     }
 
     /**
-     * Listener to mouse events, performs panning and some zooms Is very similar
-     * to the Axis.AxisMouseListener, but unclear how easy/useful it would be to
-     * base them on the same code.
+     * Listener to mouse events, performs panning and some zooms Is very similar to the Axis.AxisMouseListener, but
+     * unclear how easy/useful it would be to base them on the same code.
      */
     class PlotMouseListener extends MouseMotionListener.Stub implements
             MouseListener {
-        final private List<Range> xAxisStartRangeList = new ArrayList<Range>();
-        final private List<Range> yAxisStartRangeList = new ArrayList<Range>();
+        final private List<Range> xAxisStartRangeList = new ArrayList<>();
+        final private List<Range> yAxisStartRangeList = new ArrayList<>();
 
         private SaveStateCommand command;
 
+        @Override
         public void mousePressed(final MouseEvent me) {
             // Only react to 'main' mouse button, only react to 'real' zoom
             if (me.button != 1 || zoomType == ZoomType.NONE)
@@ -398,6 +396,7 @@ public class PlotArea extends Figure {
                 end = new Point();
                 // Start timer that will zoom while mouse button is pressed
                 Display.getCurrent().timerExec(Axis.ZOOM_SPEED, new Runnable() {
+                    @Override
                     public void run() {
                         if (!armed)
                             return;
@@ -416,6 +415,7 @@ public class PlotArea extends Figure {
             me.consume();
         }
 
+        @Override
         public void mouseDoubleClicked(final MouseEvent me) { /* Ignored */
         }
 
@@ -458,6 +458,7 @@ public class PlotArea extends Figure {
             }
         }
 
+        @Override
         public void mouseReleased(final MouseEvent me) {
             if (!armed)
                 return;
@@ -578,7 +579,8 @@ public class PlotArea extends Figure {
     /**
      * Shows or hides the hover value labels.
      *
-     * @param show true to show, false to hide
+     * @param show
+     *            true to show, false to hide
      */
     public void setShowValueLabels(boolean show) {
         boolean old = showValueLabels;
@@ -598,7 +600,8 @@ public class PlotArea extends Figure {
     /**
      * Shows or hides the axis traces.
      *
-     * @param show true to show, false to hide
+     * @param show
+     *            true to show, false to hide
      */
     public void setShowAxisTrace(boolean show) {
         boolean old = showAxisTrace;

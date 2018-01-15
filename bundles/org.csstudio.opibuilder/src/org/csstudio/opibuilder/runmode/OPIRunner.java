@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.CompactModeAction;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.util.WorkbenchWindowService;
@@ -83,8 +82,6 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
         opiRuntimeDelegate.createGUI(parent);
         // if this is the first OPI in this window, resize the window to match the OPI size.
         // Make it in compact mode if it is configured.
-        if (OPIBuilderPlugin.isRAP())
-            return;
         Display.getCurrent().asyncExec(new Runnable() {
 
             @Override

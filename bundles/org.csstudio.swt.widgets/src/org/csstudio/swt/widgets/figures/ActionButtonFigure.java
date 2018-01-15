@@ -309,10 +309,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                     label.setIcon(image);
                 else {
                     if(grayImage == null)
-                        if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                            grayImage = image;
-                        else
-                            grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
+                        grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
                     label.setIcon(grayImage);
                 }
             }
@@ -345,10 +342,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                     label.setIcon(image);
                 else{
                     if(grayImage == null && image != null)
-                        if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                            grayImage = image;
-                        else
-                            grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
+                        grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
                     label.setIcon(grayImage);
                 }
                 calculateTextPosition();
@@ -371,10 +365,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             label.setIcon(image);
         else{
             if(grayImage == null && image != null)
-                if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                    grayImage = image;
-                else
-                    grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
+                grayImage = new Image(null, image, SWTConstants.IMAGE_GRAY);
             label.setIcon(grayImage);
         }
         calculateTextPosition();

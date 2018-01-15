@@ -52,11 +52,6 @@ public class PlayWavFileAction extends AbstractWidgetAction {
 
     @Override
     public void run() {
-        if(SWT.getPlatform().startsWith("rap")){ //$NON-NLS-1$
-            SingleSourceHelper.rapPlayWavFile(getAbsolutePath());
-            return;
-        }
-
         Job job = new Job("Play wave file") {
 
             @Override

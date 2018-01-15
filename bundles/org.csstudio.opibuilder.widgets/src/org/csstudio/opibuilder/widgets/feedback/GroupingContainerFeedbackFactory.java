@@ -13,7 +13,6 @@ import java.util.List;
 import org.csstudio.opibuilder.feedback.DefaultGraphicalFeedbackFactory;
 import org.csstudio.opibuilder.widgets.actions.LockUnlockChildrenAction;
 import org.csstudio.opibuilder.widgets.editparts.GroupingContainerEditPart;
-import org.csstudio.swt.xygraph.util.SWTConstants;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.draw2d.Cursors;
@@ -30,29 +29,30 @@ import org.eclipse.gef.Handle;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.tools.DragEditPartsTracker;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-/**Feedback Factory for Grouping Contianer
+/**
+ * Feedback Factory for Grouping Contianer
+ * 
  * @author Xihui Chen
  *
  */
 public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFactory {
 
-
     @Override
     public List<Handle> createCustomHandles(GraphicalEditPart editPart) {
 
-        if(editPart instanceof GroupingContainerEditPart){
+        if (editPart instanceof GroupingContainerEditPart) {
             Handle handle = new LockIndicatorHandle(editPart);
             return Arrays.asList(handle);
         }
         return super.createCustomHandles(editPart);
     }
 
-
-    private final static class LockIndicatorHandle extends AbstractHandle{
+    private final static class LockIndicatorHandle extends AbstractHandle {
 
         private static final Color handleBackColor = CustomMediaFactory.getInstance().getColor(255, 255, 150);
         private static final Color handleForeColor = CustomMediaFactory.getInstance().getColor(77, 77, 77);
@@ -70,7 +70,7 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
                     Rectangle targetBounds = ownerFigure.getBounds().getCopy();
                     ownerFigure.translateToAbsolute(targetBounds);
                     target.translateToRelative(targetBounds);
-                    targetBounds.expand(preferedSize.height,preferedSize.height);
+                    targetBounds.expand(preferedSize.height, preferedSize.height);
                     target.setBounds(targetBounds);
                 }
             });
@@ -79,30 +79,29 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
 
         }
 
-
-
-        private Dimension getTextExtent(){
-            if(textExtents == null)
-                textExtents = Draw2dSingletonUtil.getTextUtilities().getTextExtents(((GroupingContainerEditPart) getOwner())
-                        .getWidgetModel().isLocked() ? LOCKED : UNLOCKED, getFont());
+        private Dimension getTextExtent() {
+            if (textExtents == null)
+                textExtents = Draw2dSingletonUtil.getTextUtilities()
+                        .getTextExtents(((GroupingContainerEditPart) getOwner())
+                                .getWidgetModel().isLocked() ? LOCKED : UNLOCKED, getFont());
             return textExtents;
         }
 
         @Override
         protected DragTracker createDragTracker() {
-            DragEditPartsTracker tracker = new DragEditPartsTracker(getOwner()){
+            DragEditPartsTracker tracker = new DragEditPartsTracker(getOwner()) {
                 @Override
                 protected boolean handleButtonDown(int button) {
 
-                    if((button == 1 || button==3) &&
-                            getOwner() instanceof GroupingContainerEditPart){
-                        IWorkbenchPart activePart = PlatformUI.getWorkbench().
-                                getActiveWorkbenchWindow().getActivePage().getActivePart();
+                    if ((button == 1 || button == 3) &&
+                            getOwner() instanceof GroupingContainerEditPart) {
+                        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                                .getActivePart();
 
                         CommandStack commandStack = activePart.getAdapter(CommandStack.class);
-                            if(commandStack != null)
-                                commandStack.execute(LockUnlockChildrenAction.createLockUnlockCommand
-                                        (((GroupingContainerEditPart)getOwner()).getWidgetModel()));
+                        if (commandStack != null)
+                            commandStack.execute(LockUnlockChildrenAction.createLockUnlockCommand(
+                                    ((GroupingContainerEditPart) getOwner()).getWidgetModel()));
                     }
                     return true;
                 }
@@ -118,27 +117,24 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
                     .getWidgetModel().isLocked();
             graphics.setForegroundColor(handleForeColor);
 
-            if(locked){
-
-                graphics.setLineStyle(SWTConstants.LINE_DOT);
-                graphics.drawRectangle(getBounds().getCopy().shrink(getTextExtent().height-3,getTextExtent().height-3));
-                }
+            if (locked) {
+                graphics.setLineStyle(SWT.LINE_DOT);
+                graphics.drawRectangle(
+                        getBounds().getCopy().shrink(getTextExtent().height - 3, getTextExtent().height - 3));
+            }
             Point textLocation = getTextLocation();
             graphics.setBackgroundColor(handleBackColor);
             graphics.setAlpha(180);
-            graphics.fillRectangle(textLocation.x-2, textLocation.y,
-                    getTextExtent().width+4, getTextExtent().height);
+            graphics.fillRectangle(textLocation.x - 2, textLocation.y,
+                    getTextExtent().width + 4, getTextExtent().height);
             graphics.setAlpha(250);
             graphics.drawText(locked ? LOCKED : UNLOCKED, textLocation);
 
-
         }
-
-
 
         private Point getTextLocation() {
             return getLocation().translate(
-                    getTextExtent().height,0);
+                    getTextExtent().height, 0);
         }
 
         @Override
@@ -152,8 +148,6 @@ public class GroupingContainerFeedbackFactory extends DefaultGraphicalFeedbackFa
         public Dimension getPreferredSize(int wHint, int hHint) {
             return getTextExtent();
         }
-
-
 
     }
 

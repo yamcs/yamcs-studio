@@ -10,7 +10,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -40,7 +39,6 @@ import org.eclipse.swt.widgets.Text;
 @Deprecated
 public class NativeTextEditpart extends TextInputEditpart {
 
-
     private Text text;
 
     @Override
@@ -52,24 +50,24 @@ public class NativeTextEditpart extends TextInputEditpart {
     protected IFigure doCreateFigure() {
         initFields();
 
-        int style=SWT.NONE;
+        int style = SWT.NONE;
         NativeTextModel model = getWidgetModel();
-        if(model.isShowNativeBorder())
+        if (model.isShowNativeBorder())
             style |= SWT.BORDER;
-        if(model.isMultilineInput()){
+        if (model.isMultilineInput()) {
             style |= SWT.MULTI;
-            if(model.isShowHScroll())
+            if (model.isShowHScroll())
                 style |= SWT.H_SCROLL;
-            if(model.isShowVScroll())
+            if (model.isShowVScroll())
                 style |= SWT.V_SCROLL;
-            if(model.isWrapWords())
+            if (model.isWrapWords())
                 style |= SWT.WRAP;
-        }else{
+        } else {
             style |= SWT.SINGLE;
-            if(model.isPasswordInput())
+            if (model.isPasswordInput())
                 style |= SWT.PASSWORD;
         }
-        if(model.isReadOnly())
+        if (model.isReadOnly())
             style |= SWT.READ_ONLY;
         switch (model.getHorizontalAlignment()) {
         case CENTER:
@@ -87,8 +85,8 @@ public class NativeTextEditpart extends TextInputEditpart {
         final NativeTextFigure figure = new NativeTextFigure(this, style);
         text = figure.getSWTWidget();
 
-        if(!model.isReadOnly()){
-            if(model.isMultilineInput()){
+        if (!model.isReadOnly()) {
+            if (model.isMultilineInput()) {
                 text.addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyPressed(KeyEvent keyEvent) {
@@ -97,23 +95,23 @@ public class NativeTextEditpart extends TextInputEditpart {
                                     && (text.getStyle() & SWT.MULTI) != 0) {
                                 if ((keyEvent.stateMask & SWT.CTRL) != 0) {
                                     outputText(text.getText());
-                                  keyEvent.doit=false;
-                                  text.getShell().setFocus();
+                                    keyEvent.doit = false;
+                                    text.getShell().setFocus();
                                 }
                             }
 
                         }
                     }
                 });
-            }else {
-                text.addListener (SWT.DefaultSelection, new Listener () {
+            } else {
+                text.addListener(SWT.DefaultSelection, new Listener() {
                     @Override
-                    public void handleEvent (Event e) {
+                    public void handleEvent(Event e) {
                         outputText(text.getText());
                         switch (getWidgetModel().getFocusTraverse()) {
                         case LOSE:
-                             text.getShell().setFocus();
-                             break;
+                            text.getShell().setFocus();
+                            break;
                         case NEXT:
                             SingleSourceHelper.swtControlTraverse(text, SWT.TRAVERSE_TAB_PREVIOUS);
                             break;
@@ -127,11 +125,11 @@ public class NativeTextEditpart extends TextInputEditpart {
                     }
                 });
             }
-            //Recover text if editing aborted.
+            // Recover text if editing aborted.
             text.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent keyEvent) {
-                    if(keyEvent.character == SWT.ESC){
+                    if (keyEvent.character == SWT.ESC) {
                         text.setText(getWidgetModel().getText());
                     }
                 }
@@ -139,10 +137,9 @@ public class NativeTextEditpart extends TextInputEditpart {
             text.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    //On mobile, lost focus should output text since there is not enter hit or ctrl key.
-                    if(getPV() != null && !OPIBuilderPlugin.isMobile(text.getDisplay()))
+                    if (getPV() != null)
                         text.setText(getWidgetModel().getText());
-                    else if(figure.isEnabled())
+                    else if (figure.isEnabled())
                         outputText(text.getText());
                 }
             });
@@ -154,14 +151,13 @@ public class NativeTextEditpart extends TextInputEditpart {
     }
 
     protected void outputText(String newValue) {
-        if(getPV() == null){
+        if (getPV() == null) {
             setPropertyValue(NativeTextModel.PROP_TEXT, newValue);
             outputPVValue(newValue);
-        }
-        else{
-            //PV may not be changed instantly, so recover it to old text first.
+        } else {
+            // PV may not be changed instantly, so recover it to old text first.
             text.setText(getWidgetModel().getText());
-            //Write PV and update the text with new PV value if writing succeed.
+            // Write PV and update the text with new PV value if writing succeed.
             outputPVValue(newValue);
         }
     }
@@ -176,14 +172,12 @@ public class NativeTextEditpart extends TextInputEditpart {
         getWidgetModel().setPropertyVisible(NativeTextModel.PROP_PASSWORD_INPUT, !isMulti);
     }
 
-
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        if(getExecutionMode()==ExecutionMode.RUN_MODE)
-            installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,    null);
+        if (getExecutionMode() == ExecutionMode.RUN_MODE)
+            installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, null);
     }
-
 
     @Override
     protected void setFigureText(String text) {
@@ -204,7 +198,7 @@ public class NativeTextEditpart extends TextInputEditpart {
         };
 
         getWidgetModel().getProperty(NativeTextModel.PROP_MULTILINE_INPUT)
-            .addPropertyChangeListener(updatePropSheetListener);
+                .addPropertyChangeListener(updatePropSheetListener);
 
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
 
@@ -239,8 +233,7 @@ public class NativeTextEditpart extends TextInputEditpart {
 
     @Override
     protected void performAutoSize() {
-        getWidgetModel().setSize(((NativeTextFigure)getFigure()).
-                getAutoSizeDimension());
+        getWidgetModel().setSize(((NativeTextFigure) getFigure()).getAutoSizeDimension());
     }
 
     @Override
@@ -251,13 +244,10 @@ public class NativeTextEditpart extends TextInputEditpart {
     @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class key) {
-        if(key == ITextFigure.class)
+        if (key == ITextFigure.class)
             return getFigure();
 
         return super.getAdapter(key);
     }
-
-
-
 
 }

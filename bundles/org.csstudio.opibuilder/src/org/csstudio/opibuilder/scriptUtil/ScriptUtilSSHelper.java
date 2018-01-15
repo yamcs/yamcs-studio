@@ -1,7 +1,6 @@
 package org.csstudio.opibuilder.scriptUtil;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.opibuilder.util.ImplementationLoader;
 
 /**
  * Single source helper for Script Utils. The IMPL is allowed to be NULL.
@@ -11,8 +10,7 @@ import org.csstudio.opibuilder.util.ImplementationLoader;
  */
 public abstract class ScriptUtilSSHelper {
 
-    private static final ScriptUtilSSHelper IMPL = (ScriptUtilSSHelper) ImplementationLoader.newInstance(
-            ScriptUtilSSHelper.class, false);
+    private static final ScriptUtilSSHelper IMPL = new ScriptUtilSSHelperImpl();
 
     public static ScriptUtilSSHelper getIMPL() {
         return IMPL;

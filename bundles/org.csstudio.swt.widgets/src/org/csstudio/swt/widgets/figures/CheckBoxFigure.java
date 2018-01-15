@@ -36,13 +36,14 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+
 /**
  * Figure for a check box.
  *
  * @author Xihui Chen
  *
  */
-public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigure{
+public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigure {
 
     private TotalBits totalBits = TotalBits.BITS_64;
 
@@ -56,12 +57,10 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
 
     protected boolean boolValue = false;
 
-
-        /**
+    /**
      * Listeners that react on manual boolean value change events.
      */
-    private List<IManualValueChangeListener> boolControlListeners =
-        new ArrayList<IManualValueChangeListener>();
+    private List<IManualValueChangeListener> boolControlListeners = new ArrayList<>();
 
     private boolean runMode;
 
@@ -69,7 +68,7 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
 
     private Boolean support3d;
 
-    private Color selectedColor=ColorConstants.darkGray;
+    private Color selectedColor = ColorConstants.darkGray;
 
     private BoxFigure boxFigure;
 
@@ -77,20 +76,21 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         this.runMode = runMode;
         boxFigure = new BoxFigure();
         setContents(boxFigure);
-        if(!runMode)
+        if (!runMode)
             setEventHandler(null);
         else
             setCursor(Cursors.HAND);
         addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent event) {
-                if(runMode){
+                if (runMode) {
                     fireManualValueChange(!boolValue);
                 }
             }
         });
 
-        if (runMode && !Activator.isRAP()){
+        if (runMode) {
             addMouseMotionListener(new MouseMotionListener.Stub() {
 
                 @Override
@@ -110,18 +110,20 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         }
     }
 
-    /**add a boolean control listener which will be executed when pressed or released
-     * @param listener the listener to add
+    /**
+     * add a boolean control listener which will be executed when pressed or released
+     * 
+     * @param listener
+     *            the listener to add
      */
-    public void addManualValueChangeListener(final IManualValueChangeListener listener){
+    public void addManualValueChangeListener(final IManualValueChangeListener listener) {
         boolControlListeners.add(listener);
     }
 
-    public void removeManualValueChangeListener(final IManualValueChangeListener listener){
-        if(boolControlListeners.contains(listener))
+    public void removeManualValueChangeListener(final IManualValueChangeListener listener) {
+        if (boolControlListeners.contains(listener))
             boolControlListeners.remove(listener);
     }
-
 
     /**
      * Inform all boolean control listeners, that the manual value has changed.
@@ -175,20 +177,19 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         return runMode;
     }
 
-
-
     /**
-     * @param bit the bit to set
+     * @param bit
+     *            the bit to set
      */
     public void setBit(int bit) {
-        if(this.bit == bit)
+        if (this.bit == bit)
             return;
         this.bit = bit;
         updateBoolValue();
     }
 
     public void setBoolValue(boolean boolValue) {
-        if(this.boolValue == boolValue)
+        if (this.boolValue == boolValue)
             return;
         this.boolValue = boolValue;
         updateValue();
@@ -200,25 +201,25 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         repaint();
     }
 
-
     public void setSelectedColor(Color selectedColor) {
         this.selectedColor = selectedColor;
         repaint();
     }
 
     /**
-     * @param value the value to set
+     * @param value
+     *            the value to set
      */
     public void setValue(double value) {
-        setValue((long)value);
+        setValue((long) value);
     }
 
-
     /**
-     * @param value the value to set
+     * @param value
+     *            the value to set
      */
     public void setValue(long value) {
-        if(this.value == value)
+        if (this.value == value)
             return;
         this.value = value;
         updateBoolValue();
@@ -226,43 +227,41 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
     }
 
     /**
-     * update the boolValue from value and bit.
-     * All the boolValue based behavior changes should be implemented here by inheritance.
+     * update the boolValue from value and bit. All the boolValue based behavior changes should be implemented here by
+     * inheritance.
      */
     protected void updateBoolValue() {
-        //get boolValue
-        if(bit <0 )
+        // get boolValue
+        if (bit < 0)
             boolValue = (this.value != 0);
-        else if(bit >=0) {
-            boolValue = ((value>>bit)&1L) >0;
+        else if (bit >= 0) {
+            boolValue = ((value >> bit) & 1L) > 0;
         }
         repaint();
     }
-
 
     /**
      * update the value from boolValue
      */
     @SuppressWarnings("nls")
-    private void updateValue(){
-        //get boolValue
-        if(bit < 0)
+    private void updateValue() {
+        // get boolValue
+        if (bit < 0)
             setValue(boolValue ? 1 : 0);
-        else if(bit >=0) {
-            if(bit >= 64 ) {
+        else if (bit >= 0) {
+            if (bit >= 64) {
                 // Log with exception to obtain call stack
                 Activator.getLogger().log(Level.WARNING, "Bit " + bit + " exceeds 63.", new Exception());
-            }
-            else {
+            } else {
                 switch (totalBits) {
                 case BITS_16:
-                    setValue(boolValue? value | ((short)1<<bit) : value & ~((short)1<<bit));
-                break;
+                    setValue(boolValue ? value | ((short) 1 << bit) : value & ~((short) 1 << bit));
+                    break;
                 case BITS_32:
-                    setValue(boolValue? value | ((int)1<<bit) : value & ~((int)1<<bit));
-                break;
+                    setValue(boolValue ? value | ((int) 1 << bit) : value & ~((int) 1 << bit));
+                    break;
                 default:
-                    setValue(boolValue? value | (1L<<bit) : value & ~(1L<<bit));
+                    setValue(boolValue ? value | (1L << bit) : value & ~(1L << bit));
                     break;
                 }
             }
@@ -270,6 +269,7 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         repaint();
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new LabelWidgetIntrospector().getBeanInfo(this.getClass());
     }
@@ -281,17 +281,18 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
 
     }
 
+    @Override
     public String getText() {
         return text;
     }
-
 
     public TotalBits getTotalBits() {
         return totalBits;
     }
 
     /**
-     * @param totalBits number of total bits
+     * @param totalBits
+     *            number of total bits
      */
     public void setTotalBits(TotalBits totalBits) {
         this.totalBits = totalBits;
@@ -304,36 +305,35 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
         return d;
     }
 
-
-    class BoxFigure extends Figure{
+    class BoxFigure extends Figure {
         Dimension textSize;
 
         @Override
         protected void paintClientArea(Graphics graphics) {
-            if(support3d == null)
+            if (support3d == null)
                 support3d = GraphicsUtil.testPatternSupported(graphics);
             Rectangle clientArea = getClientArea();
-            Rectangle square = new Rectangle(clientArea.x, clientArea.y+clientArea.height/2 - BOX_SIZE/2,
+            Rectangle square = new Rectangle(clientArea.x, clientArea.y + clientArea.height / 2 - BOX_SIZE / 2,
                     BOX_SIZE, BOX_SIZE);
             graphics.pushState();
-            if(support3d)
+            if (support3d)
                 graphics.setBackgroundPattern(
-                    GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
-                            square.x, square.y+1,
-                            square.x, square.y+square.height,
-                            ColorConstants.white, graphics.getBackgroundColor()));
+                        GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(),
+                                square.x, square.y + 1,
+                                square.x, square.y + square.height,
+                                ColorConstants.white, graphics.getBackgroundColor()));
             graphics.fillRoundRectangle(square, 4, 4);
             graphics.setForegroundColor(
                     CustomMediaFactory.getInstance().getColor(130, 130, 130));
             graphics.drawRoundRectangle(square, 4, 4);
 
-            if(boolValue){
+            if (boolValue) {
                 graphics.translate(square.x, square.y);
                 graphics.setLineWidth(3);
                 graphics.setForegroundColor(selectedColor);
 
-                graphics.drawPolyline(new int[]{
-                        3, (int) (BOX_SIZE*0.45),  (int) (BOX_SIZE*0.45), BOX_SIZE*3/4-1, BOX_SIZE-2, 3
+                graphics.drawPolyline(new int[] {
+                        3, (int) (BOX_SIZE * 0.45), (int) (BOX_SIZE * 0.45), BOX_SIZE * 3 / 4 - 1, BOX_SIZE - 2, 3
                 });
             }
             graphics.popState();
@@ -342,11 +342,11 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
             if (!isEnabled()) {
                 graphics.translate(1, 1);
                 graphics.setForegroundColor(ColorConstants.buttonLightest);
-                graphics.drawText(text, square.getRight().getTranslated(GAP, -textSize.height/2));
+                graphics.drawText(text, square.getRight().getTranslated(GAP, -textSize.height / 2));
                 graphics.translate(-1, -1);
                 graphics.setForegroundColor(ColorConstants.buttonDarker);
             }
-            graphics.drawText(text, square.getRight().getTranslated(GAP, -textSize.height/2));
+            graphics.drawText(text, square.getRight().getTranslated(GAP, -textSize.height / 2));
 
             super.paintClientArea(graphics);
 
@@ -371,11 +371,10 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
             return Draw2dSingletonUtil.getTextUtilities().getTextExtents(text, getFont());
         }
 
-        protected Dimension getAutoSizeDimension(){
+        protected Dimension getAutoSizeDimension() {
             return getPreferredSize().getCopy().expand(
                     getInsets().getWidth(), getInsets().getHeight());
         }
     }
-
 
 }

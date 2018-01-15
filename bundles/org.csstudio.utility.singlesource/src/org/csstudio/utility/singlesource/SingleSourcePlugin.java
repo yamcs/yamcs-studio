@@ -7,78 +7,39 @@
  ******************************************************************************/
 package org.csstudio.utility.singlesource;
 
-import java.util.logging.Logger;
-
-import org.csstudio.utility.singlesource.UIHelper.UI;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.RegistryFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-/** API for obtaining single-source helper
+/**
+ * API for obtaining single-source helper
  *
- *  <p>Acts as plugin activator
+ * <p>
+ * Acts as plugin activator
  *
- *  @author Kay Kasemir
+ * @author Kay Kasemir
  */
-@SuppressWarnings("nls")
-public class SingleSourcePlugin implements BundleActivator
-{
-    /** Extension point ID for providing the helpers */
-    final public static String EXT_ID = "org.csstudio.utility.singlesource.helpers";
+public class SingleSourcePlugin implements BundleActivator {
 
     private static ResourceHelper resources;
 
     private static UIHelper ui;
 
-    /** {@inheritDoc} */
     @Override
-    public void start(final BundleContext context) throws Exception
-    {
-        // Registry lookup
-        final IExtensionRegistry registry = RegistryFactory.getRegistry();
-        final IConfigurationElement[] configs = registry.getConfigurationElementsFor(EXT_ID);
-        if (configs.length > 1)
-            throw new Exception("Found " + configs.length +
-                    " Single Source Helper implementations, expecting at most one");
-        if (configs.length == 1)
-        {   // Use implementations from extension point
-            Logger.getLogger(getClass().getName()).config("ResourceHelper provided by " + configs[0].getContributor().getName());
-            SingleSourcePlugin.resources = (ResourceHelper)
-                configs[0].createExecutableExtension("resources");
-            SingleSourcePlugin.ui = (UIHelper)
-                    configs[0].createExecutableExtension("ui");
-        }
-        else
-        {   // Use default implementations
-            SingleSourcePlugin.resources = new ResourceHelper();
-            SingleSourcePlugin.ui = new UIHelper();
-        }
+    public void start(BundleContext context) throws Exception {
+        resources = new ResourceHelper();
+        ui = new UIHelper();
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void stop(final BundleContext context) throws Exception
-    {
-        SingleSourcePlugin.resources = null;
+    public void stop(BundleContext context) throws Exception {
+        resources = null;
     }
 
-    /** @return {@link ResourceHelper} */
-    public static ResourceHelper getResourceHelper()
-    {
-        return SingleSourcePlugin.resources;
+    public static ResourceHelper getResourceHelper() {
+        return resources;
     }
 
-    /** @return {@link UIHelper} */
-    public static UIHelper getUIHelper()
-    {
-        return SingleSourcePlugin.ui;
-    }
-
-    /** @return <code>true</code> if this is running in RAP */
-    public static boolean isRAP()
-    {
-        return SingleSourcePlugin.ui.getUI() == UI.RAP;
+    public static UIHelper getUIHelper() {
+        return ui;
     }
 }

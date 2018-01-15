@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.csstudio.opibuilder.model.DisplayModel;
@@ -43,7 +42,9 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
 
-/**The editpart for the root display.
+/**
+ * The editpart for the root display.
+ * 
  * @author Sven Wende (class of same name in SDS)
  * @author Xihui Chen
  */
@@ -68,40 +69,24 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         super.activate();
         initProperties();
 
-        if(getExecutionMode() == ExecutionMode.RUN_MODE &&
-                getWidgetModel().getDisplayScaleData().isAutoScaleWidgets()){
+        if (getExecutionMode() == ExecutionMode.RUN_MODE &&
+                getWidgetModel().getDisplayScaleData().isAutoScaleWidgets()) {
             originSize = new org.eclipse.swt.graphics.Point(
                     getWidgetModel().getWidth(), getWidgetModel().getHeight());
-            oldSize=originSize;
+            oldSize = originSize;
             scaleListener = new ControlAdapter() {
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if(getViewer() == null || getViewer().getControl().isDisposed())
+                    if (getViewer() == null || getViewer().getControl().isDisposed())
                         return;
-                    org.eclipse.swt.graphics.Point size =
-                            getViewer().getControl().getSize();
-                    if(size.equals(oldSize))
+                    org.eclipse.swt.graphics.Point size = getViewer().getControl().getSize();
+                    if (size.equals(oldSize))
                         return;
-                    //In RAP, each revalidate will enlarge the shell by 1000, see
-                    //org.eclipse.rwt.internal.textsize.TextSizeRecalculation.enlargeShell(Shell shell)
-                    if(OPIBuilderPlugin.isRAP() && (size.x - oldSize.x) == 1000 && (size.y - oldSize.y) == 1000)
-                        return;
-                    double widthRatio = size.x /(double)originSize.x;
-                    double heightRatio = size.y/(double)originSize.y;
+                    double widthRatio = size.x / (double) originSize.x;
+                    double heightRatio = size.y / (double) originSize.y;
                     oldSize = size;
                     getWidgetModel().scale(widthRatio, heightRatio);
-//                    oldSize = size;
-                    //make sure the display figure repaint everything especially for RAP.
-                    if(OPIBuilderPlugin.isRAP())
-                        UIBundlingThread.getInstance().addRunnable(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                getFigure().revalidate();
-                                getFigure().repaint();
-
-                            }
-                        });
+                    // oldSize = size;
                 }
             };
             UIBundlingThread.getInstance().addRunnable(new Runnable() {
@@ -114,31 +99,26 @@ public class DisplayEditpart extends AbstractContainerEditpart {
             getViewer().getControl().addControlListener(scaleListener);
         }
 
-        if(getExecutionMode() == ExecutionMode.RUN_MODE && getWidgetModel().isAutoZoomToFitAll()){
+        if (getExecutionMode() == ExecutionMode.RUN_MODE && getWidgetModel().isAutoZoomToFitAll()) {
             originSize = new org.eclipse.swt.graphics.Point(
                     getWidgetModel().getWidth(), getWidgetModel().getHeight());
-            oldSize=originSize;
+            oldSize = originSize;
             zoomListener = new ControlAdapter() {
-                    @Override
-                    public void controlResized(ControlEvent e) {
-                        if(!isActive() || getViewer() == null || getViewer().getControl().isDisposed())
-                            return;
-                        org.eclipse.swt.graphics.Point size =
-                                ((Canvas)getViewer().getControl()).getSize();
-                        if(size.equals(oldSize))
-                            return;
-                        //In RAP, each revalidate will enlarge the shell by 1000, see
-                        //org.eclipse.rwt.internal.textsize.TextSizeRecalculation.enlargeShell(Shell shell)
-                        if(OPIBuilderPlugin.isRAP() && (size.x - oldSize.x) == 1000 && (size.y - oldSize.y) == 1000)
-                            return;
-                        if (size.x * size.y > 0) {
-                            DisplayModel displayModel = (DisplayModel)getModel();
-                            getZoomManager().getScalableFigure().setPreferredSize(displayModel.getSize());
-                            getZoomManager().setZoomAsText(Draw2dSingletonUtil.ZoomManager_FIT_ALL);
-                        }
-                        oldSize = size;
+                @Override
+                public void controlResized(ControlEvent e) {
+                    if (!isActive() || getViewer() == null || getViewer().getControl().isDisposed())
+                        return;
+                    org.eclipse.swt.graphics.Point size = ((Canvas) getViewer().getControl()).getSize();
+                    if (size.equals(oldSize))
+                        return;
+                    if (size.x * size.y > 0) {
+                        DisplayModel displayModel = (DisplayModel) getModel();
+                        getZoomManager().getScalableFigure().setPreferredSize(displayModel.getSize());
+                        getZoomManager().setZoomAsText(Draw2dSingletonUtil.ZoomManager_FIT_ALL);
                     }
-                };
+                    oldSize = size;
+                }
+            };
             UIBundlingThread.getInstance().addRunnable(new Runnable() {
 
                 @Override
@@ -151,7 +131,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         UIBundlingThread.getInstance().addRunnable(new Runnable() {
             @Override
             public void run() {
-                if(getViewer()!=null && getViewer().getControl() != null && !getViewer().getControl().isDisposed())
+                if (getViewer() != null && getViewer().getControl() != null && !getViewer().getControl().isDisposed())
                     getViewer().getControl().forceFocus();
             }
         });
@@ -162,7 +142,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
     public void deactivate() {
         final Control control = getViewer().getControl();
         if (getViewer() != null && !control.isDisposed()) {
-            //This needs to be executed in UI Thread
+            // This needs to be executed in UI Thread
             final ZoomManager zoomManager = getZoomManager();
             control.getDisplay().asyncExec(new Runnable() {
 
@@ -191,7 +171,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
     }
 
     private void initProperties() {
-        for(String prop_id : getWidgetModel().getAllPropertyIDs()){
+        for (String prop_id : getWidgetModel().getAllPropertyIDs()) {
             getWidgetModel().getProperty(prop_id).firePropertyChange(null,
                     getWidgetModel().getPropertyValue(prop_id));
         }
@@ -199,76 +179,76 @@ public class DisplayEditpart extends AbstractContainerEditpart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler backColorHandler = new IWidgetPropertyChangeHandler(){
+        IWidgetPropertyChangeHandler backColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(Object oldValue, Object newValue,
                     IFigure figure) {
-                figure.setBackgroundColor(((OPIColor)newValue).getSWTColor());
+                figure.setBackgroundColor(((OPIColor) newValue).getSWTColor());
                 getViewer().getControl().setBackground(
-                        CustomMediaFactory.getInstance().getColor(((OPIColor)newValue).getRGBValue()));
+                        CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
                 return false;
             }
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_COLOR_BACKGROUND, backColorHandler);
 
-        //grid
-        if(getExecutionMode() == ExecutionMode.EDIT_MODE){
-            IWidgetPropertyChangeHandler gridColorHandler = new IWidgetPropertyChangeHandler(){
+        // grid
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
+            IWidgetPropertyChangeHandler gridColorHandler = new IWidgetPropertyChangeHandler() {
                 @Override
                 public boolean handleChange(Object oldValue, Object newValue,
                         IFigure figure) {
-                    ((ScalableFreeformRootEditPart)getViewer().getRootEditPart())
-                    .getLayer(LayerConstants.GRID_LAYER).setForegroundColor(CustomMediaFactory.getInstance()
-                            .getColor(((OPIColor)newValue).getRGBValue()));
+                    ((ScalableFreeformRootEditPart) getViewer().getRootEditPart())
+                            .getLayer(LayerConstants.GRID_LAYER).setForegroundColor(CustomMediaFactory.getInstance()
+                                    .getColor(((OPIColor) newValue).getRGBValue()));
                     return false;
                 }
             };
             setPropertyChangeHandler(DisplayModel.PROP_COLOR_FOREGROUND, gridColorHandler);
 
-            IWidgetPropertyChangeHandler gridSpaceHandler = new IWidgetPropertyChangeHandler(){
+            IWidgetPropertyChangeHandler gridSpaceHandler = new IWidgetPropertyChangeHandler() {
                 @Override
                 public boolean handleChange(Object oldValue, Object newValue,
                         IFigure figure) {
                     getViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING,
-                            new Dimension((Integer)newValue, (Integer)newValue));
+                            new Dimension((Integer) newValue, (Integer) newValue));
                     return false;
                 }
             };
             setPropertyChangeHandler(DisplayModel.PROP_GRID_SPACE, gridSpaceHandler);
 
-            IWidgetPropertyChangeHandler showGridHandler = new IWidgetPropertyChangeHandler(){
+            IWidgetPropertyChangeHandler showGridHandler = new IWidgetPropertyChangeHandler() {
                 @Override
                 public boolean handleChange(Object oldValue, Object newValue,
                         IFigure figure) {
-                    getViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, (Boolean)newValue);
-                    getViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, (Boolean)newValue);
+                    getViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, (Boolean) newValue);
+                    getViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, (Boolean) newValue);
                     return false;
                 }
             };
             setPropertyChangeHandler(DisplayModel.PROP_SHOW_GRID, showGridHandler);
 
-            IWidgetPropertyChangeHandler showRulerHandler = new IWidgetPropertyChangeHandler(){
+            IWidgetPropertyChangeHandler showRulerHandler = new IWidgetPropertyChangeHandler() {
                 @Override
                 public boolean handleChange(Object oldValue, Object newValue,
                         IFigure figure) {
                     getViewer().setProperty(
-                            RulerProvider.PROPERTY_RULER_VISIBILITY, (Boolean)newValue);
+                            RulerProvider.PROPERTY_RULER_VISIBILITY, (Boolean) newValue);
                     return false;
                 }
             };
             setPropertyChangeHandler(DisplayModel.PROP_SHOW_RULER, showRulerHandler);
 
-            IWidgetPropertyChangeHandler snapGeoHandler = new IWidgetPropertyChangeHandler(){
+            IWidgetPropertyChangeHandler snapGeoHandler = new IWidgetPropertyChangeHandler() {
                 @Override
                 public boolean handleChange(Object oldValue, Object newValue,
                         IFigure figure) {
-                    getViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, (Boolean)newValue);
+                    getViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, (Boolean) newValue);
                     return false;
                 }
             };
             setPropertyChangeHandler(DisplayModel.PROP_SNAP_GEOMETRY, snapGeoHandler);
 
-            IWidgetPropertyChangeHandler showEditRangeHandler = new IWidgetPropertyChangeHandler(){
+            IWidgetPropertyChangeHandler showEditRangeHandler = new IWidgetPropertyChangeHandler() {
                 @Override
                 public boolean handleChange(Object oldValue, Object newValue,
                         IFigure figure) {
@@ -283,18 +263,12 @@ public class DisplayEditpart extends AbstractContainerEditpart {
     @Override
     protected IFigure doCreateFigure() {
 
-        Figure f = new FreeformLayer(){
+        Figure f = new FreeformLayer() {
             @Override
             protected void paintFigure(Graphics graphics) {
                 super.paintFigure(graphics);
-                if(OPIBuilderPlugin.isRAP()){
-                    if(!getBackgroundColor().getRGB().equals(CustomMediaFactory.COLOR_WHITE)){
-                        graphics.setBackgroundColor(getBackgroundColor());
-                        graphics.fillRectangle(getBounds());
-                    }
-                }
-                if(getExecutionMode() == ExecutionMode.EDIT_MODE &&
-                        ((DisplayModel)getModel()).isShowEditRange()){
+                if (getExecutionMode() == ExecutionMode.EDIT_MODE &&
+                        ((DisplayModel) getModel()).isShowEditRange()) {
                     graphics.pushState();
                     graphics.setLineStyle(SWTConstants.LINE_DASH);
                     graphics.setForegroundColor(ColorConstants.black);
@@ -304,7 +278,7 @@ public class DisplayEditpart extends AbstractContainerEditpart {
                 }
             }
         };
-//        f.setBorder(new MarginBorder(3));
+        // f.setBorder(new MarginBorder(3));
         f.setLayoutManager(new FreeformLayout());
 
         return f;
@@ -321,9 +295,9 @@ public class DisplayEditpart extends AbstractContainerEditpart {
         try {
             return super.getWidget(name);
         } catch (Exception e) {
-            //search from connection widgets
-            for(ConnectionModel conn : getWidgetModel().getConnectionList()){
-                if(conn.getName().equals(name))
+            // search from connection widgets
+            for (ConnectionModel conn : getWidgetModel().getConnectionList()) {
+                if (conn.getName().equals(name))
                     return (EditPart) getViewer().getEditPartRegistry().get(conn);
             }
             throw e;
@@ -333,9 +307,9 @@ public class DisplayEditpart extends AbstractContainerEditpart {
     private ZoomManager getZoomManager() {
         RootEditPart editpart = getRoot();
         if (editpart instanceof ScalableFreeformRootEditPart) {
-            return ((ScalableFreeformRootEditPart)editpart).getZoomManager();
+            return ((ScalableFreeformRootEditPart) editpart).getZoomManager();
         } else if (editpart instanceof ScalableRootEditPart) {
-            return ((ScalableRootEditPart)editpart).getZoomManager();
+            return ((ScalableRootEditPart) editpart).getZoomManager();
         }
         return null;
     }

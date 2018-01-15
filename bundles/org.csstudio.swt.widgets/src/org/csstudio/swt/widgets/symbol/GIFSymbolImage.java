@@ -400,10 +400,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
                 return;
             originalImageDataArray = dataArray;
             originalImageData = originalImageDataArray[0];
-            if (SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                animated = false;
-            else
-                animated = originalImageDataArray.length > 1;
+            animated = originalImageDataArray.length > 1;
         } catch (Exception e) {
             Activator.getLogger().log(Level.WARNING, "ERROR in loading PNG image " + imagePath, e);
         } finally {
@@ -464,10 +461,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
                         return;
                     originalImageDataArray = dataArray;
                     originalImageData = originalImageDataArray[0];
-                    if (SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                        animated = false;
-                    else
-                        animated = originalImageDataArray.length > 1;
+                    animated = originalImageDataArray.length > 1;
                     loadingImage = false;
                     resetData();
                     if (animated)

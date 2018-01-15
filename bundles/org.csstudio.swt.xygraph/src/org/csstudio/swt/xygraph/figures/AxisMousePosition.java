@@ -9,7 +9,6 @@ package org.csstudio.swt.xygraph.figures;
 
 import org.csstudio.swt.xygraph.Preferences;
 import org.csstudio.swt.xygraph.linearscale.LinearScale;
-import org.csstudio.swt.xygraph.util.GraphicsUtil;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
@@ -141,7 +140,8 @@ public class AxisMousePosition extends Figure implements MouseMotionListener, Mo
 
     @Override
     protected void paintClientArea(Graphics graphics) {
-        if (!isVisible()) return;
+        if (!isVisible())
+            return;
         graphics.translate(bounds.x, bounds.y);
 
         graphics.setAdvanced(use_advanced_graphics);
@@ -160,35 +160,42 @@ public class AxisMousePosition extends Figure implements MouseMotionListener, Mo
         super.paintClientArea(graphics);
     }
 
+    @Override
     public void mouseDragged(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseEntered(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseExited(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseHover(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseMoved(MouseEvent me) {
         handleMouseEvent(me);
     }
 
+    @Override
     public void mousePressed(MouseEvent me) {
-        if (GraphicsUtil.isRAP())
-            handleMouseEvent(me);
+        // NOP
     }
 
+    @Override
     public void mouseReleased(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseDoubleClicked(MouseEvent me) {
         // NOP
     }

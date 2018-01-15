@@ -29,17 +29,12 @@ public class AbstractRoundRampedFigure extends AbstractMarkedWidgetFigure {
     public AbstractRoundRampedFigure() {
         scale = new RoundScale();
         ramp = new RoundScaledRamp((RoundScale) scale);
-//        if(SWT.getPlatform().startsWith("rap"))//$NON-NLS-1$
-//            ramp.setVisible(false);
     }
 
     @Override
     public void setShowMarkers(boolean showMarkers) {
         super.setShowMarkers(showMarkers);
-//        if(SWT.getPlatform().startsWith("rap"))//$NON-NLS-1$
-//            ramp.setVisible(false);
-//        else
-            ramp.setVisible(showMarkers);
+        ramp.setVisible(showMarkers);
     }
 
     @Override

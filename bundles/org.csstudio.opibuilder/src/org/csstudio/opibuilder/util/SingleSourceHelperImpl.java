@@ -6,10 +6,8 @@ import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.PrintDisplayAction;
-import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.runmode.IOPIRuntime;
 import org.csstudio.opibuilder.runmode.OPIShell;
-import org.csstudio.opibuilder.runmode.OPIView;
 import org.csstudio.opibuilder.widgetActions.OpenFileAction;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
 import org.csstudio.ui.util.dialogs.ResourceSelectionDialog;
@@ -30,7 +28,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -148,60 +145,6 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
             return rsDialog.getSelectedResource();
         }
         return null;
-    }
-
-    //////////////////////////// RAP Related Stuff ///////////////////////////////
-
-    @Override
-    protected void iRapActivatebaseEditPart(AbstractBaseEditPart editPart) {
-
-    }
-
-    @Override
-    protected void iRapDeactivatebaseEditPart(AbstractBaseEditPart editPart) {
-
-    }
-
-    @Override
-    protected void iRapOpenOPIInNewWindow(IPath path) {
-
-    }
-
-    @Override
-    protected void iRapAddDisplayDisposeListener(Display display,
-            Runnable runnable) {
-
-    }
-
-    @Override
-    protected void iRapPlayWavFile(IPath absolutePath) {
-
-    }
-
-    @Override
-    protected void iRapOPIViewCreatePartControl(OPIView opiView,
-            Composite parent) {
-
-    }
-
-    @Override
-    protected void iRapPluginStartUp() {
-
-    }
-
-    @Override
-    protected void iRapOpenWebPage(String hyperLink) {
-
-    }
-
-    @Override
-    protected boolean iRapAuthenticate(Display display) {
-        return false;
-    }
-
-    @Override
-    protected boolean iRapIsLoggedIn(Display display) {
-        return false;
     }
 
     @Override

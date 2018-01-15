@@ -36,7 +36,7 @@ import org.diirt.datasource.PVWriter;
 import org.diirt.datasource.PVWriterConfiguration;
 import org.diirt.datasource.PVWriterEvent;
 import org.diirt.datasource.PVWriterListener;
-import org.diirt.util.time.TimeDuration;
+import org.diirt.util.TimeDuration;
 import org.diirt.vtype.VType;
 import org.eclipse.osgi.util.NLS;
 
@@ -48,13 +48,15 @@ import org.eclipse.osgi.util.NLS;
  */
 public class PVManagerPV implements IPV {
 
-    //Keep the exception handler separate from the PVManagerPV, to avoid
-    //memory leaks in case the client doesn't close this PV.
+    // Keep the exception handler separate from the PVManagerPV, to avoid
+    // memory leaks in case the client doesn't close this PV.
     private static class ExHandler extends ExceptionHandler {
         private final org.csstudio.simplepv.ExceptionHandler exceptionHandler;
+
         ExHandler(org.csstudio.simplepv.ExceptionHandler exceptionHandler) {
             this.exceptionHandler = exceptionHandler;
         }
+
         @Override
         public void handleException(Exception ex) {
             exceptionHandler.handleException(ex);
@@ -68,9 +70,9 @@ public class PVManagerPV implements IPV {
     private volatile PVReader<?> pvReader;
     private volatile PVWriter<Object> pvWriter;
     private int minUpdatePeriod;
-    //If start() has been called.
+    // If start() has been called.
     private AtomicBoolean startFlag = new AtomicBoolean(false);
-    //If the PV is during start
+    // If the PV is during start
     private AtomicBoolean starting = new AtomicBoolean(false);
     /**
      * If the pv is created for read only.
@@ -80,7 +82,6 @@ public class PVManagerPV implements IPV {
     private boolean isFormula;
     private static boolean debug = false;
     private static AtomicInteger counter = new AtomicInteger(0);
-
 
     /**
      * Construct a PVManger PV.
@@ -94,16 +95,14 @@ public class PVManagerPV implements IPV {
      * @param bufferAllValues
      *            if all value on the PV should be buffered during two updates.
      * @param notificationThread
-     *            the thread on which the read and write listener will be
-     *            notified. Must not be null.
+     *            the thread on which the read and write listener will be notified. Must not be null.
      * @param exceptionHandler
-     *            the handler to handle all exceptions happened in pv connection
-     *            layer. If this is null, pv read listener or pv write listener
-     *            will be notified on read or write exceptions respectively.
+     *            the handler to handle all exceptions happened in pv connection layer. If this is null, pv read
+     *            listener or pv write listener will be notified on read or write exceptions respectively.
      *
      */
     public PVManagerPV(final String name, final boolean readOnly,
-            final long minUpdatePeriodInMs,    final boolean bufferAllValues, final Executor notificationThread,
+            final long minUpdatePeriodInMs, final boolean bufferAllValues, final Executor notificationThread,
             final org.csstudio.simplepv.ExceptionHandler exceptionHandler) {
 
         this.name = name;
@@ -122,7 +121,7 @@ public class PVManagerPV implements IPV {
         isFormula = singleChannel == null;
         if (isFormula)
             valueBuffered = false; // the value from a formula cannot be
-                                    // buffered.
+                                   // buffered.
         else
             this.name = singleChannel;
 
@@ -137,8 +136,8 @@ public class PVManagerPV implements IPV {
                 notificationThread.execute(new Runnable() {
                     @Override
                     public void run() {
-                        //allows later added listener also get connectionChanged
-                        //and valueChanged event.
+                        // allows later added listener also get connectionChanged
+                        // and valueChanged event.
                         listener.connectionChanged(PVManagerPV.this);
                         listener.valueChanged(PVManagerPV.this);
                     }
@@ -158,8 +157,8 @@ public class PVManagerPV implements IPV {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<VType> getAllBufferedValues(){
-        if(pvReader == null)
+    public List<VType> getAllBufferedValues() {
+        if (pvReader == null)
             return null;
         Object obj = pvReader.getValue();
         if (obj != null) {
@@ -186,7 +185,7 @@ public class PVManagerPV implements IPV {
     @Override
     // This method should not be synchronized because it may cause deadlock.
     public VType getValue() {
-        if(pvReader == null)
+        if (pvReader == null)
             return null;
         Object obj = pvReader.getValue();
         if (obj != null) {
@@ -206,20 +205,19 @@ public class PVManagerPV implements IPV {
     }
 
     /**
-     * This method must be called in notification thread, because PVManager
-     * requires that creating PVReader, adding listeners must be done in the
-     * notification thread and must be in the same runnable to make sure no
-     * updates are missed.
+     * This method must be called in notification thread, because PVManager requires that creating PVReader, adding
+     * listeners must be done in the notification thread and must be in the same runnable to make sure no updates are
+     * missed.
      */
     private synchronized void internalStart() {
-        if(debug){
+        if (debug) {
             System.out.println("Start: " + counter.incrementAndGet());
         }
         final PVReaderListener<Object> pvReaderListener = new PVReaderListener<Object>() {
 
             @Override
             public void pvChanged(PVReaderEvent<Object> event) {
-                for(IPVListener l : listeners){
+                for (IPVListener l : listeners) {
                     if (event != null) {
                         if (event.isConnectionChanged())
                             l.connectionChanged(PVManagerPV.this);
@@ -282,11 +280,11 @@ public class PVManagerPV implements IPV {
                 }
             };
             PVWriterConfiguration<Object> writerConfiguration = PVManager.write(channel(name));
-            //TODO: PVManager could throw unnecessary exception when data source is read only
-            //See: https://github.com/ControlSystemStudio/cs-studio/issues/66
-            //Need to enable following line when above issue is fixed.
-            //        if(exceptionHandler != null)
-            //                writerConfiguration.routeExceptionsTo(exceptionHandler);
+            // TODO: PVManager could throw unnecessary exception when data source is read only
+            // See: https://github.com/ControlSystemStudio/cs-studio/issues/66
+            // Need to enable following line when above issue is fixed.
+            // if(exceptionHandler != null)
+            // writerConfiguration.routeExceptionsTo(exceptionHandler);
             pvWriter = writerConfiguration.writeListener(pvWriterListener).notifyOn(notificationThread).async();
 
         }
@@ -364,19 +362,19 @@ public class PVManagerPV implements IPV {
                     starting.set(false);
                 }
             });
-        }else
+        } else
             throw new IllegalStateException(
                     NLS.bind("PV {0} has already been started.", getName()));
     }
 
     @Override
     public void stop() {
-        if(!startFlag.get()){
+        if (!startFlag.get()) {
             Activator.getLogger().log(Level.WARNING,
                     NLS.bind("PV {0} has already been stopped or was not started yet.", getName()));
             return;
         }
-        if(starting.get()){
+        if (starting.get()) {
             notificationThread.execute(new Runnable() {
 
                 @Override
@@ -385,10 +383,11 @@ public class PVManagerPV implements IPV {
                 }
             });
             return;
-        };
-        if (pvReader != null){
+        }
+        ;
+        if (pvReader != null) {
             pvReader.close();
-            if(debug){
+            if (debug) {
                 System.out.println("Stop: " + counter.decrementAndGet());
             }
         }
@@ -402,7 +401,7 @@ public class PVManagerPV implements IPV {
 
     @Override
     public boolean setValue(Object value, int timeout) throws Exception {
-        final AtomicBoolean result=new AtomicBoolean();
+        final AtomicBoolean result = new AtomicBoolean();
         final CountDownLatch latch = new CountDownLatch(1);
         PVWriter<Object> pvWriter = PVManager.write(channel(name))
                 .timeout(TimeDuration.ofSeconds(timeout)).writeListener(
@@ -410,19 +409,20 @@ public class PVManagerPV implements IPV {
                             @Override
                             public void pvChanged(PVWriterEvent<Object> event) {
                                 latch.countDown();
-                                if(event.isWriteFailed()){
+                                if (event.isWriteFailed()) {
                                     result.set(false);
                                 }
-                                if(event.isWriteSucceeded())
+                                if (event.isWriteSucceeded())
                                     result.set(true);
                             }
-                        }).sync();
+                        })
+                .sync();
         try {
-            if(latch.await(timeout, TimeUnit.MILLISECONDS))
+            if (latch.await(timeout, TimeUnit.MILLISECONDS))
                 pvWriter.write(value);
             else
                 throw new Exception(NLS.bind("Failed to connect to the PV in {0} milliseconds.", timeout));
-        }finally{
+        } finally {
             pvWriter.close();
         }
         return result.get();

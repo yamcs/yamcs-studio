@@ -18,7 +18,6 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -211,33 +210,6 @@ public class ScriptUtil {
     public final static void execInUI(Runnable runnable,
             AbstractBaseEditPart widget) {
         widget.getViewer().getControl().getDisplay().asyncExec(runnable);
-    }
-
-    /**
-     * @return true if it the OPI is running in WebOPI.
-     */
-    public final static boolean isWebOPI() {
-        return OPIBuilderPlugin.isRAP();
-    }
-
-    /**
-     * If the current OPI is running on Mobile device. This method can only be called in UI thread.
-     * 
-     * @return true if it the OPI is running in mobile device such as Android, iphone, iPad, iPod and blackberry.
-     */
-    public final static boolean isMobile() {
-        return OPIBuilderPlugin.isMobile(Display.getCurrent());
-    }
-
-    /**
-     * If the current OPI is running on Mobile device. This method can be called in non-UI thread.
-     * 
-     * @param widget
-     *            the widget on which the script is attached to.
-     * @return true if it the OPI is running in mobile device such as Android, iphone, iPad, iPod and blackberry.
-     */
-    public final static boolean isMobile(AbstractBaseEditPart widget) {
-        return OPIBuilderPlugin.isMobile(widget.getViewer().getControl().getDisplay());
     }
 
     public final static Version getBOYVersion() {

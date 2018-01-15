@@ -436,10 +436,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
         private final static int ALPHA = 80;
         @Override
         protected void paintClientArea(Graphics graphics) {
-            if(SWT.getPlatform().startsWith("rap")) {//$NON-NLS-1$
-                super.paintClientArea(graphics);
-                return;
-            }
             graphics.pushState();
             graphics.setAlpha(ALPHA);
 
@@ -646,9 +642,6 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
 
     public BoolSwitchFigure() {
         super();
-//        if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-//            Activator.getLogger().log(Level.SEVERE,
-//                    "BoolSwitchFigure is not implemented for RAP yet!");
         pedestal = new Pedestal();
         shadow = new Shadow();
         bar = new Bar();

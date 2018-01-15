@@ -532,39 +532,37 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
         }
 
         private synchronized void updateTextCursor(final PixelInfo pixel_info) {
-            if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                return;
-                    if(getCursor() != null)
-                        getCursor().dispose();
+            if(getCursor() != null)
+                getCursor().dispose();
 
-                    String text = "(" + xAxis.format(pixel_info.xcoord) + ", " + yAxis.format(pixel_info.ycoord) + ", "+
-                            yAxis.format(pixel_info.value) + ")";
-                    text = text + getPixelInfo(pixel_info.xindex, pixel_info.yindex,
-                            pixel_info.xcoord, pixel_info.ycoord, pixel_info.value);
-                    Dimension size = FigureUtilities.getTextExtents(
-                            text, Display.getDefault().getSystemFont());
-                    Image image = new Image(Display.getDefault(),
-                            size.width + CURSOR_SIZE, size.height + CURSOR_SIZE);
+            String text = "(" + xAxis.format(pixel_info.xcoord) + ", " + yAxis.format(pixel_info.ycoord) + ", "+
+                    yAxis.format(pixel_info.value) + ")";
+            text = text + getPixelInfo(pixel_info.xindex, pixel_info.yindex,
+                    pixel_info.xcoord, pixel_info.ycoord, pixel_info.value);
+            Dimension size = FigureUtilities.getTextExtents(
+                    text, Display.getDefault().getSystemFont());
+            Image image = new Image(Display.getDefault(),
+                    size.width + CURSOR_SIZE, size.height + CURSOR_SIZE);
 
-                    GC gc = SingleSourceHelper.getImageGC(image);
-                    //gc.setAlpha(0);
-                    gc.setBackground(TRANSPARENT_COLOR);
-                    gc.fillRectangle(image.getBounds());
-                    gc.setForeground(BLACK_COLOR);
-                    gc.drawLine(0, CURSOR_SIZE/2, CURSOR_SIZE, CURSOR_SIZE/2);
-                    gc.drawLine(CURSOR_SIZE/2, 0, CURSOR_SIZE/2, CURSOR_SIZE);
-                    gc.setBackground(WHITE_COLOR);
-                    gc.fillRectangle(CURSOR_SIZE, CURSOR_SIZE,
-                            image.getBounds().width-CURSOR_SIZE,
-                            image.getBounds().height-CURSOR_SIZE);
-                    gc.drawText(text, CURSOR_SIZE, CURSOR_SIZE, true);
+            GC gc = SingleSourceHelper.getImageGC(image);
+            //gc.setAlpha(0);
+            gc.setBackground(TRANSPARENT_COLOR);
+            gc.fillRectangle(image.getBounds());
+            gc.setForeground(BLACK_COLOR);
+            gc.drawLine(0, CURSOR_SIZE/2, CURSOR_SIZE, CURSOR_SIZE/2);
+            gc.drawLine(CURSOR_SIZE/2, 0, CURSOR_SIZE/2, CURSOR_SIZE);
+            gc.setBackground(WHITE_COLOR);
+            gc.fillRectangle(CURSOR_SIZE, CURSOR_SIZE,
+                    image.getBounds().width-CURSOR_SIZE,
+                    image.getBounds().height-CURSOR_SIZE);
+            gc.drawText(text, CURSOR_SIZE, CURSOR_SIZE, true);
 
-                    ImageData imageData = image.getImageData();
-                    imageData.transparentPixel = imageData.palette.getPixel(TRANSPARENT_COLOR.getRGB());
-                    setCursor(SingleSourceHelper.createCursor(Display.getCurrent(),
-                            imageData, CURSOR_SIZE/2 ,CURSOR_SIZE/2, SWT.CURSOR_CROSS));
-                    gc.dispose();
-                    image.dispose();
+            ImageData imageData = image.getImageData();
+            imageData.transparentPixel = imageData.palette.getPixel(TRANSPARENT_COLOR.getRGB());
+            setCursor(SingleSourceHelper.createCursor(Display.getCurrent(),
+                    imageData, CURSOR_SIZE/2 ,CURSOR_SIZE/2, SWT.CURSOR_CROSS));
+            gc.dispose();
+            image.dispose();
         }
     }
     class GraphAreaZoomer extends MouseMotionListener.Stub implements MouseListener{

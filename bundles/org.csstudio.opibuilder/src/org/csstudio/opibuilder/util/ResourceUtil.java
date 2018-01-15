@@ -58,17 +58,12 @@ public class ResourceUtil {
 
     private static final int CACHE_TIMEOUT_SECONDS = 120;
 
-    private static final ResourceUtilSSHelper IMPL;
+    private static final ResourceUtilSSHelper IMPL = new ResourceUtilSSHelperImpl();
 
     /**
      * Cache the file from URL.
      */
     private static final TimedCache<URL, File> URL_CACHE = new TimedCache<>(CACHE_TIMEOUT_SECONDS);
-
-    static {
-        IMPL = (ResourceUtilSSHelper) ImplementationLoader.newInstance(
-                ResourceUtilSSHelper.class);
-    }
 
     /**
      * Returns the cursor used during pv copy action.

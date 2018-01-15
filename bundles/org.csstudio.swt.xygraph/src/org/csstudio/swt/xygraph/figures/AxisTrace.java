@@ -1,12 +1,9 @@
 package org.csstudio.swt.xygraph.figures;
 
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.csstudio.swt.xygraph.Preferences;
-import org.csstudio.swt.xygraph.util.GraphicsUtil;
-import org.csstudio.swt.xygraph.util.SWTConstants;
 import org.csstudio.swt.xygraph.util.XYGraphMediaFactory;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
@@ -58,7 +55,7 @@ public class AxisTrace extends Figure implements MouseMotionListener, MouseListe
         }
 
         graphics.setForegroundColor(revertBackColor);
-        graphics.setLineStyle(SWTConstants.LINE_DOT);
+        graphics.setLineStyle(SWT.LINE_DOT);
         graphics.setLineWidth(2);
         graphics.drawLine(cursor_x, bounds.y, cursor_x, bounds.y + bounds.height);
         graphics.setLineWidth(1);
@@ -67,22 +64,27 @@ public class AxisTrace extends Figure implements MouseMotionListener, MouseListe
         graphics.popState();
     }
 
+    @Override
     public void mouseDragged(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseEntered(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseExited(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseHover(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseMoved(MouseEvent me) {
         cursor_x = me.getLocation().x;
         cursor_y = me.getLocation().y;
@@ -91,26 +93,27 @@ public class AxisTrace extends Figure implements MouseMotionListener, MouseListe
         }
     }
 
+    @Override
     public void mousePressed(MouseEvent me) {
-        if (GraphicsUtil.isRAP() && isVisible()) {
-            cursor_x = me.getLocation().x;
-            cursor_y = me.getLocation().y;
-            repaint();
-        }
+        // NOP
     }
 
+    @Override
     public void mouseReleased(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseDoubleClicked(MouseEvent me) {
         // NOP
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (PlotArea.BACKGROUND_COLOR.equals(evt.getPropertyName())) {
             backColor = (Color) evt.getNewValue();

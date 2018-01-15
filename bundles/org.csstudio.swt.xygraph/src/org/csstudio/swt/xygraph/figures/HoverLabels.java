@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.swt.xygraph.figures;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,8 +17,6 @@ import org.csstudio.swt.xygraph.dataprovider.ISample;
 import org.csstudio.swt.xygraph.figures.Trace.ErrorBarType;
 import org.csstudio.swt.xygraph.figures.Trace.TraceType;
 import org.csstudio.swt.xygraph.linearscale.LinearScale;
-import org.csstudio.swt.xygraph.util.GraphicsUtil;
-import org.csstudio.swt.xygraph.util.SWTConstants;
 import org.csstudio.swt.xygraph.util.XYGraphMediaFactory;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
@@ -46,8 +43,8 @@ public class HoverLabels extends Figure implements MouseMotionListener, MouseLis
     private static final int ARROW_LENGTH = 20;
     private static final double ARROW_HEIGHT_RATIO = 0.6;
 
-    private final List<Trace> traceList = new ArrayList<Trace>();
-    private final List<HoverLabel> labelList = new ArrayList<HoverLabel>();
+    private final List<Trace> traceList = new ArrayList<>();
+    private final List<HoverLabel> labelList = new ArrayList<>();
 
     /**
      * Use advanced graphics?
@@ -121,6 +118,7 @@ public class HoverLabels extends Figure implements MouseMotionListener, MouseLis
             return optional;
         }
 
+        @Override
         public int compareTo(HoverLabel o) {
             if (o == null) {
                 return 1;
@@ -152,7 +150,7 @@ public class HoverLabels extends Figure implements MouseMotionListener, MouseLis
 
     private void drawLabels(Graphics graphics) {
         graphics.setBackgroundColor(backColor);
-        graphics.setLineStyle(SWTConstants.LINE_SOLID);
+        graphics.setLineStyle(SWT.LINE_SOLID);
         graphics.setLineWidth(1);
 
         final int plotHeight = bounds.y + bounds.height;
@@ -160,7 +158,7 @@ public class HoverLabels extends Figure implements MouseMotionListener, MouseLis
         final List<HoverLabel> labelListToDisplay;
         if ((labelHeight + GAP_BEETWEEN_LABEL) * labelList.size() > bounds.height) {
             // If not enough space, don't displays optional values
-            labelListToDisplay = new ArrayList<HoverLabel>();
+            labelListToDisplay = new ArrayList<>();
             for (HoverLabel label : labelList) {
                 if (!label.isOptional()) {
                     labelListToDisplay.add(label);
@@ -235,22 +233,27 @@ public class HoverLabels extends Figure implements MouseMotionListener, MouseLis
         graphics.drawText(text, xTextPos, yTextPos);
     }
 
+    @Override
     public void mouseDragged(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseEntered(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseExited(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseHover(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseMoved(MouseEvent me) {
         if (isVisible()) {
             cursor_x = me.getLocation().x;
@@ -258,17 +261,17 @@ public class HoverLabels extends Figure implements MouseMotionListener, MouseLis
         }
     }
 
+    @Override
     public void mousePressed(MouseEvent me) {
-        if (GraphicsUtil.isRAP() && isVisible()) {
-            cursor_x = me.getLocation().x;
-            repaint();
-        }
+        // NOP
     }
 
+    @Override
     public void mouseReleased(MouseEvent me) {
         // NOP
     }
 
+    @Override
     public void mouseDoubleClicked(MouseEvent me) {
         // NOP
     }
@@ -349,18 +352,24 @@ public class HoverLabels extends Figure implements MouseMotionListener, MouseLis
                 if (yAxis.getRange().inRange(yMinError)) {
                     // Show label only if the point is in the plot area
                     labelList.add(new HoverLabel(xPos, yAxis.getValuePosition(
-                            yMinError, false), "Min: "
-                            + yAxis.format(yMinError), yAxis
-                            .getForegroundColor(), true));
+                            yMinError, false),
+                            "Min: "
+                                    + yAxis.format(yMinError),
+                            yAxis
+                                    .getForegroundColor(),
+                            true));
                 }
                 if (yErrorBarType != ErrorBarType.BOTH)
                     break;
             case PLUS:
                 if (yAxis.getRange().inRange(yPlusError)) {
                     labelList.add(new HoverLabel(xPos, yAxis.getValuePosition(
-                            yPlusError, false), "Max: "
-                            + yAxis.format(yPlusError), yAxis
-                            .getForegroundColor(), true));
+                            yPlusError, false),
+                            "Max: "
+                                    + yAxis.format(yPlusError),
+                            yAxis
+                                    .getForegroundColor(),
+                            true));
                 }
                 break;
             default:

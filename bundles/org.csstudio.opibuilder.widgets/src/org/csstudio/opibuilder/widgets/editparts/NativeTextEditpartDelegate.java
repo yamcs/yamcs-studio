@@ -10,7 +10,6 @@ package org.csstudio.opibuilder.widgets.editparts;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
@@ -36,13 +35,10 @@ import org.eclipse.swt.widgets.Text;
  */
 public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
 
-
     private TextInputEditpart editpart;
     private TextInputModel model;
     private Text text;
     private boolean skipTraverse;
-
-
 
     public NativeTextEditpartDelegate(TextInputEditpart editpart,
             TextInputModel model) {
@@ -53,23 +49,23 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
     @Override
     public IFigure doCreateFigure() {
 
-        int style=SWT.NONE;
-        if(model.isShowNativeBorder())
+        int style = SWT.NONE;
+        if (model.isShowNativeBorder())
             style |= SWT.BORDER;
-        if(model.isMultilineInput()){
+        if (model.isMultilineInput()) {
             style |= SWT.MULTI;
-            if(model.isShowHScroll())
+            if (model.isShowHScroll())
                 style |= SWT.H_SCROLL;
-            if(model.isShowVScroll())
+            if (model.isShowVScroll())
                 style |= SWT.V_SCROLL;
-            if(model.isWrapWords())
+            if (model.isWrapWords())
                 style |= SWT.WRAP;
-        }else{
+        } else {
             style |= SWT.SINGLE;
-            if(model.isPasswordInput())
+            if (model.isPasswordInput())
                 style |= SWT.PASSWORD;
         }
-        if(model.isReadOnly())
+        if (model.isReadOnly())
             style |= SWT.READ_ONLY;
         switch (model.getHorizontalAlignment()) {
         case CENTER:
@@ -87,8 +83,8 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
         final NativeTextFigure figure = new NativeTextFigure(editpart, style);
         text = figure.getSWTWidget();
 
-        if(!model.isReadOnly()){
-            if(model.isMultilineInput()){
+        if (!model.isReadOnly()) {
+            if (model.isMultilineInput()) {
                 text.addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyPressed(KeyEvent keyEvent) {
@@ -97,23 +93,23 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
                                     && (text.getStyle() & SWT.MULTI) != 0) {
                                 if ((keyEvent.stateMask & SWT.CTRL) != 0) {
                                     outputText(text.getText());
-                                  keyEvent.doit=false;
-                                  text.getShell().setFocus();
+                                    keyEvent.doit = false;
+                                    text.getShell().setFocus();
                                 }
                             }
 
                         }
                     }
                 });
-            }else {
-                text.addListener (SWT.DefaultSelection, new Listener () {
+            } else {
+                text.addListener(SWT.DefaultSelection, new Listener() {
                     @Override
-                    public void handleEvent (Event e) {
+                    public void handleEvent(Event e) {
                         outputText(text.getText());
                         switch (model.getFocusTraverse()) {
                         case LOSE:
-                             text.getShell().setFocus();
-                             break;
+                            text.getShell().setFocus();
+                            break;
                         case NEXT:
                             SingleSourceHelper.swtControlTraverse(text, SWT.TRAVERSE_TAB_PREVIOUS);
                             break;
@@ -127,8 +123,9 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
                     }
                 });
                 text.addTraverseListener(e -> {
-                    //if key code is not tab, ignore
-                    if (e.character != '\t' || skipTraverse) return;
+                    // if key code is not tab, ignore
+                    if (e.character != '\t' || skipTraverse)
+                        return;
                     e.doit = false;
                     skipTraverse = true;
                     if (e.stateMask == 0) {
@@ -139,11 +136,11 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
                     skipTraverse = false;
                 });
             }
-            //Recover text if editing aborted.
+            // Recover text if editing aborted.
             text.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent keyEvent) {
-                    if(keyEvent.character == SWT.ESC){
+                    if (keyEvent.character == SWT.ESC) {
                         text.setText(model.getText());
                     }
                 }
@@ -151,10 +148,9 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
             text.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    //On mobile, lost focus should output text since there is not enter hit or ctrl key.
-                    if(editpart.getPV() != null && !OPIBuilderPlugin.isMobile(text.getDisplay()))
+                    if (editpart.getPV() != null)
                         text.setText(model.getText());
-                    else if(figure.isEnabled())
+                    else if (figure.isEnabled())
                         outputText(text.getText());
                 }
             });
@@ -163,14 +159,13 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
     }
 
     protected void outputText(String newValue) {
-        if(editpart.getPV() == null){
+        if (editpart.getPV() == null) {
             editpart.setPropertyValue(TextInputModel.PROP_TEXT, newValue);
             editpart.outputPVValue(newValue);
-        }
-        else{
-            //PV may not be changed instantly, so recover it to old text first.
+        } else {
+            // PV may not be changed instantly, so recover it to old text first.
             text.setText(model.getText());
-            //Write PV and update the text with new PV value if writing succeed.
+            // Write PV and update the text with new PV value if writing succeed.
             editpart.outputPVValue(newValue);
         }
     }
@@ -184,13 +179,11 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
         model.setPropertyVisible(TextInputModel.PROP_PASSWORD_INPUT, !isMulti);
     }
 
-
     @Override
     public void createEditPolicies() {
-        if(editpart.getExecutionMode()==ExecutionMode.RUN_MODE)
-            editpart.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,    null);
+        if (editpart.getExecutionMode() == ExecutionMode.RUN_MODE)
+            editpart.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, null);
     }
-
 
     public void setFigureText(String text) {
         this.text.setText(text);
@@ -209,7 +202,7 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
         };
 
         model.getProperty(TextInputModel.PROP_MULTILINE_INPUT)
-            .addPropertyChangeListener(updatePropSheetListener);
+                .addPropertyChangeListener(updatePropSheetListener);
 
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
 
@@ -232,10 +225,8 @@ public class NativeTextEditpartDelegate implements ITextInputEditPartDelegate {
 
     }
 
-
     public void performAutoSize() {
-        model.setSize(((NativeTextFigure)editpart.getFigure()).
-                getAutoSizeDimension());
+        model.setSize(((NativeTextFigure) editpart.getFigure()).getAutoSizeDimension());
     }
 
     public String getValue() {

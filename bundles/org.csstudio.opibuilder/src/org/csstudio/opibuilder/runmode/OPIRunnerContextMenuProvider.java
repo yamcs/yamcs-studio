@@ -9,8 +9,6 @@ package org.csstudio.opibuilder.runmode;
 
 import java.util.List;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.opibuilder.actions.AboutWebOPIAction;
 import org.csstudio.opibuilder.actions.ConfigureRuntimePropertiesAction;
 import org.csstudio.opibuilder.actions.OpenRelatedDisplayAction;
 import org.csstudio.opibuilder.actions.OpenRelatedDisplayAction.OpenDisplayTarget;
@@ -30,7 +28,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -63,13 +60,11 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
      */
     @Override
     public void buildContextMenu(final IMenuManager menu) {
-        if(!SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-            addSettingPropertiesAction(menu);
+        addSettingPropertiesAction(menu);
         addWidgetActionToMenu(menu);
         GEFActionConstants.addStandardActionGroups(menu);
 
-        ActionRegistry actionRegistry =
-                (ActionRegistry) opiRuntime.getAdapter(ActionRegistry.class);
+        ActionRegistry actionRegistry = (ActionRegistry) opiRuntime.getAdapter(ActionRegistry.class);
         IAction action = actionRegistry.getAction(ActionFactory.REFRESH.getId());
         if (action != null)
             menu.appendToGroup(GEFActionConstants.GROUP_PRINT, action);
@@ -78,34 +73,26 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
 
         // Only show 'full screen' and 'compact mode' options for OPIView,
         // not for OPIShell.
-        if (!OPIBuilderPlugin.isRAP() && (opiRuntime instanceof OPIView || opiRuntime instanceof OPIRunner)) {
+        if (opiRuntime instanceof OPIView || opiRuntime instanceof OPIRunner) {
             menu.appendToGroup(GEFActionConstants.GROUP_EDIT,
-                WorkbenchWindowService.getInstance().getFullScreenAction(activeWindow));
+                    WorkbenchWindowService.getInstance().getFullScreenAction(activeWindow));
             menu.appendToGroup(GEFActionConstants.GROUP_EDIT,
-                WorkbenchWindowService.getInstance().getCompactModeAction(activeWindow));
+                    WorkbenchWindowService.getInstance().getCompactModeAction(activeWindow));
         }
 
-
-
-        //actionRegistry.getAction(CompactModeAction.ID));
+        // actionRegistry.getAction(CompactModeAction.ID));
 
         // ELog and EMail actions may not be available
         SingleSourceHelper.appendRCPRuntimeActionsToMenu(actionRegistry, menu);
 
-        if(OPIBuilderPlugin.isRAP()){
-            menu.add(new Separator("additions")); //$NON-NLS-1$
-            menu.add(new AboutWebOPIAction());
-        }
-
-
-//        MenuManager cssMenu = new MenuManager("CSS", "css");
-//        cssMenu.add(new Separator("additions")); //$NON-NLS-1$
-//        menu.add(cssMenu);
+        // MenuManager cssMenu = new MenuManager("CSS", "css");
+        // cssMenu.add(new Separator("additions")); //$NON-NLS-1$
+        // menu.add(cssMenu);
     }
 
     @Override
     protected boolean allowItem(IContributionItem itemToAdd) {
-        //org.eclipse.wst.sse.ui adds some junk, which we don't need
+        // org.eclipse.wst.sse.ui adds some junk, which we don't need
         if ("sourceMenuId".equals(itemToAdd.getId())) { //$NON-NLS-1$
             return false;
         }
@@ -114,22 +101,24 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
 
     /**
      * Adds the defined {@link AbstractWidgetAction}s to the given {@link IMenuManager}.
-     * @param menu The {@link IMenuManager}
+     * 
+     * @param menu
+     *            The {@link IMenuManager}
      */
     private void addWidgetActionToMenu(final IMenuManager menu) {
-        List<?> selectedEditParts = ((IStructuredSelection)getViewer().getSelection()).toList();
-        if (selectedEditParts.size()==1) {
+        List<?> selectedEditParts = ((IStructuredSelection) getViewer().getSelection()).toList();
+        if (selectedEditParts.size() == 1) {
             if (selectedEditParts.get(0) instanceof AbstractBaseEditPart) {
                 AbstractBaseEditPart editPart = (AbstractBaseEditPart) selectedEditParts.get(0);
                 AbstractWidgetModel widget = editPart.getWidgetModel();
 
-                //add menu Open, Open in New Tab and Open in New Window
+                // add menu Open, Open in New Tab and Open in New Window
                 List<AbstractWidgetAction> hookedActions = editPart.getHookedActions();
 
-                if(hookedActions != null && hookedActions.size() == 1){
+                if (hookedActions != null && hookedActions.size() == 1) {
                     AbstractWidgetAction hookedAction = hookedActions.get(0);
-                    if (hookedAction instanceof OpenDisplayAction){
-                        final OpenDisplayAction original_action = (OpenDisplayAction)hookedAction;
+                    if (hookedAction instanceof OpenDisplayAction) {
+                        final OpenDisplayAction original_action = (OpenDisplayAction) hookedAction;
                         menu.add(new OpenRelatedDisplayAction(original_action, OpenDisplayTarget.DEFAULT));
                         menu.add(new OpenRelatedDisplayAction(original_action, OpenDisplayTarget.NEW_TAB));
                         menu.add(new OpenRelatedDisplayAction(original_action, OpenDisplayTarget.NEW_WINDOW));
@@ -137,9 +126,8 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
                     }
                 }
 
-
                 ActionsInput ai = widget.getActionsInput();
-                if(ai != null){
+                if (ai != null) {
                     List<AbstractWidgetAction> widgetActions = ai.getActionsList();
                     if (!widgetActions.isEmpty()) {
                         MenuManager actionMenu = new MenuManager("Actions", "actions");
@@ -153,13 +141,13 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
         }
     }
 
-    private void addSettingPropertiesAction(final IMenuManager menu){
-        List<?> selectedEditParts = ((IStructuredSelection)getViewer().getSelection()).toList();
-        if (selectedEditParts.size()==1) {
+    private void addSettingPropertiesAction(final IMenuManager menu) {
+        List<?> selectedEditParts = ((IStructuredSelection) getViewer().getSelection()).toList();
+        if (selectedEditParts.size() == 1) {
             if (selectedEditParts.get(0) instanceof AbstractBaseEditPart) {
                 AbstractBaseEditPart editPart = (AbstractBaseEditPart) selectedEditParts.get(0);
                 AbstractWidgetModel widget = editPart.getWidgetModel();
-                if(widget.getRuntimePropertyList() != null){
+                if (widget.getRuntimePropertyList() != null) {
                     menu.add(new ConfigureRuntimePropertiesAction(
                             getViewer().getControl().getShell(), widget));
                 }

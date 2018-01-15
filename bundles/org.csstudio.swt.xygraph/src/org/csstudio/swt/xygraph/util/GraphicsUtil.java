@@ -21,8 +21,6 @@ import org.eclipse.swt.graphics.Image;
  */
 public final class GraphicsUtil {
 
-    private static boolean isRAP= SWT.getPlatform().startsWith("rap"); //$NON-NLS-1$;
-
     /**
      * Draw vertical text.
      *
@@ -38,8 +36,6 @@ public final class GraphicsUtil {
     public static final void drawVerticalText(Graphics graphics, String text,
             int x, int y, boolean upToDown) {
         try {
-            if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                throw new Exception();
             try {
                 graphics.pushState();
                 graphics.translate(x, y);
@@ -57,15 +53,15 @@ public final class GraphicsUtil {
                             -FigureUtilities.getTextWidth(text, graphics.getFont()),
                             0);
                 }
-            }finally{
+            } finally {
                 graphics.popState();
             }
         } catch (Exception e) {// If rotate is not supported by the graphics.
-//            final Dimension titleSize = FigureUtilities.getTextExtents(text,
-//                    graphics.getFont());
+            // final Dimension titleSize = FigureUtilities.getTextExtents(text,
+            // graphics.getFont());
 
-//            final int w = titleSize.height;
-//            final int h = titleSize.width + 1;
+            // final int w = titleSize.height;
+            // final int h = titleSize.width + 1;
             Image image = null;
             try {
                 image = SingleSourceHelper.createVerticalTextImage(text,
@@ -92,9 +88,5 @@ public final class GraphicsUtil {
     public static final void drawVerticalText(Graphics graphics, String text,
             Point location, boolean upToDown) {
         drawVerticalText(graphics, text, location.x, location.y, upToDown);
-    }
-
-    public static final boolean isRAP(){
-        return isRAP;
     }
 }

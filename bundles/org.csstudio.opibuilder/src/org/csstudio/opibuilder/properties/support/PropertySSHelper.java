@@ -1,36 +1,35 @@
 package org.csstudio.opibuilder.properties.support;
 
-
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.StringTableProperty.TitlesProvider;
 import org.csstudio.opibuilder.util.ImplementationLoader;
 import org.csstudio.ui.util.swt.stringtable.StringTableEditor.CellEditorType;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
-/**Single source helper for PropertyDescriptor. IMPL can be null.
+/**
+ * Single source helper for PropertyDescriptor. IMPL can be null.
+ * 
  * @author Xihui Chen
  *
  */
 public abstract class PropertySSHelper {
 
-    private static final PropertySSHelper IMPL =
-            (PropertySSHelper)ImplementationLoader.loadObjectInPlugin(
-                    "org.csstudio.opibuilder.editor",  //$NON-NLS-1$
-                    "org.csstudio.opibuilder.properties.support.PropertySSHelperImpl", //$NON-NLS-1$
-                    false);
+    private static final PropertySSHelper IMPL = (PropertySSHelper) ImplementationLoader.loadObjectInPlugin(
+            "org.csstudio.opibuilder.editor",
+            "org.csstudio.opibuilder.properties.support.PropertySSHelperImpl",
+            false);
 
-
-    public static PropertySSHelper getIMPL(){
+    public static PropertySSHelper getIMPL() {
         return IMPL;
     }
 
     public abstract PropertyDescriptor getActionsPropertyDescriptor(final String prop_id,
             final String description, final boolean showHookOption);
 
-    public  abstract PropertyDescriptor getBooleanPropertyDescriptor(
+    public abstract PropertyDescriptor getBooleanPropertyDescriptor(
             String prop_id, String description);
 
-    public  abstract PropertyDescriptor getOPIColorPropertyDescriptor(
+    public abstract PropertyDescriptor getOPIColorPropertyDescriptor(
             String prop_id, String description);
 
     public abstract PropertyDescriptor getDoublePropertyDescriptor(String prop_id,
@@ -69,7 +68,7 @@ public abstract class PropertySSHelper {
 
     public abstract PropertyDescriptor getStringTablePropertyDescriptor(String prop_id,
             String description, TitlesProvider titlesProvider,
-            CellEditorType[] cellEditorTypes,  Object[] cellEditorDatas);
+            CellEditorType[] cellEditorTypes, Object[] cellEditorDatas);
 
     public abstract PropertyDescriptor getComplexDataPropertyDescriptor(String prop_id,
             String description, String dialogTitle);
@@ -82,6 +81,5 @@ public abstract class PropertySSHelper {
 
     public abstract PropertyDescriptor getPVNamePropertyDescriptor(String prop_id,
             String description, String detailedDescription);
-
 
 }

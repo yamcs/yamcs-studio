@@ -258,8 +258,7 @@ public class XYGraphToolbar extends Figure {
         addUndoRedoButtons();
 
         addSeparator();
-        if(!SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-            addSnapshotButton();
+        addSnapshotButton();
     }
 
 //    @Override

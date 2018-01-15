@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
@@ -28,7 +27,6 @@ import org.csstudio.simplepv.IPVListener;
 import org.csstudio.simplepv.VTypeHelper;
 import org.csstudio.swt.widgets.figures.TextFigure;
 import org.csstudio.swt.widgets.figures.TextInputFigure;
-import org.csstudio.swt.widgets.figures.TextInputFigure.SelectorType;
 import org.diirt.vtype.Array;
 import org.diirt.vtype.Scalar;
 import org.diirt.vtype.VEnum;
@@ -50,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TextInputEditpart extends TextUpdateEditPart {
 
-    private static final char SPACE = ' '; //$NON-NLS-1$
+    private static final char SPACE = ' '; // $NON-NLS-1$
     private static DecimalFormat DECIMAL_FORMAT = new DecimalFormat();
     private IPVListener pvLoadLimitsListener;
     private org.diirt.vtype.Display meta = null;
@@ -70,13 +68,13 @@ public class TextInputEditpart extends TextUpdateEditPart {
     protected IFigure doCreateFigure() {
         initFields();
 
-        if(shouldBeTextInputFigure()){
+        if (shouldBeTextInputFigure()) {
             TextInputFigure textInputFigure = (TextInputFigure) createTextFigure();
             initTextFigure(textInputFigure);
             setDelegate(new Draw2DTextInputEditpartDelegate(
                     this, getWidgetModel(), textInputFigure));
 
-        }else{
+        } else {
             setDelegate(new NativeTextEditpartDelegate(this, getWidgetModel()));
         }
 
@@ -89,20 +87,10 @@ public class TextInputEditpart extends TextUpdateEditPart {
     /**
      * @return true if it should use Draw2D {@link TextInputFigure}.
      */
-    protected boolean shouldBeTextInputFigure(){
+    protected boolean shouldBeTextInputFigure() {
         TextInputModel model = getWidgetModel();
-        if(model.getStyle() == Style.NATIVE)
-            return false;
-        // Always use native text in webopi if it doesn't need TextInputFigure functions
-        if (OPIBuilderPlugin.isRAP() && !model.isTransparent()
-                && model.getRotationAngle() == 0
-                && model.getSelectorType() == SelectorType.NONE){
-            model.setPropertyValue(TextInputModel.PROP_SHOW_NATIVE_BORDER, false);
-            return false;
-        }
-        return true;
+        return model.getStyle() != Style.NATIVE;
     }
-
 
     @Override
     protected TextFigure createTextFigure() {
@@ -143,8 +131,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();
                                 if (value != null
-                                        && VTypeHelper.getDisplayInfo(value)!=null) {
-                                    org.diirt.vtype.Display new_meta =VTypeHelper.getDisplayInfo(value);
+                                        && VTypeHelper.getDisplayInfo(value) != null) {
+                                    org.diirt.vtype.Display new_meta = VTypeHelper.getDisplayInfo(value);
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
                                         // Update min/max from the control range of the PV
@@ -168,17 +156,17 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @param text
      */
     public void outputPVValue(String text) {
-        if(!getWidgetModel().getConfirmMessage().isEmpty())
-            if(!GUIUtil.openConfirmDialog("PV Name: " + getPVName() +
-                    "\nNew Value: "+ text+ "\n\n"+
+        if (!getWidgetModel().getConfirmMessage().isEmpty())
+            if (!GUIUtil.openConfirmDialog("PV Name: " + getPVName() +
+                    "\nNew Value: " + text + "\n\n" +
                     getWidgetModel().getConfirmMessage()))
                 return;
         try {
             Object result;
-            if(getWidgetModel().getFormat() != FormatEnum.STRING
-                    && text.trim().indexOf(SPACE)!=-1){
+            if (getWidgetModel().getFormat() != FormatEnum.STRING
+                    && text.trim().indexOf(SPACE) != -1) {
                 result = parseStringArray(text);
-            }else
+            } else
                 result = parseString(text);
             setPVValue(AbstractPVWidgetModel.PROP_PVNAME, result);
         } catch (Exception e) {
@@ -204,18 +192,18 @@ public class TextInputEditpart extends TextUpdateEditPart {
                         final IFigure figure) {
                     String text = (String) newValue;
 
-                    if(getPV() == null){
-                     setFigureText(text);
-                     if(getWidgetModel().isAutoSize()){
+                    if (getPV() == null) {
+                        setFigureText(text);
+                        if (getWidgetModel().isAutoSize()) {
                             Display.getCurrent().timerExec(10, new Runnable() {
                                 @Override
                                 public void run() {
-                                        performAutoSize();
+                                    performAutoSize();
                                 }
                             });
                         }
                     }
-                    //Output pv value even if pv name is empty, so setPVValuelistener can be triggered.
+                    // Output pv value even if pv name is empty, so setPVValuelistener can be triggered.
                     outputPVValue(text);
                     return false;
                 }
@@ -243,7 +231,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
             }
         };
         getWidgetModel().getProperty(TextInputModel.PROP_LIMITS_FROM_PV)
-            .addPropertyChangeListener(updatePropSheetListener);
+                .addPropertyChangeListener(updatePropSheetListener);
 
         getWidgetModel().getProperty(TextInputModel.PROP_SELECTOR_TYPE)
                 .addPropertyChangeListener(updatePropSheetListener);
@@ -258,11 +246,10 @@ public class TextInputEditpart extends TextUpdateEditPart {
         getWidgetModel().getProperty(TextInputModel.PROP_STYLE)
                 .addPropertyChangeListener(reCreateWidgetListener);
 
-
         delegate.registerPropertyChangeHandlers();
     }
 
-    private void reCreateWidget(){
+    private void reCreateWidget() {
         TextInputModel model = getWidgetModel();
         AbstractContainerModel parent = model.getParent();
         parent.removeChild(model);
@@ -278,22 +265,22 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 @Override
                 protected boolean handleButtonUp(int button) {
                     if (button == 1) {
-                        //make widget in edit mode by single click
+                        // make widget in edit mode by single click
                         performOpen();
                     }
                     return super.handleButtonUp(button);
                 }
             };
-        }else
+        } else
             return super.getDragTracker(request);
     }
 
     @Override
     public void performRequest(Request request) {
         if (getFigure().isEnabled()
-                &&((request.getType() == RequestConstants.REQ_DIRECT_EDIT &&
-                getExecutionMode() != ExecutionMode.RUN_MODE)||
-                request.getType() == RequestConstants.REQ_OPEN))
+                && ((request.getType() == RequestConstants.REQ_DIRECT_EDIT &&
+                        getExecutionMode() != ExecutionMode.RUN_MODE) ||
+                        request.getType() == RequestConstants.REQ_OPEN))
             performDirectEdit();
     }
 
@@ -303,16 +290,17 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 getFigure()), getWidgetModel().isMultilineInput()).show();
     }
 
-    /**If the text has spaces in the string and the PV is numeric array type,
-     * it will return an array of numeric values.
+    /**
+     * If the text has spaces in the string and the PV is numeric array type, it will return an array of numeric values.
+     * 
      * @param text
      * @return
      * @throws ParseException
      */
-    private Object parseStringArray(final String text) throws ParseException{
+    private Object parseStringArray(final String text) throws ParseException {
         String[] texts = text.split(" +"); //$NON-NLS-1$
         VType pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
-        if(pvValue instanceof VNumberArray){
+        if (pvValue instanceof VNumberArray) {
             double[] result = new double[texts.length];
             for (int i = 0; i < texts.length; i++) {
                 Object o = parseString(texts[i]);
@@ -338,19 +326,17 @@ public class TextInputEditpart extends TextUpdateEditPart {
         VType pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
         FormatEnum formatEnum = getWidgetModel().getFormat();
 
-        if(pvValue == null)
+        if (pvValue == null)
             return text;
 
-
         return parseStringForPVManagerPV(formatEnum, text, pvValue);
-
 
     }
 
     private Object parseStringForPVManagerPV(FormatEnum formatEnum,
             final String text, VType pvValue) throws ParseException {
-        if(pvValue instanceof Scalar){
-            Object value = ((Scalar)pvValue).getValue();
+        if (pvValue instanceof Scalar) {
+            Object value = ((Scalar) pvValue).getValue();
             if (value instanceof Number) {
                 switch (formatEnum) {
                 case HEX:
@@ -361,7 +347,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 case DECIMAL:
                 case COMPACT:
                 case EXP:
-                    return parseDouble(text,true);
+                    return parseDouble(text, true);
                 case SEXA:
                     return parseSexagesimal(text, true);
                 case SEXA_HMS:
@@ -376,8 +362,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
                         return text;
                     }
                 }
-            }else if(value instanceof String){
-                if(pvValue instanceof VEnum){
+            } else if (value instanceof String) {
+                if (pvValue instanceof VEnum) {
                     switch (formatEnum) {
                     case HEX:
                     case HEX64:
@@ -402,17 +388,17 @@ public class TextInputEditpart extends TextUpdateEditPart {
                             return text;
                         }
                     }
-                }else
+                } else
                     return text;
             }
-        }else if(pvValue instanceof Array){
-            if(pvValue instanceof VNumberArray){
+        } else if (pvValue instanceof Array) {
+            if (pvValue instanceof VNumberArray) {
                 switch (formatEnum) {
                 case HEX:
                 case HEX64:
                     return parseHEX(text, true);
                 case STRING:
-                    return parseCharArray(text, ((VNumberArray)pvValue).getData().size());
+                    return parseCharArray(text, ((VNumberArray) pvValue).getData().size());
                 case DECIMAL:
                 case EXP:
                 case COMPACT:
@@ -431,13 +417,12 @@ public class TextInputEditpart extends TextUpdateEditPart {
                         return text;
                     }
                 }
-            }else {
+            } else {
                 return text;
             }
         }
         return text;
     }
-
 
     private int[] parseCharArray(final String text, int currentLength) {
         // Turn text into array of character codes,
@@ -458,15 +443,14 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     private double parseDouble(final String text, final boolean coerce)
             throws ParseException {
-        if(text.contains("\n")&&!text.endsWith("\n"))
-            throw new ParseException(NLS.bind("{0} cannot be parsed to double", text),text.indexOf("\n"));
-        double value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+        if (text.contains("\n") && !text.endsWith("\n"))
+            throw new ParseException(NLS.bind("{0} cannot be parsed to double", text), text.indexOf("\n"));
+        double value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue(); // $NON-NLS-1$ //$NON-NLS-2$
         if (coerce) {
             double min = getWidgetModel().getMinimum();
             double max = getWidgetModel().getMaximum();
             // Only apply sensible limits, not min==max==0
-            if (min < max)
-            {
+            if (min < max) {
                 if (value < min)
                     value = min;
                 else if (value > max)
@@ -489,8 +473,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
             double min = getWidgetModel().getMinimum();
             double max = getWidgetModel().getMaximum();
             // Only apply sensible limits, not min==max==0
-            if (min < max)
-            {
+            if (min < max) {
                 if (i < min)
                     i = (long) min;
                 else if (i > max)
@@ -519,7 +502,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
             /* Hours are always present */
             try {
                 hours = parseDouble(parts[0], false);
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+            }
 
             if ((hours == Math.floor(hours)) && !(hours < 0.0)) {
                 value = hours;
@@ -528,7 +512,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 if (parts.length > 1) {
                     try {
                         minutes = parseDouble(parts[1], false);
-                    } catch (NumberFormatException e) {}
+                    } catch (NumberFormatException e) {
+                    }
 
                     if ((minutes == Math.floor(minutes)) && !(minutes < 0.0)) {
                         value += minutes / 60.0;
@@ -537,7 +522,8 @@ public class TextInputEditpart extends TextUpdateEditPart {
                         if (parts.length > 2) {
                             try {
                                 seconds = parseDouble(parts[2], false);
-                            } catch (NumberFormatException e) {}
+                            } catch (NumberFormatException e) {
+                            }
 
                             if (!(seconds < 0.0)) {
                                 value += seconds / 3600.0;
@@ -558,7 +544,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
         if (error) {
             value = Double.NaN;
-            throw new ParseException(NLS.bind("{0} cannot be parsed to double", text),text.indexOf("\n"));
+            throw new ParseException(NLS.bind("{0} cannot be parsed to double", text), text.indexOf("\n"));
         } else {
             /* Apply original sign */
             if (negative) {
@@ -569,8 +555,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 double min = getWidgetModel().getMinimum();
                 double max = getWidgetModel().getMaximum();
                 // Only apply sensible limits, not min==max==0
-                if (min < max)
-                {
+                if (min < max) {
                     if (value < min)
                         value = min;
                     else if (value > max)
@@ -601,7 +586,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
         model.setPropertyVisible(
                 TextInputModel.PROP_MIN, !getWidgetModel().isLimitsFromPV());
 
-        //set native text related properties visibility
+        // set native text related properties visibility
         boolean isNative = delegate instanceof NativeTextEditpartDelegate;
         model.setPropertyVisible(TextInputModel.PROP_SHOW_NATIVE_BORDER,
                 isNative);
@@ -612,8 +597,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
         model.setPropertyVisible(TextInputModel.PROP_NEXT_FOCUS, isNative);
         model.setPropertyVisible(TextInputModel.PROP_WRAP_WORDS, isNative);
 
-
-        //set classic text figure related properties visibility
+        // set classic text figure related properties visibility
         model.setPropertyVisible(TextInputModel.PROP_TRANSPARENT, !isNative);
         model.setPropertyVisible(TextInputModel.PROP_ROTATION, !isNative);
         model.setPropertyVisible(TextInputModel.PROP_SELECTOR_TYPE, !isNative);
@@ -623,24 +607,24 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     @Override
     protected void setFigureText(String text) {
-        if(delegate instanceof NativeTextEditpartDelegate)
-            ((NativeTextEditpartDelegate)delegate).setFigureText(text);
+        if (delegate instanceof NativeTextEditpartDelegate)
+            ((NativeTextEditpartDelegate) delegate).setFigureText(text);
         else
             super.setFigureText(text);
     }
 
     @Override
     protected void performAutoSize() {
-        if(delegate instanceof NativeTextEditpartDelegate)
-            ((NativeTextEditpartDelegate)delegate).performAutoSize();
+        if (delegate instanceof NativeTextEditpartDelegate)
+            ((NativeTextEditpartDelegate) delegate).performAutoSize();
         else
             super.performAutoSize();
     }
 
     @Override
     public String getValue() {
-        if(delegate instanceof NativeTextEditpartDelegate)
-            return ((NativeTextEditpartDelegate)delegate).getValue();
+        if (delegate instanceof NativeTextEditpartDelegate)
+            return ((NativeTextEditpartDelegate) delegate).getValue();
         else
             return super.getValue();
     }

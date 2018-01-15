@@ -342,18 +342,13 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
         if(getRotate() ==0)
             graphics.drawText(text, getTextLocation(font));
         else{
-            //rap doesn't support rotate
-            if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-                graphics.drawText(text, getTextLocation(font));
-            else{
-                try {
-                    graphics.pushState();
-                    graphics.translate(getTextLocation(font));
-                    graphics.rotate((float) getRotate());
-                    graphics.drawText(text, 0, 0);
-                } finally{
-                    graphics.popState();
-                }
+            try {
+                graphics.pushState();
+                graphics.translate(getTextLocation(font));
+                graphics.rotate((float) getRotate());
+                graphics.drawText(text, 0, 0);
+            } finally{
+                graphics.popState();
             }
         }
 

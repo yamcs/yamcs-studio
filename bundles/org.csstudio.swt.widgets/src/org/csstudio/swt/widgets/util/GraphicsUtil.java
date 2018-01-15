@@ -22,8 +22,6 @@ import org.eclipse.swt.graphics.RGB;
 public class GraphicsUtil {
 
     public static synchronized boolean testPatternSupported(Graphics graphics){
-        if(SWT.getPlatform().startsWith("rap")) //$NON-NLS-1$
-            return false;
         if(!useAdvancedGraphics())
             return false;
 
