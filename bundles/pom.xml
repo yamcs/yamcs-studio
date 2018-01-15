@@ -36,6 +36,7 @@
     <module>org.csstudio.utility.file</module>
     <module>org.csstudio.utility.singlesource</module>
     <module>org.csstudio.workspace</module>
+    <module>org.diirt</module>
 
     <module>org.yamcs.studio.alarms</module>
     <module>org.yamcs.studio.archive</module>

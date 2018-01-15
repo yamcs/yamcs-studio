@@ -7,7 +7,7 @@ Bundle-Activator: org.csstudio.autocomplete.pvmanager.loc.Activator
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
  org.csstudio.autocomplete,
- org.diirt.datasource-loc;bundle-version="3.0.1"
+ org.diirt
 Bundle-Vendor: Fred Arnaud <frederic.arnaud@iter.org> - ITER
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.csstudio.autocomplete.pvmanager.loc
