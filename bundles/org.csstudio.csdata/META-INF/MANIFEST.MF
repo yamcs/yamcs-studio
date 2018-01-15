@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Control System Data Model
-Bundle-Description: Control System Data Model: PV Names, ...
-Bundle-SymbolicName: org.csstudio.csdata
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Gabriele Carcassi <carcassi@bnl.gov>, Kay Kasemir <kasemirk@ornl.gov> - BNL, SNS
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.csstudio.csdata

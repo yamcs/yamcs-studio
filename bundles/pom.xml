@@ -15,7 +15,6 @@
     <module>org.csstudio.apputil.ui</module>
     <module>org.csstudio.autocomplete</module>
     <module>org.csstudio.autocomplete.ui</module>
-    <module>org.csstudio.csdata</module>
     <module>org.csstudio.examples</module>
     <module>org.csstudio.java</module>
     <module>org.csstudio.openfile</module>
