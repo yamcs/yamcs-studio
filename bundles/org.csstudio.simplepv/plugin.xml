@@ -2,5 +2,13 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="pvfactory" name="PV Factory Extension" schema="schema/pvfactory.exsd"/>
+   
+   <extension
+         point="org.csstudio.simplepv.pvfactory">
+      <pvfactory
+            class="org.csstudio.simplepv.pvmanager.PVManagerPVFactory"
+            id="pvmanager">
+      </pvfactory>
+   </extension>
 
 </plugin>

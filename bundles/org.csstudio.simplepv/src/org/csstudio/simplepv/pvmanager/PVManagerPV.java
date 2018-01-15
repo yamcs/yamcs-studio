@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.csstudio.simplepv.IPV;
 import org.csstudio.simplepv.IPVListener;
@@ -47,6 +48,8 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class PVManagerPV implements IPV {
+
+    private static final Logger log = Logger.getLogger(PVManagerPV.class.getName());
 
     // Keep the exception handler separate from the PVManagerPV, to avoid
     // memory leaks in case the client doesn't close this PV.
@@ -245,7 +248,8 @@ public class PVManagerPV implements IPV {
                     pvReaderConfiguration = pvReaderConfiguration
                             .routeExceptionsTo(exceptionHandler);
                 }
-                pvReader = pvReaderConfiguration.readListener(pvReaderListener).maxRate(Duration.ofMillis(minUpdatePeriod));
+                pvReader = pvReaderConfiguration.readListener(pvReaderListener)
+                        .maxRate(Duration.ofMillis(minUpdatePeriod));
 
             } else {
                 PVReaderConfiguration<?> pvReaderConfiguration = PVManager.read(channel(name, VType.class, VType.class))
@@ -254,7 +258,8 @@ public class PVManagerPV implements IPV {
                     pvReaderConfiguration = pvReaderConfiguration
                             .routeExceptionsTo(exceptionHandler);
                 }
-                pvReader = pvReaderConfiguration.readListener(pvReaderListener).maxRate(Duration.ofMillis(minUpdatePeriod));
+                pvReader = pvReaderConfiguration.readListener(pvReaderListener)
+                        .maxRate(Duration.ofMillis(minUpdatePeriod));
             }
         }
 
@@ -265,7 +270,7 @@ public class PVManagerPV implements IPV {
 
                 @Override
                 public void pvChanged(PVWriterEvent<Object> event) {
-                    for(IPVListener l : listeners){
+                    for (IPVListener l : listeners) {
                         if (event == null || event.isConnectionChanged())
                             l.writePermissionChanged(PVManagerPV.this);
                         if (event != null) {
@@ -370,8 +375,7 @@ public class PVManagerPV implements IPV {
     @Override
     public void stop() {
         if (!startFlag.get()) {
-            Activator.getLogger().log(Level.WARNING,
-                    NLS.bind("PV {0} has already been stopped or was not started yet.", getName()));
+            log.log(Level.WARNING, NLS.bind("PV {0} has already been stopped or was not started yet.", getName()));
             return;
         }
         if (starting.get()) {
@@ -384,7 +388,6 @@ public class PVManagerPV implements IPV {
             });
             return;
         }
-        ;
         if (pvReader != null) {
             pvReader.close();
             if (debug) {
