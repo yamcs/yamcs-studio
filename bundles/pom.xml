@@ -14,10 +14,6 @@
     <module>org.csstudio.apputil</module>
     <module>org.csstudio.apputil.ui</module>
     <module>org.csstudio.autocomplete</module>
-    <module>org.csstudio.autocomplete.pvmanager.formula</module>
-    <module>org.csstudio.autocomplete.pvmanager.loc</module>
-    <module>org.csstudio.autocomplete.pvmanager.sim</module>
-    <module>org.csstudio.autocomplete.pvmanager.sys</module>
     <module>org.csstudio.autocomplete.ui</module>
     <module>org.csstudio.csdata</module>
     <module>org.csstudio.data</module>

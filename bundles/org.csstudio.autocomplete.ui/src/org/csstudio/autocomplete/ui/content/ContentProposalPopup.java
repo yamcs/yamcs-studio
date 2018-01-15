@@ -55,19 +55,16 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * The lightweight popup used to show content proposals for a text field. If
- * additional information exists for a proposal, then selecting that
- * proposal will result in the information being displayed in a secondary
- * popup.
+ * The lightweight popup used to show content proposals for a text field. If additional information exists for a
+ * proposal, then selecting that proposal will result in the information being displayed in a secondary popup.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
 public class ContentProposalPopup extends PopupDialog {
 
     /*
-     * Set to <code>true</code> to use a Table with SWT.VIRTUAL. This is a
-     * workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=98585#c40
-     * The corresponding SWT bug is
+     * Set to <code>true</code> to use a Table with SWT.VIRTUAL. This is a workaround for
+     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98585#c40 The corresponding SWT bug is
      * https://bugs.eclipse.org/bugs/show_bug.cgi?id=90321
      */
     private static final boolean USE_VIRTUAL = !Util.isMotif();
@@ -83,8 +80,7 @@ public class ContentProposalPopup extends PopupDialog {
     private static final int POPUP_DELAY = 500;
 
     /*
-     * The minimum pixel width for the popup. May be overridden by using
-     * setInitialPopupSize.
+     * The minimum pixel width for the popup. May be overridden by using setInitialPopupSize.
      */
     private static final int POPUP_MINIMUM_WIDTH = 200;
     private static final int FOOTER_MINIMUM_HEIGHT = 10;
@@ -95,15 +91,14 @@ public class ContentProposalPopup extends PopupDialog {
     private static final int POPUP_OFFSET = 3;
 
     /*
-     * The listener we install on the popup and related controls to determine
-     * when to close the popup. Some events (move, resize, close, deactivate)
-     * trigger closure as soon as they are received, simply because one of the
-     * registered listeners received them. Other events depend on additional
-     * circumstances.
+     * The listener we install on the popup and related controls to determine when to close the popup. Some events
+     * (move, resize, close, deactivate) trigger closure as soon as they are received, simply because one of the
+     * registered listeners received them. Other events depend on additional circumstances.
      */
     private final class PopupCloserListener implements Listener {
         private boolean scrollbarClicked = false;
 
+        @Override
         public void handleEvent(final Event e) {
 
             // If focus is leaving an important widget or the field's
@@ -111,12 +106,12 @@ public class ContentProposalPopup extends PopupDialog {
             if (e.type == SWT.FocusOut) {
                 scrollbarClicked = false;
                 /*
-                 * Ignore this event if it's only happening because focus is
-                 * moving between the popup shells, their controls, or a
-                 * scrollbar. Do this in an async since the focus is not
-                 * actually switched when this event is received.
+                 * Ignore this event if it's only happening because focus is moving between the popup shells, their
+                 * controls, or a scrollbar. Do this in an async since the focus is not actually switched when this
+                 * event is received.
                  */
                 e.display.asyncExec(new Runnable() {
+                    @Override
                     public void run() {
                         if (isValid()) {
                             if (scrollbarClicked || hasFocus()) {
@@ -134,8 +129,7 @@ public class ContentProposalPopup extends PopupDialog {
                                 return;
                             }
                             /*
-                             * System.out.println(e);
-                             * System.out.println(e.display.getFocusControl());
+                             * System.out.println(e); System.out.println(e.display.getFocusControl());
                              * System.out.println(e.display.getActiveShell());
                              */
                             close();
@@ -218,6 +212,7 @@ public class ContentProposalPopup extends PopupDialog {
      */
     private final class TargetControlListener implements Listener {
         // Key events from the control
+        @Override
         public void handleEvent(Event e) {
             if (!isValid()) {
                 return;
@@ -463,6 +458,7 @@ public class ContentProposalPopup extends PopupDialog {
         /*
          * Create a text control for showing the info about a proposal.
          */
+        @Override
         protected Control createDialogArea(Composite parent) {
             text = new Text(parent, SWT.READ_ONLY | SWT.NO_FOCUS);
 
@@ -475,6 +471,7 @@ public class ContentProposalPopup extends PopupDialog {
 
             // since SWT.NO_FOCUS is only a hint...
             text.addFocusListener(new FocusAdapter() {
+                @Override
                 public void focusGained(FocusEvent event) {
                     ContentProposalPopup.this.close();
                 }
@@ -485,6 +482,7 @@ public class ContentProposalPopup extends PopupDialog {
         /*
          * Adjust the bounds so that we appear adjacent to our parent shell
          */
+        @Override
         protected void adjustBounds() {
             Rectangle parentBounds = getParentShell().getBounds();
             Point textSize = text.getSize();
@@ -530,6 +528,7 @@ public class ContentProposalPopup extends PopupDialog {
          *
          * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
          */
+        @Override
         protected Color getForeground() {
             return control.getDisplay().getSystemColor(
                     SWT.COLOR_INFO_FOREGROUND);
@@ -540,6 +539,7 @@ public class ContentProposalPopup extends PopupDialog {
          *
          * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
          */
+        @Override
         protected Color getBackground() {
             return control.getDisplay().getSystemColor(
                     SWT.COLOR_INFO_BACKGROUND);
@@ -603,8 +603,7 @@ public class ContentProposalPopup extends PopupDialog {
     private ContentProposalList proposalList;
 
     /*
-     * Secondary popup used to show detailed information about the selected
-     * proposal.
+     * Secondary popup used to show detailed information about the selected proposal.
      */
     private InfoPopupDialog infoPopup;
 
@@ -624,8 +623,7 @@ public class ContentProposalPopup extends PopupDialog {
     private Control control;
 
     /*
-     * A label provider used to display proposals in the popup, and to extract
-     * Strings from non-String proposals.
+     * A label provider used to display proposals in the popup, and to extract Strings from non-String proposals.
      */
     // private ILabelProvider labelProvider;
 
@@ -650,12 +648,11 @@ public class ContentProposalPopup extends PopupDialog {
     private Long uniqueId = Long.MIN_VALUE;
 
     /**
-     * Constructs a new instance of this popup, specifying the control for which
-     * this popup is showing content, and how the proposals should be obtained
-     * and displayed.
+     * Constructs a new instance of this popup, specifying the control for which this popup is showing content, and how
+     * the proposals should be obtained and displayed.
      *
-     * @param infoText Text to be shown in a lower info area, or
-     *        <code>null</code> if there is no info area.
+     * @param infoText
+     *            Text to be shown in a lower info area, or <code>null</code> if there is no info area.
      */
     ContentProposalPopup(ContentProposalAdapter adapter, String infoText,
             ContentProposalList proposalList) {
@@ -684,7 +681,7 @@ public class ContentProposalPopup extends PopupDialog {
         this.functionContentImageSelected = AutoCompleteUIPlugin.getDefault()
                 .getImageFromPlugin(AutoCompleteUIPlugin.PLUGIN_ID,
                         "icons/function-16-white.png");
-        this.nonSelectableItems = new ArrayList<Integer>();
+        this.nonSelectableItems = new ArrayList<>();
 
         this.proposalList = proposalList;
         // When the popup is opened & the content is not already completed, we
@@ -698,6 +695,7 @@ public class ContentProposalPopup extends PopupDialog {
      *
      * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
      */
+    @Override
     protected Color getForeground() {
         return JFaceResources.getColorRegistry().get(
                 JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
@@ -708,19 +706,19 @@ public class ContentProposalPopup extends PopupDialog {
      *
      * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
      */
+    @Override
     protected Color getBackground() {
         return JFaceResources.getColorRegistry().get(
                 JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
     }
 
     /*
-     * Creates the content area for the proposal popup. This creates a table and
-     * places it inside the composite. The table will contain a list of all the
-     * proposals.
+     * Creates the content area for the proposal popup. This creates a table and places it inside the composite. The
+     * table will contain a list of all the proposals.
      *
-     * @param parent The parent composite to contain the dialog area; must not
-     * be <code>null</code>.
+     * @param parent The parent composite to contain the dialog area; must not be <code>null</code>.
      */
+    @Override
     protected final Control createDialogArea(final Composite parent) {
         Composite wrapper = (Composite) super.createDialogArea(parent);
         wrapper.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -731,44 +729,40 @@ public class ContentProposalPopup extends PopupDialog {
             proposalTable = new Table(wrapper, SWT.H_SCROLL | SWT.V_SCROLL
                     | SWT.VIRTUAL | SWT.NO_FOCUS);
             Listener listener = new Listener() {
+                @Override
                 public void handleEvent(Event event) {
                     handleSetData(event);
                 }
             };
             proposalTable.addListener(SWT.SetData, listener);
 
-            /*
-             * NOTE: MeasureItem, PaintItem and EraseItem are called repeatedly.
-             * Therefore, it is critical for performance that these methods be
-             * as efficient as possible. NOT implemented for RAP.
-             */
-            if (!AutoCompleteUIPlugin.isRAP()) {
-                proposalTable.addListener(SWTPaintItem, new Listener() {
-                    public void handleEvent(Event event) {
-                        TableItem item = (TableItem) event.item;
-                        int index = proposalTable.indexOf(item);
-                        if (textLayouts != null && index < textLayouts.length
-                                && textLayouts[index] != null) {
-                            textLayouts[index].handlePaintItemEvent(event, 20, 2);
-                        }
-                        Proposal p = (Proposal) item.getData();
-                        Image image = getImage(p,
-                                index == proposalTable.getSelectionIndex());
-                        if (image != null)
-                            event.gc.drawImage(image, event.x, event.y + 2);
+            proposalTable.addListener(SWTPaintItem, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    TableItem item = (TableItem) event.item;
+                    int index = proposalTable.indexOf(item);
+                    if (textLayouts != null && index < textLayouts.length
+                            && textLayouts[index] != null) {
+                        textLayouts[index].handlePaintItemEvent(event, 20, 2);
                     }
-                });
-                proposalTable.addListener(SWTMeasureItem, new Listener() {
-                    public void handleEvent(Event event) {
-                        TableItem item = (TableItem) event.item;
-                        int index = proposalTable.indexOf(item);
-                        if (textLayouts != null && index < textLayouts.length
-                                && textLayouts[index] != null) {
-                            textLayouts[index].handleMeasureItemEvent(event);
-                        }
+                    Proposal p = (Proposal) item.getData();
+                    Image image = getImage(p,
+                            index == proposalTable.getSelectionIndex());
+                    if (image != null)
+                        event.gc.drawImage(image, event.x, event.y + 2);
+                }
+            });
+            proposalTable.addListener(SWTMeasureItem, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    TableItem item = (TableItem) event.item;
+                    int index = proposalTable.indexOf(item);
+                    if (textLayouts != null && index < textLayouts.length
+                            && textLayouts[index] != null) {
+                        textLayouts[index].handleMeasureItemEvent(event);
                     }
-                });
-            }
+                }
+            });
         } else {
             proposalTable = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL
                     | SWT.NO_FOCUS);
@@ -791,6 +785,7 @@ public class ContentProposalPopup extends PopupDialog {
             }
         });
         proposalTable.addSelectionListener(new SelectionListener() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // If a proposal has been selected, show it in the secondary
                 // popup. Otherwise close the popup.
@@ -811,6 +806,7 @@ public class ContentProposalPopup extends PopupDialog {
             }
 
             // Default selection was made. Accept the current proposal.
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 Proposal proposal = (Proposal) e.item.getData();
                 if (proposal != null) {
@@ -824,6 +820,7 @@ public class ContentProposalPopup extends PopupDialog {
         // Added to solve a item resize bug on windows:
         new TableColumn(proposalTable, SWT.NONE | SWT.NO_FOCUS);
         proposalTable.addControlListener(new ControlAdapter() {
+            @Override
             public void controlResized(ControlEvent event) {
                 if (proposalTable.getColumnCount() > 0) {
                     if (proposalTable.getClientArea().width > maxItemWidth) {
@@ -844,12 +841,12 @@ public class ContentProposalPopup extends PopupDialog {
      *
      * @see org.eclipse.jface.dialogs.PopupDialog.adjustBounds()
      */
+    @Override
     protected void adjustBounds() {
         adjustTableBounds();
         // Now set up a listener to monitor any changes in size.
-        if (AutoCompleteUIPlugin.isRAP())
-            return;
         getShell().addListener(SWT.Resize, new Listener() {
+            @Override
             public void handleEvent(Event e) {
                 popupSize = getShell().getSize();
                 if (infoPopup != null) {
@@ -894,8 +891,6 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     private void initializeTextLayouts() {
-        if (AutoCompleteUIPlugin.isRAP())
-            return;
         Display display = Display.getCurrent();
 
         FontData defaultFontData = display.getSystemFont().getFontData()[0];
@@ -967,8 +962,8 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /*
-     * Handle the set data event. Set the item data of the requested item to the
-     * corresponding proposal in the proposal cache.
+     * Handle the set data event. Set the item data of the requested item to the corresponding proposal in the proposal
+     * cache.
      */
     private void handleSetData(Event event) {
         TableItem item = (TableItem) event.item;
@@ -978,12 +973,6 @@ public class ContentProposalPopup extends PopupDialog {
         int proposalIndex = 0;
         for (Proposal proposal : proposalList.getTopProposalList()) {
             if (index == proposalIndex) {
-                if (AutoCompleteUIPlugin.isRAP()) {
-                    item.setText("  " + getString(proposal));
-                    item.setImage(getImage(proposal, false));
-                    if (maxItemWidth < item.getBounds().width)
-                        maxItemWidth = item.getBounds().width;
-                }
                 item.setData(proposal);
                 return;
             }
@@ -994,30 +983,11 @@ public class ContentProposalPopup extends PopupDialog {
                 // Data == null => not selectable
                 item.setData(null);
                 item.setBackground(display.getSystemColor(SWT.COLOR_GRAY));
-                if (AutoCompleteUIPlugin.isRAP()) {
-                    int count = proposalList.getCount(provider);
-                    String text = provider + " (" + count + " matching items)";
-                    item.setText(text);
-
-                    FontData fontData = display.getSystemFont().getFontData()[0];
-                    FontData newFontData = new FontData(fontData.getName(), fontData.getHeight(), SWT.ITALIC | SWT.BOLD);
-                    Font font = new Font(display, newFontData);
-                    item.setFont(font);
-
-                    if (maxItemWidth < item.getBounds().width)
-                        maxItemWidth = item.getBounds().width;
-                }
                 return;
             }
             proposalIndex++;
             for (Proposal proposal : proposalList.getProposals(provider)) {
                 if (index == proposalIndex) {
-                    if (AutoCompleteUIPlugin.isRAP()) {
-                        item.setText("  " + getString(proposal));
-                        item.setImage(getImage(proposal, false));
-                        if (maxItemWidth < item.getBounds().width)
-                            maxItemWidth = item.getBounds().width;
-                    }
                     item.setData(proposal);
                     return;
                 }
@@ -1027,8 +997,7 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /*
-     * Caches the specified proposals and repopulates the table if it has been
-     * created.
+     * Caches the specified proposals and repopulates the table if it has been created.
      */
     private void setProposals(ContentProposalList newProposalList) {
         if (newProposalList == null) {
@@ -1120,8 +1089,6 @@ public class ContentProposalPopup extends PopupDialog {
             if (index >= 0)
                 selectProposal(index);
         }
-        if (AutoCompleteUIPlugin.isRAP())
-            adjustTableBounds();
     }
 
     /*
@@ -1135,8 +1102,7 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /*
-     * Get the string for the specified proposal. Always return a String of some
-     * kind.
+     * Get the string for the specified proposal. Always return a String of some kind.
      */
     private String getString(Proposal proposal) {
         if (proposal == null) {
@@ -1151,8 +1117,7 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /*
-     * Get the image for the specified proposal. If there is no image available,
-     * return null.
+     * Get the image for the specified proposal. If there is no image available, return null.
      */
     private Image getImage(Proposal proposal, boolean selected) {
         if (proposal == null)
@@ -1166,24 +1131,22 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /*
-     * Return an empty array. Used so that something always shows in the
-     * proposal popup, even if no proposal provider was specified.
+     * Return an empty array. Used so that something always shows in the proposal popup, even if no proposal provider
+     * was specified.
      */
     private ContentProposalList getEmptyProposalArray() {
         return new ContentProposalList();
     }
 
     /*
-     * Answer true if the popup is valid, which means the table has been created
-     * and not disposed.
+     * Answer true if the popup is valid, which means the table has been created and not disposed.
      */
     private boolean isValid() {
         return proposalTable != null && !proposalTable.isDisposed();
     }
 
     /*
-     * Return whether the receiver has focus. This includes a check for whether
-     * the info popup has focus.
+     * Return whether the receiver has focus. This includes a check for whether the info popup has focus.
      */
     public boolean hasFocus() {
         if (!isValid()) {
@@ -1245,14 +1208,14 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /**
-     * Opens this ContentProposalPopup. This method is extended in order to add
-     * the control listener when the popup is opened and to invoke the secondary
-     * popup if applicable.
+     * Opens this ContentProposalPopup. This method is extended in order to add the control listener when the popup is
+     * opened and to invoke the secondary popup if applicable.
      *
      * @return the return code
      *
      * @see org.eclipse.jface.window.Window#open()
      */
+    @Override
     public int open() {
         int value = super.open();
         if (popupCloser == null) {
@@ -1267,12 +1230,11 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /**
-     * Closes this popup. This method is extended to remove the control
-     * listener.
+     * Closes this popup. This method is extended to remove the control listener.
      *
-     * @return <code>true</code> if the window is (or was already) closed, and
-     *         <code>false</code> if it is still open
+     * @return <code>true</code> if the window is (or was already) closed, and <code>false</code> if it is still open
      */
+    @Override
     public boolean close() {
         popupCloser.removeListeners();
         if (infoPopup != null) {
@@ -1295,6 +1257,7 @@ public class ContentProposalPopup extends PopupDialog {
             // code must be able to run independently of the Eclipse
             // runtime.
             Runnable runnable = new Runnable() {
+                @Override
                 public void run() {
                     pendingDescriptionUpdate = true;
                     try {
@@ -1305,6 +1268,7 @@ public class ContentProposalPopup extends PopupDialog {
                         return;
                     }
                     getShell().getDisplay().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             // Query the current selection since we have
                             // been delayed
@@ -1318,6 +1282,7 @@ public class ContentProposalPopup extends PopupDialog {
                                         infoPopup.getShell()
                                                 .addDisposeListener(
                                                         new DisposeListener() {
+                                                            @Override
                                                             public void widgetDisposed(
                                                                     DisposeEvent event) {
                                                                 infoPopup = null;
@@ -1355,8 +1320,7 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /*
-     * Get the proposals from the proposal provider, and recompute any caches.
-     * Repopulate the popup if it is open.
+     * Get the proposals from the proposal provider, and recompute any caches. Repopulate the popup if it is open.
      */
     private void recomputeProposals(ContentProposalList newProposalList) {
         if (newProposalList == null)
@@ -1370,10 +1334,8 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     /*
-     * In an async block, request the proposals. This is used when clients are
-     * in the middle of processing an event that affects the widget content. By
-     * using an async, we ensure that the widget content is up to date with the
-     * event.
+     * In an async block, request the proposals. This is used when clients are in the middle of processing an event that
+     * affects the widget content. By using an async, we ensure that the widget content is up to date with the event.
      */
     private void asyncRecomputeProposals() {
         footer.setText("Searching...");
@@ -1385,6 +1347,7 @@ public class ContentProposalPopup extends PopupDialog {
             }
             final Long currentId = new Long(uniqueId);
             control.getDisplay().asyncExec(new Runnable() {
+                @Override
                 public void run() {
                     adapter.getProposals(new IContentProposalSearchHandler() {
 
@@ -1393,6 +1356,7 @@ public class ContentProposalPopup extends PopupDialog {
                                 final ContentProposalList proposalList) {
                             if (control != null && !control.isDisposed()) {
                                 control.getDisplay().asyncExec(new Runnable() {
+                                    @Override
                                     public void run() {
                                         if (currentId.equals(uniqueId))
                                             recomputeProposals(proposalList);

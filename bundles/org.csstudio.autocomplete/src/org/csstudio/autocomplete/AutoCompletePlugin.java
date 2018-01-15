@@ -9,6 +9,8 @@ package org.csstudio.autocomplete;
 
 import java.util.logging.Logger;
 
+import org.csstudio.autocomplete.pvmanager.sim.DSFunctionRegistry;
+import org.csstudio.autocomplete.pvmanager.sim.SimDSFunctionSet;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -19,8 +21,7 @@ import org.osgi.framework.BundleContext;
  */
 public class AutoCompletePlugin implements BundleActivator {
 
-    // The plug-in ID
-    public static final String PLUGIN_ID = "org.csstudio.autocomplete"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.csstudio.autocomplete";
 
     public static final Logger logger = Logger.getLogger(PLUGIN_ID);
 
@@ -38,10 +39,10 @@ public class AutoCompletePlugin implements BundleActivator {
     @Override
     public void start(BundleContext context) throws Exception {
         bundleContext = context;
+        DSFunctionRegistry.getDefault().registerDSFunctionSet(new SimDSFunctionSet());
     }
 
     @Override
     public void stop(BundleContext arg0) throws Exception {
     }
-
 }

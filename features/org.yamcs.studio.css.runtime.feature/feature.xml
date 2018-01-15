@@ -83,20 +83,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.autocomplete.pvmanager.formula"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.autocomplete.pvmanager.sim"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.simplepv"
          download-size="0"
          install-size="0"
@@ -195,13 +181,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.autocomplete.pvmanager.loc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.opibuilder"
          download-size="0"
          install-size="0"
@@ -224,13 +203,6 @@
 
    <plugin
          id="org.csstudio.swt.xygraph"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.autocomplete.pvmanager.sys"
          download-size="0"
          install-size="0"
          version="0.0.0"

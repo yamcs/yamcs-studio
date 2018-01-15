@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.csstudio.autocomplete.AutoCompletePlugin
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.diirt
 Bundle-Vendor: Fred Arnaud <frederic.arnaud@iter.org> - ITER
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.csstudio.autocomplete,
@@ -15,5 +16,10 @@ Export-Package: org.csstudio.autocomplete,
  org.csstudio.autocomplete.parser.engine.expr,
  org.csstudio.autocomplete.preferences,
  org.csstudio.autocomplete.proposals,
- org.csstudio.autocomplete.tooltips
+ org.csstudio.autocomplete.tooltips,
+ org.csstudio.autocomplete.pvmanager.formula,
+ org.csstudio.autocomplete.pvmanager.loc,
+ org.csstudio.autocomplete.pvmanager.sim,
+ org.csstudio.autocomplete.pvmanager.sys
 Service-Component: OSGI-INF/*.xml
+Import-Package: org.diirt.datasource.formula

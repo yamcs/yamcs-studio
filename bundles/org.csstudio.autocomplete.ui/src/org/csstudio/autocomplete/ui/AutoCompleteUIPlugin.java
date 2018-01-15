@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -34,12 +33,11 @@ import org.osgi.framework.BundleContext;
 public class AutoCompleteUIPlugin extends AbstractUIPlugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.csstudio.autocomplete.ui"; //$NON-NLS-1$
-    public static final String HISTORY_TAG = "auto_complete_history"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.csstudio.autocomplete.ui";
+    public static final String HISTORY_TAG = "auto_complete_history";
 
     /** Extension point ID for providing the helpers */
     public static final String EXT_ID = "org.csstudio.autocomplete.ui.helpers";
-    private static boolean isRAP = SWT.getPlatform().startsWith("rap"); //$NON-NLS-1$;
 
     /** The shared instance */
     private static AutoCompleteUIPlugin plugin;
@@ -57,7 +55,7 @@ public class AutoCompleteUIPlugin extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        fifos = new HashMap<String, LinkedList<String>>();
+        fifos = new HashMap<>();
         readExtensionRegistry();
         loadSettings();
     }
@@ -78,7 +76,7 @@ public class AutoCompleteUIPlugin extends AbstractUIPlugin {
                 .getConfigurationElementsFor(EXT_ID);
         if (configs.length > 1)
             throw new Exception("Found " + configs.length
-                            + " Auto-Complete UI Helper implementations, expecting at most one");
+                    + " Auto-Complete UI Helper implementations, expecting at most one");
         if (configs.length == 1) { // Use implementations from extension point
             Logger.getLogger(getClass().getName()).config(
                     "UI Helper provided by " + configs[0].getContributor().getName());
@@ -135,7 +133,7 @@ public class AutoCompleteUIPlugin extends AbstractUIPlugin {
 
     public synchronized LinkedList<String> getHistory(final String type) {
         if (fifos.get(type) == null) {
-            final LinkedList<String> fifo = new LinkedList<String>();
+            final LinkedList<String> fifo = new LinkedList<>();
             if (settings != null) {
                 String values[] = settings.getArray(type);
                 if (values != null)
@@ -151,8 +149,10 @@ public class AutoCompleteUIPlugin extends AbstractUIPlugin {
     /**
      * Load the <code>Image</code> from the given path in the given plugin.
      *
-     * @param pluginId The id of the plugin that contains the requested image.
-     * @param relativePath The resource path of the requested image.
+     * @param pluginId
+     *            The id of the plugin that contains the requested image.
+     * @param relativePath
+     *            The resource path of the requested image.
      * @return The <code>Image</code> from the given path in the given plugin.
      */
     public Image getImageFromPlugin(final String pluginId,
@@ -170,14 +170,7 @@ public class AutoCompleteUIPlugin extends AbstractUIPlugin {
         return imageRegistry.get(key);
     }
 
-    /** @return {@link UIHelper} */
     public static UIHelper getUIHelper() {
         return AutoCompleteUIPlugin.ui;
     }
-
-    /** @return true if this is running in RAP */
-    public static boolean isRAP() {
-        return isRAP;
-    }
-
 }
