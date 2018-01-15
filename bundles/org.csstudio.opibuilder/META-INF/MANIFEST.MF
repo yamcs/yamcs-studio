@@ -29,8 +29,6 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.utility.file,
  org.csstudio.utility.singlesource,
  org.diirt,
- org.csstudio.swt.widgets,
- org.csstudio.swt.xygraph,
  org.eclipse.e4.ui.workbench 
 Bundle-ActivationPolicy: lazy
 Export-Package: org.csstudio.opibuilder,
