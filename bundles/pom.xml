@@ -11,7 +11,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.csstudio.apputil</module>
     <module>org.csstudio.autocomplete</module>
     <module>org.csstudio.autocomplete.ui</module>
     <module>org.csstudio.examples</module>
