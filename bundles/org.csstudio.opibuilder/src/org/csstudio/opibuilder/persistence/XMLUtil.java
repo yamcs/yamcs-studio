@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.csstudio.apputil.macros.MacroUtil;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractLinkingContainerModel;
@@ -35,6 +34,7 @@ import org.csstudio.opibuilder.persistence.LineAwareXMLParser.LineAwareElement;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
+import org.csstudio.opibuilder.util.MacroUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.util.WidgetDescriptor;
