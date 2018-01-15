@@ -12,7 +12,7 @@ import java.beans.IntrospectionException;
 
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
-import org.csstudio.ui.util.ColorConstants;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -50,6 +50,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
             private int startSashLoc;
             private boolean armed;
 
+            @Override
             public void mouseDoubleClicked(MouseEvent me) {
 
             }
@@ -90,6 +91,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
                 me.consume();
             }
 
+            @Override
             public void mousePressed(MouseEvent me) {
                 if (me.button != 1)
                     return;
@@ -108,6 +110,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
                 me.consume();
             }
 
+            @Override
             public void mouseReleased(MouseEvent me) {
                 if (me.button != 1)
                     return;
@@ -303,6 +306,7 @@ public class SashContainerFigure extends Figure implements Introspectable {
         add(sash);
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
@@ -336,9 +340,8 @@ public class SashContainerFigure extends Figure implements Introspectable {
     }
 
     /**
-     * @return the bounds of two subpanels. The coordinate of bounds is relative
-     *         to the pane. bounds[0] is the bounds of left/up panel. bounds[1]
-     *         is the bounds of right/down panel.
+     * @return the bounds of two subpanels. The coordinate of bounds is relative to the pane. bounds[0] is the bounds of
+     *         left/up panel. bounds[1] is the bounds of right/down panel.
      */
     public Rectangle[] getSubPanelsBounds() {
         Rectangle boundsA = new Rectangle();
@@ -406,10 +409,10 @@ public class SashContainerFigure extends Figure implements Introspectable {
             Rectangle[] subBounds = getSubPanelsBounds();
             subBounds[0].translate(clientArea.getLocation());
             subBounds[1].translate(clientArea.getLocation());
-            subBounds[0].width -=1;
-            subBounds[1].width -=1;
-            subBounds[0].height -=1;
-            subBounds[1].height -=1;
+            subBounds[0].width -= 1;
+            subBounds[1].width -= 1;
+            subBounds[0].height -= 1;
+            subBounds[1].height -= 1;
             graphics.drawRoundRectangle(subBounds[0], 6, 6);
             graphics.drawRoundRectangle(subBounds[1], 6, 6);
             break;

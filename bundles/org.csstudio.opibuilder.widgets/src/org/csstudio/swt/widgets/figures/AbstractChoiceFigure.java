@@ -15,10 +15,10 @@ import java.util.List;
 
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
-import org.csstudio.ui.util.ColorConstants;
 import org.eclipse.draw2d.ButtonGroup;
 import org.eclipse.draw2d.ChangeEvent;
 import org.eclipse.draw2d.ChangeListener;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Toggle;
@@ -26,16 +26,22 @@ import org.eclipse.draw2d.ToggleModel;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 
-/**The abstract figure for widget which can perform choice action.
+/**
+ * The abstract figure for widget which can perform choice action.
+ * 
  * @author Xihui Chen
  *
  */
-public abstract class AbstractChoiceFigure extends Figure implements Introspectable{
+public abstract class AbstractChoiceFigure extends Figure implements Introspectable {
 
     public interface IChoiceButtonListener extends EventListener {
-        /**Executed when one of the choice button pressed.
-         * @param index the index of the button.
-         * @param value the string value of the state.
+        /**
+         * Executed when one of the choice button pressed.
+         * 
+         * @param index
+         *            the index of the button.
+         * @param value
+         *            the string value of the state.
          */
         public void buttonPressed(int index, String value);
     }
@@ -50,7 +56,6 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
 
     private boolean isHorizontal = false;
 
-
     protected Color selectedColor = ColorConstants.black;
 
     protected boolean runMode;
@@ -58,26 +63,26 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     public AbstractChoiceFigure(boolean runMode) {
         this.runMode = runMode;
         buttonGroup = new ButtonGroup();
-        states = new ArrayList<String>();
-        toggles = new ArrayList<Toggle>();
-        models = new ArrayList<ToggleModel>();
-        listeners = new ArrayList<IChoiceButtonListener>();
+        states = new ArrayList<>();
+        toggles = new ArrayList<>();
+        models = new ArrayList<>();
+        listeners = new ArrayList<>();
     }
 
-    public void addChoiceButtonListener(IChoiceButtonListener listener){
-        if(listener != null)
+    public void addChoiceButtonListener(IChoiceButtonListener listener) {
+        if (listener != null)
             listeners.add(listener);
     }
 
-    public void removeChoiceButtonListener(IChoiceButtonListener listener){
-        if(listeners.contains(listener))
+    public void removeChoiceButtonListener(IChoiceButtonListener listener) {
+        if (listeners.contains(listener))
             listeners.remove(listener);
     }
 
     protected abstract Toggle createToggle(String text);
 
-    private void fireButtonPressed(int index, String value){
-        for(IChoiceButtonListener listener : listeners){
+    private void fireButtonPressed(int index, String value) {
+        for (IChoiceButtonListener listener : listeners) {
             listener.buttonPressed(index, value);
         }
     }
@@ -86,7 +91,7 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     public void setEnabled(boolean value) {
         super.setEnabled(value);
 
-        for(Toggle toggle : toggles){
+        for (Toggle toggle : toggles) {
             toggle.setEnabled(value);
         }
         repaint();
@@ -99,11 +104,13 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
         return selectedColor;
     }
 
-    public synchronized String getState(){
+    public synchronized String getState() {
         return states.get(models.indexOf(buttonGroup.getSelected()));
     }
 
-    /**Get all states.
+    /**
+     * Get all states.
+     * 
      * @return all states.
      */
     public List<String> getStates() {
@@ -120,22 +127,21 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
     @Override
     protected void layout() {
         super.layout();
-        if(states.size() >0){
+        if (states.size() > 0) {
             Rectangle clientArea = getClientArea();
-            if (isHorizontal){
-                int avgWidth = clientArea.width/states.size();
+            if (isHorizontal) {
+                int avgWidth = clientArea.width / states.size();
                 int startX = clientArea.x;
-                for(Object child : getChildren()){
-                    ((Figure)child).setBounds(new Rectangle(
+                for (Object child : getChildren()) {
+                    ((Figure) child).setBounds(new Rectangle(
                             startX, clientArea.y, avgWidth, clientArea.height));
                     startX += avgWidth;
                 }
-            }
-            else {
-                int avgHeight = clientArea.height/states.size();
+            } else {
+                int avgHeight = clientArea.height / states.size();
                 int startY = clientArea.y;
-                for(Object child : getChildren()){
-                    ((Figure)child).setBounds(new Rectangle(
+                for (Object child : getChildren()) {
+                    ((Figure) child).setBounds(new Rectangle(
                             clientArea.x, startY, clientArea.width, avgHeight));
                     startY += avgHeight;
                 }
@@ -143,31 +149,30 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
         }
     }
 
-
     @Override
     protected void paintClientArea(Graphics graphics) {
         super.paintClientArea(graphics);
-        if(states.size() <=0){
+        if (states.size() <= 0) {
             graphics.fillRectangle(getClientArea());
         }
     }
 
     public void setHorizontal(boolean newValue) {
-        if(this.isHorizontal == newValue)
+        if (this.isHorizontal == newValue)
             return;
         isHorizontal = newValue;
         revalidate();
     }
 
     public void setSelectedColor(Color checkedColor) {
-        if(this.selectedColor != null && this.selectedColor.equals(checkedColor))
+        if (this.selectedColor != null && this.selectedColor.equals(checkedColor))
             return;
         this.selectedColor = checkedColor;
         repaint();
     }
 
-    public synchronized void setState(int stateIndex){
-        if(stateIndex < states.size()){
+    public synchronized void setState(int stateIndex) {
+        if (stateIndex < states.size()) {
             fromSetState = true;
             buttonGroup.setSelected(models.get(stateIndex));
             fromSetState = false;
@@ -175,40 +180,44 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
 
     }
 
-    public synchronized void setState(String state){
+    public synchronized void setState(String state) {
         fromSetState = true;
-        if(states.contains(state)){
+        if (states.contains(state)) {
             buttonGroup.setSelected(models.get(
-                states.indexOf(state)));
-        }else
+                    states.indexOf(state)));
+        } else
             buttonGroup.setSelected(null);
         fromSetState = false;
     }
 
-    /**Set all the state string values.
-     * @param states the states
+    /**
+     * Set all the state string values.
+     * 
+     * @param states
+     *            the states
      */
     public void setStates(List<String> states) {
         this.states = states;
         removeAll();
-        for(Object model : buttonGroup.getElements().toArray()){
+        for (Object model : buttonGroup.getElements().toArray()) {
             buttonGroup.remove((ToggleModel) model);
         }
         toggles.clear();
         models.clear();
-        int i=0;
-        for(final String state : states){
+        int i = 0;
+        for (final String state : states) {
             final int index = i++;
             ToggleModel toggleModel = new ToggleModel();
             final Toggle toggle = createToggle(state);
-            if(!runMode)
+            if (!runMode)
                 toggle.setEventHandler(null);
             toggleModel.addChangeListener(new ChangeListener() {
 
+                @Override
                 public void handleStateChanged(ChangeEvent event) {
-                    if(event.getPropertyName().equals(ToggleModel.SELECTED_PROPERTY) &&
-                            toggle.isSelected()){
-                        if(fromSetState)
+                    if (event.getPropertyName().equals(ToggleModel.SELECTED_PROPERTY) &&
+                            toggle.isSelected()) {
+                        if (fromSetState)
                             fromSetState = false;
                         else
                             fireButtonPressed(index, state);
@@ -225,6 +234,7 @@ public abstract class AbstractChoiceFigure extends Figure implements Introspecta
         }
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }

@@ -17,10 +17,10 @@ import org.csstudio.swt.widgets.figures.TextFigure.H_ALIGN;
 import org.csstudio.swt.widgets.figures.TextFigure.V_ALIGN;
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
+import org.csstudio.ui.util.CSSSchemeBorder;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.draw2d.Border;
-import org.csstudio.ui.util.CSSSchemeBorder;
-import org.csstudio.ui.util.ColorConstants;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -112,7 +112,7 @@ public class ArrayFigure extends Figure implements Introspectable {
             scrollbar.setExtent(getVisibleElementsCount());
             scrollbar.setPageIncrement(getVisibleElementsCount());
             enabilityDirty = true;
-            if(!isEnabled())
+            if (!isEnabled())
                 figure.setEnabled(false);
         }
 
@@ -184,6 +184,7 @@ public class ArrayFigure extends Figure implements Introspectable {
         setHorizontal(false);
         spinner.addManualValueChangeListener(new IManualValueChangeListener() {
 
+            @Override
             public void manualValueChanged(double newValue) {
                 setIndex((int) newValue);
                 // scrollbar.setValue((int) newValue);
@@ -193,6 +194,7 @@ public class ArrayFigure extends Figure implements Introspectable {
         scrollbar
                 .addManualValueChangeListener(new IManualValueChangeListener() {
 
+                    @Override
                     public void manualValueChanged(double newValue) {
                         setIndex((int) newValue);
 
@@ -212,9 +214,9 @@ public class ArrayFigure extends Figure implements Introspectable {
         listeners.add(listener);
     }
 
-    protected void fireIndexChanged(int newIndex){
-        for(Object listener:listeners.getListeners()){
-            ((IManualValueChangeListener)listener).manualValueChanged(newIndex);
+    protected void fireIndexChanged(int newIndex) {
+        for (Object listener : listeners.getListeners()) {
+            ((IManualValueChangeListener) listener).manualValueChanged(newIndex);
         }
     }
 
@@ -230,6 +232,7 @@ public class ArrayFigure extends Figure implements Introspectable {
      *
      * @see org.csstudio.swt.widgets.introspection.Introspectable#getBeanInfo()
      */
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
@@ -260,11 +263,9 @@ public class ArrayFigure extends Figure implements Introspectable {
     }
 
     /**
-     * Calculate the number of visible elements that the array pane can hold.
-     * This is a round number since the array pane will not fit an integer
-     * number of elements. The client should call
-     * {@link #calcWidgetSizeForElements(int, Dimension)} to get the proposed
-     * size this number of elements.
+     * Calculate the number of visible elements that the array pane can hold. This is a round number since the array
+     * pane will not fit an integer number of elements. The client should call
+     * {@link #calcWidgetSizeForElements(int, Dimension)} to get the proposed size this number of elements.
      *
      * @param elementSize
      *            size of element.
@@ -285,8 +286,7 @@ public class ArrayFigure extends Figure implements Introspectable {
     }
 
     /**
-     * Calculate the proposed widget size for the proposed visible elements
-     * count.
+     * Calculate the proposed widget size for the proposed visible elements count.
      *
      * @param visibleElementsCount
      *            number of visible elements.
@@ -320,7 +320,7 @@ public class ArrayFigure extends Figure implements Introspectable {
      * @return each element widget's size. If no children, return null.
      */
     public Dimension getElementSize() {
-        if(pane.getChildren().isEmpty())
+        if (pane.getChildren().isEmpty())
             return null;
         return ((IFigure) pane.getChildren().get(0)).getSize();
     }
@@ -356,13 +356,12 @@ public class ArrayFigure extends Figure implements Introspectable {
     /**
      * Calculate the preferred size based current layout and elements' size.
      *
-     * @see org.eclipse.draw2d.XYLayout#calculatePreferredSize(org.eclipse.draw2d.IFigure,
-     *      int, int)
+     * @see org.eclipse.draw2d.XYLayout#calculatePreferredSize(org.eclipse.draw2d.IFigure, int, int)
      */
     protected Dimension calculatePreferredSize() {
         Dimension result = new Dimension();
         Dimension elementSize = getElementSize();
-        if(elementSize == null)
+        if (elementSize == null)
             return getSize();
         if (horizontal) {
             result.height = elementSize.height
@@ -429,12 +428,11 @@ public class ArrayFigure extends Figure implements Introspectable {
         this.arrayLength = arrayLength;
         scrollbar.setMaximum(arrayLength - 1);
         spinner.setMax(arrayLength - 1);
-        if(arrayLength > 0 && getIndex() >=arrayLength)
+        if (arrayLength > 0 && getIndex() >= arrayLength)
             setIndex(0);
         enabilityDirty = true;
         updateElementsEnability();
     }
-
 
     @Override
     public void setCursor(Cursor cursor) {
@@ -444,7 +442,7 @@ public class ArrayFigure extends Figure implements Introspectable {
     @Override
     public void setEnabled(boolean value) {
         pane.setEnabled(value);
-        enabilityDirty=true;
+        enabilityDirty = true;
         updateElementsEnability();
 
     }
@@ -476,12 +474,12 @@ public class ArrayFigure extends Figure implements Introspectable {
     }
 
     protected void updateElementsEnability() {
-        if(!enabilityDirty)
+        if (!enabilityDirty)
             return;
-        enabilityDirty=false;
-        if(!pane.isEnabled()){
-            for(Object child : pane.getChildren())
-                ((IFigure)child).setEnabled(false);
+        enabilityDirty = false;
+        if (!pane.isEnabled()) {
+            for (Object child : pane.getChildren())
+                ((IFigure) child).setEnabled(false);
             return;
         }
 

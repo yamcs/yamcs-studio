@@ -28,16 +28,17 @@ import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.IntegerProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.OPIFont;
-import org.csstudio.ui.util.ColorConstants;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 /**
  * Model for the ThumbWheel.
- *  @author Alen Vrecko, Jozef Stefan Institute
- *  @author Joerg Rathlev, Universitaet Hamburg
- *  @author Jose Ortega, Xihui Chen
- *  @author Takashi Nakamoto, Cosylab
+ * 
+ * @author Alen Vrecko, Jozef Stefan Institute
+ * @author Joerg Rathlev, Universitaet Hamburg
+ * @author Jose Ortega, Xihui Chen
+ * @author Takashi Nakamoto, Cosylab
  *
  */
 public class ThumbWheelModel extends AbstractPVWidgetModel {
@@ -62,7 +63,7 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
 
     public static final String ID = "org.csstudio.opibuilder.widgets.ThumbWheel"; //$NON-NLS-1$
 
-//    public static final String PROP_VALUE = "value"; //$NON-NLS-1$
+    // public static final String PROP_VALUE = "value"; //$NON-NLS-1$
 
     private static final int DEFAULT_HEIGHT = 60;
 
@@ -103,8 +104,8 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
      */
     @Override
     protected void configureProperties() {
-//        addProperty(new DoubleProperty(PROP_VALUE, "Value",
-//                WidgetPropertyCategory.Behavior, 0));
+        // addProperty(new DoubleProperty(PROP_VALUE, "Value",
+        // WidgetPropertyCategory.Behavior, 0));
         addProperty(new DoubleProperty(PROP_MIN, "Minimum",
                 WidgetPropertyCategory.Behavior, DEFAULT_MIN));
         addProperty(new DoubleProperty(PROP_MAX, "Maximum",
@@ -130,13 +131,12 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
 
     }
 
-
-    public void setFont(OPIFont font){
+    public void setFont(OPIFont font) {
         setPropertyValue(PROP_FONT, font);
     }
 
     public int getWholePartDigits() {
-        return (Integer)getProperty(PROP_INTEGER_DIGITS_PART).getPropertyValue();
+        return (Integer) getProperty(PROP_INTEGER_DIGITS_PART).getPropertyValue();
     }
 
     public void setWholePartDigits(int val) {
@@ -144,19 +144,19 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
     }
 
     public int getDecimalPartDigits() {
-        return (Integer)getProperty(PROP_DECIMAL_DIGITS_PART).getPropertyValue();
+        return (Integer) getProperty(PROP_DECIMAL_DIGITS_PART).getPropertyValue();
     }
 
     public void setDecimalPartDigits(int val) {
         setPropertyValue(PROP_DECIMAL_DIGITS_PART, val);
     }
 
-//    public double getValue() {
-//        return (Double)getProperty(PROP_VALUE).getPropertyValue();
-//    }
+    // public double getValue() {
+    // return (Double)getProperty(PROP_VALUE).getPropertyValue();
+    // }
 
     public int getInternalFrameThickness() {
-        return (Integer)getProperty(PROP_INTERNAL_FRAME_THICKNESS).getPropertyValue();
+        return (Integer) getProperty(PROP_INTERNAL_FRAME_THICKNESS).getPropertyValue();
     }
 
     public RGB getInternalFrameColor() {
@@ -168,11 +168,11 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
     }
 
     public double getMinimum() {
-        return (Double)getProperty(PROP_MIN).getPropertyValue();
+        return (Double) getProperty(PROP_MIN).getPropertyValue();
     }
 
     public double getMaximum() {
-        return (Double)getProperty(PROP_MAX).getPropertyValue();
+        return (Double) getProperty(PROP_MAX).getPropertyValue();
     }
 
     public Color getInternalBorderColor() {
@@ -184,7 +184,7 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
     }
 
     public int getInternalBorderWidth() {
-        return (Integer)getProperty(PROP_INTERNAL_FRAME_THICKNESS).getPropertyValue();
+        return (Integer) getProperty(PROP_INTERNAL_FRAME_THICKNESS).getPropertyValue();
     }
 
     /**

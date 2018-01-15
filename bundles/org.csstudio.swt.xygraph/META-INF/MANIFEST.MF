@@ -4,8 +4,7 @@ Export-Package: org.csstudio.swt.xygraph.dataprovider,org.csstudio.swt
  t.xygraph.undo,org.csstudio.swt.xygraph.util
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.draw2d,
- org.csstudio.ui.util
+ org.eclipse.draw2d
 Bundle-Vendor: Xihui Chen - SNS
 Bundle-ActivationPolicy: lazy
 Bundle-Version: 1.0.0.qualifier

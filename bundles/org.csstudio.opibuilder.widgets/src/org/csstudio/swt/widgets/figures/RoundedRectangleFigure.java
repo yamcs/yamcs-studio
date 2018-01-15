@@ -28,8 +28,8 @@ import java.beans.IntrospectionException;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.introspection.ShapeWidgetIntrospector;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
-import org.csstudio.ui.util.ColorConstants;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.Shape;
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Sven Wende, Alexander Will, Xihui Chen
  *
  */
-public final class RoundedRectangleFigure extends RoundedRectangle implements Introspectable{
+public final class RoundedRectangleFigure extends RoundedRectangle implements Introspectable {
 
     /**
      * The fill grade (0 - 100%).
@@ -64,9 +64,9 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
 
     private Color lineColor = ColorConstants.blue;
 
-    private Color backGradientStartColor =ColorConstants.white;
-    private Color foreGradientStartColor =ColorConstants.white;
-    private boolean gradient=false;
+    private Color backGradientStartColor = ColorConstants.white;
+    private Color foreGradientStartColor = ColorConstants.white;
+    private boolean gradient = false;
     private Boolean support3D = null;
 
     /**
@@ -77,24 +77,24 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
 
         Rectangle figureBounds = getClientArea();
 
-        if(support3D==null)
+        if (support3D == null)
             support3D = GraphicsUtil.testPatternSupported(graphics);
 
         if (!transparent) {
             graphics.pushState();
-            if(isEnabled())
+            if (isEnabled())
                 graphics.setBackgroundColor(getBackgroundColor());
             Pattern pattern = null;
-            if(gradient && support3D && isEnabled()){
+            if (gradient && support3D && isEnabled()) {
                 pattern = setGradientPattern(graphics, figureBounds, backGradientStartColor, getBackgroundColor());
             }
             graphics.fillRoundRectangle(figureBounds, corner.width, corner.height);
-            if(pattern!=null)
+            if (pattern != null)
                 pattern.dispose();
             graphics.popState();
         }
 
-        if(getFill() > 0){
+        if (getFill() > 0) {
             Rectangle fillRectangle;
             if (horizontalFill) {
                 int newW = (int) Math.round(figureBounds.width * (getFill() / 100));
@@ -110,14 +110,14 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
             graphics.pushState();
 
             graphics.setClip(fillRectangle);
-            if(isEnabled())
+            if (isEnabled())
                 graphics.setBackgroundColor(getForegroundColor());
             Pattern pattern = null;
-            if(gradient && support3D && isEnabled()){
+            if (gradient && support3D && isEnabled()) {
                 pattern = setGradientPattern(graphics, figureBounds, foreGradientStartColor, getForegroundColor());
             }
             graphics.fillRoundRectangle(figureBounds, corner.width, corner.height);
-            if(pattern!=null)
+            if (pattern != null)
                 pattern.dispose();
             graphics.popState();
         }
@@ -132,43 +132,37 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
             Rectangle figureBounds, Color gradientStartColor, Color fillColor) {
         Pattern pattern;
         int tx = figureBounds.x;
-        int ty = figureBounds.y+figureBounds.height;
-        if(!horizontalFill){
-            tx=figureBounds.x+figureBounds.width;
-            ty=figureBounds.y;
+        int ty = figureBounds.y + figureBounds.height;
+        if (!horizontalFill) {
+            tx = figureBounds.x + figureBounds.width;
+            ty = figureBounds.y;
         }
-        int alpha = getAlpha()==null?255:getAlpha();
-        //Workaround for the pattern zoom bug on ScaledGraphics:
-        //The coordinates need to be scaled for ScaledGraphics.
+        int alpha = getAlpha() == null ? 255 : getAlpha();
+        // Workaround for the pattern zoom bug on ScaledGraphics:
+        // The coordinates need to be scaled for ScaledGraphics.
         double scale = graphics.getAbsoluteScale();
         pattern = new Pattern(Display.getCurrent(),
-                (int)(figureBounds.x*scale),
-                (int)(figureBounds.y*scale),
-                (int)(tx*scale),
-                (int)(ty*scale),
+                (int) (figureBounds.x * scale),
+                (int) (figureBounds.y * scale),
+                (int) (tx * scale),
+                (int) (ty * scale),
                 gradientStartColor, alpha, fillColor, alpha);
         graphics.setBackgroundPattern(pattern);
         return pattern;
     }
 
-
-
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new ShapeWidgetIntrospector().getBeanInfo(this.getClass());
     }
 
-
-    public int getCornerHeight(){
+    public int getCornerHeight() {
         return corner.height;
     }
 
-
-    public int getCornerWidth(){
+    public int getCornerWidth() {
         return corner.width;
     }
-
-
-
 
     /**
      * Gets the fill grade.
@@ -215,7 +209,6 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         return foreGradientStartColor;
     }
 
-
     /**
      * @return the gradient
      */
@@ -223,9 +216,9 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         return gradient;
     }
 
-
     /**
-     * @param gradientStartColor the gradientStartColor to set
+     * @param gradientStartColor
+     *            the gradientStartColor to set
      */
     public void setBackGradientStartColor(Color gradientStartColor) {
         this.backGradientStartColor = gradientStartColor;
@@ -237,42 +230,43 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         repaint();
     }
 
-
     /**
-     * @param gradient the gradient to set
+     * @param gradient
+     *            the gradient to set
      */
     public void setGradient(boolean gradient) {
         this.gradient = gradient;
         repaint();
     }
 
-
     /**
      * @see Shape#outlineShape(Graphics)
      */
+    @Override
     protected void outlineShape(Graphics graphics) {
         float lineInset = Math.max(1.0f, getLineWidth()) / 2.0f;
-        int inset1 = (int)Math.floor(lineInset);
-        int inset2 = (int)Math.ceil(lineInset);
+        int inset1 = (int) Math.floor(lineInset);
+        int inset2 = (int) Math.ceil(lineInset);
 
         Rectangle r = Draw2dSingletonUtil.getRectangle().setBounds(getClientArea());
-        r.x += inset1 ;
+        r.x += inset1;
         r.y += inset1;
         r.width -= inset1 + inset2;
         r.height -= inset1 + inset2;
         graphics.pushState();
-        if(isEnabled())
+        if (isEnabled())
             graphics.setForegroundColor(lineColor);
-        graphics.drawRoundRectangle(r, Math.max(0, corner.width - (int)lineInset), Math.max(0, corner.height - (int)lineInset));
+        graphics.drawRoundRectangle(r, Math.max(0, corner.width - (int) lineInset),
+                Math.max(0, corner.height - (int) lineInset));
         graphics.popState();
     }
 
-    public void setCornerHeight(int value){
+    public void setCornerHeight(int value) {
         setCornerDimensions(new Dimension(corner.width, value));
         repaint();
     }
 
-    public void setCornerWidth(int value){
+    public void setCornerWidth(int value) {
         setCornerDimensions(new Dimension(value, corner.height));
         repaint();
     }
@@ -288,7 +282,6 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         repaint();
     }
 
-
     /**
      * Sets the orientation (horizontal==true | vertical==false).
      *
@@ -300,12 +293,10 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         repaint();
     }
 
-
     public void setLineColor(Color lineColor) {
         this.lineColor = lineColor;
         repaint();
     }
-
 
     /**
      * Sets the transparent state of the background.
@@ -317,7 +308,5 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
         this.transparent = transparent;
         repaint();
     }
-
-
 
 }

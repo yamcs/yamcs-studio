@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
-import org.csstudio.ui.util.ColorConstants;
 import org.csstudio.ui.util.CustomMediaFactory;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -26,18 +26,20 @@ import org.eclipse.swt.graphics.Color;
  * @author Takashi Nakamoto - added labels
  */
 
-public class ByteMonitorFigure extends Figure implements Introspectable{
+public class ByteMonitorFigure extends Figure implements Introspectable {
 
     /** The maximum number of bits in the value */
     private int MAX_BITS = 64;
-    /** The bit to start display*/
+    /** The bit to start display */
     private int startBit;
     /** The number of bits to display */
     private int numBits;
-    /** Display direction.  Horizontal if true, Vertical if false */
+    /** Display direction. Horizontal if true, Vertical if false */
     private boolean isHorizontal = true;
-    /** Reverse the direction to display bits.  If true start bit is displayed left or top, if false start bit
-     * is right or top.*/
+    /**
+     * Reverse the direction to display bits. If true start bit is displayed left or top, if false start bit is right or
+     * top.
+     */
     private boolean reverseBits = false;
 
     /** The value to be displayed */
@@ -56,17 +58,17 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
             CustomMediaFactory.COLOR_DARK_GRAY);
 
     /** LEDs */
-    private List<LEDFigure> ledFigures = new ArrayList<LEDFigure>();
+    private List<LEDFigure> ledFigures = new ArrayList<>();
 
     /** Labels */
-    private List<TextFigure> textFigures = new ArrayList<TextFigure>();
-    private List<String> labels = new ArrayList<String>();
+    private List<TextFigure> textFigures = new ArrayList<>();
+    private List<String> labels = new ArrayList<>();
 
     public ByteMonitorFigure() {
         setNumBits(16);
     }
 
-    private LEDFigure createLED(){
+    private LEDFigure createLED() {
         LEDFigure led = new LEDFigure();
         led.setShowBooleanLabel(false);
         led.setOnColor(getOnColor());
@@ -78,7 +80,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
         return led;
     }
 
-    private TextFigure createText(){
+    private TextFigure createText() {
         TextFigure text = new TextFigure();
         text.setText("");
         alignText(text);
@@ -86,33 +88,31 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     }
 
     /**
-     * Color the rectangles with values appropriate for the value.  Rectangles are colored with onColor if the bit
-     * is 1.  They are colored offColor if the bit is 0.
+     * Color the rectangles with values appropriate for the value. Rectangles are colored with onColor if the bit is 1.
+     * They are colored offColor if the bit is 0.
      */
     public void drawValue() {
-        for (int ii=startBit; ii< startBit+numBits; ii++){
-            int widgetIndex =0;
-            if (reverseBits){
-                widgetIndex = ii-startBit;
-            }
-            else{
-                widgetIndex = (numBits - 1) -(ii-startBit);
+        for (int ii = startBit; ii < startBit + numBits; ii++) {
+            int widgetIndex = 0;
+            if (reverseBits) {
+                widgetIndex = ii - startBit;
+            } else {
+                widgetIndex = (numBits - 1) - (ii - startBit);
             }
             LEDFigure led = ledFigures.get(widgetIndex);
-            if (((value>>ii)&0x1) == 1){
+            if (((value >> ii) & 0x1) == 1) {
                 led.setBooleanValue(true);
-            }
-            else {
+            } else {
 
                 led.setBooleanValue(false);
             }
         }
 
-
     }
 
     /**
      * returns the maximum number of bits to be displayed
+     * 
      * @return
      */
     public int getMAX_BITS() {
@@ -121,6 +121,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * The number of bits to display
+     * 
      * @return the numBits
      */
     public int getNumBits() {
@@ -129,6 +130,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Get the color to be displayed if a bit is 0.
+     * 
      * @return
      */
     public Color getOffColor() {
@@ -137,6 +139,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Get the color to be displayed if a bit is 1.
+     * 
      * @return
      */
     public Color getOnColor() {
@@ -145,6 +148,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Return the starting bit for the display
+     * 
      * @return the starting bit for the display
      */
     public int getStartBit() {
@@ -164,9 +168,11 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     public boolean isEffect3D() {
         return effect3D;
     }
+
     /**
-     * Check if shapes corresponding to bits should be vertical or horizontal.  Bits are displayed horizontally
-     * if true and vertically if false.
+     * Check if shapes corresponding to bits should be vertical or horizontal. Bits are displayed horizontally if true
+     * and vertically if false.
+     * 
      * @return the isHorizontal
      */
     public boolean isHorizontal() {
@@ -174,8 +180,9 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     }
 
     /**
-     * Return true if the display order of the bits should be reversed.  If true the start bit is on the left or
-     *  top.  If false it is on the right or bottom.
+     * Return true if the display order of the bits should be reversed. If true the start bit is on the left or top. If
+     * false it is on the right or bottom.
+     * 
      * @return the reverseBits
      */
     public boolean isReverseBits() {
@@ -192,8 +199,8 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     /**
      * LEDs are sized to 'fill' the client area.
      *
-     * If 'packed' borders around LEDs are overlapped giving a higher density.
-     * This gives an odd visual effect for 3d and round LEDs
+     * If 'packed' borders around LEDs are overlapped giving a higher density. This gives an odd visual effect for 3d
+     * and round LEDs
      *
      * @param clientSize
      * @param borderSize
@@ -204,8 +211,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
         if (hasPackedLEDs) {
             size = (clientSize - borderSize) / numBits + borderSize;
-        }
-        else {
+        } else {
             size = clientSize / numBits;
         }
         return size;
@@ -214,8 +220,8 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     /**
      * LEDs spacing is the offset between the corners of successive LEDs
      *
-     * If 'packed' borders around LEDs are overlapped giving a higher density.
-     * This gives an odd visual effect for 3d and round LEDs
+     * If 'packed' borders around LEDs are overlapped giving a higher density. This gives an odd visual effect for 3d
+     * and round LEDs
      *
      * @param ledSize
      * @param borderSize
@@ -231,16 +237,18 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
         return spacing;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.draw2d.Figure#layout()
      */
     @Override
     protected void layout() {
         super.layout();
 
-        if(numBits >0){
+        if (numBits > 0) {
             Rectangle clientArea = getClientArea();
-            if (isHorizontal){
+            if (isHorizontal) {
                 int ledWidth = calculateLedSize(clientArea.width, ledBorderWidth);
                 int ledSpacing = calculateLedSpacing(ledWidth, ledBorderWidth);
                 int startX = clientArea.x;
@@ -269,8 +277,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
                     }
                     startX += ledSpacing;
                 }
-            }
-            else {
+            } else {
                 int ledHeight = calculateLedSize(clientArea.height, ledBorderWidth);
                 int ledSpacing = calculateLedSpacing(ledHeight, ledBorderWidth);
                 int startY = clientArea.y;
@@ -305,10 +312,12 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Set that the displayed LEDs should have a 3D effect
-     * @param newValue boolean true if 3D, false if not
+     * 
+     * @param newValue
+     *            boolean true if 3D, false if not
      */
     public void setEffect3D(boolean newValue) {
-        if(this.effect3D == newValue)
+        if (this.effect3D == newValue)
             return;
         this.effect3D = newValue;
         for (LEDFigure bulb : ledFigures) {
@@ -318,12 +327,14 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     }
 
     /**
-     * sets the direction that shapes corresponding to bits should be displayed.  Bits are displayed horizontally
-     * if true and vertically if false.
-     * @param isHorizontal the isHorizontal to set
+     * sets the direction that shapes corresponding to bits should be displayed. Bits are displayed horizontally if true
+     * and vertically if false.
+     * 
+     * @param isHorizontal
+     *            the isHorizontal to set
      */
     public void setHorizontal(boolean isHorizontal) {
-        if(this.isHorizontal == isHorizontal)
+        if (this.isHorizontal == isHorizontal)
             return;
         this.isHorizontal = isHorizontal;
 
@@ -337,16 +348,17 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Set the number of bits to display
+     * 
      * @param numBits
      */
     public void setNumBits(int numBits) {
-        if(this.numBits == numBits || numBits <=0 || numBits > MAX_BITS)
+        if (this.numBits == numBits || numBits <= 0 || numBits > MAX_BITS)
             return;
         this.numBits = numBits;
         removeAll();
         ledFigures.clear();
         textFigures.clear();
-        for (int ii =0; ii < numBits; ii++){
+        for (int ii = 0; ii < numBits; ii++) {
             LEDFigure led = createLED();
             add(led);
             ledFigures.add(led);
@@ -359,25 +371,29 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
         revalidate();
     }
 
-
     /**
      * Set the color to be displayed if a bit is 0.
-     * @param offColor the offColor to set
+     * 
+     * @param offColor
+     *            the offColor to set
      */
     public void setOffColor(Color rgb) {
-        if(this.offColor != null && this.offColor.equals(rgb))
+        if (this.offColor != null && this.offColor.equals(rgb))
             return;
         this.offColor = rgb;
-        for (LEDFigure led : ledFigures){
+        for (LEDFigure led : ledFigures) {
             led.setOffColor(rgb);
         }
     }
+
     /**
      * Set the color to be displayed if a bit is 1.
-     * @param onColor the onColor to set
+     * 
+     * @param onColor
+     *            the onColor to set
      */
     public void setOnColor(Color rgb) {
-        if(this.onColor != null && this.onColor.equals(rgb))
+        if (this.onColor != null && this.onColor.equals(rgb))
             return;
         this.onColor = rgb;
         for (LEDFigure led : ledFigures) {
@@ -386,12 +402,14 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     }
 
     /**
-     * Sets the order to display the bits.    If true the start bit is on the left or
-     *  top.  If false it is on the right or bottom.
-     * @param reverseBits the reverseBits to set
+     * Sets the order to display the bits. If true the start bit is on the left or top. If false it is on the right or
+     * bottom.
+     * 
+     * @param reverseBits
+     *            the reverseBits to set
      */
     public void setReverseBits(boolean reverseBits) {
-        if(this.reverseBits == reverseBits)
+        if (this.reverseBits == reverseBits)
             return;
         this.reverseBits = reverseBits;
         updateLabels();
@@ -400,10 +418,12 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Set if the displayed LEDs should be square or round.
-     * @param squareLED boolean true if square, false if round
+     * 
+     * @param squareLED
+     *            boolean true if square, false if round
      */
     public void setSquareLED(boolean squareLED) {
-        if(this.squareLED == squareLED)
+        if (this.squareLED == squareLED)
             return;
 
         this.squareLED = squareLED;
@@ -419,30 +439,30 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Set the starting bit for the display
+     * 
      * @param startBit
      */
     public void setStartBit(int startBit) {
-        if(this.startBit == startBit || startBit <0 || startBit +numBits > MAX_BITS)
+        if (this.startBit == startBit || startBit < 0 || startBit + numBits > MAX_BITS)
             return;
         this.startBit = startBit;
         repaint();
     }
 
     /**
-     * @param value the value to set
+     * @param value
+     *            the value to set
      */
     public void setValue(int value) {
-        setValue((long)value);
+        setValue((long) value);
     }
 
-    public void setValue(double value){
-        setValue((long)value);
+    public void setValue(double value) {
+        setValue((long) value);
     }
-
 
     /**
-     * Set the LED border width, i.e. the spacing between
-     * the LEDs in the widget
+     * Set the LED border width, i.e. the spacing between the LEDs in the widget
      */
     public void setLedBorderWidth(int value) {
         if (value == ledBorderWidth)
@@ -456,7 +476,6 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
         revalidate();
         repaint();
     }
-
 
     /**
      * Set the LED border color
@@ -476,13 +495,15 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
 
     /**
      * Change the value to the last read value
+     * 
      * @param value
      */
-    public void setValue(long value){
+    public void setValue(long value) {
         this.value = value;
         drawValue();
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
@@ -493,7 +514,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     }
 
     private void updateLabels() {
-        for (int i = 0; i<textFigures.size(); i++) {
+        for (int i = 0; i < textFigures.size(); i++) {
             TextFigure text;
             if (reverseBits) {
                 text = textFigures.get(i);
@@ -530,7 +551,7 @@ public class ByteMonitorFigure extends Figure implements Introspectable{
     }
 
     public void setPackedLEDs(boolean packLEDs) {
-        if(this.hasPackedLEDs  == packLEDs)
+        if (this.hasPackedLEDs == packLEDs)
             return;
 
         this.hasPackedLEDs = packLEDs;

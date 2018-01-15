@@ -14,7 +14,7 @@ import org.csstudio.opibuilder.commands.SetWidgetPropertyCommand;
 import org.csstudio.opibuilder.editparts.FixedPointsConnectionRouter;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
-import org.csstudio.ui.util.ColorConstants;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.MidpointLocator;
@@ -30,33 +30,33 @@ import org.eclipse.gef.requests.BendpointRequest;
 import org.eclipse.swt.graphics.Color;
 
 /**
- * The editpolicy that allows to move the middle segment of a manhattan
- * conneciton.
+ * The editpolicy that allows to move the middle segment of a manhattan conneciton.
  *
  * @author Xihui Chen
  *
  */
 public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
 
-//    private final static int MOVE_HANDLE_SIZE = 8;
+    // private final static int MOVE_HANDLE_SIZE = 8;
 
     private ConnectionRouter originalRouter;
     private Object originalConstraint;
 
     @Override
     protected List<?> createSelectionHandles() {
-        List<BendpointHandle> handles = new ArrayList<BendpointHandle>();
+        List<BendpointHandle> handles = new ArrayList<>();
         final PointList points = getConnection().getPoints();
         if (points.size() < 4)
             return handles;
         for (int i = 1; i < points.size() - 2; i++) {
             handles.add(new BendpointMoveHandle(getConnectionEditPart(), i - 1,
-                    new MidpointLocator(getConnection(), i)){
+                    new MidpointLocator(getConnection(), i)) {
 
                 @Override
                 protected Color getBorderColor() {
                     return (isPrimary()) ? ColorConstants.darkGreen : ColorConstants.white;
                 }
+
                 @Override
                 protected Color getFillColor() {
                     return ColorConstants.yellow;
@@ -86,32 +86,34 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
                 ConnectionModel.PROP_POINTS, newPoints);
     }
 
-    /**Get new Points based on bendpoint move request.
+    /**
+     * Get new Points based on bendpoint move request.
+     * 
      * @param request
      * @return
      */
     private PointList getNewPoints(BendpointRequest request) {
         PointList newPoints = getConnection().getPoints().getCopy();
-        int aIndex = request.getIndex()+1;
+        int aIndex = request.getIndex() + 1;
         Point oldA = newPoints.getPoint(aIndex);
-        Point oldB = newPoints.getPoint(aIndex+1);
+        Point oldB = newPoints.getPoint(aIndex + 1);
         Point newM = request.getLocation().getCopy();
         Point newA, newB;
         getConnection().translateToRelative(newM);
 
-        if(oldA.x == oldB.x){    //hozitontal move
+        if (oldA.x == oldB.x) { // hozitontal move
             int dx = newM.x - oldA.x;
             newA = oldA.getTranslated(dx, 0);
             newB = oldB.getTranslated(dx, 0);
-        }else {         //vertical move
+        } else { // vertical move
             int dy = newM.y - oldA.y;
             newA = oldA.getTranslated(0, dy);
             newB = oldB.getTranslated(0, dy);
         }
         newPoints.setPoint(newA, aIndex);
-        newPoints.setPoint(newB, aIndex+1);
+        newPoints.setPoint(newB, aIndex + 1);
         newPoints.removePoint(0);
-        newPoints.removePoint(newPoints.size()-1);
+        newPoints.removePoint(newPoints.size() - 1);
         return newPoints;
     }
 
@@ -121,18 +123,15 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
             showMoveBendpointFeedback((BendpointRequest) request);
     }
 
-
     protected void showMoveBendpointFeedback(BendpointRequest request) {
-        if(originalRouter == null && !(getConnection().getConnectionRouter()
-                instanceof FixedPointsConnectionRouter)){
+        if (originalRouter == null && !(getConnection().getConnectionRouter() instanceof FixedPointsConnectionRouter)) {
             originalRouter = getConnection().getConnectionRouter();
             getConnection().setConnectionRouter(new FixedPointsConnectionRouter());
         }
-        if(originalConstraint == null)
+        if (originalConstraint == null)
             originalConstraint = getConnection().getRoutingConstraint();
         getConnection().setRoutingConstraint(getNewPoints(request));
     }
-
 
     /**
      * @see org.eclipse.gef.EditPolicy#eraseSourceFeedback(Request)
@@ -143,20 +142,16 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
             eraseConnectionFeedback((BendpointRequest) request);
     }
 
-
     protected void eraseConnectionFeedback(BendpointRequest request) {
-        if(originalRouter != null)
+        if (originalRouter != null)
             getConnection().setConnectionRouter(originalRouter);
         getConnection().setRoutingConstraint(originalConstraint);
         originalConstraint = null;
         originalRouter = null;
     }
 
-
-
     /**
-     * Restores the original constraint that was saved before feedback began to
-     * show.
+     * Restores the original constraint that was saved before feedback began to show.
      */
     protected void restoreOriginalConstraint() {
         getConnection().setRoutingConstraint(originalConstraint);
@@ -164,8 +159,7 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
     }
 
     /**
-     * Convenience method for obtaining the host's <code>Connection</code>
-     * figure.
+     * Convenience method for obtaining the host's <code>Connection</code> figure.
      *
      * @return the Connection figure
      */
@@ -177,30 +171,30 @@ public class ManhattanBendpointEditPolicy extends SelectionHandlesEditPolicy {
         return (ConnectionEditPart) getHost();
     }
 
-//    private final static class MiddlePointLocator implements Locator {
-//
-//        private Connection connection;
-//        int index; //index of start point
-//
-//        public MiddlePointLocator(Connection connection, int i) {
-//            this.connection = connection;
-//            this.index = i;
-//        }
-//
-//        @Override
-//        public void relocate(IFigure target) {
-//            if(connection.getPoints().size() <= index +1)
-//                return;
-//            Point a = connection.getPoints().getPoint(index);
-//            Point b = connection.getPoints().getPoint(index+1);
-//            connection.translateToAbsolute(a);
-//            connection.translateToAbsolute(b);
-//            int x = (a.x + b.x) / 2;
-//            int y = (a.y + b.y) / 2;
-//            target.setBounds(new Rectangle(x - MOVE_HANDLE_SIZE / 2, y
-//                    - MOVE_HANDLE_SIZE / 2, MOVE_HANDLE_SIZE, MOVE_HANDLE_SIZE));
-//        }
-//
-//    }
+    // private final static class MiddlePointLocator implements Locator {
+    //
+    // private Connection connection;
+    // int index; //index of start point
+    //
+    // public MiddlePointLocator(Connection connection, int i) {
+    // this.connection = connection;
+    // this.index = i;
+    // }
+    //
+    // @Override
+    // public void relocate(IFigure target) {
+    // if(connection.getPoints().size() <= index +1)
+    // return;
+    // Point a = connection.getPoints().getPoint(index);
+    // Point b = connection.getPoints().getPoint(index+1);
+    // connection.translateToAbsolute(a);
+    // connection.translateToAbsolute(b);
+    // int x = (a.x + b.x) / 2;
+    // int y = (a.y + b.y) / 2;
+    // target.setBounds(new Rectangle(x - MOVE_HANDLE_SIZE / 2, y
+    // - MOVE_HANDLE_SIZE / 2, MOVE_HANDLE_SIZE, MOVE_HANDLE_SIZE));
+    // }
+    //
+    // }
 
 }
