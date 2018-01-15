@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import org.diirt.util.config.ServiceLoaderOSGiWrapper;
+
+import org.diirt.util.ServiceLoaderOSGiWrapper;
 import org.diirt.vtype.ValueFactory;
 
 /**

@@ -2,7 +2,7 @@
  * Copyright (C) 2010-14 diirt developers. See COPYRIGHT.TXT
  * All rights reserved. Use is subject to license terms. See LICENSE.TXT
  */
-package org.diirt.util.config;
+package org.diirt.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

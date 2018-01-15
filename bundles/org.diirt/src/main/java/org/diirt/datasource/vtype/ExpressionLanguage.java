@@ -53,6 +53,7 @@ import org.diirt.datasource.expression.SourceRateExpression;
 import org.diirt.datasource.expression.SourceRateExpressionList;
 import org.diirt.datasource.expression.WriteExpression;
 import org.diirt.datasource.expression.WriteExpressionImpl;
+import org.diirt.util.TimeDuration;
 import org.diirt.util.array.ArrayByte;
 import org.diirt.util.array.ArrayDouble;
 import org.diirt.util.array.ArrayFloat;
@@ -61,7 +62,6 @@ import org.diirt.util.array.ArrayShort;
 import org.diirt.util.array.ListDouble;
 import org.diirt.util.array.ListInt;
 import org.diirt.util.array.ListNumber;
-import org.diirt.util.time.TimeDuration;
 
 /**
  * PVManager expression language support for value types.

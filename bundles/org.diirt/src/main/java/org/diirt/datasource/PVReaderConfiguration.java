@@ -4,6 +4,8 @@
  */
 package org.diirt.datasource;
 
+import static org.diirt.util.Executors.localThread;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +13,11 @@ import java.util.concurrent.Executor;
 
 import org.diirt.datasource.expression.DesiredRateExpression;
 
-import static org.diirt.util.concurrent.Executors.*;
-
 /**
- * An expression used to set the final parameters on how the pv expression
- * should be read.
+ * An expression used to set the final parameters on how the pv expression should be read.
  *
- * @param <T> the type of the expression
+ * @param <T>
+ *            the type of the expression
  * @author carcassi
  */
 public class PVReaderConfiguration<T> extends CommonConfiguration {
@@ -39,7 +39,8 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
      * <p>
      * For more details, consult {@link #timeout(org.diirt.util.time.Duration, java.lang.String) }.
      *
-     * @param timeout the duration of the timeout; can't be null
+     * @param timeout
+     *            the duration of the timeout; can't be null
      * @return this expression
      */
     @Override
@@ -51,16 +52,15 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
     /**
      * Sets a timeout for no values received with the given message.
      * <p>
-     * If no value is received before the given time, a {@link TimeoutException}
-     * is notified through the listener. Note the difference: the timeout is
-     * not on the connection but on the value itself. This allows to use timeouts
-     * when creating combined expressions that can produce data even if not
-     * all elements have values. For single channels, this means that if the
-     * channel is connected, but no value has been processed, a timeout
-     * exception is still sent.
+     * If no value is received before the given time, a {@link TimeoutException} is notified through the listener. Note
+     * the difference: the timeout is not on the connection but on the value itself. This allows to use timeouts when
+     * creating combined expressions that can produce data even if not all elements have values. For single channels,
+     * this means that if the channel is connected, but no value has been processed, a timeout exception is still sent.
      *
-     * @param timeout the duration of the timeout; can't be null
-     * @param timeoutMessage the message for the reported timeout
+     * @param timeout
+     *            the duration of the timeout; can't be null
+     * @param timeoutMessage
+     *            the message for the reported timeout
      * @return this expression
      */
     @Override
@@ -85,7 +85,8 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
      * <p>
      * Registering a listener here guarantees that no event is ever missed.
      *
-     * @param listener the listener to register
+     * @param listener
+     *            the listener to register
      * @return this expression
      */
     public PVReaderConfiguration<T> readListener(PVReaderListener<? super T> listener) {
@@ -96,15 +97,14 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
     }
 
     /**
-     * Forwards exception to the given exception handler. No thread switch
-     * is done, so the handler is notified on the thread where the exception
-     * was thrown.
+     * Forwards exception to the given exception handler. No thread switch is done, so the handler is notified on the
+     * thread where the exception was thrown.
      * <p>
-     * Giving a custom exception handler will disable the default handler,
-     * so {@link PVReader#lastException() } is no longer set and no notification
-     * is done.
+     * Giving a custom exception handler will disable the default handler, so {@link PVReader#lastException() } is no
+     * longer set and no notification is done.
      *
-     * @param exceptionHandler an exception handler
+     * @param exceptionHandler
+     *            an exception handler
      * @return this
      */
     public PVReaderConfiguration<T> routeExceptionsTo(ExceptionHandler exceptionHandler) {
@@ -116,10 +116,11 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
     }
 
     /**
-     * Sets the rate of scan of the expression and creates the actual {@link PVReader}
-     * object that can be monitored through listeners.
+     * Sets the rate of scan of the expression and creates the actual {@link PVReader} object that can be monitored
+     * through listeners.
      *
-     * @param rate the minimum time distance (i.e. the maximum rate) between two different notifications
+     * @param rate
+     *            the minimum time distance (i.e. the maximum rate) between two different notifications
      * @return the PVReader
      */
     public PVReader<T> maxRate(Duration rate) {
@@ -139,8 +140,10 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
     }
 
     static <T> PVDirector<T> prepareDirector(PVReaderConfiguration<T> readConfiguration) {
-        PVDirector<T> director = new PVDirector<>(readConfiguration.pv, readConfiguration.aggregatedFunction, PVManager.getReadScannerExecutorService(),
-                readConfiguration.notificationExecutor, readConfiguration.dataSource, readConfiguration.exceptionHandler);
+        PVDirector<T> director = new PVDirector<>(readConfiguration.pv, readConfiguration.aggregatedFunction,
+                PVManager.getReadScannerExecutorService(),
+                readConfiguration.notificationExecutor, readConfiguration.dataSource,
+                readConfiguration.exceptionHandler);
         if (readConfiguration.timeout != null) {
             if (readConfiguration.timeoutMessage == null)
                 readConfiguration.timeoutMessage = "Read timeout";
@@ -154,7 +157,8 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
                 .readerDirector(director)
                 .scannerExecutor(PVManager.getReadScannerExecutorService())
                 .maxDuration(readConfiguration.maxRate);
-        if (readConfiguration.aggregatedFunction instanceof Collector || readConfiguration.aggregatedFunction instanceof ValueCache) {
+        if (readConfiguration.aggregatedFunction instanceof Collector
+                || readConfiguration.aggregatedFunction instanceof ValueCache) {
             scannerParameters.type(ScannerParameters.Type.PASSIVE);
         } else {
             scannerParameters.type(ScannerParameters.Type.ACTIVE);
@@ -169,7 +173,8 @@ public class PVReaderConfiguration<T> extends CommonConfiguration {
 
     private void validateReaderConfiguration() {
         if (maxRate.getSeconds() < 0 && maxRate.getNano() < 5000000) {
-            throw new IllegalArgumentException("Current implementation limits the rate to >5ms or <200Hz (requested " + maxRate + "s)");
+            throw new IllegalArgumentException(
+                    "Current implementation limits the rate to >5ms or <200Hz (requested " + maxRate + "s)");
         }
 
         checkDataSourceAndThreadSwitch();

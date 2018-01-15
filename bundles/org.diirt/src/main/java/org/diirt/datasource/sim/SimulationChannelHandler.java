@@ -5,6 +5,7 @@
 package org.diirt.datasource.sim;
 
 import org.diirt.datasource.MultiplexedChannelHandler;
+import org.diirt.util.TimeInterval;
 import org.diirt.datasource.ChannelWriteCallback;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,7 +13,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.diirt.util.time.TimeInterval;
 import java.time.Instant;
 
 /**

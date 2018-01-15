@@ -6,9 +6,10 @@ package org.diirt.vtype.next;
 
 import java.text.NumberFormat;
 import java.util.Objects;
-import org.diirt.util.stats.Range;
-import org.diirt.util.stats.Ranges;
-import org.diirt.util.text.NumberFormats;
+
+import org.diirt.util.NumberFormats;
+import org.diirt.util.Range;
+import org.diirt.util.Ranges;
 
 /**
  * Limit and unit information needed for display and control.

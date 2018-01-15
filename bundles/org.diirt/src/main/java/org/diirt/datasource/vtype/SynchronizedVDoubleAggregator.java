@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.diirt.datasource.ReadFunction;
-import org.diirt.util.time.TimeInterval;
+import org.diirt.util.TimeInterval;
 
 /**
  * Provides an aggregator that returns a synchronized set of data by looking

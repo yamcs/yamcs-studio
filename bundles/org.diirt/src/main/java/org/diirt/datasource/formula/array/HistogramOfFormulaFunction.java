@@ -9,16 +9,15 @@ import static org.diirt.vtype.ValueFactory.*;
 import java.util.Arrays;
 import java.util.List;
 import org.diirt.datasource.formula.StatefulFormulaFunction;
+import org.diirt.util.NumberFormats;
+import org.diirt.util.Range;
+import org.diirt.util.Ranges;
+import org.diirt.util.Statistics;
+import org.diirt.util.StatisticsUtil;
 import org.diirt.util.array.ArrayInt;
 import org.diirt.util.array.IteratorNumber;
 import org.diirt.util.array.ListNumber;
 import org.diirt.util.array.ListNumbers;
-import org.diirt.util.stats.Range;
-import org.diirt.util.stats.Ranges;
-import org.diirt.util.stats.Statistics;
-import org.diirt.util.stats.StatisticsUtil;
-import org.diirt.util.text.NumberFormats;
-
 import org.diirt.vtype.VNumber;
 import org.diirt.vtype.VNumberArray;
 

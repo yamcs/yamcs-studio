@@ -4,7 +4,7 @@ import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.Date;
 
-import org.diirt.util.text.NumberFormats;
+import org.diirt.util.NumberFormats;
 import org.diirt.vtype.Alarm;
 import org.diirt.vtype.AlarmSeverity;
 import org.diirt.vtype.Display;

@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.diirt.util.TimeInterval;
 import org.diirt.vtype.VDouble;
 
 import static org.diirt.vtype.ValueFactory.*;
-
-import org.diirt.util.time.TimeInterval;
 
 /**
  * Base class for all simulated functions. It provide constant rate data generation

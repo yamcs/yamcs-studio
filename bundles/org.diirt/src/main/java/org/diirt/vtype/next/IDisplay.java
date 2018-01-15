@@ -5,7 +5,8 @@
 package org.diirt.vtype.next;
 
 import java.text.NumberFormat;
-import org.diirt.util.stats.Range;
+
+import org.diirt.util.Range;
 
 /**
  * Immutable Display implementation.

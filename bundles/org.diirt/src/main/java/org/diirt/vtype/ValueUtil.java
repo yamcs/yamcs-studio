@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.diirt.util.NumberFormats;
 import org.diirt.util.array.ArrayByte;
 import org.diirt.util.array.ArrayDouble;
 import org.diirt.util.array.ArrayInt;
 import org.diirt.util.array.ListInt;
 import org.diirt.util.array.ListNumber;
 import org.diirt.util.array.ListNumbers;
-import org.diirt.util.text.NumberFormats;
 
 /**
  * Various utility methods for runtime handling of the types defined in

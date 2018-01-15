@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.diirt.datasource.formula.StatefulFormulaFunction;
-import org.diirt.util.time.TimeDuration;
+import org.diirt.util.TimeDuration;
 import org.diirt.vtype.VNumber;
 import org.diirt.vtype.ValueFactory;
 

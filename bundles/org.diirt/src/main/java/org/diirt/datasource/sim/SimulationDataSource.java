@@ -4,17 +4,17 @@
  */
 package org.diirt.datasource.sim;
 
+import static org.diirt.util.Executors.namedPool;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.logging.Logger;
+
 import org.diirt.datasource.ChannelHandler;
 import org.diirt.datasource.DataSource;
 import org.diirt.datasource.vtype.DataTypeSupport;
-import static org.diirt.util.concurrent.Executors.namedPool;
 
 /**
- * Data source to produce simulated signals that can be using during development
- * and testing.
+ * Data source to produce simulated signals that can be using during development and testing.
  *
  * @author carcassi
  */
@@ -38,13 +38,13 @@ public final class SimulationDataSource extends DataSource {
         return SimulationDataSource.instance;
     }
 
-    private static final Logger log = Logger.getLogger(SimulationDataSource.class.getName());
     static final SimulationDataSource instance = new SimulationDataSource();
 
     /**
      * ExecutorService on which all simulated data is generated.
      */
-    private final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor(namedPool("PVMgr Simulator "));
+    private final ScheduledExecutorService exec = Executors
+            .newSingleThreadScheduledExecutor(namedPool("PVMgr Simulator "));
 
     @Override
     @SuppressWarnings("unchecked")

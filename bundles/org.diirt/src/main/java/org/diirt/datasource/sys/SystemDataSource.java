@@ -4,13 +4,14 @@
  */
 package org.diirt.datasource.sys;
 
+import static org.diirt.util.Executors.namedPool;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.logging.Logger;
+
 import org.diirt.datasource.ChannelHandler;
 import org.diirt.datasource.DataSource;
 import org.diirt.datasource.vtype.DataTypeSupport;
-import static org.diirt.util.concurrent.Executors.namedPool;
 
 /**
  * Data source to monitor system information.
@@ -28,19 +29,17 @@ public final class SystemDataSource extends DataSource {
         super(false);
     }
 
-    private static final Logger log = Logger.getLogger(SystemDataSource.class.getName());
-
     /**
      * ExecutorService on which all data is polled.
      */
-    private static ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor(namedPool("pvmanager-sys poller "));
+    private static ScheduledExecutorService exec = Executors
+            .newSingleThreadScheduledExecutor(namedPool("pvmanager-sys poller "));
 
     static ScheduledExecutorService getScheduledExecutorService() {
         return exec;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected ChannelHandler createChannel(String channelName) {
         if ("free_mb".equals(channelName)) {
             return new FreeMemoryChannelHandler(channelName);

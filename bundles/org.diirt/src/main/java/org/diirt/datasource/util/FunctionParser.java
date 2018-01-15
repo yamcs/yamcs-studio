@@ -7,7 +7,8 @@ package org.diirt.datasource.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.diirt.util.text.StringUtil;
+
+import org.diirt.util.StringUtil;
 import org.diirt.util.array.ArrayDouble;
 import org.diirt.util.array.ListDouble;
 

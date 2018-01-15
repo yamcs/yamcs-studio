@@ -9,7 +9,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.diirt.util.time.TimeInterval;
+import org.diirt.util.TimeInterval;
 import org.diirt.vtype.VDouble;
 
 /**

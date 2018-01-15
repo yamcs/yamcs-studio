@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.diirt.util.time.TimeInterval;
+import org.diirt.util.TimeInterval;
 
 /**
  * Base class for all simulated signals. It provides the common mechanism for

@@ -7,8 +7,9 @@ package org.diirt.datasource;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.diirt.util.config.Configuration;
-import org.diirt.util.config.ServiceLoaderOSGiWrapper;
+
+import org.diirt.util.Configuration;
+import org.diirt.util.ServiceLoaderOSGiWrapper;
 
 /**
  * A class that provides support for a DataSource.

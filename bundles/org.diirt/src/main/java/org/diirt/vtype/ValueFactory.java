@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.diirt.util.NumberFormats;
 import org.diirt.util.array.ArrayByte;
 import org.diirt.util.array.ArrayDouble;
 import org.diirt.util.array.ArrayInt;
@@ -23,7 +24,6 @@ import org.diirt.util.array.ListLong;
 import org.diirt.util.array.ListNumber;
 import org.diirt.util.array.ListNumbers;
 import org.diirt.util.array.ListShort;
-import org.diirt.util.text.NumberFormats;
 import org.diirt.vtype.table.ListNumberProvider;
 
 /**

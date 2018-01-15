@@ -8,8 +8,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.diirt.util.config.TimeStampFormatter;
-import org.diirt.util.text.NumberFormats;
+import org.diirt.util.NumberFormats;
+import org.diirt.util.TimeStampFormatter;
 import org.diirt.vtype.table.VTableFactory;
 
 /**

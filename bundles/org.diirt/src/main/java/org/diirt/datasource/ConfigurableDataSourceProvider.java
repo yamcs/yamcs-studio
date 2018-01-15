@@ -7,7 +7,8 @@ package org.diirt.datasource;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.diirt.util.config.Configuration;
+
+import org.diirt.util.Configuration;
 
 /**
  * DataSourceProvider for a data source that require configuration.

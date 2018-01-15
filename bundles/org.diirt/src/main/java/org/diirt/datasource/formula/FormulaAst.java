@@ -18,7 +18,7 @@ import org.antlr.runtime.TokenStream;
 import org.diirt.datasource.expression.DesiredRateExpression;
 import org.diirt.datasource.expression.DesiredRateExpressionList;
 import org.diirt.datasource.expression.DesiredRateExpressionListImpl;
-import org.diirt.util.text.StringUtil;
+import org.diirt.util.StringUtil;
 
 /**
  * The abstract syntax tree corresponding to a formula expression.

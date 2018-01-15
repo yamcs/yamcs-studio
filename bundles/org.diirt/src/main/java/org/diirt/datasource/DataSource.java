@@ -4,26 +4,31 @@
  */
 package org.diirt.datasource;
 
-import java.util.*;
-import java.util.concurrent.*;
+import static org.diirt.util.Executors.namedPool;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.diirt.util.concurrent.Executors.namedPool;
 
 /**
- * A source for data that is going to be processed by the PVManager.
- * PVManager can work with more than one source at a time. Support
- * for each different source can be added by external libraries.
+ * A source for data that is going to be processed by the PVManager. PVManager can work with more than one source at a
+ * time. Support for each different source can be added by external libraries.
  * <p>
- * To implement a datasource, one has to implement the {@link #createChannel(java.lang.String) }
- * method, and the requested will be forwarded to the channel accordingly.
- * The channels are automatically cached and reused. The name under which
- * the channels are looked up in the cache or registered in the cache is configurable.
+ * To implement a datasource, one has to implement the {@link #createChannel(java.lang.String) } method, and the
+ * requested will be forwarded to the channel accordingly. The channels are automatically cached and reused. The name
+ * under which the channels are looked up in the cache or registered in the cache is configurable.
  * <p>
- * Channel handlers can be implemented from scratch, or one can use the {@link MultiplexedChannelHandler}
- * for handlers that want to open a single connection which is going to be
- * shared by all readers and writers.
+ * Channel handlers can be implemented from scratch, or one can use the {@link MultiplexedChannelHandler} for handlers
+ * that want to open a single connection which is going to be shared by all readers and writers.
  *
  * @author carcassi
  */
@@ -34,8 +39,7 @@ public abstract class DataSource {
     private final boolean writeable;
 
     /**
-     * Returns true whether the channels of this data source can be
-     * written to.
+     * Returns true whether the channels of this data source can be written to.
      *
      * @return true if data source accept write operations
      */
@@ -46,20 +50,21 @@ public abstract class DataSource {
     /**
      * Creates a new data source.
      *
-     * @param writeable whether the data source implements write operations
+     * @param writeable
+     *            whether the data source implements write operations
      */
     public DataSource(boolean writeable) {
         this.writeable = writeable;
     }
 
     // Keeps track of the currently created channels
-    private Map<String, ChannelHandler> usedChannels = new ConcurrentHashMap<String, ChannelHandler>();
+    private Map<String, ChannelHandler> usedChannels = new ConcurrentHashMap<>();
 
     /**
-     * Returns a channel from the given name, either cached or it
-     * will create it.
+     * Returns a channel from the given name, either cached or it will create it.
      *
-     * @param channelName name of a channel
+     * @param channelName
+     *            name of a channel
      * @return a new or cached handler
      */
     ChannelHandler channel(String channelName) {
@@ -74,14 +79,12 @@ public abstract class DataSource {
     }
 
     /**
-     * Returns the lookup name to use to find the channel handler in
-     * the cache. By default, it returns the channel name itself.
-     * If a datasource needs multiple different channel names to
-     * be the same channel handler (e.g. parts of the channel name
-     * are initialization parameters) then it can override this method
-     * to change the lookup.
+     * Returns the lookup name to use to find the channel handler in the cache. By default, it returns the channel name
+     * itself. If a datasource needs multiple different channel names to be the same channel handler (e.g. parts of the
+     * channel name are initialization parameters) then it can override this method to change the lookup.
      *
-     * @param channelName the channel name
+     * @param channelName
+     *            the channel name
      * @return the channel handler to look up in the cache
      */
     protected String channelHandlerLookupName(String channelName) {
@@ -89,16 +92,15 @@ public abstract class DataSource {
     }
 
     /**
-     * Returns the name the given handler should be registered as.
-     * By default, it returns the lookup name, so that lookup and
-     * registration in the cache are consistent. If a datasource
-     * needs multiple different channel names to be the same
-     * channel handler (e.g. parts of the channel name are read/write
-     * parameters) then it can override this method to change the
-     * registration.
+     * Returns the name the given handler should be registered as. By default, it returns the lookup name, so that
+     * lookup and registration in the cache are consistent. If a datasource needs multiple different channel names to be
+     * the same channel handler (e.g. parts of the channel name are read/write parameters) then it can override this
+     * method to change the registration.
      *
-     * @param channelName the name under which the ChannelHandler was created
-     * @param handler the handler to register
+     * @param channelName
+     *            the name under which the ChannelHandler was created
+     * @param handler
+     *            the handler to register
      * @return the name under which to register in the cache
      */
     protected String channelHandlerRegisterName(String channelName, ChannelHandler handler) {
@@ -106,10 +108,11 @@ public abstract class DataSource {
     }
 
     /**
-     * Creates a channel handler for the given name. In the simplest
-     * case, this is the only method a data source needs to implement.
+     * Creates a channel handler for the given name. In the simplest case, this is the only method a data source needs
+     * to implement.
      *
-     * @param channelName the name for a new channel
+     * @param channelName
+     *            the name for a new channel
      * @return a new handler
      */
     protected abstract ChannelHandler createChannel(String channelName);
@@ -117,7 +120,8 @@ public abstract class DataSource {
     // The executor used by the data source to perform asynchronous operations,
     // such as connections and writes. We use one extra thread for each datasource,
     // mainly to be able to shut it down during cleanup
-    private final ExecutorService exec = Executors.newSingleThreadExecutor(namedPool("PVMgr " + getClass().getSimpleName() + " Worker "));
+    private final ExecutorService exec = Executors
+            .newSingleThreadExecutor(namedPool("PVMgr " + getClass().getSimpleName() + " Worker "));
 
     // Keeps track of the recipes that were opened with
     // this data source.
@@ -127,11 +131,11 @@ public abstract class DataSource {
     /**
      * Connects to a set of channels based on the given recipe.
      * <p>
-     * The data source must update the value caches relative to each channel.
-     * Before updating any cache, it must lock the collector relative to that
-     * cache and after any update it must notify the collector.
+     * The data source must update the value caches relative to each channel. Before updating any cache, it must lock
+     * the collector relative to that cache and after any update it must notify the collector.
      *
-     * @param readRecipe the instructions for the data connection
+     * @param readRecipe
+     *            the instructions for the data connection
      */
     public void connectRead(final ReadRecipe readRecipe) {
         // Add the recipe first, so that if a problem comes out
@@ -141,8 +145,7 @@ public abstract class DataSource {
 
         // Let's go through all the recipes first, so if something
         // breaks unexpectadely, either everything works or nothing works
-        final Map<ChannelHandler, Collection<ChannelReadRecipe>> handlersWithSubscriptions =
-                new HashMap<>();
+        final Map<ChannelHandler, Collection<ChannelReadRecipe>> handlersWithSubscriptions = new HashMap<>();
         for (final ChannelReadRecipe channelRecipe : readRecipe.getChannelReadRecipes()) {
             try {
                 String channelName = channelRecipe.getChannelName();
@@ -170,13 +173,14 @@ public abstract class DataSource {
 
             @Override
             public void run() {
-                for (Map.Entry<ChannelHandler, Collection<ChannelReadRecipe>> entry : handlersWithSubscriptions.entrySet()) {
+                for (Map.Entry<ChannelHandler, Collection<ChannelReadRecipe>> entry : handlersWithSubscriptions
+                        .entrySet()) {
                     ChannelHandler channelHandler = entry.getKey();
                     Collection<ChannelReadRecipe> channelRecipes = entry.getValue();
                     for (ChannelReadRecipe channelRecipe : channelRecipes) {
                         try {
                             channelHandler.addReader(channelRecipe.getReadSubscription());
-                        } catch(Exception ex) {
+                        } catch (Exception ex) {
                             // If an error happens while adding the read subscription,
                             // notify the appropriate handler
                             channelRecipe.getReadSubscription().getExceptionWriteFunction().writeValue(ex);
@@ -190,18 +194,19 @@ public abstract class DataSource {
     /**
      * Disconnects the set of channels given by the recipe.
      * <p>
-     * The disconnect call is guaranteed to be given the same object,
-     * so that the recipe itself can be used as a key in a map to retrieve
-     * the list of resources needed to be closed.
+     * The disconnect call is guaranteed to be given the same object, so that the recipe itself can be used as a key in
+     * a map to retrieve the list of resources needed to be closed.
      *
-     * @param readRecipe the instructions for the data connection
+     * @param readRecipe
+     *            the instructions for the data connection
      */
     public void disconnectRead(final ReadRecipe readRecipe) {
         // Find the channels to disconnect
         final Map<ChannelHandler, ChannelHandlerReadSubscription> handlers = new HashMap<>();
         for (ChannelReadRecipe channelRecipe : readRecipe.getChannelReadRecipes()) {
             if (!readRecipes.contains(channelRecipe)) {
-                log.log(Level.WARNING, "ChannelReadRecipe {0} was disconnected but was never connected. Ignoring it.", channelRecipe);
+                log.log(Level.WARNING, "ChannelReadRecipe {0} was disconnected but was never connected. Ignoring it.",
+                        channelRecipe);
             } else {
                 String channelName = channelRecipe.getChannelName();
                 ChannelHandler channelHandler = channel(channelName);
@@ -234,10 +239,10 @@ public abstract class DataSource {
     /**
      * Prepares the channels defined in the write recipe for writes.
      * <p>
-     * If these are channels over the network, it will create the
-     * network connections with the underlying libraries.
+     * If these are channels over the network, it will create the network connections with the underlying libraries.
      *
-     * @param writeRecipe the recipe that will contain the write data
+     * @param writeRecipe
+     *            the recipe that will contain the write data
      */
     public void connectWrite(final WriteRecipe writeRecipe) {
         if (!isWriteable()) {
@@ -274,7 +279,8 @@ public abstract class DataSource {
 
             @Override
             public void run() {
-                for (Map.Entry<ChannelHandler, Collection<ChannelHandlerWriteSubscription>> entry : handlers.entrySet()) {
+                for (Map.Entry<ChannelHandler, Collection<ChannelHandlerWriteSubscription>> entry : handlers
+                        .entrySet()) {
                     ChannelHandler channelHandler = entry.getKey();
                     Collection<ChannelHandlerWriteSubscription> subscriptions = entry.getValue();
                     for (ChannelHandlerWriteSubscription subscription : subscriptions) {
@@ -296,17 +302,19 @@ public abstract class DataSource {
      * <p>
      * Will close network channels and deallocate memory needed.
      *
-     * @param writeRecipe the recipe that will no longer be used
+     * @param writeRecipe
+     *            the recipe that will no longer be used
      */
     public void disconnectWrite(final WriteRecipe writeRecipe) {
         if (!isWriteable()) {
             throw new RuntimeException("Data source is read only");
         }
 
-        final Map<ChannelHandler, ChannelHandlerWriteSubscription> handlers = new HashMap<ChannelHandler, ChannelHandlerWriteSubscription>();
+        final Map<ChannelHandler, ChannelHandlerWriteSubscription> handlers = new HashMap<>();
         for (ChannelWriteRecipe channelWriteRecipe : writeRecipe.getChannelWriteRecipes()) {
             if (!writeRecipes.contains(channelWriteRecipe)) {
-                log.log(Level.WARNING, "ChannelWriteRecipe {0} was unregistered but was never registered. Ignoring it.", channelWriteRecipe);
+                log.log(Level.WARNING, "ChannelWriteRecipe {0} was unregistered but was never registered. Ignoring it.",
+                        channelWriteRecipe);
             } else {
                 try {
                     String channelName = channelWriteRecipe.getChannelName();
@@ -320,7 +328,9 @@ public abstract class DataSource {
                 } catch (Exception ex) {
                     // No point in sending the exception through the exception handler:
                     // nothing will be listening by now. Just log the exception
-                    log.log(Level.WARNING, "Error while preparing channel '" + channelWriteRecipe.getChannelName() + "' for closing.", ex);
+                    log.log(Level.WARNING,
+                            "Error while preparing channel '" + channelWriteRecipe.getChannelName() + "' for closing.",
+                            ex);
                 }
                 writeRecipes.remove(channelWriteRecipe);
             }
@@ -341,15 +351,17 @@ public abstract class DataSource {
     }
 
     /**
-     * Writes the contents in the given write recipe to the channels
-     * of this data sources.
+     * Writes the contents in the given write recipe to the channels of this data sources.
      * <p>
-     * The write recipe needs to be first prepared with {@link #connectWrite(org.diirt.datasource.WriteRecipe) }
-     * and then cleaned up with {@link #disconnectWrite(org.diirt.datasource.WriteRecipe) }.
+     * The write recipe needs to be first prepared with {@link #connectWrite(org.diirt.datasource.WriteRecipe) } and
+     * then cleaned up with {@link #disconnectWrite(org.diirt.datasource.WriteRecipe) }.
      *
-     * @param writeRecipe the recipe containing the data to write
-     * @param callback function to call when the write is concluded
-     * @param exceptionHandler where to report the exceptions
+     * @param writeRecipe
+     *            the recipe containing the data to write
+     * @param callback
+     *            function to call when the write is concluded
+     * @param exceptionHandler
+     *            where to report the exceptions
      */
     public void write(final WriteRecipe writeRecipe, final Runnable callback, final ExceptionHandler exceptionHandler) {
         if (!isWriteable())

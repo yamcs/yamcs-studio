@@ -8,8 +8,9 @@ import org.diirt.vtype.Time;
 import java.util.*;
 import org.diirt.datasource.Collector;
 import org.diirt.datasource.ReadFunction;
+import org.diirt.util.TimeInterval;
+
 import java.time.Duration;
-import org.diirt.util.time.TimeInterval;
 
 /**
  *

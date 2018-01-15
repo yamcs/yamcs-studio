@@ -5,7 +5,8 @@
 package org.diirt.vtype;
 
 import java.text.NumberFormat;
-import org.diirt.util.text.NumberFormats;
+
+import org.diirt.util.NumberFormats;
 
 /**
  * Allows to build a Display object which can then be re-used to generate
