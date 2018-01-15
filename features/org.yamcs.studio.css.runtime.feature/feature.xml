@@ -27,13 +27,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.data"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.openfile"
          download-size="0"
          install-size="0"
