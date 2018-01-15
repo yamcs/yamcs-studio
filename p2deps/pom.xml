@@ -11,6 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>org.diirt</module>
     <module>org.yamcs.client</module>
     <module>org.yamcs.studio.p2deps.repository</module>
   </modules>

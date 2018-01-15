@@ -29,6 +29,7 @@
             <configuration>
               <artifacts>
                 <artifact>
+                  <id>org.yamcs.studio:org.diirt:${project.version}</id>
                   <id>org.yamcs.studio:org.yamcs.client:${project.version}</id>
                 </artifact>
               </artifacts>
@@ -53,7 +54,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
         <executions>
           <execution>
             <goals>
