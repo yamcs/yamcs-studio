@@ -28,8 +28,6 @@ import org.csstudio.swt.widgets.figureparts.ROIFigure;
 import org.csstudio.swt.widgets.introspection.DefaultWidgetIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.util.SingleSourceHelper;
-import org.csstudio.swt.xygraph.figures.Axis;
-import org.csstudio.swt.xygraph.linearscale.Range;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
@@ -47,6 +45,8 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.nebula.visualization.xygraph.figures.Axis;
+import org.eclipse.nebula.visualization.xygraph.linearscale.Range;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -691,8 +691,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          * @param yAxisRange
          *            y Axis range.
          */
-        void profileDataChanged(double[] xProfileData, double[] yProfileData,
-                Range xAxisRange, Range yAxisRange);
+        void profileDataChanged(double[] xProfileData, double[] yProfileData, Range xAxisRange, Range yAxisRange);
     }
 
     public interface IPixelInfoProvider {
@@ -711,8 +710,7 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
          *            value of the pixel
          * @return the information about this pixel.
          */
-        public String getPixelInfo(int xIndex, int yIndex,
-                double xCoordinate, double yCoordinate, double pixelValue);
+        public String getPixelInfo(int xIndex, int yIndex, double xCoordinate, double yCoordinate, double pixelValue);
     }
 
     private int dataWidth, dataHeight;

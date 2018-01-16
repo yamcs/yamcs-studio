@@ -9,18 +9,20 @@ package org.csstudio.swt.widgets.figureparts;
 
 import org.csstudio.swt.widgets.datadefinition.ColorMap;
 import org.csstudio.swt.widgets.datadefinition.ColorMap.PredefinedColorMap;
-import org.csstudio.swt.xygraph.linearscale.AbstractScale.LabelSide;
-import org.csstudio.swt.xygraph.linearscale.LinearScale;
-import org.csstudio.swt.xygraph.linearscale.LinearScale.Orientation;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale.LabelSide;
+import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale;
+import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale.Orientation;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-/**The color map figure which can be used as the ramp of intensity graph.
+/**
+ * The color map figure which can be used as the ramp of intensity graph.
+ * 
  * @author Xihui Chen
  *
  */
@@ -34,6 +36,7 @@ public class ColorMapRamp extends Figure {
     private LinearScale scale;
     private ColorMapFigure colorMapFigure;
     private final static int RAMP_WIDTH = 25;
+
     public ColorMapRamp() {
         mapData = new double[256];
         min = 0;
@@ -53,12 +56,10 @@ public class ColorMapRamp extends Figure {
         add(scale);
     }
 
-
     private void updateMapData() {
-        for(int j=0; j<256; j++)
-            mapData[j] = max-j*(max-min)/255.0;
+        for (int j = 0; j < 256; j++)
+            mapData[j] = max - j * (max - min) / 255.0;
     }
-
 
     @Override
     protected void layout() {
@@ -82,7 +83,8 @@ public class ColorMapRamp extends Figure {
     }
 
     /**
-     * @param min the min to set
+     * @param min
+     *            the min to set
      */
     public final void setMin(double min) {
         this.min = min;
@@ -91,7 +93,8 @@ public class ColorMapRamp extends Figure {
     }
 
     /**
-     * @param max the max to set
+     * @param max
+     *            the max to set
      */
     public final void setMax(double max) {
         this.max = max;
@@ -100,7 +103,8 @@ public class ColorMapRamp extends Figure {
     }
 
     /**
-     * @param colorMap the colorMap to set
+     * @param colorMap
+     *            the colorMap to set
      */
     public final void setColorMap(ColorMap colorMap) {
         this.colorMap = colorMap;
@@ -112,7 +116,7 @@ public class ColorMapRamp extends Figure {
         scale.setFont(f);
     }
 
-    class ColorMapFigure extends Figure{
+    class ColorMapFigure extends Figure {
 
         @Override
         protected void paintClientArea(Graphics graphics) {
@@ -124,8 +128,5 @@ public class ColorMapRamp extends Figure {
         }
 
     }
-
-
-
 
 }

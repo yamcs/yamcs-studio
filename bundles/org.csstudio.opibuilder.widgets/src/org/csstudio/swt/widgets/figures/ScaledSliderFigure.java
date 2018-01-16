@@ -15,10 +15,6 @@ import org.csstudio.swt.widgets.figureparts.AlphaLabel;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.swt.widgets.util.OPITimer;
 import org.csstudio.swt.widgets.util.RepeatFiringBehavior;
-import org.csstudio.swt.xygraph.linearscale.AbstractScale.LabelSide;
-import org.csstudio.swt.xygraph.linearscale.LinearScale;
-import org.csstudio.swt.xygraph.linearscale.LinearScale.Orientation;
-import org.csstudio.swt.xygraph.linearscale.LinearScaledMarker;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.ColorConstants;
@@ -42,6 +38,10 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale.LabelSide;
+import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale;
+import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale.Orientation;
+import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScaledMarker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Pattern;
@@ -98,15 +98,15 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
 
         super();
         scale.setScaleLineVisible(false);
-        scale.setTickLableSide(LabelSide.Secondary);
+        scale.setTickLabelSide(LabelSide.Secondary);
 
         if (horizontal) {
             ((LinearScale) scale).setOrientation(Orientation.HORIZONTAL);
-            scale.setTickLableSide(LabelSide.Primary);
+            scale.setTickLabelSide(LabelSide.Primary);
             marker.setLabelSide(LabelSide.Secondary);
         } else {
             ((LinearScale) scale).setOrientation(Orientation.VERTICAL);
-            scale.setTickLableSide(LabelSide.Secondary);
+            scale.setTickLabelSide(LabelSide.Secondary);
             marker.setLabelSide(LabelSide.Primary);
         }
 
@@ -380,11 +380,11 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         this.horizontal = horizontal;
         if (horizontal) {
             ((LinearScale) scale).setOrientation(Orientation.HORIZONTAL);
-            scale.setTickLableSide(LabelSide.Primary);
+            scale.setTickLabelSide(LabelSide.Primary);
             marker.setLabelSide(LabelSide.Secondary);
         } else {
             ((LinearScale) scale).setOrientation(Orientation.VERTICAL);
-            scale.setTickLableSide(LabelSide.Secondary);
+            scale.setTickLabelSide(LabelSide.Secondary);
             marker.setLabelSide(LabelSide.Primary);
         }
         revalidate();

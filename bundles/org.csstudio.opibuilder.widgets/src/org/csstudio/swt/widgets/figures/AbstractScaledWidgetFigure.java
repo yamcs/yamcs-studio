@@ -7,18 +7,18 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.figures;
 
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.text.DecimalFormat;
 
+import org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.introspection.ScaleWidgetIntrospector;
-import org.csstudio.swt.xygraph.linearscale.AbstractScale;
-import org.csstudio.swt.xygraph.linearscale.Range;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale;
+import org.eclipse.nebula.visualization.xygraph.linearscale.Range;
 
 /**
  * Base figure for a widget based on {@link AbstractScaledWidgetModel}.
@@ -26,7 +26,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
  * @author Xihui Chen
  *
  */
-public abstract class AbstractScaledWidgetFigure extends Figure implements Introspectable{
+public abstract class AbstractScaledWidgetFigure extends Figure implements Introspectable {
 
     protected AbstractScale scale;
 
@@ -38,7 +38,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
 
     protected double maximum = 100;
 
-    protected int majorTickMarkStepHint =30;
+    protected int majorTickMarkStepHint = 30;
 
     protected boolean showMinorTicks = true;
 
@@ -48,6 +48,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
 
     protected String valueLabelFormat = ""; //$NON-NLS-1$
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new ScaleWidgetIntrospector().getBeanInfo(this.getClass());
     }
@@ -55,33 +56,38 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
     /**
      * @return the coerced value of the widget based on the scale range.
      */
-    public double getCoercedValue(){
+    public double getCoercedValue() {
         return getCoercedValue(value);
     }
 
-    /**Coerce a value into range of the scale.
-     * @param v the value to be coerced.
+    /**
+     * Coerce a value into range of the scale.
+     * 
+     * @param v
+     *            the value to be coerced.
      * @return the coerced value
      */
-    public double getCoercedValue(double v){
+    public double getCoercedValue(double v) {
         Range range = scale.getRange();
-        if(range.inRange(v))
+        if (range.inRange(v))
             return v;
         else {
-            if(range.getUpper() >= range.getLower())
-                return v > range.getUpper()? range.getUpper() : range.getLower();
+            if (range.getUpper() >= range.getLower())
+                return v > range.getUpper() ? range.getUpper() : range.getLower();
             else
-                return v > range.getLower()?range.getLower(): range.getUpper();
+                return v > range.getLower() ? range.getLower() : range.getUpper();
         }
 
-//        return Math.max(scale.getRange().getLower(), Math.min(scale.getRange().getUpper(), value));
+        // return Math.max(scale.getRange().getLower(), Math.min(scale.getRange().getUpper(), value));
     }
+
     /**
      * @return the majorTickMarkStepHint
      */
     public int getMajorTickMarkStepHint() {
         return majorTickMarkStepHint;
     }
+
     /**
      * @return the maximum
      */
@@ -96,7 +102,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
         return minimum;
     }
 
-    public Range getRange(){
+    public Range getRange() {
         return new Range(minimum, maximum);
     }
 
@@ -118,10 +124,10 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
     /**
      * @return the value text after format.
      */
-    public String getValueText(){
-        if(valueLabelFormat.trim().equals("")){ //$NON-NLS-1$
+    public String getValueText() {
+        if (valueLabelFormat.trim().equals("")) { //$NON-NLS-1$
             return getScale().format(getValue());
-        }else {
+        } else {
             return new DecimalFormat(valueLabelFormat).format(getValue());
         }
 
@@ -138,7 +144,6 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
     public boolean isOpaque() {
         return false;
     }
-
 
     /**
      * @return the showMinorTicks
@@ -160,6 +165,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
     public boolean isTransparent() {
         return transparent;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -173,29 +179,35 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
         }
         super.paintFigure(graphics);
     }
+
     /**
-     * @param logScale the logScale to set
+     * @param logScale
+     *            the logScale to set
      */
     public void setLogScale(final boolean logScale) {
-        if(this.logScale == logScale)
+        if (this.logScale == logScale)
             return;
         this.logScale = logScale;
         scale.setLogScale(logScale);
         scale.setRange(new Range(minimum, maximum));
         repaint();
     }
+
     /**
-     * @param majorTickMarkStepHint the majorTickMarkStepHint to set
+     * @param majorTickMarkStepHint
+     *            the majorTickMarkStepHint to set
      */
     public void setMajorTickMarkStepHint(int majorTickMarkStepHint) {
-        if(this.majorTickMarkStepHint == majorTickMarkStepHint || majorTickMarkStepHint <=0)
+        if (this.majorTickMarkStepHint == majorTickMarkStepHint || majorTickMarkStepHint <= 0)
             return;
         this.majorTickMarkStepHint = majorTickMarkStepHint;
         scale.setMajorTickMarkStepHint(majorTickMarkStepHint);
         repaint();
     }
+
     /**
      * set the range of the scale
+     * 
      * @param min
      * @param max
      */
@@ -205,70 +217,80 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
         this.minimum = scale.getRange().getLower();
         repaint();
     }
-    public void setRange(Range range){
+
+    public void setRange(Range range) {
         setRange(range.getLower(), range.getUpper());
     }
 
     /**
-     * @param scale the scale to set
+     * @param scale
+     *            the scale to set
      */
     public void setScale(AbstractScale scale) {
         this.scale = scale;
     }
+
     /**
-     * @param showMinorTicks the showMinorTicks to set
+     * @param showMinorTicks
+     *            the showMinorTicks to set
      */
     public void setShowMinorTicks(final boolean showMinorTicks) {
-        if(this.showMinorTicks == showMinorTicks)
+        if (this.showMinorTicks == showMinorTicks)
             return;
         this.showMinorTicks = showMinorTicks;
         scale.setMinorTicksVisible(showMinorTicks);
         repaint();
     }
+
     /**
-     * @param showScale the showScale to set
+     * @param showScale
+     *            the showScale to set
      */
     public void setShowScale(final boolean showScale) {
-        if(this.showScale == showScale)
+        if (this.showScale == showScale)
             return;
         this.showScale = showScale;
         scale.setVisible(showScale);
         repaint();
     }
+
     /**
      * Sets, if this widget should have a transparent background.
+     * 
      * @param transparent
-     *                 The new value for the transparent property
+     *            The new value for the transparent property
      */
     public void setTransparent(final boolean transparent) {
-        if(this.transparent == transparent)
+        if (this.transparent == transparent)
             return;
         this.transparent = transparent;
         repaint();
     }
+
     /**
-     * @param value the value to set
+     * @param value
+     *            the value to set
      */
     public void setValue(final double value) {
         this.value = value;
-        //    Math.max(scale.getRange().getLower(), Math.min(scale.getRange().getUpper(), value));
+        // Math.max(scale.getRange().getLower(), Math.min(scale.getRange().getUpper(), value));
         repaint();
     }
 
     /**
-     * @param valueLabelFormat the numeric format pattern for value label.
+     * @param valueLabelFormat
+     *            the numeric format pattern for value label.
      */
     public void setValueLabelFormat(String valueLabelFormat) {
-         try {
-                 new DecimalFormat(valueLabelFormat);
-             } catch (NullPointerException e) {
-                 throw e;
-             } catch (IllegalArgumentException e){
-                 throw e;
-             }
+        try {
+            new DecimalFormat(valueLabelFormat);
+        } catch (NullPointerException e) {
+            throw e;
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
         this.valueLabelFormat = valueLabelFormat;
         setValue(value);
     }
-
 
 }

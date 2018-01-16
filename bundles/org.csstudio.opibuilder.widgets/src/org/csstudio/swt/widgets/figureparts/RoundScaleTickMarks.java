@@ -9,11 +9,11 @@ package org.csstudio.swt.widgets.figureparts;
 
 import java.util.ArrayList;
 
-import org.csstudio.swt.xygraph.linearscale.AbstractScale.LabelSide;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale.LabelSide;
 import org.eclipse.swt.SWT;
 
 /**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="163">
+<?pde version="3.8"?><target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="164">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.emf.common.feature.group" version="2.12.0.v20160420-0247"/>
@@ -67,6 +67,10 @@
             <unit id="org.objectweb.asm.source" version="5.0.1.v201404251740"/>
             <unit id="org.yaml.snakeyaml" version="1.14.0.v201604211500"/>
             <repository location="http://download.eclipse.org/tools/orbit/R-builds/R20170307180635/repository"/>
+        </location>
+        <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+            <unit id="org.eclipse.nebula.visualization.feature.feature.group" version="2.1.0.201711021145"/>
+            <repository location="http://download.eclipse.org/nebula/releases/1.4.0"/>
         </location>
     </locations>
 </target>

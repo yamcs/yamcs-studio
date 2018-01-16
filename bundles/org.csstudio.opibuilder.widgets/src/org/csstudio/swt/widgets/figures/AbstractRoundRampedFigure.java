@@ -7,24 +7,21 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.figures;
 
-
 import org.csstudio.swt.widgets.figureparts.RoundScale;
 import org.csstudio.swt.widgets.figureparts.RoundScaledRamp;
 import org.csstudio.swt.widgets.figureparts.RoundScaledRamp.Threshold;
 import org.eclipse.swt.graphics.Color;
 
-
 /**
  * Abstract figure with a round ramp and a round scale.
+ * 
  * @author Xihui Chen
  *
  */
 public class AbstractRoundRampedFigure extends AbstractMarkedWidgetFigure {
 
-
     protected boolean gradient = true;
     protected RoundScaledRamp ramp;
-
 
     public AbstractRoundRampedFigure() {
         scale = new RoundScale();
@@ -114,10 +111,11 @@ public class AbstractRoundRampedFigure extends AbstractMarkedWidgetFigure {
     }
 
     /**
-     * @param gradient the gradient to set
+     * @param gradient
+     *            the gradient to set
      */
     public void setGradient(boolean gradient) {
-        if(this.gradient == gradient)
+        if (this.gradient == gradient)
             return;
         this.gradient = gradient;
         ramp.setGradient(gradient);
@@ -142,7 +140,5 @@ public class AbstractRoundRampedFigure extends AbstractMarkedWidgetFigure {
     public boolean isGradient() {
         return gradient;
     }
-
-
 
 }

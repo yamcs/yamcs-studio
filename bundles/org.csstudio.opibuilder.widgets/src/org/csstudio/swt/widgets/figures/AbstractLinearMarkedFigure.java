@@ -7,16 +7,15 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.figures;
 
-
-import org.csstudio.swt.xygraph.linearscale.LinearScale;
-import org.csstudio.swt.xygraph.linearscale.LinearScaledMarker;
 import org.csstudio.ui.util.CustomMediaFactory;
+import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale;
+import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScaledMarker;
 import org.eclipse.swt.graphics.Color;
 
-
 /**
- * Abstract linear marked figure. The figure also includes a scale.
- * The marker and scale have been created in the constructor.
+ * Abstract linear marked figure. The figure also includes a scale. The marker and scale have been created in the
+ * constructor.
+ * 
  * @author Xihui Chen
  *
  */
@@ -27,7 +26,6 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
     private static final String LO = "LO";
     private static final String LOLO = "LOLO";
     protected LinearScaledMarker marker;
-
 
     public AbstractLinearMarkedFigure() {
         scale = new LinearScale();
@@ -71,8 +69,8 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
     @Override
     public void setShowLolo(boolean showLolo) {
         super.setShowLolo(showLolo);
-        if(showLolo)
-            if(loloColor != null)
+        if (showLolo)
+            if (loloColor != null)
                 marker.addMarkerElement(LOLO, loloLevel, loloColor.getRGB());
             else
                 marker.addMarkerElement(LOLO, loloLevel);
@@ -84,8 +82,8 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
     @Override
     public void setShowLo(boolean showLo) {
         super.setShowLo(showLo);
-        if(showLo)
-            if(loColor != null)
+        if (showLo)
+            if (loColor != null)
                 marker.addMarkerElement(LO, loLevel, loColor.getRGB());
             else
                 marker.addMarkerElement(LO, loLevel);
@@ -98,8 +96,8 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
     @Override
     public void setShowHi(boolean showHi) {
         super.setShowHi(showHi);
-        if(showHi)
-            if(hiColor != null)
+        if (showHi)
+            if (hiColor != null)
                 marker.addMarkerElement(HI, hiLevel, hiColor.getRGB());
             else
                 marker.addMarkerElement(HI, hiLevel);
@@ -111,8 +109,8 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
     @Override
     public void setShowHihi(boolean showHihi) {
         super.setShowHihi(showHihi);
-        if(showHihi)
-            if(hihiColor != null)
+        if (showHihi)
+            if (hihiColor != null)
                 marker.addMarkerElement(HIHI, hihiLevel, hihiColor.getRGB());
             else
                 marker.addMarkerElement(HIHI, hihiLevel);
@@ -156,6 +154,5 @@ public class AbstractLinearMarkedFigure extends AbstractMarkedWidgetFigure {
         super.setLogScale(logScale);
         marker.setDirty(true);
     }
-
 
 }
