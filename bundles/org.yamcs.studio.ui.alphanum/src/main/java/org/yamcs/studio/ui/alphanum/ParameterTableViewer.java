@@ -16,24 +16,25 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.core.pvmanager.YamcsPVReader;
 
 public class ParameterTableViewer extends TableViewer {
 
-    public static final String COL_CONTAINER = "Container";
+    public static final String COL_ALIAS = "Alias";
     public static final String COL_NAME = "Parameter";
     public static final String COL_ENG = "Eng Value";
     public static final String COL_RAW = "Raw Value";
     
-    private Map<ParameterInfo, String> engValue;
-    private Map<ParameterInfo, String> rawValue;
+    private Map<ParameterInfo, Object> engValue;
+    private Map<ParameterInfo, Object> rawValue;
     ParameterContentProvider contentProvider;
 	
 	
@@ -53,14 +54,13 @@ public class ParameterTableViewer extends TableViewer {
     private void addFixedColumns(TableColumnLayout tcl) {
 
         TableViewerColumn containerColumn = new TableViewerColumn(this, SWT.NONE);
-        containerColumn.getColumn().setText(COL_CONTAINER);
-        tcl.setColumnData(containerColumn.getColumn(), new ColumnWeightData(40));
+        containerColumn.getColumn().setText(COL_ALIAS);
+        tcl.setColumnData(containerColumn.getColumn(), new ColumnWeightData(20));
         containerColumn.setLabelProvider(new ColumnLabelProvider() {           
         	
         	@Override 
             public String getText(Object element) {
             	ParameterInfo cnt = (ParameterInfo) element;
-                System.out.println("Adding value " + cnt.getName());
                 return cnt.getName();
             }
         });
@@ -68,7 +68,7 @@ public class ParameterTableViewer extends TableViewer {
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.CENTER);
         nameColumn.getColumn().setText(COL_NAME);
-        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(10));
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(30));
         nameColumn.setLabelProvider(new ColumnLabelProvider() {           
         	
         	@Override 
@@ -85,8 +85,10 @@ public class ParameterTableViewer extends TableViewer {
         engValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	System.out.println("Eng:" + engValue.get(element));
-                return engValue.get(element);
+            	if(engValue.get(element) == null)
+            		return "-";
+                return String.valueOf(engValue.get(element));
+                		
             }
         });
 
@@ -96,7 +98,9 @@ public class ParameterTableViewer extends TableViewer {
         rawValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	return rawValue.get(element);
+            	if(rawValue.get(element) == null)
+            		return "-";
+            	return String.valueOf(rawValue.get(element));
             }
         });
 
@@ -125,8 +129,9 @@ public class ParameterTableViewer extends TableViewer {
     
 
     public void addParameter(ParameterInfo element) {
-    	ParameterCatalogue.getInstance().register(new ParameterReader(element));
-    	contentProvider.addParameter(element);
+    	if(contentProvider.addParameter(element))
+    		ParameterCatalogue.getInstance().register(new ParameterReader(element));
+    	
 
     }
     
@@ -143,6 +148,7 @@ public class ParameterTableViewer extends TableViewer {
     				id = parameter.getAliasList().get(0);
     			}
     		}
+    		this.info = info;
 		}
     	
 		@Override
@@ -166,11 +172,33 @@ public class ParameterTableViewer extends TableViewer {
 
 		@Override
 		public void processParameterValue(ParameterValue pval) {
-			engValue.put(info, pval.getEngValue().toString());
-			rawValue.put(info, pval.getRawValue().toString());
-			System.out.println("Updating eng:" + pval.getEngValue().toString());
-			ParameterTableViewer.this.refresh();
 			
+			engValue.put(info, getValue(pval.getEngValue()));
+			rawValue.put(info, getValue(pval.getRawValue()));
+			Display.getDefault().asyncExec( () -> ParameterTableViewer.this.refresh() );
+			
+		}
+		
+		private Object getValue(Value value) {
+			Object obj = null;
+			if(value.hasStringValue())
+				obj= value.getStringValue();
+			else if(value.hasSint64Value())
+				obj= value.getSint64Value();
+			else if(value.hasSint32Value()) 
+				obj= value.getSint32Value();
+			else if(value.hasUint64Value())
+				obj= value.getUint64Value();
+			else if(value.hasUint32Value()) 
+				obj= value.getUint32Value();
+			else if(value.hasDoubleValue())
+				obj= value.getDoubleValue();
+			else if(value.hasFloatValue())
+				obj= value.getFloatValue();
+			else if(value.hasBooleanValue())
+				obj= value.getBooleanValue();
+
+			return obj;
 		}
     	
     }
@@ -203,9 +231,12 @@ public class ParameterTableViewer extends TableViewer {
 			return parameter.toArray();
 		}
 		
-		public void addParameter(ParameterInfo info) {
+		public boolean addParameter(ParameterInfo info) {
+			if(parameter.contains(info))
+				return false;
 			parameter.add(info);
 			table.add(info);
+			return true;
 		}
     	
     }

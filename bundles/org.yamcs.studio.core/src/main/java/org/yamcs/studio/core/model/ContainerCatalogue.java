@@ -9,12 +9,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Mdb.ContainerInfo;
 import org.yamcs.protobuf.Rest.ListContainerInfoResponse;
 import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
 import org.yamcs.studio.core.web.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -38,8 +36,6 @@ public class ContainerCatalogue implements Catalogue {
 
     @Override
     public void onStudioConnect() {
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("packets", "subscribe tm_realtime"));
         initialiseState();
     }
 

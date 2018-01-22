@@ -110,13 +110,18 @@ public class AddParameterPage extends WizardPage {
         containerTreeTable.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.isEmpty()) {
-                setMessage(null);
+                setParameter(null);
                 return;
             }
-            if(sel.getFirstElement() instanceof ParameterInfo)
+            
+            if(sel.getFirstElement() instanceof ParameterInfo) {
             	setParameter((ParameterInfo) sel.getFirstElement());
-
-            setPageComplete(true);
+            	setPageComplete(true);
+            } else {
+            	setParameter(null);
+            	return;
+            }
+           
         });
         ContainerTreeContentProvider commandTreeContentProvider = new ContainerTreeContentProvider();
         containerTreeTable.setContentProvider(commandTreeContentProvider);
