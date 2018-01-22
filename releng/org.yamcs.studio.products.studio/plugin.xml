@@ -234,8 +234,16 @@
                closeable="true"
                id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
          </view>
+         <view
+               relative="org.yamcs.studio.ui.commanding.queue.CommandQueueView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.ui.alphanum.AlphaNumericView">
+         </view>
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.ui.alphanum.AlphaNumericView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.queue.CommandQueueView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>

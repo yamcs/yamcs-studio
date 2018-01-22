@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+      		name="Yamcs Server"
+      		id="org.yamcs.studio.server">
+      </category>
+            <view
+            category="org.yamcs.studio.server"
+            class="org.yamcs.studio.ui.alphanum.AlphaNumericView"
+            id="org.yamcs.studio.ui.alphanum.AlphaNumericView"
+            name="Alpha Numeric"/> 
+   </extension>
+   
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="toolbar:org.yamcs.studio.ui.alphanum.AlphaNumericView">
+         <command
+               commandId="org.yamcs.studio.ui.alphanum.add"
+               label="New Parameter"
+               style="push"/>
+      </menuContribution>
+   </extension>
+   
+    <extension point="org.eclipse.ui.handlers">
+      <handler
+            class="org.yamcs.studio.ui.alphanum.AddToAlphaNumHandler"
+            commandId="org.yamcs.studio.ui.alphanum.add">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>s	
+      </handler>
+      </extension>
+</plugin>
