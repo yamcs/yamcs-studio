@@ -268,12 +268,6 @@ public class AddParameterPage extends WizardPage {
 					children.add(name);
 				}
 			}
-//			System.out.println("Parent:" + parent);
-//			System.out.println("Children:");
-//			for(String i: children) {
-//				System.out.println(i);
-//			}
-			
 			
 			return children.toArray();
 		}
@@ -288,8 +282,6 @@ public class AddParameterPage extends WizardPage {
 				return null;
 				
 			}
-			System.out.println("Name: " + namespace);
-			System.out.println("Parent: " + parent);
 			
 			return parent;
 		}
