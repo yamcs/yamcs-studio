@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.alphanum;
 
+import java.util.List;
+
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -65,8 +67,10 @@ public class AlphaNumericView extends ViewPart implements StudioConnectionListen
          parameterTable.refresh();
      }
 
-	public void addParameter(ParameterInfo parameter) {
-		parameterTable.addParameter(parameter);
+	public void addParameters(List<ParameterInfo> parameters) {
+		for(ParameterInfo info: parameters) {
+			parameterTable.addParameter(info);
+		}
 		parameterTable.refresh();
 		
 	}

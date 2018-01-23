@@ -1,5 +1,7 @@
 package org.yamcs.studio.ui.alphanum;
 
+import java.util.List;
+
 import org.eclipse.jface.wizard.Wizard;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 
@@ -9,7 +11,9 @@ public class AddParameterWizard extends Wizard {
 	
 	@Override
 	public boolean performFinish() {
-		return true;
+		if (page.getParameter() != null)
+			return true;
+		return false;
 	}
 	
 	@Override
@@ -19,7 +23,7 @@ public class AddParameterWizard extends Wizard {
 		
 	}
 
-	public ParameterInfo getParameter() {
+	public List<ParameterInfo> getParameter() {
 		return page.getParameter();
 	}
 

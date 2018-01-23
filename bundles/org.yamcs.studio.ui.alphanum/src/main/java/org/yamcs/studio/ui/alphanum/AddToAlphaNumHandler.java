@@ -23,7 +23,7 @@ public class AddToAlphaNumHandler extends AbstractHandler {
         AddParameterWizard wizard = new AddParameterWizard();
         WizardDialog dialog = new WizardDialog(shell, wizard);
         if (dialog.open() == Window.OK)
-        	alphaNumView.addParameter(wizard.getParameter());
+        	alphaNumView.addParameters(wizard.getParameter());
         return null;
 	}
 

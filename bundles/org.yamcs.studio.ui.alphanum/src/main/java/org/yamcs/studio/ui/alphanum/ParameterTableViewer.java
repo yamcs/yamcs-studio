@@ -1,6 +1,8 @@
 package org.yamcs.studio.ui.alphanum;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +34,10 @@ public class ParameterTableViewer extends TableViewer {
     public static final String COL_NAME = "Parameter";
     public static final String COL_ENG = "Eng Value";
     public static final String COL_RAW = "Raw Value";
+    public static final String COL_TIME = "Generation";
+    public static final String COL_AQU_TIME = "Aquisition";
     
-    private Map<ParameterInfo, Object> engValue;
-    private Map<ParameterInfo, Object> rawValue;
+    private Map<ParameterInfo, ParameterValue> parValue;
     ParameterContentProvider contentProvider;
 	
 	
@@ -42,8 +45,7 @@ public class ParameterTableViewer extends TableViewer {
 		super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));;
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
-        engValue = new HashMap<>();
-        rawValue = new HashMap<>();
+        parValue = new HashMap<>();
         addFixedColumns(tcl);
         contentProvider = new ParameterContentProvider(this);
         setContentProvider(contentProvider);
@@ -53,22 +55,9 @@ public class ParameterTableViewer extends TableViewer {
 	
     private void addFixedColumns(TableColumnLayout tcl) {
 
-        TableViewerColumn containerColumn = new TableViewerColumn(this, SWT.NONE);
-        containerColumn.getColumn().setText(COL_ALIAS);
-        tcl.setColumnData(containerColumn.getColumn(), new ColumnWeightData(20));
-        containerColumn.setLabelProvider(new ColumnLabelProvider() {           
-        	
-        	@Override 
-            public String getText(Object element) {
-            	ParameterInfo cnt = (ParameterInfo) element;
-                return cnt.getName();
-            }
-        });
-        
-
-        TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.CENTER);
+        TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.LEFT);
         nameColumn.getColumn().setText(COL_NAME);
-        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(30));
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(40));
         nameColumn.setLabelProvider(new ColumnLabelProvider() {           
         	
         	@Override 
@@ -79,37 +68,71 @@ public class ParameterTableViewer extends TableViewer {
             }
         });
 
-        TableViewerColumn engValueColumn = new TableViewerColumn(this, SWT.CENTER);
+        TableViewerColumn engValueColumn = new TableViewerColumn(this, SWT.RIGHT);
         engValueColumn.getColumn().setText(COL_ENG);
         tcl.setColumnData(engValueColumn.getColumn(), new ColumnWeightData(10));
         engValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	if(engValue.get(element) == null)
+            	if(parValue.get(element) == null)
             		return "-";
-                return String.valueOf(engValue.get(element));
-                		
+            	ParameterValue value = parValue.get(element);
+                return String.valueOf(getValue(value.getEngValue()));
             }
         });
 
-        TableViewerColumn rawValueColumn = new TableViewerColumn(this, SWT.CENTER);
+        TableViewerColumn rawValueColumn = new TableViewerColumn(this, SWT.RIGHT);
         rawValueColumn.getColumn().setText(COL_RAW);
         tcl.setColumnData(rawValueColumn.getColumn(), new ColumnWeightData(10));
         rawValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	if(rawValue.get(element) == null)
+            	if(parValue.get(element) == null)
             		return "-";
-            	return String.valueOf(rawValue.get(element));
+            	ParameterValue value = parValue.get(element);
+                return String.valueOf(getValue(value.getRawValue()));
+            }
+        });
+        
+        TableViewerColumn gentimeValueColumn = new TableViewerColumn(this, SWT.LEFT);
+        gentimeValueColumn.getColumn().setText(COL_TIME);
+        tcl.setColumnData(gentimeValueColumn.getColumn(), new ColumnWeightData(20));
+        gentimeValueColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override 
+            public String getText(Object element) {
+            	if(parValue.get(element) == null)
+            		return "-";
+            	ParameterValue value = parValue.get(element);
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                Date time = new Date(value.getGenerationTime());
+                String strDate = sdfDate.format(time);
+                return strDate;
+            }
+        });
+        
+        TableViewerColumn aqutimeValueColumn = new TableViewerColumn(this, SWT.LEFT);
+        aqutimeValueColumn.getColumn().setText(COL_AQU_TIME);
+        tcl.setColumnData(aqutimeValueColumn.getColumn(), new ColumnWeightData(20));
+        aqutimeValueColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override 
+            public String getText(Object element) {
+            	if(parValue.get(element) == null)
+            		return "-";
+            	ParameterValue value = parValue.get(element);
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                Date time = new Date(value.getAcquisitionTime());
+                String strDate = sdfDate.format(time);
+                return strDate;
             }
         });
 
         // Common properties to all columns
         List<TableViewerColumn> columns = new ArrayList<>();
-        columns.add(containerColumn);
         columns.add(nameColumn);
         columns.add(engValueColumn);
         columns.add(rawValueColumn);
+        columns.add(gentimeValueColumn);
+        columns.add(aqutimeValueColumn);
         for (TableViewerColumn column : columns) {
             // prevent resize to 0
             column.getColumn().addControlListener(new ControlListener() {
@@ -134,6 +157,30 @@ public class ParameterTableViewer extends TableViewer {
     	
 
     }
+    
+	private Object getValue(Value value) {
+		Object obj = null;
+		if(value.hasStringValue())
+			obj= value.getStringValue();
+		else if(value.hasSint64Value())
+			obj= value.getSint64Value();
+		else if(value.hasSint32Value()) 
+			obj= value.getSint32Value();
+		else if(value.hasUint64Value())
+			obj= value.getUint64Value();
+		else if(value.hasUint32Value()) 
+			obj= value.getUint32Value();
+		else if(value.hasDoubleValue())
+			obj= value.getDoubleValue();
+		else if(value.hasFloatValue())
+			obj= value.getFloatValue();
+		else if(value.hasBooleanValue())
+			obj= value.getBooleanValue();
+		if(obj == null)
+			return "-";
+		return obj;
+	}
+
     
     
     
@@ -172,35 +219,11 @@ public class ParameterTableViewer extends TableViewer {
 
 		@Override
 		public void processParameterValue(ParameterValue pval) {
-			
-			engValue.put(info, getValue(pval.getEngValue()));
-			rawValue.put(info, getValue(pval.getRawValue()));
+			parValue.put(info, pval);
 			Display.getDefault().asyncExec( () -> ParameterTableViewer.this.refresh() );
 			
 		}
-		
-		private Object getValue(Value value) {
-			Object obj = null;
-			if(value.hasStringValue())
-				obj= value.getStringValue();
-			else if(value.hasSint64Value())
-				obj= value.getSint64Value();
-			else if(value.hasSint32Value()) 
-				obj= value.getSint32Value();
-			else if(value.hasUint64Value())
-				obj= value.getUint64Value();
-			else if(value.hasUint32Value()) 
-				obj= value.getUint32Value();
-			else if(value.hasDoubleValue())
-				obj= value.getDoubleValue();
-			else if(value.hasFloatValue())
-				obj= value.getFloatValue();
-			else if(value.hasBooleanValue())
-				obj= value.getBooleanValue();
-
-			return obj;
-		}
-    	
+		    	
     }
     
     class ParameterContentProvider implements IStructuredContentProvider {
