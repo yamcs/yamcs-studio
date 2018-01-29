@@ -10,33 +10,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.studio.core.StudioConnectionListener;
-import org.yamcs.studio.core.model.InstanceListener;
 
-public class AlphaNumericView extends ViewPart implements StudioConnectionListener, InstanceListener{
+public class AlphaNumericView extends ViewPart{
 
 	
 	public static final String ID = "org.yamcs.studio.ui.alphanum.AlphaNumericView";
 	
 	ParameterTableViewer parameterTable;
 	
-	@Override
-	public void instanceChanged(String oldInstance, String newInstance) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onStudioConnect() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onStudioDisconnect() {
-		// TODO Auto-generated method stub
-		
-	}
 
      public AlphaNumericView() {
              super();
@@ -73,6 +54,10 @@ public class AlphaNumericView extends ViewPart implements StudioConnectionListen
 		}
 		parameterTable.refresh();
 		
+	}
+	
+	public List<ParameterInfo> getParameterList() {
+		return parameterTable.getParameters();
 	}
 
 

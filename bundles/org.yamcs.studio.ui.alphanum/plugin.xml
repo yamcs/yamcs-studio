@@ -17,6 +17,18 @@
    
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="toolbar:org.yamcs.studio.ui.alphanum.AlphaNumericView">
+	     <command
+               commandId="org.yamcs.studio.ui.alphanum.export"
+               icon="icons/elcl16/export_log.png"
+               disabledIcon="icons/dlcl16/export_log.png"
+               label="Export Parameters"
+               style="push"/>
+	     <command
+               commandId="org.yamcs.studio.ui.alphanum.import"
+               icon="icons/elcl16/import_log.png"
+               disabledIcon="icons/dlcl16/import_log.png"
+               label="Import Parameters"
+               style="push"/>
          <command
                commandId="org.yamcs.studio.ui.alphanum.add"
                label="New Parameter"
@@ -34,7 +46,15 @@
                   <equals value="true"/>
                </with>
             </and>
-         </activeWhen>s	
+         </activeWhen>
+      </handler>
+            <handler
+            class="org.yamcs.studio.ui.alphanum.ExportAlphaNumericHandler"
+            commandId="org.yamcs.studio.ui.alphanum.export">	
+      </handler>
+      <handler
+            class="org.yamcs.studio.ui.alphanum.ImportAlphaNumericHandler"
+            commandId="org.yamcs.studio.ui.alphanum.import">	
       </handler>
       </extension>
 </plugin>

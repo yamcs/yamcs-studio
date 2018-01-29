@@ -155,8 +155,11 @@ public class ParameterTableViewer extends TableViewer {
     	if(contentProvider.addParameter(element))
     		ParameterCatalogue.getInstance().register(new ParameterReader(element));
     	
-
     }
+    
+	public List<ParameterInfo> getParameters() {
+		return contentProvider.getParameter();
+	}
     
 	private Object getValue(Value value) {
 		Object obj = null;
@@ -230,8 +233,11 @@ public class ParameterTableViewer extends TableViewer {
 
     	TableViewer table;
     	List<ParameterInfo> parameter;
-    	
-    	
+
+		public List<ParameterInfo> getParameter() {
+			return parameter;
+		}
+
 		public ParameterContentProvider(TableViewer parameterTableViewer) {
 			table = parameterTableViewer;
 			parameter = new ArrayList<>();
