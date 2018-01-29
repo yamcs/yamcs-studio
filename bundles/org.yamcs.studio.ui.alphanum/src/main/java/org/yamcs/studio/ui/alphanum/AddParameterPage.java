@@ -1,7 +1,9 @@
 package org.yamcs.studio.ui.alphanum;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,8 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -97,6 +101,48 @@ public class AddParameterPage extends WizardPage {
 
 
 		});
+		
+		namespaceTable.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = new IStructuredSelection() {
+					
+					@Override
+					public boolean isEmpty() {
+						return false;
+					}
+					
+					@Override
+					public List toList() {
+						return Arrays.asList(contentProvider.getElements(event));
+					}
+					
+					@Override
+					public Object[] toArray() {
+						
+						return contentProvider.getElements(event);
+					}
+					
+					@Override
+					public int size() {
+						return contentProvider.getElements(event).length;
+					}
+					
+					@Override
+					public Iterator iterator() {
+						return Arrays.asList(contentProvider.getElements(event)).iterator();
+					}
+					
+					@Override
+					public Object getFirstElement() {
+						return null;
+					}
+				};
+				parameterTable.setSelection(sel);
+				
+			}
+		});
 
 		
 		namespaceTable.setContentProvider(new NamespaceContentProvider());
@@ -121,7 +167,6 @@ public class AddParameterPage extends WizardPage {
 		parameterTable = new TableViewer(tableWrapper2, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		parameterTable.getTable().setHeaderVisible(true);
 		parameterTable.getTable().setLinesVisible(true);
-
 
 		
 		TableViewerColumn nameColumn = new TableViewerColumn(parameterTable, SWT.NONE);
