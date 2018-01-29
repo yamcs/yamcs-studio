@@ -12,7 +12,8 @@
             category="org.yamcs.studio.server"
             class="org.yamcs.studio.ui.alphanum.AlphaNumericView"
             id="org.yamcs.studio.ui.alphanum.AlphaNumericView"
-            name="Alpha Numeric"/> 
+            name="Alpha Numeric"
+            /> 
    </extension>
    
    <extension point="org.eclipse.ui.menus">
@@ -27,6 +28,12 @@
                commandId="org.yamcs.studio.ui.alphanum.import"
                icon="icons/elcl16/import_log.png"
                disabledIcon="icons/dlcl16/import_log.png"
+               label="Import Parameters"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.ui.alphanum.clear"
+               icon="icons/elcl16/clear.png"
+               disabledIcon="icons/dlcl16/clear.png"
                label="Import Parameters"
                style="push"/>
          <command
@@ -55,6 +62,10 @@
       <handler
             class="org.yamcs.studio.ui.alphanum.ImportAlphaNumericHandler"
             commandId="org.yamcs.studio.ui.alphanum.import">	
+      </handler>
+            <handler
+            class="org.yamcs.studio.ui.alphanum.ClearViewHandler"
+            commandId="org.yamcs.studio.ui.alphanum.clear">	
       </handler>
       </extension>
 </plugin>
