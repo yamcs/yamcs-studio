@@ -37,15 +37,14 @@ public class ParameterTableViewer extends TableViewer {
     public static final String COL_TIME = "Generation";
     public static final String COL_AQU_TIME = "Aquisition";
     
-    private Map<ParameterInfo, ParameterValue> parValue;
     ParameterContentProvider contentProvider;
-	
+	private Map<ParameterInfo, ParameterReader> readers;
 	
 	public ParameterTableViewer(AlphaNumericView view, Composite parent, TableColumnLayout tcl) {
 		super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));;
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
-        parValue = new HashMap<>();
+        readers = new HashMap<>();
         addFixedColumns(tcl);
         contentProvider = new ParameterContentProvider(this);
         setContentProvider(contentProvider);
@@ -74,9 +73,10 @@ public class ParameterTableViewer extends TableViewer {
         engValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	if(parValue.get(element) == null)
+            	ParameterReader reader = readers.get(element);
+            	if(reader == null || reader.getValue() == null)
             		return "-";
-            	ParameterValue value = parValue.get(element);
+            	ParameterValue value = reader.getValue();
                 return String.valueOf(getValue(value.getEngValue()));
             }
         });
@@ -87,9 +87,10 @@ public class ParameterTableViewer extends TableViewer {
         rawValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	if(parValue.get(element) == null)
+            	ParameterReader reader = readers.get(element);
+            	if(reader == null || reader.getValue() == null)
             		return "-";
-            	ParameterValue value = parValue.get(element);
+            	ParameterValue value = reader.getValue();
                 return String.valueOf(getValue(value.getRawValue()));
             }
         });
@@ -100,9 +101,10 @@ public class ParameterTableViewer extends TableViewer {
         gentimeValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	if(parValue.get(element) == null)
+            	ParameterReader reader = readers.get(element);
+            	if(reader == null || reader.getValue() == null)
             		return "-";
-            	ParameterValue value = parValue.get(element);
+            	ParameterValue value = reader.getValue();
                 SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 Date time = new Date(value.getGenerationTime());
                 String strDate = sdfDate.format(time);
@@ -116,9 +118,10 @@ public class ParameterTableViewer extends TableViewer {
         aqutimeValueColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-            	if(parValue.get(element) == null)
+            	ParameterReader reader = readers.get(element);
+            	if(reader == null || reader.getValue() == null)
             		return "-";
-            	ParameterValue value = parValue.get(element);
+            	ParameterValue value = reader.getValue();
                 SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 Date time = new Date(value.getAcquisitionTime());
                 String strDate = sdfDate.format(time);
@@ -152,9 +155,11 @@ public class ParameterTableViewer extends TableViewer {
     
 
     public void addParameter(ParameterInfo element) {
-    	if(contentProvider.addParameter(element))
-    		ParameterCatalogue.getInstance().register(new ParameterReader(element));
-    	
+    	if(contentProvider.addParameter(element)) {
+    		ParameterReader reader = new ParameterReader(element);
+    		readers.put(element, reader);
+    		ParameterCatalogue.getInstance().register(reader);
+    	}
     }
     
 	public List<ParameterInfo> getParameters() {
@@ -191,8 +196,11 @@ public class ParameterTableViewer extends TableViewer {
 
     	NamedObjectId id;
     	ParameterInfo info;
+    	ParameterValue value;
     	
-    	public ParameterReader(ParameterInfo info) {
+
+
+		public ParameterReader(ParameterInfo info) {
     		for(ParameterInfo parameter: ParameterCatalogue.getInstance().getMetaParameters()) {
     			if(info.getQualifiedName().equals(parameter.getQualifiedName())) {
     				id = parameter.getAliasList().get(0);
@@ -203,7 +211,7 @@ public class ParameterTableViewer extends TableViewer {
     	
 		@Override
 		public void reportException(Exception e) {
-			// TODO Auto-generated method stub
+			;
 			
 		}
 
@@ -211,18 +219,21 @@ public class ParameterTableViewer extends TableViewer {
 		public NamedObjectId getId() {
 			return id;
 		}
+		
+    	public ParameterValue getValue() {
+			return value;
+		}
 
 		@Override
 		public void processConnectionInfo(PVConnectionInfo info) {
 			if(!info.connected) {
 				//TODO do something
-			}
-							
+			}		
 		}
 
 		@Override
 		public void processParameterValue(ParameterValue pval) {
-			parValue.put(info, pval);
+			value = pval;
 			Display.getDefault().asyncExec( () -> ParameterTableViewer.this.refresh() );
 			
 		}
@@ -267,8 +278,26 @@ public class ParameterTableViewer extends TableViewer {
 			table.add(info);
 			return true;
 		}
+
+		public void clearAll() {
+			parameter.clear();
+			table.getTable().clearAll();
+			
+		}
     	
     }
+
+	public void clear() {
+		
+		for(ParameterInfo info : readers.keySet()) {
+			ParameterCatalogue.getInstance().unregister(readers.get(info));
+		}
+		readers.clear();
+		contentProvider.clearAll();
+		System.out.println(readers.size());
+		refresh();
+				
+	}
 
 
 }

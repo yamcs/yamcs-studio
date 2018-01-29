@@ -59,6 +59,10 @@ public class AlphaNumericView extends ViewPart{
 	public List<ParameterInfo> getParameterList() {
 		return parameterTable.getParameters();
 	}
+	
+	public void clear() {
+		parameterTable.clear();
+	}
 
 
 	

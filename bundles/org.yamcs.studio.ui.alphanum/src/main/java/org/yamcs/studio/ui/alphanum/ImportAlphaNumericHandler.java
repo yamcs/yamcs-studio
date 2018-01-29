@@ -43,7 +43,7 @@ public class ImportAlphaNumericHandler extends AbstractHandler {
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         IWorkbenchPart part = window.getActivePage().findView(AlphaNumericView.ID);
         AlphaNumericView alphanumericView = (AlphaNumericView) part;
-        
+        alphanumericView.clear();
         alphanumericView.addParameters(parseParameterList(importFile));
 
         return null;
