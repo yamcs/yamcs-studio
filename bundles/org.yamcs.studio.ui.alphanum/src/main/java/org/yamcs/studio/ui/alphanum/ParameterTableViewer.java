@@ -10,10 +10,8 @@ import java.util.Map;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -30,7 +28,6 @@ import org.yamcs.studio.core.pvmanager.YamcsPVReader;
 
 public class ParameterTableViewer extends TableViewer {
 
-    public static final String COL_ALIAS = "Alias";
     public static final String COL_NAME = "Parameter";
     public static final String COL_ENG = "Eng Value";
     public static final String COL_RAW = "Raw Value";
@@ -40,9 +37,12 @@ public class ParameterTableViewer extends TableViewer {
     ParameterContentProvider contentProvider;
 	private Map<ParameterInfo, ParameterReader> readers;
 	
-	public ParameterTableViewer(AlphaNumericView view, Composite parent, TableColumnLayout tcl) {
-		super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));;
-        getTable().setHeaderVisible(true);
+	public ParameterTableViewer(Composite parent) {
+		super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL));;
+        TableColumnLayout tcl = new TableColumnLayout();
+        parent.setLayout(tcl);
+		
+		getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
         readers = new HashMap<>();
         addFixedColumns(tcl);
@@ -51,8 +51,8 @@ public class ParameterTableViewer extends TableViewer {
         setInput(contentProvider);
         
 	}
-	
-    private void addFixedColumns(TableColumnLayout tcl) {
+
+	private void addFixedColumns(TableColumnLayout tcl) {
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.LEFT);
         nameColumn.getColumn().setText(COL_NAME);
@@ -162,8 +162,38 @@ public class ParameterTableViewer extends TableViewer {
     	}
     }
     
+    public void removeParameter(ParameterInfo info) {
+    	ParameterCatalogue.getInstance().unregister(readers.get(info));
+    	readers.remove(info);
+    	contentProvider.remove(info);
+		refresh();
+    }
+    
+	public void restoreParameters() {
+		clear();
+		for(ParameterInfo info : contentProvider.getInitial()) {
+			addParameter(info);
+		}
+		refresh();
+		
+	}
+    
+	public void clear() {
+		for(ParameterInfo info : readers.keySet()) {
+			ParameterCatalogue.getInstance().unregister(readers.get(info));
+		}
+		readers.clear();
+		contentProvider.clearAll();
+		refresh();
+				
+	}
+    
 	public List<ParameterInfo> getParameters() {
 		return contentProvider.getParameter();
+	}
+	
+	public boolean hasChanged() {
+		return contentProvider.hasChanged();
 	}
     
 	private Object getValue(Value value) {
@@ -188,8 +218,6 @@ public class ParameterTableViewer extends TableViewer {
 			return "-";
 		return obj;
 	}
-
-    
     
     
     class ParameterReader implements YamcsPVReader{
@@ -234,70 +262,16 @@ public class ParameterTableViewer extends TableViewer {
 		@Override
 		public void processParameterValue(ParameterValue pval) {
 			value = pval;
-			Display.getDefault().asyncExec( () -> ParameterTableViewer.this.refresh() );
-			
+			if (getTable().isDisposed()) {
+				return;
+			}
+				Display.getDefault().asyncExec( () -> {
+					if (!getTable().isDisposed()) {
+					ParameterTableViewer.this.refresh();
+					}
+				});	
 		}
 		    	
     }
-    
-    class ParameterContentProvider implements IStructuredContentProvider {
-
-    	TableViewer table;
-    	List<ParameterInfo> parameter;
-
-		public List<ParameterInfo> getParameter() {
-			return parameter;
-		}
-
-		public ParameterContentProvider(TableViewer parameterTableViewer) {
-			table = parameterTableViewer;
-			parameter = new ArrayList<>();
-		}
-
-		@Override
-		public void dispose() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public Object[] getElements(Object inputElement) {
-			return parameter.toArray();
-		}
-		
-		public boolean addParameter(ParameterInfo info) {
-			if(parameter.contains(info))
-				return false;
-			parameter.add(info);
-			table.add(info);
-			return true;
-		}
-
-		public void clearAll() {
-			parameter.clear();
-			table.getTable().clearAll();
-			
-		}
-    	
-    }
-
-	public void clear() {
-		
-		for(ParameterInfo info : readers.keySet()) {
-			ParameterCatalogue.getInstance().unregister(readers.get(info));
-		}
-		readers.clear();
-		contentProvider.clearAll();
-		System.out.println(readers.size());
-		refresh();
-				
-	}
-
 
 }

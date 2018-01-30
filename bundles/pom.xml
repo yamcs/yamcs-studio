@@ -24,5 +24,6 @@
     <module>org.yamcs.studio.ui.monitoring</module>
     <module>org.yamcs.studio.ui.processor</module>
     <module>org.yamcs.studio.ui.alphanum</module>
+    <module>org.csstudio.display.pvtable</module>
   </modules>
 </project>
