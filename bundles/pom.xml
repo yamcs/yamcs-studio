@@ -17,6 +17,7 @@
     <module>org.yamcs.studio.product.utility</module>
     <module>org.yamcs.studio.script</module>
     <module>org.yamcs.studio.theming</module>
+    <module>org.yamcs.studio.ui.alphanum</module>
     <module>org.yamcs.studio.ui.archive</module>
     <module>org.yamcs.studio.ui.commanding</module>
     <module>org.yamcs.studio.ui.css</module>
