@@ -57,12 +57,8 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
 
     @Override
     public void instanceChanged(String oldInstance, String newInstance) {
-        // The server will normally transfer our parameter subscription,
-        // but don't necessarily trust that right now. So reconnect all pvs
-        // manually
-        // (probably handled by OPIUtils.refresh in org.yamcs.studio.ui.css.Activator)
-        /// disconnect();
-        /// connect();
+        disconnect();
+        connect();
     }
 
     @Override
