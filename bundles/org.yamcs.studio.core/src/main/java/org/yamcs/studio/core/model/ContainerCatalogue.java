@@ -11,9 +11,8 @@ import java.util.logging.Logger;
 
 import org.yamcs.protobuf.Mdb.ContainerInfo;
 import org.yamcs.protobuf.Rest.ListContainerInfoResponse;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -35,7 +34,7 @@ public class ContainerCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         initialiseState();
     }
 
@@ -46,7 +45,7 @@ public class ContainerCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         clearState();
     }
 
@@ -79,10 +78,9 @@ public class ContainerCatalogue implements Catalogue {
 
     private void loadContainers() {
         log.fine("Fetching available Containers");
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/containers", null).whenComplete((data, exc) -> {
+        yamcsClient.get("/mdb/" + instance + "/containers", null).whenComplete((data, exc) -> {
             try {
                 ListContainerInfoResponse response = ListContainerInfoResponse.parseFrom(data);
                 processContainers(response.getContainerList());

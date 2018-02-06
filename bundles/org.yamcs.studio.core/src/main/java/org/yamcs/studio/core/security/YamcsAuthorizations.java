@@ -39,6 +39,13 @@ public class YamcsAuthorizations {
         });
     }
 
+    public String getUsername() {
+        if (userInfo != null) {
+            return userInfo.getLogin();
+        }
+        return null;
+    }
+
     public boolean hasSystemPrivilege(SystemPrivilege systemPrivilege) {
         if (!isAuthorizationEnabled()) {
             return true;
@@ -49,7 +56,7 @@ public class YamcsAuthorizations {
         return userInfo.getSystemPrivilegesList().contains(systemPrivilege.name());
     }
 
-    private boolean isAuthorizationEnabled() {
+    public boolean isAuthorizationEnabled() {
         YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         // TODO we should probably control this from the server, rather than here. Just because
         // the creds are null, does not really mean anything. We could also send creds to an

@@ -13,8 +13,6 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
-import org.yamcs.protobuf.Yamcs.EventOrBuilder;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
@@ -94,18 +92,17 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
         });
     }
 
-
-    public CompletableFuture<byte[]> createEvent(String source, int sequenceNumber, String message, long generationTime, long receptionTime, EventSeverity severity)
-    {
-    	String instance = ManagementCatalogue.getCurrentYamcsInstance();
+    public CompletableFuture<byte[]> createEvent(String source, int sequenceNumber, String message, long generationTime,
+            long receptionTime, EventSeverity severity) {
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         String resource = "/archive/" + instance + "/events/";
-        
-        Event event= Event.newBuilder().setSource(source).setSeqNumber(sequenceNumber)
-        		.setMessage(message).setGenerationTime(generationTime)
-        		.setReceptionTime(receptionTime).setSeverity(severity).build();
-        
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.post(resource, event);
+
+        Event event = Event.newBuilder().setSource(source).setSeqNumber(sequenceNumber)
+                .setMessage(message).setGenerationTime(generationTime)
+                .setReceptionTime(receptionTime).setSeverity(severity).build();
+
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.post(resource, event);
     }
 
     private static class EventBatchGenerator implements BulkRestDataReceiver {

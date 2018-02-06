@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.csstudio.workspace,
  org.csstudio.simplepv,
  org.csstudio.opibuilder
-Export-Package: org.yamcs.studio.css.core.prefs,
+Export-Package: org.yamcs.studio.css.core,
+ org.yamcs.studio.css.core.prefs,
  org.yamcs.studio.css.core.pvmanager,
  org.yamcs.studio.css.core.pvmanager.autocomplete,
  org.yamcs.studio.css.core.vtype
