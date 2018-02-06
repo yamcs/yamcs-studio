@@ -182,7 +182,11 @@ public class ScrollParameterTableViewer extends TableViewer {
 
         @Override
         public void processParameterValue(ParameterValue pval) {
-            value.put(pval.getGenerationTimeUTC(), extractValue(pval.getEngValue()));
+            //Show even if there are several values for one time stamp
+            if(value.containsKey(pval.getGenerationTimeUTC())) {
+                value.put(pval.getGenerationTimeUTC(), value.get(pval.getGenerationTimeUTC()) + ", " + extractValue(pval.getEngValue()));
+            } else
+                value.put(pval.getGenerationTimeUTC(), extractValue(pval.getEngValue()));
             contentProvider.addTimeStamp(pval.getGenerationTimeUTC());
             if (getTable().isDisposed()) {
                 return;
