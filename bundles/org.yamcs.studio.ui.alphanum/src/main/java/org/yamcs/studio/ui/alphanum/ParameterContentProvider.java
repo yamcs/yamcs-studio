@@ -76,7 +76,7 @@ public class ParameterContentProvider implements IStructuredContentProvider {
     }
 
     public boolean hasChanged() {
-        return !(initial.size() == parameter.size() && initial.containsAll(parameter));
+        return initial.size() != parameter.size() || !initial.containsAll(parameter);
     }
 
 }

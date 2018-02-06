@@ -89,7 +89,6 @@ public class AlphaNumericEditor extends EditorPart {
                 fileInput = new AlphaNumericJson();
             }
             
-            System.out.println(fileInput);
             for (ParameterInfo meta :ParameterCatalogue.getInstance().getMetaParameters()) {
                 for(String parameter : fileInput.getParameterList())
                     if(parameter.contains(meta.getQualifiedName()))
@@ -116,8 +115,6 @@ public class AlphaNumericEditor extends EditorPart {
         Composite tableWrapper = new Composite(sash, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
         List<ParameterInfo> parameters = loadData(); 
-        for(String s:  fileInput.getColumns())
-            System.out.println(s);
         parameterTable = new ParameterTableViewer(tableWrapper);
         ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
         provider.load(parameters);
@@ -173,6 +170,7 @@ public class AlphaNumericEditor extends EditorPart {
             for(ParameterInfo info : parameters)
                 parameterNames.add(info.getQualifiedName());
             fileInput.setParameterList(parameterNames);
+            fileInput.setColumns(new ArrayList<>(parameterTable.getColumns()));
             gson.toJson(fileInput, out);
             ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
             provider.load(parameters);
@@ -196,8 +194,12 @@ public class AlphaNumericEditor extends EditorPart {
 
     @Override
     public boolean isDirty() {
-        //TODO ignoring remove
-        return parameterTable.hasChanged();
+        return parameterTable.hasChanged() || !checkColumns();
+    }
+    
+    private boolean checkColumns() {
+        return parameterTable.getColumns().size() == fileInput.getColumns().size() 
+                && parameterTable.getColumns().containsAll(fileInput.getColumns());
     }
 
     @Override
