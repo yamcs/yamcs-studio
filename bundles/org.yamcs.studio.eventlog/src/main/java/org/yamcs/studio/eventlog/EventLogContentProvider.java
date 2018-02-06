@@ -188,11 +188,11 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             source = event.getSource();
         item.setText(1, source);
 
-        // reception time
-        item.setText(2, event.getReceptionTimeUTC());
-
         // generation time
-        item.setText(3, event.getGenerationTimeUTC());
+        item.setText(2, event.getGenerationTimeUTC());
+
+        // reception time
+        item.setText(3, event.getReceptionTimeUTC());
 
         // seq number
         item.setText(4, event.getSeqNumber() + "");

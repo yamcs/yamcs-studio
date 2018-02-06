@@ -39,6 +39,10 @@
             categoryId="org.yamcs.studio"
             id="org.yamcs.studio.eventlog.addManualEventCommand"
             name="Add a Manual Event">
+         <commandParameter
+               id="org.yamcs.studio.eventlog.addEvent.action"
+               name="Action"
+               optional="false" />
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -114,6 +118,15 @@
             </not>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.yamcs.studio.eventlog.InsertManualEventHandler"
+            commandId="org.yamcs.studio.eventlog.insertManualEventCommand">
+         <enabledWhen>
+            <not>
+               <count value="0"/>
+            </not>
+         </enabledWhen>
+      </handler>
    </extension>
    
    <extension point="org.eclipse.ui.views">
@@ -136,7 +149,10 @@
                icon="icons/elcl16/add_obj.gif"
                disabledIcon="icons/elcl16/add_obj.gif"
                label="Add a Manual Event"
-               style="push"/>
+               style="push">
+            <parameter
+                  name="org.yamcs.studio.eventlog.addEvent.action" value="ADD" />
+         </command>
          <command
                commandId="org.yamcs.studio.eventlog.exportCommand"
                icon="icons/elcl16/export_log.png"
@@ -228,6 +244,13 @@
                      name="org.yamcs.studio.eventlog.copyDetails.property" value="SEQNO" />
             </command>
          </menu>
+         <separator name="org.yamcs.studio.eventlog.separator2" visible="true"/>
+         <command
+               commandId="org.yamcs.studio.eventlog.addManualEventCommand"
+               label="Insert a Manual Event">               
+            <parameter
+                  name="org.yamcs.studio.eventlog.addEvent.action" value="INSERT" />
+         </command>
       </menuContribution>
    </extension>
    
