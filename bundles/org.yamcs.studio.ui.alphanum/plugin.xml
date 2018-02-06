@@ -7,7 +7,7 @@
             class="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
             contributorClass="org.yamcs.studio.ui.alphanum.AlphaNumericEditorActionBarContributor"
             default="false"
-            extensions="par"
+            extensions="par2"
             id="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
             name="AlphaNumeric">
       </editor>

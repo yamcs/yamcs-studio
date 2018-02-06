@@ -115,13 +115,18 @@ public class AlphaNumericEditor extends EditorPart {
 
         Composite tableWrapper = new Composite(sash, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+        List<ParameterInfo> parameters = loadData(); 
+        for(String s:  fileInput.getColumns())
+            System.out.println(s);
         parameterTable = new ParameterTableViewer(tableWrapper);
         ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
-        provider.load(loadData());
+        provider.load(parameters);
+        parameterTable.setColumns(fileInput.getColumns());
         for(ParameterInfo info : loadData())
             parameterTable.addParameter(info);
-        parameterTable.refresh();   }
+        parameterTable.refresh();
+        
+    }
 
     public AlphaNumericEditor() {
         super();

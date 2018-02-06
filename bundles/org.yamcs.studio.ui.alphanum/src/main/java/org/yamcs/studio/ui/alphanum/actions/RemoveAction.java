@@ -40,7 +40,7 @@ public class RemoveAction extends AlphaNumericAction {
 
     public void setViewer(ParameterTableViewer viewer) {
         if( getViewer() != null)
-            viewer.removeSelectionChangedListener(listener);
+            getViewer().removeSelectionChangedListener(listener);
         super.setViewer(viewer);
         if( getViewer() != null)
             viewer.addSelectionChangedListener(listener);

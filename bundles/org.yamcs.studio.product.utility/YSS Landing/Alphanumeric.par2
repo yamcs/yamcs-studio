@@ -1,0 +1,4 @@
+{ 
+  "columns":["Eng Value", "Raw Value"], 
+  "parameterList":["/YSS/SIMULATOR/Alpha", "/YSS/SIMULATOR/Beta"]
+}

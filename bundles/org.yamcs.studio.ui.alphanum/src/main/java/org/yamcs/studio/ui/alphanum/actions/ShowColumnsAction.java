@@ -4,13 +4,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.studio.ui.alphanum.AddParameterWizard;
 import org.yamcs.studio.ui.alphanum.ParameterTableViewer;
+import org.yamcs.studio.ui.alphanum.ShowColumnsWizard;
 
-public class AddNewParameterAction extends AlphaNumericAction {
+public class ShowColumnsAction extends AlphaNumericAction {
 
-    public AddNewParameterAction(final ParameterTableViewer viewer) {
+    public ShowColumnsAction(final ParameterTableViewer viewer) {
         super("icons/elcl16/add.png", viewer);
         setToolTipText("Add Parameter");
     }
@@ -18,11 +17,10 @@ public class AddNewParameterAction extends AlphaNumericAction {
     @Override
     public void run() {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        AddParameterWizard wizard = new AddParameterWizard();
+        ShowColumnsWizard wizard = new ShowColumnsWizard(getViewer().getColumns());
         WizardDialog dialog = new WizardDialog(shell, wizard);
         if (dialog.open() == Window.OK)
-            for(ParameterInfo info : wizard.getParameter())
-                viewer.addParameter(info);
+            viewer.setColumns(wizard.getColumns());
 
     }
 

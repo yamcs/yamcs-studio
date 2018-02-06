@@ -74,7 +74,7 @@ public class ScrollParameterTableViewer extends TableViewer {
         });
 
     }
-
+    
     private void addColumn(ParameterInfo info) {
         TableViewerColumn column = new TableViewerColumn(this, SWT.RIGHT);
         column.getColumn().setText(info.getName());
