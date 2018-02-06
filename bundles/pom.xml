@@ -38,8 +38,8 @@
     <module>org.yamcs.studio.eventlog</module>
     <module>org.yamcs.studio.monitoring</module>
     <module>org.yamcs.studio.p2</module>
-
     <module>org.yamcs.studio.editor</module>
     <module>org.yamcs.studio.runtime</module>
+    <module>org.yamcs.studio.ui.alphanum</module>
   </modules>
 </project>

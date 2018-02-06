@@ -37,6 +37,11 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.eventlog.addManualEventCommand"
+            name="Add a Manual Event">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.eventlog.copyDetailsCommand"
             name="Copy Event Details">
          <commandParameter
@@ -59,6 +64,15 @@
       <handler
             class="org.yamcs.studio.eventlog.ExportEventsHandler"
             commandId="org.yamcs.studio.eventlog.exportCommand">
+      </handler>
+      <handler
+            class="org.yamcs.studio.eventlog.AddManualEventHandler"
+            commandId="org.yamcs.studio.eventlog.addManualEventCommand">            
+         <activeWhen>
+            <with variable="org.yamcs.studio.ui.state.connected">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
       </handler>
       <handler
             class="org.yamcs.studio.eventlog.ClearEventLogHandler"
@@ -117,6 +131,12 @@
 
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="toolbar:org.yamcs.studio.eventlog.EventLogView">
+         <command
+               commandId="org.yamcs.studio.eventlog.addManualEventCommand"
+               icon="icons/elcl16/add_obj.gif"
+               disabledIcon="icons/elcl16/add_obj.gif"
+               label="Add a Manual Event"
+               style="push"/>
          <command
                commandId="org.yamcs.studio.eventlog.exportCommand"
                icon="icons/elcl16/export_log.png"
