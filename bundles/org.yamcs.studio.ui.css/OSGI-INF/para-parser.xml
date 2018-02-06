@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Yamcs Parameter Parser">
-   <implementation class="org.yamcs.studio.ui.css.pvmanager.autocomplete.ParameterContentParser"/>
-   <service>
-      <provide interface="org.csstudio.autocomplete.parser.IContentParser"/>
-   </service>
-</scr:component>

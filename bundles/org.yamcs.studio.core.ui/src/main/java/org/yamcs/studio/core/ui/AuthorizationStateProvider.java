@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
@@ -17,7 +17,7 @@ import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
  * Used in plugin.xml core-expressions to keep track of connection state
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class AuthorizationStateProvider extends AbstractSourceProvider implements StudioConnectionListener {
+public class AuthorizationStateProvider extends AbstractSourceProvider implements YamcsConnectionListener {
 
     private static final Logger log = Logger.getLogger(ConnectionStateProvider.class.getName());
 
@@ -25,13 +25,14 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     private static final String[] SOURCE_NAMES = { STATE_KEY_MAY_COMMAND_PAYLOAD };
 
     public AuthorizationStateProvider() {
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
     }
 
     @Override
     public Map getCurrentState() {
         Map map = new HashMap(1);
-        map.put(STATE_KEY_MAY_COMMAND_PAYLOAD, YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayCommandPayload));
+        map.put(STATE_KEY_MAY_COMMAND_PAYLOAD,
+                YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayCommandPayload));
         return map;
     }
 
@@ -41,7 +42,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
         Display.getDefault().asyncExec(() -> {
             Map newState = getCurrentState();
             log.fine(String.format("Fire new authz state %s", newState));
@@ -50,7 +51,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         Display.getDefault().asyncExec(() -> {
             Map newState = getCurrentState();
             log.fine(String.format("Fire new authz state %s", newState));
@@ -60,6 +61,6 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
 
     @Override
     public void dispose() {
-        ConnectionManager.getInstance().removeStudioConnectionListener(this);
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
     }
 }

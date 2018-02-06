@@ -9,24 +9,20 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
-
   <organization>
     <name>Space Applications Services</name>
     <url>http://www.spaceapplications.com</url>
   </organization>
 
   <properties>
-    <yamcs.version>3.4.0</yamcs.version>
+    <yamcs.version>4.0.1-SNAPSHOT</yamcs.version>
     <tycho.version>1.0.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <modules>
     <module>bundles</module>
-    <module>platform</module>
+    <module>features</module>
     <module>releng</module>
     <module>tests</module>
   </modules>
@@ -47,6 +43,11 @@
             <source>1.8</source>
             <target>1.8</target>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
@@ -79,6 +80,16 @@
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-maven-plugin</artifactId>
+          <version>${tycho.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-p2-director-plugin</artifactId>
+          <version>${tycho.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-p2-repository-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
         <plugin>

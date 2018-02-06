@@ -1,0 +1,101 @@
+
+/* 
+ * body 
+ */
+
+body {
+	background-color: white;
+	font-size: 10pt;
+	font-family: Verdana, Arial, sans-serif, Tahoma;
+    margin: 0px;
+}
+
+/**list**/
+body>ul>li{
+	padding-bottom: 10px;
+}
+
+
+
+.example_code {
+    border: 1px solid #d8d8d8;
+    padding: 5px;
+	margin-left: 20px;
+    width: 90%;
+    background-color: #fafafa;
+	font-family: "Courier New";
+}
+
+.example_code strong {
+   color: #7e0055;
+}
+
+.example_code i {
+   color: #0000c0;
+}
+
+a:link {
+    text-decoration: underline;
+}
+
+a:visited {
+    text-decoration: underline; 
+}
+
+a:hover { 
+    text-decoration: underline;
+}
+
+a:active { 
+    text-decoration: underline;
+}
+
+strong {
+    font-weight: bold;
+}
+
+a.strong {
+    color: #14b9eb;
+    font-weight: bold;
+}
+
+a.strong:hover { 
+    color: #f58241;
+    text-decoration: none;
+}
+
+a.strong:link { 
+    text-decoration: none;
+}
+
+a.strong:visited { 
+    text-decoration: none;
+}
+
+p, h3, h4, h5, table {
+	margin-left: 20px;
+}
+
+table {
+    background-color: #fafafa;
+    border-color: #c0c0c0;
+    border-collapse: collapse;
+}
+
+table th {
+	color: #5A5A5A;
+    background-color: #eaeaea;
+}
+
+code {
+    font-family: "Courier New";
+}
+
+code i {
+    color: #0000c0;
+}
+
+div.image {
+    margin-left: 10ex;
+    font-style: italic;
+}

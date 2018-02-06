@@ -23,8 +23,9 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
-import org.yamcs.studio.core.pvmanager.YamcsPVReader;
+import org.yamcs.studio.css.core.PVCatalogue;
+import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
+import org.yamcs.studio.css.core.pvmanager.YamcsPVReader;
 
 public class ParameterTableViewer extends TableViewer {
 

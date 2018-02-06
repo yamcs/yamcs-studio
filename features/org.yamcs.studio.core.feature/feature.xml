@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.yamcs.studio.core.feature"
+      label="Yamcs Studio Components"
+      version="1.0.0.qualifier"
+      provider-name="Space Applications Services"
+      plugin="org.yamcs.studio.core.ui">
+
+   <copyright>
+      Copyright (c) 2015 Space Applications Services
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      You must accept this license agreement in order to install and
+use this
+software.
+THIS SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN &quot;../AS IS&quot;
+BASIS.
+WITHOUT WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+For details, see http://www.eclipse.org/legal/epl-v10.html
+   </license>
+
+   <plugin
+         id="org.yamcs.studio.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.commanding"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.archive"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.monitoring"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.eventlog"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.core.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.alarms"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.yamcs.studio.ui.alphanum"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+</feature>

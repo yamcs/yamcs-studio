@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs Studio Commanding Tests
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-SymbolicName: org.yamcs.studio.commanding.tests
+Bundle-Vendor: Space Applications Services
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: org.yamcs.studio.commanding
+Require-Bundle: org.junit

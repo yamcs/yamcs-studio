@@ -11,17 +11,8 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.yamcs.studio.features.core</module>
-    <module>org.yamcs.studio.features.css</module>
-    <module>org.yamcs.studio.features.eclipse</module>
-    <module>org.yamcs.studio.features.p2</module>
-    <module>org.yamcs.studio.features.runtime</module>
-
-    <module>org.yamcs.studio.products.studio</module>
-    <module>org.yamcs.studio.products.studio.feature</module>
-    <module>org.yamcs.studio.products.eventviewer</module>
-    <module>org.yamcs.studio.products.eventviewer.feature</module>
-
-    <module>org.yamcs.studio.repository</module>
+    <module>org.yamcs.studio.platform</module>
+    <module>org.yamcs.studio.editor.product</module>
+    <module>org.yamcs.studio.runtime.product</module>
   </modules>
 </project>

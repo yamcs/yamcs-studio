@@ -1,0 +1,3 @@
+org.diirt.datasource.loc.LocalDataSourceProvider
+org.diirt.datasource.sys.SystemDataSourceProvider
+org.diirt.datasource.sim.SimulationDataSourceProvider

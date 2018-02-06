@@ -4,8 +4,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.protobuf.YamcsManagement.UserInfo;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -14,12 +16,7 @@ public class YamcsAuthorizations {
     private static final Logger log = Logger.getLogger(YamcsAuthorizations.class.getName());
 
     public enum SystemPrivilege {
-        MayControlYProcessor,
-        MayModifyCommandHistory,
-        MayControlCommandQueue,
-        MayCommandPayload,
-        MayGetMissionDatabase,
-        MayControlArchiving
+        MayControlYProcessor, MayModifyCommandHistory, MayControlCommandQueue, MayCommandPayload, MayGetMissionDatabase, MayControlArchiving
     }
 
     private static YamcsAuthorizations instance = new YamcsAuthorizations();
@@ -30,8 +27,8 @@ public class YamcsAuthorizations {
     }
 
     public CompletableFuture<byte[]> loadAuthorizations() {
-        ConnectionManager manager = ConnectionManager.getInstance();
-        return manager.requestAuthenticatedUser().whenComplete((data, exc) -> {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.get("/user", null).whenComplete((data, exc) -> {
             if (exc == null) {
                 try {
                     userInfo = UserInfo.parseFrom(data);
@@ -42,15 +39,30 @@ public class YamcsAuthorizations {
         });
     }
 
+    public String getUsername() {
+        if (userInfo != null) {
+            return userInfo.getLogin();
+        }
+        return null;
+    }
+
     public boolean hasSystemPrivilege(SystemPrivilege systemPrivilege) {
-        if (!isAuthorizationEnabled())
+        if (!isAuthorizationEnabled()) {
             return true;
-        if (userInfo == null)
+        }
+        if (userInfo == null) {
             return false;
+        }
         return userInfo.getSystemPrivilegesList().contains(systemPrivilege.name());
     }
 
-    private boolean isAuthorizationEnabled() {
-        return ConnectionManager.getInstance().isPrivilegesEnabled();
+    public boolean isAuthorizationEnabled() {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        // TODO we should probably control this from the server, rather than here. Just because
+        // the creds are null, does not really mean anything. We could also send creds to an
+        // unsecured yamcs server. It would just ignore it, and then our client state would
+        // be wrong
+        YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
+        return (yprops == null) ? false : yprops.getAuthenticationToken() != null;
     }
 }

@@ -22,7 +22,7 @@ public class EventLogViewActivator implements EventListener {
     public void processEvent(Event event) {
         Display.getDefault().asyncExec(() -> {
             try {
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.yamcs.studio.ui.eventlog.EventLogView");
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.yamcs.studio.eventlog.EventLogView");
             } catch (PartInitException e) {
                 log.log(Level.WARNING, "Failed to init part", e);
             }

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.services">   
+      <sourceProvider provider="org.yamcs.studio.archive.RefreshStateProvider">
+         <variable name="org.yamcs.studio.archive.state.refreshEnabled" priorityLevel="workbench" />
+      </sourceProvider>
+      <sourceProvider provider="org.yamcs.studio.archive.ZoomInStateProvider">
+         <variable name="org.yamcs.studio.archive.state.zoomInEnabled" priorityLevel="workbench" />
+      </sourceProvider>
+      <sourceProvider provider="org.yamcs.studio.archive.ZoomOutStateProvider">
+         <variable name="org.yamcs.studio.archive.state.zoomOutEnabled" priorityLevel="workbench" />
+      </sourceProvider>
+      <sourceProvider provider="org.yamcs.studio.archive.ClearZoomStateProvider">
+         <variable name="org.yamcs.studio.archive.state.zoomClearEnabled" priorityLevel="workbench" />
+      </sourceProvider>
+      <sourceProvider provider="org.yamcs.studio.archive.AnnotateRangeStateProvider">
+         <variable name="org.yamcs.studio.archive.state.tagEnabled" priorityLevel="workbench" />
+      </sourceProvider>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.yamcs.studio"
+            name="Yamcs">
+      </category>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.archive.refreshCommand"
+            name="Refresh">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.archive.zoomInCommand"
+            name="Zoom In">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.archive.zoomOutCommand"
+            name="Zoom Out">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.archive.zoomClearCommand"
+            name="Zoom all the way out">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.archive.createTagCommand"
+            name="Annotate the selected range">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.archive.createReplayCommand"
+            name="Create Replay">
+      </command>
+   </extension>
+   
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+            class="org.yamcs.studio.archive.RefreshArchiveHandler"
+            commandId="org.yamcs.studio.archive.refreshCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.archive.state.refreshEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.archive.ZoomInHandler"
+            commandId="org.yamcs.studio.archive.zoomInCommand">
+         <activeWhen>
+            <with variable="org.yamcs.studio.archive.state.zoomInEnabled">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.archive.ZoomOutHandler"
+            commandId="org.yamcs.studio.archive.zoomOutCommand">
+         <activeWhen>
+            <with variable="org.yamcs.studio.archive.state.zoomOutEnabled">
+               <equals value="true"/>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.archive.ZoomClearHandler"
+            commandId="org.yamcs.studio.archive.zoomClearCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.archive.state.zoomOutEnabled">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.archive.state.zoomClearEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.archive.AnnotateArchiveHandler"
+            commandId="org.yamcs.studio.archive.createTagCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.archive.state.tagEnabled">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.yamcs.studio.archive.CreateReplayHandler"
+            commandId="org.yamcs.studio.archive.createReplayCommand">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+   </extension>
+   
+   <extension point="org.eclipse.ui.views">
+      <category
+      		name="Yamcs Server"
+      		id="org.yamcs.studio.server">
+      </category>
+      <view
+            category="org.yamcs.studio.server"
+            class="org.yamcs.studio.archive.ArchiveView"
+            icon="icons/eview16/archive.png"
+            id="org.yamcs.studio.archive.ArchiveView"
+            name="Archive"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="toolbar:org.yamcs.studio.archive.ArchiveView">
+         <command
+               commandId="org.yamcs.studio.archive.refreshCommand"
+               icon="icons/elcl16/refresh.png"
+               disabledIcon="icons/dlcl16/refresh.png"
+               label="Refresh"
+               style="push"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.archive.zoomInCommand"
+               icon="icons/elcl16/zoom_in.png"
+               label="Zoom In"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.archive.zoomOutCommand"
+               icon="icons/elcl16/zoom_out.png"
+               label="Zoom Out"
+               style="push"/>
+         <command
+               commandId="org.yamcs.studio.archive.zoomClearCommand"
+               icon="icons/elcl16/zoom_clear.png"
+               label="Zoom Out Completely"
+               style="push"/>
+         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
+         <command
+               commandId="org.yamcs.studio.archive.createTagCommand"
+               icon="icons/elcl16/tag.gif"
+               label="Annotate Selected Range"
+               style="push"/>
+         <command
+               id="org.yamcs.studio.archive.toolbar.createReplay.dropdown"
+               commandId="org.yamcs.studio.archive.createReplayCommand"
+               icon="icons/elcl16/replay.png"
+               label="Replay Selected Range"
+               style="pulldown"/>
+      </menuContribution>
+      
+      <!-- Processor List Pop-up menu -->
+      <menuContribution
+            locationURI="menu:org.yamcs.studio.archive.toolbar.createReplay.dropdown">
+         <dynamic
+               id="org.yamcs.studio.core.ui.processor.menu.switchProcessor"
+               class="org.yamcs.studio.core.ui.processor.SwitchProcessorCompoundContributionItem"/>
+      </menuContribution>
+   </extension>
+</plugin>

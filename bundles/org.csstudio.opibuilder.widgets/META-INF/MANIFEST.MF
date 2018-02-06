@@ -1,0 +1,42 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BOY Widgets Plug-in
+Bundle-Description: Widgets for BOY
+Bundle-SymbolicName: org.csstudio.opibuilder.widgets;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.csstudio.opibuilder.widgets.Activator
+Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.browser,
+ org.eclipse.ui.views,
+ org.eclipse.gef,
+ org.csstudio.ui.util,
+ org.csstudio.opibuilder,
+ org.csstudio.simplepv,
+ org.diirt,
+ org.jdom,
+ org.eclipse.core.expressions,
+ org.eclipse.core.resources,
+ org.eclipse.jface,
+ org.csstudio.utility.batik,
+ org.apache.commons.lang3,
+ org.apache.batik.dom.svg,
+ org.apache.batik.util,
+ org.apache.batik.dom,
+ com.google.guava,
+ org.eclipse.nebula.visualization.xygraph
+Import-Package: org.eclipse.draw2d,
+ org.eclipse.draw2d.geometry,
+ org.eclipse.gef,
+ org.w3c.dom.svg
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: org.csstudio.opibuilder.widgets,
+ org.csstudio.opibuilder.widgets.actions,
+ org.csstudio.opibuilder.widgets.editparts,
+ org.csstudio.opibuilder.widgets.feedback,
+ org.csstudio.opibuilder.widgets.figures,
+ org.csstudio.opibuilder.widgets.model,
+ org.csstudio.opibuilder.widgets.util
