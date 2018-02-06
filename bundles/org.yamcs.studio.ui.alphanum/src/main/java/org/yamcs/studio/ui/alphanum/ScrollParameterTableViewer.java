@@ -23,8 +23,10 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.pvmanager.PVConnectionInfo;
-import org.yamcs.studio.core.pvmanager.YamcsPVReader;
+
+import org.yamcs.studio.css.core.PVCatalogue;
+import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
+import org.yamcs.studio.css.core.pvmanager.YamcsPVReader;
 
 public class ScrollParameterTableViewer extends TableViewer {
 
@@ -81,7 +83,7 @@ public class ScrollParameterTableViewer extends TableViewer {
         column.getColumn().setToolTipText(info.getQualifiedName());
         tcl.setColumnData(column.getColumn(), new ColumnWeightData(40));
         ParameterReader reader = new ParameterReader(info);
-        ParameterCatalogue.getInstance().register(reader);
+        PVCatalogue.getInstance().register(reader);
         readers.put(info, reader);
         column.setLabelProvider(new ColumnLabelProvider() {           
 

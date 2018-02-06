@@ -175,13 +175,13 @@ public class ParameterTableViewer extends TableViewer {
         if(contentProvider.addParameter(element)) {
             ParameterReader reader = new ParameterReader(element);
             readers.put(element, reader);
-            ParameterCatalogue.getInstance().register(reader);
+            PVCatalogue.getInstance().register(reader);
         }
         refresh();
     }
 
     public void removeParameter(ParameterInfo info) {
-        ParameterCatalogue.getInstance().unregister(readers.get(info));
+        PVCatalogue.getInstance().unregister(readers.get(info));
         readers.remove(info);
         contentProvider.remove(info);
         refresh();
@@ -198,7 +198,7 @@ public class ParameterTableViewer extends TableViewer {
 
     public void clear() {
         for(ParameterInfo info : readers.keySet()) {
-            ParameterCatalogue.getInstance().unregister(readers.get(info));
+            PVCatalogue.getInstance().unregister(readers.get(info));
         }
         readers.clear();
         contentProvider.clearAll();
