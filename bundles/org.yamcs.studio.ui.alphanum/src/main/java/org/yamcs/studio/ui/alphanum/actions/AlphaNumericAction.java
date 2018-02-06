@@ -9,27 +9,27 @@ import org.yamcs.studio.ui.alphanum.ParameterTableViewer;
 
 public abstract class AlphaNumericAction extends Action {
 
-	protected ParameterTableViewer viewer;
-	
-	public AlphaNumericAction(String icon, final ParameterTableViewer viewer) {
-		this.viewer = viewer;
-		setImageDescriptor(getImageDescriptor(icon));
-		
-	}
-	
-	public void setViewer(ParameterTableViewer viewer) {
-		this.viewer = viewer;
-	}
+    protected ParameterTableViewer viewer;
 
-	public ParameterTableViewer getViewer() {
-		return viewer;
-	}
-	
-	private ImageDescriptor getImageDescriptor(String path) {
-		return ImageDescriptor.createFromURL(FileLocator
-				.find(Platform.getBundle("org.yamcs.studio.ui.alphanum"),
-				new Path(path),null));
+    public AlphaNumericAction(String icon, final ParameterTableViewer viewer) {
+        this.viewer = viewer;
+        setImageDescriptor(getImageDescriptor(icon));
+
+    }
+
+    public void setViewer(ParameterTableViewer viewer) {
+        this.viewer = viewer;
+    }
+
+    public ParameterTableViewer getViewer() {
+        return viewer;
+    }
+
+    private ImageDescriptor getImageDescriptor(String path) {
+        return ImageDescriptor.createFromURL(FileLocator
+                .find(Platform.getBundle("org.yamcs.studio.ui.alphanum"),
+                        new Path(path),null));
 
 
-	}
+    }
 }

@@ -1,8 +1,6 @@
 package org.yamcs.studio.ui.alphanum;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -35,170 +33,185 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
+import com.google.gson.Gson;
+
 public class AlphaNumericEditor extends EditorPart {
 
-	public static final String ID = AlphaNumericEditor.class.getName();
-	private static final Logger log = Logger.getLogger(AlphaNumericEditor.class.getName());
+    public static final String ID = AlphaNumericEditor.class.getName();
+    private static final Logger log = Logger.getLogger(AlphaNumericEditor.class.getName());
 
-	ParameterTableViewer parameterTable;
+    ParameterTableViewer parameterTable;
 
-	private FileEditorInput input;
-
-
-	public static AlphaNumericEditor createPVTableEditor() {
-		final IWorkbench workbench = PlatformUI.getWorkbench();
-		final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-		final IWorkbenchPage page = window.getActivePage();
-		try {
-			final EmptyEditorInput input = new EmptyEditorInput(); //$NON-NLS-1$
-			return (AlphaNumericEditor) page.openEditor(input, AlphaNumericEditor.ID);
-		} catch (Exception ex) {
-			ExceptionDetailsErrorDialog.openError(page.getActivePart().getSite().getShell(), "Cannot create PV Table", //$NON-NLS-1$
-					ex);
-		}
-		return null;
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
+    private FileEditorInput input;
+    private AlphaNumericJson fileInput;
 
 
-	@Override
-	public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
-		// "Site is incorrect" error results if the site is not set:
-		this.input = (FileEditorInput) input;
-		setSite(site);
-		setInput(input);
-		setPartName(input.getName());
-		setSite(site);
+    public static AlphaNumericEditor createPVTableEditor() {
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+        final IWorkbenchPage page = window.getActivePage();
+        try {
+            final EmptyEditorInput input = new EmptyEditorInput(); //$NON-NLS-1$
+            return (AlphaNumericEditor) page.openEditor(input, AlphaNumericEditor.ID);
+        } catch (Exception ex) {
+            ExceptionDetailsErrorDialog.openError(page.getActivePart().getSite().getShell(), "Cannot create PV Table", //$NON-NLS-1$
+                    ex);
+        }
+        return null;
+    }
 
-		this.getEditorSite().getActionBarContributor();
-
-	}
-
-	private List<ParameterInfo> loadData() {
-		try {
-			List<ParameterInfo> info = new ArrayList<>();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(input.getFile().getContents()));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				for (ParameterInfo meta :ParameterCatalogue.getInstance().getMetaParameters()) {
-					if(line.contains(meta.getQualifiedName()))
-						info.add(meta);
-				}
-			}
-
-			return info;
-		} catch (IOException | CoreException e) {
-			log.log(Level.SEVERE, "Could not read parameter list", e);
-			return null;
-		}
-	}
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
 
 
-	@Override
-	public void createPartControl(Composite parent) {
-		FillLayout fl = new FillLayout();
-		fl.marginHeight = 0;
-		fl.marginWidth = 0;
-		parent.setLayout(fl);
+    @Override
+    public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
+        // "Site is incorrect" error results if the site is not set:
+        this.input = (FileEditorInput) input;
+        setSite(site);
+        setInput(input);
+        setPartName(input.getName());
+        setSite(site);
 
-		SashForm sash = new SashForm(parent, SWT.VERTICAL);
+        this.getEditorSite().getActionBarContributor();
 
-		Composite tableWrapper = new Composite(sash, SWT.NONE);
-		tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+    }
 
-		parameterTable = new ParameterTableViewer(tableWrapper);
-		ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
-		provider.load(loadData());
-		for(ParameterInfo info : loadData())
-			parameterTable.addParameter(info);
+    private List<ParameterInfo> loadData() {
+        try {
+            List<ParameterInfo> info = new ArrayList<>();
+            Gson gson = new Gson();
 
-		parameterTable.refresh();   }
+            fileInput = gson.fromJson(new InputStreamReader(input.getFile().getContents()), AlphaNumericJson.class);
+            if(fileInput == null) {
+                fileInput = new AlphaNumericJson();
+            }
+            
+            System.out.println(fileInput);
+            for (ParameterInfo meta :ParameterCatalogue.getInstance().getMetaParameters()) {
+                for(String parameter : fileInput.getParameterList())
+                    if(parameter.contains(meta.getQualifiedName()))
+                        info.add(meta);
+            }
 
-	public AlphaNumericEditor() {
-		super();
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		final IEditorInput input = getEditorInput();
-		final ResourceHelper resources = SingleSourcePlugin.getResourceHelper();
-		try {
-			if (input.exists()) {
-
-				saveToStream(monitor, parameterTable.getParameters(), resources.getOutputStream(input));
-			} else { // First save of Editor with empty input, prompt for name
-				doSaveAs();
-			}
-		} catch (Exception ex) {
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error while saving parameter list", ex);
-			// Save failed, allow saving under a different name, or cancel
-			doSaveAs();
-		}
-	}
-
-	/**
-	 * Save current model, mark editor as clean.
-	 *
-	 * @param monitor
-	 *            <code>IProgressMonitor</code>, may be <code>null</code>.
-	 * @param stream
-	 *            Output stream
-	 */
-	private void saveToStream(final IProgressMonitor monitor, final List<ParameterInfo> parameters,
-			final OutputStream stream) {
-		if (monitor != null) {
-			monitor.beginTask("Save", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-		}
-		final PrintWriter out = new PrintWriter(stream);
-		try {
-
-			for(ParameterInfo info : parameters)
-				out.println(info.getQualifiedName());
-			ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
-			provider.load(new ArrayList<>(provider.getParameter()));
-			firePropertyChange(IEditorPart.PROP_DIRTY);
-		} catch (Exception ex) {
-			ExceptionDetailsErrorDialog.openError(getSite().getShell(),"Error while writing parameter list", ex);
-		} finally {
-			out.close();
-		}
-		if (monitor != null) {
-			monitor.done();
-		} 
-	}
-
-	@Override
-	public void doSaveAs() {
-
-	}
+            return info;
+        } catch (CoreException e) {
+            log.log(Level.SEVERE, "Could not read parameter list", e);
+            return null;
+        }
+    }
 
 
-	@Override
-	public boolean isDirty() {
-		return parameterTable.hasChanged();
-	}
+    @Override
+    public void createPartControl(Composite parent) {
+        FillLayout fl = new FillLayout();
+        fl.marginHeight = 0;
+        fl.marginWidth = 0;
+        parent.setLayout(fl);
 
-	@Override
-	public boolean isSaveAsAllowed() {
-		if(isDirty())
-			return true;
-		return false;
-	}
+        SashForm sash = new SashForm(parent, SWT.VERTICAL);
 
-	@Override
-	public void setFocus() {
-		parameterTable.getTable().setFocus();
+        Composite tableWrapper = new Composite(sash, SWT.NONE);
+        tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	}
+        parameterTable = new ParameterTableViewer(tableWrapper);
+        ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
+        provider.load(loadData());
+        for(ParameterInfo info : loadData())
+            parameterTable.addParameter(info);
+        parameterTable.refresh();   }
+
+    public AlphaNumericEditor() {
+        super();
+    }
+
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        final IEditorInput input = getEditorInput();
+        final ResourceHelper resources = SingleSourcePlugin.getResourceHelper();
+        try {
+            if (input.exists()) {
+
+                saveToStream(monitor, parameterTable.getParameters(), resources.getOutputStream(input));
+            } else { // First save of Editor with empty input, prompt for name
+                doSaveAs();
+            }
+        } catch (Exception ex) {
+            ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error while saving parameter list", ex);
+            // Save failed, allow saving under a different name, or cancel
+            doSaveAs();
+        }
+    }
+
+    /**
+     * Save current model, mark editor as clean.
+     *
+     * @param monitor
+     *            <code>IProgressMonitor</code>, may be <code>null</code>.
+     * @param stream
+     *            Output stream
+     */
+    private void saveToStream(final IProgressMonitor monitor, final List<ParameterInfo> parameters,
+            final OutputStream stream) {
+        if (monitor != null) {
+            monitor.beginTask("Save", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+        }
+        final PrintWriter out = new PrintWriter(stream);
+
+        try {
+
+            Gson gson = new Gson();
+             
+            List<String> parameterNames = new ArrayList<>();
+            for(ParameterInfo info : parameters)
+                parameterNames.add(info.getQualifiedName());
+            fileInput.setParameterList(parameterNames);
+            gson.toJson(fileInput, out);
+            ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
+            provider.load(parameters);
+            
+            firePropertyChange(IEditorPart.PROP_DIRTY);
+        } catch (Exception ex) {
+            ExceptionDetailsErrorDialog.openError(getSite().getShell(),"Error while writing parameter list", ex);
+        } finally {
+            out.close();
+        }
+        if (monitor != null) {
+            monitor.done();
+        } 
+    }
+
+    @Override
+    public void doSaveAs() {
+
+    }
 
 
-	public ParameterTableViewer getParameterTable() {
-		return parameterTable;
-	}
+    @Override
+    public boolean isDirty() {
+        //TODO ignoring remove
+        return parameterTable.hasChanged();
+    }
+
+    @Override
+    public boolean isSaveAsAllowed() {
+        if(isDirty())
+            return true;
+        return false;
+    }
+
+    @Override
+    public void setFocus() {
+        parameterTable.getTable().setFocus();
+
+    }
+
+
+    public ParameterTableViewer getParameterTable() {
+        return parameterTable;
+    }
 
 
 }
