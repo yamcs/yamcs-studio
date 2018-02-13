@@ -6,15 +6,14 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 
 public class ParameterContentProvider implements IStructuredContentProvider {
 
     TableViewer table;
-    List<ParameterInfo> parameter;
-    List<ParameterInfo> initial;
+    List<String> parameter;
+    List<String> initial;
 
-    public List<ParameterInfo> getParameter() {
+    public List<String> getParameter() {
         return parameter;
     }
 
@@ -30,7 +29,7 @@ public class ParameterContentProvider implements IStructuredContentProvider {
 
     }
 
-    public void load(List<ParameterInfo> list) {
+    public void load(List<String> list) {
         initial = new ArrayList<>();
         initial.addAll(list);
     }
@@ -47,7 +46,7 @@ public class ParameterContentProvider implements IStructuredContentProvider {
         return parameter.toArray();
     }
 
-    public boolean addParameter(ParameterInfo info) {
+    public boolean addParameter(String info) {
         if(parameter.contains(info))
             return false;
         parameter.add(info);
@@ -71,7 +70,7 @@ public class ParameterContentProvider implements IStructuredContentProvider {
 
     }
 
-    public List<ParameterInfo> getInitial() {
+    public List<String> getInitial() {
         return initial;
     }
 

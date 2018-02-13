@@ -2,19 +2,24 @@ package org.yamcs.studio.ui.alphanum.actions;
 
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorPart;
+import org.yamcs.studio.ui.alphanum.AlphaNumericEditor;
 import org.yamcs.studio.ui.alphanum.ParameterTableViewer;
 
-public class RemoveAction extends AlphaNumericAction {
+public class RemoveAction extends Action implements IEditorActionDelegate {
 
+    private ParameterTableViewer table;
     private ISelectionChangedListener listener;
     
-    public RemoveAction(final ParameterTableViewer viewer) {
-        super("icons/elcl16/remove.png", viewer);
-        setToolTipText("Remove");
+    public RemoveAction() {
         setEnabled(false);
+        
         listener = new ISelectionChangedListener() {
             
             @Override
@@ -26,26 +31,41 @@ public class RemoveAction extends AlphaNumericAction {
                 
             }
         };
-        
-
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void run() {
-        List<ParameterInfo> selected = (List<ParameterInfo>)viewer.getStructuredSelection().toList();
-        for(ParameterInfo info : selected) {
-            viewer.removeParameter(info);
+        List<String> selected = (List<String>)table.getStructuredSelection().toList();
+        for(String info : selected) {
+            table.removeParameter(info);
+        }
+    }
+    @Override
+    public void run(IAction action) {
+        run();
+        
+    }
+    @Override
+    public void selectionChanged(IAction action, ISelection selection) {
+        if(selection == null || selection.isEmpty())
+            setEnabled(false);
+        else 
+            setEnabled(true);
+    }
+    @Override
+    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+        if(table != null)
+            table.removeSelectionChangedListener(listener);
+        
+        if(targetEditor == null)
+            table = null;
+        else {
+            table = ((AlphaNumericEditor)targetEditor).getParameterTable();
+            table.addSelectionChangedListener(listener);
         }
     }
 
-    public void setViewer(ParameterTableViewer viewer) {
-        if( getViewer() != null)
-            getViewer().removeSelectionChangedListener(listener);
-        super.setViewer(viewer);
-        if( getViewer() != null)
-            viewer.addSelectionChangedListener(listener);
-        
-    }
 
 
 

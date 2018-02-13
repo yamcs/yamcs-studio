@@ -5,13 +5,54 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
-            contributorClass="org.yamcs.studio.ui.alphanum.AlphaNumericEditorActionBarContributor"
             default="false"
             extensions="par2"
             id="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
             name="AlphaNumeric">
       </editor>
    </extension>
+   
+   
+   <extension point="org.eclipse.ui.editorActions"> 
+		<editorContribution 
+      		id="org.eclipse.ui.articles.action.contribution.editor" 
+   			targetID="org.yamcs.studio.ui.alphanum.AlphaNumericEditor">
+   	    <action
+         	id="org.yamcs.studio.ui.alphanum.action.showcolumns" 
+         	label="Choose columns" 
+         	icon="icons/elcl16/config.png"
+         	tooltip="Choose columns"
+      		toolbarPath="Normal/additions"
+         	class="org.yamcs.studio.ui.alphanum.actions.ShowColumnsAction"> 
+      	</action> 
+   		<action
+         	id="org.yamcs.studio.ui.alphanum.action.cleartable" 
+         	label="Clear table" 
+         	icon="icons/elcl16/removeall.png"
+         	tooltip="Clear table"
+      		toolbarPath="Normal/additions"
+         	class="org.yamcs.studio.ui.alphanum.actions.ClearAction"> 
+      	</action> 
+   		<action
+         	id="org.yamcs.studio.ui.alphanum.action.removeparameter" 
+         	label="Remove Parameter" 
+         	icon="icons/elcl16/remove.png"
+         	tooltip="Remove Parameter"
+      		toolbarPath="Normal/additions"
+         	class="org.yamcs.studio.ui.alphanum.actions.RemoveAction"> 
+      	 </action> 
+   		 <action
+         	id="org.yamcs.studio.ui.alphanum.action.addparameter" 
+         	label="Add Parameter" 
+         	icon="icons/elcl16/add.png"
+         	tooltip="Add Parameter"
+      		toolbarPath="Normal/additions"
+         	class="org.yamcs.studio.ui.alphanum.actions.AddNewParameterAction"> 
+      	 </action>
+   </editorContribution> 
+</extension>
+   
+   
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -21,5 +62,29 @@
             id="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor"
             name="ScrollAlphaNumeric">
       </editor>
-   </extension>  
+   </extension> 
+   
+      <extension point="org.eclipse.ui.editorActions"> 
+		<editorContribution 
+      		id="org.eclipse.ui.articles.action.contribution.editor" 
+   			targetID="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor">
+  	    <action
+         	id="org.yamcs.studio.ui.alphanum.action.config" 
+         	label="Choose Value" 
+         	icon="icons/elcl16/config.png"
+         	tooltip="Choose the value to be displayed in the table"
+      		toolbarPath="Normal/additions"
+         	class="org.yamcs.studio.ui.alphanum.actions.ValueConfigAction"> 
+      	</action>  
+   	    <action
+         	id="org.yamcs.studio.ui.alphanum.action.addcolumns" 
+         	label="Add Parameter Column" 
+         	icon="icons/elcl16/add.png"
+         	tooltip="Add Parameter Column"
+      		toolbarPath="Normal/additions"
+         	class="org.yamcs.studio.ui.alphanum.actions.AddNewColumnAction"> 
+      	</action> 
+   </editorContribution> 
+</extension> 
+    
 </plugin>

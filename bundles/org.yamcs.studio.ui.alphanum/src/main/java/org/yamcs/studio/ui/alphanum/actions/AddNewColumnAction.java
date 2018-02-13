@@ -9,24 +9,28 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.yamcs.studio.ui.alphanum.AlphaNumericEditor;
-import org.yamcs.studio.ui.alphanum.ParameterTableViewer;
-import org.yamcs.studio.ui.alphanum.ShowColumnsWizard;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.studio.ui.alphanum.AddParameterWizard;
+import org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor;
+import org.yamcs.studio.ui.alphanum.ScrollParameterTableViewer;
 
-public class ShowColumnsAction extends Action implements IEditorActionDelegate {
+public class AddNewColumnAction extends Action implements IEditorActionDelegate {
 
-    private ParameterTableViewer table;
+    private ScrollParameterTableViewer table;
+
 
     @Override
     public void run() {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        ShowColumnsWizard wizard = new ShowColumnsWizard(table.getColumns());
+        
+        AddParameterWizard wizard = new AddParameterWizard();
         WizardDialog dialog = new WizardDialog(shell, wizard);
         if (dialog.open() == Window.OK)
-            table.setColumns(wizard.getColumns());
+            for(ParameterInfo info : wizard.getParameter())
+                table.addParameter(info);
 
     }
-    
+
     @Override
     public void run(IAction action) {
         run();
@@ -35,7 +39,7 @@ public class ShowColumnsAction extends Action implements IEditorActionDelegate {
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        ;
+        // TODO
         
     }
 
@@ -44,10 +48,8 @@ public class ShowColumnsAction extends Action implements IEditorActionDelegate {
         if(targetEditor == null)
             table = null;
         else
-            table = ((AlphaNumericEditor)targetEditor).getParameterTable();
-
+            table = ((ScrollAlphaNumericEditor)targetEditor).getParameterTable();
         
     }
-
 
 }

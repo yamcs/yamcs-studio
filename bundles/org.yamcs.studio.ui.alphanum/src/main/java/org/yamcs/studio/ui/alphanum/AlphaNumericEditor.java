@@ -88,7 +88,7 @@ public class AlphaNumericEditor extends EditorPart {
             if(fileInput == null) {
                 fileInput = new AlphaNumericJson();
             }
-            
+
             for (ParameterInfo meta :ParameterCatalogue.getInstance().getMetaParameters()) {
                 for(String parameter : fileInput.getParameterList())
                     if(parameter.contains(meta.getQualifiedName()))
@@ -117,12 +117,16 @@ public class AlphaNumericEditor extends EditorPart {
         List<ParameterInfo> parameters = loadData(); 
         parameterTable = new ParameterTableViewer(tableWrapper);
         ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
-        provider.load(parameters);
+        List<String> parameterNames = new ArrayList<>();
+        for(ParameterInfo info : parameters)
+            parameterNames.add(info.getQualifiedName());
+
+        provider.load(parameterNames);
         parameterTable.setColumns(fileInput.getColumns());
         for(ParameterInfo info : loadData())
             parameterTable.addParameter(info);
         parameterTable.refresh();
-        
+
     }
 
     public AlphaNumericEditor() {
@@ -155,7 +159,7 @@ public class AlphaNumericEditor extends EditorPart {
      * @param stream
      *            Output stream
      */
-    private void saveToStream(final IProgressMonitor monitor, final List<ParameterInfo> parameters,
+    private void saveToStream(final IProgressMonitor monitor, final List<String> parameters,
             final OutputStream stream) {
         if (monitor != null) {
             monitor.beginTask("Save", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
@@ -165,16 +169,16 @@ public class AlphaNumericEditor extends EditorPart {
         try {
 
             Gson gson = new Gson();
-             
-            List<String> parameterNames = new ArrayList<>();
-            for(ParameterInfo info : parameters)
-                parameterNames.add(info.getQualifiedName());
-            fileInput.setParameterList(parameterNames);
+            //             
+            //            List<String> parameterNames = new ArrayList<>();
+            //            for(ParameterInfo info : parameters)
+            //                parameterNames.add(info.getQualifiedName());
+            fileInput.setParameterList(parameters);
             fileInput.setColumns(new ArrayList<>(parameterTable.getColumns()));
             gson.toJson(fileInput, out);
             ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
             provider.load(parameters);
-            
+
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (Exception ex) {
             ExceptionDetailsErrorDialog.openError(getSite().getShell(),"Error while writing parameter list", ex);
@@ -191,12 +195,11 @@ public class AlphaNumericEditor extends EditorPart {
 
     }
 
-
     @Override
     public boolean isDirty() {
         return parameterTable.hasChanged() || !checkColumns();
     }
-    
+
     private boolean checkColumns() {
         return parameterTable.getColumns().size() == fileInput.getColumns().size() 
                 && parameterTable.getColumns().containsAll(fileInput.getColumns());

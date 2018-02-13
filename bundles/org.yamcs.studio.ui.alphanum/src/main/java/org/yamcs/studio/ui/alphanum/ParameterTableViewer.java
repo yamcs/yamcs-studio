@@ -19,15 +19,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.css.core.PVCatalogue;
-import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
-import org.yamcs.studio.css.core.pvmanager.YamcsPVReader;
+import org.yamcs.studio.core.model.ParameterListener;
 
-public class ParameterTableViewer extends TableViewer {
+public class ParameterTableViewer extends TableViewer implements ParameterListener {
 
     public static final String COL_NAME = "Parameter";
     public static final String COL_ENG = "Eng Value";
@@ -36,23 +36,25 @@ public class ParameterTableViewer extends TableViewer {
     public static final String COL_AQU_TIME = "Aquisition time";
 
     private ParameterContentProvider contentProvider;
-    private Map<ParameterInfo, ParameterReader> readers;
+    private Map<String, ParameterValue> values;
     private Map<String, ColumnLabelProvider> columnLabels;
     private List<String> activeColumns;
+    TableColumnLayout tcl;
 
     public ParameterTableViewer(Composite parent) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL));;
-        TableColumnLayout tcl = new TableColumnLayout();
+        tcl = new TableColumnLayout();
         parent.setLayout(tcl);       
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
-        readers = new HashMap<>();
+        values = new HashMap<>();
         startColumnLabels();
         contentProvider = new ParameterContentProvider(this);
         setContentProvider(contentProvider);
         setInput(contentProvider);
         activeColumns = new ArrayList<>();
         createColumn(COL_NAME); //Name always visible
+        ParameterCatalogue.getInstance().addParameterListener(this);
 
     }
 
@@ -80,10 +82,11 @@ public class ParameterTableViewer extends TableViewer {
     }
     
     private void createColumn(String name) {
-        TableColumnLayout tcl = (TableColumnLayout) getTable().getParent().getLayout();
         TableViewerColumn column = new TableViewerColumn(this, SWT.LEFT);
         column.getColumn().setText(name);
-        tcl.setColumnData(column.getColumn(), new ColumnWeightData(40));
+        tcl.setColumnData(
+                column.getColumn(),
+                new ColumnWeightData(40));
         column.setLabelProvider(columnLabels.get(name)); 
         column.getColumn().addControlListener(new ControlListener() {
             @Override
@@ -109,19 +112,16 @@ public class ParameterTableViewer extends TableViewer {
 
             @Override 
             public String getText(Object element) {
-                ParameterInfo cnt = (ParameterInfo) element;
-
-                return cnt.getQualifiedName();
+                return (String)element;
             }
         });
         
         columnLabels.put(COL_ENG, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-                ParameterReader reader = readers.get(element);
-                if(reader == null || reader.getValue() == null)
+                ParameterValue value = values.get(element);
+                if(value == null)
                     return "-";
-                ParameterValue value = reader.getValue();
                 return String.valueOf(getValue(value.getEngValue()));
             }
         });
@@ -129,10 +129,9 @@ public class ParameterTableViewer extends TableViewer {
         columnLabels.put(COL_RAW, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-                ParameterReader reader = readers.get(element);
-                if(reader == null || reader.getValue() == null)
+                ParameterValue value = values.get(element);
+                if(value == null)
                     return "-";
-                ParameterValue value = reader.getValue();
                 return String.valueOf(getValue(value.getRawValue()));
             }
         });
@@ -140,10 +139,9 @@ public class ParameterTableViewer extends TableViewer {
         columnLabels.put(COL_TIME, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-                ParameterReader reader = readers.get(element);
-                if(reader == null || reader.getValue() == null)
+                ParameterValue value = values.get(element);
+                if(value == null)
                     return "-";
-                ParameterValue value = reader.getValue();
                 SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 Date time = new Date(value.getGenerationTime());
                 String strDate = sdfDate.format(time);
@@ -154,10 +152,9 @@ public class ParameterTableViewer extends TableViewer {
         columnLabels.put(COL_AQU_TIME, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
-                ParameterReader reader = readers.get(element);
-                if(reader == null || reader.getValue() == null)
+                ParameterValue value = values.get(element);
+                if(value == null)
                     return "-";
-                ParameterValue value = reader.getValue();
                 SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 Date time = new Date(value.getAcquisitionTime());
                 String strDate = sdfDate.format(time);
@@ -166,54 +163,41 @@ public class ParameterTableViewer extends TableViewer {
         });
         
         
-        
-        
     }
     
 
-    public void addParameter(ParameterInfo element) {
-        if(contentProvider.addParameter(element)) {
-            ParameterReader reader = new ParameterReader(element);
-            readers.put(element, reader);
-            PVCatalogue.getInstance().register(reader);
+    public void addParameter(ParameterInfo info) {
+        NamedObjectList list = NamedObjectList.newBuilder()
+                .addList(info.getAlias(0)).build();
+        ParameterCatalogue.getInstance().subscribeParameters(list);
+        if(contentProvider.addParameter(info.getQualifiedName())) {
+            values.put(info.getQualifiedName(), null);
         }
         refresh();
     }
 
-    public void removeParameter(ParameterInfo info) {
-        PVCatalogue.getInstance().unregister(readers.get(info));
-        readers.remove(info);
+    public void removeParameter(String info) {
+        values.remove(info);
         contentProvider.remove(info);
         refresh();
     }
 
-    public void restoreParameters() {
-        clear();
-        for(ParameterInfo info : contentProvider.getInitial()) {
-            addParameter(info);
-        }
-        refresh();
-
-    }
 
     public void clear() {
-        for(ParameterInfo info : readers.keySet()) {
-            PVCatalogue.getInstance().unregister(readers.get(info));
-        }
-        readers.clear();
+        values.clear();
         contentProvider.clearAll();
         refresh();
 
     }
 
-    public List<ParameterInfo> getParameters() {
+    public List<String> getParameters() {
         return contentProvider.getParameter();
     }
-
+    
     public boolean hasChanged() {
         return contentProvider.hasChanged();
     }
-
+    
     private Object getValue(Value value) {
         Object obj = null;
         if(value.hasStringValue())
@@ -238,58 +222,39 @@ public class ParameterTableViewer extends TableViewer {
     }
 
 
-    class ParameterReader implements YamcsPVReader{
-
-        NamedObjectId id;
-        ParameterInfo info;
-        ParameterValue value;
-
-
-
-        public ParameterReader(ParameterInfo info) {
-            for(ParameterInfo parameter: ParameterCatalogue.getInstance().getMetaParameters()) {
-                if(info.getQualifiedName().equals(parameter.getQualifiedName())) {
-                    id = parameter.getAliasList().get(0);
-                }
-            }
-            this.info = info;
-        }
-
-        @Override
-        public void reportException(Exception e) {
-            ;
-
-        }
-
-        @Override
-        public NamedObjectId getId() {
-            return id;
-        }
-
-        public ParameterValue getValue() {
-            return value;
-        }
-
-        @Override
-        public void processConnectionInfo(PVConnectionInfo info) {
-            if(!info.connected) {
-                //TODO do something
-            }		
-        }
-
-        @Override
-        public void processParameterValue(ParameterValue pval) {
-            value = pval;
-            if (getTable().isDisposed()) {
-                return;
-            }
-            Display.getDefault().asyncExec( () -> {
-                if (!getTable().isDisposed()) {
-                    ParameterTableViewer.this.refresh();
-                }
-            });	
-        }
-
+    @Override
+    public void mdbUpdated() {
+        // TODO Auto-generated method stub
+        
     }
+
+
+    @Override
+    public void onParameterData(ParameterData pdata) {
+        for(ParameterValue value : pdata.getParameterList()) {
+            if(values.keySet().contains(value.getId().getNamespace() +"/" +value.getId().getName())) {
+                values.put(value.getId().getNamespace() +"/" +value.getId().getName(), value);
+
+            }
+        }
+        if (getTable().isDisposed()) {
+            return;
+        }
+        Display.getDefault().asyncExec( () -> {
+            if (!getTable().isDisposed()) {
+                ParameterTableViewer.this.refresh();
+            }
+        });
+
+        
+    }
+
+
+    @Override
+    public void onInvalidIdentification(NamedObjectId id) {
+        // TODO Auto-generated method stub
+        
+    }
+
 
 }

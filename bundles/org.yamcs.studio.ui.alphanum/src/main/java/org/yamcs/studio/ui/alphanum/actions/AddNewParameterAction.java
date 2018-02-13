@@ -1,20 +1,24 @@
 package org.yamcs.studio.ui.alphanum.actions;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorActionDelegate;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.ui.alphanum.AddParameterWizard;
+import org.yamcs.studio.ui.alphanum.AlphaNumericEditor;
 import org.yamcs.studio.ui.alphanum.ParameterTableViewer;
 
-public class AddNewParameterAction extends AlphaNumericAction {
+public class AddNewParameterAction extends Action implements IEditorActionDelegate{
 
-    public AddNewParameterAction(final ParameterTableViewer viewer) {
-        super("icons/elcl16/add.png", viewer);
-        setToolTipText("Add Parameter");
-    }
-
+    private ParameterTableViewer table;
+    
+    
     @Override
     public void run() {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -22,8 +26,29 @@ public class AddNewParameterAction extends AlphaNumericAction {
         WizardDialog dialog = new WizardDialog(shell, wizard);
         if (dialog.open() == Window.OK)
             for(ParameterInfo info : wizard.getParameter())
-                viewer.addParameter(info);
+                table.addParameter(info);
 
+    }
+
+    @Override
+    public void run(IAction action) {
+        run();
+        
+    }
+
+    @Override
+    public void selectionChanged(IAction action, ISelection selection) {
+        // TODO
+        
+    }
+
+    @Override
+    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+        if(targetEditor == null)
+            table = null;
+        else
+            table = ((AlphaNumericEditor)targetEditor).getParameterTable();
+        
     }
 
 

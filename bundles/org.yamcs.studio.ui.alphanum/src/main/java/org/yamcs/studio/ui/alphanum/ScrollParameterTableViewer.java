@@ -1,9 +1,9 @@
 package org.yamcs.studio.ui.alphanum;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -19,24 +19,28 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.model.ParameterListener;
 
-import org.yamcs.studio.css.core.PVCatalogue;
-import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
-import org.yamcs.studio.css.core.pvmanager.YamcsPVReader;
-
-public class ScrollParameterTableViewer extends TableViewer {
+public class ScrollParameterTableViewer extends TableViewer implements ParameterListener {
 
     public static final String COL_TIME = "Timestamp";
-    
+
     private final int MAX_SIZE = 100;
 
+    private final String ENG = "ENG";
+    private final String RAW = "RAW";
+    
+    private String valueType = ENG;
+    
     private ScrollParameterContentProvider contentProvider;
-    private Map<ParameterInfo, ParameterReader> readers;
     private TableColumnLayout tcl;
+    private List<String> parameters;
 
     public ScrollParameterTableViewer(Composite parent) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL));;
@@ -45,21 +49,22 @@ public class ScrollParameterTableViewer extends TableViewer {
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
-        readers = new HashMap<>();
-        contentProvider = new ScrollParameterContentProvider(this);
+        contentProvider = new ScrollParameterContentProvider();
         setContentProvider(contentProvider);
         setInput(contentProvider);
 
 
         TableViewerColumn timeColumn = new TableViewerColumn(this, SWT.LEFT);
         timeColumn.getColumn().setText(COL_TIME);
-        tcl.setColumnData(timeColumn.getColumn(), new ColumnWeightData(80));
+        tcl.setColumnData(timeColumn.getColumn(), new ColumnWeightData(30));
         timeColumn.setLabelProvider(new ColumnLabelProvider() {           
 
             @Override 
             public String getText(Object element) {
-                String cnt = (String) element;
-                return cnt.replace("Z", "").replace("T", " ");
+                ParameterData data = (ParameterData) element;
+                Date date = new Date(data.getParameter(0).getGenerationTime());
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                return sdfDate.format(date);
             }
         });
 
@@ -74,34 +79,45 @@ public class ScrollParameterTableViewer extends TableViewer {
                     timeColumn.getColumn().setWidth(5);
             }
         });
+        parameters = new ArrayList<>();
+
+        ParameterCatalogue.getInstance().addParameterListener(this);
 
     }
-    
+
     private void addColumn(ParameterInfo info) {
+
+        ParameterCatalogue.getInstance().subscribeParameters(NamedObjectList.newBuilder()
+                .addList(info.getAlias(0)).build());
         TableViewerColumn column = new TableViewerColumn(this, SWT.RIGHT);
         column.getColumn().setText(info.getName());
         column.getColumn().setToolTipText(info.getQualifiedName());
-        tcl.setColumnData(column.getColumn(), new ColumnWeightData(40));
-        ParameterReader reader = new ParameterReader(info);
-        PVCatalogue.getInstance().register(reader);
-        readers.put(info, reader);
+        tcl.setColumnData(column.getColumn(), new ColumnWeightData(20));
         column.setLabelProvider(new ColumnLabelProvider() {           
 
             @Override 
             public String getText(Object element) {
-                return reader.getValue((String)element);
+                ParameterData data = (ParameterData) element;
+                for( ParameterValue value : data.getParameterList())
+                    if(value.getId().getName().equals(info.getName())){
+                        if(valueType.equals(ENG))
+                            return String.valueOf(getValue(value.getEngValue()));
+                        return String.valueOf(getValue(value.getRawValue()));
+                            
+                    }                
+                return "-";
             }
         });
         column.getColumn().addControlListener(new ControlListener() {
             @Override
             public void controlMoved(ControlEvent e) {
-                
+
             }
 
             @Override
             public void controlResized(ControlEvent e) {
-                if (column.getColumn().getWidth() < 5)
-                    column.getColumn().setWidth(5);
+                if (column.getColumn().getWidth() < 40)
+                    column.getColumn().setWidth(40);
             }
         });       
 
@@ -109,137 +125,83 @@ public class ScrollParameterTableViewer extends TableViewer {
 
 
     public void addParameter(ParameterInfo element) {
+        if(parameters.contains(element.getName()))
+            return;
+        parameters.add(element.getName());
         addColumn(element);
+        getTable().getColumn(0).setWidth(180);
+        for(int i = 1; i < getTable().getColumnCount(); i ++) {
+            getTable().getColumn(i).setWidth(60);
+        }
+        refresh();
     }
 
-//    public void removeParameter(ParameterInfo info) {
-//        ParameterCatalogue.getInstance().unregister(readers.get(info));
-//        readers.remove(info);
-//        contentProvider.remove(info);
-//        refresh();
-//    }
-//
-//    public void restoreParameters() {
-//        clear();
-//        for(ParameterInfo info : contentProvider.getInitial()) {
-//            addParameter(info);
-//        }
-//        refresh();
-//
-//    }
-//
-//    public void clear() {
-//        for(ParameterInfo info : readers.keySet()) {
-//            ParameterCatalogue.getInstance().unregister(readers.get(info));
-//        }
-//        readers.clear();
-//        contentProvider.clearAll();
-//        refresh();
-//
-//    }
-//
-//    public List<ParameterInfo> getParameters() {
-//        return contentProvider.getParameter();
-//    }
-//
-//    public boolean hasChanged() {
-//        return contentProvider.hasChanged();
-//    }
-
-
-    class ParameterReader implements YamcsPVReader{
-
-        NamedObjectId id;
-        Map<String, String> value;
-
-        public ParameterReader(ParameterInfo info) {
-            id = info.getAliasList().get(0);
-            value = new HashMap<>();
-        }
-
-        @Override
-        public void reportException(Exception e) {
-            ;
-
-        }
-
-        @Override
-        public NamedObjectId getId() {
-            return id;
-        }
-
-        public String getValue(String timeStamp) {
-            if(value.get(timeStamp) == null) {
-                return "-";
-            }
-            return value.get(timeStamp);
-        }
-
-        @Override
-        public void processConnectionInfo(PVConnectionInfo info) {
-            if(!info.connected) {
-                //TODO do something
-            }		
-        }
-
-        @Override
-        public void processParameterValue(ParameterValue pval) {
-            //Show even if there are several values for one time stamp
-            if(value.containsKey(pval.getGenerationTimeUTC())) {
-                value.put(pval.getGenerationTimeUTC(), value.get(pval.getGenerationTimeUTC()) + ", " + extractValue(pval.getEngValue()));
-            } else
-                value.put(pval.getGenerationTimeUTC(), extractValue(pval.getEngValue()));
-            contentProvider.addTimeStamp(pval.getGenerationTimeUTC());
-            if (getTable().isDisposed()) {
-                return;
-            }
-            Display.getDefault().asyncExec( () -> {
-                if (!getTable().isDisposed()) {
-                    ScrollParameterTableViewer.this.refresh();
-                }
-            });
-
-        }
-        public void remove(String removed) {
-            value.remove(removed);
-            
+    public void removeParameter(ParameterInfo info) {
+        int i;
+        for(i = 1; i < getTable().getColumnCount(); i ++) {
+            if(getTable().getColumn(i).getText().equals(info.getName()))
+                break;
         }
         
-        private String extractValue(Value value) {
-            Object obj = null;
-            if(value.hasStringValue())
-                obj= value.getStringValue();
-            else if(value.hasSint64Value())
-                obj= value.getSint64Value();
-            else if(value.hasSint32Value()) 
-                obj= value.getSint32Value();
-            else if(value.hasUint64Value())
-                obj= value.getUint64Value();
-            else if(value.hasUint32Value()) 
-                obj= value.getUint32Value();
-            else if(value.hasDoubleValue())
-                obj= value.getDoubleValue();
-            else if(value.hasFloatValue())
-                obj= value.getFloatValue();
-            else if(value.hasBooleanValue())
-                obj= value.getBooleanValue();
-            if(obj == null)
-                return "-";
-            return String.valueOf(obj);
-        }
+        getTable().getColumn(i).dispose();
+        parameters.remove(info.getName());
+        refresh();
+    }
 
+    public void clear() {
+        while ( getTable().getColumnCount() > 1 ) 
+            getTable().getColumns()[1].dispose();
+
+        parameters.clear();
+        contentProvider.clearAll();
+        refresh();
+
+    }
+
+    public List<String> getParameters() {
+        return parameters;
+    }
+
+    public boolean hasChanged() {
+        return false; //TODO
+    }
+    
+    private Object getValue(Value value) {
+        Object obj = null;
+        if(value.hasStringValue())
+            obj= value.getStringValue();
+        else if(value.hasSint64Value())
+            obj= value.getSint64Value();
+        else if(value.hasSint32Value()) 
+            obj= value.getSint32Value();
+        else if(value.hasUint64Value())
+            obj= value.getUint64Value();
+        else if(value.hasUint32Value()) 
+            obj= value.getUint32Value();
+        else if(value.hasDoubleValue())
+            obj= value.getDoubleValue();
+        else if(value.hasFloatValue())
+            obj= value.getFloatValue();
+        else if(value.hasBooleanValue())
+            obj= value.getBooleanValue();
+        if(obj == null)
+            return "-";
+        return obj;
     }
 
 
     public class ScrollParameterContentProvider implements IStructuredContentProvider {
 
-        TableViewer table;
-        List<String> timestamps;
-        
+        private List<ParameterData> values;
 
-        public ScrollParameterContentProvider(TableViewer parameterTableViewer) {
-            table = parameterTableViewer;
-            timestamps = new ArrayList<>();
+
+        public ScrollParameterContentProvider() {
+            values = new ArrayList<>();
+        }
+
+        public void clearAll() {
+            values.clear();
+            
         }
 
         @Override
@@ -250,33 +212,69 @@ public class ScrollParameterTableViewer extends TableViewer {
         @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             // TODO Auto-generated method stub
-            
+
         }
 
         @Override
         public Object[] getElements(Object inputElement) {
-            return timestamps.toArray();
+            return values.toArray();
         }
 
-        public boolean addTimeStamp(String timestamp) {
-            if(timestamps.contains(timestamp))
-                return false;
-            timestamps.add(0, timestamp);
-            if(timestamps.size() > MAX_SIZE) {
-                
-                String removed = timestamps.remove(MAX_SIZE);
-                for(ParameterInfo info : readers.keySet()) {
-                    readers.get(info).remove(removed);
+
+        private boolean hasData(ParameterData data) {
+
+            for(ParameterValue v: data.getParameterList()) {
+                if (parameters.contains(v.getId().getName()))
+                    return true;
+            }
+            return false;
+        }
+
+
+        public void addParameterData(ParameterData data) {
+            if(hasData(data)) {
+                values.add(0, data);
+                if(values.size() > MAX_SIZE) {
+                    values.remove(MAX_SIZE);
                 }
             }
-            return true;
+
+            if (getTable().isDisposed()) {
+                return;
+            }
+            Display.getDefault().asyncExec( () -> {
+                if (!getTable().isDisposed()) {
+                    ScrollParameterTableViewer.this.refresh();
+                }
+            });
         }
+
 
     }
 
 
+    @Override
+    public void mdbUpdated() {
+        // TODO Auto-generated method stub
 
+    }
 
+    @Override
+    public void onParameterData(ParameterData pdata) {
+        contentProvider.addParameterData(pdata);
+
+    }
+
+    @Override
+    public void onInvalidIdentification(NamedObjectId id) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setValue(String string) {
+        valueType = string;
+        
+    }
 
 
 }
