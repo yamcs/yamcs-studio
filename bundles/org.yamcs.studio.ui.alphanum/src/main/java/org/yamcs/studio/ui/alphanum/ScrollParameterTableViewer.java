@@ -41,6 +41,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
     private ScrollParameterContentProvider contentProvider;
     private TableColumnLayout tcl;
     private List<String> parameters;
+    private List<String> qualifiedNames;
 
     public ScrollParameterTableViewer(Composite parent) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL));;
@@ -80,6 +81,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
             }
         });
         parameters = new ArrayList<>();
+        qualifiedNames = new ArrayList<>();
 
         ParameterCatalogue.getInstance().addParameterListener(this);
 
@@ -128,6 +130,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         if(parameters.contains(element.getName()))
             return;
         parameters.add(element.getName());
+        qualifiedNames.add(element.getQualifiedName());
         addColumn(element);
         getTable().getColumn(0).setWidth(180);
         for(int i = 1; i < getTable().getColumnCount(); i ++) {
@@ -145,6 +148,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         
         getTable().getColumn(i).dispose();
         parameters.remove(info.getName());
+        qualifiedNames.remove(info.getQualifiedName());
         refresh();
     }
 
@@ -153,17 +157,14 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
             getTable().getColumns()[1].dispose();
 
         parameters.clear();
+        qualifiedNames.clear();
         contentProvider.clearAll();
         refresh();
 
     }
 
     public List<String> getParameters() {
-        return parameters;
-    }
-
-    public boolean hasChanged() {
-        return false; //TODO
+        return qualifiedNames;
     }
     
     private Object getValue(Value value) {

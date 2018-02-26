@@ -34,6 +34,7 @@ import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class AlphaNumericEditor extends EditorPart {
 
@@ -69,7 +70,9 @@ public class AlphaNumericEditor extends EditorPart {
     @Override
     public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
         // "Site is incorrect" error results if the site is not set:
+        
         this.input = (FileEditorInput) input;
+       
         setSite(site);
         setInput(input);
         setPartName(input.getName());
@@ -80,11 +83,12 @@ public class AlphaNumericEditor extends EditorPart {
     }
 
     private List<ParameterInfo> loadData() {
+        List<ParameterInfo> info = new ArrayList<>();
         try {
-            List<ParameterInfo> info = new ArrayList<>();
-            Gson gson = new Gson();
-
-            fileInput = gson.fromJson(new InputStreamReader(input.getFile().getContents()), AlphaNumericJson.class);
+            
+            Gson gson = new Gson();   
+            InputStreamReader reader = new InputStreamReader(input.getFile().getContents());
+            fileInput = gson.fromJson(reader, AlphaNumericJson.class);
             if(fileInput == null) {
                 fileInput = new AlphaNumericJson();
             }
@@ -95,6 +99,9 @@ public class AlphaNumericEditor extends EditorPart {
                         info.add(meta);
             }
 
+            return info;
+        }catch (JsonSyntaxException ex)  {
+            fileInput = new AlphaNumericJson();
             return info;
         } catch (CoreException e) {
             log.log(Level.SEVERE, "Could not read parameter list", e);

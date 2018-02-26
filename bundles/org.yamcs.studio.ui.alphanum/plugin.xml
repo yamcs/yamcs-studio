@@ -5,10 +5,17 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
-            default="false"
-            extensions="par2"
+            default="true"
+            extensions="par"
             id="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
             name="AlphaNumeric">
+      </editor>
+      <editor
+            class="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor"
+            default="false"
+            extensions="par"
+            id="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor"
+            name="ScrollAlphaNumeric">
       </editor>
    </extension>
    
@@ -49,23 +56,8 @@
       		toolbarPath="Normal/additions"
          	class="org.yamcs.studio.ui.alphanum.actions.AddNewParameterAction"> 
       	 </action>
-   </editorContribution> 
-</extension>
-   
-   
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor"
-            default="false"
-            extensions="par"
-            id="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor"
-            name="ScrollAlphaNumeric">
-      </editor>
-   </extension> 
-   
-      <extension point="org.eclipse.ui.editorActions"> 
-		<editorContribution 
+   </editorContribution>
+   <editorContribution 
       		id="org.eclipse.ui.articles.action.contribution.editor" 
    			targetID="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor">
   	    <action
@@ -83,8 +75,9 @@
          	tooltip="Add Parameter Column"
       		toolbarPath="Normal/additions"
          	class="org.yamcs.studio.ui.alphanum.actions.AddNewColumnAction"> 
-      	</action> 
-   </editorContribution> 
-</extension> 
+      	</action>
+    </editorContribution>
+</extension>
+
     
 </plugin>

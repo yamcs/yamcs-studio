@@ -70,6 +70,7 @@ public class OPIEditorPerspective implements IPerspectiveFactory
         layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
         layout.addNewWizardShortcut("org.csstudio.opibuilder.wizards.newOPIWizard"); //$NON-NLS-1$
         layout.addNewWizardShortcut("org.csstudio.opibuilder.wizards.newJSWizard"); //$NON-NLS-1$
+        layout.addNewWizardShortcut("org.csstudio.opibuilder.wizards.newParWizard"); //$NON-NLS-1$
         layout.addNewWizardShortcut("org.csstudio.opibuilder.wizards.newPyWizard"); //$NON-NLS-1$
     }
 }

@@ -45,7 +45,7 @@ public class NewParFileWizardPage extends WizardNewFileCreationPage {
 
     @Override
     public String getFileExtension() {
-        return "par2"; //TODO get from
+        return "par"; //TODO get from
     }
 
 }
