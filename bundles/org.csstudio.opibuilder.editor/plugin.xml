@@ -149,6 +149,16 @@
             id="org.csstudio.opibuilder.wizards.newJSWizard"
             name="JavaScript">
       </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.csstudio.opibuilder.wizards"
+            class="org.csstudio.opibuilder.wizards.NewParFileWizard"
+            hasPages="true"
+            icon="icons/placeholder.gif"
+            id="org.csstudio.opibuilder.wizards.newParWizard"
+            name="Par File">
+      </wizard>
+
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
