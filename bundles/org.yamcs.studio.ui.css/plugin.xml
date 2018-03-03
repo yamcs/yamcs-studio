@@ -45,5 +45,23 @@
             </and>
          </visibility>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.yamcs.studio.showExplorer"
+            objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
+         <action
+               class="org.yamcs.studio.ui.css.ShowExplorerAction"
+               icon="icons/eview16/filenav_nav.png"
+               id="org.yamcs.studio.showExplorerAction"
+               label="Show Explorer"
+               menubarPath="ui">
+         </action>
+         <visibility>
+            <objectState
+                  name="executionMode"
+                  value="RUN_MODE">
+            </objectState>
+         </visibility>
+      </objectContribution>
    </extension>
 </plugin>

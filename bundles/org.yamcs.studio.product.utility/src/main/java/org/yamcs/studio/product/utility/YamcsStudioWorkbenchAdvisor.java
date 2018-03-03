@@ -6,6 +6,7 @@ import org.csstudio.startup.application.OpenDocumentEventProcessor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -24,8 +25,7 @@ import org.osgi.framework.Bundle;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
- * Forked from org.csstudio.utility.product.ApplicationWorkbenchAdvisor to clear dependency on
- * utility.product
+ * Forked from org.csstudio.utility.product.ApplicationWorkbenchAdvisor to clear dependency on utility.product
  */
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
@@ -197,5 +197,10 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         pm.remove("org.eclipse.team.ui.TeamPreferences");
         pm.remove("org.csstudio.platform.ui.css.applications");
         pm.remove("org.csstudio.platform.ui.css.platform");
+    }
+
+    @Override
+    public IAdaptable getDefaultPageInput() {
+        return ResourcesPlugin.getWorkspace().getRoot();
     }
 }

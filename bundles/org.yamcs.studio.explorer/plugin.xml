@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Yamcs Server"
+            id="org.yamcs.studio.server">
+      </category>
+      <view
+            category="org.yamcs.studio.server"
+            class="org.yamcs.studio.explorer.ExplorerView"
+            icon="icons/eview16/filenav_nav.png"
+            id="org.yamcs.studio.explorer.view"
+            name="Explorer"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="org.yamcs.studio.explorer.OpenActionProvider"
+            id="org.yamcs.studio.explorer.actions.OpenActions">
+         <enablement>
+            <or>
+               <adapt type="org.eclipse.core.resources.IFile" />
+            </or> 
+         </enablement>
+      </actionProvider>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewer
+            viewerId="org.yamcs.studio.explorer.view"
+            popupMenuId="org.yamcs.studio.explorer.viewer1">
+      </viewer>
+      <viewerContentBinding
+            viewerId="org.yamcs.studio.explorer.view">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resourceContent"/>
+            <contentExtension
+                  pattern="org.eclipse.ui.navigator.resources.filters.*"/>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding
+            viewerId="org.yamcs.studio.explorer.view">
+         <includes>
+            <actionExtension
+                  pattern="org.yamcs.studio.explorer.actions.OpenActions"/>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.*"/>
+         </includes>
+         <excludes>
+            <actionExtension
+                  pattern="org.eclipse.ui.navigator.resources.OpenActions">
+            </actionExtension>
+         </excludes>
+      </viewerActionBinding>
+   </extension>
+</plugin>

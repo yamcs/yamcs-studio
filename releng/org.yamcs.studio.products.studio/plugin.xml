@@ -85,6 +85,10 @@
       <activityPatternBinding
             activityId="yamcsstudio.disableextensions"
             pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
+      <!-- Hide 'Show Navigator' replaced with 'Show Explorer' -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.openRuntimePerspective"/>
       <!-- Hide CS-Studio perspective from perspective switcher and friends -->
       <activityPatternBinding
             activityId="yamcsstudio.disableextensions"
@@ -234,6 +238,12 @@
                closeable="true"
                id="org.yamcs.studio.ui.commanding.queue.CommandQueueView">
          </view>
+         <view
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.explorer.view"/>
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.ui.commanding.stack.CommandStackView"/>
@@ -241,6 +251,7 @@
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
          <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
+         <viewShortcut id="org.yamcs.studio.explorer.view"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
@@ -289,6 +300,18 @@
                relationship="stack"
                visible="false"
                id="org.yamcs.studio.ui.clients.ClientsView"/>
+         <view
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               relationship="stack"
+               visible="true"
+               closeable="false"
+               id="org.yamcs.studio.explorer.view"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.eclipse.ui.views.ResourceNavigator"/>
          <!-- Yamcs -->
          <viewShortcut id="org.yamcs.studio.ui.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.ui.eventlog.EventLogView"/>
@@ -297,6 +320,7 @@
          <viewShortcut id="org.yamcs.studio.ui.commanding.cmdhist.CommandHistoryView"/>
          <viewShortcut id="org.yamcs.studio.ui.links.LinksView"/>
          <viewShortcut id="org.yamcs.studio.ui.clients.ClientsView"/>
+         <viewShortcut id="org.yamcs.studio.explorer.view"/>
          <!-- CS-Studio -->
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
