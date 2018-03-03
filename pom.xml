@@ -27,6 +27,10 @@
     <module>tests</module>
   </modules>
 
+  <scm>
+    <connection>scm:git:https://github.com/yamcs/yamcs-studio</connection>
+  </scm>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -105,6 +109,11 @@
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-packaging-plugin</artifactId>
+          <version>${tycho.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-versions-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
       </plugins>
