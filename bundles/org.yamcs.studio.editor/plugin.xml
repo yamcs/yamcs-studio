@@ -53,20 +53,6 @@
             activityId="yamcsstudio.disableextensions"
             pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
    </extension>
-   
-   <!--
-   	This extension point is actually considered deprecated now, in favor of the
-   	"common navigator framework". We'll use this one until we have time to figure
-   	out the other one.
-   -->
-   <extension point="org.eclipse.ui.ide.resourceFilters">
-      
-      <!-- Hide files that should by default be hidden (.project, ..) -->
-      <filter
-            selected="true"
-            pattern=".**"> <!-- Not using .* because that one is declared by org.eclipse.ui.ide as selected="false" -->
-      </filter>
-   </extension>
 
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -126,13 +112,7 @@
                visible="false"
                closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView"/>
-         <view
-               relative="org.eclipse.ui.views.ResourceNavigator"
-               relationship="stack"
-               visible="true"
-               closeable="true"
-               id="org.yamcs.studio.explorer.view"/>
-               
+
          <viewShortcut id="org.yamcs.studio.explorer.view"/>
          <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
@@ -142,17 +122,6 @@
          <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
          <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
          <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
-         <viewShortcut id="org.yamcs.studio.explorer.view"/>
-      </perspectiveExtension>
-      
-      <!-- OPI Runtime Perspective -->
-      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
-         <view
-               relative="org.eclipse.ui.views.ResourceNavigator"
-               relationship="stack"
-               visible="true"
-               closeable="true"
-               id="org.yamcs.studio.explorer.view"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
