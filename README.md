@@ -12,12 +12,12 @@ Below instructions are targeted at Yamcs Studio core contributors.
 
 ### Headless Build
 
-There are two different maven reactors (the first bundles up non-OSGI dependencies):
+There are two different maven reactors (the first bundles up non-OSGI dependencies). To run both:
 
 ```
-mvn -f p2deps/pom.xml clean install
-mvn clean install
+make
 ```
+
 
 ### Eclipse Development
 
