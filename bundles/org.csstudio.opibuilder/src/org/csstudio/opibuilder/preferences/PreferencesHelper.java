@@ -9,13 +9,11 @@ package org.csstudio.opibuilder.preferences;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 
 import org.csstudio.java.string.StringSplitter;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
-import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -46,7 +44,6 @@ public class PreferencesHelper {
     public static final String AUTOSAVE = "auto_save"; //$NON-NLS-1$
     public static final String OPI_GUI_REFRESH_CYCLE = "opi_gui_refresh_cycle"; //$NON-NLS-1$
     public static final String NO_EDIT = "no_edit"; //$NON-NLS-1$
-    public static final String TOP_OPIS = "top_opis"; //$NON-NLS-1$
     public static final String DISABLE_ADVANCED_GRAPHICS = "disable_advanced_graphics"; //$NON-NLS-1$
     public static final String POPUP_CONSOLE = "popup_console"; //$NON-NLS-1$
     public static final String PROBE_OPI = "probe_opi"; //$NON-NLS-1$
@@ -79,8 +76,6 @@ public class PreferencesHelper {
     public static final String MOBILE_STARTUP_OPI = "mobile_startup_opi"; //$NON-NLS-1$
 
     private static final char ROW_SEPARATOR = '|';
-    private static final char ITEM_SEPARATOR = ',';
-    private static final char MACRO_SEPARATOR = '=';
 
     public static final String DEFAULT_EMAIL_SENDER = "default_email_sender"; //$NON-NLS-1$
 
@@ -238,32 +233,6 @@ public class PreferencesHelper {
         }
         return new LinkedHashMap<>();
 
-    }
-
-    public static Map<IPath, MacrosInput> getTopOPIs() throws Exception {
-        String rawString = getString(TOP_OPIS);
-        if (rawString == null)
-            return null;
-        Map<IPath, MacrosInput> result = new LinkedHashMap<>();
-        String[] rows = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, false);
-        for (String rowString : rows) {
-            String[] items = StringSplitter.splitIgnoreInQuotes(rowString, ITEM_SEPARATOR, true);
-            IPath path = null;
-            MacrosInput macrosInput = new MacrosInput(new LinkedHashMap<String, String>(), true);
-            for (int i = 0; i < items.length; i++) {
-                if (i == 0) {
-                    String urlString = items[i];
-                    path = getExistFileInRepoAndSearchPath(urlString);
-                } else {
-                    String[] macro = StringSplitter.splitIgnoreInQuotes(items[i], MACRO_SEPARATOR, true);
-                    if (macro.length == 2)
-                        macrosInput.getMacrosMap().put(macro[0], macro[1]);
-                }
-            }
-            if (path != null)
-                result.put(path, macrosInput);
-        }
-        return result;
     }
 
     /**

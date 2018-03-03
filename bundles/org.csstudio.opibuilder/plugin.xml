@@ -81,16 +81,6 @@
             label="OPI Actions"
             visible="true">
          <action
-               class="org.csstudio.opibuilder.actions.OpenTopOPIsAction"
-               icon="icons/OPIRunner.png"
-               id="org.csstudio.opibuilder.openTopFileAction"
-               label="Top Files"
-               pulldown="true"
-               style="pulldown"
-               toolbarPath="Normal/additions"
-               tooltip="Open top files in editor. e.g. Open OPIs in run mode">
-         </action>
-         <action
                class="org.csstudio.opibuilder.actions.CompactModeAction"
                definitionId="org.csstudio.opibuilder.actions.compactMode"
                id="org.csstudio.opibuilder.compactModeAction"
@@ -311,18 +301,6 @@
                style="push"
                tooltip="Send PV name to OPI Probe">
          </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:file?after=new.ext">
-         <menu
-               icon="icons/OPIRunner.png"
-               label="Top Files">
-            <dynamic
-                  class="org.csstudio.opibuilder.actions.TopFilesContributionItem"
-                  id="org.csstudio.opibuilder.topfiles">
-            </dynamic>
-         </menu>
       </menuContribution>
    </extension>
 

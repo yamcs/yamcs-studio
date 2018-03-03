@@ -8,10 +8,13 @@
 package org.csstudio.opibuilder.actions;
 
 import java.io.FileNotFoundException;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.csstudio.openfile.IOpenDisplayAction;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
+import org.csstudio.opibuilder.runmode.RunModeService;
+import org.csstudio.opibuilder.runmode.RunModeService.DisplayMode;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.ui.util.thread.UIBundlingThread;
@@ -62,7 +65,8 @@ public class ExternalOpenDisplayAction implements IOpenDisplayAction {
         MacrosInput macrosInput = null;
         if (data == null) {
             // No macros or links.
-            OpenTopOPIsAction.runOPI(null, originPath);
+            RunModeService.openDisplay(originPath, Optional.ofNullable(macrosInput), DisplayMode.NEW_TAB,
+                    Optional.empty());
         } else {
             String[] parts = data.split(SEPARATOR);
             if (parts[0] != null && parts[0].trim().length() > 0) {
@@ -100,7 +104,7 @@ public class ExternalOpenDisplayAction implements IOpenDisplayAction {
                     @Override
                     public void done(IJobChangeEvent jce) {
                         Runnable r = () -> {
-                            OpenTopOPIsAction.runOPI(finalMacrosInput, finalOriginPath);
+                            runOPI(finalMacrosInput, finalOriginPath);
                         };
                         UIBundlingThread.getInstance().addRunnable(r);
                     }
@@ -108,9 +112,28 @@ public class ExternalOpenDisplayAction implements IOpenDisplayAction {
                 job.schedule();
             } else {
                 // We don't need to set up links.
-                OpenTopOPIsAction.runOPI(macrosInput, originPath);
+                runOPI(macrosInput, originPath);
             }
         }
+    }
+
+    public static void runOPI(MacrosInput macrosInput, IPath path) {
+        DisplayMode mode = DisplayMode.NEW_TAB;
+        if (macrosInput != null) {
+            String position = macrosInput.getMacrosMap().get("Position");
+            if (position != null) {
+                if (position.toUpperCase().equals("NEW_SHELL")) {
+                    mode = DisplayMode.NEW_SHELL;
+                } else {
+                    try {
+                        mode = DisplayMode.valueOf("NEW_TAB_" + position.toUpperCase());
+                    } catch (IllegalArgumentException ex) {
+                        // Ignore
+                    }
+                }
+            }
+        }
+        RunModeService.openDisplay(path, Optional.ofNullable(macrosInput), mode, Optional.empty());
     }
 
 }
