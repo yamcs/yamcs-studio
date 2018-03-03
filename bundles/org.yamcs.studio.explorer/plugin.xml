@@ -9,7 +9,7 @@
       </category>
       <view
             category="org.yamcs.studio.server"
-            class="org.eclipse.ui.navigator.CommonNavigator"
+            class="org.yamcs.studio.explorer.ExplorerView"
             icon="icons/eview16/filenav_nav.png"
             id="org.yamcs.studio.explorer.view"
             name="Explorer"/>

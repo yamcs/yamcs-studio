@@ -11,7 +11,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -77,8 +76,7 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
         if (file.getFileExtension().equalsIgnoreCase("opi")) {
             try {
                 boolean activate = OpenStrategy.activateOnOpen();
-                IEditorDescriptor desc = IDE.getEditorDescriptor(file.getName(), true, false);
-                page.openEditor(new FileEditorInput(file), desc.getId(), activate,
+                page.openEditor(new FileEditorInput(file), "org.csstudio.opibuilder.OPIEditor", activate,
                         IWorkbenchPage.MATCH_INPUT | IWorkbenchPage.MATCH_ID);
             } catch (PartInitException e) {
                 DialogUtil.openError(page.getWorkbenchWindow().getShell(), "Problems Opening Editor", e.getMessage(),
