@@ -61,7 +61,7 @@
    -->
    <extension point="org.eclipse.ui.ide.resourceFilters">
       
-      <!-- Hide files that should by default be hidden (.project, .pydevproject, ..) -->
+      <!-- Hide files that should by default be hidden (.project, ..) -->
       <filter
             selected="true"
             pattern=".**"> <!-- Not using .* because that one is declared by org.eclipse.ui.ide as selected="false" -->
@@ -129,7 +129,7 @@
          <view
                relative="org.eclipse.ui.views.ResourceNavigator"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.explorer.view"/>
                
@@ -142,6 +142,7 @@
          <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
          <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
          <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+         <viewShortcut id="org.yamcs.studio.explorer.view"/>
       </perspectiveExtension>
       
       <!-- OPI Runtime Perspective -->

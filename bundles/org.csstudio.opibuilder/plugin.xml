@@ -225,24 +225,6 @@
             </objectState>
          </visibility>
       </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="org.csstudio.opibuilder.showNavigator"
-            objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
-         <action
-               class="org.csstudio.opibuilder.actions.ShowNavigatorAction"
-               icon="icons/filenav_nav.gif"
-               id="org.csstudio.opibuilder.openRuntimePerspective"
-               label="Show Navigator"
-               menubarPath="ui">
-         </action>
-         <visibility>
-            <objectState
-                  name="executionMode"
-                  value="RUN_MODE">
-            </objectState>
-         </visibility>
-      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.help.index">
