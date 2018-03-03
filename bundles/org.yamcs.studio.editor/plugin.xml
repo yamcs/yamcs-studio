@@ -126,7 +126,14 @@
                visible="false"
                closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+         <view
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.explorer.view"/>
                
+         <viewShortcut id="org.yamcs.studio.explorer.view"/>
          <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
          <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
@@ -139,7 +146,12 @@
       
       <!-- OPI Runtime Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
-
+         <view
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.explorer.view"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->

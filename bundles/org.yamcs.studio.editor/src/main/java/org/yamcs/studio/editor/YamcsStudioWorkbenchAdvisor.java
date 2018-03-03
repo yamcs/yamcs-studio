@@ -43,6 +43,7 @@ import java.net.URL;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -182,5 +183,11 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         pm.remove("org.eclipse.team.ui.TeamPreferences");
 
         YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
+    }
+
+    // Important. Without this the 'Display Explorer' view only shows content when right-clicking in it...
+    @Override
+    public IAdaptable getDefaultPageInput() {
+        return ResourcesPlugin.getWorkspace().getRoot();
     }
 }

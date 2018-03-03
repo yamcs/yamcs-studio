@@ -34,6 +34,7 @@
     <module>org.yamcs.studio.css.core</module>
     <module>org.yamcs.studio.css.script</module>
     <module>org.yamcs.studio.css.theming</module>
+    <module>org.yamcs.studio.explorer</module>
     <module>org.yamcs.studio.eventlog</module>
     <module>org.yamcs.studio.monitoring</module>
     <module>org.yamcs.studio.p2</module>
