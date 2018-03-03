@@ -7,7 +7,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.platform.workspace.RelaunchConstants;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -134,10 +133,9 @@ public class Application implements IApplication {
         }
 
         // IWorkbench.restart() was called.
-        Integer exitCode = Integer.getInteger(RelaunchConstants.PROP_EXIT_CODE);
+        Integer exitCode = Integer.getInteger("eclipse.exitcode");
         if (EXIT_RELAUNCH.equals(exitCode)) { // RELAUCH with new command line
-            log.fine(String.format("RELAUNCH, command line: %s",
-                    System.getProperty(RelaunchConstants.PROP_EXIT_DATA)));
+            log.fine(String.format("RELAUNCH, command line: %s", System.getProperty("eclipse.exitdata")));
             return EXIT_RELAUNCH;
         }
         // RESTART without changes

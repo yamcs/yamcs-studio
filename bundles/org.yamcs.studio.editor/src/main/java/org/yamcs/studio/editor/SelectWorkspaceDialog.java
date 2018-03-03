@@ -3,11 +3,9 @@ package org.yamcs.studio.editor;
 import java.io.File;
 import java.io.IOException;
 
-import org.csstudio.platform.workspace.Messages;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -148,7 +146,9 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
             while (parent != null) { // Is there a .metadata file?
                 File meta = new File(parent.getCanonicalPath() + File.separator + ".metadata");
                 if (meta.exists()) {
-                    setErrorMessage(NLS.bind(Messages.Workspace_NestedErrorFMT, parent.getName()));
+                    setErrorMessage(String.format(
+                            "The selected directory is inside an existing workspace named \\\"%s\\\".\\nPick a directory that is neither inside an existing workspace, nor contains another workspace.",
+                            parent.getName()));
                     return false;
                 }
                 // OK, go one up
@@ -162,7 +162,9 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
         // Check if there are already workspaces within the selected directory.
         String nested = checkForWorkspacesInSubdirs(ws_file);
         if (nested != null) {
-            setErrorMessage(NLS.bind(Messages.Workspace_ContainsWorkspacesErrorFMT, nested));
+            setErrorMessage(String.format(
+                    "There is already a workspace named \\\"%s\\\" below the selected directory.\\nPick a directory that is neither inside an existing workspace, nor contains another workspace.",
+                    nested));
             return false;
         }
 

@@ -61,7 +61,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowMenuBar(true);
         configurer.setShowCoolBar(true);
         configurer.setShowProgressIndicator(true);
-        configurer.setShowPerspectiveBar(false);
+        configurer.setShowPerspectiveBar(true);
         configurer.setShowStatusLine(true);
         configurer.setTitle(Platform.getProduct().getName());
 
