@@ -151,7 +151,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
 
     public static final int MAX_AXES_AMOUNT = 4;
 
-    public static final int MAX_TRACES_AMOUNT = 20;
+    public static final int MAX_TRACES_AMOUNT = 30;
 
     public final static String[] AXES_ARRAY = new String[MAX_AXES_AMOUNT];
     {
