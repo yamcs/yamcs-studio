@@ -16,7 +16,7 @@ See http://www.yamcs.org
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xmx1024m
+      <vmArgs>-Xmx2048m
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
       </vmArgs>
