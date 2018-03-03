@@ -11,5 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.yamcs.studio.core.ui,
  org.eclipse.core.runtime,
- org.yamcs.client
+ org.yamcs.client,
+ com.google.gson
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
