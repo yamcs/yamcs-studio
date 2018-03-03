@@ -158,15 +158,23 @@ public class SVGHandler {
     private boolean suspended = true;
 
     private final Display swtDisplay;
+
+    /*
+     * Enable caching of images provided by Batik SVG animation process until the animation has repeated once and then
+     * take over. Instead of always disposing the previous image, all images will be disposed when the figure is
+     * disposed. WARNING: Batik is not built to work with a cache, using this one can generate hazards.
+     */
     private boolean useCache = false;
+
+    private int cacheMaxSize = 100;
+
     private List<Image> imageBuffer;
     private int maxBufferSize;
 
     public SVGHandler(final SVGDocument doc, final Display display) {
         swtDisplay = display;
-        useCache = Preferences.getUseCache();
         imageBuffer = Collections.synchronizedList(new ArrayList<Image>());
-        maxBufferSize = Preferences.getCacheMaxSize();
+        maxBufferSize = cacheMaxSize;
 
         listener = new Listener();
         userAgent = createUserAgent();
@@ -723,7 +731,7 @@ public class SVGHandler {
                         public void newImage(Image newImage) {
                             notifyNewImage(newImage);
                         }
-                    }, Preferences.getCacheMaxSize());
+                    }, cacheMaxSize);
         }
         if (copy != null && !copy.isDisposed()) {
             copy.dispose();
