@@ -52,6 +52,7 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
     public void onYamcsConnecting() {
         Display.getDefault().asyncExec(() -> {
             connecting = true;
+            connected = false;
             Map newState = getCurrentState();
             log.fine(String.format("Fire new connection state %s", newState));
             fireSourceChanged(ISources.WORKBENCH, newState);
@@ -72,6 +73,18 @@ public class ConnectionStateProvider extends AbstractSourceProvider implements Y
     @Override
     public void onYamcsDisconnected() {
         Display.getDefault().asyncExec(() -> {
+            connecting = false;
+            connected = false;
+            Map newState = getCurrentState();
+            log.fine(String.format("Fire new connection state %s", newState));
+            fireSourceChanged(ISources.WORKBENCH, newState);
+        });
+    }
+
+    @Override
+    public void onYamcsConnectionFailed(Throwable t) {
+        Display.getDefault().asyncExec(() -> {
+            connecting = false;
             connected = false;
             Map newState = getCurrentState();
             log.fine(String.format("Fire new connection state %s", newState));

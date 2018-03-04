@@ -38,6 +38,9 @@ import io.netty.handler.codec.http.HttpMethod;
 
 /**
  * Provides passage to Yamcs. This covers both the REST and WebSocket API.
+ * 
+ * TODO currently reconnection can only be cancelled on initial connect. We should also make it cancellable (via Job UI)
+ * on auto reconnect.
  */
 public class YamcsClient implements WebSocketClientCallback {
 
@@ -66,13 +69,14 @@ public class YamcsClient implements WebSocketClientCallback {
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
     private Map<IProgressMonitor, Future<?>> cancellableJobs = new ConcurrentHashMap<>();
 
-    public YamcsClient(String application) {
+    public YamcsClient(String application, boolean retry) {
         this.application = application;
+        this.retry = retry;
 
         canceller.scheduleWithFixedDelay(() -> {
             cancellableJobs.forEach((monitor, future) -> {
                 if (monitor.isCanceled()) {
-                    future.cancel(false);
+                    future.cancel(true);
                     cancellableJobs.remove(monitor);
                 } else if (future.isDone()) {
                     cancellableJobs.remove(monitor);
@@ -140,8 +144,13 @@ public class YamcsClient implements WebSocketClientCallback {
                             return;
                         } catch (Exception e) {
                             // For anything other than a security exception, re-try
-                            log.log(Level.WARNING, String.format("Connection to %s failed (attempt %d of %d)",
-                                    yprops, i + 1, maxAttempts), e);
+                            if (log.isLoggable(Level.FINEST)) {
+                                log.log(Level.FINEST, String.format("Connection to %s failed (attempt %d of %d)",
+                                        yprops, i + 1, maxAttempts), e);
+                            } else {
+                                log.warning(String.format("Connection to %s failed (attempt %d of %d)",
+                                        yprops, i + 1, maxAttempts));
+                            }
                             Thread.sleep(5000);
                         }
                     }
@@ -152,6 +161,8 @@ public class YamcsClient implements WebSocketClientCallback {
                     }
                     log.warning(maxAttempts + " connection attempts failed, giving up.");
                 } catch (InterruptedException e) {
+                    log.info("Connection cancelled by user");
+                    connecting = false;
                     for (ConnectionListener cl : connectionListeners) {
                         cl.connectionFailed(null, new YamcsException("Thread interrupted", e));
                     }
@@ -190,6 +201,7 @@ public class YamcsClient implements WebSocketClientCallback {
         if (connected) {
             log.warning("Connection to " + yprops + " lost");
         }
+        connected = false;
         for (ConnectionListener listener : connectionListeners) {
             listener.disconnected();
         }

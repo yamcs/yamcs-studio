@@ -17,7 +17,6 @@ import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.Catalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.model.ContainerCatalogue;
 import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.LinkCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -45,7 +44,7 @@ public class YamcsPlugin extends Plugin {
 
         TimeEncoding.setUp();
 
-        yamcsClient = new YamcsClient(getProductString());
+        yamcsClient = new YamcsClient(getProductString(), true);
         yamcsClient.addConnectionListener(new UIConnectionListener());
 
         ManagementCatalogue managementCatalogue = new ManagementCatalogue();
