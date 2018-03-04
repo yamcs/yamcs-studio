@@ -53,6 +53,7 @@
               io.netty.handler.codec.http,
               io.netty.util.concurrent,
               io.protostuff,
+              org.yaml.snakeyaml,
               org.yamcs,
               org.yamcs.api,
               org.yamcs.api.rest,
