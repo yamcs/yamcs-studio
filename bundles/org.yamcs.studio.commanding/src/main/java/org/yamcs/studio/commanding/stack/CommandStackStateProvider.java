@@ -20,7 +20,8 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
     public static final String STATE_KEY_EXECUTION_STARTED = "org.yamcs.studio.commanding.stack.state.executionStarted";
     public static final String STATE_KEY_EMPTY = "org.yamcs.studio.commanding.stack.state.empty";
     public static final String STATE_KEY_ARMED = "org.yamcs.studio.commanding.stack.state.armed";
-    private static final String[] SOURCE_NAMES = { STATE_KEY_REMAINING, STATE_KEY_EXECUTION_STARTED, STATE_KEY_EMPTY, STATE_KEY_ARMED };
+    private static final String[] SOURCE_NAMES = { STATE_KEY_REMAINING, STATE_KEY_EXECUTION_STARTED, STATE_KEY_EMPTY,
+            STATE_KEY_ARMED };
 
     /**
      * Whether there's any remaining commands to be armed/executed
@@ -61,7 +62,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
         }
 
         Map newState = getCurrentState();
-        log.info(String.format("Fire new stack state %s", newState));
+        log.fine(String.format("Fire new stack state %s", newState));
         fireSourceChanged(ISources.WORKBENCH, newState);
     }
 

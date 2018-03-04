@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
@@ -187,7 +188,8 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
     public static String getCurrentYamcsInstance() {
         YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.getYamcsConnectionProperties().getInstance();
+        YamcsConnectionProperties props = yamcsClient.getYamcsConnectionProperties();
+        return (props != null) ? props.getInstance() : null;
     }
 
     public ProcessorInfo getCurrentProcessorInfo() {
