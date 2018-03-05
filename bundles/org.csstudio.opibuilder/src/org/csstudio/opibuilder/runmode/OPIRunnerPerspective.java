@@ -82,7 +82,7 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
     public void createInitialLayout(IPageLayout layout) {
         String editor = layout.getEditorArea();
 
-        IFolderLayout left = layout.createFolder(Position.LEFT.name(), IPageLayout.LEFT, 0.25f, editor);
+        IFolderLayout left = layout.createFolder(Position.LEFT.name(), IPageLayout.LEFT, 0.2f, editor);
         left.addPlaceholder(Position.LEFT.getOPIViewID() + SECOND_ID);
 
         IFolderLayout right = layout.createFolder(Position.RIGHT.name(), IPageLayout.RIGHT, 0.75f, editor);
