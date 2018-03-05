@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.osgi.framework.Bundle;
@@ -91,6 +92,7 @@ public class Application implements IApplication {
         root.setLevel(Level.WARNING);
 
         // Exceptions only for plugins that do not flood the Console View with INFO messages:
+        Logger.getLogger("com.spaceapplications").setLevel(Level.FINE);
         Logger.getLogger("org.csstudio").setLevel(Level.FINE);
         Logger.getLogger("org.yamcs.studio").setLevel(Level.FINE);
 
@@ -121,11 +123,15 @@ public class Application implements IApplication {
         }
     }
 
+    protected WorkbenchAdvisor createWorkbenchAdvisor() {
+        return new YamcsStudioWorkbenchAdvisor();
+    }
+
     private int runWorkbench(Display display, IApplicationContext context) {
         Logger log = Logger.getLogger(getClass().getName());
 
         // Run the workbench
-        int returnCode = PlatformUI.createAndRunWorkbench(display, new YamcsStudioWorkbenchAdvisor());
+        int returnCode = PlatformUI.createAndRunWorkbench(display, createWorkbenchAdvisor());
 
         // Plain exit from IWorkbench.close()
         if (returnCode != PlatformUI.RETURN_RESTART) {
@@ -142,7 +148,7 @@ public class Application implements IApplication {
         return EXIT_RESTART;
     }
 
-    private IProject createProject(URL location, String sourceFolder) throws CoreException {
+    protected IProject createProject(URL location, String sourceFolder) throws CoreException {
         IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(sourceFolder);
         try {
             project.create(new NullProgressMonitor());

@@ -29,6 +29,15 @@
                name="startupProgressRect"
                value="20,215,560,15"/>
          <property
+               name="introTitle"
+               value="Yamcs Studio Editor"/>
+         <property
+               name="introBrandingImage"
+               value="product:icons/logo64.png"/>
+         <property
+               name="introBrandingImageText"
+               value="Yamcs Studio Editor"/>
+         <property
                name="preferenceCustomization"
                value="plugin_customization.ini">
          </property>
@@ -37,7 +46,8 @@
    
    <extension
          id="application"
-         point="org.eclipse.core.runtime.applications">
+         point="org.eclipse.core.runtime.applications"
+         name="Yamcs Studio Editor">
       <application>
          <run
                class="org.yamcs.studio.editor.Application">
