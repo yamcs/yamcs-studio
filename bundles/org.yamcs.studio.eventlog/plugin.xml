@@ -118,15 +118,6 @@
             </not>
          </enabledWhen>
       </handler>
-      <handler
-            class="org.yamcs.studio.eventlog.InsertManualEventHandler"
-            commandId="org.yamcs.studio.eventlog.insertManualEventCommand">
-         <enabledWhen>
-            <not>
-               <count value="0"/>
-            </not>
-         </enabledWhen>
-      </handler>
    </extension>
    
    <extension point="org.eclipse.ui.views">

@@ -24,7 +24,6 @@ import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
 import org.yamcs.studio.core.ui.logging.ConsoleViewHandler;
 import org.yamcs.studio.core.ui.logging.UserLogFormatter;
 import org.yamcs.studio.css.core.pvmanager.ParameterDataSourceProvider;
-import org.yamcs.studio.css.core.pvmanager.SoftwareParameterDataSourceProvider;
 
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
@@ -72,7 +71,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // Bootstrap DIIRT
         CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
         defaultDs.putDataSource(new ParameterDataSourceProvider());
-        defaultDs.putDataSource(new SoftwareParameterDataSourceProvider());
         defaultDs.setConfiguration(new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
         PVManager.setDefaultDataSource(defaultDs);
     }
