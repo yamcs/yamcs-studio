@@ -8,21 +8,20 @@ import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
-import org.yamcs.studio.core.ConnectionManager;
-import org.yamcs.studio.core.StudioConnectionListener;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
 /**
- * TODO current processor info should be maintained in ManagementCatalogue, and
- * less iffy As a result we should no longer need to implement the
- * studioconnectionlistener
+ * TODO current processor info should be maintained in ManagementCatalogue, and less iffy As a result we should no
+ * longer need to implement the studioconnectionlistener
  */
 public class ProcessorStatusLineContributionItem extends StatusLineContributionItem
-        implements ManagementListener, StudioConnectionListener {
-    
+        implements ManagementListener, YamcsConnectionListener {
+
     private static final Logger log = Logger.getLogger(ProcessorStatusLineContributionItem.class.getName());
 
     private static final String DEFAULT_TEXT = "---";
@@ -36,13 +35,13 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
         setText(DEFAULT_TEXT);
         setToolTipText("Subscribed Yamcs Processor");
         addClickListener(evt -> {
-            if (ConnectionManager.getInstance().isConnected()) {
+            if (YamcsPlugin.getYamcsClient().isConnected()) {
                 // Hmm should probably move processor plugin back in core.ui
-                RCPUtils.runCommand("org.yamcs.studio.ui.processor.infoCommand");
+                RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.infoCommand");
             }
         });
         ManagementCatalogue.getInstance().addManagementListener(this);
-        ConnectionManager.getInstance().addStudioConnectionListener(this);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
     }
 
     @Override
@@ -51,10 +50,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
         if (catalogue != null) {
             catalogue.removeManagementListener(this);
         }
-        ConnectionManager connManager = ConnectionManager.getInstance();
-        if (connManager != null) {
-            connManager.removeStudioConnectionListener(this);
-        }
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
     }
 
     @Override
@@ -81,7 +77,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
     @Override
     public void processorUpdated(ProcessorInfo updatedInfo) {
     }
-    
+
     @Override
     public void instanceUpdated(ConnectionInfo connectionInfo) {
         Display.getDefault().asyncExec(() -> {
@@ -133,11 +129,11 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         Display display = Display.getDefault();
         if (!display.isDisposed()) {
             display.asyncExec(() -> updateText(null));

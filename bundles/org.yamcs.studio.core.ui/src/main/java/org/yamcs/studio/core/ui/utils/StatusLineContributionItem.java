@@ -20,16 +20,14 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * A contribution item to be used with status line managers. Forked and modified
- * from jface's StatusLineContributionItem, because it does not provide good
- * customization options. (e.g. no tooltip support)
+ * A contribution item to be used with status line managers. Forked and modified from jface's
+ * StatusLineContributionItem, because it does not provide good customization options. (e.g. no tooltip support)
  */
 public class StatusLineContributionItem extends ContributionItem {
 
     /**
-     * A constant indicating that the contribution should compute its actual
-     * size depending on the text. It will grab all space necessary to display
-     * the whole text.
+     * A constant indicating that the contribution should compute its actual size depending on the text. It will grab
+     * all space necessary to display the whole text.
      */
     public final static int CALC_TRUE_WIDTH = -1;
 
@@ -41,8 +39,8 @@ public class StatusLineContributionItem extends ContributionItem {
     private String errorDetail;
 
     /**
-     * The composite into which this contribution item has been placed. This
-     * will be <code>null</code> if this instance has not yet been initialized.
+     * The composite into which this contribution item has been placed. This will be <code>null</code> if this instance
+     * has not yet been initialized.
      */
     private Composite statusLine = null;
 
@@ -58,8 +56,7 @@ public class StatusLineContributionItem extends ContributionItem {
      * Creates a status line contribution item with the given id.
      *
      * @param id
-     *            the contribution item's id, or <code>null</code> if it is to
-     *            have no id
+     *            the contribution item's id, or <code>null</code> if it is to have no id
      */
     public StatusLineContributionItem(String id) {
         this(id, CALC_TRUE_WIDTH, false);
@@ -70,17 +67,14 @@ public class StatusLineContributionItem extends ContributionItem {
     }
 
     /**
-     * Creates a status line contribution item with the given id that displays
-     * the given number of characters.
+     * Creates a status line contribution item with the given id that displays the given number of characters.
      *
      * @param id
-     *            the contribution item's id, or <code>null</code> if it is to
-     *            have no id
+     *            the contribution item's id, or <code>null</code> if it is to have no id
      * @param charWidth
-     *            the number of characters to display. If the value is
-     *            CALC_TRUE_WIDTH then the contribution will compute the
-     *            preferred size exactly. Otherwise the size will be based on
-     *            the average character size * 'charWidth'
+     *            the number of characters to display. If the value is CALC_TRUE_WIDTH then the contribution will
+     *            compute the preferred size exactly. Otherwise the size will be based on the average character size *
+     *            'charWidth'
      */
     public StatusLineContributionItem(String id, int charWidth) {
         this(id, charWidth, false);
@@ -100,7 +94,7 @@ public class StatusLineContributionItem extends ContributionItem {
         Label sep = new Label(parent, SWT.SEPARATOR);
         label = new CLabel(statusLine, SWT.SHADOW_NONE);
         updateMessageLabel();
-        
+
         if (clickListener != null) {
             label.addListener(SWT.MouseDown, clickListener);
         }
@@ -136,7 +130,7 @@ public class StatusLineContributionItem extends ContributionItem {
             sep.setLayoutData(data);
         }
     }
-    
+
     private void updateMessageLabel() {
         if (label != null && !label.isDisposed()) {
             Display display = label.getDisplay();
@@ -144,31 +138,31 @@ public class StatusLineContributionItem extends ContributionItem {
                 label.setForeground(JFaceColors.getErrorText(display));
                 label.setText(escape(errorText));
                 label.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK));
-                if (errorDetail != null)
+                if (errorDetail != null) {
                     label.setToolTipText(escape(errorDetail));
-                else if (tooltip != null)
+                } else if (tooltip != null) {
                     label.setToolTipText(escape(tooltip));
-                else
+                } else {
                     label.setToolTipText(null);
-                
+                }
+
             } else {
                 label.setForeground(label.getParent().getForeground());
                 label.setText(escape(text));
                 label.setImage(image);
-                if (tooltip != null)
+                if (tooltip != null) {
                     label.setToolTipText(escape(tooltip));
-                else
+                } else {
                     label.setToolTipText(null);
+                }
             }
         }
     }
 
     /**
-     * An accessor for the current location of this status line contribution
-     * item -- relative to the display.
+     * An accessor for the current location of this status line contribution item -- relative to the display.
      *
-     * @return The current location of this status line; <code>null</code> if
-     *         not yet initialized.
+     * @return The current location of this status line; <code>null</code> if not yet initialized.
      */
     public Point getDisplayLocation() {
         if (label != null && statusLine != null) {
@@ -183,13 +177,13 @@ public class StatusLineContributionItem extends ContributionItem {
         updateMessageLabel();
         updateManager();
     }
-    
+
     public void setImage(Image image) {
         this.image = image;
         updateMessageLabel();
         updateManager();
     }
-    
+
     public void setErrorText(String errorText, String errorDetail) {
         this.errorText = errorText;
         this.errorDetail = errorDetail;
@@ -249,10 +243,11 @@ public class StatusLineContributionItem extends ContributionItem {
             }
         }
     }
-    
+
     private String escape(String text) {
-        if (text == null)
+        if (text == null) {
             return text;
+        }
         return LegacyActionTools.escapeMnemonics(text);
     }
 }

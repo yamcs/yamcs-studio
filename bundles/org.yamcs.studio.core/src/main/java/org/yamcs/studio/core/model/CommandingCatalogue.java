@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
@@ -28,14 +29,13 @@ import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.protobuf.Rest.ListCommandInfoResponse;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
-import org.yamcs.studio.core.ConnectionManager;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class CommandingCatalogue implements Catalogue {
+public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(CommandingCatalogue.class.getName());
 
@@ -76,11 +76,42 @@ public class CommandingCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioConnect() {
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("cmdhistory", "subscribe"));
-        webSocketClient.sendMessage(new WebSocketRequest("cqueues", "subscribe"));
+    public void onYamcsConnected() {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        yamcsClient.subscribe(new WebSocketRequest("cmdhistory", "subscribe"), this);
+        yamcsClient.subscribe(new WebSocketRequest("cqueues", "subscribe"), this);
         initialiseState();
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasCommand()) {
+            CommandHistoryEntry cmdhistEntry = msg.getCommand();
+            cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
+        }
+
+        if (msg.hasCommandQueueEvent()) {
+            CommandQueueEvent queueEvent = msg.getCommandQueueEvent();
+            switch (queueEvent.getType()) {
+            case COMMAND_ADDED:
+                queueListeners.forEach(l -> l.commandAdded(queueEvent.getData()));
+                break;
+            case COMMAND_REJECTED:
+                queueListeners.forEach(l -> l.commandRejected(queueEvent.getData()));
+                break;
+            case COMMAND_SENT:
+                queueListeners.forEach(l -> l.commandSent(queueEvent.getData()));
+                break;
+            default:
+                log.log(Level.SEVERE, "Unsupported queue event type " + queueEvent.getType());
+            }
+        }
+
+        if (msg.hasCommandQueueInfo()) {
+            CommandQueueInfo queueInfo = msg.getCommandQueueInfo();
+            queuesByName.put(queueInfo.getName(), queueInfo);
+            queueListeners.forEach(l -> l.updateQueue(queueInfo));
+        }
     }
 
     @Override
@@ -90,43 +121,28 @@ public class CommandingCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         clearState();
     }
 
     private void initialiseState() {
-        loadMetaCommands();
+        log.fine("Fetching available commands");
+        YamcsClient restClient = YamcsPlugin.getYamcsClient();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        restClient.get("/mdb/" + instance + "/commands", null).whenComplete((data, exc) -> {
+            try {
+                ListCommandInfoResponse response = ListCommandInfoResponse.parseFrom(data);
+                processMetaCommands(response.getCommandList());
+            } catch (InvalidProtocolBufferException e) {
+                log.log(Level.SEVERE, "Failed to decode server response", e);
+            }
+        });
     }
 
     private void clearState() {
         metaCommands = Collections.emptyList();
         queuesByName.clear();
         commandsByQualifiedName.clear();
-    }
-
-    public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
-        cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
-    }
-
-    public void processCommandQueueInfo(CommandQueueInfo queueInfo) {
-        queuesByName.put(queueInfo.getName(), queueInfo);
-        queueListeners.forEach(l -> l.updateQueue(queueInfo));
-    }
-
-    public void processCommandQueueEvent(CommandQueueEvent queueEvent) {
-        switch (queueEvent.getType()) {
-        case COMMAND_ADDED:
-            queueListeners.forEach(l -> l.commandAdded(queueEvent.getData()));
-            break;
-        case COMMAND_REJECTED:
-            queueListeners.forEach(l -> l.commandRejected(queueEvent.getData()));
-            break;
-        case COMMAND_SENT:
-            queueListeners.forEach(l -> l.commandSent(queueEvent.getData()));
-            break;
-        default:
-            log.log(Level.SEVERE, "Unsupported queue event type " + queueEvent.getType());
-        }
     }
 
     public List<CommandInfo> getMetaCommands() {
@@ -139,21 +155,24 @@ public class CommandingCatalogue implements Catalogue {
 
     public CompletableFuture<byte[]> sendCommand(String processor, String commandName, IssueCommandRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request);
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request);
     }
 
     public CompletableFuture<byte[]> editQueue(CommandQueueInfo queue, EditCommandQueueRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
-        return yamcsClient.patch("/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(), request);
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.patch(
+                "/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(), request);
     }
 
     public CompletableFuture<byte[]> editQueuedCommand(CommandQueueEntry entry, EditCommandQueueEntryRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.patch(
-                "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName() + "/entries/" + entry.getUuid(), request);
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.patch(
+                "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName()
+                        + "/entries/" + entry.getUuid(),
+                request);
     }
 
     public synchronized void processMetaCommands(List<CommandInfo> metaCommands) {
@@ -167,21 +186,6 @@ public class CommandingCatalogue implements Catalogue {
         }
     }
 
-    private void loadMetaCommands() {
-        log.fine("Fetching available commands");
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
-        YamcsClient restClient = connectionManager.getYamcsClient();
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/commands", null).whenComplete((data, exc) -> {
-            try {
-                ListCommandInfoResponse response = ListCommandInfoResponse.parseFrom(data);
-                processMetaCommands(response.getCommandList());
-            } catch (InvalidProtocolBufferException e) {
-                log.log(Level.SEVERE, "Failed to decode server response", e);
-            }
-        });
-    }
-
     public String getCommandOrigin() {
         try {
             return InetAddress.getLocalHost().getHostName();
@@ -192,11 +196,14 @@ public class CommandingCatalogue implements Catalogue {
 
     public CompletableFuture<byte[]> updateCommandComment(String processor, CommandId cmdId, String newComment) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
 
         KeyValue keyValue = KeyValue.newBuilder().setKey("Comment").setValue(newComment).build();
-        UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId).addHistoryEntry(keyValue).build();
+        UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId)
+                .addHistoryEntry(keyValue).build();
 
-        return restClient.post("/processors/" + instance + "/" + processor + "/commandhistory" + cmdId.getCommandName(), request);
+        return yamcsClient.post(
+                "/processors/" + instance + "/" + processor + "/commandhistory" + cmdId.getCommandName(),
+                request);
     }
 }

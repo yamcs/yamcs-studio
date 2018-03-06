@@ -1,0 +1,2 @@
+The package does not mention the bundle name.
+This is intentional because we want the import package to be short inside CS-Studio scripts.

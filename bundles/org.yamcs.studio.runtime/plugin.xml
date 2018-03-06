@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            name="Yamcs Studio Runtime"
+            application="org.yamcs.studio.runtime.application">
+         <property
+               name="windowImages"
+               value="icons/logo16.png,icons/logo32.png,icons/logo48.png,icons/logo64.png,icons/logo128.png,icons/logo256.png"/>
+         <property
+               name="aboutText"
+               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+         <property
+               name="aboutImage"
+               value="icons/aboutSide.png"/>
+         <property
+               name="appName"
+               value="Yamcs Studio Runtime"/>
+      </product>
+   </extension>
+   
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+            class="org.yamcs.studio.runtime.Application">
+         </run>
+      </application>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Runtime"
+            class="org.yamcs.studio.runtime.RuntimePerspective"
+            id="org.yamcs.studio.runtime.perspective">
+      </perspective>
+   </extension>
+
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=file">
+         <toolbar id="additions"/>
+      </menuContribution>
+   </extension>
+   
+   <extension point="org.eclipse.ui.views">
+      <category
+            name="Yamcs Studio"
+            id="org.yamcs.studio">
+      </category>
+      <view
+            category="org.yamcs.studio"
+            class="org.yamcs.studio.runtime.RuntimeView"
+            id="org.yamcs.studio.runtime.RuntimeView"
+            name="Runtime"/>
+   </extension>
+</plugin>

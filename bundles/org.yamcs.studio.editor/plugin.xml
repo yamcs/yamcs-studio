@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.yamcs.studio.editor.application"
+            name="Yamcs Studio Editor">
+         <property
+               name="windowImages"
+               value="icons/logo16.png,icons/logo32.png,icons/logo48.png,icons/logo64.png,icons/logo128.png,icons/logo256.png"/>
+         <property
+               name="aboutText"
+               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+         <property
+               name="aboutImage"
+               value="icons/aboutSide.png"/>
+         <property
+               name="appName"
+               value="Yamcs Studio Editor"/>
+         <property
+               name="startupForegroundColor"
+               value="2F376D"/>
+         <property
+               name="startupMessageRect"
+               value="20,195,560,20"/>
+         <property
+               name="startupProgressRect"
+               value="20,215,560,15"/>
+         <property
+               name="introTitle"
+               value="Yamcs Studio Editor"/>
+         <property
+               name="introBrandingImage"
+               value="product:icons/logo64.png"/>
+         <property
+               name="introBrandingImageText"
+               value="Yamcs Studio Editor"/>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+      </product>
+   </extension>
+   
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications"
+         name="Yamcs Studio Editor">
+      <application>
+         <run
+               class="org.yamcs.studio.editor.Application">
+         </run>
+      </application>
+   </extension>
+
+   <extension point="org.eclipse.ui.activities">
+      <activity id="yamcsstudio.disableextensions" name="Hidden activities"/>
+      <!-- Hide the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.
+        We have our own richer modal for that. -->
+      <activityPatternBinding
+            activityId="yamcsstudio.disableextensions"
+            pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="*">
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.archive.ArchiveView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.eventlog.EventLogView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.alarms.active.ActiveAlarmsView">
+         </view>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.commanding.stack.CommandStackView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.monitoring.links.LinksView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+
+         <viewShortcut id="org.yamcs.studio.explorer.view"/>
+         <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
+         <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+      </perspectiveExtension>
+      
+      <!-- OPI Editor Perspective -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
+         <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
+      </perspectiveExtension>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <separator
+               name="css"
+               visible="true">
+         </separator>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=css">
+         <menu
+               icon="platform:/plugin/org.csstudio.ui.util/icons/processVariable.png"
+               id="org.csstudio.ui.menu.popup.processvariable"
+               label="Process Variable">
+            <visibleWhen>
+            <or>
+               <with variable="activeMenuSelection">
+                  <iterate>
+                     <adapt type="org.csstudio.csdata.ProcessVariable"/>
+                  </iterate>
+                  <and>
+                     <count value="+"/>
+                  </and>
+               </with>
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <adapt
+                           type="[Lorg.csstudio.csdata.ProcessVariable;">
+                     </adapt>
+                  </iterate>
+                  <and>
+                     <count value="+"/>
+                  </and>
+               </with>
+            </or>
+            </visibleWhen>
+            <separator
+                  name="main">
+            </separator>
+         </menu>
+      </menuContribution>
+   </extension>
+</plugin>

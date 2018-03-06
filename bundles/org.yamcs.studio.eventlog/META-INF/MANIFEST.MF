@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.yamcs.studio.eventlog.Activator
+Bundle-ActivationPolicy: lazy
+Bundle-Description: Yamcs Studio Event Log
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs Studio Event Log
+Bundle-SymbolicName: org.yamcs.studio.eventlog;singleton:=true
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.yamcs.studio.core,
+ org.yamcs.studio.core.ui,
+ org.yamcs.client,
+ org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Import-Package: com.csvreader

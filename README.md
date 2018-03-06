@@ -12,12 +12,12 @@ Below instructions are targeted at Yamcs Studio core contributors.
 
 ### Headless Build
 
-There are two different maven reactors (the first bundles up non-OSGI dependencies):
+There are two different maven reactors (the first bundles up non-OSGI dependencies). To run both:
 
 ```
-mvn -f p2deps/pom.xml clean install
-mvn clean install
+make
 ```
+
 
 ### Eclipse Development
 
@@ -37,9 +37,9 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 
 - All error signs should now be resolved. If not, try right-clicking the yamcs-studio project and choose `Maven > Update Project Configuration`.
 
-- Open `yamcs-studio.product` found in the project `org.yamcs.studio.repository`.
+- Open one of the `*.product` files found under `org.yamcs.studio.releng`.
 
-- Click `Launch an Eclipse Application`.
+- Click `Synchronize` followed by `Launch an Eclipse Application`.
 
 
 ### CI Status

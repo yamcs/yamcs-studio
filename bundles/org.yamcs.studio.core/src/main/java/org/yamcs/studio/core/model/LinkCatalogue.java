@@ -10,23 +10,23 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.EditLinkRequest;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.LinkEvent;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 
 /**
  * Provides access to aggregated state on yamcs data link information.
  * <p>
- * There should be only one long-lived instance of this class, which goes down together with the
- * application (same lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining
- * correct state accross connection-reconnects, so listeners only need to register once.
+ * There should be only one long-lived instance of this class, which goes down together with the application (same
+ * lifecycle as {@link YamcsPlugin}). This catalogue deals with maintaining correct state accross connection-reconnects,
+ * so listeners only need to register once.
  */
-public class LinkCatalogue implements Catalogue, InstanceListener {
+public class LinkCatalogue implements Catalogue, WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(LinkCatalogue.class.getName());
 
@@ -38,9 +38,44 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
     }
 
     @Override
-    public void onStudioConnect() {
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("links", "subscribe"));
+    public void onYamcsConnected() {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        yamcsClient.subscribe(new WebSocketRequest("links", "subscribe"), this);
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasLinkEvent()) {
+            LinkEvent linkEvent = msg.getLinkEvent();
+            LinkInfo incoming = linkEvent.getLinkInfo();
+
+            LinkId id = new LinkId(incoming);
+            switch (linkEvent.getType()) {
+            case REGISTERED:
+                linksById.put(id, incoming);
+                linkListeners.forEach(l -> l.linkRegistered(incoming));
+                break;
+            case UNREGISTERED:
+                LinkInfo linkInfo = linksById.get(id);
+                if (linkInfo == null) {
+                    log.warning(
+                            "Request to unregister unknown link " + incoming.getInstance() + "/" + incoming.getName());
+                } else {
+                    linksById.remove(id);
+                    linkListeners.forEach(l -> l.linkUnregistered(incoming));
+                }
+                break;
+            case UPDATED:
+                LinkInfo oldLinkInfo = linksById.put(id, incoming);
+                if (oldLinkInfo == null) {
+                    log.warning("Request to update unknown link " + incoming.getInstance() + "/" + incoming.getName());
+                }
+                linkListeners.forEach(l -> l.linkUpdated(linkEvent.getLinkInfo()));
+                break;
+            default:
+                log.warning("Unexpected link event " + linkEvent.getType());
+            }
+        }
     }
 
     @Override
@@ -49,13 +84,13 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
         clearState();
     }
 
     private void clearState() {
         linksById.clear();
-        linkListeners.forEach(l -> l.clearDataLinkData());
+        linkListeners.forEach(LinkListener::clearDataLinkData);
     }
 
     public void addLinkListener(LinkListener listener) {
@@ -69,44 +104,14 @@ public class LinkCatalogue implements Catalogue, InstanceListener {
         linkListeners.remove(listener);
     }
 
-    public void processLinkEvent(LinkEvent linkEvent) {
-        LinkInfo incoming = linkEvent.getLinkInfo();
-
-        LinkId id = new LinkId(incoming);
-        switch (linkEvent.getType()) {
-        case REGISTERED:
-            linksById.put(id, incoming);
-            linkListeners.forEach(l -> l.linkRegistered(incoming));
-            break;
-        case UNREGISTERED:
-            LinkInfo linkInfo = linksById.get(id);
-            if (linkInfo == null) {
-                log.warning("Request to unregister unknown link " + incoming.getInstance() + "/" + incoming.getName());
-            } else {
-                linksById.remove(id);
-                linkListeners.forEach(l -> l.linkUnregistered(incoming));
-            }
-            break;
-        case UPDATED:
-            LinkInfo oldLinkInfo = linksById.put(id, incoming);
-            if (oldLinkInfo == null) {
-                log.warning("Request to update unknown link " + incoming.getInstance() + "/" + incoming.getName());
-            }
-            linkListeners.forEach(l -> l.linkUpdated(linkEvent.getLinkInfo()));
-            break;
-        default:
-            log.warning("Unexpected link event " + linkEvent.getType());
-        }
-    }
-
     public CompletableFuture<byte[]> enableLink(String instance, String name) {
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("enabled").build();
         return yamcsClient.patch("/links/" + instance + "/" + name, req);
     }
 
     public CompletableFuture<byte[]> disableLink(String instance, String name) {
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("disabled").build();
         return yamcsClient.patch("/links/" + instance + "/" + name, req);
     }

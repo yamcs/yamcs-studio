@@ -8,20 +8,18 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.api.YamcsApiException;
 import org.yamcs.api.rest.BulkRestDataReceiver;
+import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
-import org.yamcs.protobuf.Yamcs.EventOrBuilder;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.WebSocketRegistrar;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.YamcsClient;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-
-public class EventCatalogue implements Catalogue {
+public class EventCatalogue implements Catalogue, WebSocketClientCallback {
 
     private Set<EventListener> eventListeners = new CopyOnWriteArraySet<>();
 
@@ -38,9 +36,16 @@ public class EventCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioConnect() {
-        WebSocketRegistrar webSocketClient = ConnectionManager.getInstance().getWebSocketClient();
-        webSocketClient.sendMessage(new WebSocketRequest("events", "subscribe"));
+    public void onYamcsConnected() {
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        yamcsClient.subscribe(new WebSocketRequest("events", "subscribe"), this);
+    }
+
+    @Override
+    public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasEvent()) {
+            processEvent(msg.getEvent());
+        }
     }
 
     @Override
@@ -50,7 +55,7 @@ public class EventCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
     }
 
     public void processEvent(Event event) {
@@ -59,13 +64,13 @@ public class EventCatalogue implements Catalogue {
 
     public CompletableFuture<byte[]> fetchLatestEvents(String instance) {
         String resource = "/archive/" + instance + "/events";
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.get(resource, null);
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.get(resource, null);
     }
 
     /**
-     * Downloads a batch of events in the specified time range. These events are not
-     * distributed to registered listeners, but only to the provided listener.
+     * Downloads a batch of events in the specified time range. These events are not distributed to registered
+     * listeners, but only to the provided listener.
      */
     public CompletableFuture<Void> downloadEvents(long start, long stop, BulkEventListener listener) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
@@ -78,27 +83,26 @@ public class EventCatalogue implements Catalogue {
         } else if (stop != TimeEncoding.INVALID_INSTANT) {
             resource += "?stop=" + stop;
         }
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         EventBatchGenerator batchGenerator = new EventBatchGenerator(listener);
-        return restClient.streamGet(resource, null, batchGenerator).whenComplete((data, exc) -> {
+        return yamcsClient.streamGet(resource, null, batchGenerator).whenComplete((data, exc) -> {
             if (!batchGenerator.events.isEmpty()) {
                 listener.processEvents(new ArrayList<>(batchGenerator.events));
             }
         });
     }
 
-
-    public CompletableFuture<byte[]> createEvent(String source, int sequenceNumber, String message, long generationTime, long receptionTime, EventSeverity severity)
-    {
-    	String instance = ManagementCatalogue.getCurrentYamcsInstance();
+    public CompletableFuture<byte[]> createEvent(String source, int sequenceNumber, String message, long generationTime,
+            long receptionTime, EventSeverity severity) {
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         String resource = "/archive/" + instance + "/events/";
-        
-        Event event= Event.newBuilder().setSource(source).setSeqNumber(sequenceNumber)
-        		.setMessage(message).setGenerationTime(generationTime)
-        		.setReceptionTime(receptionTime).setSeverity(severity).build();
-        
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.post(resource, event);
+
+        Event event = Event.newBuilder().setSource(source).setSeqNumber(sequenceNumber)
+                .setMessage(message).setGenerationTime(generationTime)
+                .setReceptionTime(receptionTime).setSeverity(severity).build();
+
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.post(resource, event);
     }
 
     private static class EventBatchGenerator implements BulkRestDataReceiver {

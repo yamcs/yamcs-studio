@@ -6,11 +6,10 @@ import java.util.concurrent.CompletableFuture;
 import org.yamcs.api.rest.BulkRestDataReceiver;
 import org.yamcs.protobuf.Rest.CreateTagRequest;
 import org.yamcs.protobuf.Rest.EditTagRequest;
-import org.yamcs.studio.core.ConnectionManager;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.web.URLBuilder;
-import org.yamcs.studio.core.web.YamcsClient;
+import org.yamcs.studio.core.client.URLBuilder;
+import org.yamcs.studio.core.client.YamcsClient;
 
 /**
  * Groups generic archive operations (index, tags).
@@ -22,7 +21,7 @@ public class ArchiveCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioConnect() {
+    public void onYamcsConnected() {
     }
 
     @Override
@@ -30,7 +29,7 @@ public class ArchiveCatalogue implements Catalogue {
     }
 
     @Override
-    public void onStudioDisconnect() {
+    public void onYamcsDisconnected() {
     }
 
     public CompletableFuture<Void> downloadCommands(TimeInterval interval, BulkRestDataReceiver receiver) {
@@ -41,8 +40,8 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.streamGet(urlb.toString(), null, receiver);
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.streamGet(urlb.toString(), null, receiver);
     }
 
     public CompletableFuture<Void> downloadIndexes(TimeInterval interval, BulkRestDataReceiver receiver) {
@@ -54,24 +53,24 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
-        return restClient.streamGet(urlb.toString(), null, receiver);
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.streamGet(urlb.toString(), null, receiver);
     }
 
     public CompletableFuture<byte[]> createTag(CreateTagRequest request) {
-        YamcsClient restClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return restClient.post("/archive/" + instance + "/tags", request);
+        return yamcsClient.post("/archive/" + instance + "/tags", request);
     }
 
     public CompletableFuture<byte[]> editTag(long tagTime, int tagId, EditTagRequest request) {
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request);
     }
 
     public CompletableFuture<byte[]> deleteTag(long tagTime, int tagId) {
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null);
     }
@@ -85,7 +84,7 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient yamcsClient = ConnectionManager.requireYamcsClient();
+        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get(urlb.toString(), null);
     }
 }

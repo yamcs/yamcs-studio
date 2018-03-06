@@ -3,9 +3,8 @@ package org.yamcs.studio.explorer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.ResourceMapping;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IAdapterManager;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -71,11 +70,10 @@ public class OpenActionProvider extends CommonActionProvider {
         Object o = ss.getFirstElement();
 
         // first try IResource
-        IAdapterManager manager = Platform.getAdapterManager();
-        IAdaptable openable = manager.getAdapter(o, IResource.class);
+        IAdaptable openable = Adapters.adapt(o, IResource.class);
         // otherwise try ResourceMapping
         if (openable == null) {
-            openable = manager.getAdapter(o, ResourceMapping.class);
+            openable = Adapters.adapt(o, ResourceMapping.class);
         } else if (((IResource) openable).getType() != IResource.FILE) {
             openable = null;
         }
