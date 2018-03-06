@@ -114,12 +114,12 @@ public class DataLinkTableViewer extends TableViewer {
 
             @Override
             public void widgetSelected(SelectionEvent arg0) {
-                LinkInfo li = (LinkInfo) (getTable().getSelection()[0].getData());
-                if (li == null)
+                DataLinkRecord rec = (DataLinkRecord) (getTable().getSelection()[0].getData());
+                if (rec == null)
                     return;
 
                 LinkCatalogue catalogue = LinkCatalogue.getInstance();
-                catalogue.enableLink(li.getInstance(), li.getName()).whenComplete((data, exc) -> {
+                catalogue.enableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName()).whenComplete((data, exc) -> {
                     if (exc != null) {
                         getTable().getDisplay().asyncExec(() -> {
                             showMessage(getTable().getShell(), exc.getMessage());
