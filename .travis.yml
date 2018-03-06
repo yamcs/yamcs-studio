@@ -6,8 +6,7 @@ cache:
     - $HOME/.m2
 
 install:
-  - git clone https://github.com/yamcs/yamcs
-  - git branch 3.4.x
+  - git clone --branch 3.4.x --depth 1 https://github.com/yamcs/yamcs
   - mvn install -DskipTests -f yamcs/pom.xml
 
 # Prevent Travis from automatically running mvn install
