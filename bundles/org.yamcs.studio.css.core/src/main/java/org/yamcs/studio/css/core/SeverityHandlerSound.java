@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.yamcs.protobuf.Pvalue.MonitoringResult;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.core.ui.SoundSystem;
@@ -64,10 +63,6 @@ public class SeverityHandlerSound implements ParameterListener {
                 SoundSystem.beep();
             }
         }
-    }
-
-    @Override
-    public void onInvalidIdentification(NamedObjectId id) {
     }
 
     @Override

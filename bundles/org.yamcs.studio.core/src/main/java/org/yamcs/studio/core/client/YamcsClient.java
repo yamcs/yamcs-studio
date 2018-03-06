@@ -27,6 +27,7 @@ import org.yamcs.api.ws.ConnectionListener;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -63,7 +64,7 @@ public class YamcsClient implements WebSocketClientCallback {
     private List<ConnectionListener> connectionListeners = new CopyOnWriteArrayList<>();
     private List<WebSocketClientCallback> subscribers = new CopyOnWriteArrayList<>();
 
-    private MessageBundler messageBundler;
+    private ParameterSubscriptionBundler parameterSubscriptionBundler;
 
     // Keep track of ongoing jobs, to respond to user cancellation requests.
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
@@ -84,8 +85,8 @@ public class YamcsClient implements WebSocketClientCallback {
             });
         }, 2000, 1000, TimeUnit.MILLISECONDS);
 
-        messageBundler = new MessageBundler(this);
-        executor.scheduleWithFixedDelay(messageBundler, 200, 400, TimeUnit.MILLISECONDS);
+        parameterSubscriptionBundler = new ParameterSubscriptionBundler(this);
+        executor.scheduleWithFixedDelay(parameterSubscriptionBundler, 200, 400, TimeUnit.MILLISECONDS);
     }
 
     public void addConnectionListener(ConnectionListener connectionListener) {
@@ -188,7 +189,7 @@ public class YamcsClient implements WebSocketClientCallback {
     @Override
     public void connected() {
         log.info("Connected to " + yprops);
-        messageBundler.clearQueue();
+        parameterSubscriptionBundler.clearQueue();
 
         connected = true;
         for (ConnectionListener listener : connectionListeners) {
@@ -240,15 +241,26 @@ public class YamcsClient implements WebSocketClientCallback {
         return instances.stream().map(r -> r.getName()).collect(Collectors.toList());
     }
 
-    public void subscribe(WebSocketRequest req, WebSocketClientCallback messageHandler) {
+    public CompletableFuture<WebSocketReplyData> subscribe(WebSocketRequest req,
+            WebSocketClientCallback messageHandler) {
         if (!subscribers.contains(messageHandler)) {
             subscribers.add(messageHandler);
         }
-        messageBundler.queue(req);
+        if (req instanceof ParameterWebSocketRequest) {
+            parameterSubscriptionBundler.queue((ParameterWebSocketRequest) req);
+            return null; // TODO ?
+        } else {
+            return wsclient.sendRequest(req);
+        }
     }
 
-    public void sendWebSocketMessage(WebSocketRequest req) {
-        messageBundler.queue(req);
+    public CompletableFuture<WebSocketReplyData> sendWebSocketMessage(WebSocketRequest req) {
+        if (req instanceof ParameterWebSocketRequest) {
+            parameterSubscriptionBundler.queue((ParameterWebSocketRequest) req);
+            return null; // TODO ?
+        } else {
+            return wsclient.sendRequest(req);
+        }
     }
 
     @Override

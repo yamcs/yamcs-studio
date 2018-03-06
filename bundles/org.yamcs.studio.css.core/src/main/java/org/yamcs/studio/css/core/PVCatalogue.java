@@ -100,11 +100,6 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
         }
     }
 
-    @Override
-    public void onInvalidIdentification(NamedObjectId id) {
-        // pvReadersById.get(id).reportException(new InvalidIdentification(id));
-    }
-
     private void reportConnectionState() {
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
         pvReadersById.forEach((id, pvReader) -> {

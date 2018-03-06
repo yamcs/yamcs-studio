@@ -215,10 +215,6 @@ public class PVComposite extends Composite implements ParameterListener {
     public void mdbUpdated() {
     }
 
-    @Override
-    public void onInvalidIdentification(NamedObjectId id) {
-    }
-
     // TODO move this onto a digest thread. We shouldn't update GUI for _every_ value.
     @Override
     public void onParameterData(ParameterData pdata) {

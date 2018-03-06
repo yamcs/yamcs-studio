@@ -149,12 +149,6 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
         }
     }
 
-    @Override
-    public void onInvalidIdentification(NamedObjectId id) {
-        log.fine("No parameter for id " + id);
-        parameterListeners.forEach(l -> l.onInvalidIdentification(id));
-    }
-
     public void unsubscribeParameters(NamedObjectList idList) {
         YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         if (yamcsClient.isConnected()) {
