@@ -22,7 +22,7 @@
       </editor>
    </extension>
    <extension
-      point="org.eclipse.ui.perspectives">
+         point="org.eclipse.ui.perspectives">
       <perspective
             class="org.csstudio.opibuilder.editor.OPIEditorPerspective"
             icon="icons/placeholder.gif"
@@ -246,4 +246,45 @@
          </enablement>
       </decorator>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.csstudio.opibuilder.editor.contributions.activeEditor">
+         <with
+               variable="activeEditorId">
+            <equals
+                  value="org.csstudio.opibuilder.OPIEditor">
+            </equals>
+         </with>
+      </definition>
+      <definition
+            id="org.csstudio.opibuilder.editor.contributions.activeEditorPerspective">
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+            <equals
+                  value="org.csstudio.opibuilder.opieditor">
+            </equals>
+         </with>
+      </definition>
+   </extension>
+   <!--extension  This works but commented out as long as we have other actions.
+                  Goal is to replace all actions with normal menu entries so that we
+                  could hide them in runtime perspective.
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar id="yamcs-studio.toolbar2">
+            <command
+                  commandId="org.csstudio.opibuilder.runopi"
+                  icon="icons/run.gif">
+               <visibleWhen>
+                  <and>
+                     <reference definitionId="org.csstudio.opibuilder.editor.contributions.activeEditor" />
+                     <reference definitionId="org.csstudio.opibuilder.editor.contributions.activeEditorPerspective" />
+                  </and>
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension-->
 </plugin>
