@@ -118,4 +118,14 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         IFileUtil.getInstance().restoreState(memento);
         return Status.OK_STATUS;
     }
+
+    @Override
+    public boolean isDurableFolder(String perspectiveId, String folderId) {
+        // This method no longer does anything...
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=355750
+
+        // Otherwise could have been used to prevent the part stack closing when the last
+        // view is closed in runtime mode.
+        return super.isDurableFolder(perspectiveId, folderId);
+    }
 }
