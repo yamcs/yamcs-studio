@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ActivationPolicy: lazy
+Bundle-Description: Yamcs Studio Default Product
+Bundle-ManifestVersion: 2
+Bundle-Name: Event Viewer
+Bundle-SymbolicName: org.yamcs.studio.runtime;singleton:=true
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 1.0.0.qualifier
+Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Require-Bundle: org.yamcs.studio.runtime.base
