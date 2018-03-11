@@ -13,7 +13,6 @@ import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -40,7 +39,7 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             handler.setFormatter(new UserLogFormatter());
         }
 
-        // Now that we now that the user will see it:
+        // Now that we know that the user will see it:
         Logger log = Logger.getLogger(getClass().getName());
         log.info(Platform.getProduct().getName() + " v" + Platform.getProduct().getDefiningBundle().getVersion());
         log.info("Workspace: " + Platform.getInstanceLocation().getURL().getPath());
@@ -84,19 +83,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         defaultDs.putDataSource(new ParameterDataSourceProvider());
         defaultDs.setConfiguration(new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
         PVManager.setDefaultDataSource(defaultDs);
-    }
-
-    @Override
-    public void postWindowRestore() throws WorkbenchException {
-    }
-
-    @Override
-    public void postWindowOpen() {
-    }
-
-    @Override
-    public boolean preWindowShellClose() {
-        return super.preWindowShellClose();
     }
 
     @Override

@@ -123,7 +123,6 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
             }
         });
         addRetargetAction(a);
-
     }
 
     @Override

@@ -135,6 +135,9 @@
       
       <!-- OPI Editor Perspective -->
       <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
+         <actionSet
+               id="org.csstudio.opibuilder.editor.actionSet">
+         </actionSet>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"

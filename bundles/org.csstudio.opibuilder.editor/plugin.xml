@@ -163,11 +163,13 @@
       <actionSet
             id="org.csstudio.opibuilder.editor.actionSet"
             label="OPI Builder Actions"
-            visible="true">
+            visible="false">
          <action
                class="org.csstudio.opibuilder.actions.RunOPIAction"
                definitionId="org.csstudio.opibuilder.runopi"
+               toolbarPath="Normal/additions"
                id="org.csstudio.opibuilder.runOPIAction"
+               icon="icons/run.gif"
                label="Launch Display Runner"
                style="push">
          </action>
@@ -245,43 +247,5 @@
             </or>
          </enablement>
       </decorator>
-   </extension>
-   <extension
-         point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="org.csstudio.opibuilder.editor.contributions.activeEditor">
-         <with
-               variable="activeEditorId">
-            <equals
-                  value="org.csstudio.opibuilder.OPIEditor">
-            </equals>
-         </with>
-      </definition>
-      <definition
-            id="org.csstudio.opibuilder.editor.contributions.activeEditorPerspective">
-         <with
-               variable="activeWorkbenchWindow.activePerspective">
-            <equals
-                  value="org.csstudio.opibuilder.opieditor">
-            </equals>
-         </with>
-      </definition>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar id="yamcs-studio.toolbar2">
-            <command
-                  commandId="org.csstudio.opibuilder.runopi"
-                  icon="icons/run.gif">
-               <visibleWhen>
-                  <and>
-                     <reference definitionId="org.csstudio.opibuilder.editor.contributions.activeEditorPerspective" />
-                  </and>
-               </visibleWhen>
-            </command>
-         </toolbar>
-      </menuContribution>
    </extension>
 </plugin>

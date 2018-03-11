@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.ui,
  org.csstudio.workspace,
  org.csstudio.ui.util,
  org.csstudio.opibuilder,
- org.diirt
+ org.diirt,
+ org.eclipse.jface
 Export-Package: org.yamcs.studio.editor.base
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

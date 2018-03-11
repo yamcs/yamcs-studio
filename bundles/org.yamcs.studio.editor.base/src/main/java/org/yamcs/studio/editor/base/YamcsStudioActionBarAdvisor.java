@@ -110,7 +110,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
      * bar, and the action actually implements the handler. The actions also provide the dynamic enablement.
      */
     @Override
-    protected void makeActions(final IWorkbenchWindow window) {
+    protected void makeActions(IWorkbenchWindow window) {
         /*
          * FILE
          */
