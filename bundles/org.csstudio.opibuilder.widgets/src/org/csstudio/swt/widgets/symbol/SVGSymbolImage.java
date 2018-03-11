@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.csstudio.swt.widgets.Activator;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
@@ -58,6 +58,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         super(sip, runMode);
     }
 
+    @Override
     public void dispose() {
         super.dispose();
         if (svgHandler != null) {
@@ -66,6 +67,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         }
     }
 
+    @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (svgHandler == null) {
@@ -82,6 +84,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
     // Image color & paint
     // ************************************************************
 
+    @Override
     public void paintFigure(final Graphics gfx) {
         if (disposed || loadingImage || originalImageData == null) {
             return;
@@ -200,6 +203,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
             resizeImage();
     }
 
+    @Override
     public Dimension getAutoSizedDimension() {
         // if (imgDimension == null)
         // generateSVGData();
@@ -210,6 +214,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
     // Animated images
     // ************************************************************
 
+    @Override
     public void setAnimationDisabled(final boolean stop) {
         super.setAnimationDisabled(stop);
         if (svgHandler == null) {
@@ -225,6 +230,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         }
     }
 
+    @Override
     public void setAlignedToNearestSecond(boolean aligned) {
         super.setAlignedToNearestSecond(aligned);
         if (svgHandler == null) {
@@ -237,6 +243,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
     // Image loading
     // ************************************************************
 
+    @Override
     public void syncLoadImage() {
         svgHandler = null;
         failedToLoadDocument = false;
@@ -248,6 +255,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         }
     }
 
+    @Override
     public void asyncLoadImage() {
         if (imagePath == null)
             return;
@@ -255,6 +263,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         loadImage(new IJobErrorHandler() {
             private int maxAttempts = 5;
 
+            @Override
             public void handleError(Exception exception) {
                 if (maxAttempts-- > 0) {
                     try {
@@ -287,6 +296,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
                     }
                     loadingImage = false;
                     Display.getCurrent().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             fireSymbolImageLoaded();
                         }
@@ -319,6 +329,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
                 resetData();
             }
             svgHandler.setRenderListener(new SVGHandlerListener() {
+                @Override
                 public void newImage(final Image image) {
                     if (disposed) {
                         return;
