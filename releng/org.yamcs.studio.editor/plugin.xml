@@ -189,6 +189,7 @@
                visible="false"
                closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+         <viewShortcut id="org.yamcs.studio.explorer.view"/>
          <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
    </extension>

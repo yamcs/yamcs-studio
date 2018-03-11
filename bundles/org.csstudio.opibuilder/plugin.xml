@@ -317,13 +317,6 @@
          </adapter>
       </factory>
    </extension>
-   <extension
-         point="org.csstudio.openfile.openDisplay">
-      <openDisplay
-            class="org.csstudio.opibuilder.actions.ExternalOpenDisplayAction"
-            file_extension="opi">
-      </openDisplay>
-   </extension>
    <extension point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"

@@ -3,15 +3,11 @@ package org.yamcs.studio.editor.base;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.csstudio.utility.file.IFileUtil;
 import org.diirt.datasource.CompositeDataSource;
 import org.diirt.datasource.CompositeDataSourceConfiguration;
 import org.diirt.datasource.PVManager;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchPage;
@@ -120,18 +116,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }
             win.setActivePage(null);
         }
-    }
-
-    @Override
-    public IStatus saveState(IMemento memento) {
-        IFileUtil.getInstance().saveState(memento);
-        return Status.OK_STATUS;
-    }
-
-    @Override
-    public IStatus restoreState(IMemento memento) {
-        IFileUtil.getInstance().restoreState(memento);
-        return Status.OK_STATUS;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.csstudio.opibuilder.util;
 
-import java.net.URI;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -11,7 +10,6 @@ import org.csstudio.opibuilder.runmode.OPIShell;
 import org.csstudio.opibuilder.widgetActions.OpenFileAction;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
 import org.csstudio.ui.util.dialogs.ResourceSelectionDialog;
-import org.csstudio.utility.file.IFileUtil;
 import org.csstudio.utility.singlesource.SingleSourcePlugin;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -52,17 +50,16 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
      *            Action for opening a file
      */
     @Override
-    @SuppressWarnings("nls")
     protected void iOpenFileActionRun(final OpenFileAction openFileAction) {
-        final UIJob job = new UIJob(openFileAction.getDescription()) {
+        UIJob job = new UIJob(openFileAction.getDescription()) {
             @Override
             public IStatus runInUIThread(final IProgressMonitor monitor) {
                 // Open editor on new file.
-                final IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                 if (dw == null)
                     return Status.OK_STATUS; // Not really OK..
                 try {
-                    final IWorkbenchPage page = Objects.requireNonNull(dw.getActivePage());
+                    IWorkbenchPage page = Objects.requireNonNull(dw.getActivePage());
 
                     IPath absolutePath = openFileAction.getPath();
                     if (!absolutePath.isAbsolute())
@@ -86,10 +83,6 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
                             throw new Exception("Cannot open local file system location " + openFileAction.getPath(),
                                     e);
                         }
-                    } else { // Attempt to download URL into local file (since IDE.openEditor needs local file)
-                        final URI uri = new URI(openFileAction.getPath().toString());
-                        file = IFileUtil.getInstance().createURLFileResource(uri);
-                        IDE.openEditor(page, file, true);
                     }
                 } catch (Exception e) {
                     final String message = "Failed to open file " + openFileAction.getPath();
@@ -104,22 +97,19 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
     }
 
     @Override
-    protected void iAddPaintListener(Control control,
-            PaintListener paintListener) {
+    protected void iAddPaintListener(Control control, PaintListener paintListener) {
         control.addPaintListener(paintListener);
 
     }
 
     @Override
-    protected void iRemovePaintListener(Control control,
-            PaintListener paintListener) {
+    protected void iRemovePaintListener(Control control, PaintListener paintListener) {
         control.removePaintListener(paintListener);
 
     }
 
     @Override
-    protected void iRegisterRCPRuntimeActions(ActionRegistry actionRegistry,
-            IOPIRuntime opiRuntime) {
+    protected void iRegisterRCPRuntimeActions(ActionRegistry actionRegistry, IOPIRuntime opiRuntime) {
         actionRegistry.registerAction(new PrintDisplayAction(opiRuntime));
     }
 
@@ -134,8 +124,7 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
     }
 
     @Override
-    protected IPath iRcpGetPathFromWorkspaceFileDialog(IPath startPath,
-            String[] extensions) {
+    protected IPath iRcpGetPathFromWorkspaceFileDialog(IPath startPath, String[] extensions) {
         ResourceSelectionDialog rsDialog = new ResourceSelectionDialog(
                 Display.getCurrent().getActiveShell(), "Choose File", extensions);
         if (startPath != null)
@@ -148,8 +137,7 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
     }
 
     @Override
-    protected void iOpenEditor(IWorkbenchPage page, IPath path)
-            throws Exception {
+    protected void iOpenEditor(IWorkbenchPage page, IPath path) throws Exception {
         SingleSourcePlugin.getUIHelper().openEditor(page, path);
     }
 
