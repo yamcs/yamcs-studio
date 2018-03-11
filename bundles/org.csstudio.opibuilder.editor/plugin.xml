@@ -36,7 +36,7 @@
             categoryId="org.eclipse.ui.category.edit"
             description="Run the OPI file currently in the editor"
             id="org.csstudio.opibuilder.runopi"
-            name="Run OPI">
+            name="Launch Display Runner">
       </command>
       <command
             categoryId="org.eclipse.ui.category.edit"
@@ -168,7 +168,7 @@
                class="org.csstudio.opibuilder.actions.RunOPIAction"
                definitionId="org.csstudio.opibuilder.runopi"
                id="org.csstudio.opibuilder.runOPIAction"
-               label="Run OPI"
+               label="Launch Display Runner"
                style="push">
          </action>
       </actionSet>
@@ -267,9 +267,7 @@
          </with>
       </definition>
    </extension>
-   <!--extension  This works but commented out as long as we have other actions.
-                  Goal is to replace all actions with normal menu entries so that we
-                  could hide them in runtime perspective.
+   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
@@ -279,12 +277,11 @@
                   icon="icons/run.gif">
                <visibleWhen>
                   <and>
-                     <reference definitionId="org.csstudio.opibuilder.editor.contributions.activeEditor" />
                      <reference definitionId="org.csstudio.opibuilder.editor.contributions.activeEditorPerspective" />
                   </and>
                </visibleWhen>
             </command>
          </toolbar>
       </menuContribution>
-   </extension-->
+   </extension>
 </plugin>

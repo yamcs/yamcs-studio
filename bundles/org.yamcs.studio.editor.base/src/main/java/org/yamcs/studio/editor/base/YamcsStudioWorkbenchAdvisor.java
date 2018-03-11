@@ -41,8 +41,10 @@ import static org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_WIZBAN_
 import java.net.URL;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.PreferenceManager;
@@ -173,9 +175,19 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
     }
 
-    // Important. Without this the 'Display Explorer' view only shows content when right-clicking in it...
     @Override
     public IAdaptable getDefaultPageInput() {
         return ResourcesPlugin.getWorkspace().getRoot();
+    }
+
+    @Override
+    public boolean preShutdown() {
+        try {
+            ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
+        } catch (CoreException e) {
+            System.err.println("Failed to save workspace pre-shutdown: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return true;
     }
 }
