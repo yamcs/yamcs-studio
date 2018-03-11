@@ -12,7 +12,6 @@ import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -59,16 +58,7 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
             // IPath workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
             RunModeService.openDisplay(workspacePath, Optional.empty(), DisplayMode.NEW_TAB, Optional.empty());
         } else {
-            boolean confirm = MessageDialog.openQuestion(null, "Problems Opening Editor", "This file cannot be opened"
-                    + " in the OPI Runtime perspective. Do you wish to switch to the OPI Builder perspective?");
-            if (confirm) {
-                IWorkbench workbench = page.getWorkbenchWindow().getWorkbench();
-                IPerspectiveDescriptor descriptor = workbench
-                        .getPerspectiveRegistry()
-                        .findPerspectiveWithId(OPI_BUILDER_PERSPECTIVE_ID);
-                workbench.getActiveWorkbenchWindow().getActivePage().setPerspective(descriptor);
-                openFile(file);
-            }
+            MessageDialog.openWarning(null, "Problems Opening File", "This file cannot be opened in Display Runner.");
         }
     }
 

@@ -10,7 +10,7 @@
             class="org.csstudio.opibuilder.runmode.OPIRunnerPerspective"
             icon="icons/OPIBuilder.png"
             id="org.csstudio.opibuilder.OPIRuntime.perspective"
-            name="%OPIRunner">
+            name="Display Runner">
       </perspective>
    </extension>
    <extension

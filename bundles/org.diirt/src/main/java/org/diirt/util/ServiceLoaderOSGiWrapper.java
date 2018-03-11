@@ -73,28 +73,22 @@ public class ServiceLoaderOSGiWrapper {
     private static <T> List<T> loadOSGi(Class<T> serviceClazz) {
         // TODO: improve logging
         Object bundle = osgi.getBundle(serviceClazz);
-        System.out.println("Found bundle " + bundle);
         osgi.start(bundle);
         Object bundleContext = osgi.getBundleContext(bundle);
         Object[] bundles = osgi.getBundles(bundleContext);
-        System.out.println("Found bundle " + bundleContext);
-        System.out.println("Found bundles " + bundles);
         Map<Object, List<String>> bundleToServiceClassnamesMap = new HashMap<>();
         List<T> providers = new ArrayList<>();
         for (Object providerBundle : bundles) {
             URL url = osgi.getEntry(providerBundle, "META-INF/services/" + serviceClazz.getName());
             if (url != null) {
-                System.out.println("Found " + url + " in " + providerBundle);
                 List<String> classnames = readAllLines(url);
                 if (classnames != null) {
                     bundleToServiceClassnamesMap.put(providerBundle, classnames);
-                    System.out.println("Providers " + classnames);
                     for (String classname : classnames) {
                         Class<?> providerClass = osgi.loadClass(providerBundle, classname);
                         if (providerClass != null) {
                             try {
                                 T provider = serviceClazz.cast(providerClass.newInstance());
-                                System.out.println("Provider instance " + provider);
                                 providers.add(provider);
                             } catch (InstantiationException | IllegalAccessException e) {
                                 // TODO Auto-generated catch block

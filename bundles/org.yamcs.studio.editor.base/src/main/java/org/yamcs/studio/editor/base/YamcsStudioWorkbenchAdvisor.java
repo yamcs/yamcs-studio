@@ -41,10 +41,8 @@ import static org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_WIZBAN_
 import java.net.URL;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.PreferenceManager;
@@ -93,16 +91,6 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
     @Override
     public String getInitialWindowPerspectiveId() {
         return IDs.OPI_EDITOR_PERSPECTIVE;
-    }
-
-    @Override
-    public boolean preShutdown() {
-        try {
-            ResourcesPlugin.getWorkspace().save(true, new NullProgressMonitor());
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
-        return true;
     }
 
     /**

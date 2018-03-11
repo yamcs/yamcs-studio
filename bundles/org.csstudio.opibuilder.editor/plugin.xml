@@ -27,7 +27,7 @@
             class="org.csstudio.opibuilder.editor.OPIEditorPerspective"
             icon="icons/placeholder.gif"
             id="org.csstudio.opibuilder.opieditor"
-            name="OPI Builder">
+            name="Display Builder">
       </perspective>
    </extension>
    <extension
