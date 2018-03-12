@@ -20,22 +20,23 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-/**The dedicated color type which supports predefined color name in OPI builder color file.
- * If the color name doesn't exist in the color file, the color value is null.
+/**
+ * The dedicated color type which supports predefined color name in OPI builder color file. If the color name doesn't
+ * exist in the color file, the color value is null.
+ * 
  * @author Xihui Chen
  *
  */
 public class OPIColor implements IAdaptable {
 
     private static final RGB TRANSPARENT_COLOR = new RGB(253,
-                    254, 252);
+            254, 252);
 
     private String colorName;
 
     private RGB colorValue;
 
     private boolean preDefined = false;
-
 
     static ImageRegistry imageRegistry = new ImageRegistry(DisplayUtils.getDisplay());
     private static int imageCount = 0;
@@ -48,14 +49,13 @@ public class OPIColor implements IAdaptable {
         preDefined = true;
     }
 
-    public OPIColor(RGB rgb){
+    public OPIColor(RGB rgb) {
         setColorValue(rgb);
     }
 
-    public OPIColor(int red, int green, int blue){
+    public OPIColor(int red, int green, int blue) {
         this(new RGB(red, green, blue));
     }
-
 
     public OPIColor(String name, RGB rgb, boolean predefined) {
         this.colorName = name;
@@ -64,8 +64,7 @@ public class OPIColor implements IAdaptable {
     }
 
     /**
-     * @return the name of color if it is a predefined color macro;
-     * otherwise, it is a string of the RGB values.
+     * @return the name of color if it is a predefined color macro; otherwise, it is a string of the RGB values.
      */
     public String getColorName() {
         return colorName;
@@ -81,7 +80,7 @@ public class OPIColor implements IAdaptable {
     /**
      * @return the swt color. No dispose is needed, the system will handle the dispose.
      */
-    public Color getSWTColor(){
+    public Color getSWTColor() {
         return CustomMediaFactory.getInstance().getColor(colorValue);
     }
 
@@ -106,7 +105,7 @@ public class OPIColor implements IAdaptable {
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if(adapter == IWorkbenchAdapter.class)
+        if (adapter == IWorkbenchAdapter.class)
             return adapter.cast(new IWorkbenchAdapter() {
 
                 @Override
@@ -123,11 +122,11 @@ public class OPIColor implements IAdaptable {
                 public ImageDescriptor getImageDescriptor(Object object) {
 
                     Image image = imageRegistry.get(getID());
-                    if(image == null){
+                    if (image == null) {
                         image = createIcon(getRGBValue());
-                        if(imageCount >= MAX_IMG_COUNT){
+                        if (imageCount >= MAX_IMG_COUNT) {
                             imageRegistry.dispose();
-                            imageCount =0;
+                            imageCount = 0;
                         }
                         imageRegistry.put(getID(), image);
                         imageCount++;
@@ -145,16 +144,18 @@ public class OPIColor implements IAdaptable {
         return null;
     }
 
-    /**Get the color image for this color.
+    /**
+     * Get the color image for this color.
+     * 
      * @return the color image
      */
-    public Image getImage(){
+    public Image getImage() {
         Image image = imageRegistry.get(getID());
-        if(image == null){
+        if (image == null) {
             image = createIcon(getRGBValue());
-            if(imageCount >= MAX_IMG_COUNT){
+            if (imageCount >= MAX_IMG_COUNT) {
                 imageRegistry.dispose();
-                imageCount =0;
+                imageCount = 0;
             }
             imageRegistry.put(getID(), image);
             imageCount++;
@@ -162,11 +163,11 @@ public class OPIColor implements IAdaptable {
         return image;
     }
 
-
-    private String getID(){
-        return "OPIBUILDER.COLORPROPERTY.ICON_"  //$NON-NLS-1$
-            +colorValue.red+"_"+colorValue.green+"_"+colorValue.blue;  //$NON-NLS-1$ //$NON-NLS-2$
+    private String getID() {
+        return "OPIBUILDER.COLORPROPERTY.ICON_" //$NON-NLS-1$
+                + colorValue.red + "_" + colorValue.green + "_" + colorValue.blue; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
     /**
      * Creates a small icon using the specified color.
      *
@@ -175,16 +176,16 @@ public class OPIColor implements IAdaptable {
      * @return an icon
      */
     private Image createIcon(RGB rgb) {
-        //System.out.println("OPIColor: create icon" + rgb);
-        if(rgb == null)
-             rgb = CustomMediaFactory.COLOR_BLACK;
+        // System.out.println("OPIColor: create icon" + rgb);
+        if (rgb == null)
+            rgb = CustomMediaFactory.COLOR_BLACK;
 
         Color color = CustomMediaFactory.getInstance().getColor(rgb);
 
         // create new graphics context, to draw on
         Image image = new Image(Display.getCurrent(), 16, 16);
-        GC gc = SingleSourceHelper.getImageGC(image);
-        if(gc != null){
+        GC gc = new GC(image);
+        if (gc != null) {
             // draw transparent background
             Color bg = CustomMediaFactory.getInstance().getColor(TRANSPARENT_COLOR);
             gc.setBackground(bg);
@@ -194,7 +195,7 @@ public class OPIColor implements IAdaptable {
             Rectangle r = new Rectangle(1, 4, 14, 9);
             gc.fillRectangle(r);
             gc.setBackground(CustomMediaFactory.getInstance().getColor(0,
-                            0, 0));
+                    0, 0));
             gc.drawRectangle(r);
             gc.dispose();
         }
@@ -208,8 +209,6 @@ public class OPIColor implements IAdaptable {
     public String toString() {
         return getColorName();
     }
-
-
 
     @Override
     public boolean equals(Object obj) {
@@ -233,15 +232,15 @@ public class OPIColor implements IAdaptable {
         return true;
     }
 
-//    @Override
-//    public boolean equals(Object obj) {
-//        if(obj instanceof OPIColor){
-//            OPIColor input = (OPIColor)obj;
-//            return colorName.equals(input.getColorName()) &&
-//                colorValue.equals(input.getRGBValue());
-//        }
-//        return false;
-//    }
+    // @Override
+    // public boolean equals(Object obj) {
+    // if(obj instanceof OPIColor){
+    // OPIColor input = (OPIColor)obj;
+    // return colorName.equals(input.getColorName()) &&
+    // colorValue.equals(input.getRGBValue());
+    // }
+    // return false;
+    // }
 
     @Override
     public int hashCode() {
@@ -254,7 +253,7 @@ public class OPIColor implements IAdaptable {
         return result;
     }
 
-    public OPIColor getCopy(){
+    public OPIColor getCopy() {
         return new OPIColor(colorName, new RGB(colorValue.red, colorValue.green, colorValue.blue), preDefined);
     }
 

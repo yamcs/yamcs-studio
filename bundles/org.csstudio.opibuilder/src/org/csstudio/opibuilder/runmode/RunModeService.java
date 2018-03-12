@@ -14,7 +14,6 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.runmode.OPIRunnerPerspective.Position;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
-import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -126,7 +125,7 @@ public class RunModeService {
                 shell.moveAbove(null);
                 break;
             case NEW_SHELL:
-                SingleSourceHelper.openOPIShell(path, macros.orElse(null));
+                OPIShell.openOPIShell(path, macros.orElse(null));
                 break;
             default:
                 throw new Exception("Unknown display mode " + mode);

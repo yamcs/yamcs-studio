@@ -15,7 +15,6 @@ import org.csstudio.opibuilder.actions.OpenRelatedDisplayAction.OpenDisplayTarge
 import org.csstudio.opibuilder.actions.WidgetActionMenuAction;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.opibuilder.util.WorkbenchWindowService;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.ActionsInput;
@@ -29,7 +28,6 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -83,7 +81,10 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
         // actionRegistry.getAction(CompactModeAction.ID));
 
         // ELog and EMail actions may not be available
-        SingleSourceHelper.appendRCPRuntimeActionsToMenu(actionRegistry, menu);
+        action = actionRegistry.getAction(ActionFactory.PRINT.getId());
+        if (action != null) {
+            menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
+        }
 
         // MenuManager cssMenu = new MenuManager("CSS", "css");
         // cssMenu.add(new Separator("additions")); //$NON-NLS-1$

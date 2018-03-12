@@ -10,63 +10,185 @@ package org.csstudio.swt.widgets.util;
 import java.io.InputStream;
 
 import org.csstudio.swt.widgets.figures.TextInputFigure;
+import org.csstudio.swt.widgets.figures.TextInputFigure.FileReturnPart;
+import org.csstudio.ui.util.dialogs.ResourceSelectionDialog;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 
-public abstract class SingleSourceHelper {
+public class SingleSourceHelper {
 
-    private static final SingleSourceHelper IMPL = new SingleSourceHelperImpl();
+    private static final String SEPARATOR = "|";
 
-    public static GC getImageGC(final Image image) {
-        if (IMPL == null)
-            return null;
-        return IMPL.internalGetImageGC(image);
+    public static GC getImageGC(Image image) {
+        return new GC(image);
     }
-
-    protected abstract GC internalGetImageGC(final Image image);
 
     public static InputStream workspaceFileToInputStream(IPath path) {
-        if (IMPL == null)
+        // Try workspace location
+        final IFile workspace_file = getIFileFromIPath(path);
+        // Valid file should either open, or give meaningful exception
+        if (workspace_file != null && workspace_file.exists())
+            try {
+                return workspace_file.getContents();
+            } catch (CoreException e) {
+                return null;
+            }
+        else
             return null;
-        try {
-            return IMPL.internalWorkspaceFileToInputStream(path);
-        } catch (Exception e) {
-            return null;
-        }
     }
-
-    protected abstract InputStream internalWorkspaceFileToInputStream(IPath path) throws Exception;
 
     public static Cursor createCursor(
             Display display, ImageData imageData, int width, int height, int backUpSWTCursorStyle) {
-        if (IMPL == null)
-            return null;
-        return IMPL.createInternalCursor(display, imageData, width, height, backUpSWTCursorStyle);
+        return new Cursor(display, imageData, width, height);
     }
-
-    protected abstract Cursor createInternalCursor(
-            Display display, ImageData imageData, int width, int height, int backUpSWTCursorStyle);
 
     public static void setGCTransform(GC gc, Transform transform) {
-        if (IMPL == null)
-            return;
-        IMPL.internalSetGCTransform(gc, transform);
+        gc.setTransform(transform);
     }
-
-    protected abstract void internalSetGCTransform(GC gc, Transform transform);
 
     public static void handleTextInputFigureFileSelector(TextInputFigure textInput) {
-        if (IMPL == null) {
-            return;
+        String startPath = textInput.getStartPath();
+        String currentPath = textInput.getCurrentPath();
+        switch (textInput.getFileReturnPart()) {
+        case DIRECTORY:
+        case FULL_PATH:
+            currentPath = textInput.getText();
+            break;
+        default:
+            if (currentPath == null) {
+                if (startPath == null)
+                    currentPath = textInput.getText();
+                else
+                    currentPath = startPath;
+            }
+            break;
         }
-        IMPL.internalHandleTextInputFigureFileSelector(textInput);
+
+        switch (textInput.getFileSource()) {
+        case WORKSPACE:
+            ResourceSelectionDialog dialog = new ResourceSelectionDialog(Display.getCurrent().getActiveShell(),
+                    "Select workspace file",
+                    textInput.getFileReturnPart() == FileReturnPart.DIRECTORY ? null : new String[] { "*.*" }); // $NON-NLS-2$
+            if (currentPath != null)
+                dialog.setSelectedResource(new Path(currentPath));
+            if (dialog.open() == Window.OK) {
+                IPath path = dialog.getSelectedResource();
+                currentPath = path.toPortableString();
+                String fileString = currentPath;
+                switch (textInput.getFileReturnPart()) {
+                case NAME_ONLY:
+                    fileString = path.removeFileExtension().lastSegment();
+                    break;
+                case NAME_EXT:
+                    fileString = path.lastSegment();
+                    break;
+                case FULL_PATH:
+                case DIRECTORY:
+                default:
+                    break;
+                }
+                textInput.setText(fileString);
+                textInput.setCurrentPath(currentPath);
+                textInput.fireManualValueChange(textInput.getText());
+            }
+            break;
+        case LOCAL:
+            IPath paths[] = null;
+            if (textInput.getFileReturnPart() == FileReturnPart.DIRECTORY) {
+                DirectoryDialog directoryDialog = new DirectoryDialog(
+                        Display.getCurrent().getActiveShell());
+                directoryDialog.setFilterPath(currentPath);
+                String directory = directoryDialog.open();
+                if (directory != null)
+                    paths = new Path[] { new Path(directory) };
+
+            } else {
+                FileDialog fileDialog = new FileDialog(Display.getCurrent()
+                        .getActiveShell(), SWT.MULTI);
+                if (currentPath != null)
+                    ((FileDialog) fileDialog).setFileName(currentPath);
+                String firstPath = fileDialog.open();
+                if (firstPath != null) {
+                    paths = new Path[fileDialog.getFileNames().length];
+                    paths[0] = new Path(firstPath);
+                    for (int i = 1; i < paths.length; i++) {
+                        paths[i] = paths[0].removeLastSegments(1).append(
+                                fileDialog.getFileNames()[i]);
+                    }
+                }
+            }
+            if (paths != null) {
+                currentPath = paths[0].toOSString();
+                StringBuilder result = new StringBuilder();
+                switch (textInput.getFileReturnPart()) {
+                case NAME_ONLY:
+                    for (int i = 0; i < paths.length; i++) {
+                        if (i > 0)
+                            result.append(SEPARATOR);
+                        result.append(paths[i].removeFileExtension().lastSegment());
+                    }
+                    break;
+                case NAME_EXT:
+                    for (int i = 0; i < paths.length; i++) {
+                        if (i > 0)
+                            result.append(SEPARATOR);
+                        result.append(paths[i].lastSegment());
+                    }
+                    break;
+                case FULL_PATH:
+                case DIRECTORY:
+                default:
+                    for (int i = 0; i < paths.length; i++) {
+                        if (i > 0)
+                            result.append(SEPARATOR);
+                        result.append(paths[i].toOSString());
+                    }
+                    break;
+                }
+                textInput.setText(result.toString());
+                textInput.setCurrentPath(currentPath);
+                textInput.fireManualValueChange(textInput.getText());
+            }
+
+            break;
+        default:
+            break;
+        }
     }
 
-    protected abstract void internalHandleTextInputFigureFileSelector(TextInputFigure textInput);
-
+    /**
+     * Get the IFile from IPath.
+     * 
+     * @param path
+     *            Path to file in workspace
+     * @return the IFile. <code>null</code> if no IFile on the path, file does not exist, internal error.
+     */
+    public static IFile getIFileFromIPath(final IPath path) {
+        try {
+            final IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(
+                    path, false);
+            if (r != null && r instanceof IFile) {
+                final IFile file = (IFile) r;
+                if (file.exists())
+                    return file;
+            }
+        } catch (Exception ex) {
+            // Ignored
+        }
+        return null;
+    }
 }

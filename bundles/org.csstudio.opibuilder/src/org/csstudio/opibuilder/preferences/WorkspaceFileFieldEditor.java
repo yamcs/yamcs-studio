@@ -7,11 +7,13 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.preferences;
 
-import org.csstudio.opibuilder.util.SingleSourceHelper;
+import org.csstudio.ui.util.dialogs.ResourceSelectionDialog;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * A field editor for a workspace file path type preference. A workspace file dialog appears when the user presses the
@@ -73,7 +75,15 @@ public class WorkspaceFileFieldEditor extends StringButtonFieldEditor {
     }
 
     private IPath getPath(IPath startPath) {
-        return SingleSourceHelper.rcpGetPathFromWorkspaceFileDialog(startPath, extensions);
+        ResourceSelectionDialog rsDialog = new ResourceSelectionDialog(
+                Display.getCurrent().getActiveShell(), "Choose File", extensions);
+        if (startPath != null)
+            rsDialog.setSelectedResource(startPath);
+
+        if (rsDialog.open() == Window.OK) {
+            return rsDialog.getSelectedResource();
+        }
+        return null;
     }
 
     @Override

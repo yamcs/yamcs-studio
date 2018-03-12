@@ -18,6 +18,10 @@ import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
 import org.csstudio.swt.widgets.Preferences;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -38,8 +42,6 @@ import com.google.common.io.ByteStreams;
  */
 public class ResourceUtil {
 
-    private static final ResourceUtilSSHelper IMPL = new ResourceUtilSSHelperImpl();
-
     private static final LoadingCache<String, byte[]> cache = CacheBuilder.newBuilder()
             .recordStats()
             .expireAfterWrite(2, TimeUnit.MINUTES)
@@ -59,7 +61,13 @@ public class ResourceUtil {
      * @return the corresponding system path. null if it is not exist.
      */
     public static IPath workspacePathToSysPath(IPath path) {
-        return IMPL.workspacePathToSysPath(path);
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceRoot root = workspace.getRoot();
+        IResource resource = root.findMember(path);
+        if (resource != null)
+            return resource.getLocation(); // existing resource
+        else
+            return root.getFile(path).getLocation(); // for not existing resource
     }
 
     /**

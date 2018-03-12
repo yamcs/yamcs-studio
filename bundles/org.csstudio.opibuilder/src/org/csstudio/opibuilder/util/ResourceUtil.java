@@ -21,6 +21,7 @@ import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -35,19 +36,37 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.persistence.URLPath;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.filesystem.URIUtil;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IPathEditorInput;
+import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
+import org.osgi.framework.Bundle;
 
 /**
  * Utility functions for resources.
@@ -58,7 +77,10 @@ public class ResourceUtil {
 
     private static final int CACHE_TIMEOUT_SECONDS = 120;
 
-    private static final ResourceUtilSSHelper IMPL = new ResourceUtilSSHelperImpl();
+    private static final Logger LOGGER = Logger.getLogger(ResourceUtil.class.getName());
+
+    private static final String CURSOR_PATH = "icons/copy.gif";
+    private static Cursor copyPvCursor;
 
     /**
      * Cache the file from URL.
@@ -71,7 +93,18 @@ public class ResourceUtil {
      * @return the cursor
      */
     public static Cursor getCopyPvCursor() {
-        return IMPL.getCopyPvCursor();
+        if (copyPvCursor == null) {
+            Bundle bundle = Platform.getBundle(OPIBuilderPlugin.PLUGIN_ID);
+            IPath path = new Path(CURSOR_PATH);
+            URL url = FileLocator.find(bundle, path, null);
+            try {
+                InputStream inputStream = url.openConnection().getInputStream();
+                copyPvCursor = new Cursor(Display.getCurrent(), new ImageData(inputStream), 0, 0);
+            } catch (IOException e) {
+                copyPvCursor = Cursors.HELP;
+            }
+        }
+        return copyPvCursor;
     }
 
     /**
@@ -84,8 +117,19 @@ public class ResourceUtil {
      * @throws Exception
      *             in case of an error
      */
-    public static File getFile(final IPath path) throws Exception {
-        return IMPL.getFile(path);
+    public static File getFile(IPath path) throws Exception {
+        IFile workspace_file = getIFileFromIPath(path);
+        // Valid file should either open, or give meaningful exception
+        if (workspace_file != null && workspace_file.exists())
+            return workspace_file.getLocation().toFile().getAbsoluteFile();
+
+        // Not a workspace file. Try local file system
+        File local_file = path.toFile();
+        // Path URL for "file:..." so that it opens as FileInputStream
+        if (local_file.getPath().startsWith("file:"))
+            local_file = new File(local_file.getPath().substring(5));
+
+        return local_file.exists() ? local_file.getAbsoluteFile() : null;
     }
 
     /**
@@ -110,9 +154,38 @@ public class ResourceUtil {
      * @return The corresponding {@link InputStream}. Never <code>null</code>
      * @throws Exception
      */
-    @SuppressWarnings("nls")
-    public static InputStream pathToInputStream(final IPath path, boolean runInUIJob) throws Exception {
-        return IMPL.pathToInputStream(path, runInUIJob);
+    public static InputStream pathToInputStream(IPath path, boolean runInUIJob) throws Exception {
+        // Try workspace location
+        IFile workspace_file = getIFileFromIPath(path);
+        // Valid file should either open, or give meaningful exception
+        if (workspace_file != null && workspace_file.exists())
+            return workspace_file.getContents();
+
+        // Not a workspace file. Try local file system
+        File local_file = path.toFile();
+        // Path URL for "file:..." so that it opens as FileInputStream
+        if (local_file.getPath().startsWith("file:"))
+            local_file = new File(local_file.getPath().substring(5));
+        String urlString;
+        try {
+            return new FileInputStream(local_file);
+        } catch (Exception ex) {
+            // Could not open as local file.
+            // Does it look like a URL?
+            // TODO:
+            // Eclipse Path collapses "//" into "/", revert that: Is this true? Need test on Mac.
+            urlString = path.toString();
+            // if(!urlString.startsWith("platform") && !urlString.contains("://")) //$NON-NLS-1$ //$NON-NLS-2$
+            // urlString = urlString.replaceFirst(":/", "://"); //$NON-NLS-1$ //$NON-NLS-2$
+            // Does it now look like a URL? If not, report the original local file problem
+            if (!ResourceUtil.isURL(urlString))
+                throw new Exception("Cannot open " + ex.getMessage(), ex);
+        }
+
+        // Must be an URL
+        final URL url = new URL(urlString);
+
+        return ResourceUtil.openURLStream(url, runInUIJob);
     }
 
     /**
@@ -123,8 +196,26 @@ public class ResourceUtil {
      * @return a stream which can be used to read this editors input data
      */
     public static InputStream getInputStreamFromEditorInput(IEditorInput editorInput) {
-        return IMPL.getInputStreamFromEditorInput(editorInput);
+        InputStream result = null;
+        if (editorInput instanceof FileEditorInput) {
+            try {
+                result = ((FileEditorInput) editorInput).getFile()
+                        .getContents();
+            } catch (CoreException e) {
+                LOGGER.log(Level.SEVERE, "Error while trying to access input stream of an editor.", e);
+                e.printStackTrace();
+            }
+        } else if (editorInput instanceof FileStoreEditorInput) {
+            IPath path = URIUtil.toPath(((FileStoreEditorInput) editorInput)
+                    .getURI());
+            try {
+                result = new FileInputStream(path.toFile());
+            } catch (FileNotFoundException e) {
+                // ignore
+            }
+        }
 
+        return result;
     }
 
     /**
@@ -133,7 +224,7 @@ public class ResourceUtil {
      * @return true if the file path is an existing workspace file.
      */
     public static boolean isExistingWorkspaceFile(IPath path) {
-        return IMPL.isExistingWorkspaceFile(path);
+        return getIFileFromIPath(path) != null;
     }
 
     public static boolean isExistingLocalFile(IPath path) {
@@ -198,7 +289,16 @@ public class ResourceUtil {
      * @throws FileNotFoundException
      */
     public static IPath getPathInEditor(IEditorInput input) {
-        return IMPL.getPathInEditor(input);
+        if (input instanceof FileEditorInput)
+            return ((FileEditorInput) input).getFile().getFullPath();
+        else if (input instanceof IPathEditorInput)
+            return ((IPathEditorInput) input).getPath();
+        else if (input instanceof FileStoreEditorInput) {
+            IPath path = URIUtil.toPath(((FileStoreEditorInput) input)
+                    .getURI());
+            return path;
+        }
+        return null;
     }
 
     /**
@@ -225,7 +325,13 @@ public class ResourceUtil {
      * @return the corresponding system path. null if it is not exist.
      */
     public static IPath workspacePathToSysPath(IPath path) {
-        return IMPL.workspacePathToSysPath(path);
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceRoot root = workspace.getRoot();
+        IResource resource = root.findMember(path);
+        if (resource != null)
+            return resource.getLocation(); // existing resource
+        else
+            return root.getFile(path).getLocation(); // for not existing resource
     }
 
     /**
@@ -235,7 +341,6 @@ public class ResourceUtil {
      *            Possible URL
      * @return <code>true</code> if considered a URL
      */
-    @SuppressWarnings("nls")
     public static boolean isURL(final String urlString) {
         try {
             new URL(urlString);
@@ -440,7 +545,19 @@ public class ResourceUtil {
     }
 
     public static IEditorInput editorInputFromPath(IPath path) {
-        return IMPL.editorInputFromPath(path);
+        IEditorInput editorInput = null;
+        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+        // Files outside the workspace are handled differently
+        // by Eclipse.
+        if (!ResourceUtil.isExistingWorkspaceFile(path)
+                && ResourceUtil.isExistingLocalFile(path)) {
+            IFileStore fileStore = EFS.getLocalFileSystem()
+                    .getStore(file.getFullPath());
+            editorInput = new FileStoreEditorInput(fileStore);
+        } else {
+            editorInput = new FileEditorInput(file);
+        }
+        return editorInput;
     }
 
     /**
@@ -478,13 +595,25 @@ public class ResourceUtil {
      * @return the screenshot image
      */
     public static Image getScreenshotImage(GraphicalViewer viewer) {
-        return IMPL.getScreenShotImage(viewer);
+        GC gc = new GC(viewer.getControl());
+        Image image = new Image(Display.getDefault(), viewer.getControl()
+                .getSize().x, viewer.getControl().getSize().y);
+        gc.copyArea(image, 0, 0);
+        /*
+         * This is a workaround for issue 2345 - empty screenshot
+         * https://github.com/ControlSystemStudio/cs-studio/issues/2345
+         *
+         * The workaround is calling gc.copyArea twice.
+         */
+        gc.copyArea(image, 0, 0);
+        gc.dispose();
+        return image;
     }
 
     public static String getScreenshotFile(GraphicalViewer viewer) throws Exception {
         File file;
         // Get name for snapshot file
-        file = File.createTempFile("opi", ".png"); //$NON-NLS-1$ //$NON-NLS-2$
+        file = File.createTempFile("opi", ".png");
         file.deleteOnExit();
 
         // Create snapshot file
@@ -497,4 +626,25 @@ public class ResourceUtil {
         return file.getAbsolutePath();
     }
 
+    /**
+     * Get the IFile from IPath.
+     * 
+     * @param path
+     *            Path to file in workspace
+     * @return the IFile. <code>null</code> if no IFile on the path, file does not exist, internal error.
+     */
+    public static IFile getIFileFromIPath(final IPath path) {
+        try {
+            final IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(
+                    path, false);
+            if (r != null && r instanceof IFile) {
+                final IFile file = (IFile) r;
+                if (file.exists())
+                    return file;
+            }
+        } catch (Exception ex) {
+            // Ignored
+        }
+        return null;
+    }
 }

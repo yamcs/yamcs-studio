@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
+import org.csstudio.opibuilder.actions.PrintDisplayAction;
 import org.csstudio.opibuilder.actions.RefreshOPIAction;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.editparts.WidgetEditPartFactory;
@@ -16,7 +17,6 @@ import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.core.runtime.IAdaptable;
@@ -110,8 +110,9 @@ public class OPIRuntimeDelegate implements IAdaptable {
     public void init(final IWorkbenchPartSite site, final IEditorInput input) throws PartInitException {
         this.site = site;
         setEditorInput(input);
-        if (viewer != null)
-            SingleSourceHelper.removePaintListener(viewer.getControl(), errorMessagePaintListener);
+        if (viewer != null) {
+            viewer.getControl().removePaintListener(errorMessagePaintListener);
+        }
 
         displayModel = new DisplayModel(getOPIFilePath());
         displayModel.setOpiRuntime(opiRuntime);
@@ -157,7 +158,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
         }
 
         getActionRegistry().registerAction(new RefreshOPIAction(opiRuntime));
-        SingleSourceHelper.registerRCPRuntimeActions(getActionRegistry(), opiRuntime);
+        getActionRegistry().registerAction(new PrintDisplayAction(opiRuntime));
 
         // hide close button
         hideCloseButton(site);
@@ -398,8 +399,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
                         @Override
                         public void run() {
                             if (viewer != null) {
-                                SingleSourceHelper.addPaintListener(
-                                        viewer.getControl(), loadingMessagePaintListener);
+                                viewer.getControl().addPaintListener(loadingMessagePaintListener);
                                 viewer.getControl().redraw();
                             }
                         }
@@ -413,8 +413,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
                         public void run() {
                             try {
                                 if (viewer != null) {
-                                    SingleSourceHelper.removePaintListener(
-                                            viewer.getControl(), loadingMessagePaintListener);
+                                    viewer.getControl().removePaintListener(loadingMessagePaintListener);
                                 }
                                 MacrosInput macrosInput = ((IRunnerInput) input).getMacrosInput();
                                 XMLUtil.fillDisplayModelFromInputStream(
@@ -441,10 +440,8 @@ public class OPIRuntimeDelegate implements IAdaptable {
                         @Override
                         public void run() {
                             if (viewer != null && viewer.getControl() != null) {
-                                SingleSourceHelper.removePaintListener(
-                                        viewer.getControl(), loadingMessagePaintListener);
-                                SingleSourceHelper.addPaintListener(viewer.getControl(),
-                                        errorMessagePaintListener);
+                                viewer.getControl().removePaintListener(loadingMessagePaintListener);
+                                viewer.getControl().addPaintListener(errorMessagePaintListener);
                                 viewer.getControl().redraw();
                             }
                             ErrorHandlerUtil.handleError("Failed to open opi file: " + input, e, true, true);

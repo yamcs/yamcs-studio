@@ -1,11 +1,12 @@
 package org.csstudio.opibuilder.actions;
+
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.runmode.IOPIRuntime;
+import org.csstudio.opibuilder.runmode.OPIShell;
 import org.csstudio.opibuilder.runmode.OPIView;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -23,27 +24,25 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-
 public class EditOPIHandler extends AbstractHandler implements IHandler {
 
     private static final String OPI_EDITOR_ID = "org.csstudio.opibuilder.OPIEditor"; //$NON-NLS-1$
 
-    /** EditOPI action
-     *  - if selected part is an OPIShell open this in the main CSS window in edit mode
-     *  - if the selected part is in the CSS window  as an OPIView open as an editor
-     *  - if the selected part is in the CSS in run mode, open in edit mode
+    /**
+     * EditOPI action - if selected part is an OPIShell open this in the main CSS window in edit mode - if the selected
+     * part is in the CSS window as an OPIView open as an editor - if the selected part is in the CSS in run mode, open
+     * in edit mode
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        IOPIRuntime opiRuntime = SingleSourceHelper.getOPIShellForShell(HandlerUtil.getActiveShell(event));
+        IOPIRuntime opiRuntime = OPIShell.getOPIShellForShell(HandlerUtil.getActiveShell(event));
         if (opiRuntime == null) {
             // if the selected object isn't an OPIShell so grab the
             // OPIView or OPIRunner currently selected
             IWorkbenchPart part = HandlerUtil.getActivePart(event);
-            if (part instanceof IOPIRuntime)
-            {
-                opiRuntime = (IOPIRuntime)part;
+            if (part instanceof IOPIRuntime) {
+                opiRuntime = (IOPIRuntime) part;
             }
         }
 
@@ -68,9 +67,9 @@ public class EditOPIHandler extends AbstractHandler implements IHandler {
         return null;
     }
 
-    /** Extract the workbench part from an evaluation context (this
-     *  is equivalent to HandleUtils.getActivePart() for the
-     *  IEvaluationContext argument)
+    /**
+     * Extract the workbench part from an evaluation context (this is equivalent to HandleUtils.getActivePart() for the
+     * IEvaluationContext argument)
      */
     private IWorkbenchPart getActivePart(IEvaluationContext context) {
         Object var = context.getVariable(ISources.ACTIVE_PART_NAME);
@@ -80,9 +79,9 @@ public class EditOPIHandler extends AbstractHandler implements IHandler {
         return null;
     }
 
-    /** Extract the active shell from an evaluation context (this
-     *  is equivalent to HandleUtils.getActiveShell() for the
-     *  IEvaluationContext argument)
+    /**
+     * Extract the active shell from an evaluation context (this is equivalent to HandleUtils.getActiveShell() for the
+     * IEvaluationContext argument)
      */
     private Shell getActiveShell(IEvaluationContext context) {
         Object var = context.getVariable(ISources.ACTIVE_SHELL_NAME);
@@ -92,13 +91,10 @@ public class EditOPIHandler extends AbstractHandler implements IHandler {
         return null;
     }
 
-    /** The handler is enabled if:
-     *  - selected object is an OPIShell (i.e. an EDM window)
-     *  - selected object is an OPIView (i.e. a CSS view)
-     *  - selected object is an OPIRunner (e.g. a CSS editor panel in runmode)
-     *  The handler is disabled if:
-     *  - the open resource is a URL (i.e. the content is served over http)
-     *  - CSS is in no-edit mode
+    /**
+     * The handler is enabled if: - selected object is an OPIShell (i.e. an EDM window) - selected object is an OPIView
+     * (i.e. a CSS view) - selected object is an OPIRunner (e.g. a CSS editor panel in runmode) The handler is disabled
+     * if: - the open resource is a URL (i.e. the content is served over http) - CSS is in no-edit mode
      */
     @Override
     public void setEnabled(Object evaluationContext) {
@@ -106,7 +102,7 @@ public class EditOPIHandler extends AbstractHandler implements IHandler {
         if (!PreferencesHelper.isNoEdit()) {
             if (evaluationContext instanceof IEvaluationContext) {
                 IWorkbenchPart part = getActivePart((IEvaluationContext) evaluationContext);
-                IOPIRuntime opiShell = SingleSourceHelper.getOPIShellForShell(
+                IOPIRuntime opiShell = OPIShell.getOPIShellForShell(
                         getActiveShell((IEvaluationContext) evaluationContext));
                 IPath path = null;
                 if (opiShell != null) {
@@ -126,4 +122,3 @@ public class EditOPIHandler extends AbstractHandler implements IHandler {
     }
 
 }
-
