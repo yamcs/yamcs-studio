@@ -197,6 +197,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         menubar.add(fileMenu);
         menubar.add(editMenu);
         menubar.add(navigateMenu);
+        menubar.add(new GroupMarker("yamcs"));
         menubar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         menubar.add(windowMenu);
         menubar.add(helpMenu);
@@ -312,6 +313,13 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         coolbar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         coolbar.add(new GroupMarker(IWorkbenchActionConstants.GROUP_EDITOR));
 
+        fillAppToolBar(appToolBar);
+
+        // Doesn't seem to work...
+        coolbar.setLockLayout(true);
+    }
+
+    protected void fillAppToolBar(IToolBarManager appToolBar) {
         appToolBar.add(new Separator(IWorkbenchActionConstants.NEW_GROUP));
         appToolBar.add(new NewWizardDropDownAction(window));
         appToolBar.add(save);
@@ -320,9 +328,6 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         appToolBar.add(new GroupMarker(COOL_GROUP_BOOKMARK_SHORTCUTS));
         appToolBar.add(new GroupMarker(COOL_GROUP_PROCESSOR_CONTROLS));
         appToolBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-
-        // Doesn't seem to work...
-        coolbar.setLockLayout(true);
     }
 
     @Override
