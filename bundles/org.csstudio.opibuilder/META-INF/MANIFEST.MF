@@ -22,7 +22,6 @@ Require-Bundle: org.eclipse.ui,
  org.jdom,
  org.csstudio.autocomplete.ui,
  org.csstudio.simplepv,
- org.csstudio.utility.singlesource,
  org.diirt,
  org.eclipse.e4.ui.workbench,
  org.eclipse.swt

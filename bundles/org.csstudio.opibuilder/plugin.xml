@@ -14,6 +14,13 @@
       </perspective>
    </extension>
    <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="org.csstudio.utility.singlesource.PathEditorInputFactory"
+            id="org.csstudio.utility.singlesource.PathEditorInputFactory">
+      </factory>
+   </extension>
+   <extension
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.ui.category.views"

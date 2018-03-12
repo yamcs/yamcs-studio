@@ -10,7 +10,6 @@ import org.csstudio.opibuilder.runmode.OPIShell;
 import org.csstudio.opibuilder.widgetActions.OpenFileAction;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
 import org.csstudio.ui.util.dialogs.ResourceSelectionDialog;
-import org.csstudio.utility.singlesource.SingleSourcePlugin;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
@@ -138,7 +137,7 @@ public class SingleSourceHelperImpl extends SingleSourceHelper {
 
     @Override
     protected void iOpenEditor(IWorkbenchPage page, IPath path) throws Exception {
-        SingleSourcePlugin.getUIHelper().openEditor(page, path);
+        OPIBuilderPlugin.getUIHelper().openEditor(page, path);
     }
 
     @Override

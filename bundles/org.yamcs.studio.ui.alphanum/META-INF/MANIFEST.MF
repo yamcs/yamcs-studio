@@ -26,6 +26,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gef,
  org.eclipse.jface,
  org.csstudio.ui.util,
- org.csstudio.utility.singlesource,
  org.eclipse.ui.ide
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

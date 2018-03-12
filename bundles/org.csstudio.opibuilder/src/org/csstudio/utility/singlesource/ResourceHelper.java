@@ -10,7 +10,6 @@ package org.csstudio.utility.singlesource;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
@@ -246,23 +245,7 @@ public class ResourceHelper {
     public OutputStream getOutputStream(final IEditorInput input) throws Exception {
         // Try workspace file
         final IFile ws_file = (IFile) input.getAdapter(IFile.class);
-        // Fall back to non-workspace implementation
-        if (ws_file == null) {
-            // Try file outside of the workspace
-            final File file = getFilesystemFile(input);
-            if (file != null)
-                return new FileOutputStream(file);
 
-            // Didn't find anything. Log adapters to aid in future extension of this code.
-            final Logger logger = Logger.getLogger(getClass().getName());
-            logger.fine("Cannot write to " + input.getClass().getName());
-            for (String adapt : Platform.getAdapterManager().computeAdapterTypes(input.getClass()))
-                logger.finer("Would adapt to " + adapt);
-
-            return null;
-        }
-
-        // Have workspace file
         // Check write access.
         if (ws_file.isReadOnly())
             throw new Exception("File " + ws_file.getName() + " is read-only");

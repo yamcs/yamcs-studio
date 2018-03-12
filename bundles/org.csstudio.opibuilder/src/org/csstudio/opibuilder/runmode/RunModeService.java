@@ -16,7 +16,6 @@ import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.csstudio.utility.singlesource.SingleSourcePlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.osgi.util.NLS;
@@ -220,7 +219,7 @@ public class RunModeService {
 
                 // Adjust position
                 if (position == Position.DETACHED) {
-                    SingleSourcePlugin.getUIHelper().detachView(opiView);
+                    OPIBuilderPlugin.getUIHelper().detachView(opiView);
                     opiView.positionFromModel();
                 }
             } catch (Exception e) {

@@ -2,6 +2,8 @@ package org.yamcs.studio.ui.alphanum;
 
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -13,8 +15,7 @@ import java.util.logging.Logger;
 
 import org.csstudio.ui.util.EmptyEditorInput;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
-import org.csstudio.utility.singlesource.ResourceHelper;
-import org.csstudio.utility.singlesource.SingleSourcePlugin;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -125,11 +126,12 @@ public class AlphaNumericEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		final IEditorInput input = getEditorInput();
-		final ResourceHelper resources = SingleSourcePlugin.getResourceHelper();
 		try {
 			if (input.exists()) {
-
-				saveToStream(monitor, parameterTable.getParameters(), resources.getOutputStream(input));
+			    IFile file = (IFile) input.getAdapter(IFile.class);
+			    ByteArrayOutputStream out = new ByteArrayOutputStream();
+			    saveToStream(parameterTable.getParameters(), out);
+			    file.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, monitor);
 			} else { // First save of Editor with empty input, prompt for name
 				doSaveAs();
 			}
@@ -142,17 +144,11 @@ public class AlphaNumericEditor extends EditorPart {
 
 	/**
 	 * Save current model, mark editor as clean.
-	 *
-	 * @param monitor
-	 *            <code>IProgressMonitor</code>, may be <code>null</code>.
+	 * 
 	 * @param stream
 	 *            Output stream
 	 */
-	private void saveToStream(final IProgressMonitor monitor, final List<ParameterInfo> parameters,
-			final OutputStream stream) {
-		if (monitor != null) {
-			monitor.beginTask("Save", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-		}
+	private void saveToStream(List<ParameterInfo> parameters, OutputStream stream) {
 		final PrintWriter out = new PrintWriter(stream);
 		try {
 
@@ -165,9 +161,6 @@ public class AlphaNumericEditor extends EditorPart {
 			ExceptionDetailsErrorDialog.openError(getSite().getShell(),"Error while writing parameter list", ex);
 		} finally {
 			out.close();
-		}
-		if (monitor != null) {
-			monitor.done();
 		} 
 	}
 

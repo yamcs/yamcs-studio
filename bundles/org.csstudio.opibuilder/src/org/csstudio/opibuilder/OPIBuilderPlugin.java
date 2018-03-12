@@ -15,6 +15,8 @@ import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.SchemaService;
+import org.csstudio.utility.singlesource.ResourceHelper;
+import org.csstudio.utility.singlesource.UIHelper;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -52,6 +54,10 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     // The shared instance
     private static OPIBuilderPlugin plugin;
 
+    private static ResourceHelper resources;
+
+    private static UIHelper ui;
+
     private IPropertyChangeListener preferenceLisener;
 
     /**
@@ -73,6 +79,8 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+        resources = new ResourceHelper();
+        ui = new UIHelper();
 
         // set this to resolve Xincludes in XMLs
         System.setProperty("org.apache.xerces.xni.parser.XMLParserConfiguration",
@@ -152,5 +160,13 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    public static ResourceHelper getResourceHelper() {
+        return resources;
+    }
+
+    public static UIHelper getUIHelper() {
+        return ui;
     }
 }

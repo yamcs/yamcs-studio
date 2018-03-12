@@ -9,6 +9,7 @@ package org.csstudio.utility.singlesource;
 
 import java.io.IOException;
 
+import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.ui.util.dialogs.ResourceSelectionDialog;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -54,7 +55,7 @@ public class UIHelper {
      * @throws Exception
      */
     public void openEditor(final IWorkbenchPage page, IPath path) throws Exception {
-        if (path == null || !SingleSourcePlugin.getResourceHelper().exists(path))
+        if (path == null || !OPIBuilderPlugin.getResourceHelper().exists(path))
             throw new Exception(NLS.bind("Cannot find {0}", path));
         final IFile resource = ResourceHelper.getFileForPath(path);
         if (resource != null && resource.exists()) {

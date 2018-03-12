@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.RefreshOPIAction;
@@ -20,7 +19,6 @@ import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
-import org.csstudio.utility.singlesource.SingleSourcePlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -313,7 +311,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
             Display.getCurrent().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    SingleSourcePlugin.getUIHelper().enableClose(site, false);
+                    OPIBuilderPlugin.getUIHelper().enableClose(site, false);
                 }
             });
         }
