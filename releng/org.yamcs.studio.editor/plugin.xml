@@ -108,7 +108,7 @@
                relationship="stack"
                visible="false"
                closeable="true"
-               id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
+               id="org.yamcs.studio.editor.base.views.FunctionsView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -179,12 +179,6 @@
                relationship="stack"
                visible="false"
                closeable="true"
-               id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
                id="org.yamcs.studio.monitoring.links.LinksView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
@@ -192,8 +186,6 @@
                visible="false"
                closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView"/>
-         <viewShortcut id="org.yamcs.studio.explorer.view"/>
-         <viewShortcut id="org.csstudio.utility.pvmanager.ui.toolbox.FunctionsView"/>
       </perspectiveExtension>
    </extension>
 </plugin>

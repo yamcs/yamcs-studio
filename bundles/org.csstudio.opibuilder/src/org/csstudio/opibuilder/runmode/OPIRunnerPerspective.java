@@ -70,8 +70,6 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
 
     private static final String SECOND_ID = ":*";
 
-    // Note that this used to be called "OPIRunner", just like the editor,
-    // but in Eclipse 4 that re-used of the same ID for an Editor and a perspective caused trouble
     public final static String ID = "org.csstudio.opibuilder.OPIRuntime.perspective";
 
     private static final String ID_CONSOLE_VIEW = "org.eclipse.ui.console.ConsoleView";
@@ -119,7 +117,7 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
             bottom.addView(PlaceHolderView.ID + ":BOTTOM");
         }
 
-        bottom.addPlaceholder(ID_CONSOLE_VIEW);
+        bottom.addView(ID_CONSOLE_VIEW);
         layout.addShowViewShortcut(ID_CONSOLE_VIEW);
         left.addView(ID_EXPLORER);
         layout.addShowViewShortcut(ID_EXPLORER);

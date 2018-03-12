@@ -2,6 +2,15 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.yamcs.studio.editor.base.views.FunctionsView"
+            icon="icons/eview16/formula-viewer-16.png"
+            id="org.yamcs.studio.editor.base.views.FunctionsView"
+            name="Function Reference">
+      </view>
+   </extension>
+   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"

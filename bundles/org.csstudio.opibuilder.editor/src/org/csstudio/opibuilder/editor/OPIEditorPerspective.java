@@ -15,7 +15,8 @@ public class OPIEditorPerspective implements IPerspectiveFactory {
     private static final String ID_CONSOLE_VIEW = "org.eclipse.ui.console.ConsoleView";
     private static final String ID_HELP_VIEW = "org.eclipse.help.ui.HelpView";
 
-    static final String ID_EXPLORER = "org.yamcs.studio.explorer.view";
+    private static final String ID_FUNCTIONS_VIEW = "org.yamcs.studio.editor.base.views.FunctionsView";
+    private static final String ID_EXPLORER = "org.yamcs.studio.explorer.view";
 
     @Override
     public void createInitialLayout(IPageLayout layout) {
@@ -32,11 +33,14 @@ public class OPIEditorPerspective implements IPerspectiveFactory {
         right.addView(IPageLayout.ID_PROP_SHEET);
 
         bottom.addView(ID_CONSOLE_VIEW);
+        bottom.addView(ID_FUNCTIONS_VIEW);
         bottom.addPlaceholder(IPageLayout.ID_PROGRESS_VIEW);
 
         layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
         layout.addShowViewShortcut(IPageLayout.ID_OUTLINE);
         layout.addShowViewShortcut(ID_CONSOLE_VIEW);
+        layout.addShowViewShortcut(ID_EXPLORER);
+        layout.addShowViewShortcut(ID_FUNCTIONS_VIEW);
         layout.addShowViewShortcut(ID_HELP_VIEW);
         layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");
         layout.addNewWizardShortcut("org.csstudio.opibuilder.wizards.newOPIWizard");
