@@ -16,6 +16,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.commanding.PTVInfo;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.ByteString;
@@ -161,7 +162,7 @@ public class CommandHistoryRecord {
     }
 
     public String getGenerationTime() {
-        return TimeEncoding.toString(id.getGenerationTime());
+        return TimestampFormatter.format(id.getGenerationTime());
     }
 
     public long getRawGenerationTime() {

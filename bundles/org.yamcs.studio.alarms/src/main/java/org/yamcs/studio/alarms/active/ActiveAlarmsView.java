@@ -15,6 +15,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Alarms.AlarmData;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.AlarmListener;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 
 public class ActiveAlarmsView extends ViewPart implements AlarmListener {
 
@@ -48,7 +49,7 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             public String getText(Object element) {
                 if (element instanceof XtceAlarmNode) {
                     AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
-                    return String.valueOf(alarmData.getTriggerValue().getGenerationTimeUTC());
+                    return TimestampFormatter.format(alarmData.getTriggerValue().getGenerationTime());
                 } else {
                     return null;
                 }

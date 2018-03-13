@@ -29,6 +29,7 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuedTableViewer extends TableViewer {
@@ -203,7 +204,7 @@ public class CommandQueuedTableViewer extends TableViewer {
             case 2:
                 return model.getSource();
             case 3:
-                return TimeEncoding.toString(model.getGenerationTime());
+                return TimestampFormatter.format(model.getGenerationTime());
             default:
                 break;
             }

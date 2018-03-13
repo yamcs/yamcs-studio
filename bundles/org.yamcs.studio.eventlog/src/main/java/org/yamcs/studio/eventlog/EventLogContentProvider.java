@@ -1,6 +1,7 @@
 package org.yamcs.studio.eventlog;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 
 public class EventLogContentProvider implements IStructuredContentProvider {
 
@@ -48,7 +50,6 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private Color errorColor;
     private Color warningColor;
     
-    
     Event lastAddedEvent = null;
 
 
@@ -64,6 +65,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             severeIcon = getImage("icons/eview16/level5s.png");
             
         }
+        
         errorColor = new Color(table.getDisplay(), new RGB(255, 221, 221));
         warningColor = new Color(table.getDisplay(), new RGB(248, 238, 199));
 
@@ -123,7 +125,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
                 errorCount++;
                 break;
             default:
-                log.warning("Unexpected event severity '" + event.getSeverity() + "'");
+                log.warning("Unexpected event severity '" + event.getSeverity() + "'"); //TODO
                 break;
             }
         }
@@ -155,7 +157,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
                     errorCount++;
                     break;
                 default:
-                    log.warning("Unexpected event severity '" + event.getSeverity() + "'");
+                    log.warning("Unexpected event severity '" + event.getSeverity() + "'"); //TODO
                     break;
                 }
             }
@@ -210,10 +212,10 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         item.setText(1, source);
 
         // generation time
-        item.setText(2, event.getGenerationTimeUTC());
+        item.setText(2, TimestampFormatter.format(event.getGenerationTime()));
 
         // reception time
-        item.setText(3, event.getReceptionTimeUTC());
+        item.setText(3, TimestampFormatter.format(event.getReceptionTime()));
 
         // seq number
         item.setText(4, event.getSeqNumber() + "");

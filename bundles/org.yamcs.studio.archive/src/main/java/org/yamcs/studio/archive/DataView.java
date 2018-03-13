@@ -29,6 +29,7 @@ import javax.swing.SwingUtilities;
 
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.studio.core.TimeInterval;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -688,7 +689,7 @@ public class DataView extends JScrollPane {
         void drawMouseTime(Graphics g, int mouseX, int offsetY) {
             int boxPadding = 1;
             long instant = getMouseInstant(mouseX);
-            String dateTimeText = TimeEncoding.toString(instant);
+            String dateTimeText = TimestampFormatter.format(instant);
             int fontWidth = g.getFontMetrics().stringWidth(dateTimeText);
             int fontHeight = 9;
             // g.setColor(Color.LIGHT_GRAY);
