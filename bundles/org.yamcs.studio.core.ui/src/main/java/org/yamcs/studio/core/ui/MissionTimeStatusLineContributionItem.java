@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Display;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 import org.yamcs.utils.TimeEncoding;
 
 public class MissionTimeStatusLineContributionItem extends StatusLineContributionItem implements TimeListener {
@@ -41,7 +42,7 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
             if (missionTime == TimeEncoding.INVALID_INSTANT) {
                 setText(DEFAULT_TEXT);
             } else {
-                setText(TimeCatalogue.getInstance().toString(missionTime));
+                setText(TimestampFormatter.format(missionTime));
             }
         });
     }

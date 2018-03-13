@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Yamcs;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
-import org.yamcs.utils.TimeEncoding;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 
 public class EventDetailsDialog extends TitleAreaDialog {
 
@@ -31,8 +31,8 @@ public class EventDetailsDialog extends TitleAreaDialog {
         setTitle("Event Details");
 
         String titleMessage = "";
-        titleMessage += "\tGeneration Time:\t" + TimeEncoding.toString(event.getGenerationTime()) + "\n";
-        titleMessage += "\tReception Time:\t" + TimeEncoding.toString(event.getReceptionTime());
+        titleMessage += "\tGeneration Time:\t" + TimestampFormatter.format(event.getGenerationTime()) + "\n";
+        titleMessage += "\tReception Time:\t" + TimestampFormatter.format(event.getReceptionTime());
         int icon = IMessageProvider.NONE;
         if (event.getSeverity() == EventSeverity.ERROR)
             icon = IMessageProvider.ERROR;

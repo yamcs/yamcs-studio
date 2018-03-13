@@ -47,6 +47,7 @@ import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.ui.utils.TimestampFormatter;
 import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart
@@ -292,7 +293,7 @@ public class ArchiveView extends ViewPart
             if (missionTime == TimeEncoding.INVALID_INSTANT || missionTime == 0) {
                 replayTimeLabel.setText("");
             } else {
-                String prettyTime = TimeCatalogue.getInstance().toString(missionTime);
+                String prettyTime = TimestampFormatter.format(missionTime);
                 replayTimeLabel.setText(prettyTime);
             }
         });
