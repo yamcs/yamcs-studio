@@ -14,12 +14,14 @@ public class ParameterContentParser implements IContentParser {
 
     @Override
     public boolean accept(ContentDescriptor desc) {
-        if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX))
+        if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX)) {
             return false;
+        }
         if (desc.getValue().startsWith(PARA_SOURCE)
                 || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                && PARA_SOURCE.equals(desc.getDefaultDataSource())))
+                        && PARA_SOURCE.equals(desc.getDefaultDataSource()))) {
             return true;
+        }
         return false;
     }
 
