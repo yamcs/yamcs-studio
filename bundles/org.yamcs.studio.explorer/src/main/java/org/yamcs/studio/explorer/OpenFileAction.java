@@ -53,13 +53,16 @@ public class OpenFileAction extends Action implements IWorkbenchAction {
     }
 
     private void openFileInRuntimeMode(IFile file) {
-        if (file.getFileExtension().equalsIgnoreCase("opi")) {
-            IPath workspacePath = file.getFullPath();
-            // IPath workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
-            RunModeService.openDisplay(workspacePath, Optional.empty(), DisplayMode.NEW_TAB, Optional.empty());
-        } else {
-            MessageDialog.openWarning(null, "Problems Opening File", "This file cannot be opened in Display Runner.");
+        if (file.getFileExtension() != null) {
+            if (file.getFileExtension().equalsIgnoreCase("opi")) {
+                IPath workspacePath = file.getFullPath();
+                // IPath workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
+                RunModeService.openDisplay(workspacePath, Optional.empty(), DisplayMode.NEW_TAB, Optional.empty());
+                return;
+            }
         }
+
+        MessageDialog.openWarning(null, "Problems Opening File", "This file cannot be opened in Display Runner.");
     }
 
     private void openFileInBuilderMode(IFile file) {
