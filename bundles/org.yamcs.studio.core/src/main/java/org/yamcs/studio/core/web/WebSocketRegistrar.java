@@ -46,6 +46,9 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(WebSocketRegistrar.class.getName());
 
+    // WebSocketClient max frame payload length, otherwise we get "frame length 65535 exceeded" error for displays with many parameters
+    private static final int MAX_FRAME_PAYLOAD_LENGTH = 10*1024*1024;
+
     private WebSocketClient wsclient;
 
     // Order all subscribe/unsubscribe events
@@ -58,6 +61,7 @@ public class WebSocketRegistrar implements WebSocketClientCallback {
         wsclient.setConnectionTimeoutMs(3000);
         wsclient.enableReconnection(false);
         wsclient.setUserAgent(YamcsPlugin.getDefault().getProductIdentifier());
+        wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
         requestSender = new Thread(() -> {
             try {
                 sendMergedRequests();
