@@ -47,6 +47,9 @@ public class YamcsClient implements WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
 
+    // WebSocketClient max frame payload length, otherwise we get "frame length 65535 exceeded" error for displays with many parameters
+    private static final int MAX_FRAME_PAYLOAD_LENGTH = 10*1024*1024;
+
     private YamcsConnectionProperties yprops;
     private String application;
 
@@ -103,6 +106,7 @@ public class YamcsClient implements WebSocketClientCallback {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(application);
         wsclient.enableReconnection(true);
+        wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
 
         FutureTask<YamcsConnectionProperties> future = new FutureTask<>(new Runnable() {
             @Override
