@@ -136,10 +136,10 @@ public class ScrollAlphaNumericEditor extends EditorPart {
         final ResourceHelper resources = SingleSourcePlugin.getResourceHelper();
         try {
             saveToStream(monitor, parameterTable.getParameters(), resources.getOutputStream(input));
+            loadData();
         } catch (Exception ex) {
             ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error while saving parameter list", ex);
             // Save failed, allow saving under a different name, or cancel
-            doSaveAs();
         }
     }
     

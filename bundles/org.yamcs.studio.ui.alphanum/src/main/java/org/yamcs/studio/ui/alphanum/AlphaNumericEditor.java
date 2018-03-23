@@ -70,7 +70,6 @@ public class AlphaNumericEditor extends EditorPart {
     @Override
     public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
         // "Site is incorrect" error results if the site is not set:
-        
         this.input = (FileEditorInput) input;
        
         setSite(site);
@@ -85,6 +84,7 @@ public class AlphaNumericEditor extends EditorPart {
     private List<ParameterInfo> loadData() {
         List<ParameterInfo> info = new ArrayList<>();
         try {
+            
             
             Gson gson = new Gson();   
             InputStreamReader reader = new InputStreamReader(input.getFile().getContents());
@@ -130,7 +130,7 @@ public class AlphaNumericEditor extends EditorPart {
 
         provider.load(parameterNames);
         parameterTable.setColumns(fileInput.getColumns());
-        for(ParameterInfo info : loadData())
+        for(ParameterInfo info : parameters)
             parameterTable.addParameter(info);
         parameterTable.refresh();
 
@@ -176,10 +176,6 @@ public class AlphaNumericEditor extends EditorPart {
         try {
 
             Gson gson = new Gson();
-            //             
-            //            List<String> parameterNames = new ArrayList<>();
-            //            for(ParameterInfo info : parameters)
-            //                parameterNames.add(info.getQualifiedName());
             fileInput.setParameterList(parameters);
             fileInput.setColumns(new ArrayList<>(parameterTable.getColumns()));
             gson.toJson(fileInput, out);
