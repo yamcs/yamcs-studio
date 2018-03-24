@@ -15,6 +15,7 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -147,6 +148,10 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
                         { "Don't Popup", ConsolePopupLevel.NO_POP.toString() } },
                 parent);
         addField(popupConsoleEditor);
+
+        StringFieldEditor pythonPathEditor = new StringFieldEditor(PreferencesHelper.PYTHON_PATH, "PYTHONPATH", parent);
+        pythonPathEditor.getTextControl(parent).setToolTipText("The path to search python modules");
+        addField(pythonPathEditor);
 
         BooleanFieldEditor showCompactModeDialogEditor = new BooleanFieldEditor(
                 PreferencesHelper.SHOW_COMPACT_MODE_DIALOG,

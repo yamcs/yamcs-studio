@@ -1,20 +1,29 @@
 package org.csstudio.opibuilder.script;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
 import org.csstudio.simplepv.IPV;
 import org.csstudio.ui.util.thread.UIBundlingThread;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.swt.widgets.Display;
 import org.mozilla.javascript.Context;
+import org.osgi.framework.Bundle;
+import org.python.core.PySystemState;
+import org.python.util.PythonInterpreter;
 
 /**
  * The factory to return the corresponding script store according to the script type.
@@ -36,6 +45,8 @@ public class ScriptStoreFactory {
 
     final private static JavaScriptEngine defaultJsEngine;
 
+    private static boolean pythonInterpreterInitialized = false;
+
     private static Map<Display, Context> displayContextMap = new HashMap<>();
     private static Map<Display, ScriptEngine> displayScriptEngineMap = new HashMap<>();
 
@@ -50,6 +61,51 @@ public class ScriptStoreFactory {
             throw new RuntimeException(
                     "Invalid preference setting " + OPIBuilderPlugin.PLUGIN_ID + "/java_script_engine=" + option);
         }
+    }
+
+    public static void initPythonInterpreter() throws Exception {
+        if (pythonInterpreterInitialized) {
+            return;
+        }
+
+        // Add Jython's /lib PYTHONPATH
+        Bundle bundle = Platform.getBundle("org.python.jython");
+        String pythonPath = null;
+        if (bundle == null) {
+            throw new Exception("Cannot locate jython bundle");
+        }
+        // Used to be packed as org.python.jython/jython.jar/Lib
+        URL fileURL = FileLocator.find(bundle, new Path("jython.jar"), null);
+        if (fileURL != null) {
+            pythonPath = FileLocator.resolve(fileURL).getPath() + "/Lib";
+        } else { // Different packaging where jython.jar is expanded, /Lib at plugin root
+            pythonPath = FileLocator.resolve(new URL("platform:/plugin/org.python.jython/Lib/")).getPath();
+            // Turn politically correct URL path digestible by jython
+            if (pythonPath.startsWith("file:/"))
+                pythonPath = pythonPath.substring(5);
+            pythonPath = pythonPath.replace(".jar!", ".jar");
+        }
+
+        Optional<String> prefPath = PreferencesHelper.getPythonPath();
+        if (prefPath.isPresent()) {
+            pythonPath += System.getProperty("path.separator") + prefPath.get();
+        }
+        final Properties props = new Properties();
+        props.setProperty("python.path", pythonPath);
+        // Disable cachedir to avoid creation of cachedir folder.
+        // See http://www.jython.org/jythonbook/en/1.0/ModulesPackages.html#java-package-scanning
+        // and http://wiki.python.org/jython/PackageScanning
+        props.setProperty(PySystemState.PYTHON_CACHEDIR_SKIP, "true");
+
+        // Jython 2.7(b2, b3) need these to set sys.prefix and sys.executable.
+        // If left undefined, initialization of Lib/site.py fails with
+        // posixpath.py", line 394, in normpath AttributeError:
+        // 'NoneType' object has no attribute 'startswith'
+        props.setProperty("python.home", ".");
+        props.setProperty("python.executable", "css");
+
+        PythonInterpreter.initialize(System.getProperties(), props, new String[] { "" });
+        pythonInterpreterInitialized = true;
     }
 
     public static JavaScriptEngine getDefaultJavaScriptEngine() {
@@ -93,19 +149,32 @@ public class ScriptStoreFactory {
                 (scriptData.getPath() == null || scriptData.getPath().getFileExtension() == null)) {
             if (scriptData instanceof RuleScriptData) {
                 return getJavaScriptStore(scriptData, editpart, pvArray);
-            } else
+            } else {
                 throw new RuntimeException("No Script Engine for this type of script");
+            }
         }
-        String fileExt = ""; //$NON-NLS-1$
+
+        String fileExt = "";
         if (scriptData.isEmbedded()) {
-            if (scriptData.getScriptType() == ScriptType.JAVASCRIPT)
+            if (scriptData.getScriptType() == ScriptType.JAVASCRIPT) {
                 fileExt = ScriptService.JS;
-        } else
+            } else if (scriptData.getScriptType() == ScriptType.PYTHON) {
+                fileExt = ScriptService.PY;
+            }
+        } else {
             fileExt = scriptData.getPath().getFileExtension().trim().toLowerCase();
+        }
+
         if (fileExt.equals(ScriptService.JS)) {
             return getJavaScriptStore(scriptData, editpart, pvArray);
-        } else
+        } else if (fileExt.equals(ScriptService.PY)) {
+            if (!pythonInterpreterInitialized) {
+                initPythonInterpreter();
+            }
+            return new JythonScriptStore(scriptData, editpart, pvArray);
+        } else {
             throw new RuntimeException("No Script Engine for this type of script");
+        }
     }
 
     private static AbstractScriptStore getJavaScriptStore(
@@ -143,13 +212,9 @@ public class ScriptStoreFactory {
 
     public static void exit() {
         boolean jsEngineInitialized = displayContextMap.containsKey(Display.getCurrent());
-        if (jsEngineInitialized)
-            UIBundlingThread.getInstance().addRunnable(Display.getCurrent(), new Runnable() {
-                @Override
-                public void run() {
-                    Context.exit();
-                }
-            });
+        if (jsEngineInitialized) {
+            UIBundlingThread.getInstance().addRunnable(Display.getCurrent(), () -> Context.exit());
+        }
     }
 
     /**
@@ -168,5 +233,4 @@ public class ScriptStoreFactory {
             initJdkJSEngine();
         return displayScriptEngineMap.get(display);
     }
-
 }

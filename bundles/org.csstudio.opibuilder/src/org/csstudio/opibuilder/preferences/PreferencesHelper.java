@@ -9,6 +9,7 @@ package org.csstudio.opibuilder.preferences;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.csstudio.java.string.StringSplitter;
@@ -16,6 +17,7 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -48,6 +50,7 @@ public class PreferencesHelper {
     public static final String POPUP_CONSOLE = "popup_console"; //$NON-NLS-1$
     public static final String PROBE_OPI = "probe_opi"; //$NON-NLS-1$
     public static final String SCHEMA_OPI = "schema_opi"; //$NON-NLS-1$
+    public static final String PYTHON_PATH = "python_path"; //$NON-NLS-1$
     public static final String DISPLAY_SYSTEM_OUTPUT = "display_system_output"; //$NON-NLS-1$
     public static final String SHOW_COMPACT_MODE_DIALOG = "show_compact_mode_dialog";//$NON-NLS-1$
     public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";//$NON-NLS-1$
@@ -273,7 +276,29 @@ public class PreferencesHelper {
             ErrorHandlerUtil.handleError("Failed to parse hidden_widgets preference", e);
             return null;
         }
+    }
 
+    /**
+     * @return the python path, null if this preference is not setted.
+     * @throws Exception
+     */
+    public static Optional<String> getPythonPath() throws Exception {
+        final String rawString = getString(PYTHON_PATH);
+        if (rawString == null || rawString.isEmpty())
+            return Optional.empty();
+        final String[] rawPaths = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
+        final StringBuilder sb = new StringBuilder();
+        for (String rawPath : rawPaths) {
+            if (sb.length() > 0)
+                sb.append(System.getProperty("path.separator"));
+            final IPath path = new Path(rawPath);
+            final IPath location = ResourceUtil.workspacePathToSysPath(path);
+            if (location != null)
+                sb.append(location.toOSString());
+            else
+                sb.append(rawPath);
+        }
+        return Optional.of(sb.toString());
     }
 
     public static boolean isDisplaySystemOutput() {
