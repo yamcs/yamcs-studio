@@ -48,7 +48,6 @@ public class PreferencesHelper {
     public static final String NO_EDIT = "no_edit"; //$NON-NLS-1$
     public static final String DISABLE_ADVANCED_GRAPHICS = "disable_advanced_graphics"; //$NON-NLS-1$
     public static final String POPUP_CONSOLE = "popup_console"; //$NON-NLS-1$
-    public static final String PROBE_OPI = "probe_opi"; //$NON-NLS-1$
     public static final String SCHEMA_OPI = "schema_opi"; //$NON-NLS-1$
     public static final String PYTHON_PATH = "python_path"; //$NON-NLS-1$
     public static final String DISPLAY_SYSTEM_OUTPUT = "display_system_output"; //$NON-NLS-1$
@@ -129,18 +128,6 @@ public class PreferencesHelper {
         if (fontFilePath == null || fontFilePath.trim().isEmpty())
             return null;
         return getAbsolutePathOnRepo(fontFilePath);
-    }
-
-    /**
-     * Get the probe OPI path from preference store.
-     * 
-     * @return the probe OPI path. null if not specified.
-     */
-    public static IPath getProbeOPIPath() {
-        String probeOPIPath = getString(PROBE_OPI);
-        if (probeOPIPath == null || probeOPIPath.trim().isEmpty())
-            return null;
-        return getExistFileInRepoAndSearchPath(probeOPIPath);
     }
 
     /**

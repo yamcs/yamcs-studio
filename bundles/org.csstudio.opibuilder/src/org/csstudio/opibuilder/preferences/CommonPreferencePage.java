@@ -51,12 +51,6 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
                 "The path to search OPI files.");
         addField(opiSearchPathEditor);
 
-        WorkspaceFileFieldEditor probeOPIEditor = new WorkspaceFileFieldEditor(PreferencesHelper.PROBE_OPI,
-                "Probe OPI: ", new String[] { "opi" }, parent);//$NON-NLS-2$
-        probeOPIEditor.getTextControl(parent).setToolTipText(
-                "The opi file to be invoked from CSS->OPI Probe context menu");
-        addField(probeOPIEditor);
-
         BooleanFieldEditor noEditModeEditor = new BooleanFieldEditor(PreferencesHelper.NO_EDIT,
                 "No-Editing mode", parent);
         addField(noEditModeEditor);
