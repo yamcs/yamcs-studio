@@ -24,7 +24,7 @@ public class SeverityHandlerSound implements ParameterListener {
     public static void updatePrefence() {
         Activator plugin = Activator.getDefault();
 
-        triggerCondition = plugin.getPreferenceStore().getString("trigerBeep");
+        triggerCondition = plugin.getPreferenceStore().getString("triggerBeep");
         if (plugin.getPreferenceStore().getBoolean("beepWarning")) {
             beepLevel = MonitoringResult.WARNING.getNumber();
         } else {

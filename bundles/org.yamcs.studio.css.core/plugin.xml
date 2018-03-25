@@ -47,4 +47,12 @@
          </visibility>
       </objectContribution>
    </extension>
+   
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.yamcs.studio.css.core.prefs.SoundPreferencePage"
+            id="org.yamcs.studio.css.core.prefs.SoundPreferencePage"
+            name="Sound">
+      </page>
+   </extension>
 </plugin>
