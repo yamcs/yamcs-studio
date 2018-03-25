@@ -64,13 +64,13 @@
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.archive.ArchiveView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.eventlog.EventLogView"/>
          <view
@@ -82,19 +82,19 @@
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.commanding.stack.CommandStackView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
          <view
@@ -106,13 +106,13 @@
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.monitoring.links.LinksView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="false"
+               visible="true"
                closeable="true"
                id="org.yamcs.studio.monitoring.clients.ClientsView"/>
 
