@@ -25,6 +25,8 @@ import org.yamcs.studio.css.core.pvmanager.ParameterDataSourceProvider;
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
+    private static boolean logProductInfo = true;
+
     public YamcsStudioWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
     }
@@ -40,9 +42,14 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         }
 
         // Now that we know that the user will see it:
-        Logger log = Logger.getLogger(getClass().getName());
-        log.info(Platform.getProduct().getName() + " v" + Platform.getProduct().getDefiningBundle().getVersion());
-        log.info("Workspace: " + Platform.getInstanceLocation().getURL().getPath());
+        if (logProductInfo) {
+            Logger log = Logger.getLogger(getClass().getName());
+            log.info(Platform.getProduct().getName() + " v" + Platform.getProduct().getDefiningBundle().getVersion());
+            log.info("Workspace: " + Platform.getInstanceLocation().getURL().getPath());
+
+            // Prevent this message from appearing when runtime window is opened from builder
+            logProductInfo = false;
+        }
     }
 
     @Override
