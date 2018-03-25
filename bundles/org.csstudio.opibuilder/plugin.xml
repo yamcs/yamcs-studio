@@ -125,54 +125,6 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"
-            id="org.csstudio.opibuilder.showPVInfo"
-            objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
-         <action
-               class="org.csstudio.opibuilder.actions.ShowPVInfoAction"
-               enablesFor="1"
-               id="org.csstudio.opibuilder.showPVInfoAction"
-               label="Show PV Info"
-               tooltip="Show detail infomation of PVs on this widget">
-         </action>
-         <visibility>
-            <and>
-               <objectState
-                     name="executionMode"
-                     value="RUN_MODE">
-               </objectState>
-               <objectState
-                     name="hasPVs"
-                     value="true">
-               </objectState>
-            </and>
-         </visibility>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.csstudio.opibuilder.CSSpopupMenu"
-            objectClass="org.csstudio.platform.model.IProcessVariable">
-         <menu
-               id="org.csstudio.popmenu"
-               label="CSS"
-               path="additions">
-            <groupMarker
-                  name="content">
-            </groupMarker>
-            <separator
-                  name="additions">
-            </separator>
-         </menu>
-         <action
-               class="org.csstudio.opibuilder.actions.OpenOPIProbeAction"
-               icon="icons/OPIRunner.png"
-               id="org.csstudio.opibuilder.openOPIProbeAction"
-               label="OPI Probe"
-               menubarPath="org.csstudio.popmenu/content"
-               tooltip="Send PV name to OPI Probe">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
             id="org.csstudio.opibuilder.showMacros"
             objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
          <action
@@ -296,20 +248,6 @@
             name="OPI Placeholder">
       </view>
    </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.csstudio.ui.menu.popup.processvariable">
-         <command
-               commandId="org.csstudio.opibuilder.openProbeOPI"
-               icon="icons/OPIRunner.png"
-               label="OPI Probe"
-               style="push"
-               tooltip="Send PV name to OPI Probe">
-         </command>
-      </menuContribution>
-   </extension>
 
    <extension
          point="org.eclipse.core.runtime.adapters">
@@ -351,5 +289,50 @@
             launcher="org.csstudio.opibuilder.runmode.ShellLauncher"
             name="OPI Runner (New Window)">
       </editor-->
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <separator
+               name="css"
+               visible="true">
+         </separator>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=css">
+         <command
+               commandId="org.csstudio.opibuilder.openProbeOPI"
+               icon="icons/probe-16.png"
+               label="Probe"
+               style="push">
+            <visibleWhen>
+               <or>
+                  <with variable="activeMenuSelection">
+                     <iterate>
+                        <adapt type="org.csstudio.csdata.ProcessVariable"/>
+                     </iterate>
+                     <and>
+                        <count value="+"/>
+                     </and>
+                  </with>
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate>
+                        <adapt
+                              type="[Lorg.csstudio.csdata.ProcessVariable;">
+                        </adapt>
+                     </iterate>
+                     <and>
+                        <count value="+"/>
+                     </and>
+                  </with>
+               </or>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
 </plugin>

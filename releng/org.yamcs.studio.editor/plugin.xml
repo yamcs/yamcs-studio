@@ -55,15 +55,6 @@
       </application>
    </extension>
 
-   <extension point="org.eclipse.ui.activities">
-      <activity id="yamcsstudio.disableextensions" name="Hidden activities"/>
-      <!-- Hide the 'Show PV Info' pop-up menu that appears when you right-click a PV in a display.
-        We have our own richer modal for that. -->
-      <activityPatternBinding
-            activityId="yamcsstudio.disableextensions"
-            pattern="org.csstudio.opibuilder/org.csstudio.opibuilder.showPVInfoAction"/>
-   </extension>
-
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">

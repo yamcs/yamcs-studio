@@ -2,11 +2,11 @@
 <display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
   <actions hook="false" hook_all="false" />
   <auto_scale_widgets>
-    <auto_scale_widgets>true</auto_scale_widgets>
+    <auto_scale_widgets>false</auto_scale_widgets>
     <min_width>400</min_width>
-    <min_height>300</min_height>
+    <min_height>900</min_height>
   </auto_scale_widgets>
-  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
+  <auto_zoom_to_fit_all>true</auto_zoom_to_fit_all>
   <background_color>
     <color red="255" green="255" blue="255" />
   </background_color>
@@ -19,7 +19,7 @@
   <macros>
     <include_parent_macros>true</include_parent_macros>
   </macros>
-  <name>OPI Probe</name>
+  <name>Probe</name>
   <rules />
   <scripts />
   <show_close_button>true</show_close_button>
