@@ -93,6 +93,8 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
 
             if (runtime_page == null) { // (Re-)create runtime window
                 runtime_page = createRuntimePage();
+            } else {
+                runtime_page.getWorkbenchWindow().getShell().setActive();
             }
 
             if (activeEditor instanceof OPIEditor) {

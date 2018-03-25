@@ -36,7 +36,13 @@
             categoryId="org.eclipse.ui.category.edit"
             description="Run the OPI file currently in the editor"
             id="org.csstudio.opibuilder.runopi"
-            name="Launch Display Runner">
+            name="Open workspace in Display Runner">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.edit"
+            description="Open Display Builder"
+            id="org.csstudio.opibuilder.editopi"
+            name="Open workspace in Display Builder">
       </command>
       <command
             categoryId="org.eclipse.ui.category.edit"
@@ -179,7 +185,21 @@
                toolbarPath="Normal/additions"
                id="org.csstudio.opibuilder.runOPIAction"
                icon="icons/run.gif"
-               label="Launch Display Runner"
+               label="Open Display Runner"
+               style="push">
+         </action>
+      </actionSet>
+      <actionSet
+            id="org.csstudio.opibuilder.editor.runtimeActionSet"
+            label="OPI Builder Actions for Runtime Mode"
+            visible="false">
+         <action
+               class="org.csstudio.opibuilder.actions.EditOPIAction"
+               definitionId="org.csstudio.opibuilder.editopi"
+               toolbarPath="Normal/additions"
+               id="org.csstudio.opibuilder.editOPIAction"
+               icon="icons/placeholder.gif"
+               label="Open Display Builder"
                style="push">
          </action>
       </actionSet>
