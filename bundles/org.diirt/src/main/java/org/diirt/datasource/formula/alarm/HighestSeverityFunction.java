@@ -4,15 +4,16 @@
  */
 package org.diirt.datasource.formula.alarm;
 
-import org.diirt.vtype.ValueFactory;
 import java.util.Arrays;
 import java.util.List;
+
 import org.diirt.datasource.formula.FormulaFunction;
 import org.diirt.vtype.Alarm;
 import org.diirt.vtype.AlarmSeverity;
 import org.diirt.vtype.Time;
 import org.diirt.vtype.VEnum;
 import org.diirt.vtype.VType;
+import org.diirt.vtype.ValueFactory;
 import org.diirt.vtype.ValueUtil;
 
 /**
@@ -44,7 +45,7 @@ class HighestSeverityFunction implements FormulaFunction {
 
     @Override
     public List<Class<?>> getArgumentTypes() {
-        return Arrays.<Class<?>>asList(VType.class);
+        return Arrays.<Class<?>> asList(VType.class);
     }
 
     @Override
@@ -59,7 +60,7 @@ class HighestSeverityFunction implements FormulaFunction {
 
     @Override
     public Object calculate(final List<Object> args) {
-        Alarm alarm = ValueUtil.highestSeverityOf(args, true);
+        Alarm alarm = highestSeverityOf(args, true);
         Time time = ValueUtil.timeOf(alarm);
         if (time == null) {
             time = ValueFactory.timeNow();

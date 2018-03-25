@@ -4,23 +4,18 @@
  */
 package org.diirt.datasource.formula.venum;
 
-import static org.diirt.vtype.ValueFactory.*;
+import static org.diirt.vtype.ValueFactory.newVEnum;
 
 import java.util.Arrays;
 import java.util.List;
-import org.diirt.datasource.formula.FormulaFunction;
 
+import org.diirt.datasource.formula.FormulaFunction;
 import org.diirt.datasource.util.NullUtils;
 import org.diirt.vtype.VEnum;
 import org.diirt.vtype.VNumber;
 import org.diirt.vtype.VNumberArray;
 import org.diirt.vtype.VStringArray;
-import org.diirt.vtype.ValueUtil;
 
-/**
- *
- * @author carcassi
- */
 class EnumFromVNumberFunction implements FormulaFunction {
 
     @Override
@@ -45,7 +40,7 @@ class EnumFromVNumberFunction implements FormulaFunction {
 
     @Override
     public List<Class<?>> getArgumentTypes() {
-        return Arrays.<Class<?>>asList(VNumber.class, VNumberArray.class, VStringArray.class);
+        return Arrays.<Class<?>> asList(VNumber.class, VNumberArray.class, VStringArray.class);
     }
 
     @Override
@@ -67,12 +62,12 @@ class EnumFromVNumberFunction implements FormulaFunction {
         VNumberArray intervals = (VNumberArray) args.get(1);
         VStringArray labels = (VStringArray) args.get(2);
         int index = 0;
-        while (index < intervals.getData().size() && value.getValue().doubleValue() >= intervals.getData().getDouble(index)) {
+        while (index < intervals.getData().size()
+                && value.getValue().doubleValue() >= intervals.getData().getDouble(index)) {
             index++;
         }
         return newVEnum(index, labels.getData(),
                 value,
-                ValueUtil.latestValidTimeOrNowOf(args));
+                latestValidTimeOrNowOf(args));
     }
-
 }

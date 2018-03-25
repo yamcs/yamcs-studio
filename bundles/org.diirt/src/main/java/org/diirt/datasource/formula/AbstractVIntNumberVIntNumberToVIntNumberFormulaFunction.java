@@ -4,25 +4,26 @@
  */
 package org.diirt.datasource.formula;
 
+import static org.diirt.vtype.ValueFactory.displayNone;
+import static org.diirt.vtype.ValueFactory.newVInt;
+
 import java.util.Arrays;
 import java.util.List;
+
 import org.diirt.datasource.util.NullUtils;
 import org.diirt.vtype.VNumber;
-import static org.diirt.vtype.ValueFactory.*;
-import org.diirt.vtype.ValueUtil;
-
 
 /**
- * Abstract class for formula functions that take two integer {@link VNumber} as arguments
- * and return an integer {@code VNumber}.
+ * Abstract class for formula functions that take two integer {@link VNumber} as arguments and return an integer
+ * {@code VNumber}.
  * <p>
  * This class takes care of:
  * <ul>
- *    <li>extracting int value from the {@code VNumber}</li>
- *    <li>null handling - returns null if one argument is null</li>
- *    <li>alarm handling - returns highest alarm</li>
- *    <li>time handling - returns latest time, or now if no time is available</li>
- *    <li>display handling - returns display none</li>
+ * <li>extracting int value from the {@code VNumber}</li>
+ * <li>null handling - returns null if one argument is null</li>
+ * <li>alarm handling - returns highest alarm</li>
+ * <li>time handling - returns latest time, or now if no time is available</li>
+ * <li>display handling - returns display none</li>
  * </ul>
  *
  * @author shroffk
@@ -37,12 +38,17 @@ public abstract class AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction im
     /**
      * Creates a new function.
      *
-     * @param name function name; can't be null
-     * @param description function description; can't be null
-     * @param arg1Name first argument name; can't be null
-     * @param arg2Name second argument name; can't be null
+     * @param name
+     *            function name; can't be null
+     * @param description
+     *            function description; can't be null
+     * @param arg1Name
+     *            first argument name; can't be null
+     * @param arg2Name
+     *            second argument name; can't be null
      */
-    public AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction(String name, String description, String arg1Name, String arg2Name) {
+    public AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction(String name, String description, String arg1Name,
+            String arg2Name) {
         // Validate parameters
         if (name == null) {
             throw new NullPointerException("Function name can't be null");
@@ -59,7 +65,7 @@ public abstract class AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction im
 
         this.name = name;
         this.description = description;
-        this.argumentTypes = Arrays.<Class<?>>asList(VNumber.class, VNumber.class);
+        this.argumentTypes = Arrays.<Class<?>> asList(VNumber.class, VNumber.class);
         this.argumentNames = Arrays.asList(arg1Name, arg2Name);
     }
 
@@ -113,17 +119,18 @@ public abstract class AbstractVIntNumberVIntNumberToVIntNumberFormulaFunction im
 
         return newVInt(
                 calculate(arg1.intValue(), arg2.intValue()),
-                ValueUtil.highestSeverityOf(args, false),
-                ValueUtil.latestValidTimeOrNowOf(args),
+                highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args),
                 displayNone());
     }
 
     /**
-     * Calculates the result based on the two arguments. This is the only
-     * method one has to implement.
+     * Calculates the result based on the two arguments. This is the only method one has to implement.
      *
-     * @param arg1 the first argument
-     * @param arg2 the second argument
+     * @param arg1
+     *            the first argument
+     * @param arg2
+     *            the second argument
      * @return the result
      */
     public abstract int calculate(int arg1, int arg2);

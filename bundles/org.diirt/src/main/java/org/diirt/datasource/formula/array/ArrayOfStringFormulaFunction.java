@@ -7,17 +7,12 @@ package org.diirt.datasource.formula.array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.diirt.datasource.formula.FormulaFunction;
 
+import org.diirt.datasource.formula.FormulaFunction;
 import org.diirt.vtype.VString;
 import org.diirt.vtype.VStringArray;
 import org.diirt.vtype.ValueFactory;
-import org.diirt.vtype.ValueUtil;
 
-/**
- * @author shroffk
- *
- */
 class ArrayOfStringFormulaFunction implements FormulaFunction {
 
     @Override
@@ -68,8 +63,7 @@ class ArrayOfStringFormulaFunction implements FormulaFunction {
         }
 
         return ValueFactory.newVStringArray(data,
-                ValueUtil.highestSeverityOf(args, false),
-                ValueUtil.latestValidTimeOrNowOf(args));
+                highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args));
     }
-
 }

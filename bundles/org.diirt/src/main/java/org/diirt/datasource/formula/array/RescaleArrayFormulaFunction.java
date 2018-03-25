@@ -9,13 +9,12 @@ import static org.diirt.vtype.ValueFactory.newVNumberArray;
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.diirt.datasource.formula.FormulaFunction;
 import org.diirt.datasource.util.NullUtils;
-
 import org.diirt.util.array.ListMath;
 import org.diirt.vtype.VNumber;
 import org.diirt.vtype.VNumberArray;
-import org.diirt.vtype.ValueUtil;
 
 /**
  * @author shroffk
@@ -71,8 +70,8 @@ class RescaleArrayFormulaFunction implements FormulaFunction {
 
         return newVNumberArray(
                 ListMath.rescale(arg1.getData(), arg2.getValue().doubleValue(), arg3.getValue().doubleValue()),
-                ValueUtil.highestSeverityOf(args, false),
-                ValueUtil.latestValidTimeOrNowOf(args),
+                highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args),
                 displayNone());
     }
 }

@@ -6,24 +6,22 @@ package org.diirt.datasource.formula;
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.diirt.vtype.Alarm;
 import org.diirt.vtype.Time;
 import org.diirt.vtype.VNumber;
 import org.diirt.vtype.ValueFactory;
-import org.diirt.vtype.ValueUtil;
-
 
 /**
- * Abstract class for formula functions that take two {@link VNumber}s as arguments
- * and return a {@code VNumber}.
+ * Abstract class for formula functions that take two {@link VNumber}s as arguments and return a {@code VNumber}.
  * <p>
  * This class takes care of:
  * <ul>
- *    <li>extracting double value from {@code VNumber}</li>
- *    <li>null handling - returns null if one argument is null</li>
- *    <li>alarm handling - returns highest alarm</li>
- *    <li>time handling - returns latest time, or now if no time is available</li>
- *    <li>display handling - returns display none</li>
+ * <li>extracting double value from {@code VNumber}</li>
+ * <li>null handling - returns null if one argument is null</li>
+ * <li>alarm handling - returns highest alarm</li>
+ * <li>time handling - returns latest time, or now if no time is available</li>
+ * <li>display handling - returns display none</li>
  * </ul>
  *
  * @author carcassi
@@ -38,12 +36,17 @@ public abstract class AbstractVNumberVNumberToVNumberFormulaFunction implements 
     /**
      * Creates a new function.
      *
-     * @param name function name; can't be null
-     * @param description function description; can't be null
-     * @param arg1Name first argument name; can't be null
-     * @param arg2Name second argument name; can't be null
+     * @param name
+     *            function name; can't be null
+     * @param description
+     *            function description; can't be null
+     * @param arg1Name
+     *            first argument name; can't be null
+     * @param arg2Name
+     *            second argument name; can't be null
      */
-    public AbstractVNumberVNumberToVNumberFormulaFunction(String name, String description, String arg1Name, String arg2Name) {
+    public AbstractVNumberVNumberToVNumberFormulaFunction(String name, String description, String arg1Name,
+            String arg2Name) {
         // Validate parameters
         if (name == null) {
             throw new NullPointerException("Function name can't be null");
@@ -60,7 +63,7 @@ public abstract class AbstractVNumberVNumberToVNumberFormulaFunction implements 
 
         this.name = name;
         this.description = description;
-        this.argumentTypes = Arrays.<Class<?>>asList(VNumber.class, VNumber.class);
+        this.argumentTypes = Arrays.<Class<?>> asList(VNumber.class, VNumber.class);
         this.argumentNames = Arrays.asList(arg1Name, arg2Name);
     }
 
@@ -106,25 +109,25 @@ public abstract class AbstractVNumberVNumberToVNumberFormulaFunction implements 
         if (arg1 == null || arg2 == null) {
             return null;
         }
-        Alarm alarm = ValueUtil.highestSeverityOf(args, false);
-        Time time = ValueUtil.latestTimeOf(args);
+        Alarm alarm = highestSeverityOf(args, false);
+        Time time = latestValidTimeOrNowOf(args);
         if (time == null) {
             time = ValueFactory.timeNow();
         }
         return ValueFactory.newVDouble(
                 calculate(((VNumber) args.get(0)).getValue().doubleValue(),
-                ((VNumber) args.get(1)).getValue().doubleValue())
-                , alarm, time, ValueFactory.displayNone());
+                        ((VNumber) args.get(1)).getValue().doubleValue()),
+                alarm, time, ValueFactory.displayNone());
     }
 
     /**
-     * Calculates the result based on the two arguments. This is the only
-     * method one has to implement.
+     * Calculates the result based on the two arguments. This is the only method one has to implement.
      *
-     * @param arg1 the first argument
-     * @param arg2 the second argument
+     * @param arg1
+     *            the first argument
+     * @param arg2
+     *            the second argument
      * @return the result
      */
     public abstract double calculate(double arg1, double arg2);
-
 }
