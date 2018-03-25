@@ -15,3 +15,4 @@ Export-Package: org.csstudio.autocomplete.ui,
  org.csstudio.autocomplete.ui.history,
  org.csstudio.autocomplete.ui.util
 Service-Component: OSGI-INF/*.xml
+Automatic-Module-Name: org.csstudio.autocomplete.ui

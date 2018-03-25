@@ -31,3 +31,4 @@ Export-Package: org.csstudio.opibuilder.actions,
  org.csstudio.opibuilder.properties.support,
  org.csstudio.opibuilder.visualparts,
  org.csstudio.opibuilder.wizards
+Automatic-Module-Name: org.csstudio.opibuilder.editor

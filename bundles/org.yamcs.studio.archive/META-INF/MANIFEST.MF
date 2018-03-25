@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.ui,
  org.yamcs.client,
  com.google.gson
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Automatic-Module-Name: org.yamcs.studio.archive

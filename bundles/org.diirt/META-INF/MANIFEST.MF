@@ -28,3 +28,4 @@ Export-Package: org.diirt.datasource,
  org.diirt.vtype,
  org.diirt.vtype.next,
  org.diirt.vtype.table
+Automatic-Module-Name: org.diirt

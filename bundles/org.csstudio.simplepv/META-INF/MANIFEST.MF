@@ -9,3 +9,4 @@ Require-Bundle: org.diirt,
  org.eclipse.core.runtime
 Export-Package: org.csstudio.simplepv
 Bundle-Activator: org.csstudio.simplepv.SimplePVPlugin
+Automatic-Module-Name: org.csstudio.simplepv

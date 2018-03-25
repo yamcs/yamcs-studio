@@ -28,3 +28,4 @@ Export-Package: org.csstudio.csdata,
  org.eclipse.wb.swt
 Bundle-Activator: org.csstudio.ui.util.Activator
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.csstudio.ui.util

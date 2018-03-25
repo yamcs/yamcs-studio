@@ -15,3 +15,4 @@ Export-Package: org.yamcs.studio.core,
  org.yamcs.studio.core.model,
  org.yamcs.studio.core.security
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Automatic-Module-Name: org.yamcs.studio.core

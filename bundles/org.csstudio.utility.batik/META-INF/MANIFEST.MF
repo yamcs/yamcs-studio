@@ -28,3 +28,4 @@ Bundle-Description: Extra utils for apache batik
 Bundle-ClassPath: .
 Import-Package: org.w3c.dom,
  org.w3c.dom.events
+Automatic-Module-Name: org.csstudio.utility.batik

@@ -23,3 +23,4 @@ Export-Package: org.csstudio.autocomplete,
  org.csstudio.autocomplete.pvmanager.sys
 Service-Component: OSGI-INF/*.xml
 Import-Package: org.diirt.datasource.formula
+Automatic-Module-Name: org.csstudio.autocomplete

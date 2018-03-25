@@ -15,3 +15,4 @@ Require-Bundle: org.yamcs.studio.core,
  org.eclipse.core.runtime
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Import-Package: com.csvreader
+Automatic-Module-Name: org.yamcs.studio.eventlog

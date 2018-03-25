@@ -10,3 +10,4 @@ Require-Bundle: org.yamcs.studio.core,
  org.yamcs.studio.commanding,
  org.yamcs.client
 Export-Package: org.yamcs.studio.script
+Automatic-Module-Name: org.yamcs.studio.css.script
