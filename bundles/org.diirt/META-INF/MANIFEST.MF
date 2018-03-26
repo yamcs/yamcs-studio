@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: DIIRT
 Bundle-SymbolicName: org.diirt
 Bundle-Vendor: Space Applications Services
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.antlr.runtime;bundle-version="[3.2,4)"
 Import-Package: org.osgi.framework
