@@ -47,35 +47,33 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     private Color errorColor;
     private Color warningColor;
-    
-    
-    Event lastAddedEvent = null;
 
+    Event lastAddedEvent = null;
 
     public EventLogContentProvider(Table table) {
         this.table = table;
         if (PlatformUI.isWorkbenchRunning()) {
-            errorIcon = getImage("icons/eview16/error_obj.png");   
+            errorIcon = getImage("icons/eview16/error_obj.png");
             infoIcon = getImage("icons/eview16/level0s.png");
             watchIcon = getImage("icons/eview16/level1s.png");
             warnIcon = getImage("icons/eview16/level2s.png");
             distressIcon = getImage("icons/eview16/level3s.png");
             criticalIcon = getImage("icons/eview16/level4s.png");
             severeIcon = getImage("icons/eview16/level5s.png");
-            
+
         }
         errorColor = new Color(table.getDisplay(), new RGB(255, 221, 221));
         warningColor = new Color(table.getDisplay(), new RGB(248, 238, 199));
 
         nbMessageLineToDisplay = EventLogPreferences.getMessageLineCount();
     }
-    
+
     private Image getImage(String path) {
         return ImageDescriptor.createFromURL(FileLocator
                 .find(Platform.getBundle("org.yamcs.studio.eventlog"),
-                new Path(path),null)).createImage();
+                        new Path(path), null))
+                .createImage();
     }
-    
 
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -247,19 +245,17 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             switch (evt.getSeverity()) {
             case INFO:
                 return infoIcon;
+            case WATCH:
+                return watchIcon;
             case WARNING:
                 return warnIcon;
-            case ERROR:
-                return errorIcon;
             case DISTRESS:
                 return distressIcon;
             case CRITICAL:
                 return criticalIcon;
             case SEVERE:
+            case ERROR:
                 return severeIcon;
-            case WATCH:
-                return watchIcon;
-             
             }
         }
         return null;
