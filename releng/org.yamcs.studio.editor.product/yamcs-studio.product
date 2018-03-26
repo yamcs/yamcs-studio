@@ -19,6 +19,8 @@ See http://www.yamcs.org
       <vmArgs>-Xmx2048m
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
+-Dosgi.requiredJavaVersion=1.8
+--add-modules=ALL-SYSTEM
       </vmArgs>
       <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
 -XstartOnFirstThread
