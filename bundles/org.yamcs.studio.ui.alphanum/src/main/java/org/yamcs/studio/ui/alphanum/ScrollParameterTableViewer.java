@@ -17,6 +17,8 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
@@ -33,15 +35,17 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
 
     private final int MAX_SIZE = 100;
 
-    private final String ENG = "ENG";
-    private final String RAW = "RAW";
-    
+    public final static String ENG = "ENG";
+    public final static String RAW = "RAW";
+
     private String valueType = ENG;
-    
+
     private ScrollParameterContentProvider contentProvider;
     private TableColumnLayout tcl;
     private List<String> parameters;
     private List<String> qualifiedNames;
+    
+    private List<Listener> listeners;
 
     public ScrollParameterTableViewer(Composite parent) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL));;
@@ -82,6 +86,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         });
         parameters = new ArrayList<>();
         qualifiedNames = new ArrayList<>();
+        listeners = new ArrayList<>();
 
         ParameterCatalogue.getInstance().addParameterListener(this);
 
@@ -105,7 +110,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
                         if(valueType.equals(ENG))
                             return String.valueOf(getValue(value.getEngValue()));
                         return String.valueOf(getValue(value.getRawValue()));
-                            
+
                     }                
                 return "-";
             }
@@ -136,19 +141,34 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         for(int i = 1; i < getTable().getColumnCount(); i ++) {
             getTable().getColumn(i).setWidth(60);
         }
+        
+        for(Listener l : listeners) {
+            l.handleEvent(new Event());
+        }
+        
         refresh();
     }
 
-    public void removeParameter(ParameterInfo info) {
+    public void removeParameter(String info) {
         int i;
         for(i = 1; i < getTable().getColumnCount(); i ++) {
-            if(getTable().getColumn(i).getText().equals(info.getName()))
+            if(getTable().getColumn(i).getText().equals(info))
                 break;
         }
-        
+
         getTable().getColumn(i).dispose();
-        parameters.remove(info.getName());
-        qualifiedNames.remove(info.getQualifiedName());
+        parameters.remove(info);
+        String qualifiedName = "";
+        for(String qname: qualifiedNames) {
+            if (qname.endsWith(info)) {
+                qualifiedName = qname;
+                break;
+            }
+        }
+        qualifiedNames.remove(qualifiedName);
+        for(Listener l : listeners) {
+            l.handleEvent(new Event());
+        }
         refresh();
     }
 
@@ -159,14 +179,16 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         parameters.clear();
         qualifiedNames.clear();
         contentProvider.clearAll();
+        for(Listener l : listeners) {
+            l.handleEvent(new Event());
+        }
         refresh();
-
     }
 
     public List<String> getParameters() {
         return qualifiedNames;
     }
-    
+
     private Object getValue(Value value) {
         Object obj = null;
         if(value.hasStringValue())
@@ -189,6 +211,10 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
             return "-";
         return obj;
     }
+    
+    public void addDataChangedListener(Listener listener){
+        listeners.add(listener);
+    }
 
 
     public class ScrollParameterContentProvider implements IStructuredContentProvider {
@@ -202,7 +228,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
 
         public void clearAll() {
             values.clear();
-            
+
         }
 
         @Override
@@ -274,6 +300,11 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
 
     public void setValue(String string) {
         valueType = string;
+
+    }
+
+    public String getValue() {
+        return valueType;
         
     }
 

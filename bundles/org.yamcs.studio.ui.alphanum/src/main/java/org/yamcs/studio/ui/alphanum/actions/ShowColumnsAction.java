@@ -1,52 +1,39 @@
 package org.yamcs.studio.ui.alphanum.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.yamcs.studio.ui.alphanum.AlphaNumericEditor;
 import org.yamcs.studio.ui.alphanum.ParameterTableViewer;
 import org.yamcs.studio.ui.alphanum.ShowColumnsWizard;
 
-public class ShowColumnsAction extends Action implements IEditorActionDelegate {
+public class ShowColumnsAction extends AlphaNumericAction {
 
-    private ParameterTableViewer table;
+    private List<String> columns;
+    
+    public ShowColumnsAction(final ParameterTableViewer viewer) {
+        super("icons/elcl16/config.png", viewer);
+        setToolTipText("Choose Columns");
+
+        columns = new ArrayList<>();
+        columns.add(ParameterTableViewer.COL_ENG);
+        columns.add(ParameterTableViewer.COL_RAW);
+        columns.add(ParameterTableViewer.COL_TIME);
+        columns.add(ParameterTableViewer.COL_AQU_TIME);
+    }
 
     @Override
     public void run() {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        ShowColumnsWizard wizard = new ShowColumnsWizard(table.getColumns());
+        
+        ShowColumnsWizard wizard = new ShowColumnsWizard(viewer.getColumns(), columns);
         WizardDialog dialog = new WizardDialog(shell, wizard);
         if (dialog.open() == Window.OK)
-            table.setColumns(wizard.getColumns());
+            viewer.setColumns(wizard.getColumns());
 
-    }
-    
-    @Override
-    public void run(IAction action) {
-        run();
-        
-    }
-
-    @Override
-    public void selectionChanged(IAction action, ISelection selection) {
-        ;
-        
-    }
-
-    @Override
-    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-        if(targetEditor == null)
-            table = null;
-        else
-            table = ((AlphaNumericEditor)targetEditor).getParameterTable();
-
-        
     }
 
 

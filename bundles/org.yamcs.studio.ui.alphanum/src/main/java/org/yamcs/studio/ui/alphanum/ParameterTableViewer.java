@@ -17,6 +17,8 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
@@ -40,6 +42,8 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
     private Map<String, ColumnLabelProvider> columnLabels;
     private List<String> activeColumns;
     TableColumnLayout tcl;
+    
+    private List<Listener> listeners;
 
     public ParameterTableViewer(Composite parent) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL));;
@@ -53,6 +57,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         setContentProvider(contentProvider);
         setInput(contentProvider);
         activeColumns = new ArrayList<>();
+        listeners = new ArrayList<>();
         createColumn(COL_NAME); //Name always visible
         ParameterCatalogue.getInstance().addParameterListener(this);
 
@@ -174,12 +179,20 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
             values.put(info.getQualifiedName(), null);
         }
         refresh();
+        for(Listener l : listeners) {
+            l.handleEvent(new Event());
+        }
+        
     }
 
     public void removeParameter(String info) {
         values.remove(info);
         contentProvider.remove(info);
         refresh();
+        for(Listener l : listeners) {
+            l.handleEvent(new Event());
+        }
+        
     }
 
 
@@ -187,6 +200,10 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         values.clear();
         contentProvider.clearAll();
         refresh();
+        for(Listener l : listeners) {
+            l.handleEvent(new Event());
+        }
+        
 
     }
 
@@ -196,6 +213,10 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
     
     public boolean hasChanged() {
         return contentProvider.hasChanged();
+    }
+    
+    public void addDataChangedListener(Listener listener){
+        listeners.add(listener);
     }
     
     private Object getValue(Value value) {

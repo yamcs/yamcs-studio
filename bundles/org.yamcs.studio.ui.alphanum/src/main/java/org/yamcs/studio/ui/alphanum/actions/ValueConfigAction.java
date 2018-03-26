@@ -1,26 +1,23 @@
 package org.yamcs.studio.ui.alphanum.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor;
 import org.yamcs.studio.ui.alphanum.ScrollParameterTableViewer;
 
-//TODO
-public class ValueConfigAction extends Action implements IEditorActionDelegate {
-
-    private ScrollParameterTableViewer table;
+public class ValueConfigAction extends AlphaNumericAction {
+    
+   
+    public ValueConfigAction(ScrollParameterTableViewer viewer) {
+        super( "icons/elcl16/config.png", viewer);
+        setToolTipText("Choose the value to be displayed in the table");
+        
+    }
+    
 
     @Override
     public void run() {
@@ -36,7 +33,7 @@ public class ValueConfigAction extends Action implements IEditorActionDelegate {
             public void widgetSelected(SelectionEvent e) {
                 boolean isSelected = ((MenuItem)e.widget).getSelection();
                 if(isSelected){ 
-                    table.setValue("ENG");
+                    getScrollViewer().setValue(ScrollParameterTableViewer.ENG);
                 }
 
             }
@@ -50,38 +47,18 @@ public class ValueConfigAction extends Action implements IEditorActionDelegate {
             public void widgetSelected(SelectionEvent e) {
                 boolean isSelected = ((MenuItem)e.widget).getSelection();
                 if(isSelected){ 
-                    table.setValue("RAW");
+                    getScrollViewer().setValue(ScrollParameterTableViewer.RAW);
                 }
             }
         });
+        
+        if(getScrollViewer().getValue().equals(ScrollParameterTableViewer.RAW))
+            item2.setSelection(true);
+        else
+            item1.setSelection(true);
 
-        Point loc = shell.getDisplay().getActiveShell().getLocation();
-        Rectangle rect = shell.getDisplay().getActiveShell().getBounds();
-
-        Point mLoc = new Point(loc.x-1, loc.y+rect.height);
 
         menu.setVisible(true);
-
-    }
-
-    @Override
-    public void run(IAction action) {
-        run();
-
-    }
-
-    @Override
-    public void selectionChanged(IAction action, ISelection selection) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-        if(targetEditor == null)
-            table = null;
-        else
-            table = ((ScrollAlphaNumericEditor)targetEditor).getParameterTable();
 
     }
 

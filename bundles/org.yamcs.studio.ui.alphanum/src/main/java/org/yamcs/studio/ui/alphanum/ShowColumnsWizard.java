@@ -8,9 +8,11 @@ public class ShowColumnsWizard extends Wizard {
 
     private ChooseColumnsPage page;
     private List<String> columns;
+    private List<String> choosenColumns;
     
-    public ShowColumnsWizard(List<String> columns) {
+    public ShowColumnsWizard(List<String> choosenColumns, List<String> columns) {
         this.columns = columns;
+        this.choosenColumns = choosenColumns;
     }
 
     @Override
@@ -22,7 +24,7 @@ public class ShowColumnsWizard extends Wizard {
 
     @Override
     public void addPages() {
-        page = new ChooseColumnsPage(columns);
+        page = new ChooseColumnsPage(choosenColumns, columns);
         addPage(page);
 
     }

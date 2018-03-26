@@ -12,22 +12,21 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-public class ChooseColumnsPage extends WizardPage {
+public class ChooseScrollColumnsPage extends WizardPage {
 
-    private List<String> choosenColumns;
     private List<String> columns;
+    private List<String> selected;
 
-    protected ChooseColumnsPage(List<String> choosenColumns, List<String> columns) {
-        super("Select columns");
-        setTitle("Select columns:");
-
-        this.choosenColumns = new ArrayList<>();
-        this.choosenColumns.addAll(choosenColumns);
-        this.columns = columns;
+    protected ChooseScrollColumnsPage(List<String> columns) {
+        super("Choose columns");
+        setTitle("Choose the colums to be removed");
+        selected = new ArrayList<>();
+        this.columns = new ArrayList<>();
+        this.columns.addAll(columns);
     }
 
     public List<String> getColumns() {
-        return choosenColumns;
+        return columns;
     }
 
     @Override
@@ -42,25 +41,42 @@ public class ChooseColumnsPage extends WizardPage {
         composite.setLayout(gl);
 
         composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+        List<Button> checkboxes = new ArrayList<>();
+
+        Button checkBox;
         
         for(String column: columns) {
-            Button checkBox = new Button(composite,SWT.CHECK);
+            checkBox = new Button(composite,SWT.CHECK);
             checkBox.setText(column);
-            if(choosenColumns.contains(column)){
-                checkBox.setSelection(true);
-            }
+            checkboxes.add(checkBox);
+        }
+        
+        
+        checkBox = new Button(composite,SWT.CHECK);
+        checkBox.setText(ParameterTableViewer.COL_RAW);
+        checkboxes.add(checkBox);
 
-            checkBox.addSelectionListener(new SelectionAdapter() {
+        checkBox = new Button(composite,SWT.CHECK);
+        checkBox.setText(ParameterTableViewer.COL_TIME);
+        checkboxes.add(checkBox);
+
+        checkBox = new Button(composite,SWT.CHECK);
+        checkBox.setText(ParameterTableViewer.COL_AQU_TIME);
+        checkboxes.add(checkBox);
+
+        for(Button check : checkboxes) {
+            check.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent event) {
                     Button btn = (Button) event.getSource();
                     if(btn.getSelection())
-                        choosenColumns.add(btn.getText());
+                        selected.add(btn.getText());
                     else
-                        choosenColumns.remove(btn.getText());
+                        columns.remove(btn.getText());
 
                 }
             });
         }
+
 
     }
 
