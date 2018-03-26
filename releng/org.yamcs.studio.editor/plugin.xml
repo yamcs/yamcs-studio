@@ -6,7 +6,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.yamcs.studio.editor.application"
-            name="Yamcs Studio Editor">
+            name="Yamcs Studio">
          <property
                name="windowImages"
                value="icons/logo16.png,icons/logo32.png,icons/logo48.png,icons/logo64.png,icons/logo128.png,icons/logo256.png"/>
@@ -18,7 +18,7 @@
                value="icons/aboutSide.png"/>
          <property
                name="appName"
-               value="Yamcs Studio Editor"/>
+               value="Yamcs Studio"/>
          <property
                name="startupForegroundColor"
                value="2F376D"/>
