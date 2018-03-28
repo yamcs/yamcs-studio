@@ -25,7 +25,8 @@ Require-Bundle: org.eclipse.ui,
  org.diirt,
  org.eclipse.e4.ui.workbench,
  org.eclipse.swt,
- org.python.jython
+ org.python.jython,
+ org.csstudio.swt.widgets
 Eclipse-RegisterBuddy: org.python.jython
 Bundle-ActivationPolicy: lazy
 Export-Package: org.csstudio.opibuilder,

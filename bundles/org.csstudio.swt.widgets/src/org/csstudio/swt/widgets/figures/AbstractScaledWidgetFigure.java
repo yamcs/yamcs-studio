@@ -11,7 +11,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.text.DecimalFormat;
 
-import org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.introspection.ScaleWidgetIntrospector;
 import org.eclipse.draw2d.Figure;
