@@ -34,7 +34,7 @@ See http://www.yamcs.org
       startupProgressRect="20,215,560,15"
       startupMessageRect="20,195,560,20"
       startupForegroundColor="2F376D" />
-   <launcher name="Yamcs Studio Editor">
+   <launcher name="Yamcs Studio">
       <linux icon="/launcher/css.xpm"/>
       <macosx icon="/launcher/css.icns"/>
       <win useIco="true">

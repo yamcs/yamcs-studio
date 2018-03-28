@@ -30,13 +30,13 @@
                value="20,215,560,15"/>
          <property
                name="introTitle"
-               value="Yamcs Studio Editor"/>
+               value="Yamcs Studio"/>
          <property
                name="introBrandingImage"
                value="product:icons/logo64.png"/>
          <property
                name="introBrandingImageText"
-               value="Yamcs Studio Editor"/>
+               value="Yamcs Studio"/>
          <property
                name="preferenceCustomization"
                value="plugin_customization.ini">
@@ -47,7 +47,7 @@
    <extension
          id="application"
          point="org.eclipse.core.runtime.applications"
-         name="Yamcs Studio Editor">
+         name="Yamcs Studio">
       <application>
          <run
                class="org.yamcs.studio.editor.base.Application">
