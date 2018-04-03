@@ -20,7 +20,6 @@ public class SoundPreferencePage extends FieldEditorPreferencePage implements IW
     public SoundPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        setDescription("Set sound properties for Yamcs Studio");
     }
 
     @Override
@@ -38,7 +37,7 @@ public class SoundPreferencePage extends FieldEditorPreferencePage implements IW
         String[][] typeOfBeepTriggers = { { "Do Not Beep", "NONE" },
                 { "Parameter First Out-of-Limit Value", "FIRST" },
                 { "Parameter Each Out-of-Limit Value", "EACH" } };
-        triggerBeep = new ComboFieldEditor("trigerBeep", "Beep on event:",
+        triggerBeep = new ComboFieldEditor("triggerBeep", "Beep on event:",
                 typeOfBeepTriggers, getFieldEditorParent());
         addField(triggerBeep);
 

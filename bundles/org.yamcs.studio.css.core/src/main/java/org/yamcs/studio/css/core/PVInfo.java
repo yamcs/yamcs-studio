@@ -22,22 +22,21 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public String getPVType() {
-        if (displayName.startsWith("sw://"))
-            return "Yamcs Software Parameter";
-        else if (displayName.startsWith("para://"))
+        if (displayName.startsWith("para://")) {
             return "Yamcs Parameter";
-        else if (displayName.startsWith("loc://"))
+        } else if (displayName.startsWith("loc://")) {
             return "Local PV";
-        else if (displayName.startsWith("sim://"))
+        } else if (displayName.startsWith("sim://")) {
             return "Locally Simulated PV";
-        else if (displayName.startsWith("sys://"))
+        } else if (displayName.startsWith("sys://")) {
             return "Local System Indicator";
-        else if (displayName.startsWith("="))
+        } else if (displayName.startsWith("=")) {
             return "Formula";
-        else if (isYamcsParameter())
+        } else if (isYamcsParameter()) {
             return "Yamcs Parameter";
-        else
+        } else {
             return "Unknown";
+        }
     }
 
     public void setParameterInfo(ParameterInfo parameterInfo) {
@@ -61,12 +60,13 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public boolean isYamcsParameter() {
-        if (displayName.startsWith("sw://") || displayName.startsWith("para://"))
+        if (displayName.startsWith("para://")) {
             return true;
-        else if (displayName.startsWith("="))
+        } else if (displayName.startsWith("=")) {
             return false;
-        else
+        } else {
             return !(displayName.contains("://")); // default schema
+        }
     }
 
     @Override
@@ -75,14 +75,14 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public String getYamcsQualifiedName() {
-        if (!isYamcsParameter())
+        if (!isYamcsParameter()) {
             throw new UnsupportedOperationException();
+        }
 
-        if (displayName.startsWith("sw://"))
-            return displayName.substring(5);
-        else if (displayName.startsWith("para://"))
+        if (displayName.startsWith("para://")) {
             return displayName.substring(7);
-        else
+        } else {
             return displayName;
+        }
     }
 }

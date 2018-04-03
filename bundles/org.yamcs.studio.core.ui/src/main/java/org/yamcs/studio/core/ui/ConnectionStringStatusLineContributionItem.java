@@ -71,6 +71,19 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         });
     }
 
+    @Override
+    public void onYamcsConnectionFailed(Throwable t) {
+        Display display = Display.getDefault();
+        if (display.isDisposed()) {
+            return;
+        }
+        display.asyncExec(() -> {
+            setErrorText(null, null);
+            setImage(null);
+            setText("Offline");
+        });
+    }
+
     private String getConnectionString(YamcsConnectionProperties yprops) {
         String subjectName = null;
         if (yprops.getAuthenticationToken() != null) {

@@ -4,8 +4,12 @@
  */
 package org.diirt.datasource.formula.array;
 
+import static org.diirt.vtype.ValueFactory.displayNone;
+import static org.diirt.vtype.ValueFactory.newDisplay;
+
 import java.util.Arrays;
 import java.util.List;
+
 import org.diirt.datasource.formula.FormulaFunction;
 import org.diirt.util.NumberFormats;
 import org.diirt.util.Statistics;
@@ -15,7 +19,6 @@ import org.diirt.vtype.Display;
 import org.diirt.vtype.VNumber;
 import org.diirt.vtype.VNumberArray;
 import org.diirt.vtype.ValueFactory;
-import static org.diirt.vtype.ValueFactory.*;
 import org.diirt.vtype.ValueUtil;
 
 /**
@@ -46,7 +49,7 @@ class ArrayOfNumberFormulaFunction implements FormulaFunction {
 
     @Override
     public List<Class<?>> getArgumentTypes() {
-        return Arrays.<Class<?>>asList(VNumber.class);
+        return Arrays.<Class<?>> asList(VNumber.class);
     }
 
     @Override
@@ -90,16 +93,18 @@ class ArrayOfNumberFormulaFunction implements FormulaFunction {
                 display = firstNonNull;
             } else {
                 Statistics stats = StatisticsUtil.statisticsOf(data);
-                display = newDisplay(stats.getRange().getMinimum(), stats.getRange().getMinimum(), stats.getRange().getMinimum(),
-                        "", NumberFormats.toStringFormat(), stats.getRange().getMaximum(), stats.getRange().getMaximum(), stats.getRange().getMaximum(),
+                display = newDisplay(stats.getRange().getMinimum(), stats.getRange().getMinimum(),
+                        stats.getRange().getMinimum(),
+                        "", NumberFormats.toStringFormat(), stats.getRange().getMaximum(),
+                        stats.getRange().getMaximum(), stats.getRange().getMaximum(),
                         stats.getRange().getMinimum(), stats.getRange().getMaximum());
             }
 
         }
 
         return ValueFactory.newVNumberArray(data,
-                ValueUtil.highestSeverityOf(args, false),
-                ValueUtil.latestValidTimeOrNowOf(args),
+                highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args),
                 display);
     }
 

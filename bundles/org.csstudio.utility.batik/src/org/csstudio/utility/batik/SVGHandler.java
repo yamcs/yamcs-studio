@@ -22,6 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.batik.anim.dom.SVGOMDocument;
+import org.apache.batik.anim.dom.SVGStylableElement;
 import org.apache.batik.anim.timing.TimedDocumentRoot;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.DocumentLoader;
@@ -35,9 +38,6 @@ import org.apache.batik.bridge.ViewBox;
 import org.apache.batik.css.engine.CSSStyleSheetNode;
 import org.apache.batik.css.engine.SVGCSSEngine;
 import org.apache.batik.css.engine.StyleSheet;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.svg.SVGOMDocument;
-import org.apache.batik.dom.svg.SVGStylableElement;
 import org.apache.batik.dom.util.DOMUtilities;
 import org.apache.batik.gvt.CanvasGraphicsNode;
 import org.apache.batik.gvt.CompositeGraphicsNode;
@@ -158,15 +158,23 @@ public class SVGHandler {
     private boolean suspended = true;
 
     private final Display swtDisplay;
+
+    /*
+     * Enable caching of images provided by Batik SVG animation process until the animation has repeated once and then
+     * take over. Instead of always disposing the previous image, all images will be disposed when the figure is
+     * disposed. WARNING: Batik is not built to work with a cache, using this one can generate hazards.
+     */
     private boolean useCache = false;
+
+    private int cacheMaxSize = 100;
+
     private List<Image> imageBuffer;
     private int maxBufferSize;
 
     public SVGHandler(final SVGDocument doc, final Display display) {
         swtDisplay = display;
-        useCache = Preferences.getUseCache();
         imageBuffer = Collections.synchronizedList(new ArrayList<Image>());
-        maxBufferSize = Preferences.getCacheMaxSize();
+        maxBufferSize = cacheMaxSize;
 
         listener = new Listener();
         userAgent = createUserAgent();
@@ -723,7 +731,7 @@ public class SVGHandler {
                         public void newImage(Image newImage) {
                             notifyNewImage(newImage);
                         }
-                    }, Preferences.getCacheMaxSize());
+                    }, cacheMaxSize);
         }
         if (copy != null && !copy.isDisposed()) {
             copy.dispose();

@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -17,7 +21,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Yamcs.Event;
 
@@ -37,21 +40,39 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     private Image errorIcon;
     private Image warnIcon;
     private Image infoIcon;
+    private Image distressIcon;
+    private Image criticalIcon;
+    private Image severeIcon;
+    private Image watchIcon;
 
     private Color errorColor;
     private Color warningColor;
 
+    Event lastAddedEvent = null;
+
     public EventLogContentProvider(Table table) {
         this.table = table;
         if (PlatformUI.isWorkbenchRunning()) {
-            errorIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
-            warnIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
-            infoIcon = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+            errorIcon = getImage("icons/eview16/error_obj.png");
+            infoIcon = getImage("icons/eview16/level0s.png");
+            watchIcon = getImage("icons/eview16/level1s.png");
+            warnIcon = getImage("icons/eview16/level2s.png");
+            distressIcon = getImage("icons/eview16/level3s.png");
+            criticalIcon = getImage("icons/eview16/level4s.png");
+            severeIcon = getImage("icons/eview16/level5s.png");
+
         }
         errorColor = new Color(table.getDisplay(), new RGB(255, 221, 221));
         warningColor = new Color(table.getDisplay(), new RGB(248, 238, 199));
 
         nbMessageLineToDisplay = EventLogPreferences.getMessageLineCount();
+    }
+
+    private Image getImage(String path) {
+        return ImageDescriptor.createFromURL(FileLocator
+                .find(Platform.getBundle("org.yamcs.studio.eventlog"),
+                        new Path(path), null))
+                .createImage();
     }
 
     @Override
@@ -107,8 +128,6 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
         maybeSelectAndReveal(event);
     }
-
-    Event lastAddedEvent = null;
 
     public void addEvents(List<Event> events) {
         if (events.size() == 0)
@@ -188,11 +207,11 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             source = event.getSource();
         item.setText(1, source);
 
-        // reception time
-        item.setText(2, event.getReceptionTimeUTC());
-
         // generation time
-        item.setText(3, event.getGenerationTimeUTC());
+        item.setText(2, event.getGenerationTimeUTC());
+
+        // reception time
+        item.setText(3, event.getReceptionTimeUTC());
 
         // seq number
         item.setText(4, event.getSeqNumber() + "");
@@ -209,8 +228,12 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             case INFO:
                 return null;
             case WARNING:
+            case WATCH:
                 return warningColor;
             case ERROR:
+            case CRITICAL:
+            case SEVERE:
+            case DISTRESS:
                 return errorColor;
             }
         }
@@ -222,10 +245,17 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             switch (evt.getSeverity()) {
             case INFO:
                 return infoIcon;
+            case WATCH:
+                return watchIcon;
             case WARNING:
                 return warnIcon;
+            case DISTRESS:
+                return distressIcon;
+            case CRITICAL:
+                return criticalIcon;
+            case SEVERE:
             case ERROR:
-                return errorIcon;
+                return severeIcon;
             }
         }
         return null;

@@ -15,7 +15,7 @@ public class ParameterDataSource extends DataSource {
     }
 
     public ParameterDataSource() {
-        super(false /* read-only */);
+        super(true /* writeable */);
     }
 
     @Override

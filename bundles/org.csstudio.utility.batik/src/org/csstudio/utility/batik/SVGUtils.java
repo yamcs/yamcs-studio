@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.InputStream;
 import java.util.logging.Level;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Device;
@@ -24,7 +25,8 @@ import org.w3c.dom.Document;
 public class SVGUtils {
 
     public static ImageData loadSVG(IPath fullPath, InputStream is, int width, int height) {
-        if(fullPath == null || is == null) return null;
+        if (fullPath == null || is == null)
+            return null;
         SimpleImageTranscoder transcoder = null;
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
@@ -59,10 +61,12 @@ public class SVGUtils {
     }
 
     /**
-     * Converts an AWT based buffered image into an SWT <code>Image</code>. This will always return an <code>Image</code> that
-     * has 24 bit depth regardless of the type of AWT buffered image that is passed into the method.
+     * Converts an AWT based buffered image into an SWT <code>Image</code>. This will always return an
+     * <code>Image</code> that has 24 bit depth regardless of the type of AWT buffered image that is passed into the
+     * method.
      *
-     * @param awtImage the {@link java.awt.image.BufferedImage} to be converted to an <code>Image</code>
+     * @param awtImage
+     *            the {@link java.awt.image.BufferedImage} to be converted to an <code>Image</code>
      * @return an <code>Image</code> that represents the same image data as the AWT <code>BufferedImage</code> type.
      */
     public static ImageData toSWT(Device device, BufferedImage awtImage) {

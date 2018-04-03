@@ -9,23 +9,22 @@ import static org.diirt.vtype.ValueFactory.newVNumberArray;
 
 import java.util.Arrays;
 import java.util.List;
-import org.diirt.datasource.util.NullUtils;
 
+import org.diirt.datasource.util.NullUtils;
 import org.diirt.util.array.ListNumber;
 import org.diirt.vtype.VNumberArray;
-import org.diirt.vtype.ValueUtil;
 
 /**
- * Abstract class for formula functions that take two {@link VNumberArray} as arguments
- * and return a {@link VNumberArray}.
+ * Abstract class for formula functions that take two {@link VNumberArray} as arguments and return a
+ * {@link VNumberArray}.
  * <p>
  * This class takes care of:
  * <ul>
- *    <li>extracting ListNumber value from {@code VNumberArray}</li>
- *    <li>null handling - returns null if one argument is null</li>
- *    <li>alarm handling - returns highest alarm</li>
- *    <li>time handling - returns latest time, or now if no time is available</li>
- *    <li>display handling - returns display none</li>
+ * <li>extracting ListNumber value from {@code VNumberArray}</li>
+ * <li>null handling - returns null if one argument is null</li>
+ * <li>alarm handling - returns highest alarm</li>
+ * <li>time handling - returns latest time, or now if no time is available</li>
+ * <li>display handling - returns display none</li>
  * </ul>
  *
  * @author shroffk
@@ -33,7 +32,8 @@ import org.diirt.vtype.ValueUtil;
  */
 public abstract class AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunction implements FormulaFunction {
 
-    private static final List<Class<?>> argumentTypes = Arrays.<Class<?>> asList(VNumberArray.class, VNumberArray.class);
+    private static final List<Class<?>> argumentTypes = Arrays.<Class<?>> asList(VNumberArray.class,
+            VNumberArray.class);
 
     private final String name;
     private final String description;
@@ -42,10 +42,14 @@ public abstract class AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunct
     /**
      * Creates a new function.
      *
-     * @param name function name; can't be null
-     * @param description function description; can't be null
-     * @param arg1Name first argument name; can't be null
-     * @param arg2Name second argument name; can't be null
+     * @param name
+     *            function name; can't be null
+     * @param description
+     *            function description; can't be null
+     * @param arg1Name
+     *            first argument name; can't be null
+     * @param arg2Name
+     *            second argument name; can't be null
      */
     public AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunction(String name, String description,
             String arg1Name, String arg2Name) {
@@ -114,17 +118,18 @@ public abstract class AbstractVNumberArrayVNumberArrayToVNumberArrayFormulaFunct
 
         return newVNumberArray(
                 calculate(arg1.getData(), arg2.getData()),
-                ValueUtil.highestSeverityOf(args, false),
-                ValueUtil.latestValidTimeOrNowOf(args),
+                highestSeverityOf(args, false),
+                latestValidTimeOrNowOf(args),
                 displayNone());
     }
 
     /**
-     * Calculates the result based on the two arguments. This is the only
-     * method one has to implement.
+     * Calculates the result based on the two arguments. This is the only method one has to implement.
      *
-     * @param arg1 the first argument; not null
-     * @param arg2 the second argument; not null
+     * @param arg1
+     *            the first argument; not null
+     * @param arg2
+     *            the second argument; not null
      * @return the result; not null
      */
     public abstract ListNumber calculate(ListNumber arg1, ListNumber arg2);

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PV Autocomplete
 Bundle-SymbolicName: org.csstudio.autocomplete;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: org.csstudio.autocomplete.AutoCompletePlugin
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
@@ -23,3 +23,4 @@ Export-Package: org.csstudio.autocomplete,
  org.csstudio.autocomplete.pvmanager.sys
 Service-Component: OSGI-INF/*.xml
 Import-Package: org.diirt.datasource.formula
+Automatic-Module-Name: org.csstudio.autocomplete

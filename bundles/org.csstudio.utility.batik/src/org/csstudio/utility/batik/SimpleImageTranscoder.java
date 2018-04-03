@@ -23,12 +23,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.batik.anim.dom.SVGOMDocument;
+import org.apache.batik.anim.dom.SVGStylableElement;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.dom.GenericCDATASection;
 import org.apache.batik.dom.GenericText;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.dom.svg.SVGOMDocument;
-import org.apache.batik.dom.svg.SVGStylableElement;
 import org.apache.batik.gvt.renderer.ImageRenderer;
 import org.apache.batik.gvt.renderer.StaticRenderer;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
@@ -116,8 +116,8 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     /**
-     * Call before querying for CSS properties. If document has CSS engine installed returns null. Client is responsible to
-     * dispose bridge context if it was returned by this method.
+     * Call before querying for CSS properties. If document has CSS engine installed returns null. Client is responsible
+     * to dispose bridge context if it was returned by this method.
      */
     public BridgeContext initCSSEngine() {
         if (this.document == null) {
@@ -175,6 +175,7 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         }
     }
 
+    @Override
     protected void transcode(Document document, String uri, TranscoderOutput output) throws TranscoderException {
         super.transcode(document, uri, output);
         int w = (int) (this.width + 0.5);
@@ -383,16 +384,16 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
             width = svgElmt.getWidth().getBaseVal().getValue();
             height = svgElmt.getHeight().getBaseVal().getValue();
         } catch (NullPointerException e) {
-            //FIXME
-            //this is a dirty workaround for the RAP problem, which doesn't know how to
-            //transform between units and pixels. Here we assume that all units are inches
-            //and 96 dpi is used.
+            // FIXME
+            // this is a dirty workaround for the RAP problem, which doesn't know how to
+            // transform between units and pixels. Here we assume that all units are inches
+            // and 96 dpi is used.
             SVGLength length = svgElmt.getWidth().getBaseVal();
             double value = length.getValueInSpecifiedUnits();
-            width = value * 25.4/0.26458333333333333333333333333333;
+            width = value * 25.4 / 0.26458333333333333333333333333333;
             length = svgElmt.getHeight().getBaseVal();
             value = length.getValueInSpecifiedUnits();
-            height = value * 25.4/0.26458333333333333333333333333333;
+            height = value * 25.4 / 0.26458333333333333333333333333333;
         }
 
         // current Transformation Matrix
@@ -444,17 +445,17 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
 
         // TODO: remove this part => debug
         // Write to file
-//        try {
-//            TransformerFactory factory = TransformerFactory.newInstance();
-//            Transformer transformer = factory.newTransformer();
-//            FileWriter writer = new FileWriter("/home/ITER/arnaudf/perso/testX.svg");
-//            Source source = new DOMSource(newDocument);
-//            Result result = new StreamResult(writer);
-//            transformer.transform(source, result);
-//            writer.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        // try {
+        // TransformerFactory factory = TransformerFactory.newInstance();
+        // Transformer transformer = factory.newTransformer();
+        // FileWriter writer = new FileWriter("/home/ITER/arnaudf/perso/testX.svg");
+        // Source source = new DOMSource(newDocument);
+        // Result result = new StreamResult(writer);
+        // transformer.transform(source, result);
+        // writer.close();
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
         return newDocument;
     }
 

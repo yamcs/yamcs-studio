@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>org.yamcs.studio.p2deps</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.yamcs.client</artifactId>
@@ -52,7 +52,7 @@
               io.netty.channel,
               io.netty.handler.codec.http,
               io.netty.util.concurrent,
-              io.protostuff,
+              org.yaml.snakeyaml,
               org.yamcs,
               org.yamcs.api,
               org.yamcs.api.rest,

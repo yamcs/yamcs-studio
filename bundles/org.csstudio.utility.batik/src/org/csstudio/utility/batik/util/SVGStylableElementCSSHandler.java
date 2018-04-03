@@ -7,12 +7,12 @@
  ******************************************************************************/
 package org.csstudio.utility.batik.util;
 
+import org.apache.batik.anim.dom.SVGStylableElement;
 import org.apache.batik.css.engine.CSSEngine;
 import org.apache.batik.css.engine.StyleDeclaration;
 import org.apache.batik.css.engine.value.FloatValue;
 import org.apache.batik.css.engine.value.RGBColorValue;
 import org.apache.batik.css.engine.value.Value;
-import org.apache.batik.dom.svg.SVGStylableElement;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -35,6 +35,7 @@ public class SVGStylableElementCSSHandler implements ICSSHandler {
         this.originalStyle = new CloneableStyleDeclaration(embedStyle.getStyleDeclaration());
     }
 
+    @Override
     public void updateCSSColor(Color colorToChange, Color newColor) {
         if (colorToChange == null || newColor == null || colorToChange.equals(newColor)) {
             return;
@@ -101,6 +102,7 @@ public class SVGStylableElementCSSHandler implements ICSSHandler {
             }
         }
 
+        @Override
         public CloneableStyleDeclaration clone() {
             return new CloneableStyleDeclaration(this);
         }

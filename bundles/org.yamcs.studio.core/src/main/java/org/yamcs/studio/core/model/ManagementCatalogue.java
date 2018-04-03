@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
+import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
@@ -185,9 +186,22 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         return clientInfoById.get(currentClientId);
     }
 
+    // Careful we must support the case where Yamcs itself changes the instance of our client
+    // TODO maybe remove this and instead just store an instance field in YamcsClient ?
     public static String getCurrentYamcsInstance() {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.getYamcsConnectionProperties().getInstance();
+        ManagementCatalogue catalogue = getInstance();
+        if (catalogue == null) {
+            return null;
+        }
+        ClientInfo ci = catalogue.getCurrentClientInfo();
+        if (ci != null) {
+            return ci.getInstance();
+        } else {
+            // Fallback (initial connection properties
+            YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+            YamcsConnectionProperties props = yamcsClient.getYamcsConnectionProperties();
+            return (props != null) ? props.getInstance() : null;
+        }
     }
 
     public ProcessorInfo getCurrentProcessorInfo() {

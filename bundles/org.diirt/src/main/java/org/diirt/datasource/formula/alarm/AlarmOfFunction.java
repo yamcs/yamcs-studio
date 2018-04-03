@@ -4,12 +4,12 @@
  */
 package org.diirt.datasource.formula.alarm;
 
-import static org.diirt.vtype.ValueFactory.*;
+import static org.diirt.vtype.ValueFactory.newVEnum;
 
 import java.util.Arrays;
 import java.util.List;
-import org.diirt.datasource.formula.FormulaFunction;
 
+import org.diirt.datasource.formula.FormulaFunction;
 import org.diirt.datasource.util.NullUtils;
 import org.diirt.vtype.Alarm;
 import org.diirt.vtype.AlarmSeverity;
@@ -45,7 +45,7 @@ class AlarmOfFunction implements FormulaFunction {
 
     @Override
     public List<Class<?>> getArgumentTypes() {
-        return Arrays.<Class<?>>asList(Object.class);
+        return Arrays.<Class<?>> asList(Object.class);
     }
 
     @Override
@@ -67,7 +67,7 @@ class AlarmOfFunction implements FormulaFunction {
         Alarm alarm = ValueUtil.alarmOf(arg);
         return newVEnum(alarm.getAlarmSeverity().ordinal(), AlarmSeverity.labels(),
                 alarm,
-                ValueUtil.latestValidTimeOrNowOf(args));
+                latestValidTimeOrNowOf(args));
     }
 
 }

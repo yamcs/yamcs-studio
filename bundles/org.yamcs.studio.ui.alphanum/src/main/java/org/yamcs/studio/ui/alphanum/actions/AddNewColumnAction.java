@@ -9,7 +9,6 @@ import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.ui.alphanum.AddParameterWizard;
-import org.yamcs.studio.ui.alphanum.ParameterTableViewer;
 import org.yamcs.studio.ui.alphanum.ScrollParameterTableViewer;
 
 public class AddNewColumnAction extends AlphaNumericAction {
@@ -20,9 +19,18 @@ public class AddNewColumnAction extends AlphaNumericAction {
     public AddNewColumnAction(ScrollParameterTableViewer viewer) {
         super( "icons/elcl16/add.png", viewer);
         setToolTipText("Add Column");
-        
+        listener = new Listener() {
 
-        
+            @Override
+            public void handleEvent(Event event) {
+                if(getScrollViewer().getParameters().size() == 
+                        ParameterCatalogue.getInstance().getMetaParameters().size())
+                    setEnabled(false);
+                else
+                    setEnabled(true);
+
+            }
+        };
     }
 
     @Override

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PV Autocomplete UI
 Bundle-SymbolicName: org.csstudio.autocomplete.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: org.csstudio.autocomplete.ui.AutoCompleteUIPlugin
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.csstudio.autocomplete,
@@ -15,3 +15,4 @@ Export-Package: org.csstudio.autocomplete.ui,
  org.csstudio.autocomplete.ui.history,
  org.csstudio.autocomplete.ui.util
 Service-Component: OSGI-INF/*.xml
+Automatic-Module-Name: org.csstudio.autocomplete.ui

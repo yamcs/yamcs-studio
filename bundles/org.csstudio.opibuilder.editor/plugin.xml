@@ -8,7 +8,7 @@
             class="org.csstudio.opibuilder.editor.OPIEditor"
             contributorClass="org.csstudio.opibuilder.editor.OPIEditorActionBarContributor"
             extensions="opi"
-            icon="icons/placeholder.gif"
+            icon="icons/OPIBuilder.png"
             id="org.csstudio.opibuilder.OPIEditor"
             name="OPI Builder">
       </editor>
@@ -22,12 +22,12 @@
       </editor>
    </extension>
    <extension
-      point="org.eclipse.ui.perspectives">
+         point="org.eclipse.ui.perspectives">
       <perspective
             class="org.csstudio.opibuilder.editor.OPIEditorPerspective"
             icon="icons/placeholder.gif"
             id="org.csstudio.opibuilder.opieditor"
-            name="OPI Builder">
+            name="Display Builder">
       </perspective>
    </extension>
    <extension
@@ -36,7 +36,13 @@
             categoryId="org.eclipse.ui.category.edit"
             description="Run the OPI file currently in the editor"
             id="org.csstudio.opibuilder.runopi"
-            name="Run OPI">
+            name="Open workspace in Display Runner">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.edit"
+            description="Open Display Builder"
+            id="org.csstudio.opibuilder.editopi"
+            name="Open workspace in Display Builder">
       </command>
       <command
             categoryId="org.eclipse.ui.category.edit"
@@ -152,13 +158,12 @@
       <wizard
             canFinishEarly="false"
             category="org.csstudio.opibuilder.wizards"
-            class="org.csstudio.opibuilder.wizards.NewParFileWizard"
+            class="org.csstudio.opibuilder.wizards.NewPythonScriptWizard"
             hasPages="true"
-            icon="icons/placeholder.gif"
-            id="org.csstudio.opibuilder.wizards.newParWizard"
-            name="Par File">
+            icon="icons/python_file.gif"
+            id="org.csstudio.opibuilder.wizards.newPyWizard"
+            name="Python Script">
       </wizard>
-
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -173,12 +178,28 @@
       <actionSet
             id="org.csstudio.opibuilder.editor.actionSet"
             label="OPI Builder Actions"
-            visible="true">
+            visible="false">
          <action
                class="org.csstudio.opibuilder.actions.RunOPIAction"
                definitionId="org.csstudio.opibuilder.runopi"
+               toolbarPath="Normal/additions"
                id="org.csstudio.opibuilder.runOPIAction"
-               label="Run OPI"
+               icon="icons/run.gif"
+               label="Open Display Runner"
+               style="push">
+         </action>
+      </actionSet>
+      <actionSet
+            id="org.csstudio.opibuilder.editor.runtimeActionSet"
+            label="OPI Builder Actions for Runtime Mode"
+            visible="false">
+         <action
+               class="org.csstudio.opibuilder.actions.EditOPIAction"
+               definitionId="org.csstudio.opibuilder.editopi"
+               toolbarPath="Normal/additions"
+               id="org.csstudio.opibuilder.editOPIAction"
+               icon="icons/placeholder.gif"
+               label="Open Display Builder"
                style="push">
          </action>
       </actionSet>

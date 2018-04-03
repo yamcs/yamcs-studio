@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>yamcs-studio</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.yamcs.studio.releng</artifactId>
@@ -12,7 +12,9 @@
 
   <modules>
     <module>org.yamcs.studio.platform</module>
+    <module>org.yamcs.studio.editor</module>
     <module>org.yamcs.studio.editor.product</module>
+    <module>org.yamcs.studio.runtime</module>
     <module>org.yamcs.studio.runtime.product</module>
   </modules>
 </project>

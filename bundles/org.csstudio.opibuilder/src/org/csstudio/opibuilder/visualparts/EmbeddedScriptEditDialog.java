@@ -13,6 +13,8 @@ import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -121,17 +123,20 @@ public class EmbeddedScriptEditDialog extends HelpTrayDialog {
         else
             scriptTypeCombo.select(0);
 
-        /*-scriptTypeCombo.addSelectionListener(new SelectionAdapter() {
+        scriptTypeCombo.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (scriptData == null) {
                     if (scriptTypeCombo.getSelectionIndex() == ScriptType.JAVASCRIPT.ordinal() &&
                             scriptText.getText().trim().equals(ScriptService.DEFAULT_PYTHONSCRIPT_HEADER.trim()))
                         scriptText.setText(ScriptService.DEFAULT_JS_HEADER);
+                    else if (scriptTypeCombo.getSelectionIndex() == ScriptType.PYTHON.ordinal() &&
+                            scriptText.getText().trim().equals(ScriptService.DEFAULT_JS_HEADER.trim()))
+                        scriptText.setText(ScriptService.DEFAULT_PYTHONSCRIPT_HEADER);
                 }
-        
+
             }
-        });*/
+        });
         scriptTypeCombo.setLayoutData(gd);
         scriptText = new Text(dialogArea, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);

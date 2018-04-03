@@ -61,8 +61,9 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
     public synchronized void register(YamcsPVReader pvReader) {
         pvReadersById.put(pvReader.getId(), pvReader);
         // Report current connection state
+        boolean connected = YamcsPlugin.getYamcsClient().isConnected();
         ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(pvReader.getId());
-        pvReader.processConnectionInfo(new PVConnectionInfo(p));
+        pvReader.processConnectionInfo(new PVConnectionInfo(connected, p));
         // Register (pending) websocket request
         NamedObjectList idList = pvReader.toNamedObjectList();
         ParameterCatalogue.getInstance().subscribeParameters(idList);
@@ -81,7 +82,7 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
             if (log.isLoggable(Level.FINER)) {
                 log.finer(String.format("Signaling %s --> %s", id, parameter));
             }
-            pvReader.processConnectionInfo(new PVConnectionInfo(parameter));
+            pvReader.processConnectionInfo(new PVConnectionInfo(true, parameter));
         });
     }
 
@@ -99,15 +100,11 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
         }
     }
 
-    @Override
-    public void onInvalidIdentification(NamedObjectId id) {
-        // pvReadersById.get(id).reportException(new InvalidIdentification(id));
-    }
-
     private void reportConnectionState() {
+        boolean connected = YamcsPlugin.getYamcsClient().isConnected();
         pvReadersById.forEach((id, pvReader) -> {
             ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
-            pvReader.processConnectionInfo(new PVConnectionInfo(p));
+            pvReader.processConnectionInfo(new PVConnectionInfo(connected, p));
         });
     }
 }

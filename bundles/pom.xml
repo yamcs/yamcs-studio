@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>yamcs-studio</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.yamcs.studio.bundles</artifactId>
@@ -14,16 +14,13 @@
     <module>org.csstudio.autocomplete</module>
     <module>org.csstudio.autocomplete.ui</module>
     <module>org.csstudio.examples</module>
-    <module>org.csstudio.java</module>
-    <module>org.csstudio.openfile</module>
     <module>org.csstudio.opibuilder</module>
     <module>org.csstudio.opibuilder.editor</module>
     <module>org.csstudio.opibuilder.widgets</module>
     <module>org.csstudio.simplepv</module>
+    <module>org.csstudio.swt.widgets</module>
     <module>org.csstudio.ui.util</module>
     <module>org.csstudio.utility.batik</module>
-    <module>org.csstudio.utility.file</module>
-    <module>org.csstudio.utility.singlesource</module>
     <module>org.csstudio.workspace</module>
     <module>org.diirt</module>
 
@@ -35,11 +32,12 @@
     <module>org.yamcs.studio.css.core</module>
     <module>org.yamcs.studio.css.script</module>
     <module>org.yamcs.studio.css.theming</module>
+    <module>org.yamcs.studio.editor.base</module>
     <module>org.yamcs.studio.eventlog</module>
+    <module>org.yamcs.studio.explorer</module>
     <module>org.yamcs.studio.monitoring</module>
     <module>org.yamcs.studio.p2</module>
-    <module>org.yamcs.studio.editor</module>
-    <module>org.yamcs.studio.runtime</module>
+    <module>org.yamcs.studio.runtime.base</module>
     <module>org.yamcs.studio.ui.alphanum</module>
   </modules>
 </project>

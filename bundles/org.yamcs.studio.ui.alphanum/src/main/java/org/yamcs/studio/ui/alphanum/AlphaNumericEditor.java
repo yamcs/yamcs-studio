@@ -1,6 +1,9 @@
+
 package org.yamcs.studio.ui.alphanum;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -11,8 +14,7 @@ import java.util.logging.Logger;
 
 import org.csstudio.ui.util.EmptyEditorInput;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
-import org.csstudio.utility.singlesource.ResourceHelper;
-import org.csstudio.utility.singlesource.SingleSourcePlugin;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -34,7 +36,6 @@ import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 public class AlphaNumericEditor extends EditorPart {
 
@@ -71,7 +72,6 @@ public class AlphaNumericEditor extends EditorPart {
     public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
         // "Site is incorrect" error results if the site is not set:
         this.input = (FileEditorInput) input;
-       
         setSite(site);
         setInput(input);
         setPartName(input.getName());
@@ -82,10 +82,9 @@ public class AlphaNumericEditor extends EditorPart {
     }
 
     private List<ParameterInfo> loadData() {
-        List<ParameterInfo> info = new ArrayList<>();
+
         try {
-            
-            
+            List<ParameterInfo> info = new ArrayList<>();
             Gson gson = new Gson();   
             InputStreamReader reader = new InputStreamReader(input.getFile().getContents());
             fileInput = gson.fromJson(reader, AlphaNumericJson.class);
@@ -100,13 +99,11 @@ public class AlphaNumericEditor extends EditorPart {
             }
 
             return info;
-        }catch (JsonSyntaxException ex)  {
-            fileInput = new AlphaNumericJson();
-            return info;
         } catch (CoreException e) {
             log.log(Level.SEVERE, "Could not read parameter list", e);
             return null;
         }
+
     }
 
 
@@ -121,19 +118,19 @@ public class AlphaNumericEditor extends EditorPart {
 
         Composite tableWrapper = new Composite(sash, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
-        List<ParameterInfo> parameters = loadData(); 
+
         parameterTable = new ParameterTableViewer(tableWrapper);
         ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
-        List<String> parameterNames = new ArrayList<>();
-        for(ParameterInfo info : parameters)
-            parameterNames.add(info.getQualifiedName());
 
-        provider.load(parameterNames);
-        parameterTable.setColumns(fileInput.getColumns());
-        for(ParameterInfo info : parameters)
+        List<String> names = new ArrayList<>();
+
+        for(ParameterInfo info : loadData()) {
             parameterTable.addParameter(info);
-        parameterTable.refresh();
-
+            names.add(info.getQualifiedName());
+        }
+        provider.load(names);
+        parameterTable.setColumns(fileInput.getColumns());
+        parameterTable.refresh();   
     }
 
     public AlphaNumericEditor() {
@@ -143,11 +140,12 @@ public class AlphaNumericEditor extends EditorPart {
     @Override
     public void doSave(IProgressMonitor monitor) {
         final IEditorInput input = getEditorInput();
-        final ResourceHelper resources = SingleSourcePlugin.getResourceHelper();
         try {
             if (input.exists()) {
-
-                saveToStream(monitor, parameterTable.getParameters(), resources.getOutputStream(input));
+                IFile file = (IFile) input.getAdapter(IFile.class);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                saveToStream(monitor, parameterTable.getParameters(), out);
+                file.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, monitor);
             } else { // First save of Editor with empty input, prompt for name
                 doSaveAs();
             }
@@ -155,33 +153,33 @@ public class AlphaNumericEditor extends EditorPart {
             ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error while saving parameter list", ex);
             // Save failed, allow saving under a different name, or cancel
             doSaveAs();
-        }
+        }       
+
     }
 
     /**
      * Save current model, mark editor as clean.
-     *
-     * @param monitor
-     *            <code>IProgressMonitor</code>, may be <code>null</code>.
+     * 
      * @param stream
      *            Output stream
      */
-    private void saveToStream(final IProgressMonitor monitor, final List<String> parameters,
-            final OutputStream stream) {
+    private void saveToStream(IProgressMonitor monitor, List<String> parameters, OutputStream stream) {
         if (monitor != null) {
             monitor.beginTask("Save", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
         }
-        final PrintWriter out = new PrintWriter(stream);
 
+        final PrintWriter out = new PrintWriter(stream);
         try {
 
             Gson gson = new Gson();
-            fileInput.setParameterList(parameters);
-            fileInput.setColumns(new ArrayList<>(parameterTable.getColumns()));
-            gson.toJson(fileInput, out);
             ParameterContentProvider provider = (ParameterContentProvider)parameterTable.getContentProvider();
-            provider.load(parameters);
 
+            fileInput.setParameterList(parameters);
+            fileInput.setColumns(parameterTable.getColumns());
+            gson.toJson(fileInput, out);
+            
+            
+            provider.load(new ArrayList<>(provider.getParameter()));
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (Exception ex) {
             ExceptionDetailsErrorDialog.openError(getSite().getShell(),"Error while writing parameter list", ex);
@@ -198,14 +196,16 @@ public class AlphaNumericEditor extends EditorPart {
 
     }
 
+
     @Override
     public boolean isDirty() {
-        return parameterTable.hasChanged() || !checkColumns();
-    }
-
-    private boolean checkColumns() {
-        return parameterTable.getColumns().size() == fileInput.getColumns().size() 
-                && parameterTable.getColumns().containsAll(fileInput.getColumns());
+        if( parameterTable.hasChanged())
+            return true;
+        if(parameterTable.getColumns().size() != fileInput.getColumns().size()) 
+            return true;
+        if(parameterTable.getColumns().containsAll(fileInput.getColumns()))
+            return false;
+        return true;
     }
 
     @Override

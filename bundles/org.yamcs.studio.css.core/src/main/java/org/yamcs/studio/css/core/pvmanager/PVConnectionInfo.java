@@ -1,7 +1,6 @@
 package org.yamcs.studio.css.core.pvmanager;
 
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Bundles info required by pv readers to determine the connection state
@@ -16,8 +15,8 @@ public class PVConnectionInfo {
      */
     public ParameterInfo parameter;
 
-    public PVConnectionInfo(ParameterInfo parameter) {
-        this.connected = YamcsPlugin.getYamcsClient().isConnected();
+    public PVConnectionInfo(boolean connected, ParameterInfo parameter) {
+        this.connected = connected;
         this.parameter = parameter;
     }
 

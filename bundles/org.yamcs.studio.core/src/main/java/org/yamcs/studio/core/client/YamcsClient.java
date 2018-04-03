@@ -27,6 +27,7 @@ import org.yamcs.api.ws.ConnectionListener;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -38,10 +39,16 @@ import io.netty.handler.codec.http.HttpMethod;
 
 /**
  * Provides passage to Yamcs. This covers both the REST and WebSocket API.
+ * 
+ * TODO currently reconnection can only be cancelled on initial connect. We should also make it cancellable (via Job UI)
+ * on auto reconnect.
  */
 public class YamcsClient implements WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
+
+    // WebSocketClient max frame payload length, otherwise we get "frame length 65535 exceeded" error for displays with many parameters
+    private static final int MAX_FRAME_PAYLOAD_LENGTH = 10*1024*1024;
 
     private YamcsConnectionProperties yprops;
     private String application;
@@ -60,19 +67,20 @@ public class YamcsClient implements WebSocketClientCallback {
     private List<ConnectionListener> connectionListeners = new CopyOnWriteArrayList<>();
     private List<WebSocketClientCallback> subscribers = new CopyOnWriteArrayList<>();
 
-    private MessageBundler messageBundler;
+    private ParameterSubscriptionBundler parameterSubscriptionBundler;
 
     // Keep track of ongoing jobs, to respond to user cancellation requests.
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
     private Map<IProgressMonitor, Future<?>> cancellableJobs = new ConcurrentHashMap<>();
 
-    public YamcsClient(String application) {
+    public YamcsClient(String application, boolean retry) {
         this.application = application;
+        this.retry = retry;
 
         canceller.scheduleWithFixedDelay(() -> {
             cancellableJobs.forEach((monitor, future) -> {
                 if (monitor.isCanceled()) {
-                    future.cancel(false);
+                    future.cancel(true);
                     cancellableJobs.remove(monitor);
                 } else if (future.isDone()) {
                     cancellableJobs.remove(monitor);
@@ -80,8 +88,8 @@ public class YamcsClient implements WebSocketClientCallback {
             });
         }, 2000, 1000, TimeUnit.MILLISECONDS);
 
-        messageBundler = new MessageBundler(this);
-        executor.scheduleWithFixedDelay(messageBundler, 200, 400, TimeUnit.MILLISECONDS);
+        parameterSubscriptionBundler = new ParameterSubscriptionBundler(this);
+        executor.scheduleWithFixedDelay(parameterSubscriptionBundler, 200, 400, TimeUnit.MILLISECONDS);
     }
 
     public void addConnectionListener(ConnectionListener connectionListener) {
@@ -98,6 +106,8 @@ public class YamcsClient implements WebSocketClientCallback {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(application);
         wsclient.enableReconnection(true);
+        wsclient.enableLegacyURLFallback(true); // Provides compatiblity with old Yamcs instances
+        wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
 
         FutureTask<YamcsConnectionProperties> future = new FutureTask<>(new Runnable() {
             @Override
@@ -140,8 +150,13 @@ public class YamcsClient implements WebSocketClientCallback {
                             return;
                         } catch (Exception e) {
                             // For anything other than a security exception, re-try
-                            log.log(Level.WARNING, String.format("Connection to %s failed (attempt %d of %d)",
-                                    yprops, i + 1, maxAttempts), e);
+                            if (log.isLoggable(Level.FINEST)) {
+                                log.log(Level.FINEST, String.format("Connection to %s failed (attempt %d of %d)",
+                                        yprops, i + 1, maxAttempts), e);
+                            } else {
+                                log.warning(String.format("Connection to %s failed (attempt %d of %d)",
+                                        yprops, i + 1, maxAttempts));
+                            }
                             Thread.sleep(5000);
                         }
                     }
@@ -152,6 +167,8 @@ public class YamcsClient implements WebSocketClientCallback {
                     }
                     log.warning(maxAttempts + " connection attempts failed, giving up.");
                 } catch (InterruptedException e) {
+                    log.info("Connection cancelled by user");
+                    connecting = false;
                     for (ConnectionListener cl : connectionListeners) {
                         cl.connectionFailed(null, new YamcsException("Thread interrupted", e));
                     }
@@ -177,7 +194,7 @@ public class YamcsClient implements WebSocketClientCallback {
     @Override
     public void connected() {
         log.info("Connected to " + yprops);
-        messageBundler.clearQueue();
+        parameterSubscriptionBundler.clearQueue();
 
         connected = true;
         for (ConnectionListener listener : connectionListeners) {
@@ -190,6 +207,7 @@ public class YamcsClient implements WebSocketClientCallback {
         if (connected) {
             log.warning("Connection to " + yprops + " lost");
         }
+        connected = false;
         for (ConnectionListener listener : connectionListeners) {
             listener.disconnected();
         }
@@ -228,15 +246,26 @@ public class YamcsClient implements WebSocketClientCallback {
         return instances.stream().map(r -> r.getName()).collect(Collectors.toList());
     }
 
-    public void subscribe(WebSocketRequest req, WebSocketClientCallback messageHandler) {
+    public CompletableFuture<WebSocketReplyData> subscribe(WebSocketRequest req,
+            WebSocketClientCallback messageHandler) {
         if (!subscribers.contains(messageHandler)) {
             subscribers.add(messageHandler);
         }
-        messageBundler.queue(req);
+        if (req instanceof ParameterWebSocketRequest) {
+            parameterSubscriptionBundler.queue((ParameterWebSocketRequest) req);
+            return null; // TODO ?
+        } else {
+            return wsclient.sendRequest(req);
+        }
     }
 
-    public void sendWebSocketMessage(WebSocketRequest req) {
-        messageBundler.queue(req);
+    public CompletableFuture<WebSocketReplyData> sendWebSocketMessage(WebSocketRequest req) {
+        if (req instanceof ParameterWebSocketRequest) {
+            parameterSubscriptionBundler.queue((ParameterWebSocketRequest) req);
+            return null; // TODO ?
+        } else {
+            return wsclient.sendRequest(req);
+        }
     }
 
     @Override

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.yamcs.studio.editor.application"
+            name="Yamcs Studio">
+         <property
+               name="windowImages"
+               value="icons/logo16.png,icons/logo32.png,icons/logo48.png,icons/logo64.png,icons/logo128.png,icons/logo256.png"/>
+         <property
+               name="aboutText"
+               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+         <property
+               name="aboutImage"
+               value="icons/aboutSide.png"/>
+         <property
+               name="appName"
+               value="Yamcs Studio"/>
+         <property
+               name="startupForegroundColor"
+               value="2F376D"/>
+         <property
+               name="startupMessageRect"
+               value="20,195,560,20"/>
+         <property
+               name="startupProgressRect"
+               value="20,215,560,15"/>
+         <property
+               name="introTitle"
+               value="Yamcs Studio"/>
+         <property
+               name="introBrandingImage"
+               value="product:icons/logo64.png"/>
+         <property
+               name="introBrandingImageText"
+               value="Yamcs Studio"/>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+      </product>
+   </extension>
+   
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications"
+         name="Yamcs Studio">
+      <application>
+         <run
+               class="org.yamcs.studio.editor.base.Application">
+         </run>
+      </application>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.csstudio.opibuilder.OPIRuntime.perspective">
+         <actionSet
+               id="org.csstudio.opibuilder.editor.runtimeActionSet">
+         </actionSet>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.archive.ArchiveView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.eventlog.EventLogView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.commanding.stack.CommandStackView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.editor.base.views.FunctionsView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.monitoring.links.LinksView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="true"
+               closeable="true"
+               id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+
+         <viewShortcut id="org.yamcs.studio.explorer.view"/>
+         <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
+         <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
+         <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.stack.CommandStackView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
+         <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
+         <viewShortcut id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+      </perspectiveExtension>
+      
+      <!-- OPI Editor Perspective -->
+      <perspectiveExtension targetID="org.csstudio.opibuilder.opieditor">
+         <actionSet
+               id="org.csstudio.opibuilder.editor.actionSet">
+         </actionSet>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.archive.ArchiveView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.eventlog.EventLogView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.commanding.stack.CommandStackView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.monitoring.links.LinksView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.monitoring.clients.ClientsView"/>
+      </perspectiveExtension>
+   </extension>
+</plugin>

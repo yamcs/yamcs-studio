@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>org.yamcs.studio.bundles</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.yamcs.studio.css.script</artifactId>

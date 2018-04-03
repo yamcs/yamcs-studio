@@ -566,6 +566,8 @@ public class ScriptsInputDialog extends HelpTrayDialog {
                             String ext = absoluteScriptPath.getFileExtension().trim().toLowerCase();
                             if (ext.equals(ScriptService.JS))
                                 sd.setScriptType(ScriptType.JAVASCRIPT);
+                            else if (ext.equals(ScriptService.PY))
+                                sd.setScriptType(ScriptType.PYTHON);
                             else {
                                 MessageDialog.openError(getShell(),
                                         "Failed", "The script type is not recognized.");

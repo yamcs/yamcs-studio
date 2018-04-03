@@ -6,10 +6,12 @@ Bundle-Name: Yamcs Studio Archive
 Bundle-SymbolicName: org.yamcs.studio.archive;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.yamcs.studio.core.ui,
  org.eclipse.core.runtime,
- org.yamcs.client
+ org.yamcs.client,
+ com.google.gson
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Automatic-Module-Name: org.yamcs.studio.archive

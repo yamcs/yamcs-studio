@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.runtime.feature"
       label="Yamcs Studio Runtime"
-      version="1.0.0.qualifier"
+      version="1.0.2.qualifier"
       provider-name="Space Applications Services">
 
    <includes
@@ -20,6 +20,13 @@
    <includes
          id="org.yamcs.studio.core.feature"
          version="0.0.0"/>
+
+   <plugin
+         id="org.yamcs.studio.runtime.base"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.yamcs.studio.runtime"

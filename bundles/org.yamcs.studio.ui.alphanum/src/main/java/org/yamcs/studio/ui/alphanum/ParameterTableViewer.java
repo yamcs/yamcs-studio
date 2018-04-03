@@ -37,7 +37,6 @@ import org.yamcs.protobuf.Mdb.AlarmLevelType;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
@@ -158,9 +157,9 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
             @Override
             public Image getImage(Object element) {
                 ParameterValue value = values.get(element);
-                if(value == null || value.getAlarmRangeCount() == 0) //TODO check
+                if(value == null || value.getAlarmRangeCount() == 0) {
                     return super.getImage(element);
-
+                }
                 return alarmIcons.get(value.getAlarmRange(0).getLevel());
             }
         });
@@ -314,12 +313,6 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
 
     }
 
-
-    @Override
-    public void onInvalidIdentification(NamedObjectId id) {
-        // TODO Auto-generated method stub
-
-    }
 
     private final class PVsInfoDialog extends MessageDialog {
 

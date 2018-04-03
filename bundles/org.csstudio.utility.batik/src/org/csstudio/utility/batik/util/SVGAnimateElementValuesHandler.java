@@ -11,15 +11,14 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.batik.anim.dom.SVGOMAnimateElement;
 import org.apache.batik.css.engine.CSSEngine;
-import org.apache.batik.dom.svg.SVGOMAnimateElement;
 import org.csstudio.utility.batik.Activator;
 import org.eclipse.swt.graphics.Color;
 import org.w3c.dom.svg.SVGAnimateElement;
 
 /**
- * Manages the update of defined colors values of {@link SVGAnimateElement}.
- * Always updates the original values.
+ * Manages the update of defined colors values of {@link SVGAnimateElement}. Always updates the original values.
  *
  * @author Fred Arnaud (Sopra Steria Group) - ITER
  */
@@ -34,6 +33,7 @@ public class SVGAnimateElementValuesHandler implements ICSSHandler {
         this.originalValuesStr = element.getAttribute("values");
     }
 
+    @Override
     public void updateCSSColor(Color colorToChange, Color newColor) {
         if (colorToChange == null || newColor == null
                 || colorToChange.equals(newColor)) {
@@ -88,7 +88,8 @@ public class SVGAnimateElementValuesHandler implements ICSSHandler {
                     }
                 }
             } else if (value.trim().startsWith("#")) {
-                String svgOldColor = toHexString(colorToChange.getRed(), colorToChange.getGreen(), colorToChange.getBlue());
+                String svgOldColor = toHexString(colorToChange.getRed(), colorToChange.getGreen(),
+                        colorToChange.getBlue());
                 String svgNewColor = toHexString(newColor.getRed(), newColor.getGreen(), newColor.getBlue());
                 if (svgOldColor.equals(value.trim())) {
                     newValue = svgNewColor;

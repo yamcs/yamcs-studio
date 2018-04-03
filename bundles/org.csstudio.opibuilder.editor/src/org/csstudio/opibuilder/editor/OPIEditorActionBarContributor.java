@@ -6,10 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 package org.csstudio.opibuilder.editor;
+
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.ChangeOrderAction.OrderType;
 import org.csstudio.opibuilder.actions.DistributeWidgetsAction.DistributeType;
-import org.csstudio.opibuilder.actions.RunOPIAction;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.ui.actions.ActionBarContributor;
 import org.eclipse.gef.ui.actions.AlignmentRetargetAction;
@@ -33,8 +33,9 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-
-/**The action bar contributor for OPI editor.
+/**
+ * The action bar contributor for OPI editor.
+ * 
  * @author Sven Wende & Alexander Will(original author), Xihui Chen (since import from SDS 2009/9)
  *
  */
@@ -81,42 +82,20 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
                 OPIBuilderPlugin.PLUGIN_ID, "icons/ruler.png"));
         addRetargetAction(a);
 
-        //This is only for action displaying in toolbar
-        a = new RetargetAction(RunOPIAction.ID, "Run OPI"){
-            @Override
-            public boolean isEnabled() {
-                return true;
-            }
-
-            //make this action always runnable even the part is not active
-            @Override
-            protected void setActionHandler(IAction newHandler) {
-                if(newHandler == null)
-                    return;
-                super.setActionHandler(newHandler);
-            }
-
-        };
-        a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/run.gif"));
-        //same defid can help to display the accelerator key.
-        a.setActionDefinitionId(RunOPIAction.ACITON_DEFINITION_ID);
-        addRetargetAction(a);
-
-
-        for(DistributeType dt : DistributeType.values()){
-            if(dt != DistributeType.HORIZONTAL_GAP){
+        for (DistributeType dt : DistributeType.values()) {
+            if (dt != DistributeType.HORIZONTAL_GAP) {
                 a = new RetargetAction(dt.getActionID(), dt.getLabel());
                 a.setImageDescriptor(dt.getImageDescriptor());
                 addRetargetAction(a);
             }
         }
-        //This is only for action displaying in toolbar
+        // This is only for action displaying in toolbar
         a = new RetargetAction(DistributeType.HORIZONTAL_GAP.getActionID(),
                 DistributeType.HORIZONTAL_GAP.getLabel(), IAction.AS_DROP_DOWN_MENU);
         a.setImageDescriptor(DistributeType.HORIZONTAL_GAP.getImageDescriptor());
         a.setMenuCreator(new IMenuCreator() {
             Menu menu;
+
             @Override
             public Menu getMenu(Menu parent) {
                 return null;
@@ -124,11 +103,11 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
 
             @Override
             public Menu getMenu(Control parent) {
-                if(menu !=null)
+                if (menu != null)
                     return menu;
                 MenuManager manager = new MenuManager();
-                for(DistributeType dt : DistributeType.values()){
-                    if(dt != DistributeType.HORIZONTAL_GAP)
+                for (DistributeType dt : DistributeType.values()) {
+                    if (dt != DistributeType.HORIZONTAL_GAP)
                         manager.add(getAction(dt.getActionID()));
                 }
                 menu = manager.createContextMenu(parent);
@@ -137,14 +116,13 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
 
             @Override
             public void dispose() {
-                if(menu != null){
+                if (menu != null) {
                     menu.dispose();
                     menu = null;
                 }
             }
         });
         addRetargetAction(a);
-
     }
 
     @Override
@@ -178,9 +156,6 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
         tbm.add(getAction(GEFActionConstants.ZOOM_IN));
         tbm.add(getAction(GEFActionConstants.ZOOM_OUT));
         tbm.add(new ZoomComboContributionItem(getPage()));
-
-        tbm.add(new Separator());
-        tbm.add(getAction(RunOPIAction.ID));
     }
 
     @Override

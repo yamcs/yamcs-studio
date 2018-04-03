@@ -11,23 +11,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.diirt.util.NumberFormats;
-import org.diirt.util.array.ArrayByte;
 import org.diirt.util.array.ArrayDouble;
 import org.diirt.util.array.ArrayInt;
 import org.diirt.util.array.ListInt;
 import org.diirt.util.array.ListNumber;
-import org.diirt.util.array.ListNumbers;
 
 /**
- * Various utility methods for runtime handling of the types defined in
- * this package.
+ * Various utility methods for runtime handling of the types defined in this package.
  *
  * @author carcassi
  */
@@ -37,7 +33,7 @@ public class ValueUtil {
         // Can't instantiate
     }
 
-    private static Collection<Class<?>> types = Arrays.<Class<?>>asList(VByte.class, VByteArray.class, VDouble.class,
+    private static Collection<Class<?>> types = Arrays.<Class<?>> asList(VByte.class, VByteArray.class, VDouble.class,
             VDoubleArray.class, VEnum.class, VEnumArray.class, VFloat.class, VFloatArray.class,
             VLong.class, VLongArray.class, VInt.class, VIntArray.class, VMultiDouble.class, VMultiEnum.class,
             VMultiInt.class, VMultiString.class, VShort.class, VShortArray.class,
@@ -45,12 +41,12 @@ public class ValueUtil {
             VImage.class);
 
     /**
-     * Returns the type of the object by returning the class object of one
-     * of the VXxx interfaces. The getClass() methods returns the
-     * concrete implementation type, which is of little use. If no
-     * super-interface is found, Object.class is used.
+     * Returns the type of the object by returning the class object of one of the VXxx interfaces. The getClass()
+     * methods returns the concrete implementation type, which is of little use. If no super-interface is found,
+     * Object.class is used.
      *
-     * @param obj an object implementing a standard type
+     * @param obj
+     *            an object implementing a standard type
      * @return the type is implementing
      */
     public static Class<?> typeOf(Object obj) {
@@ -76,7 +72,8 @@ public class ValueUtil {
     /**
      * Extracts the alarm information if present.
      *
-     * @param obj an object implementing a standard type
+     * @param obj
+     *            an object implementing a standard type
      * @return the alarm information for the object
      */
     public static Alarm alarmOf(Object obj) {
@@ -89,117 +86,24 @@ public class ValueUtil {
     }
 
     /**
-     * Extracts the alarm information if present, based on value
-     * and connection status.
-     *
-     * @param value a value
-     * @param connected the connection status
-     * @return the alarm information
-     */
-    public static Alarm alarmOf(Object value, boolean connected) {
-        if (value != null) {
-            if (value instanceof Alarm) {
-                return (Alarm) value;
-            } else {
-                return ValueFactory.alarmNone();
-            }
-        } else if (connected) {
-            return ValueFactory.newAlarm(AlarmSeverity.INVALID, "No value");
-        } else {
-            return ValueFactory.newAlarm(AlarmSeverity.UNDEFINED, "Disconnected");
-        }
-    }
-
-    /**
-     * Returns the alarm with highest severity. null values can either be ignored or
-     * treated as UNDEFINED severity.
-     *
-     * @param args a list of values
-     * @param considerNull whether to consider null values
-     * @return the highest alarm; can't be null
-     */
-    public static Alarm highestSeverityOf(final List<Object> args, final boolean considerNull) {
-        Alarm finalAlarm = ValueFactory.alarmNone();
-        for (Object object : args) {
-            Alarm newAlarm;
-            if (object == null && considerNull) {
-                newAlarm = ValueFactory.newAlarm(AlarmSeverity.UNDEFINED, "No Value");
-            } else {
-                newAlarm = ValueUtil.alarmOf(object);
-                if (newAlarm == null) {
-                    newAlarm = ValueFactory.alarmNone();
-                }
-            }
-            if (newAlarm.getAlarmSeverity().compareTo(finalAlarm.getAlarmSeverity()) > 0) {
-                finalAlarm = newAlarm;
-            }
-        }
-
-        return finalAlarm;
-    }
-
-    /**
-     * Returns the time with latest timestamp.
-     *
-     * @param args a list of values
-     * @return the latest time; can be null
-     */
-    public static Time latestTimeOf(final List<Object> args) {
-        Time finalTime = null;
-        for (Object object : args) {
-            Time newTime;
-            if (object != null)  {
-                newTime = ValueUtil.timeOf(object);
-                if (newTime != null && (finalTime == null || newTime.getTimestamp().compareTo(finalTime.getTimestamp()) > 0)) {
-                    finalTime = newTime;
-                }
-            }
-        }
-
-        return finalTime;
-    }
-
-    /**
-     * Returns the time with latest valid timestamp or now.
-     *
-     * @param args a list of values
-     * @return the latest time; can't be null
-     */
-    public static Time latestValidTimeOrNowOf(final List<Object> args) {
-        Time finalTime = null;
-        for (Object object : args) {
-            Time newTime;
-            if (object != null)  {
-                newTime = ValueUtil.timeOf(object);
-                if (newTime != null && newTime.isTimeValid() && (finalTime == null || newTime.getTimestamp().compareTo(finalTime.getTimestamp()) > 0)) {
-                    finalTime = newTime;
-                }
-            }
-        }
-
-        if (finalTime == null) {
-            finalTime = ValueFactory.timeNow();
-        }
-
-        return finalTime;
-    }
-
-    /**
      * Extracts the time information if present.
      *
-     * @param obj an object implementing a standard type
+     * @param obj
+     *            an object implementing a standard type
      * @return the time information for the object
      */
     public static Time timeOf(Object obj) {
-        if (obj instanceof Time)
+        if (obj instanceof Time) {
             return (Time) obj;
+        }
         return null;
     }
 
     /**
      * Extracts the display information if present.
      *
-     * @param obj an object implementing a standard type
+     * @param obj
+     *            an object implementing a standard type
      * @return the display information for the object
      */
     public static Display displayOf(Object obj) {
@@ -217,7 +121,8 @@ public class ValueUtil {
     /**
      * Checks whether the display limits are non-null and non-NaN.
      *
-     * @param display a display
+     * @param display
+     *            a display
      * @return true if the display limits have actual values
      */
     public static boolean displayHasValidDisplayLimits(Display display) {
@@ -231,12 +136,11 @@ public class ValueUtil {
     }
 
     /**
-     * Extracts the numericValueOf the object and normalizes according
-     * to the display range.
+     * Extracts the numericValueOf the object and normalizes according to the display range.
      *
-     * @param obj an object implementing a standard type
-     * @return the value normalized in its display range, or null
-     *         if no value or display information is present
+     * @param obj
+     *            an object implementing a standard type
+     * @return the value normalized in its display range, or null if no value or display information is present
      */
     public static Double normalizedNumericValueOf(Object obj) {
         return normalize(numericValueOf(obj), displayOf(obj));
@@ -245,8 +149,10 @@ public class ValueUtil {
     /**
      * Normalizes the given value according to the given display information.
      *
-     * @param value a value
-     * @param display the display information
+     * @param value
+     *            a value
+     * @param display
+     *            the display information
      * @return the normalized value, or null of either value or display is null
      */
     public static Double normalize(Number value, Display display) {
@@ -254,15 +160,19 @@ public class ValueUtil {
             return null;
         }
 
-        return (value.doubleValue() - display.getLowerDisplayLimit()) / (display.getUpperDisplayLimit() - display.getLowerDisplayLimit());
+        return (value.doubleValue() - display.getLowerDisplayLimit())
+                / (display.getUpperDisplayLimit() - display.getLowerDisplayLimit());
     }
 
     /**
      * Normalizes the given value according to the given range;
      *
-     * @param value a value
-     * @param lowValue the lowest value in the range
-     * @param highValue the highest value in the range
+     * @param value
+     *            a value
+     * @param lowValue
+     *            the lowest value in the range
+     * @param highValue
+     *            the highest value in the range
      * @return the normalized value, or null if any value is null
      */
     public static Double normalize(Number value, Number lowValue, Number highValue) {
@@ -274,12 +184,11 @@ public class ValueUtil {
     }
 
     /**
-     * Extracts a numeric value for the object. If it's a numeric scalar,
-     * the value is returned. If it's a numeric array, the first element is
-     * returned. If it's a numeric multi array, the value of the first
-     * element is returned.
+     * Extracts a numeric value for the object. If it's a numeric scalar, the value is returned. If it's a numeric
+     * array, the first element is returned. If it's a numeric multi array, the value of the first element is returned.
      *
-     * @param obj an object implementing a standard type
+     * @param obj
+     *            an object implementing a standard type
      * @return the numeric value
      */
     public static Double numericValueOf(Object obj) {
@@ -322,13 +231,13 @@ public class ValueUtil {
     }
 
     /**
-     * Converts a VImage to an AWT BufferedImage, so that it can be displayed.
-     * The content of the vImage buffer is copied, so further changes
-     * to the VImage will not modify the BufferedImage.
+     * Converts a VImage to an AWT BufferedImage, so that it can be displayed. The content of the vImage buffer is
+     * copied, so further changes to the VImage will not modify the BufferedImage.
      * 
      * 
      * 
-     * @param vImage the image to be converted
+     * @param vImage
+     *            the image to be converted
      * @return a new BufferedImage
      */
     public static BufferedImage toImage(VImage vImage) {
@@ -351,12 +260,14 @@ public class ValueUtil {
      * <p>
      * Currently, only TYPE_3BYTE_BGR is supported
      *
-     * @param image buffered image
+     * @param image
+     *            buffered image
      * @return a new image
      */
     public static VImage toVImage(BufferedImage image) {
         if (image.getType() != BufferedImage.TYPE_3BYTE_BGR) {
-            BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+            BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(),
+                    BufferedImage.TYPE_3BYTE_BGR);
             newImage.getGraphics().drawImage(image, 0, 0, null);
             image = newImage;
         }
@@ -368,8 +279,10 @@ public class ValueUtil {
     /**
      * Returns true if the two displays contain the same information.
      *
-     * @param d1 the first display
-     * @param d2 the second display
+     * @param d1
+     *            the first display
+     * @param d2
+     *            the second display
      * @return true if they match
      */
     public static boolean displayEquals(Display d1, Display d2) {
@@ -409,10 +322,10 @@ public class ValueUtil {
     }
 
     /**
-     * Changes the color map for AlarmSeverity. The new color map must be complete
-     * and not null;
+     * Changes the color map for AlarmSeverity. The new color map must be complete and not null;
      *
-     * @param map the new color map
+     * @param map
+     *            the new color map
      */
     public static void setAlarmSeverityColorMap(Map<AlarmSeverity, Integer> map) {
         if (map == null) {
@@ -433,7 +346,8 @@ public class ValueUtil {
     /**
      * Returns the rgb value for the given severity.
      *
-     * @param severity an alarm severity
+     * @param severity
+     *            an alarm severity
      * @return the rgb color
      */
     public static int colorFor(AlarmSeverity severity) {
@@ -452,7 +366,8 @@ public class ValueUtil {
     /**
      * Changes the default timestamp format.
      *
-     * @param defaultTimestampFormat the new default timestamp format
+     * @param defaultTimestampFormat
+     *            the new default timestamp format
      */
     public static void setDefaultTimestampFormat(DateTimeFormatter defaultTimestampFormat) {
         ValueUtil.defaultTimestampFormat = defaultTimestampFormat;
@@ -470,7 +385,8 @@ public class ValueUtil {
     /**
      * Changes the default format for numbers.
      *
-     * @param defaultNumberFormat the new default number format
+     * @param defaultNumberFormat
+     *            the new default number format
      */
     public static void setDefaultNumberFormat(NumberFormat defaultNumberFormat) {
         ValueUtil.defaultNumberFormat = defaultNumberFormat;
@@ -488,20 +404,23 @@ public class ValueUtil {
     /**
      * Changes the default format for VTypes.
      *
-     * @param defaultValueFormat the new default format
+     * @param defaultValueFormat
+     *            the new default format
      */
     public static void setDefaultValueFormat(ValueFormat defaultValueFormat) {
         ValueUtil.defaultValueFormat = defaultValueFormat;
     }
 
     /**
-     * Extracts the values of a column, making sure it contains
-     * numeric values.
+     * Extracts the values of a column, making sure it contains numeric values.
      *
-     * @param table a table
-     * @param columnName the name of the column to extract
+     * @param table
+     *            a table
+     * @param columnName
+     *            the name of the column to extract
      * @return the values; null if the columnName is null or is not found
-     * @throws IllegalArgumentException if the column is found but does not contain numeric values
+     * @throws IllegalArgumentException
+     *             if the column is found but does not contain numeric values
      */
     public static ListNumber numericColumnOf(VTable table, String columnName) {
         if (columnName == null) {
@@ -513,22 +432,25 @@ public class ValueUtil {
                 if (table.getColumnType(i).isPrimitive()) {
                     return (ListNumber) table.getColumnData(i);
                 } else {
-                    throw new IllegalArgumentException("Column '" + columnName +"' is not numeric (contains " + table.getColumnType(i).getSimpleName() + ")");
+                    throw new IllegalArgumentException("Column '" + columnName + "' is not numeric (contains "
+                            + table.getColumnType(i).getSimpleName() + ")");
                 }
             }
         }
 
-        throw new IllegalArgumentException("Column '" + columnName +"' was not found");
+        throw new IllegalArgumentException("Column '" + columnName + "' was not found");
     }
 
     /**
-     * Extracts the values of a column, making sure it contains
-     * strings.
+     * Extracts the values of a column, making sure it contains strings.
      *
-     * @param table a table
-     * @param columnName the name of the column to extract
+     * @param table
+     *            a table
+     * @param columnName
+     *            the name of the column to extract
      * @return the values; null if the columnName is null or is not found
-     * @throws IllegalArgumentException if the column is found but does not contain string values
+     * @throws IllegalArgumentException
+     *             if the column is found but does not contain string values
      */
     public static List<String> stringColumnOf(VTable table, String columnName) {
         if (columnName == null) {
@@ -542,19 +464,21 @@ public class ValueUtil {
                     List<String> result = (List<String>) table.getColumnData(i);
                     return result;
                 } else {
-                    throw new IllegalArgumentException("Column '" + columnName +"' is not string (contains " + table.getColumnType(i).getSimpleName() + ")");
+                    throw new IllegalArgumentException("Column '" + columnName + "' is not string (contains "
+                            + table.getColumnType(i).getSimpleName() + ")");
                 }
             }
         }
 
-        throw new IllegalArgumentException("Column '" + columnName +"' was not found");
+        throw new IllegalArgumentException("Column '" + columnName + "' was not found");
     }
 
     /**
-     * Returns the default array dimension display by looking at the size
-     * of the n dimensional array and creating cell boundaries based on index.
+     * Returns the default array dimension display by looking at the size of the n dimensional array and creating cell
+     * boundaries based on index.
      *
-     * @param array the array
+     * @param array
+     *            the array
      * @return the array dimension display
      */
     public static List<ArrayDimensionDisplay> defaultArrayDisplay(VNumberArray array) {
@@ -562,10 +486,11 @@ public class ValueUtil {
     }
 
     /**
-     * Returns the default array dimension display given the size
-     * of the n dimensional array and creating cell boundaries based on index.
+     * Returns the default array dimension display given the size of the n dimensional array and creating cell
+     * boundaries based on index.
      *
-     * @param sizes the shape of the array
+     * @param sizes
+     *            the shape of the array
      * @return the array dimension display
      */
     public static List<ArrayDimensionDisplay> defaultArrayDisplay(ListInt sizes) {
@@ -579,8 +504,10 @@ public class ValueUtil {
     /**
      * Filters an element of a one-dimensional array.
      *
-     * @param array a 1D array
-     * @param index a valid index
+     * @param array
+     *            a 1D array
+     * @param index
+     *            a valid index
      * @return the trimmed array to that one index
      */
     public static VNumberArray subArray(VNumberArray array, int index) {
@@ -593,7 +520,9 @@ public class ValueUtil {
 
         ArrayDimensionDisplay display = array.getDimensionDisplay().get(0);
         return ValueFactory.newVNumberArray(new ArrayDouble(array.getData().getDouble(index)),
-                new ArrayInt(1), Arrays.asList(ValueFactory.newDisplay(new ArrayDouble(display.getCellBoundaries().getDouble(index), display.getCellBoundaries().getDouble(index+1)), display.getUnits())),
+                new ArrayInt(1),
+                Arrays.asList(ValueFactory.newDisplay(new ArrayDouble(display.getCellBoundaries().getDouble(index),
+                        display.getCellBoundaries().getDouble(index + 1)), display.getUnits())),
                 array, array, array);
 
     }

@@ -26,13 +26,13 @@ import org.diirt.vtype.VEnum;
 import org.diirt.vtype.VType;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
 
-/**The editpart of a combo.
+/**
+ * The editpart of a combo.
  *
  * @author Xihui Chen
  *
@@ -67,48 +67,31 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
      * @param items
      */
     private void updateCombo(List<String> items) {
-        if(items !=null && getExecutionMode() == ExecutionMode.RUN_MODE){
+        if (items != null && getExecutionMode() == ExecutionMode.RUN_MODE) {
             combo.removeAll();
 
-            for(String item : items){
+            for (String item : items) {
                 combo.add(item);
             }
 
-            //write value to pv if pv name is not empty
-            if(getWidgetModel().getPVName().trim().length() > 0){
-                if(comboSelectionListener !=null)
+            // write value to pv if pv name is not empty
+            if (getWidgetModel().getPVName().trim().length() > 0) {
+                if (comboSelectionListener != null)
                     combo.removeSelectionListener(comboSelectionListener);
-                comboSelectionListener = new SelectionAdapter(){
-                        @Override
-                        public void widgetSelected(SelectionEvent e) {
-                            // Only react if the selection was accomplished
-                            // by clicking on an item.
-                            if (e.stateMask == SWT.BUTTON1)
-                                setPVValue(AbstractPVWidgetModel.PROP_PVNAME, combo.getText());
-                            else
-                            {   // Ignore selections from mouse wheel (stateMask == 0).
-                                // Unfortunately this also ignores selections via keyboard,
-                                // which has been discussed in
-                                // https://github.com/ControlSystemStudio/cs-studio/issues/2276
-                                // Restore current value to UI.
-                                final String current = VTypeHelper.getString((VType)getPropertyValue(ComboModel.PROP_PVVALUE));
-                                final int sel = Arrays.asList(combo.getItems()).indexOf(current);
-                                if (sel >= 0)
-                                    combo.select(sel);
-                                else
-                                    combo.deselectAll();
-                            }
-                        }
+                comboSelectionListener = new SelectionAdapter() {
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        setPVValue(AbstractPVWidgetModel.PROP_PVNAME, combo.getText());
+                    }
                 };
                 combo.addSelectionListener(comboSelectionListener);
             }
-
         }
     }
 
     @Override
     public ComboModel getWidgetModel() {
-        return (ComboModel)getModel();
+        return (ComboModel) getModel();
     }
 
     @Override
@@ -117,25 +100,21 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         registerLoadItemsListener();
     }
 
-    /**
-     *
-     */
     private void registerLoadItemsListener() {
-        //load items from PV
-        if(getExecutionMode() == ExecutionMode.RUN_MODE){
-            if(getWidgetModel().isItemsFromPV()){
+        // load items from PV
+        if (getExecutionMode() == ExecutionMode.RUN_MODE) {
+            if (getWidgetModel().isItemsFromPV()) {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
-                if(pv != null){
-                    if(loadItemsFromPVListener == null)
+                if (pv != null) {
+                    if (loadItemsFromPVListener == null)
                         loadItemsFromPVListener = new IPVListener.Stub() {
-                        @Override
+                            @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();
-                                if (value != null && value instanceof VEnum){
-                                    List<String> items = ((VEnum)value).getLabels();
-                                        getWidgetModel().setPropertyValue(
-                                                ComboModel.PROP_ITEMS, items);
-                                    }
+                                if (value != null && value instanceof VEnum) {
+                                    List<String> items = ((VEnum) value).getLabels();
+                                    getWidgetModel().setPropertyValue(ComboModel.PROP_ITEMS, items);
+                                }
                             }
                         };
                     pv.addListener(loadItemsFromPVListener);
@@ -147,13 +126,13 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
     @Override
     protected void doDeActivate() {
         super.doDeActivate();
-        if(getWidgetModel().isItemsFromPV()){
+        if (getWidgetModel().isItemsFromPV()) {
             IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
-            if(pv != null && loadItemsFromPVListener !=null){
+            if (pv != null && loadItemsFromPVListener != null) {
                 pv.removeListener(loadItemsFromPVListener);
             }
         }
-//        ((ComboFigure)getFigure()).dispose();
+        // ((ComboFigure)getFigure()).dispose();
     }
 
     /**
@@ -171,22 +150,20 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         };
         setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME, pvNameHandler);
 
-
         autoSizeWidget((ComboFigure) getFigure());
         // PV_Value
         IWidgetPropertyChangeHandler pvhandler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                if(newValue != null){
-                    String stringValue = VTypeHelper.getString((VType)newValue);
-                    if(Arrays.asList(combo.getItems()).contains(stringValue))
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                if (newValue != null) {
+                    String stringValue = VTypeHelper.getString((VType) newValue);
+                    if (Arrays.asList(combo.getItems()).contains(stringValue))
                         combo.setText(stringValue);
                     else
                         combo.deselectAll();
-//
-//                    if(getWidgetModel().isBorderAlarmSensitve())
-//                            autoSizeWidget((ComboFigure) refreshableFigure);
+                    //
+                    // if(getWidgetModel().isBorderAlarmSensitve())
+                    // autoSizeWidget((ComboFigure) refreshableFigure);
                 }
 
                 return true;
@@ -198,11 +175,10 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         IWidgetPropertyChangeHandler itemsHandler = new IWidgetPropertyChangeHandler() {
             @SuppressWarnings("unchecked")
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                if(newValue != null && newValue instanceof List){
-                    updateCombo((List<String>)newValue);
-                    if(getWidgetModel().isItemsFromPV())
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
+                if (newValue != null && newValue instanceof List) {
+                    updateCombo((List<String>) newValue);
+                    if (getWidgetModel().isItemsFromPV())
                         combo.setText(VTypeHelper.getString(getPVValue(AbstractPVWidgetModel.PROP_PVNAME)));
                 }
                 return true;
@@ -210,29 +186,27 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         };
         setPropertyChangeHandler(ComboModel.PROP_ITEMS, itemsHandler);
 
-        final IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
+        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
+            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
                 updatePropSheet((Boolean) newValue);
                 return false;
             }
         };
-        getWidgetModel().getProperty(ComboModel.PROP_ITEMS_FROM_PV).
-            addPropertyChangeListener(new PropertyChangeListener(){
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
-                }
-        });
+        getWidgetModel().getProperty(ComboModel.PROP_ITEMS_FROM_PV)
+                .addPropertyChangeListener(new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
+                    }
+                });
 
-
-        //size change handlers--always apply the default height
+        // size change handlers--always apply the default height
         IWidgetPropertyChangeHandler handle = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue, final Object newValue,
                     final IFigure figure) {
-                autoSizeWidget((ComboFigure)figure);
+                autoSizeWidget((ComboFigure) figure);
                 return true;
             }
         };
@@ -243,12 +217,11 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
         setPropertyChangeHandler(ComboModel.PROP_FONT, handle);
     }
 
-        /**
-        * @param actionsFromPV
-        */
+    /**
+     * @param actionsFromPV
+     */
     private void updatePropSheet(final boolean itemsFromPV) {
-        getWidgetModel().setPropertyVisible(
-                ComboModel.PROP_ITEMS, !itemsFromPV);
+        getWidgetModel().setPropertyVisible(ComboModel.PROP_ITEMS, !itemsFromPV);
     }
 
     private void autoSizeWidget(ComboFigure comboFigure) {
@@ -263,12 +236,11 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public void setValue(Object value) {
-        if(value instanceof String)
+        if (value instanceof String)
             combo.setText((String) value);
         else if (value instanceof Number)
-            combo.select(((Number)value).intValue());
+            combo.select(((Number) value).intValue());
         else
             super.setValue(value);
     }
-
 }

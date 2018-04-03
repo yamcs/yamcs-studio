@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.css.runtime.feature"
       label="Yamcs CS-Studio Runtime Components"
-      version="1.0.0.qualifier"
+      version="1.0.2.qualifier"
       provider-name="Space Applications Services">
 
    <plugin
@@ -13,21 +13,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.openfile"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.ui.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.csstudio.utility.singlesource"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -132,13 +118,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.utility.file"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.opibuilder"
          download-size="0"
          install-size="0"
@@ -172,5 +151,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.python.jython"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

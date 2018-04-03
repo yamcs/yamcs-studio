@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BOY Widgets Plug-in
 Bundle-Description: Widgets for BOY
 Bundle-SymbolicName: org.csstudio.opibuilder.widgets;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: org.csstudio.opibuilder.widgets.Activator
 Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
 Require-Bundle: org.eclipse.core.resources,
@@ -25,8 +25,10 @@ Require-Bundle: org.eclipse.core.resources,
  org.apache.batik.dom.svg,
  org.apache.batik.util,
  org.apache.batik.dom,
+ org.apache.batik.anim,
  com.google.guava,
- org.eclipse.nebula.visualization.xygraph
+ org.eclipse.nebula.visualization.xygraph,
+ org.csstudio.swt.widgets
 Import-Package: org.eclipse.draw2d,
  org.eclipse.draw2d.geometry,
  org.eclipse.gef,
@@ -40,3 +42,4 @@ Export-Package: org.csstudio.opibuilder.widgets,
  org.csstudio.opibuilder.widgets.figures,
  org.csstudio.opibuilder.widgets.model,
  org.csstudio.opibuilder.widgets.util
+Automatic-Module-Name: org.csstudio.opibuilder.widgets

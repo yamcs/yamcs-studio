@@ -7,7 +7,7 @@ Bundle-Name: Yamcs Studio: CS-Studio Interfacing
 Bundle-SymbolicName: org.yamcs.studio.css.core;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.core.resources,
@@ -30,3 +30,4 @@ Export-Package: org.yamcs.studio.css.core,
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Service-Component: OSGI-INF/autocomplete/para-parser.xml,
  OSGI-INF/autocomplete/para-provider.xml
+Automatic-Module-Name: org.yamcs.studio.css.core

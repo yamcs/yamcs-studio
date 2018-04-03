@@ -31,8 +31,9 @@ public class YamcsVType implements VType, Alarm, Time, Display {
                 || pval.getAcquisitionStatus() == AcquisitionStatus.INVALID)
             return AlarmSeverity.INVALID; // Workaround to display LOS in the displays, should be 'Expired'
 
-        if (!pval.hasMonitoringResult())
+        if (!pval.hasMonitoringResult()) {
             return AlarmSeverity.NONE;
+        }
 
         switch (pval.getMonitoringResult()) {
         case IN_LIMITS:
@@ -73,23 +74,109 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     }
 
     @Override
-    public Double getLowerDisplayLimit() {
-        return Double.MIN_VALUE;
+    public Double getLowerWarningLimit() {
+        // Assumes ordered ranges
+        for (AlarmRange range : pval.getAlarmRangeList()) {
+            if (range.getLevel() == AlarmLevelType.WATCH
+                    || range.getLevel() == AlarmLevelType.WARNING
+                    || range.getLevel() == AlarmLevelType.DISTRESS) {
+                if (range.hasMinInclusive()) {
+                    return range.getMinInclusive();
+                } else if (range.hasMinExclusive()) {
+                    return range.getMinExclusive();
+                }
+            }
+        }
+
+        return Double.NaN;
     }
 
+    /**
+     * Highest value before the warning region
+     */
     @Override
-    public Double getLowerCtrlLimit() {
-        return Double.MIN_VALUE;
+    public Double getUpperWarningLimit() {
+        // Assumes ordered ranges
+        for (AlarmRange range : pval.getAlarmRangeList()) {
+            if (range.getLevel() == AlarmLevelType.WATCH
+                    || range.getLevel() == AlarmLevelType.WARNING
+                    || range.getLevel() == AlarmLevelType.DISTRESS) {
+                if (range.hasMaxInclusive()) {
+                    return range.getMaxInclusive();
+                } else if (range.hasMaxExclusive()) {
+                    return range.getMaxExclusive();
+                }
+            }
+        }
+
+        return Double.NaN;
     }
 
     @Override
     public Double getLowerAlarmLimit() {
-        return Double.MIN_VALUE;
+        // Assumes ordered ranges
+        for (AlarmRange range : pval.getAlarmRangeList()) {
+            if (range.getLevel() == AlarmLevelType.CRITICAL
+                    || range.getLevel() == AlarmLevelType.SEVERE) {
+                if (range.hasMinInclusive()) {
+                    return range.getMinInclusive();
+                } else if (range.hasMinExclusive()) {
+                    return range.getMinExclusive();
+                }
+            }
+        }
+
+        return Double.NaN;
+    }
+
+    /**
+     * Highest value before the alarm region
+     */
+    @Override
+    public Double getUpperAlarmLimit() {
+        // Assumes ordered ranges
+        for (AlarmRange range : pval.getAlarmRangeList()) {
+            if (range.getLevel() == AlarmLevelType.CRITICAL
+                    || range.getLevel() == AlarmLevelType.SEVERE) {
+                if (range.hasMaxInclusive()) {
+                    return range.getMaxInclusive();
+                } else if (range.hasMaxExclusive()) {
+                    return range.getMaxExclusive();
+                }
+            }
+        }
+
+        return Double.NaN;
     }
 
     @Override
-    public Double getLowerWarningLimit() {
-        return Double.MIN_VALUE;
+    public Double getLowerDisplayLimit() {
+        Double loLimit = getLowerAlarmLimit();
+        if (loLimit == Double.NaN) {
+            loLimit = getLowerWarningLimit();
+        }
+
+        return loLimit;
+    }
+
+    @Override
+    public Double getUpperDisplayLimit() {
+        Double hiLimit = getUpperAlarmLimit();
+        if (hiLimit == Double.NaN) {
+            hiLimit = getUpperWarningLimit();
+        }
+
+        return hiLimit;
+    }
+
+    @Override
+    public Double getLowerCtrlLimit() {
+        return Double.NaN;
+    }
+
+    @Override
+    public Double getUpperCtrlLimit() {
+        return Double.NaN;
     }
 
     @Override
@@ -102,45 +189,6 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     @Override
     public NumberFormat getFormat() {
         return NumberFormats.toStringFormat();
-    }
-
-    /**
-     * Highest value before the warning region
-     */
-    @Override
-    public Double getUpperWarningLimit() {
-        // Assumes ordered ranges
-        for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevelType.WATCH
-                    || range.getLevel() == AlarmLevelType.WARNING
-                    || range.getLevel() == AlarmLevelType.DISTRESS)
-                return range.getMaxInclusive();
-        }
-        return Double.MAX_VALUE;
-    }
-
-    /**
-     * Highest value before the alarm region
-     */
-    @Override
-    public Double getUpperAlarmLimit() {
-        // Assumes ordered ranges
-        for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevelType.CRITICAL
-                    || range.getLevel() == AlarmLevelType.SEVERE)
-                return range.getMaxInclusive();
-        }
-        return Double.MAX_VALUE;
-    }
-
-    @Override
-    public Double getUpperCtrlLimit() {
-        return Double.MAX_VALUE;
-    }
-
-    @Override
-    public Double getUpperDisplayLimit() {
-        return Double.MAX_VALUE;
     }
 
     /**

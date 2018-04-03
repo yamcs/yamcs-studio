@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Runtime"
+            class="org.yamcs.studio.runtime.base.RuntimePerspective"
+            id="org.yamcs.studio.runtime.perspective">
+      </perspective>
+   </extension>
+   
+   <extension point="org.eclipse.ui.views">
+      <category
+            name="Yamcs Studio"
+            id="org.yamcs.studio">
+      </category>
+      <view
+            category="org.yamcs.studio"
+            class="org.yamcs.studio.runtime.base.RuntimeView"
+            id="org.yamcs.studio.runtime.RuntimeView"
+            name="Runtime"/>
+   </extension>
+</plugin>

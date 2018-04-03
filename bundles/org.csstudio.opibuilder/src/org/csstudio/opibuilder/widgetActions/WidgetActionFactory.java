@@ -26,6 +26,7 @@ public class WidgetActionFactory {
         WRITE_PV("Write PV", createImage("icons/writePV.png")), //$NON-NLS-2$
         EXECUTE_CMD("Execute Command", createImage("icons/command.gif")), //$NON-NLS-2$
         EXECUTE_JAVASCRIPT("Execute Javascript", createImage("icons/exeJS.png")), //$NON-NLS-2$
+        EXECUTE_PYTHONSCRIPT("Execute Python Script", createImage("icons/exePy.gif")), //$NON-NLS-2$
         PLAY_SOUND("Play WAV File", createImage("icons/sound.gif")), //$NON-NLS-2$
         OPEN_FILE("Open File", createImage("icons/openFile.png")), //$NON-NLS-2$
         OPEN_WEBPAGE("Open Webpage", createImage("icons/hyperlink.gif"));//$NON-NLS-2$
@@ -95,6 +96,8 @@ public class WidgetActionFactory {
             } else {
                 return new ExecuteJavaScriptJdkAction();
             }
+        case EXECUTE_PYTHONSCRIPT:
+            return new ExecutePythonScriptAction();
         case OPEN_WEBPAGE:
             return new OpenWebpageAction();
         case PLAY_SOUND:

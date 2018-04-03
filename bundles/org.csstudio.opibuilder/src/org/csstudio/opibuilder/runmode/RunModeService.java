@@ -14,13 +14,10 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.runmode.OPIRunnerPerspective.Position;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
-import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.csstudio.utility.singlesource.SingleSourcePlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -46,8 +43,10 @@ public class RunModeService {
         NEW_TAB("Workbench Tab"),
 
         /** .. in desired location, if possible */
-        NEW_TAB_LEFT("Workbench Tab (Left)"), NEW_TAB_RIGHT("Workbench Tab (Right)"), NEW_TAB_TOP(
-                "Workbench Tab (Top)"), NEW_TAB_BOTTOM("Workbench Tab (Bottom)"),
+        NEW_TAB_LEFT("Workbench Tab (Left)"),
+        NEW_TAB_RIGHT("Workbench Tab (Right)"),
+        NEW_TAB_TOP("Workbench Tab (Top)"),
+        NEW_TAB_BOTTOM("Workbench Tab (Bottom)"),
 
         /** .. detached */
         NEW_TAB_DETACHED("Detached Tab"),
@@ -85,10 +84,9 @@ public class RunModeService {
      * @param runtime
      *            Runtime to update in case DisplayMode is 'replace'
      */
-    public static void openDisplay(final IPath path, final Optional<MacrosInput> macros,
-            DisplayMode mode,
-            final Optional<IOPIRuntime> runtime) {
-        final RunnerInput input = new RunnerInput(path, null, macros.orElse(null));
+    public static void openDisplay(IPath path, Optional<MacrosInput> macros, DisplayMode mode,
+            Optional<IOPIRuntime> runtime) {
+        RunnerInput input = new RunnerInput(path, null, macros.orElse(null));
         try {
             if (mode == DisplayMode.REPLACE) { // Anything to replace?
                 if (!runtime.isPresent())
@@ -127,7 +125,7 @@ public class RunModeService {
                 shell.moveAbove(null);
                 break;
             case NEW_SHELL:
-                SingleSourceHelper.openOPIShell(path, macros.orElse(null));
+                OPIShell.openOPIShell(path, macros.orElse(null));
                 break;
             default:
                 throw new Exception("Unknown display mode " + mode);
@@ -167,7 +165,7 @@ public class RunModeService {
      * @param mode
      *            Mode, must be one related to Views ("NEW_TAB_*")
      */
-    public static void openDisplayInView(final IWorkbenchPage page, final RunnerInput input, final DisplayMode mode) {
+    public static void openDisplayInView(IWorkbenchPage page, RunnerInput input, DisplayMode mode) {
         UIBundlingThread.getInstance().addRunnable(() -> {
             try {
                 // Check for existing view with same input.
@@ -220,7 +218,7 @@ public class RunModeService {
 
                 // Adjust position
                 if (position == Position.DETACHED) {
-                    SingleSourcePlugin.getUIHelper().detachView(opiView);
+                    OPIBuilderPlugin.getUIHelper().detachView(opiView);
                     opiView.positionFromModel();
                 }
             } catch (Exception e) {

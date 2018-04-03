@@ -7,7 +7,6 @@ import org.diirt.datasource.ChannelWriteCallback;
 import org.diirt.datasource.DataSourceTypeAdapter;
 import org.diirt.datasource.MultiplexedChannelHandler;
 import org.diirt.datasource.ValueCache;
-import org.yamcs.protobuf.Mdb.DataSourceType;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsConnectionListener;
@@ -82,8 +81,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected boolean isConnected(PVConnectionInfo info) {
         boolean sysParam = getId().getName().startsWith("/yamcs"); // These are always valid in yamcs world
-        boolean nonLocal = info.parameter != null && info.parameter.getDataSource() != DataSourceType.LOCAL;
-        return info.connected && (sysParam || nonLocal);
+        return info.connected && (sysParam || info.parameter != null);
     }
 
     @Override
@@ -112,14 +110,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     public void processConnectionInfo(PVConnectionInfo info) {
         if (log.isLoggable(Level.FINEST)) {
             log.finest(String.format("Processing %s", info));
-        }
-        /*
-         * Check that it's not actually a software parameter, because we don't want leaking between the datasource
-         * schemes (the web socket client wouldn't make the distinction).
-         */
-        if (info.parameter != null && info.parameter.getDataSource() == DataSourceType.LOCAL) {
-            reportExceptionToAllReadersAndWriters(new IllegalArgumentException(
-                    "Not a valid parameter channel: '" + getChannelName() + "'"));
         }
 
         // Call the real (but protected) method

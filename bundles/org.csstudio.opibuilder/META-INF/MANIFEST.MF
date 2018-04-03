@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BOY base plugin
 Bundle-Description: Base plugin of BOY
 Bundle-SymbolicName: org.csstudio.opibuilder;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: org.csstudio.opibuilder.OPIBuilderPlugin
 Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
 Bundle-Localization: plugin
@@ -19,15 +19,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.help,
  org.csstudio.ui.util,
- org.csstudio.openfile,
  org.jdom,
  org.csstudio.autocomplete.ui,
  org.csstudio.simplepv,
- org.csstudio.utility.file,
- org.csstudio.utility.singlesource,
  org.diirt,
  org.eclipse.e4.ui.workbench,
- org.eclipse.swt
+ org.eclipse.swt,
+ org.python.jython,
+ org.csstudio.swt.widgets
+Eclipse-RegisterBuddy: org.python.jython
 Bundle-ActivationPolicy: lazy
 Export-Package: org.csstudio.opibuilder,
  org.csstudio.opibuilder.actions,
@@ -53,3 +53,4 @@ Export-Package: org.csstudio.opibuilder,
 Bundle-ClassPath: lib/rhino/js.jar,
  .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.csstudio.opibuilder

@@ -12,6 +12,6 @@
             class="org.yamcs.studio.alarms.active.ActiveAlarmsView"
             icon="icons/eview16/alarms.png"
             id="org.yamcs.studio.alarms.active.ActiveAlarmsView"
-            name="Active Alarms"/>
+            name="Active Alarms (Preview)"/>
    </extension>
 </plugin>

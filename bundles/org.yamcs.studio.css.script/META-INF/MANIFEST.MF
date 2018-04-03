@@ -3,10 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs Script Extensions for OPIBuilder
 Bundle-SymbolicName: org.yamcs.studio.css.script
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Bundle-Vendor: Space Applications Services
 Fragment-Host: org.csstudio.opibuilder
 Require-Bundle: org.yamcs.studio.core,
  org.yamcs.studio.commanding,
  org.yamcs.client
 Export-Package: org.yamcs.studio.script
+Automatic-Module-Name: org.yamcs.studio.css.script

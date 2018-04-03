@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
+import org.csstudio.opibuilder.actions.PrintDisplayAction;
 import org.csstudio.opibuilder.actions.RefreshOPIAction;
 import org.csstudio.opibuilder.datadefinition.NotImplementedException;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
@@ -17,7 +18,6 @@ import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.csstudio.opibuilder.util.SingleSourceHelper;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -58,18 +58,14 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.services.IServiceLocator;
 
 /**
- * An OPIShell is a CS-Studio OPI presented in an SWT shell, which allows
- * more free integration with the host operating system.  In most ways
- * it behaves like an OPIView.
+ * An OPIShell is a CS-Studio OPI presented in an SWT shell, which allows more free integration with the host operating
+ * system. In most ways it behaves like an OPIView.
  *
- * All OPIShells are maintained in a static set within this class.  To
- * maintain a cache of all shells, construction is limited to a static
- * method.  The private constructor means that this class cannot be
- * extended.
+ * All OPIShells are maintained in a static set within this class. To maintain a cache of all shells, construction is
+ * limited to a static method. The private constructor means that this class cannot be extended.
  *
- * In order for the OPIShell to be integrated with Eclipse functionality,
- * in particular the right-click context menu, it needs to be registered
- * against an existing IViewPart.
+ * In order for the OPIShell to be integrated with Eclipse functionality, in particular the right-click context menu, it
+ * needs to be registered against an existing IViewPart.
  *
  * @author Will Rogers, Matthew Furseman
  *
@@ -86,7 +82,7 @@ public final class OPIShell implements IOPIRuntime {
     // The active OPIshell, or null if no OPIShell is active
     private static OPIShell activeShell = null;
     // Cache of open OPI shells in order of opening.
-    private static final Set<OPIShell> openShells = new LinkedHashSet<OPIShell>();
+    private static final Set<OPIShell> openShells = new LinkedHashSet<>();
     // The view against which the context menu is registered.
     private IViewPart view;
 
@@ -98,7 +94,7 @@ public final class OPIShell implements IOPIRuntime {
     // Variables that change if OPI input is changed.
     private DisplayModel displayModel;
     private IPath path;
-    // macrosInput should not be null.  If there are no macros it should
+    // macrosInput should not be null. If there are no macros it should
     // be an empty MacrosInput object.
     private MacrosInput macrosInput;
 
@@ -125,6 +121,7 @@ public final class OPIShell implements IOPIRuntime {
             public DragTracker getDragTracker(Request req) {
                 return new DragEditPartsTracker(this);
             }
+
             @Override
             public boolean isSelectable() {
                 return false;
@@ -145,19 +142,25 @@ public final class OPIShell implements IOPIRuntime {
         shell.setLayout(new FillLayout());
         shell.addShellListener(new ShellListener() {
             @Override
-            public void shellIconified(ShellEvent e) {}
+            public void shellIconified(ShellEvent e) {
+            }
+
             @Override
-            public void shellDeiconified(ShellEvent e) {}
+            public void shellDeiconified(ShellEvent e) {
+            }
+
             @Override
             public void shellDeactivated(ShellEvent e) {
                 activeShell = null;
             }
+
             @Override
             public void shellClosed(ShellEvent e) {
                 // Remove this shell from the cache.
                 openShells.remove(OPIShell.this);
                 sendUpdateCommand();
             }
+
             @Override
             public void shellActivated(ShellEvent e) {
                 activeShell = OPIShell.this;
@@ -197,15 +200,15 @@ public final class OPIShell implements IOPIRuntime {
     }
 
     /**
-     * In order for the right-click menu to work, this shell must be registered
-     * with a view.  Register the context menu against the view.
-     * Make the view the default.
+     * In order for the right-click menu to work, this shell must be registered with a view. Register the context menu
+     * against the view. Make the view the default.
+     * 
      * @param view
      */
     public void registerWithView(IViewPart view) {
         this.view = view;
         actionRegistry.registerAction(new RefreshOPIAction(this));
-        SingleSourceHelper.registerRCPRuntimeActions(actionRegistry, this);
+        actionRegistry.registerAction(new PrintDisplayAction(this));
         OPIRunnerContextMenuProvider contextMenuProvider = new OPIRunnerContextMenuProvider(viewer, this);
         getSite().registerContextMenu(contextMenuProvider, viewer);
         viewer.setContextMenu(contextMenuProvider);
@@ -275,8 +278,7 @@ public final class OPIShell implements IOPIRuntime {
      *************************************************************/
 
     /**
-     * This is the only way to create an OPIShell.
-     * Logs an error and cleans up if path is null.
+     * This is the only way to create an OPIShell. Logs an error and cleans up if path is null.
      */
     public static void openOPIShell(IPath path, MacrosInput macrosInput) {
         if (macrosInput == null) {
@@ -300,14 +302,13 @@ public final class OPIShell implements IOPIRuntime {
                     os.dispose();
                 }
                 log.log(Level.WARNING, "Failed to create new OPIShell.", e);
-           }
+            }
         }
 
     }
 
     /**
-     * Close all open OPIShells.  Use getAllShells() for a copy
-     * of the set, to avoid removing items during iteration.
+     * Close all open OPIShells. Use getAllShells() for a copy of the set, to avoid removing items during iteration.
      */
     public static void closeAll() {
         for (OPIShell s : getAllShells()) {
@@ -324,10 +325,10 @@ public final class OPIShell implements IOPIRuntime {
         }
     }
 
-    /** Search the cache of open OPIShells to find a match for the
-     *  input Shell object.
+    /**
+     * Search the cache of open OPIShells to find a match for the input Shell object.
      *
-     *     Return associated OPIShell or Null if none found
+     * Return associated OPIShell or Null if none found
      */
     public static OPIShell getOPIShellForShell(final Shell target) {
         OPIShell foundShell = null;
@@ -343,16 +344,17 @@ public final class OPIShell implements IOPIRuntime {
     }
 
     /**
-     * Return a copy of the set of open shells.  Returning the same
-     * instance may lead to problems when closing shells.
+     * Return a copy of the set of open shells. Returning the same instance may lead to problems when closing shells.
+     * 
      * @return a copy of the set of open shells.
      */
     public static Set<OPIShell> getAllShells() {
-        return new LinkedHashSet<OPIShell>(openShells);
+        return new LinkedHashSet<>(openShells);
     }
 
     /**
      * Return the active shell, which may be null
+     * 
      * @return the active OPIShell
      */
     public static OPIShell getActiveShell() {

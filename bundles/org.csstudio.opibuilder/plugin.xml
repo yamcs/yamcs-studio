@@ -10,8 +10,15 @@
             class="org.csstudio.opibuilder.runmode.OPIRunnerPerspective"
             icon="icons/OPIBuilder.png"
             id="org.csstudio.opibuilder.OPIRuntime.perspective"
-            name="%OPIRunner">
+            name="Display Runner">
       </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.elementFactories">
+      <factory
+            class="org.csstudio.utility.singlesource.PathEditorInputFactory"
+            id="org.csstudio.utility.singlesource.PathEditorInputFactory">
+      </factory>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -81,16 +88,6 @@
             label="OPI Actions"
             visible="true">
          <action
-               class="org.csstudio.opibuilder.actions.OpenTopOPIsAction"
-               icon="icons/OPIRunner.png"
-               id="org.csstudio.opibuilder.openTopFileAction"
-               label="Top Files"
-               pulldown="true"
-               style="pulldown"
-               toolbarPath="Normal/additions"
-               tooltip="Open top files in editor. e.g. Open OPIs in run mode">
-         </action>
-         <action
                class="org.csstudio.opibuilder.actions.CompactModeAction"
                definitionId="org.csstudio.opibuilder.actions.compactMode"
                id="org.csstudio.opibuilder.compactModeAction"
@@ -126,54 +123,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="org.csstudio.opibuilder.showPVInfo"
-            objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
-         <action
-               class="org.csstudio.opibuilder.actions.ShowPVInfoAction"
-               enablesFor="1"
-               id="org.csstudio.opibuilder.showPVInfoAction"
-               label="Show PV Info"
-               tooltip="Show detail infomation of PVs on this widget">
-         </action>
-         <visibility>
-            <and>
-               <objectState
-                     name="executionMode"
-                     value="RUN_MODE">
-               </objectState>
-               <objectState
-                     name="hasPVs"
-                     value="true">
-               </objectState>
-            </and>
-         </visibility>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.csstudio.opibuilder.CSSpopupMenu"
-            objectClass="org.csstudio.platform.model.IProcessVariable">
-         <menu
-               id="org.csstudio.popmenu"
-               label="CSS"
-               path="additions">
-            <groupMarker
-                  name="content">
-            </groupMarker>
-            <separator
-                  name="additions">
-            </separator>
-         </menu>
-         <action
-               class="org.csstudio.opibuilder.actions.OpenOPIProbeAction"
-               icon="icons/OPIRunner.png"
-               id="org.csstudio.opibuilder.openOPIProbeAction"
-               label="OPI Probe"
-               menubarPath="org.csstudio.popmenu/content"
-               tooltip="Send PV name to OPI Probe">
-         </action>
-      </objectContribution>
       <objectContribution
             adaptable="false"
             id="org.csstudio.opibuilder.showMacros"
@@ -217,24 +166,6 @@
                label="Dump PV List"
                menubarPath="org.eclipse.gef.group.edit"
                tooltip="Dump all PVs in the OPI.">
-         </action>
-         <visibility>
-            <objectState
-                  name="executionMode"
-                  value="RUN_MODE">
-            </objectState>
-         </visibility>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="org.csstudio.opibuilder.showNavigator"
-            objectClass="org.csstudio.opibuilder.editparts.AbstractBaseEditPart">
-         <action
-               class="org.csstudio.opibuilder.actions.ShowNavigatorAction"
-               icon="icons/filenav_nav.gif"
-               id="org.csstudio.opibuilder.openRuntimePerspective"
-               label="Show Navigator"
-               menubarPath="ui">
          </action>
          <visibility>
             <objectState
@@ -317,32 +248,6 @@
             name="OPI Placeholder">
       </view>
    </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.csstudio.ui.menu.popup.processvariable">
-         <command
-               commandId="org.csstudio.opibuilder.openProbeOPI"
-               icon="icons/OPIRunner.png"
-               label="OPI Probe"
-               style="push"
-               tooltip="Send PV name to OPI Probe">
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:file?after=new.ext">
-         <menu
-               icon="icons/OPIRunner.png"
-               label="Top Files">
-            <dynamic
-                  class="org.csstudio.opibuilder.actions.TopFilesContributionItem"
-                  id="org.csstudio.opibuilder.topfiles">
-            </dynamic>
-         </menu>
-      </menuContribution>
-   </extension>
 
    <extension
          point="org.eclipse.core.runtime.adapters">
@@ -356,13 +261,6 @@
                type="[Lorg.csstudio.csdata.ProcessVariable;">
          </adapter>
       </factory>
-   </extension>
-   <extension
-         point="org.csstudio.openfile.openDisplay">
-      <openDisplay
-            class="org.csstudio.opibuilder.actions.ExternalOpenDisplayAction"
-            file_extension="opi">
-      </openDisplay>
    </extension>
    <extension point="org.eclipse.core.contenttype.contentTypes">
       <content-type
@@ -391,5 +289,50 @@
             launcher="org.csstudio.opibuilder.runmode.ShellLauncher"
             name="OPI Runner (New Window)">
       </editor-->
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <separator
+               name="css"
+               visible="true">
+         </separator>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=css">
+         <command
+               commandId="org.csstudio.opibuilder.openProbeOPI"
+               icon="icons/probe-16.png"
+               label="Probe"
+               style="push">
+            <visibleWhen>
+               <or>
+                  <with variable="activeMenuSelection">
+                     <iterate>
+                        <adapt type="org.csstudio.csdata.ProcessVariable"/>
+                     </iterate>
+                     <and>
+                        <count value="+"/>
+                     </and>
+                  </with>
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate>
+                        <adapt
+                              type="[Lorg.csstudio.csdata.ProcessVariable;">
+                        </adapt>
+                     </iterate>
+                     <and>
+                        <count value="+"/>
+                     </and>
+                  </with>
+               </or>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
 </plugin>

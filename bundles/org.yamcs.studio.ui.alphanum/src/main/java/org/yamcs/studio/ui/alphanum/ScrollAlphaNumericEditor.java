@@ -1,6 +1,8 @@
 package org.yamcs.studio.ui.alphanum;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -11,8 +13,7 @@ import java.util.logging.Logger;
 
 import org.csstudio.ui.util.EmptyEditorInput;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
-import org.csstudio.utility.singlesource.ResourceHelper;
-import org.csstudio.utility.singlesource.SingleSourcePlugin;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -83,7 +84,7 @@ public class ScrollAlphaNumericEditor extends EditorPart {
     private List<ParameterInfo> loadData() {
         List<ParameterInfo> info = new ArrayList<>();
         try {
-            
+
             Gson gson = new Gson();   
             InputStreamReader reader = new InputStreamReader(input.getFile().getContents());
             fileInput = gson.fromJson(reader, AlphaNumericJson.class);
@@ -96,6 +97,8 @@ public class ScrollAlphaNumericEditor extends EditorPart {
                     if(parameter.contains(meta.getQualifiedName()))
                         info.add(meta);
             }
+            
+            
 
             return info;
         }catch (JsonSyntaxException ex)  {
@@ -133,16 +136,20 @@ public class ScrollAlphaNumericEditor extends EditorPart {
     @Override
     public void doSave(IProgressMonitor monitor) {
         final IEditorInput input = getEditorInput();
-        final ResourceHelper resources = SingleSourcePlugin.getResourceHelper();
         try {
-            saveToStream(monitor, parameterTable.getParameters(), resources.getOutputStream(input));
-            loadData();
+            if (input.exists()) {
+                IFile file = (IFile) input.getAdapter(IFile.class);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                saveToStream(monitor, parameterTable.getParameters(), out);
+                loadData();
+                file.setContents(new ByteArrayInputStream(out.toByteArray()), true, false, monitor);
+            }
         } catch (Exception ex) {
             ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error while saving parameter list", ex);
             // Save failed, allow saving under a different name, or cancel
         }
     }
-    
+
 
     /**
      * Save current model, mark editor as clean.

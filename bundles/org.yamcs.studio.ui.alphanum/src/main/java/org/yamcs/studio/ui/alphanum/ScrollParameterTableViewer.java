@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
@@ -292,11 +291,6 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
 
     }
 
-    @Override
-    public void onInvalidIdentification(NamedObjectId id) {
-        // TODO Auto-generated method stub
-
-    }
 
     public void setValue(String string) {
         valueType = string;

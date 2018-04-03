@@ -1,7 +1,5 @@
 package org.yamcs.studio.archive;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -23,8 +21,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
-import org.yamcs.protobuf.SchemaYamcs;
-import org.yamcs.protobuf.Yamcs.ReplayRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -32,7 +28,8 @@ import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
-import io.protostuff.JsonIOUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class CreateReplayDialog extends TitleAreaDialog {
 
@@ -132,17 +129,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
     }
 
     public CreateProcessorRequest toCreateProcessorRequest(ClientInfo ci) {
-        ReplayRequest spec = ReplayRequest.newBuilder()
-                .setStart(TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime)))
-                .build();
-
-        StringWriter writer = new StringWriter();
-        try {
-            JsonIOUtil.writeTo(writer, spec, SchemaYamcs.ReplayRequest.WRITE, false);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not encode replay request", e);
-        }
-        String specJson = writer.toString();
+        JsonObject spec = new JsonObject();
+        spec.addProperty("start", TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime)));
+        String specJson = new Gson().toJson(spec);
 
         CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
                 .setName(name.getText())
