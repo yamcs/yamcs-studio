@@ -12,7 +12,7 @@ public class ClearAction extends AlphaNumericAction {
         super("icons/elcl16/removeall.png", viewer);
         setToolTipText("Clear");
         
-        listener = new Listener() { //TODO not the right listener
+        listener = new Listener() {
 
             @Override
             public void handleEvent(Event event) {

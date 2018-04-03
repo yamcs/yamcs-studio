@@ -7,7 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
@@ -15,11 +21,19 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
@@ -40,9 +54,10 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
     private ParameterContentProvider contentProvider;
     private Map<String, ParameterValue> values;
     private Map<String, ColumnLabelProvider> columnLabels;
+    private Map<AlarmLevelType, Image> alarmIcons;
     private List<String> activeColumns;
     TableColumnLayout tcl;
-    
+
     private List<Listener> listeners;
 
     public ParameterTableViewer(Composite parent) {
@@ -58,34 +73,54 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         setInput(contentProvider);
         activeColumns = new ArrayList<>();
         listeners = new ArrayList<>();
-        createColumn(COL_NAME); //Name always visible
+        createColumn(COL_NAME);
         ParameterCatalogue.getInstance().addParameterListener(this);
+        getAlarmIcons();
 
     }
+
+
+    private void getAlarmIcons() {
+        alarmIcons = new HashMap<>();
+        alarmIcons.put(AlarmLevelType.NORMAL, getImage("icons/eview16/level0s.png"));
+        alarmIcons.put(AlarmLevelType.WATCH, getImage("icons/eview16/level1s.png"));
+        alarmIcons.put(AlarmLevelType.WARNING, getImage("icons/eview16/level2s.png"));
+        alarmIcons.put(AlarmLevelType.DISTRESS, getImage("icons/eview16/level3s.png"));
+        alarmIcons.put(AlarmLevelType.SEVERE, getImage("icons/eview16/level4s.png"));
+        alarmIcons.put(AlarmLevelType.CRITICAL, getImage("icons/eview16/level5s.png"));
+    }
+
+
+    private Image getImage(String path) {
+        return ImageDescriptor.createFromURL(FileLocator
+                .find(Platform.getBundle("org.yamcs.studio.ui.alphanum"),
+                        new Path(path),null)).createImage();
+    }
+
 
 
     public void setColumns(List<String> columnNames) {
         activeColumns.clear();
         activeColumns.addAll(columnNames);
         getTable().setRedraw( false );
-     
-        while ( getTable().getColumnCount() > 1 ) //Leave always the name otherwise it doesn't allow adding again 
+
+        while ( getTable().getColumnCount() > 1 ) 
             getTable().getColumns()[1].dispose();
-        
+
 
         for(String column : columnNames) { 
             createColumn(column);
-    }
+        }
         getTable().setRedraw( true );
         refresh();
 
 
     }
-    
+
     public List<String> getColumns() {
         return activeColumns;
     }
-    
+
     private void createColumn(String name) {
         TableViewerColumn column = new TableViewerColumn(this, SWT.LEFT);
         column.getColumn().setText(name);
@@ -104,23 +139,32 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                     column.getColumn().setWidth(5);
             }
         });
-        
-        
+
+
     }
-    
-    
+
+
     private void startColumnLabels() {
 
         columnLabels = new HashMap<>();
-        
+
         columnLabels.put(COL_NAME, new ColumnLabelProvider() {           
 
             @Override 
             public String getText(Object element) {
                 return (String)element;
             }
+
+            @Override
+            public Image getImage(Object element) {
+                ParameterValue value = values.get(element);
+                if(value == null || value.getAlarmRangeCount() == 0) //TODO check
+                    return super.getImage(element);
+
+                return alarmIcons.get(value.getAlarmRange(0).getLevel());
+            }
         });
-        
+
         columnLabels.put(COL_ENG, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
@@ -130,7 +174,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 return String.valueOf(getValue(value.getEngValue()));
             }
         });
-        
+
         columnLabels.put(COL_RAW, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
@@ -140,7 +184,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 return String.valueOf(getValue(value.getRawValue()));
             }
         });
-        
+
         columnLabels.put(COL_TIME, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
@@ -153,7 +197,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 return strDate;
             }
         });
-        
+
         columnLabels.put(COL_AQU_TIME, new ColumnLabelProvider() {
             @Override 
             public String getText(Object element) {
@@ -166,10 +210,10 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 return strDate;
             }
         });
-        
-        
+
+
     }
-    
+
 
     public void addParameter(ParameterInfo info) {
         NamedObjectList list = NamedObjectList.newBuilder()
@@ -182,7 +226,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         for(Listener l : listeners) {
             l.handleEvent(new Event());
         }
-        
+
     }
 
     public void removeParameter(String info) {
@@ -192,7 +236,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         for(Listener l : listeners) {
             l.handleEvent(new Event());
         }
-        
+
     }
 
 
@@ -203,22 +247,22 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         for(Listener l : listeners) {
             l.handleEvent(new Event());
         }
-        
+
 
     }
 
     public List<String> getParameters() {
         return contentProvider.getParameter();
     }
-    
+
     public boolean hasChanged() {
         return contentProvider.hasChanged();
     }
-    
+
     public void addDataChangedListener(Listener listener){
         listeners.add(listener);
     }
-    
+
     private Object getValue(Value value) {
         Object obj = null;
         if(value.hasStringValue())
@@ -246,7 +290,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
     @Override
     public void mdbUpdated() {
         // TODO Auto-generated method stub
-        
+
     }
 
 
@@ -267,15 +311,45 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
             }
         });
 
-        
+
     }
 
 
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
         // TODO Auto-generated method stub
-        
+
     }
+
+    private final class PVsInfoDialog extends MessageDialog {
+
+        private ParameterValue pv;
+
+        public PVsInfoDialog(Shell parentShell, String dialogTitle, ParameterValue pv) {
+            super(parentShell, dialogTitle, null, "PVs' details on this widget:",
+                    MessageDialog.INFORMATION, new String[] { JFaceResources.getString("ok")}, 0); //$NON-NLS-1$
+            this.pv = pv;
+        }
+
+        @Override
+        protected Control createCustomArea(Composite parent) {
+            if(pv == null)
+                return super.createCustomArea(parent);
+            parent.setLayout(new FillLayout());
+            TabFolder tabFolder = new TabFolder(parent, SWT.None);
+
+            TabItem tabItem = new TabItem(tabFolder, SWT.None);
+            tabItem.setText(pv.getId().getName());
+            Text text = new Text(tabFolder, SWT.MULTI|SWT.READ_ONLY);
+//            text.setText(getPVInfo(pv));
+            tabItem.setControl(text);
+            return tabFolder;
+
+        }
+
+    }
+
+
 
 
 }
