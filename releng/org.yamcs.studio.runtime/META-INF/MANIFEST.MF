@@ -6,7 +6,7 @@ Bundle-Name: Event Viewer
 Bundle-SymbolicName: org.yamcs.studio.runtime;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3.qualifier
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Require-Bundle: org.yamcs.studio.runtime.base
 Automatic-Module-Name: org.yamcs.studio.runtime
