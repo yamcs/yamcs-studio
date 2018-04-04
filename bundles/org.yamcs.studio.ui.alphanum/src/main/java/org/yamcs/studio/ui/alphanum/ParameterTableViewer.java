@@ -10,10 +10,8 @@ import java.util.Map;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
@@ -22,17 +20,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Mdb.AlarmLevelType;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
@@ -312,37 +304,5 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
 
 
     }
-
-
-    private final class PVsInfoDialog extends MessageDialog {
-
-        private ParameterValue pv;
-
-        public PVsInfoDialog(Shell parentShell, String dialogTitle, ParameterValue pv) {
-            super(parentShell, dialogTitle, null, "PVs' details on this widget:",
-                    MessageDialog.INFORMATION, new String[] { JFaceResources.getString("ok")}, 0); //$NON-NLS-1$
-            this.pv = pv;
-        }
-
-        @Override
-        protected Control createCustomArea(Composite parent) {
-            if(pv == null)
-                return super.createCustomArea(parent);
-            parent.setLayout(new FillLayout());
-            TabFolder tabFolder = new TabFolder(parent, SWT.None);
-
-            TabItem tabItem = new TabItem(tabFolder, SWT.None);
-            tabItem.setText(pv.getId().getName());
-            Text text = new Text(tabFolder, SWT.MULTI|SWT.READ_ONLY);
-//            text.setText(getPVInfo(pv));
-            tabItem.setControl(text);
-            return tabFolder;
-
-        }
-
-    }
-
-
-
 
 }
