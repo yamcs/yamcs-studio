@@ -222,7 +222,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
             case BINARY:
                 return new BinaryVType(pval);
             case TIMESTAMP:
-                throw new UnsupportedOperationException("No support for timestamp pvals");
+                return new TimestampVType(pval);
             default:
                 throw new IllegalStateException(
                         "Unexpected type for parameter value. Got: " + pval.getEngValue().getType());

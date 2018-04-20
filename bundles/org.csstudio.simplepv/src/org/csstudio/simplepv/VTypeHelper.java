@@ -38,29 +38,28 @@ import org.diirt.vtype.VShort;
 import org.diirt.vtype.VShortArray;
 import org.diirt.vtype.VString;
 import org.diirt.vtype.VStringArray;
+import org.diirt.vtype.VTimestamp;
 import org.diirt.vtype.VType;
 import org.diirt.vtype.ValueUtil;
 
 /**
  * A center place for VType related operations.
  *
- * @author Xihui Chen, Kay Kasemir, carcassi (some of code are learned from
- *         {@link ValueUtil})
+ * @author Xihui Chen, Kay Kasemir, carcassi (some of code are learned from {@link ValueUtil})
  */
 public class VTypeHelper {
 
-    public static final int DEFAULT_PRECISION = 4;//$NON-NLS-1$
-    public static final int UNSET_PRECISION = -1;//$NON-NLS-1$
-    public static final String HEX_PREFIX = "0x"; //$NON-NLS-1$
+    public static final int DEFAULT_PRECISION = 4;
+    public static final int UNSET_PRECISION = -1;
+    public static final String HEX_PREFIX = "0x";
     /**
-     * The max count of values to be formatted into string. The value beyond
-     * this count will be omitted.
+     * The max count of values to be formatted into string. The value beyond this count will be omitted.
      */
     public static final int MAX_FORMAT_VALUE_COUNT = 100;
-    public static final String ARRAY_ELEMENT_SEPARATOR = ", "; //$NON-NLS-1$
+    public static final String ARRAY_ELEMENT_SEPARATOR = ", ";
 
-    private static Map<Integer, NumberFormat> expFormatCacheMap = new HashMap<Integer, NumberFormat>();
-    private static Map<Integer, NumberFormat> decimalFormatCacheMap = new HashMap<Integer, NumberFormat>();
+    private static Map<Integer, NumberFormat> expFormatCacheMap = new HashMap<>();
+    private static Map<Integer, NumberFormat> decimalFormatCacheMap = new HashMap<>();
 
     /**
      * Format a VType value to string.
@@ -70,8 +69,7 @@ public class VTypeHelper {
      * @param vValue
      *            PVManager value, such as VDouble, VEnum, V....
      * @param precision
-     *            decimal precision. If it is -1, it will use the precision from
-     *            PV.
+     *            decimal precision. If it is -1, it will use the precision from PV.
      * @return the formated string
      */
     public static String formatValue(FormatEnum formatEnum, VType vValue, int precision) {
@@ -100,31 +98,37 @@ public class VTypeHelper {
         return "no value"; //$NON-NLS-1$
     }
 
-    /**Extract the alarm name from the VType obj.
-     * @param obj the VType object.
+    /**
+     * Extract the alarm name from the VType obj.
+     * 
+     * @param obj
+     *            the VType object.
      * @return the alarm name or empty if there is no alarm info from the object.
      */
-    public static String getAlarmName(VType obj){
+    public static String getAlarmName(VType obj) {
         Alarm alarmOf = ValueUtil.alarmOf(obj);
-        if(alarmOf != null)
+        if (alarmOf != null)
             return alarmOf.getAlarmName();
         return ""; //$NON-NLS-1$
     }
 
-    /**Extract the {@link AlarmSeverity} from the VType obj.
-     * @param obj the VType object.
+    /**
+     * Extract the {@link AlarmSeverity} from the VType obj.
+     * 
+     * @param obj
+     *            the VType object.
      * @return the alarm severity or null if there is no alarm info from the object.
      */
-    public static AlarmSeverity getAlarmSeverity(VType obj){
+    public static AlarmSeverity getAlarmSeverity(VType obj) {
         Alarm alarmOf = ValueUtil.alarmOf(obj);
-        if(alarmOf != null)
+        if (alarmOf != null)
             return alarmOf.getAlarmSeverity();
         return null;
     }
 
     /**
-     * Get the basic data type of a single VType value. If it is not a basic
-     * data type, it will return BasicDataType.UNKNOWN.
+     * Get the basic data type of a single VType value. If it is not a basic data type, it will return
+     * BasicDataType.UNKNOWN.
      *
      * @param obj
      *            The PV Manager VType value.
@@ -162,20 +166,25 @@ public class VTypeHelper {
         if (typeClass == VStringArray.class)
             return BasicDataType.STRING_ARRAY;
 
+        if (typeClass == VTimestamp.class)
+            return BasicDataType.TIMESTAMP;
+
         return BasicDataType.UNKNOWN;
     }
 
-    /**Extract the display information from the VType obj.
-     * @param obj the VType object.
+    /**
+     * Extract the display information from the VType obj.
+     * 
+     * @param obj
+     *            the VType object.
      * @return the display information or null if there is no display info from the object.
      */
-    public static Display getDisplayInfo(VType obj){
+    public static Display getDisplayInfo(VType obj) {
         return ValueUtil.displayOf(obj);
     }
 
     /**
-     * Get double value from a {@link VType} object. It might be casted from
-     * other numeric type.
+     * Get double value from a {@link VType} object. It might be casted from other numeric type.
      *
      * @param obj
      *            the VType object.
@@ -183,19 +192,17 @@ public class VTypeHelper {
      */
     public static double getDouble(final VType obj) {
         Double value = ValueUtil.numericValueOf(obj);
-        return value==null? Double.NaN:value;
+        return value == null ? Double.NaN : value;
     }
 
     /**
-     * Get double value from a {@link VType} object at index. It might be casted
-     * from other numeric type.
+     * Get double value from a {@link VType} object at index. It might be casted from other numeric type.
      *
      * @param obj
      *            the VType object.
      * @param index
      *            index of the double value
-     * @return double or NaN if no double value is available in the object at
-     *         the index.
+     * @return double or NaN if no double value is available in the object at the index.
      */
     public static double getDouble(final VType obj, int index) {
         if (index == 0)
@@ -218,8 +225,8 @@ public class VTypeHelper {
      *
      * @param obj
      *            an object implementing a standard type
-     * @return the double array from the VType object or empty double array if no double array
-     * can be extracted from the input.
+     * @return the double array from the VType object or empty double array if no double array can be extracted from the
+     *         input.
      */
     public static double[] getDoubleArray(VType obj) {
         if (obj instanceof Scalar) {
@@ -240,8 +247,7 @@ public class VTypeHelper {
     }
 
     /**
-     * Get the original number value of the VType object without casting. If it
-     * is an array, return the first element.
+     * Get the original number value of the VType object without casting. If it is an array, return the first element.
      *
      * @param obj
      *            the VType object value.
@@ -284,8 +290,7 @@ public class VTypeHelper {
     }
 
     /**
-     * Get the original number value of the VType object at a index without
-     * casting.
+     * Get the original number value of the VType object at a index without casting.
      *
      * @param obj
      *            the VType object value.
@@ -337,44 +342,56 @@ public class VTypeHelper {
             return ((Array) obj).getSizes().getInt(0);
         }
 
-        if(obj instanceof MultiScalar){
-            return ((MultiScalar<?>)obj).getValues().size();
+        if (obj instanceof MultiScalar) {
+            return ((MultiScalar<?>) obj).getValues().size();
         }
         return 1;
     }
 
-    /**Get String from a VType value.
-     * @param obj the value
+    /**
+     * Get String from a VType value.
+     * 
+     * @param obj
+     *            the value
      * @return the String from the VType value.
      */
-    public static String getString(VType obj){
+    public static String getString(VType obj) {
         return formatValue(FormatEnum.DEFAULT, obj, -1);
     }
 
-    /**Extract the {@link Timestamp} from the VType obj.
-     * @param obj the VType object.
+    /**
+     * Extract the {@link Timestamp} from the VType obj.
+     * 
+     * @param obj
+     *            the VType object.
      * @return the time or null if there is no time info in the object.
      */
-    public static Instant getTimestamp(VType obj){
+    public static Instant getTimestamp(VType obj) {
         Time timeOf = ValueUtil.timeOf(obj);
-        if(timeOf != null)
+        if (timeOf != null)
             return timeOf.getTimestamp();
         return null;
     }
 
-    /**Get wrapped array in the VNumberArray object. The wrapped array could be double[],
-     * float[], int[], long[], short[], byte[] etc.
-     * @param obj the {@link VType} object.
+    /**
+     * Get wrapped array in the VNumberArray object. The wrapped array could be double[], float[], int[], long[],
+     * short[], byte[] etc.
+     * 
+     * @param obj
+     *            the {@link VType} object.
      * @return the wrapped array or null if no array is wrapped in the object.
      */
     public static Object getWrappedArray(VType obj) {
-        if(obj instanceof VNumberArray)
+        if (obj instanceof VNumberArray)
             return CollectionNumbers.wrappedArray(((VNumberArray) obj).getData());
         return null;
     }
 
-    /**Is an object primary array
-     * @param array the object
+    /**
+     * Is an object primary array
+     * 
+     * @param array
+     *            the object
      * @return true if it is a primary type array, such as byte[], int[], double[] etc.
      */
     public static boolean isPrimaryNumberArray(Object array) {
@@ -390,8 +407,7 @@ public class VTypeHelper {
             final byte[] bytes = new byte[data.size()];
             // Copy bytes until end _or_ '\0'
             int len = 0;
-            while (len<bytes.length)
-            {
+            while (len < bytes.length) {
                 final byte b = data.getByte(len);
                 if (b == 0)
                     break;
@@ -504,12 +520,12 @@ public class VTypeHelper {
                 // Sun's implementation of the JDK returns the Unicode replacement
                 // character, U+FFFD, when asked to parse a NaN. This is more
                 // consistent with the rest of CSS.
-                if(Double.isNaN(numValue.doubleValue())) {
+                if (Double.isNaN(numValue.doubleValue())) {
                     return Double.toString(Double.NaN);
                 }
 
                 // Also check for positive and negative infinity.
-                if(Double.isInfinite(numValue.doubleValue())) {
+                if (Double.isInfinite(numValue.doubleValue())) {
                     return Double.toString(numValue.doubleValue());
                 }
 
@@ -550,7 +566,8 @@ public class VTypeHelper {
                 lowDispLimit = ((Display) pmValue).getLowerDisplayLimit();
             }
 
-            return doubleToSexagesimal(numValue.doubleValue() * 12.0 / Math.PI, displayPrecision, highDispLimit, lowDispLimit);
+            return doubleToSexagesimal(numValue.doubleValue() * 12.0 / Math.PI, displayPrecision, highDispLimit,
+                    lowDispLimit);
 
         case SEXA_DMS:
             if (pmValue instanceof Display) {
@@ -558,7 +575,8 @@ public class VTypeHelper {
                 lowDispLimit = ((Display) pmValue).getLowerDisplayLimit();
             }
 
-            return doubleToSexagesimal(numValue.doubleValue() * 180.0 / Math.PI, displayPrecision, highDispLimit, lowDispLimit);
+            return doubleToSexagesimal(numValue.doubleValue() * 180.0 / Math.PI, displayPrecision, highDispLimit,
+                    lowDispLimit);
 
         case EXP:
             // Exponential notation identified as 'negative' precision in cached
@@ -570,14 +588,14 @@ public class VTypeHelper {
         case HEX64:
             return HEX_PREFIX + Long.toHexString(numValue.longValue());
         case STRING:
-            return new String(new char[] { (char) numValue.intValue()});
+            return new String(new char[] { (char) numValue.intValue() });
         }
     }
 
-    /** Return decimal number format.
+    /**
+     * Return decimal number format.
      *
-     *  The formats are created if it has not previously been used.
-     *  Constructed formats are cached.
+     * The formats are created if it has not previously been used. Constructed formats are cached.
      *
      * @param precision
      * @return
@@ -594,10 +612,10 @@ public class VTypeHelper {
         return numberFormat;
     }
 
-    /** Return exponential number format.
+    /**
+     * Return exponential number format.
      *
-     *  The formats are created if it has not previously been used.
-     *  Constructed formats are cached.
+     * The formats are created if it has not previously been used. Constructed formats are cached.
      *
      * @param precision
      * @return
@@ -621,10 +639,9 @@ public class VTypeHelper {
         return numberFormat;
     }
 
-    /** Find the display precision for the value:
-     *  - if a precision is specified use that (precision != UNSET)
-     *  - if precision is UNSET, find the precision from the passed VType value
-     *  - if no suitable value passed use the default
+    /**
+     * Find the display precision for the value: - if a precision is specified use that (precision != UNSET) - if
+     * precision is UNSET, find the precision from the passed VType value - if no suitable value passed use the default
      *
      * @param pmValue
      * @param precision
@@ -635,8 +652,7 @@ public class VTypeHelper {
 
         if (precision != UNSET_PRECISION) {
             displayPrecision = precision;
-        }
-        else if (pmValue instanceof Display) {
+        } else if (pmValue instanceof Display) {
             final NumberFormat format = ((Display) pmValue).getFormat();
             if (format != null)
                 displayPrecision = format.getMinimumFractionDigits();
@@ -660,8 +676,8 @@ public class VTypeHelper {
     private static final int MAXPREC = 8;
 
     private static final double[] prec_tab = new double[] {
-        1.0, 1.0 / 6.0, 1.0 / 60.0, 1.0 / 360.0, 1.0 / 3.6E3,
-        1.0 / 3.6E4, 1.0 / 3.6E5, 1.0 / 3.6E6, 1.0 / 3.6E7 };
+            1.0, 1.0 / 6.0, 1.0 / 60.0, 1.0 / 360.0, 1.0 / 3.6E3,
+            1.0 / 3.6E4, 1.0 / 3.6E5, 1.0 / 3.6E6, 1.0 / 3.6E7 };
 
     private static String doubleToSexagesimal(double value, int precision, double hopr, double lopr) {
         double prec_frac, range, hrs, frac;
@@ -677,7 +693,7 @@ public class VTypeHelper {
             prec_frac = prec_tab[precision];
         } else {
             prec_frac = prec_tab[MAXPREC];
-            for(i = precision; i > MAXPREC; i--) {
+            for (i = precision; i > MAXPREC; i--) {
                 prec_frac *= 0.1;
             }
         }
@@ -694,7 +710,7 @@ public class VTypeHelper {
         StringBuilder builder = new StringBuilder();
 
         /* Insert a leading negative sign, if required */
-        if(value < 0.0) {
+        if (value < 0.0) {
             builder.append('-');
             value = -value + prec_frac;
         }

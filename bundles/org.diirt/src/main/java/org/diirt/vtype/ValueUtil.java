@@ -38,7 +38,7 @@ public class ValueUtil {
             VLong.class, VLongArray.class, VInt.class, VIntArray.class, VMultiDouble.class, VMultiEnum.class,
             VMultiInt.class, VMultiString.class, VShort.class, VShortArray.class,
             VStatistics.class, VString.class, VStringArray.class, VBoolean.class, VBooleanArray.class, VTable.class,
-            VImage.class);
+            VImage.class, VTimestamp.class);
 
     /**
      * Returns the type of the object by returning the class object of one of the VXxx interfaces. The getClass()
