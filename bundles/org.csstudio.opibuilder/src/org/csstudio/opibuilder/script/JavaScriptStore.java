@@ -1,8 +1,8 @@
 package org.csstudio.opibuilder.script;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
@@ -14,18 +14,20 @@ import org.csstudio.simplepv.IPV;
 
 /**
  * This is the implementation of {@link AbstractScriptStore} for the default javascript script engine embedded in Java.
- * The default javascript engine is Rhino for Java 7, Nashorn for Java 8.
+ * (Nashorn since Java 8).
  */
 public class JavaScriptStore extends AbstractScriptStore {
+
+    // Adds support for importPackage() to Nashorn scripts.
+    // This is an old function that existed back in the Rhino days
+    private static final String COMPAT_PREFIX = "load(\"nashorn:mozilla_compat.js\");\n";
 
     private ScriptEngine engine;
     private Bindings bindings;
     private CompiledScript script;
 
-    public JavaScriptStore(final ScriptData scriptData, final AbstractBaseEditPart editpart,
-            final IPV[] pvArray) throws Exception {
+    public JavaScriptStore(ScriptData scriptData, AbstractBaseEditPart editpart, IPV[] pvArray) throws Exception {
         super(scriptData, editpart, pvArray);
-
     }
 
     @Override
@@ -41,15 +43,24 @@ public class JavaScriptStore extends AbstractScriptStore {
 
     @Override
     protected void compileString(String string) throws Exception {
-        script = ((Compilable) engine).compile(string);
+        script = ((Compilable) engine).compile(COMPAT_PREFIX + string);
     }
 
     @Override
-    protected void compileInputStream(InputStream s) throws Exception {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(s))) {
-            script = ((Compilable) engine).compile(reader);
+    protected void compileInputStream(InputStream in) throws Exception {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = in.read(buffer)) != -1) {
+                bout.write(buffer, 0, length);
+            }
+        } finally {
+            in.close();
         }
 
+        String content = bout.toString(StandardCharsets.UTF_8.name());
+        script = ((Compilable) engine).compile(COMPAT_PREFIX + content);
     }
 
     @Override
