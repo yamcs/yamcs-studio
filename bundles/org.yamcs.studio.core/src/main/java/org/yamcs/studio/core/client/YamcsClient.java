@@ -47,8 +47,9 @@ public class YamcsClient implements WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
 
-    // WebSocketClient max frame payload length, otherwise we get "frame length 65535 exceeded" error for displays with many parameters
-    private static final int MAX_FRAME_PAYLOAD_LENGTH = 10*1024*1024;
+    // WebSocketClient max frame payload length, otherwise we get "frame length 65535 exceeded" error for displays with
+    // many parameters
+    private static final int MAX_FRAME_PAYLOAD_LENGTH = 10 * 1024 * 1024;
 
     private YamcsConnectionProperties yprops;
     private String application;
@@ -109,71 +110,68 @@ public class YamcsClient implements WebSocketClientCallback {
         wsclient.enableLegacyURLFallback(true); // Provides compatiblity with old Yamcs instances
         wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
 
-        FutureTask<YamcsConnectionProperties> future = new FutureTask<>(new Runnable() {
-            @Override
-            public void run() {
-                log.info("Connecting to " + yprops);
-                int maxAttempts = 10;
-                try {
-                    if (reconnecting && !retry) {
-                        log.warning("Retries are disabled, cancelling reconnection");
-                        reconnecting = false;
-                        return;
-                    }
+        FutureTask<YamcsConnectionProperties> future = new FutureTask<>(() -> {
+            log.info("Connecting to " + yprops);
+            int maxAttempts = 10;
+            try {
+                if (reconnecting && !retry) {
+                    log.warning("Retries are disabled, cancelling reconnection");
+                    reconnecting = false;
+                    return;
+                }
 
-                    connecting = true;
-                    connecting();
-                    for (int i = 0; i < maxAttempts; i++) {
-                        try {
-                            log.fine(String.format("Connecting to %s attempt %d", yprops, i));
-                            instances = restClient.blockingGetYamcsInstances();
-                            if (instances == null || instances.isEmpty()) {
-                                log.warning("No configured yamcs instance");
-                                return;
-                            }
-                            String defaultInstanceName = instances.get(0).getName();
-                            String instanceName = defaultInstanceName;
-                            if (yprops.getInstance() != null) { // check if the instance saved in properties exists,
-                                                                // otherwise use the default one
-                                instanceName = instances.stream().map(yi -> yi.getName())
-                                        .filter(s -> s.equals(yprops.getInstance()))
-                                        .findFirst()
-                                        .orElse(defaultInstanceName);
-                            }
-                            yprops.setInstance(instanceName);
-
-                            ChannelFuture future = wsclient.connect();
-                            future.get(5000, TimeUnit.MILLISECONDS);
-                            // now the TCP connection is established but we have to wait for the websocket to be setup
-                            // the connected callback will handle that
-
+                connecting = true;
+                connecting();
+                for (int i = 0; i < maxAttempts; i++) {
+                    try {
+                        log.fine(String.format("Connecting to %s attempt %d", yprops, i));
+                        instances = restClient.blockingGetYamcsInstances();
+                        if (instances == null || instances.isEmpty()) {
+                            log.warning("No configured yamcs instance");
                             return;
-                        } catch (Exception e) {
-                            // For anything other than a security exception, re-try
-                            if (log.isLoggable(Level.FINEST)) {
-                                log.log(Level.FINEST, String.format("Connection to %s failed (attempt %d of %d)",
-                                        yprops, i + 1, maxAttempts), e);
-                            } else {
-                                log.warning(String.format("Connection to %s failed (attempt %d of %d)",
-                                        yprops, i + 1, maxAttempts));
-                            }
-                            Thread.sleep(5000);
                         }
-                    }
-                    connecting = false;
-                    for (ConnectionListener cl : connectionListeners) {
-                        cl.connectionFailed(null,
-                                new YamcsException(maxAttempts + " connection attempts failed, giving up."));
-                    }
-                    log.warning(maxAttempts + " connection attempts failed, giving up.");
-                } catch (InterruptedException e) {
-                    log.info("Connection cancelled by user");
-                    connecting = false;
-                    for (ConnectionListener cl : connectionListeners) {
-                        cl.connectionFailed(null, new YamcsException("Thread interrupted", e));
+                        String defaultInstanceName = instances.get(0).getName();
+                        String instanceName = defaultInstanceName;
+                        if (yprops.getInstance() != null) { // check if the instance saved in properties exists,
+                                                            // otherwise use the default one
+                            instanceName = instances.stream().map(yi -> yi.getName())
+                                    .filter(s -> s.equals(yprops.getInstance()))
+                                    .findFirst()
+                                    .orElse(defaultInstanceName);
+                        }
+                        yprops.setInstance(instanceName);
+
+                        ChannelFuture future1 = wsclient.connect();
+                        future1.get(5000, TimeUnit.MILLISECONDS);
+                        // now the TCP connection is established but we have to wait for the websocket to be setup
+                        // the connected callback will handle that
+
+                        return;
+                    } catch (Exception e1) {
+                        // For anything other than a security exception, re-try
+                        if (log.isLoggable(Level.FINEST)) {
+                            log.log(Level.FINEST, String.format("Connection to %s failed (attempt %d of %d)",
+                                    yprops, i + 1, maxAttempts), e1);
+                        } else {
+                            log.warning(String.format("Connection to %s failed (attempt %d of %d)",
+                                    yprops, i + 1, maxAttempts));
+                        }
+                        Thread.sleep(5000);
                     }
                 }
-            };
+                connecting = false;
+                for (ConnectionListener cl1 : connectionListeners) {
+                    cl1.connectionFailed(null,
+                            new YamcsException(maxAttempts + " connection attempts failed, giving up."));
+                }
+                log.warning(maxAttempts + " connection attempts failed, giving up.");
+            } catch (InterruptedException e2) {
+                log.info("Connection cancelled by user");
+                connecting = false;
+                for (ConnectionListener cl2 : connectionListeners) {
+                    cl2.connectionFailed(null, new YamcsException("Thread interrupted", e2));
+                }
+            }
         }, yprops);
         executor.submit(future);
 
@@ -342,7 +340,7 @@ public class YamcsClient implements WebSocketClientCallback {
             } catch (CancellationException | InterruptedException e) {
                 return Status.CANCEL_STATUS;
             } catch (ExecutionException e) {
-                log.log(Level.SEVERE, "Exception while executing job '" + jobName + "'", e.getCause());
+                log.log(Level.SEVERE, "Exception while executing job '" + jobName + "': " + e.getCause(), e.getCause());
                 return Status.OK_STATUS;
             }
         });
