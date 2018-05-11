@@ -20,7 +20,7 @@ public class OnlineHelpAction extends Action implements IWorkbenchAction {
 
     @Override
     public void run() {
-        Program.launch("http://www.yamcs.org/docs/");
+        Program.launch("https://www.yamcs.org/docs/");
     }
 
     @Override

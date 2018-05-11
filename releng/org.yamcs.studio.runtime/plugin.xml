@@ -12,7 +12,7 @@
                value="icons/logo16.png,icons/logo32.png,icons/logo48.png,icons/logo64.png,icons/logo128.png,icons/logo256.png"/>
          <property
                name="aboutText"
-               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See http://www.yamcs.org"/>
+               value="Rich desktop client for Yamcs - The Open Source Mission Control System&#x0A;&#x0A;See https://www.yamcs.org"/>
          <property
                name="aboutImage"
                value="icons/aboutSide.png"/>

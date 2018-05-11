@@ -1,6 +1,6 @@
 Below instructions are targeted at Yamcs Studio core contributors.
 
-* **End-User documentation** is available at: [http://www.yamcs.org/docs/studio/](http://www.yamcs.org/docs/studio/)
+* **End-User documentation** is available at: [https://www.yamcs.org/docs/studio/](https://www.yamcs.org/docs/studio/)
 * Extension development is not currently documented.
 
 ---
