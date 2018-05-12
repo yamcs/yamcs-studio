@@ -22,8 +22,9 @@ public class AddToStackHandler extends AbstractHandler {
 
         AddToStackWizard wizard = new AddToStackWizard();
         WizardDialog dialog = new WizardDialog(shell, wizard);
-        if (dialog.open() == Window.OK)
+        if (dialog.open() == Window.OK) {
             commandStackView.addTelecommand(wizard.getTelecommand());
+        }
         return null;
     }
 }

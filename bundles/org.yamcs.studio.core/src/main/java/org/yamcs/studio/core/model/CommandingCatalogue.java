@@ -129,7 +129,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
         log.fine("Fetching available commands");
         YamcsClient restClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/commands", null).whenComplete((data, exc) -> {
+        restClient.get("/mdb/" + instance + "/commands?details", null).whenComplete((data, exc) -> {
             try {
                 ListCommandInfoResponse response = ListCommandInfoResponse.parseFrom(data);
                 processMetaCommands(response.getCommandList());
