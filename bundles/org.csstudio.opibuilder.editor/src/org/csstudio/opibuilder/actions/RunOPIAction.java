@@ -48,13 +48,13 @@ import org.eclipse.ui.PlatformUI;
 public class RunOPIAction extends Action implements IWorkbenchWindowActionDelegate {
 
     public static String ID = "org.csstudio.opibuilder.editor.run";
-    public static String ACITON_DEFINITION_ID = "org.csstudio.opibuilder.runopi";
+    public static String ACTION_DEFINITION_ID = "org.csstudio.opibuilder.runopi";
 
     public RunOPIAction() {
-        super("Launch Display Runner", CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/run.gif"));
+        super("Display Runner", CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
+                OPIBuilderPlugin.PLUGIN_ID, "icons/run_exc.png"));
         setId(ID);
-        setActionDefinitionId(ACITON_DEFINITION_ID);
+        setActionDefinitionId(ACTION_DEFINITION_ID);
     }
 
     @Override

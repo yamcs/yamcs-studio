@@ -1,6 +1,5 @@
 package org.csstudio.opibuilder.actions;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editor.OPIEditorPerspective;
 import org.csstudio.opibuilder.runmode.IOPIRuntime;
 import org.csstudio.opibuilder.runmode.OPIShell;
@@ -24,15 +23,15 @@ import org.eclipse.ui.WorkbenchException;
 public class EditOPIAction extends Action implements IWorkbenchWindowActionDelegate {
 
     public static String ID = "org.csstudio.opibuilder.editor.edit";
-    public static String ACITON_DEFINITION_ID = "org.csstudio.opibuilder.editopi";
+    public static String ACTION_DEFINITION_ID = "org.csstudio.opibuilder.editopi";
 
     private static final String OPI_EDITOR_ID = "org.csstudio.opibuilder.OPIEditor";
 
     public EditOPIAction() {
-        super("Open Display Builder", CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/placeholder.gif"));
+        super("Display Builder", CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
+                "org.csstudio.opibuilder.editor", "icons/placeholder.gif"));
         setId(ID);
-        setActionDefinitionId(ACITON_DEFINITION_ID);
+        setActionDefinitionId(ACTION_DEFINITION_ID);
     }
 
     @Override

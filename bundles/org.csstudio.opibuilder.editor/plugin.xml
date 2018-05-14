@@ -46,6 +46,12 @@
       </command>
       <command
             categoryId="org.eclipse.ui.category.edit"
+            description="Run the OPI file currently in the editor"
+            id="org.csstudio.opibuilder.runopi_old"
+            name="Open workspace in Display Runner">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.edit"
             description="Change the widget order to front"
             id="org.csstudio.opibuilder.actions.TO_FRONT"
             name="To Front">
@@ -86,11 +92,27 @@
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="org.csstudio.opibuilder.runopi"
+            commandId="org.csstudio.opibuilder.editopi"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+1">
+      </key>
+      <!-- M1-G is the old shortcut, keeping around for now. Maybe could turn
+           into some generic switch (either run-to-edit or edit-to-run), but not
+           sure yet. -->
+      <key
+            commandId="org.csstudio.opibuilder.runopi_old"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+G">
       </key>
+      <key
+            commandId="org.csstudio.opibuilder.runopi"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+2">
+      </key>
+      
       <key
             commandId="org.csstudio.opibuilder.actions.TO_FRONT"
             contextId="org.csstudio.opibuilder.opiEditor"
@@ -185,6 +207,14 @@
                toolbarPath="Normal/additions"
                id="org.csstudio.opibuilder.runOPIAction"
                icon="icons/run.gif"
+               label="Open Display Runner"
+               style="push">
+         </action>
+         <!-- Same class as org.csstudio.opibuilder.runopi action. This one uses a different shortcut -->
+         <action
+               class="org.csstudio.opibuilder.actions.RunOPIAction"
+               definitionId="org.csstudio.opibuilder.runopi_old"
+               id="org.csstudio.opibuilder.runOPIAction_old"
                label="Open Display Runner"
                style="push">
          </action>

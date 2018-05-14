@@ -1,5 +1,7 @@
 package org.yamcs.studio.editor.base;
 
+import org.csstudio.opibuilder.actions.EditOPIAction;
+import org.csstudio.opibuilder.actions.RunOPIAction;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.GroupMarker;
@@ -276,6 +278,9 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         }
         windowMenu.add(toggleToolBar);
         windowMenu.add(new Separator());
+        windowMenu.add(new EditOPIAction());
+        windowMenu.add(new RunOPIAction());
+        windowMenu.add(new Separator());
         IMenuManager showViewMenu = new MenuManager("Show View");
         showViewMenu.add(new ShowViewMenu());
         windowMenu.add(showViewMenu);
@@ -289,7 +294,7 @@ public class YamcsStudioActionBarAdvisor extends ActionBarAdvisor {
         windowMenu.add(new Separator());
         windowMenu.add(new BringAllToFrontAction(window.getWorkbench()));
         windowMenu.add(new Separator());
-        windowMenu.add(new OpenWindowMenu());
+        // windowMenu.add(new OpenWindowMenu());
 
         /*
          * HELP
