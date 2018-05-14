@@ -30,6 +30,7 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -98,10 +99,11 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
 
         @Override
         protected void buttonPressed(int buttonId) {
-            if (buttonId == IDialogConstants.CLOSE_ID)
+            if (buttonId == IDialogConstants.CLOSE_ID) {
                 close();
-            else
+            } else {
                 super.buttonPressed(buttonId);
+            }
         }
 
         @Override
@@ -164,7 +166,7 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             createHeader(composite, "Runtime Information", true);
             long missionTime = TimeCatalogue.getInstance().getMissionTime();
             missionTimeTxt = createKeyValueTextPair(composite, "Mission Time",
-                    TimeCatalogue.getInstance().toString(missionTime));
+                    YamcsUIPlugin.getDefault().formatInstant(missionTime));
             processorStateTxt = createKeyValueTextPair(composite, "Processor State", "" + processor.getState());
 
             return composite;
@@ -173,12 +175,14 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         @Override
         public void processTime(long missionTime) {
             Display.getDefault().asyncExec(() -> {
-                if (missionTimeTxt.isDisposed())
+                if (missionTimeTxt.isDisposed()) {
                     return;
-                if (missionTimeTxt != null && !missionTimeTxt.isDisposed())
-                    missionTimeTxt.setText(TimeCatalogue.getInstance().toString(missionTime));
-                else
+                }
+                if (missionTimeTxt != null && !missionTimeTxt.isDisposed()) {
+                    missionTimeTxt.setText(YamcsUIPlugin.getDefault().formatInstant(missionTime));
+                } else {
                     missionTimeTxt.setText("---");
+                }
             });
         }
 
@@ -219,8 +223,9 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
          * current.
          */
         private void refreshProcessorState() {
-            if (processorStateTxt.isDisposed())
+            if (processorStateTxt.isDisposed()) {
                 return;
+            }
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
             ProcessorInfo latestInfo = catalogue.getProcessorInfo(instance.getName(), processor.getName());
             if (latestInfo != null) {
@@ -232,8 +237,9 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
 
         private StyledText createKeyValueTextPair(Composite parent, String key, String value) {
             Label lbl = new Label(parent, SWT.NONE);
-            if (key != null)
+            if (key != null) {
                 lbl.setText(key + ":");
+            }
             GridData gd = new GridData();
             gd.horizontalAlignment = SWT.END;
             gd.verticalAlignment = SWT.BEGINNING;

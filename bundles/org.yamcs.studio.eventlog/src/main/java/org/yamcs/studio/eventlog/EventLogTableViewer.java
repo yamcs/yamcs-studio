@@ -55,12 +55,12 @@ public class EventLogTableViewer extends TableViewer {
         TableViewerColumn generationColumn = new TableViewerColumn(this, SWT.NONE);
         generationColumn.getColumn().setText(COL_GENERATION);
         generationColumn.getColumn().addListener(SWT.Selection, sortListener);
-        tableLayout.addColumnData(new ColumnPixelData(150));
+        tableLayout.addColumnData(new ColumnPixelData(160));
 
         TableViewerColumn receptionColumn = new TableViewerColumn(this, SWT.NONE);
         receptionColumn.getColumn().setText(COL_RECEPTION);
         receptionColumn.getColumn().addListener(SWT.Selection, sortListener);
-        tableLayout.addColumnData(new ColumnPixelData(150));
+        tableLayout.addColumnData(new ColumnPixelData(160));
 
         TableViewerColumn seqNumColum = new TableViewerColumn(this, SWT.RIGHT);
         seqNumColum.getColumn().setText(COL_SEQNUM);
@@ -90,8 +90,9 @@ public class EventLogTableViewer extends TableViewer {
 
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (tableColumn.getWidth() < 5)
+                    if (tableColumn.getWidth() < 5) {
                         tableColumn.setWidth(5);
+                    }
                 }
             });
         }

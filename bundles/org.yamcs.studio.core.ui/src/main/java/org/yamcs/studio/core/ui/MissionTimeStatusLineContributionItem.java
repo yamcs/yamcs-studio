@@ -36,12 +36,14 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
     @Override
     public void processTime(long missionTime) {
         Display display = Display.getDefault();
-        if (display.isDisposed()) return;
+        if (display.isDisposed()) {
+            return;
+        }
         display.asyncExec(() -> {
             if (missionTime == TimeEncoding.INVALID_INSTANT) {
                 setText(DEFAULT_TEXT);
             } else {
-                setText(TimeCatalogue.getInstance().toString(missionTime));
+                setText(YamcsUIPlugin.getDefault().formatInstant(missionTime, true));
             }
         });
     }

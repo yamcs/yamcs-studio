@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.protobuf.Yamcs;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
-import org.yamcs.utils.TimeEncoding;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 public class EventDetailsDialog extends TitleAreaDialog {
 
@@ -30,16 +30,19 @@ public class EventDetailsDialog extends TitleAreaDialog {
         super.create();
         setTitle("Event Details");
 
+        YamcsUIPlugin plugin = YamcsUIPlugin.getDefault();
+
         String titleMessage = "";
-        titleMessage += "\tGeneration Time:\t" + TimeEncoding.toString(event.getGenerationTime()) + "\n";
-        titleMessage += "\tReception Time:\t" + TimeEncoding.toString(event.getReceptionTime());
+        titleMessage += "\tGeneration Time:\t" + plugin.formatInstant(event.getGenerationTime()) + "\n";
+        titleMessage += "\tReception Time:\t" + plugin.formatInstant(event.getReceptionTime());
         int icon = IMessageProvider.NONE;
-        if (event.getSeverity() == EventSeverity.ERROR)
+        if (event.getSeverity() == EventSeverity.ERROR) {
             icon = IMessageProvider.ERROR;
-        else if (event.getSeverity() == EventSeverity.WARNING)
+        } else if (event.getSeverity() == EventSeverity.WARNING) {
             icon = IMessageProvider.WARNING;
-        else if (event.getSeverity() == EventSeverity.INFO)
+        } else if (event.getSeverity() == EventSeverity.INFO) {
             icon = IMessageProvider.INFORMATION;
+        }
         setMessage(titleMessage, icon);
     }
 
@@ -56,8 +59,7 @@ public class EventDetailsDialog extends TitleAreaDialog {
         return area;
     }
 
-    private void createDetailArea(Composite container)
-    {
+    private void createDetailArea(Composite container) {
         org.eclipse.swt.graphics.Font terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
         final StyledText styledText = new StyledText(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
         styledText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
@@ -76,5 +78,4 @@ public class EventDetailsDialog extends TitleAreaDialog {
     protected void createButtonsForButtonBar(Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.CLOSE_LABEL, true);
     }
-
 }

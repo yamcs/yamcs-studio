@@ -40,8 +40,6 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     private EventLogContentProvider tableContentProvider;
     private MenuManager menuManager;
 
-    private StatsListener statsListener;
-
     public EventLog(Composite parent, int style) {
         super(parent, style);
         setLayout(new FillLayout());
@@ -140,7 +138,6 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
             return;
         }
         tableContentProvider.addEvent(event);
-        fireStatsChanged();
     }
 
     public void addEvents(List<Event> events) {
@@ -148,7 +145,6 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
             return;
         }
         tableContentProvider.addEvents(events);
-        fireStatsChanged();
     }
 
     // This method should be called when the stream of events to be imported is ended
@@ -160,24 +156,6 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         tableContentProvider.clearAll();
         tableViewer.setInput(null);
         tableViewer.setSelection(null);
-        fireStatsChanged();
-    }
-
-    public void setStatsListener(StatsListener statsListener) {
-        this.statsListener = statsListener;
-        fireStatsChanged(); // Send initial state
-    }
-
-    private void fireStatsChanged() {
-        if (statsListener != null) {
-            statsListener.statsChanged(tableContentProvider.getNbErrors(), tableContentProvider.getNbWarnings(),
-                    tableContentProvider.getNbInfo());
-        }
-    }
-
-    public static interface StatsListener {
-
-        void statsChanged(int errorCount, int warningCount, int infoCount);
     }
 
     public List<Event> getEvents() {

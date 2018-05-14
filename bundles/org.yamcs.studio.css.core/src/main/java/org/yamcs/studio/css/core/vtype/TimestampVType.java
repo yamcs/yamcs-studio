@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.diirt.vtype.VTimestamp;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 public class TimestampVType extends YamcsVType implements VTimestamp {
@@ -22,7 +22,7 @@ public class TimestampVType extends YamcsVType implements VTimestamp {
     @Override
     public String toString() {
         Date dt = getValue();
-        long instant = TimeEncoding.fromUnixTime(dt.getTime());
-        return TimeCatalogue.getInstance().toString(instant);
+        long instant = TimeEncoding.fromUnixMillisec(dt.getTime());
+        return YamcsUIPlugin.getDefault().formatInstant(instant);
     }
 }

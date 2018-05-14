@@ -3,10 +3,14 @@ package org.yamcs.studio.eventlog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
-public class EventLogView extends ViewPart {
+public class EventLogView extends ViewPart implements YamcsConnectionListener, InstanceListener {
 
     private EventLog eventlog;
 
@@ -18,7 +22,8 @@ public class EventLogView extends ViewPart {
         eventlog.attachToSite(getViewSite());
         eventlog.connect();
 
-        eventlog.setStatsListener(this::updateSummaryLine);
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
+        ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
     @Override
@@ -27,23 +32,37 @@ public class EventLogView extends ViewPart {
     }
 
     @Override
-    public void dispose() {
-        eventlog.dispose();
-        super.dispose();
+    public void onYamcsConnected() {
+        Display.getDefault().asyncExec(() -> updateYamcsInstance());
     }
 
-    private void updateSummaryLine(int errorCount, int warningCount, int infoCount) {
-        String yamcsInstance = ManagementCatalogue.getCurrentYamcsInstance();
-        String summaryLine = "";
-        if (yamcsInstance != null) {
-            summaryLine = "Showing events for Yamcs instance " + yamcsInstance + ". ";
-        }
+    @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        Display.getDefault().asyncExec(() -> updateYamcsInstance());
+    }
 
-        setContentDescription(summaryLine + String.format("%d errors, %d warnings, %d others (no filter)",
-                errorCount, warningCount, infoCount));
+    private void updateYamcsInstance() {
+        String yamcsInstance = ManagementCatalogue.getCurrentYamcsInstance();
+        if (yamcsInstance != null) {
+            setContentDescription("Showing events for Yamcs instance " + yamcsInstance + " (no filter)");
+        } else {
+            setContentDescription(null);
+        }
+    }
+
+    @Override
+    public void onYamcsDisconnected() {
     }
 
     public EventLog getEventLog() {
         return eventlog;
+    }
+
+    @Override
+    public void dispose() {
+        ManagementCatalogue.getInstance().removeInstanceListener(this);
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
+        eventlog.dispose();
+        super.dispose();
     }
 }

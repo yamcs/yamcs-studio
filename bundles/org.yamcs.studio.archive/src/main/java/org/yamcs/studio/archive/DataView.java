@@ -29,6 +29,7 @@ import javax.swing.SwingUtilities;
 
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.studio.core.TimeInterval;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 /**
@@ -239,8 +240,9 @@ public class DataView extends JScrollPane {
 
     void setViewLocationFromZoomstack() {
         SwingUtilities.invokeLater(() -> {
-            if (zoomStack.isEmpty())
+            if (zoomStack.isEmpty()) {
                 return;
+            }
             final ZoomSpec currentZoom = zoomStack.peek();
             final JViewport vp = getViewport();
             int x = (int) ((currentZoom.viewLocation - currentZoom.startInstant) / currentZoom.pixelRatio);
@@ -262,14 +264,16 @@ public class DataView extends JScrollPane {
             zoomStack.clear();
             long reqStart = intvStart;
             long zstart = archivePanel.dataStart;
-            if (reqStart != TimeEncoding.INVALID_INSTANT)
+            if (reqStart != TimeEncoding.INVALID_INSTANT) {
                 zstart = Math.min(reqStart, zstart);
+            }
 
             long reqStop = intvStop;
             long zstop = archivePanel.dataStop;
 
-            if (reqStop != TimeEncoding.INVALID_INSTANT)
+            if (reqStop != TimeEncoding.INVALID_INSTANT) {
                 zstop = Math.max(reqStop, zstop);
+            }
             long range = zstop - zstart;
             zstart -= range / 100;
             zstop += range / 100;
@@ -506,8 +510,9 @@ public class DataView extends JScrollPane {
         }
 
         public void doMouseMoved(MouseEvent e) {
-            if (zoomStack.isEmpty())
+            if (zoomStack.isEmpty()) {
                 return;
+            }
             mouseLocatorX = e.getX();
             repaint();
         }
@@ -535,8 +540,9 @@ public class DataView extends JScrollPane {
         }
 
         public void doMousePressed(MouseEvent e) {
-            if (zoomStack.isEmpty())
+            if (zoomStack.isEmpty()) {
                 return;
+            }
             dragButton = e.getButton();
             if (dragButton == MouseEvent.BUTTON1) {
                 if (e.getClickCount() == 2) {
@@ -589,10 +595,12 @@ public class DataView extends JScrollPane {
                     // stopX = Math.max(e.getX(), vp.getViewPosition().x);
                     // stopX = Math.min(stopX, vp.getViewPosition().x + vp.getExtentSize().width - 1);
                     stopX = e.getX() - deltaX;
-                    if (startX == -1)
+                    if (startX == -1) {
                         startX = stopX;
-                    if (Math.abs(stopX - startX) < 20 /* snap */)
+                    }
+                    if (Math.abs(stopX - startX) < 20 /* snap */) {
                         return;
+                    }
                     if (currentSelection == null) {
                         currentSelection = new SelectionImpl(startX, stopX);
                     } else {
@@ -631,8 +639,9 @@ public class DataView extends JScrollPane {
 
                     for (y1 = offset; y1 < yend; y1 += antsLength) {
                         y2 = y1 + (antsLength - 1);
-                        if (y2 >= yend)
+                        if (y2 >= yend) {
                             y2 = yend - 1;
+                        }
                         g.setColor((color = !color) ? Color.BLACK : Color.WHITE);
                         g.drawLine(x1, y1, x1, y2);
                         g.drawLine(x2, y1, x2, y2);
@@ -688,7 +697,7 @@ public class DataView extends JScrollPane {
         void drawMouseTime(Graphics g, int mouseX, int offsetY) {
             int boxPadding = 1;
             long instant = getMouseInstant(mouseX);
-            String dateTimeText = TimeEncoding.toString(instant);
+            String dateTimeText = YamcsUIPlugin.getDefault().formatInstant(instant);
             int fontWidth = g.getFontMetrics().stringWidth(dateTimeText);
             int fontHeight = 9;
             // g.setColor(Color.LIGHT_GRAY);

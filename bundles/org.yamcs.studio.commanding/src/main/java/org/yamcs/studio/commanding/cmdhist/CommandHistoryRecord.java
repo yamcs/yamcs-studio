@@ -16,6 +16,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.commanding.PTVInfo;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.ByteString;
@@ -135,8 +136,9 @@ public class CommandHistoryRecord {
     }
 
     public String getCellImage(String columnName) {
-        if (!cellPropsByColumn.containsKey(columnName))
+        if (!cellPropsByColumn.containsKey(columnName)) {
             return null;
+        }
         return (String) cellPropsByColumn.get(columnName).get(KEY_IMAGE);
     }
 
@@ -161,7 +163,7 @@ public class CommandHistoryRecord {
     }
 
     public String getGenerationTime() {
-        return TimeEncoding.toString(id.getGenerationTime());
+        return YamcsUIPlugin.getDefault().formatInstant(id.getGenerationTime());
     }
 
     public long getRawGenerationTime() {
@@ -228,8 +230,9 @@ public class CommandHistoryRecord {
     }
 
     private Object valueToRawValue(Value value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         switch (value.getType()) {
         case STRING:
             return value.getStringValue();
@@ -258,8 +261,9 @@ public class CommandHistoryRecord {
     }
 
     private String valueToString(Value value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         switch (value.getType()) {
         case STRING:
             return value.getStringValue();

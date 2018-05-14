@@ -17,6 +17,7 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.AlarmListener;
 import org.yamcs.studio.core.ui.XtceSubSystemNode;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 public class ActiveAlarmsView extends ViewPart implements AlarmListener {
 
@@ -54,7 +55,7 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             public String getText(Object element) {
                 if (element instanceof XtceAlarmNode) {
                     AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
-                    return String.valueOf(alarmData.getTriggerValue().getGenerationTimeUTC());
+                    return YamcsUIPlugin.getDefault().formatInstant(alarmData.getTriggerValue().getGenerationTime());
                 } else {
                     return null;
                 }

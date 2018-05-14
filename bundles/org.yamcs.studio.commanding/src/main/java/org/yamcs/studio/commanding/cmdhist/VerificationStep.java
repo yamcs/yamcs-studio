@@ -7,6 +7,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import java.util.Locale;
 
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
 public class VerificationStep {
@@ -41,7 +42,7 @@ public class VerificationStep {
 
     public String getTime() {
         if (instant != TimeEncoding.INVALID_INSTANT) {
-            return TimeEncoding.toString(instant);
+            return YamcsUIPlugin.getDefault().formatInstant(instant);
         } else {
             return null;
         }

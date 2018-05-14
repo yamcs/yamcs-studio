@@ -34,12 +34,12 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.studio.commanding.cmdhist.CommandHistoryFilters.Filter;
+import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord.CommandState;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.commanding.cmdhist.CommandHistoryFilters.Filter;
-import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord.CommandState;
 
 public class CommandHistoryView extends ViewPart {
 
@@ -308,7 +308,11 @@ public class CommandHistoryView extends ViewPart {
             @Override
             public String getText(Object element) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                return rec.getUsername() + "@" + rec.getOrigin();
+                if (rec.getOrigin() != null) {
+                    return rec.getUsername() + "@" + rec.getOrigin();
+                } else {
+                    return rec.getUsername();
+                }
             }
         });
         tableLayout.addColumnData(new ColumnPixelData(200));
@@ -406,8 +410,9 @@ public class CommandHistoryView extends ViewPart {
     public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
         // Maybe we need to update structure
         for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
-            if (IGNORED_ATTRIBUTES.contains(attr.getName()))
+            if (IGNORED_ATTRIBUTES.contains(attr.getName())) {
                 continue;
+            }
 
             String shortName = CommandHistoryRecordContentProvider.toHumanReadableName(attr);
             if (!dynamicColumns.contains(shortName)) {
@@ -428,12 +433,13 @@ public class CommandHistoryView extends ViewPart {
                     @Override
                     public Image getImage(Object element) {
                         String imgLoc = ((CommandHistoryRecord) element).getImageForColumn(shortName);
-                        if (CommandHistoryRecordContentProvider.GREEN.equals(imgLoc))
+                        if (CommandHistoryRecordContentProvider.GREEN.equals(imgLoc)) {
                             return greenBubble;
-                        else if (CommandHistoryRecordContentProvider.RED.equals(imgLoc))
+                        } else if (CommandHistoryRecordContentProvider.RED.equals(imgLoc)) {
                             return redBubble;
-                        else
+                        } else {
                             return null;
+                        }
                     }
                 });
                 dynamicColumns.add(shortName);
@@ -460,8 +466,9 @@ public class CommandHistoryView extends ViewPart {
 
     private void checkMinWidth(TableColumn column) {
         if (column.getData("hidden") != null && !((boolean) column.getData("hidden"))) {
-            if (column.getWidth() < 5)
+            if (column.getWidth() < 5) {
                 column.setWidth(5);
+            }
         }
     }
 
@@ -489,8 +496,9 @@ public class CommandHistoryView extends ViewPart {
             if (selectedFilter.matchFilter(column.getText())) {
                 column.setData("hidden", false);
                 column.pack();
-                if (column.getWidth() > MAX_WIDTH)
+                if (column.getWidth() > MAX_WIDTH) {
                     column.setWidth(MAX_WIDTH);
+                }
             } else {
                 column.setData("hidden", true);
                 column.setWidth(0);

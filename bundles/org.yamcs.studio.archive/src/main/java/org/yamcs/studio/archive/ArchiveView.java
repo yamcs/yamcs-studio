@@ -44,6 +44,7 @@ import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
@@ -186,10 +187,11 @@ public class ArchiveView extends ViewPart
         playButton.setImage(playImage);
         playButton.setToolTipText("Play");
         playButton.addListener(SWT.Selection, evt -> {
-            if (playButton.getImage().equals(playImage))
+            if (playButton.getImage().equals(playImage)) {
                 RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.playCommand");
-            else
+            } else {
                 RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.pauseCommand");
+            }
         });
 
         forwardButton = new Button(controlsComposite, SWT.PUSH);
@@ -286,13 +288,14 @@ public class ArchiveView extends ViewPart
             archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime);
         });
         replayTimeLabel.getDisplay().asyncExec(() -> {
-            if (replayTimeLabel.isDisposed())
+            if (replayTimeLabel.isDisposed()) {
                 return;
+            }
 
             if (missionTime == TimeEncoding.INVALID_INSTANT || missionTime == 0) {
                 replayTimeLabel.setText("");
             } else {
-                String prettyTime = TimeCatalogue.getInstance().toString(missionTime);
+                String prettyTime = YamcsUIPlugin.getDefault().formatInstant(missionTime);
                 replayTimeLabel.setText(prettyTime);
             }
         });
@@ -379,10 +382,12 @@ public class ArchiveView extends ViewPart
                     dialog.setInitialRange(archivePanel.prefs.getInterval());
                     if (dialog.open() == Window.OK) {
                         TimeInterval range = new TimeInterval();
-                        if (dialog.hasStartTime())
+                        if (dialog.hasStartTime()) {
                             range.setStart(dialog.getStartTime());
-                        if (dialog.hasStopTime())
+                        }
+                        if (dialog.hasStopTime()) {
                             range.setStop(dialog.getStopTime());
+                        }
                         doFilter(range);
                     }
                 }
@@ -585,8 +590,9 @@ public class ArchiveView extends ViewPart
         Boolean replay = (Boolean) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY);
         Float replaySpeed = (Float) processorState.getCurrentState().get(ProcessorStateProvider.STATE_KEY_REPLAY_SPEED);
 
-        if (connected == null || processing == null || replay == null || replaySpeed == null)
+        if (connected == null || processing == null || replay == null || replaySpeed == null) {
             return;
+        }
 
         toggleReplayComposite(replay);
 

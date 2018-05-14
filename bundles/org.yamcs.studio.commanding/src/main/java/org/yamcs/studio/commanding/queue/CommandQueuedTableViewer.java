@@ -17,8 +17,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -29,7 +27,7 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
-import org.yamcs.utils.TimeEncoding;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 public class CommandQueuedTableViewer extends TableViewer {
 
@@ -63,8 +61,9 @@ public class CommandQueuedTableViewer extends TableViewer {
             @Override
             public void widgetSelected(SelectionEvent arg0) {
                 CommandQueueEntry cqe = (CommandQueueEntry) (getTable().getSelection()[0].getData());
-                if (cqe == null)
+                if (cqe == null) {
                     return;
+                }
                 long missionTime = TimeCatalogue.getInstance().getMissionTime();
                 long timeinthequeue = missionTime - cqe.getGenerationTime();
                 if (timeinthequeue > CommandQueueView.oldCommandWarningTime * 1000L) {
@@ -103,27 +102,23 @@ public class CommandQueuedTableViewer extends TableViewer {
             @Override
             public void widgetSelected(SelectionEvent arg0) {
                 CommandQueueEntry cqe = (CommandQueueEntry) (getTable().getSelection()[0].getData());
-                if (cqe == null)
+                if (cqe == null) {
                     return;
+                }
                 log.info("rejecting command: " + cqe.getSource());
                 updateQueueEntryState(cqe, "rejected", false);
             }
 
         });
-        getTable().addListener(SWT.MouseDown, new Listener() {
-
-            @Override
-            public void handleEvent(Event event) {
-                TableItem[] selection = getTable().getSelection();
-                if (selection.length != 0 && (event.button == 3)) {
-                    if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayControlCommandQueue)) {
-                        contextMenu.setVisible(true);
-                    } else {
-                        contextMenu.setVisible(false);
-                    }
+        getTable().addListener(SWT.MouseDown, event -> {
+            TableItem[] selection = getTable().getSelection();
+            if (selection.length != 0 && (event.button == 3)) {
+                if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayControlCommandQueue)) {
+                    contextMenu.setVisible(true);
+                } else {
+                    contextMenu.setVisible(false);
                 }
             }
-
         });
     }
 
@@ -163,8 +158,9 @@ public class CommandQueuedTableViewer extends TableViewer {
 
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (column.getColumn().getWidth() < 5)
+                    if (column.getColumn().getWidth() < 5) {
                         column.getColumn().setWidth(5);
+                    }
                 }
             });
         }
@@ -203,7 +199,7 @@ public class CommandQueuedTableViewer extends TableViewer {
             case 2:
                 return model.getSource();
             case 3:
-                return TimeEncoding.toString(model.getGenerationTime());
+                return YamcsUIPlugin.getDefault().formatInstant(model.getGenerationTime());
             default:
                 break;
             }

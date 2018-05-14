@@ -1,5 +1,10 @@
 package org.yamcs.studio.core.ui;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -11,7 +16,9 @@ import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.connections.ConnectionPreferences;
+import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
@@ -23,6 +30,9 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
     private static YamcsUIPlugin plugin;
 
     public static final String CMD_CONNECT = "org.yamcs.studio.core.ui.connect";
+
+    private SimpleDateFormat format;
+    private SimpleDateFormat tzFormat;
 
     // private EventLogViewActivator eventLogActivator; // TODO remove? very annoying actually
 
@@ -36,6 +46,11 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
         // TODO should maybe move this to eventlog-plugin, but verify lazy behaviour
         // eventLogActivator = new EventLogViewActivator(); // TODO remove? very annoying actually
+
+        IPreferenceStore store = getPreferenceStore();
+        String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
+        format = new SimpleDateFormat(pattern, Locale.US);
+        tzFormat = new SimpleDateFormat(pattern + " Z", Locale.US);
     }
 
     @Override
@@ -46,6 +61,33 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
     public static YamcsUIPlugin getDefault() {
         return plugin;
+    }
+
+    /**
+     * Formats a Yamcs instant. Timezone information is not added. Must be called on SWT thread due to reuse of
+     * dateformatter.
+     */
+    public String formatInstant(long instant) {
+        return formatInstant(instant, false);
+    }
+
+    /**
+     * Formats a Yamcs instant. Must be called on SWT thread due to reuse of dateformatter.
+     * 
+     * @param tzOffset
+     *            whether timezone offset is added to the output string.
+     */
+    public String formatInstant(long instant, boolean tzOffset) {
+        // TODO Improve this. Don't use Date
+        Calendar cal = TimeEncoding.toCalendar(instant);
+        cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+        if (tzOffset) {
+            tzFormat.setTimeZone(cal.getTimeZone());
+            return tzFormat.format(cal.getTime());
+        } else {
+            format.setTimeZone(cal.getTimeZone());
+            return format.format(cal.getTime());
+        }
     }
 
     /**

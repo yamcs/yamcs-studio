@@ -1,8 +1,6 @@
 package org.yamcs.studio.core.model;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -19,7 +17,6 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
 
     private volatile long currentTime = TimeEncoding.INVALID_INSTANT;
     private Set<TimeListener> timeListeners = new CopyOnWriteArraySet<>();
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
     public static TimeCatalogue getInstance() {
         return YamcsPlugin.getDefault().getCatalogue(TimeCatalogue.class);
@@ -54,8 +51,9 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
 
     public Calendar getMissionTimeAsCalendar(boolean wallClockIfUnset) {
         long t = getMissionTime(wallClockIfUnset);
-        if (t == TimeEncoding.INVALID_INSTANT)
+        if (t == TimeEncoding.INVALID_INSTANT) {
             return null;
+        }
 
         Calendar cal = TimeEncoding.toCalendar(t);
         cal.setTimeZone(getTimeZone());
@@ -68,15 +66,6 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
         // At least for now, it should stay consistent with the workbench
         // TODO Research modifications to SWT xychart and then make this controllable from user prefs
         return TimeZone.getDefault();
-    }
-
-    // must be called on the swt thread due to the dateformatter being reused
-    public String toString(long instant) {
-        // TODO Improve this. Don't use Date
-        Calendar cal = TimeEncoding.toCalendar(instant);
-        cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
-        format.setTimeZone(cal.getTimeZone());
-        return format.format(cal.getTime());
     }
 
     @Override
