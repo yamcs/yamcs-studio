@@ -1,4 +1,4 @@
-package org.yamcs.studio.alarms.active;
+package org.yamcs.studio.core.ui;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;

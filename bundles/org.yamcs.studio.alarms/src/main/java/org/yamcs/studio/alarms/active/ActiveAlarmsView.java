@@ -13,8 +13,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Alarms.AlarmData;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.AlarmListener;
+import org.yamcs.studio.core.ui.XtceSubSystemNode;
 
 public class ActiveAlarmsView extends ViewPart implements AlarmListener {
 
@@ -36,7 +38,11 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((XtceTreeNode) element).getName();
+                if (element instanceof XtceAlarmNode) {
+                    return ((XtceAlarmNode) element).getName();
+                } else {
+                    return ((XtceSubSystemNode) element).getName();
+                }
             }
         });
 
@@ -92,7 +98,7 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             @Override
             public String getText(Object element) {
                 if (element instanceof XtceAlarmNode) {
-                    AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
+                    // AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
                     return "Out of Limits";
                 } else {
                     return null;
@@ -171,7 +177,12 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
     @Override
     public void processAlarmData(AlarmData alarmData) {
         Display.getDefault().asyncExec(() -> {
-            contentProvider.processActiveAlarm(alarmData);
+            ParameterValue triggerValue = alarmData.getTriggerValue();
+            String qname = triggerValue.getId().getName();
+            if (!qname.startsWith("/")) {
+                throw new IllegalArgumentException("Unexpected id " + qname);
+            }
+            contentProvider.addElement(qname, alarmData);
             viewer.refresh();
         });
     }
