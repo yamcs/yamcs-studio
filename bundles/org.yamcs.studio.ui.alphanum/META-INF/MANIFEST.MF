@@ -26,6 +26,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gef,
  org.eclipse.jface,
  org.csstudio.ui.util,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ com.google.gson,
+ org.csstudio.opibuilder
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.ui.alphanum

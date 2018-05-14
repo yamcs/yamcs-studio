@@ -6,77 +6,76 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 
 public class ParameterContentProvider implements IStructuredContentProvider {
 
-	TableViewer table;
-	List<ParameterInfo> parameter;
-	List<ParameterInfo> initial;
+    TableViewer table;
+    List<String> parameter;
+    List<String> initial;
 
-	public List<ParameterInfo> getParameter() {
-		return parameter;
-	}
+    public List<String> getParameter() {
+        return parameter;
+    }
 
-	public ParameterContentProvider(TableViewer parameterTableViewer) {
-		table = parameterTableViewer;
-		parameter = new ArrayList<>();
-		initial = new ArrayList<>();
-	}
+    public ParameterContentProvider(TableViewer parameterTableViewer) {
+        table = parameterTableViewer;
+        parameter = new ArrayList<>();
+        initial = new ArrayList<>();
+    }
 
-	@Override
-	public void dispose() {
+    @Override
+    public void dispose() {
 
-		
-	}
-	
-	public void load(List<ParameterInfo> list) {
-		initial = list;
-	}
-	
 
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public Object[] getElements(Object inputElement) {
-		return parameter.toArray();
-	}
-	
-	public boolean addParameter(ParameterInfo info) {
-		if(parameter.contains(info))
-			return false;
-		parameter.add(info);
-		table.add(info);
-		return true;
-	}
+    public void load(List<String> list) {
+        initial = new ArrayList<>();
+        initial.addAll(list);
+    }
 
-	public void clearAll() {
-		parameter.clear();
-		table.getTable().clearAll();
-		
-	}
 
-	public void restore() {
-		parameter.clear();
-		parameter.addAll(initial);
-		
-	}
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        // TODO Auto-generated method stub
 
-	public void remove(Object info) {
-		parameter.remove(info);
-		
-	}
+    }
 
-	public List<ParameterInfo> getInitial() {
-		return initial;
-	}
+    @Override
+    public Object[] getElements(Object inputElement) {
+        return parameter.toArray();
+    }
 
-	public boolean hasChanged() {
-		return !(initial.size() == parameter.size() && initial.containsAll(parameter));
-	}
-	
+    public boolean addParameter(String info) {
+        if(parameter.contains(info))
+            return false;
+        parameter.add(info);
+        return true;
+    }
+
+    public void clearAll() {
+        parameter.clear();
+        table.getTable().clearAll();
+
+    }
+
+    public void restore() {
+        parameter.clear();
+        parameter.addAll(initial);
+
+    }
+
+    public void remove(Object info) {
+        parameter.remove(info);
+
+    }
+
+    public List<String> getInitial() {
+        return initial;
+    }
+
+    public boolean hasChanged() {
+        return initial.size() != parameter.size() || !initial.containsAll(parameter);
+    }
+
 }

@@ -5,11 +5,21 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
-            contributorClass="org.yamcs.studio.ui.alphanum.AlphaNumericEditorActionBarContributor"
             default="true"
             extensions="par"
+            contributorClass="org.yamcs.studio.ui.alphanum.AlphaNumericEditorActionBarContributor"
             id="org.yamcs.studio.ui.alphanum.AlphaNumericEditor"
             name="AlphaNumeric">
       </editor>
-   </extension>  
+      <editor
+            class="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor"
+            default="false"
+            extensions="par"
+            contributorClass = "org.yamcs.studio.ui.alphanum.ScrollEditorActionBarContributor"
+            id="org.yamcs.studio.ui.alphanum.ScrollAlphaNumericEditor"
+            name="ScrollAlphaNumeric">
+      </editor>
+   </extension>
+
+    
 </plugin>
