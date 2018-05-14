@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editor.OPIEditor;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
+import org.csstudio.opibuilder.runmode.OPIRunnerPerspective;
 import org.csstudio.opibuilder.runmode.OPIView;
 import org.csstudio.opibuilder.runmode.RunModeService;
 import org.csstudio.opibuilder.runmode.RunModeService.DisplayMode;
@@ -26,7 +27,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -49,8 +49,6 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
 
     public static String ID = "org.csstudio.opibuilder.editor.run";
     public static String ACITON_DEFINITION_ID = "org.csstudio.opibuilder.runopi";
-
-    private static IWorkbenchPage runtime_page = null;
 
     public RunOPIAction() {
         super("Launch Display Runner", CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
@@ -91,11 +89,19 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
                 }
             }
 
-            if (runtime_page == null) { // (Re-)create runtime window
-                runtime_page = createRuntimePage();
-            } else {
-                runtime_page.getWorkbenchWindow().getShell().setActive();
+            IWorkbenchWindow targetWindow = null;
+            for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+                if (window.getActivePage().getPerspective().getId().equals(OPIRunnerPerspective.ID)) {
+                    targetWindow = window;
+                }
             }
+
+            if (targetWindow == null) {
+                IWorkbenchPage runnerPage = RunModeService.createNewWorkbenchPage(Optional.empty());
+                targetWindow = runnerPage.getWorkbenchWindow();
+            }
+
+            targetWindow.getShell().setActive();
 
             if (activeEditor instanceof OPIEditor) {
                 // DisplayModel displayModel = ((OPIEditor) activeEditor).getDisplayModel();
@@ -107,7 +113,7 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
 
                 // If this display is already executing, update it to the new content,
                 // because RunModeService would only pop old content back to the front.
-                for (IViewReference view_ref : runtime_page.getViewReferences()) {
+                for (IViewReference view_ref : targetWindow.getActivePage().getViewReferences()) {
                     if (view_ref.getId().startsWith(OPIView.ID)) {
                         IViewPart view = view_ref.getView(true);
                         if (view instanceof OPIView) {
@@ -125,7 +131,7 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
                     }
                 }
 
-                RunModeService.openDisplayInView(runtime_page, new_input, DisplayMode.NEW_TAB);
+                RunModeService.openDisplayInView(targetWindow.getActivePage(), new_input, DisplayMode.NEW_TAB);
             }
         } catch (Exception ex) {
             ExceptionDetailsErrorDialog.openError(page.getWorkbenchWindow().getShell(),
@@ -133,31 +139,7 @@ public class RunOPIAction extends Action implements IWorkbenchWindowActionDelega
         }
     }
 
-    private IWorkbenchPage createRuntimePage() throws Exception {
-        IWorkbenchPage page = RunModeService.createNewWorkbenchPage(Optional.empty());
-        page.getWorkbenchWindow().addPageListener(new IPageListener() {
-            @Override
-            public void pageClosed(IWorkbenchPage page) {
-                if (page == runtime_page) {
-                    runtime_page = null;
-                }
-            }
-
-            @Override
-            public void pageActivated(IWorkbenchPage page) {
-                // NOP
-            }
-
-            @Override
-            public void pageOpened(IWorkbenchPage page) {
-                // NOP
-            }
-        });
-        return page;
-    }
-
     @Override
     public void dispose() {
-        // NOP
     }
 }
