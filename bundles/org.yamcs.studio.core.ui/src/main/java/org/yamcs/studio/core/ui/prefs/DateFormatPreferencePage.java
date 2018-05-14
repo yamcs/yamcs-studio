@@ -29,7 +29,6 @@ public class DateFormatPreferencePage extends FieldEditorPreferencePage implemen
         Composite parent = getFieldEditorParent();
         format = new StringFieldEditor(PREF_DATEFORMAT, "Date Format:", parent);
         addField(format);
-
     }
 
     @Override
@@ -42,6 +41,7 @@ public class DateFormatPreferencePage extends FieldEditorPreferencePage implemen
         boolean ret = super.performOk();
 
         if (propertiesChanged) {
+            YamcsUIPlugin.getDefault().initializeDateFormatting();
             warningApply();
         }
 

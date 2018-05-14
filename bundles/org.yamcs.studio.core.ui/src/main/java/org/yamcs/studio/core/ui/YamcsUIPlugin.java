@@ -47,6 +47,10 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         // TODO should maybe move this to eventlog-plugin, but verify lazy behaviour
         // eventLogActivator = new EventLogViewActivator(); // TODO remove? very annoying actually
 
+        initializeDateFormatting();
+    }
+
+    public void initializeDateFormatting() {
         IPreferenceStore store = getPreferenceStore();
         String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
         format = new SimpleDateFormat(pattern, Locale.US);
