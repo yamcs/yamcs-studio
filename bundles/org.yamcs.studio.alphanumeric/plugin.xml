@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.yamcs.studio.alphanumeric.AlphaNumericEditor"
+            default="true"
+            extensions="par"
+            contributorClass="org.yamcs.studio.alphanumeric.AlphaNumericEditorActionBarContributor"
+            id="org.yamcs.studio.alphanumeric.AlphaNumericEditor"
+            name="AlphaNumeric">
+      </editor>
+      <editor
+            class="org.yamcs.studio.alphanumeric.ScrollAlphaNumericEditor"
+            default="false"
+            extensions="par"
+            contributorClass = "org.yamcs.studio.alphanumeric.ScrollEditorActionBarContributor"
+            id="org.yamcs.studio.alphanumeric.ScrollAlphaNumericEditor"
+            name="ScrollAlphaNumeric">
+      </editor>
+   </extension>
+
+    
+</plugin>

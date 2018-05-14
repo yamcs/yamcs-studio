@@ -25,6 +25,7 @@
     <module>org.diirt</module>
 
     <module>org.yamcs.studio.alarms</module>
+    <module>org.yamcs.studio.alphanumeric</module>
     <module>org.yamcs.studio.archive</module>
     <module>org.yamcs.studio.commanding</module>
     <module>org.yamcs.studio.core</module>
@@ -38,6 +39,5 @@
     <module>org.yamcs.studio.monitoring</module>
     <module>org.yamcs.studio.p2</module>
     <module>org.yamcs.studio.runtime.base</module>
-    <module>org.yamcs.studio.ui.alphanum</module>
   </modules>
 </project>

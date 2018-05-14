@@ -49,7 +49,7 @@ public class NewParFileWizard extends Wizard implements INewWizard {
 
         try {
             workbench.getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new FileEditorInput(file), "org.yamcs.studio.ui.alphanum.AlphaNumericEditor");//$NON-NLS-1$
+                    new FileEditorInput(file), "org.yamcs.studio.alphanumeric.AlphaNumericEditor");//$NON-NLS-1$
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open Par File error",
                     "Failed to open the newly created Par File. \n" + e.getMessage());
