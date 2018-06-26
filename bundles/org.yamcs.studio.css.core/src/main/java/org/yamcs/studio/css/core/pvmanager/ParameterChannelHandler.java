@@ -1,5 +1,8 @@
 package org.yamcs.studio.css.core.pvmanager;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -7,12 +10,18 @@ import org.diirt.datasource.ChannelWriteCallback;
 import org.diirt.datasource.DataSourceTypeAdapter;
 import org.diirt.datasource.MultiplexedChannelHandler;
 import org.diirt.datasource.ValueCache;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.css.core.PVCatalogue;
 import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
 
@@ -25,6 +34,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
+    private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1", "1.0");
     private NamedObjectId id;
 
     public ParameterChannelHandler(String channelName) {
@@ -85,8 +95,61 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
+    protected boolean isWriteConnected(PVConnectionInfo info) {
+        return isConnected(info)
+                && info.parameter != null
+                && info.parameter.hasDataSource()
+                && info.parameter.getDataSource() == DataSourceType.LOCAL;
+    }
+
+    @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
-        throw new UnsupportedOperationException("Channel write not supported");
+        try {
+            ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
+            Value v = toValue(p, newValue);
+            ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
+            catalogue.setParameter("realtime", id, v).whenComplete((data, e) -> {
+                if (e != null) {
+                    log.log(Level.SEVERE, "Could not write to parameter", e);
+                    if (e instanceof Exception) {
+                        callback.channelWritten((Exception) e);
+                    } else {
+                        callback.channelWritten(new ExecutionException(e));
+                    }
+                } else {
+                    // Report success
+                    callback.channelWritten(null);
+                }
+            });
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Unable to write parameter value: " + newValue, e);
+            return;
+        }
+    }
+
+    private static Value toValue(ParameterInfo p, Object value) {
+        ParameterTypeInfo ptype = p.getType();
+        if (ptype != null) {
+            switch (ptype.getEngType()) {
+            case "string":
+            case "enumeration":
+                return Value.newBuilder().setType(Type.STRING).setStringValue(String.valueOf(value)).build();
+            case "integer":
+                if (value instanceof Double) {
+                    return Value.newBuilder().setType(Type.UINT64).setUint64Value(((Double) value).longValue()).build();
+                } else {
+                    return Value.newBuilder().setType(Type.UINT64).setUint64Value(Long.parseLong(String.valueOf(value)))
+                            .build();
+                }
+            case "float":
+                return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(String.valueOf(value)))
+                        .build();
+            case "boolean":
+                boolean booleanValue = TRUTHY.contains(String.valueOf(value).toLowerCase());
+                return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
+            }
+        }
+        return null;
     }
 
     /**
