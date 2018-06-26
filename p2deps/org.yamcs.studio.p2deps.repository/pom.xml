@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>org.yamcs.studio.p2deps</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.yamcs.studio.p2deps.repository</artifactId>
