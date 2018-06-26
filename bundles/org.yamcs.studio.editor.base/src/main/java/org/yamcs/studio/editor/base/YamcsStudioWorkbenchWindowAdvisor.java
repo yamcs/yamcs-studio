@@ -3,9 +3,6 @@ package org.yamcs.studio.editor.base;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.diirt.datasource.CompositeDataSource;
-import org.diirt.datasource.CompositeDataSourceConfiguration;
-import org.diirt.datasource.PVManager;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -20,7 +17,6 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.EditorAreaDropAdapter;
 import org.yamcs.studio.core.ui.logging.ConsoleViewHandler;
 import org.yamcs.studio.core.ui.logging.UserLogFormatter;
-import org.yamcs.studio.css.core.pvmanager.ParameterDataSourceProvider;
 
 @SuppressWarnings("restriction")
 public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
@@ -84,12 +80,6 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // Workaround for text editor DND bug.
         // See http://www.eclipse.org/forums/index.php/m/333816/
         configurer.configureEditorAreaDropListener(new EditorAreaDropAdapter(configurer.getWindow()));
-
-        // Bootstrap DIIRT
-        CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
-        defaultDs.putDataSource(new ParameterDataSourceProvider());
-        defaultDs.setConfiguration(new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
-        PVManager.setDefaultDataSource(defaultDs);
     }
 
     @Override
