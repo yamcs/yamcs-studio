@@ -40,6 +40,9 @@ import static org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_WIZBAN_
 
 import java.net.URL;
 
+import org.diirt.datasource.CompositeDataSource;
+import org.diirt.datasource.CompositeDataSourceConfiguration;
+import org.diirt.datasource.PVManager;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -60,6 +63,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.css.core.pvmanager.ParameterDataSourceProvider;
 
 /**
  * Forked from org.csstudio.utility.product.ApplicationWorkbenchAdvisor to clear dependency on utility.product
@@ -171,6 +175,13 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         PreferenceManager pm = workbench.getPreferenceManager();
         pm.remove("org.eclipse.help.ui.browsersPreferencePage");
         pm.remove("org.eclipse.team.ui.TeamPreferences");
+
+        // Bootstrap DIIRT
+        CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
+        defaultDs.putDataSource(new ParameterDataSourceProvider());
+        defaultDs.setConfiguration(
+                new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
+        PVManager.setDefaultDataSource(defaultDs);
 
         YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
     }

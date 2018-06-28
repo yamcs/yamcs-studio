@@ -41,7 +41,7 @@ public class DateFormatPreferencePage extends FieldEditorPreferencePage implemen
         boolean ret = super.performOk();
 
         if (propertiesChanged) {
-            YamcsUIPlugin.getDefault().initializeDateFormatting();
+            YamcsUIPlugin.getDefault().setDateFormat(format.getStringValue());
             warningApply();
         }
 

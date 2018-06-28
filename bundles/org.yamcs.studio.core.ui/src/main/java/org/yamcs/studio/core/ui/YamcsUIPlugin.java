@@ -47,12 +47,11 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         // TODO should maybe move this to eventlog-plugin, but verify lazy behaviour
         // eventLogActivator = new EventLogViewActivator(); // TODO remove? very annoying actually
 
-        initializeDateFormatting();
+        // Warning to future self: don't access preference store here. It triggers before workspace selection, causing
+        // chaos.
     }
 
-    public void initializeDateFormatting() {
-        IPreferenceStore store = getPreferenceStore();
-        String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
+    public void setDateFormat(String pattern) {
         format = new SimpleDateFormat(pattern, Locale.US);
         tzFormat = new SimpleDateFormat(pattern + " Z", Locale.US);
     }
@@ -82,6 +81,11 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
      *            whether timezone offset is added to the output string.
      */
     public String formatInstant(long instant, boolean tzOffset) {
+        if (format == null) {
+            IPreferenceStore store = getPreferenceStore();
+            String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
+            setDateFormat(pattern);
+        }
         // TODO Improve this. Don't use Date
         Calendar cal = TimeEncoding.toCalendar(instant);
         cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());

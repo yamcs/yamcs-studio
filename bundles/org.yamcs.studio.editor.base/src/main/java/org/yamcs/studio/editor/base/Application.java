@@ -7,9 +7,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.diirt.datasource.CompositeDataSource;
-import org.diirt.datasource.CompositeDataSourceConfiguration;
-import org.diirt.datasource.PVManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -30,7 +27,6 @@ import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 import org.yamcs.CompactFormatter;
-import org.yamcs.studio.css.core.pvmanager.ParameterDataSourceProvider;
 
 public class Application implements IApplication {
 
@@ -62,12 +58,6 @@ public class Application implements IApplication {
             }
         }
 
-        // Bootstrap DIIRT
-        CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
-        defaultDs.putDataSource(new ParameterDataSourceProvider());
-        defaultDs.setConfiguration(new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
-        PVManager.setDefaultDataSource(defaultDs);
-
         Display display = PlatformUI.createDisplay();
         try {
             boolean success = YamcsStudioWorkspace.prompt(new URL("file:" + workspace), workspacePrompt);
@@ -77,6 +67,7 @@ public class Application implements IApplication {
             }
 
             openProjects();
+
             return runWorkbench(display, context);
         } finally {
             if (display != null) {
