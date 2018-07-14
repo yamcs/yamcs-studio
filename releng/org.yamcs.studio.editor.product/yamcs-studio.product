@@ -20,6 +20,7 @@ See https://www.yamcs.org
 -Declipse.p2.unsignedPolicy=allow
 -Duser.timezone=GMT
 -Dosgi.requiredJavaVersion=1.8
+-Dorg.eclipse.update.reconcile=false
 --add-modules=ALL-SYSTEM
       </vmArgs>
       <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
@@ -79,6 +80,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="org.eclipse.update.reconcile" value="false" />
    </configurations>
 
    <preferencesInfo>
