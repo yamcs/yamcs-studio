@@ -15,9 +15,8 @@ public class YamcsAuthorizations {
 
     private static final Logger log = Logger.getLogger(YamcsAuthorizations.class.getName());
 
-    public enum SystemPrivilege {
-        MayControlYProcessor, MayModifyCommandHistory, MayControlCommandQueue, MayCommandPayload, MayGetMissionDatabase, MayControlArchiving
-    }
+    public static final String ControlCommandQueue = "ControlCommandQueue";
+    public static final String Command = "Command";
 
     private static YamcsAuthorizations instance = new YamcsAuthorizations();
     private UserInfo userInfo;
@@ -46,14 +45,25 @@ public class YamcsAuthorizations {
         return null;
     }
 
-    public boolean hasSystemPrivilege(SystemPrivilege systemPrivilege) {
+    public boolean hasSystemPrivilege(String systemPrivilege) {
         if (!isAuthorizationEnabled()) {
             return true;
         }
         if (userInfo == null) {
             return false;
         }
-        return userInfo.getSystemPrivilegesList().contains(systemPrivilege.name());
+
+        // Use deprecated api for compatibility with Yamcs v3
+        switch (systemPrivilege) {
+        case ControlCommandQueue:
+            return userInfo.getSystemPrivilegesList().contains("MayControlCommandQueue")
+                    || userInfo.getSystemPrivilegeList().contains("ControlCommandQueue");
+        case Command:
+            return userInfo.getSystemPrivilegesList().contains("MayCommand")
+                    || userInfo.getSystemPrivilegesList().contains("MayCommandPayload")
+                    || userInfo.getSystemPrivilegeList().contains("Command");
+        }
+        return userInfo.getSystemPrivilegeList().contains(systemPrivilege);
     }
 
     public boolean isAuthorizationEnabled() {
@@ -63,6 +73,6 @@ public class YamcsAuthorizations {
         // unsecured yamcs server. It would just ignore it, and then our client state would
         // be wrong
         YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
-        return (yprops == null) ? false : yprops.getAuthenticationToken() != null;
+        return (yprops == null) ? false : yprops.getPassword() != null;
     }
 }

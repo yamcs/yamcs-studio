@@ -43,12 +43,11 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 
 public class CommandStackView extends ViewPart {
 
@@ -188,10 +187,12 @@ public class CommandStackView extends ViewPart {
         armButton.addListener(SWT.Selection, evt -> {
             if (armButton.getSelection()) {
                 ICommandService commandService = (ICommandService) getViewSite().getService(ICommandService.class);
-                IEvaluationService evaluationService = (IEvaluationService) getViewSite().getService(IEvaluationService.class);
+                IEvaluationService evaluationService = (IEvaluationService) getViewSite()
+                        .getService(IEvaluationService.class);
                 Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
                 try {
-                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
+                            evaluationService.getCurrentState()));
                 } catch (Exception e) {
                     log.log(Level.SEVERE, "Could not execute command", e);
                 }
@@ -209,10 +210,12 @@ public class CommandStackView extends ViewPart {
         issueButton.setEnabled(false);
         issueButton.addListener(SWT.Selection, evt -> {
             ICommandService commandService = (ICommandService) getViewSite().getService(ICommandService.class);
-            IEvaluationService evaluationService = (IEvaluationService) getViewSite().getService(IEvaluationService.class);
+            IEvaluationService evaluationService = (IEvaluationService) getViewSite()
+                    .getService(IEvaluationService.class);
             Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issue");
             try {
-                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+                cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
+                        evaluationService.getCurrentState()));
             } catch (Exception e) {
                 log.log(Level.SEVERE, "Could not execute command", e);
             }
@@ -237,7 +240,8 @@ public class CommandStackView extends ViewPart {
         getViewSite().setSelectionProvider(commandTableViewer);
 
         // Set up connection state, and listen to changes
-        connectionStateProvider = RCPUtils.findSourceProvider(getViewSite(), ConnectionStateProvider.STATE_KEY_CONNECTED,
+        connectionStateProvider = RCPUtils.findSourceProvider(getViewSite(),
+                ConnectionStateProvider.STATE_KEY_CONNECTED,
                 ConnectionStateProvider.class);
         connectionStateProvider.addSourceProviderListener(new ISourceProviderListener() {
             @Override
@@ -397,7 +401,7 @@ public class CommandStackView extends ViewPart {
 
     // Enable the buttons if user is authorized to command payload
     private void setButtonEnable(Button button, boolean isEnabled) {
-        if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayCommandPayload))
+        if (YamcsAuthorizations.getInstance().hasSystemPrivilege(YamcsAuthorizations.Command))
             button.setEnabled(isEnabled);
         else
             button.setEnabled(false);
@@ -492,7 +496,8 @@ public class CommandStackView extends ViewPart {
                     String errorMessage = "Unable to build Stacked Command from the specifed source: ";
                     log.log(Level.WARNING, errorMessage, e);
                     commandTableViewer.getTable().getDisplay().asyncExec(() -> {
-                        MessageBox dialog = new MessageBox(commandTableViewer.getTable().getShell(), SWT.ICON_ERROR | SWT.OK);
+                        MessageBox dialog = new MessageBox(commandTableViewer.getTable().getShell(),
+                                SWT.ICON_ERROR | SWT.OK);
                         dialog.setText("Command Stack Edition");
                         dialog.setMessage(errorMessage + e.getMessage());
                         // open dialog and await user selection
@@ -520,7 +525,8 @@ public class CommandStackView extends ViewPart {
                 CommandStack.getInstance().getCommands().removeAll(CommandClipboard.getCutCommands());
 
                 // refresh command stack view state
-                IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(CommandStackView.ID);
+                IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                        .findView(CommandStackView.ID);
                 CommandStackView commandStackView = (CommandStackView) part;
                 commandStackView.refreshState();
             }

@@ -10,7 +10,6 @@ import org.eclipse.ui.ISources;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 
 /**
@@ -32,7 +31,7 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
     public Map getCurrentState() {
         Map map = new HashMap(1);
         map.put(STATE_KEY_MAY_COMMAND_PAYLOAD,
-                YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayCommandPayload));
+                YamcsAuthorizations.getInstance().hasSystemPrivilege(YamcsAuthorizations.Command));
         return map;
     }
 

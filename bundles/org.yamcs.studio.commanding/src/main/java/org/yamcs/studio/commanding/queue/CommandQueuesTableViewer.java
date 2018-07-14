@@ -30,10 +30,10 @@ import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Commanding.QueueState;
 import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
+import org.yamcs.studio.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 
 public class CommandQueuesTableViewer extends TableViewer {
 
@@ -49,7 +49,7 @@ public class CommandQueuesTableViewer extends TableViewer {
 
     public CommandQueuesTableViewer(CommandQueueView commandQueueView, Composite parent, TableColumnLayout tcl) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
-        //   this.styleProvider = styleProvider;
+        // this.styleProvider = styleProvider;
 
         this.commandQueueView = commandQueueView;
         this.parent = parent;
@@ -166,7 +166,7 @@ public class CommandQueuesTableViewer extends TableViewer {
 
         @Override
         protected boolean canEdit(Object element) {
-            return YamcsAuthorizations.getInstance().hasSystemPrivilege(YamcsAuthorizations.SystemPrivilege.MayControlCommandQueue);
+            return YamcsAuthorizations.getInstance().hasSystemPrivilege(YamcsAuthorizations.ControlCommandQueue);
         }
 
         @Override
@@ -198,7 +198,7 @@ public class CommandQueuesTableViewer extends TableViewer {
                 if (rcqi.cq == commandQueue)
                     q = rcqi.commandQueueInfo;
             }
-            //CommandQueueInfo q = queues.get(row);
+            // CommandQueueInfo q = queues.get(row);
             if (newState == QueueState.BLOCKED) {
                 blockQueue(q);
             } else if (newState == QueueState.DISABLED) {
@@ -233,12 +233,12 @@ public class CommandQueuesTableViewer extends TableViewer {
         if (oldcommandsfound) {
             int result = CommandFateDialog.showDialog2(parent.getShell());
             switch (result) {
-            case -1://cancel
+            case -1:// cancel
                 return;
-            case 0: //send with updated times
+            case 0: // send with updated times
                 updateQueueState(q, QueueState.ENABLED, true);
                 break;
-            case 1://send with old times
+            case 1:// send with old times
                 updateQueueState(q, QueueState.ENABLED, false);
                 break;
             }
@@ -256,7 +256,7 @@ public class CommandQueuesTableViewer extends TableViewer {
     }
 
     class ModelLabelProvider extends LabelProvider implements
-    ITableLabelProvider {
+            ITableLabelProvider {
 
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
@@ -311,13 +311,17 @@ public class CommandQueuesTableViewer extends TableViewer {
 
     public static void main(String arg[]) {
         int nbSeconds = 5; // 00:00:05
-        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+        System.out
+                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
         nbSeconds = 65; // 00:01:05
-        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+        System.out
+                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
         nbSeconds = 3665; // 01:01:05
-        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
-        nbSeconds = 90065; //1d 01:01:05
-        System.out.println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+        System.out
+                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
+        nbSeconds = 90065; // 1d 01:01:05
+        System.out
+                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
 
     }
 }

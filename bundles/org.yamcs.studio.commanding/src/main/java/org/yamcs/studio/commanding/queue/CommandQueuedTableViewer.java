@@ -26,7 +26,6 @@ import org.yamcs.protobuf.Rest.EditCommandQueueEntryRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.studio.core.security.YamcsAuthorizations.SystemPrivilege;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 public class CommandQueuedTableViewer extends TableViewer {
@@ -113,7 +112,7 @@ public class CommandQueuedTableViewer extends TableViewer {
         getTable().addListener(SWT.MouseDown, event -> {
             TableItem[] selection = getTable().getSelection();
             if (selection.length != 0 && (event.button == 3)) {
-                if (YamcsAuthorizations.getInstance().hasSystemPrivilege(SystemPrivilege.MayControlCommandQueue)) {
+                if (YamcsAuthorizations.getInstance().hasSystemPrivilege(YamcsAuthorizations.ControlCommandQueue)) {
                     contextMenu.setVisible(true);
                 } else {
                     contextMenu.setVisible(false);
