@@ -1,4 +1,4 @@
-package org.yamcs.studio.alphanumeric;
+package org.yamcs.studio.displays;
 
 import java.util.List;
 

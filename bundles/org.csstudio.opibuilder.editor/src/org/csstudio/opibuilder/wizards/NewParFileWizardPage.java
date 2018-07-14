@@ -1,10 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.wizards;
 
 import java.io.ByteArrayInputStream;
@@ -16,16 +9,12 @@ import org.csstudio.opibuilder.util.SchemaService;
 import org.csstudio.ui.util.wizards.WizardNewFileCreationPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-/**Wizard page for the creation of new OPI files.
- * @author Xihui Chen
- *
- */
 public class NewParFileWizardPage extends WizardNewFileCreationPage {
 
     public NewParFileWizardPage(String pageName, IStructuredSelection selection) {
         super(pageName, selection);
-        setTitle("Create a new Par File");
-        setDescription("Create a new Par file in the selected project or folder.");
+        setTitle("Create a new Parameter Table");
+        setDescription("Create a new Parameter Table in the selected project or folder.");
     }
 
     @Override
@@ -40,12 +29,11 @@ public class NewParFileWizardPage extends WizardNewFileCreationPage {
 
     @Override
     protected String getNewFileLabel() {
-        return "Par File Name:";
+        return "File Name:";
     }
 
     @Override
     public String getFileExtension() {
         return "par"; //TODO get from
     }
-
 }

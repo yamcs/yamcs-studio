@@ -1,4 +1,4 @@
-package org.yamcs.studio.alphanumeric;
+package org.yamcs.studio.displays;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,11 +24,11 @@ import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
-import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
+import org.yamcs.utils.StringConverter;
 
-public class ScrollParameterTableViewer extends TableViewer implements ParameterListener {
+public class ScrollViewer extends TableViewer implements ParameterListener {
 
     public static final String COL_TIME = "Timestamp";
 
@@ -43,11 +43,11 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
     private TableColumnLayout tcl;
     private List<String> parameters;
     private List<String> qualifiedNames;
-    
+
     private List<Listener> listeners;
 
-    public ScrollParameterTableViewer(Composite parent) {
-        super(new Table(parent, SWT.FULL_SELECTION | SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL));;
+    public ScrollViewer(Composite parent) {
+        super(new Table(parent, SWT.FULL_SELECTION | SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL));
         tcl = new TableColumnLayout();
         parent.setLayout(tcl);
 
@@ -57,13 +57,12 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         setContentProvider(contentProvider);
         setInput(contentProvider);
 
-
         TableViewerColumn timeColumn = new TableViewerColumn(this, SWT.LEFT);
         timeColumn.getColumn().setText(COL_TIME);
         tcl.setColumnData(timeColumn.getColumn(), new ColumnWeightData(30));
-        timeColumn.setLabelProvider(new ColumnLabelProvider() {           
+        timeColumn.setLabelProvider(new ColumnLabelProvider() {
 
-            @Override 
+            @Override
             public String getText(Object element) {
                 ParameterData data = (ParameterData) element;
                 Date date = new Date(data.getParameter(0).getGenerationTime());
@@ -79,8 +78,9 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
 
             @Override
             public void controlResized(ControlEvent e) {
-                if (timeColumn.getColumn().getWidth() < 5)
+                if (timeColumn.getColumn().getWidth() < 5) {
                     timeColumn.getColumn().setWidth(5);
+                }
             }
         });
         parameters = new ArrayList<>();
@@ -99,18 +99,20 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         column.getColumn().setText(info.getName());
         column.getColumn().setToolTipText(info.getQualifiedName());
         tcl.setColumnData(column.getColumn(), new ColumnWeightData(20));
-        column.setLabelProvider(new ColumnLabelProvider() {           
+        column.setLabelProvider(new ColumnLabelProvider() {
 
-            @Override 
+            @Override
             public String getText(Object element) {
                 ParameterData data = (ParameterData) element;
-                for( ParameterValue value : data.getParameterList())
-                    if(value.getId().getName().equals(info.getName())){
-                        if(valueType.equals(ENG))
-                            return String.valueOf(getValue(value.getEngValue()));
-                        return String.valueOf(getValue(value.getRawValue()));
+                for (ParameterValue value : data.getParameterList()) {
+                    if (value.getId().getName().equals(info.getName())) {
+                        if (valueType.equals(ENG)) {
+                            return StringConverter.toString(value.getEngValue(), false);
+                        }
+                        return StringConverter.toString(value.getRawValue(), false);
 
-                    }                
+                    }
+                }
                 return "-";
             }
         });
@@ -122,63 +124,66 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
 
             @Override
             public void controlResized(ControlEvent e) {
-                if (column.getColumn().getWidth() < 40)
+                if (column.getColumn().getWidth() < 40) {
                     column.getColumn().setWidth(40);
+                }
             }
-        });       
+        });
 
     }
 
-
     public void addParameter(ParameterInfo element) {
-        if(parameters.contains(element.getName()))
+        if (parameters.contains(element.getName())) {
             return;
+        }
         parameters.add(element.getName());
         qualifiedNames.add(element.getQualifiedName());
         addColumn(element);
         getTable().getColumn(0).setWidth(180);
-        for(int i = 1; i < getTable().getColumnCount(); i ++) {
+        for (int i = 1; i < getTable().getColumnCount(); i++) {
             getTable().getColumn(i).setWidth(60);
         }
-        
-        for(Listener l : listeners) {
+
+        for (Listener l : listeners) {
             l.handleEvent(new Event());
         }
-        
+
         refresh();
     }
 
     public void removeParameter(String info) {
         int i;
-        for(i = 1; i < getTable().getColumnCount(); i ++) {
-            if(getTable().getColumn(i).getText().equals(info))
+        for (i = 1; i < getTable().getColumnCount(); i++) {
+            if (getTable().getColumn(i).getText().equals(info)) {
                 break;
+            }
         }
 
         getTable().getColumn(i).dispose();
         parameters.remove(info);
         String qualifiedName = "";
-        for(String qname: qualifiedNames) {
+        for (String qname : qualifiedNames) {
             if (qname.endsWith(info)) {
                 qualifiedName = qname;
                 break;
             }
         }
         qualifiedNames.remove(qualifiedName);
-        for(Listener l : listeners) {
+        for (Listener l : listeners) {
             l.handleEvent(new Event());
         }
         refresh();
     }
 
     public void clear() {
-        while ( getTable().getColumnCount() > 1 ) 
+        while (getTable().getColumnCount() > 1) {
             getTable().getColumns()[1].dispose();
+        }
 
         parameters.clear();
         qualifiedNames.clear();
         contentProvider.clearAll();
-        for(Listener l : listeners) {
+        for (Listener l : listeners) {
             l.handleEvent(new Event());
         }
         refresh();
@@ -188,38 +193,13 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         return qualifiedNames;
     }
 
-    private Object getValue(Value value) {
-        Object obj = null;
-        if(value.hasStringValue())
-            obj= value.getStringValue();
-        else if(value.hasSint64Value())
-            obj= value.getSint64Value();
-        else if(value.hasSint32Value()) 
-            obj= value.getSint32Value();
-        else if(value.hasUint64Value())
-            obj= value.getUint64Value();
-        else if(value.hasUint32Value()) 
-            obj= value.getUint32Value();
-        else if(value.hasDoubleValue())
-            obj= value.getDoubleValue();
-        else if(value.hasFloatValue())
-            obj= value.getFloatValue();
-        else if(value.hasBooleanValue())
-            obj= value.getBooleanValue();
-        if(obj == null)
-            return "-";
-        return obj;
-    }
-    
-    public void addDataChangedListener(Listener listener){
+    public void addDataChangedListener(Listener listener) {
         listeners.add(listener);
     }
-
 
     public class ScrollParameterContentProvider implements IStructuredContentProvider {
 
         private List<ParameterData> values;
-
 
         public ScrollParameterContentProvider() {
             values = new ArrayList<>();
@@ -231,14 +211,7 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
         }
 
         @Override
-        public void dispose() {
-
-
-        }
-        @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            // TODO Auto-generated method stub
-
         }
 
         @Override
@@ -246,21 +219,19 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
             return values.toArray();
         }
 
-
         private boolean hasData(ParameterData data) {
-
-            for(ParameterValue v: data.getParameterList()) {
-                if (parameters.contains(v.getId().getName()))
+            for (ParameterValue v : data.getParameterList()) {
+                if (parameters.contains(v.getId().getName())) {
                     return true;
+                }
             }
             return false;
         }
 
-
         public void addParameterData(ParameterData data) {
-            if(hasData(data)) {
+            if (hasData(data)) {
                 values.add(0, data);
-                if(values.size() > MAX_SIZE) {
+                if (values.size() > MAX_SIZE) {
                     values.remove(MAX_SIZE);
                 }
             }
@@ -268,39 +239,29 @@ public class ScrollParameterTableViewer extends TableViewer implements Parameter
             if (getTable().isDisposed()) {
                 return;
             }
-            Display.getDefault().asyncExec( () -> {
+            Display.getDefault().asyncExec(() -> {
                 if (!getTable().isDisposed()) {
-                    ScrollParameterTableViewer.this.refresh();
+                    ScrollViewer.this.refresh();
                 }
             });
         }
-
-
     }
-
 
     @Override
     public void mdbUpdated() {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void onParameterData(ParameterData pdata) {
         contentProvider.addParameterData(pdata);
-
     }
-
 
     public void setValue(String string) {
         valueType = string;
-
     }
 
     public String getValue() {
         return valueType;
-        
     }
-
-
 }

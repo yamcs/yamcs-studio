@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.yamcs.studio.displays.ParameterTableEditor"
+            default="true"
+            extensions="par"
+            id="org.yamcs.studio.displays.ParameterTableEditor"
+            name="Parameter Table">
+      </editor>
+      <!--editor
+            class="org.yamcs.studio.displays.ScrollEditor"
+            default="false"
+            extensions="par"
+            contributorClass = "org.yamcs.studio.displays.ScrollEditorActionBarContributor"
+            id="org.yamcs.studio.displays.ScrollEditor"
+            name="Scrolling Table">
+      </editor-->
+   </extension>
+
+    
+</plugin>

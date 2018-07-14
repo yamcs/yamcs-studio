@@ -29,10 +29,6 @@ public class EventLogTableViewer extends TableViewer {
         tableLayout = new TableLayout();
         getTable().setLayout(tableLayout);
 
-        addFixedColumns();
-    }
-
-    private void addFixedColumns() {
         // sort listener common for all columns
         Listener sortListener = event -> {
             TableColumn column = (TableColumn) event.widget;

@@ -9,6 +9,6 @@
     <version>1.0.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.studio.alphanumeric</artifactId>
+  <artifactId>org.yamcs.studio.displays</artifactId>
   <packaging>eclipse-plugin</packaging>
 </project>

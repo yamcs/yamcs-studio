@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
-Bundle-Description: Yamcs Studio AlphaNumeric
+Bundle-Description: Yamcs Studio Displays
 Bundle-ManifestVersion: 2
-Bundle-Name: Yamcs Studio AlphaNumeric
-Bundle-SymbolicName: org.yamcs.studio.alphanumeric;singleton:=true
+Bundle-Name: Yamcs Studio Displays
+Bundle-SymbolicName: org.yamcs.studio.displays;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.0.4.qualifier
@@ -30,4 +30,4 @@ Require-Bundle: org.eclipse.ui,
  com.google.gson,
  org.csstudio.opibuilder
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
-Automatic-Module-Name: org.yamcs.studio.alphanumeric
+Automatic-Module-Name: org.yamcs.studio.displays

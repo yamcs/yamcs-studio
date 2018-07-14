@@ -1,5 +1,4 @@
-package org.yamcs.studio.alphanumeric;
-
+package org.yamcs.studio.displays;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,27 +36,26 @@ import org.yamcs.studio.core.model.ParameterCatalogue;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-public class ScrollAlphaNumericEditor extends EditorPart {
+public class ScrollEditor extends EditorPart {
 
-    public static final String ID = ScrollAlphaNumericEditor.class.getName();
-    private static final Logger log = Logger.getLogger(ScrollAlphaNumericEditor.class.getName());
+    public static final String ID = ScrollEditor.class.getName();
+    private static final Logger log = Logger.getLogger(ScrollEditor.class.getName());
 
-    ScrollParameterTableViewer parameterTable;
+    ScrollViewer parameterTable;
 
     private FileEditorInput input;
-    private AlphaNumericJson fileInput;
+    private ParameterTable fileInput;
 
-
-    public static ScrollAlphaNumericEditor createPVTableEditor() {
+    public static ScrollEditor createPVTableEditor() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
         final IWorkbenchPage page = window.getActivePage();
         try {
-            final EmptyEditorInput input = new EmptyEditorInput(); //$NON-NLS-1$
-            return (ScrollAlphaNumericEditor) page.openEditor(input, ScrollAlphaNumericEditor.ID);
-        } catch (Exception ex) {
-            ExceptionDetailsErrorDialog.openError(page.getActivePart().getSite().getShell(), "Cannot create PV Table", //$NON-NLS-1$
-                    ex);
+            final EmptyEditorInput input = new EmptyEditorInput();
+            return (ScrollEditor) page.openEditor(input, ScrollEditor.ID);
+        } catch (Exception e) {
+            ExceptionDetailsErrorDialog.openError(page.getActivePart().getSite().getShell(),
+                    "Cannot create Parameter Table", e);
         }
         return null;
     }
@@ -66,7 +64,6 @@ public class ScrollAlphaNumericEditor extends EditorPart {
     public void dispose() {
         super.dispose();
     }
-
 
     @Override
     public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
@@ -85,31 +82,30 @@ public class ScrollAlphaNumericEditor extends EditorPart {
         List<ParameterInfo> info = new ArrayList<>();
         try {
 
-            Gson gson = new Gson();   
+            Gson gson = new Gson();
             InputStreamReader reader = new InputStreamReader(input.getFile().getContents());
-            fileInput = gson.fromJson(reader, AlphaNumericJson.class);
-            if(fileInput == null) {
-                fileInput = new AlphaNumericJson();
+            fileInput = gson.fromJson(reader, ParameterTable.class);
+            if (fileInput == null) {
+                fileInput = new ParameterTable();
             }
 
-            for (ParameterInfo meta :ParameterCatalogue.getInstance().getMetaParameters()) {
-                for(String parameter : fileInput.getParameterList())
-                    if(parameter.contains(meta.getQualifiedName()))
+            for (ParameterInfo meta : ParameterCatalogue.getInstance().getMetaParameters()) {
+                for (String parameter : fileInput.getParameters()) {
+                    if (parameter.contains(meta.getQualifiedName())) {
                         info.add(meta);
+                    }
+                }
             }
-            
-            
 
             return info;
-        }catch (JsonSyntaxException ex)  {
-            fileInput = new AlphaNumericJson();
+        } catch (JsonSyntaxException ex) {
+            fileInput = new ParameterTable();
             return info;
         } catch (CoreException e) {
             log.log(Level.SEVERE, "Could not read parameter list", e);
             return null;
         }
     }
-
 
     @Override
     public void createPartControl(Composite parent) {
@@ -123,13 +119,15 @@ public class ScrollAlphaNumericEditor extends EditorPart {
         Composite tableWrapper = new Composite(sash, SWT.NONE);
         tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        parameterTable = new ScrollParameterTableViewer(tableWrapper);
-        for(ParameterInfo info : loadData())
+        parameterTable = new ScrollViewer(tableWrapper);
+        for (ParameterInfo info : loadData()) {
             parameterTable.addParameter(info);
+        }
 
-        parameterTable.refresh();   }
+        parameterTable.refresh();
+    }
 
-    public ScrollAlphaNumericEditor() {
+    public ScrollEditor() {
         super();
     }
 
@@ -150,19 +148,15 @@ public class ScrollAlphaNumericEditor extends EditorPart {
         }
     }
 
-
     /**
      * Save current model, mark editor as clean.
      *
      * @param monitor
      *            <code>IProgressMonitor</code>, may be <code>null</code>.
-     * @param stream
-     *            Output stream
      */
-    private void saveToStream(final IProgressMonitor monitor, final List<String> parameters,
-            final OutputStream stream) {
+    private void saveToStream(IProgressMonitor monitor, List<String> parameters, OutputStream stream) {
         if (monitor != null) {
-            monitor.beginTask("Save", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+            monitor.beginTask("Save", IProgressMonitor.UNKNOWN);
         }
         final PrintWriter out = new PrintWriter(stream);
 
@@ -170,49 +164,41 @@ public class ScrollAlphaNumericEditor extends EditorPart {
 
             Gson gson = new Gson();
 
-            fileInput.setParameterList(parameters);
+            fileInput.setParameters(parameters);
             gson.toJson(fileInput, out);
 
             firePropertyChange(IEditorPart.PROP_DIRTY);
-        } catch (Exception ex) {
-            ExceptionDetailsErrorDialog.openError(getSite().getShell(),"Error while writing parameter list", ex);
+        } catch (Exception e) {
+            ExceptionDetailsErrorDialog.openError(getSite().getShell(), "Error while writing parameter list", e);
         } finally {
             out.close();
         }
         if (monitor != null) {
             monitor.done();
-        } 
+        }
     }
 
     @Override
     public void doSaveAs() {
-
     }
 
-
     @Override
-    public boolean isDirty() {       
-        return !(parameterTable.getParameters().size() == fileInput.getParameterList().size()
-                && parameterTable.getParameters().containsAll(fileInput.getParameterList()));
+    public boolean isDirty() {
+        return !(parameterTable.getParameters().size() == fileInput.getParameters().size()
+                && parameterTable.getParameters().containsAll(fileInput.getParameters()));
     }
 
     @Override
     public boolean isSaveAsAllowed() {
-        if(isDirty())
-            return true;
-        return false;
+        return isDirty();
     }
 
     @Override
     public void setFocus() {
         parameterTable.getTable().setFocus();
-
     }
 
-
-    public ScrollParameterTableViewer getParameterTable() {
+    public ScrollViewer getParameterTable() {
         return parameterTable;
     }
-
-
 }

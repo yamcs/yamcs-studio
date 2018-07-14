@@ -1,9 +1,7 @@
-package org.yamcs.studio.alphanumeric;
+package org.yamcs.studio.displays;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,8 +9,6 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -31,7 +27,6 @@ import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
-
 public class AddParameterPage extends WizardPage {
 
     public static final String COL_NAMESPACE = "Namespace";
@@ -39,15 +34,14 @@ public class AddParameterPage extends WizardPage {
     public static final int COLUMN_WIDTH = 10;
     public static final int COLUMN_MAX_WIDTH = 600;
 
-    TreeViewer namespaceTable;
-    TableViewer parameterTable;
-    TableColumnLayout tcl;
-    TreeColumnLayout trcl;
-    List<ParameterInfo> selectedParameters;
-    ParameterContentProvider contentProvider;
+    private TreeViewer treeViewer;
+    private TableViewer tableViewer;
+    private TableColumnLayout tcl;
+    private TreeColumnLayout trcl;
+    private List<ParameterInfo> selectedParameters;
+    private ParameterContentProvider contentProvider;
 
-    Map<String, ArrayList<ParameterInfo>> parameterInfos;
-
+    private Map<String, ArrayList<ParameterInfo>> parameterInfos;
 
     public AddParameterPage() {
         super("Choose parameters");
@@ -75,23 +69,23 @@ public class AddParameterPage extends WizardPage {
         tableWrapper1.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableWrapper1.setLayout(trcl);
 
-        namespaceTable = new TreeViewer(tableWrapper1, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-        namespaceTable.getTree().setHeaderVisible(true);
-        namespaceTable.getTree().setLinesVisible(true);
+        treeViewer = new TreeViewer(tableWrapper1, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        treeViewer.getTree().setHeaderVisible(true);
+        treeViewer.getTree().setLinesVisible(true);
 
         // column container
-        TreeViewerColumn pathColumn = new TreeViewerColumn(namespaceTable, SWT.NONE);
+        TreeViewerColumn pathColumn = new TreeViewerColumn(treeViewer, SWT.NONE);
         pathColumn.getColumn().setText(COL_NAMESPACE);
         pathColumn.setLabelProvider(new ColumnLabelProvider() {
-            @Override 
+            @Override
             public String getText(Object element) {
-                String namespace = (String) element;                       
-                return namespace.substring(namespace.lastIndexOf("/") +1);
+                String namespace = (String) element;
+                return namespace.substring(namespace.lastIndexOf("/") + 1);
             }
         });
         trcl.setColumnData(pathColumn.getColumn(), new ColumnPixelData(COLUMN_WIDTH));
 
-        namespaceTable.addSelectionChangedListener(evt -> {
+        treeViewer.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.isEmpty()) {
                 contentProvider.setNamespace(null);
@@ -99,62 +93,16 @@ public class AddParameterPage extends WizardPage {
             }
             contentProvider.setNamespace((String) sel.getFirstElement());
 
-
         });
 
-        namespaceTable.addDoubleClickListener(new IDoubleClickListener() {
+        treeViewer.setContentProvider(new NamespaceContentProvider());
 
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                IStructuredSelection sel = new IStructuredSelection() {
-
-                    @Override
-                    public boolean isEmpty() {
-                        return false;
-                    }
-
-                    @Override
-                    public List toList() {
-                        return Arrays.asList(contentProvider.getElements(event));
-                    }
-
-                    @Override
-                    public Object[] toArray() {
-
-                        return contentProvider.getElements(event);
-                    }
-
-                    @Override
-                    public int size() {
-                        return contentProvider.getElements(event).length;
-                    }
-
-                    @Override
-                    public Iterator iterator() {
-                        return Arrays.asList(contentProvider.getElements(event)).iterator();
-                    }
-
-                    @Override
-                    public Object getFirstElement() {
-                        return null;
-                    }
-                };
-                parameterTable.setSelection(sel);
-
-            }
-        });
-
-
-        namespaceTable.setContentProvider(new NamespaceContentProvider());
-
-
-        namespaceTable.setComparator(new ViewerComparator() {
+        treeViewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object o1, Object o2) {
                 String n1 = (String) o1;
-                String n2 =	(String) o2;
+                String n2 = (String) o2;
                 return n1.compareTo(n2);
-
 
             }
         });
@@ -164,12 +112,11 @@ public class AddParameterPage extends WizardPage {
         tableWrapper2.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableWrapper2.setLayout(tcl);
 
-        parameterTable = new TableViewer(tableWrapper2, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-        parameterTable.getTable().setHeaderVisible(true);
-        parameterTable.getTable().setLinesVisible(true);
+        tableViewer = new TableViewer(tableWrapper2, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+        tableViewer.getTable().setHeaderVisible(true);
+        tableViewer.getTable().setLinesVisible(true);
 
-
-        TableViewerColumn nameColumn = new TableViewerColumn(parameterTable, SWT.NONE);
+        TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         nameColumn.getColumn().setText(COL_NAME);
         nameColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
@@ -180,14 +127,14 @@ public class AddParameterPage extends WizardPage {
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(COLUMN_WIDTH));
 
-        parameterTable.addSelectionChangedListener(evt -> {
+        tableViewer.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.isEmpty()) {
                 setParameter(new ArrayList<>());
                 return;
             }
             List<ParameterInfo> parameters = new ArrayList<>();
-            for(Object obj: sel.toArray()) {
+            for (Object obj : sel.toArray()) {
                 parameters.add((ParameterInfo) obj);
             }
 
@@ -196,48 +143,45 @@ public class AddParameterPage extends WizardPage {
 
         });
 
-        parameterTable.setContentProvider(contentProvider);
-        parameterTable.setInput(contentProvider);
+        tableViewer.setContentProvider(contentProvider);
+        tableViewer.setInput(contentProvider);
 
         ParameterCatalogue.getInstance().getMetaParameters().forEach(pmtr -> {
 
             for (NamedObjectId alias : pmtr.getAliasList()) {
                 String namespace = alias.getNamespace();
-                if(!namespace.startsWith("/"))
+                if (!namespace.startsWith("/")) {
                     return;
-                if(!parameterInfos.containsKey(namespace)) {
+                }
+                if (!parameterInfos.containsKey(namespace)) {
                     parameterInfos.put(namespace, new ArrayList<>());
                 }
 
                 parameterInfos.get(namespace).add(pmtr);
 
                 String parentns = namespace.substring(0, namespace.lastIndexOf("/"));
-                while(!parentns.isEmpty()) {
-                    if(!parameterInfos.containsKey(parentns)) {
+                while (!parentns.isEmpty()) {
+                    if (!parameterInfos.containsKey(parentns)) {
                         parameterInfos.put(parentns, new ArrayList<>());
                     }
                     parentns = parentns.substring(0, parentns.lastIndexOf("/"));
 
                 }
 
-
-
             }
 
         });
-        namespaceTable.setInput(parameterInfos.keySet());
+        treeViewer.setInput(parameterInfos.keySet());
 
-        parameterTable.setComparator(new ViewerComparator() {
+        tableViewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object o1, Object o2) {
                 ParameterInfo n1 = (ParameterInfo) o1;
-                ParameterInfo n2 =	(ParameterInfo) o2;
+                ParameterInfo n2 = (ParameterInfo) o2;
                 return n1.getQualifiedName().compareTo(n2.getQualifiedName());
-
 
             }
         });
-
 
     }
 
@@ -249,7 +193,6 @@ public class AddParameterPage extends WizardPage {
         return selectedParameters;
     }
 
-
     private class ParameterContentProvider implements IStructuredContentProvider {
 
         private String namespace;
@@ -259,47 +202,52 @@ public class AddParameterPage extends WizardPage {
             // TODO Auto-generated method stub
 
         }
+
         @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             // TODO Auto-generated method stub
 
         }
+
         @Override
         public Object[] getElements(Object inputElement) {
-            if(namespace == null)
+            if (namespace == null) {
                 return new String[0];
+            }
 
             return parameterInfos.get(namespace).toArray();
         }
 
         private void setNamespace(String namespace) {
             this.namespace = namespace;
-            parameterTable.refresh();
+            tableViewer.refresh();
         }
 
     }
 
     private class NamespaceContentProvider implements ITreeContentProvider {
 
-
         @Override
         public void dispose() {
             // TODO Auto-generated method stub
 
         }
+
         @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             // TODO Auto-generated method stub
 
         }
+
         @Override
         public Object[] getElements(Object inputElement) {
 
             List<String> elements = new ArrayList<>();
-            for(String name: parameterInfos.keySet()) {
-                if(getParent(name) == null)
+            for (String name : parameterInfos.keySet()) {
+                if (getParent(name) == null) {
                     elements.add(name);
-            }			
+                }
+            }
 
             return elements.toArray();
         }
@@ -308,8 +256,9 @@ public class AddParameterPage extends WizardPage {
         public Object[] getChildren(Object parentElement) {
             String parent = (String) parentElement;
             List<String> children = new ArrayList<>();
-            for(String name: parameterInfos.keySet()) {
-                if( name != parent && name.startsWith(parent) && name.substring(parent.length()).lastIndexOf("/") == 0) {
+            for (String name : parameterInfos.keySet()) {
+                if (name != parent && name.startsWith(parent)
+                        && name.substring(parent.length()).lastIndexOf("/") == 0) {
                     children.add(name);
                 }
             }
@@ -334,10 +283,8 @@ public class AddParameterPage extends WizardPage {
         @Override
         public boolean hasChildren(Object element) {
             return getChildren(element).length > 0;
-        }	
+        }
 
     }
-
-
 
 }

@@ -1,10 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.wizards;
 
 import java.util.logging.Level;
@@ -19,10 +12,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-/**A wizard for creating new OPI Files.
- * @author Xihui Chen
- *
- */
 public class NewParFileWizard extends Wizard implements INewWizard {
 
     private NewParFileWizardPage parFilePage;
@@ -30,7 +19,6 @@ public class NewParFileWizard extends Wizard implements INewWizard {
     private IStructuredSelection selection;
 
     private IWorkbench workbench;
-
 
     @Override
     public void addPages() {
@@ -49,10 +37,10 @@ public class NewParFileWizard extends Wizard implements INewWizard {
 
         try {
             workbench.getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new FileEditorInput(file), "org.yamcs.studio.alphanumeric.AlphaNumericEditor");//$NON-NLS-1$
+                    new FileEditorInput(file), "org.yamcs.studio.displays.ParamterTableEditor");
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open Par File error",
-                    "Failed to open the newly created Par File. \n" + e.getMessage());
+                    "Failed to open the newly created Parameter Table. \n" + e.getMessage());
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "ParEditor activation error", e);
         }
 
