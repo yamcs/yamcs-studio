@@ -259,6 +259,6 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
         YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.post("/instances/" + yamcsInstance + "?state=restarted", null);
+        return yamcsClient.patch("/instances/" + yamcsInstance + "?state=restarted", null);
     }
 }
