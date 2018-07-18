@@ -15,18 +15,16 @@ public class AddManualEventHandler extends AbstractHandler {
 
     public static final String EVENT_ADD_ACTION = "org.yamcs.studio.eventlog.addEvent.action";
     private static final String EVENT_ADD = "ADD";
-    private static final String EVENT_INSERT = "INSERT";
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
-        EventLogView view = (EventLogView) part;
 
         String action = event.getParameter(EVENT_ADD_ACTION);
 
         if (action.equals(EVENT_ADD)) {
             AddManualEventDialog addManualEventDialog = new AddManualEventDialog(part.getSite().getShell());
-            int result = addManualEventDialog.open();
+            addManualEventDialog.open();
         } else { // action.equals(EVENT_INSERT)
             ISelection sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
@@ -39,7 +37,7 @@ public class AddManualEventHandler extends AbstractHandler {
 
                 AddManualEventDialog addManualEventDialog = new AddManualEventDialog(part.getSite().getShell(),
                         generationTime);
-                int result = addManualEventDialog.open();
+                addManualEventDialog.open();
             }
         }
 

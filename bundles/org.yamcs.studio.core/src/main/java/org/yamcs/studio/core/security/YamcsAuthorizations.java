@@ -53,16 +53,6 @@ public class YamcsAuthorizations {
             return false;
         }
 
-        // Use deprecated api for compatibility with Yamcs v3
-        switch (systemPrivilege) {
-        case ControlCommandQueue:
-            return userInfo.getSystemPrivilegesList().contains("MayControlCommandQueue")
-                    || userInfo.getSystemPrivilegeList().contains("ControlCommandQueue");
-        case Command:
-            return userInfo.getSystemPrivilegesList().contains("MayCommand")
-                    || userInfo.getSystemPrivilegesList().contains("MayCommandPayload")
-                    || userInfo.getSystemPrivilegeList().contains("Command");
-        }
         return userInfo.getSystemPrivilegeList().contains(systemPrivilege);
     }
 

@@ -1,6 +1,7 @@
 package org.yamcs.studio.core.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -10,6 +11,7 @@ import org.yamcs.api.YamcsApiException;
 import org.yamcs.api.rest.BulkRestDataReceiver;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Rest.CreateEventRequest;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
@@ -92,17 +94,19 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
         });
     }
 
-    public CompletableFuture<byte[]> createEvent(String source, int sequenceNumber, String message, long generationTime,
-            long receptionTime, EventSeverity severity) {
+    public CompletableFuture<byte[]> createEvent(String message, Date time, EventSeverity severity) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        String resource = "/archive/" + instance + "/events/";
+        String resource = "/archive/" + instance + "/events2/";
 
-        Event event = Event.newBuilder().setSource(source).setSeqNumber(sequenceNumber)
-                .setMessage(message).setGenerationTime(generationTime)
-                .setReceptionTime(receptionTime).setSeverity(severity).build();
+        CreateEventRequest.Builder requestb = CreateEventRequest.newBuilder();
+        requestb.setMessage(message);
+        requestb.setSeverity(severity.toString());
+        long instant = TimeEncoding.fromDate(time);
+        String isoString = TimeEncoding.toString(instant);
+        requestb.setTime(isoString);
 
-        return yamcsClient.post(resource, event);
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.post(resource, requestb.build());
     }
 
     private static class EventBatchGenerator implements BulkRestDataReceiver {

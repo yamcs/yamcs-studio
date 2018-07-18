@@ -20,21 +20,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.model.EventCatalogue;
-import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
 public class AddManualEventDialog extends TitleAreaDialog {
 
-    static int sequenceNumber = 0;
     Calendar generationTimeValue = null;
 
     private Text messageText;
     private DateTime generationDatePicker;
     private DateTime generationTimePicker;
-    Label userLbl = null;
-    Text userText = null;
     Combo severityCombo;
 
     protected AddManualEventDialog(Shell shell) {
@@ -100,22 +95,6 @@ public class AddManualEventDialog extends TitleAreaDialog {
         }
 
         lbl = new Label(container, SWT.NONE);
-        lbl.setText("Source:");
-        lbl = new Label(container, SWT.NONE);
-        lbl.setText("Manual");
-
-        lbl = new Label(container, SWT.NONE);
-        lbl.setText("User:");
-        if (YamcsAuthorizations.getInstance().isAuthorizationEnabled()) {
-            userLbl = new Label(container, SWT.NONE);
-            userLbl.setText(YamcsAuthorizations.getInstance().getUsername());
-        } else {
-            userText = new Text(container, SWT.SINGLE);
-            userText.setLayoutData(new GridData(GridData.FILL_BOTH));
-            userText.setText("");
-        }
-
-        lbl = new Label(container, SWT.NONE);
         lbl.setText("Message:");
         messageText = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
         GridData data = new GridData(GridData.FILL_BOTH);
@@ -127,8 +106,6 @@ public class AddManualEventDialog extends TitleAreaDialog {
         try {
             gc.setFont(messageText.getFont());
             FontMetrics fm = gc.getFontMetrics();
-
-            /* Set the height to 5 rows of characters */
             data.heightHint = 5 * fm.getHeight();
         } finally {
             gc.dispose();
@@ -142,9 +119,9 @@ public class AddManualEventDialog extends TitleAreaDialog {
         severityCombo.add(EventSeverity.WARNING.name(), EventSeverity.WARNING_VALUE);
         severityCombo.add(EventSeverity.ERROR.name(), EventSeverity.ERROR_VALUE);
         severityCombo.add(EventSeverity.WATCH.name(), EventSeverity.WATCH_VALUE);
-        severityCombo.add(EventSeverity.DISTRESS.name(), EventSeverity.DISTRESS_VALUE -1 ); //TODO use index, 
-        severityCombo.add(EventSeverity.CRITICAL.name(), EventSeverity.CRITICAL_VALUE -1);  //the value skips 4  
-        severityCombo.add(EventSeverity.SEVERE.name(), EventSeverity.SEVERE_VALUE -1);
+        severityCombo.add(EventSeverity.DISTRESS.name(), EventSeverity.DISTRESS_VALUE - 1); // TODO use index,
+        severityCombo.add(EventSeverity.CRITICAL.name(), EventSeverity.CRITICAL_VALUE - 1); // the value skips 4
+        severityCombo.add(EventSeverity.SEVERE.name(), EventSeverity.SEVERE_VALUE - 1);
         severityCombo.select(EventSeverity.INFO_VALUE);
 
         return container;
@@ -152,51 +129,27 @@ public class AddManualEventDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        String source = "Manual";
-        if (userText != null && !userText.getText().isEmpty()) {
-            source += " :: " + userText.getText();
-        } else if (userLbl != null) {
-            source += " :: " + userLbl.getText();
-        }
         String message = messageText.getText();
-        long generationTime = TimeEncoding
-                .fromCalendar(RCPUtils.toCalendar(generationDatePicker, generationTimePicker));
-        long receptionTime = TimeCatalogue.getInstance().getMissionTime();
+        Calendar cal = RCPUtils.toCalendar(generationDatePicker, generationTimePicker);
         EventSeverity severity = EventSeverity.internalGetValueMap()
-                .findValueByNumber(severityCombo.getSelectionIndex() > 3?
-                        severityCombo.getSelectionIndex() +1 :severityCombo.getSelectionIndex()); 
+                .findValueByNumber(severityCombo.getSelectionIndex() > 3 ? severityCombo.getSelectionIndex() + 1
+                        : severityCombo.getSelectionIndex());
 
         EventCatalogue catalogue = EventCatalogue.getInstance();
-        try {
-            catalogue.createEvent(source, sequenceNumber++, message, generationTime, receptionTime, severity)
-                    .whenComplete((data, exc) -> {
-                        if (exc == null) {
-                            Display.getDefault().asyncExec(() -> {
-                                // MessageBox m = new MessageBox(getShell(),
-                                // SWT.OK | SWT.ICON_INFORMATION | SWT.APPLICATION_MODAL);
-                                // m.setText("Ok");
-                                // m.setMessage("Added the manual event successfully.\n" + new String(data));
-                                // m.open();
-                                close();
-                            });
-                        } else {
-                            Display.getDefault().asyncExec(() -> {
-                                MessageBox m = new MessageBox(getShell(),
-                                        SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
-                                m.setText("Error");
-                                m.setMessage(exc.getMessage());
-                                m.open();
-                            });
-                        }
-                    });
-        } catch (Exception e) {
-            Display.getDefault().asyncExec(() -> {
-                MessageBox m = new MessageBox(getShell(), SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
-                m.setText("Error");
-                m.setMessage("Error: " + e.getMessage());
-                m.open();
-            });
-        }
+        catalogue.createEvent(message, cal.getTime(), severity)
+                .whenComplete((data, exc) -> {
+                    if (exc == null) {
+                        Display.getDefault().asyncExec(() -> close());
+                    } else {
+                        Display.getDefault().asyncExec(() -> {
+                            MessageBox m = new MessageBox(getShell(),
+                                    SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
+                            m.setText("Error");
+                            m.setMessage(exc.getMessage());
+                            m.open();
+                        });
+                    }
+                });
 
     }
 

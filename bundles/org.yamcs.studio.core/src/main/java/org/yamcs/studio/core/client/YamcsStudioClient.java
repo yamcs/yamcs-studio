@@ -107,7 +107,6 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(application);
         wsclient.enableReconnection(true);
-        wsclient.enableLegacyURLFallback(true); // Provides compatiblity with old Yamcs instances
         wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
 
         FutureTask<YamcsConnectionProperties> future = new FutureTask<>(() -> {
