@@ -99,7 +99,10 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         return isConnected(info)
                 && info.parameter != null
                 && info.parameter.hasDataSource()
-                && info.parameter.getDataSource() == DataSourceType.LOCAL;
+                && (info.parameter.getDataSource() == DataSourceType.LOCAL
+                        || info.parameter.getDataSource() == DataSourceType.EXTERNAL1
+                        || info.parameter.getDataSource() == DataSourceType.EXTERNAL2
+                        || info.parameter.getDataSource() == DataSourceType.EXTERNAL3);
     }
 
     @Override
