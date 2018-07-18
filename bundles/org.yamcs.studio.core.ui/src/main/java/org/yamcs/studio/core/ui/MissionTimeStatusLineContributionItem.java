@@ -35,11 +35,10 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
 
     @Override
     public void processTime(long missionTime) {
-        Display display = Display.getDefault();
-        if (display.isDisposed()) {
+        if (isDisposed()) {
             return;
         }
-        display.asyncExec(() -> {
+        Display.getDefault().asyncExec(() -> {
             if (missionTime == TimeEncoding.INVALID_INSTANT) {
                 setText(DEFAULT_TEXT);
             } else {

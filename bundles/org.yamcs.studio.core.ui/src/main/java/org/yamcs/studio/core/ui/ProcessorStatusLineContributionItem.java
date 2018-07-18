@@ -134,9 +134,9 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
 
     @Override
     public void onYamcsDisconnected() {
-        Display display = Display.getDefault();
-        if (!display.isDisposed()) {
-            display.asyncExec(() -> updateText(null));
+        if (isDisposed()) {
+            return;
         }
+        Display.getDefault().asyncExec(() -> updateText(null));
     }
 }

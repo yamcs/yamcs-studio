@@ -24,9 +24,9 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
 
     private static final Logger log = Logger.getLogger(PVCatalogue.class.getName());
 
-    // Store pvreaders while connection is not established
+    // Store PV channel handlers while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
-    private Map<NamedObjectId, ParameterChannelHandler> pvReadersById = new LinkedHashMap<>();
+    private Map<NamedObjectId, ParameterChannelHandler> channelHandlersById = new LinkedHashMap<>();
 
     public static PVCatalogue getInstance() {
         return Activator.getDefault().getPVCatalogue();
@@ -58,21 +58,21 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
         reportConnectionState();
     }
 
-    public synchronized void register(ParameterChannelHandler pvReader) {
-        pvReadersById.put(pvReader.getId(), pvReader);
+    public synchronized void register(ParameterChannelHandler channelHandler) {
+        channelHandlersById.put(channelHandler.getId(), channelHandler);
         // Report current connection state
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
-        ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(pvReader.getId());
-        pvReader.processConnectionInfo(new PVConnectionInfo(connected, p));
+        ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(channelHandler.getId());
+        channelHandler.processConnectionInfo(new PVConnectionInfo(connected, p));
         // Register (pending) websocket request
-        NamedObjectList idList = toNamedObjectList(pvReader.getId());
+        NamedObjectList idList = toNamedObjectList(channelHandler.getId());
         ParameterCatalogue.getInstance().subscribeParameters(idList);
     }
 
-    public synchronized void unregister(ParameterChannelHandler pvReader) {
-        pvReadersById.remove(pvReader.getId());
-        if (pvReader.isConnected()) {
-            NamedObjectList idList = toNamedObjectList(pvReader.getId());
+    public synchronized void unregister(ParameterChannelHandler channelHandler) {
+        channelHandlersById.remove(channelHandler.getId());
+        if (channelHandler.isConnected()) {
+            NamedObjectList idList = toNamedObjectList(channelHandler.getId());
             ParameterCatalogue.getInstance().unsubscribeParameters(idList);
         }
     }
@@ -83,34 +83,34 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
 
     @Override
     public void mdbUpdated() {
-        pvReadersById.forEach((id, pvReader) -> {
+        channelHandlersById.forEach((id, channelHandler) -> {
             ParameterInfo parameter = ParameterCatalogue.getInstance().getParameterInfo(id);
             if (log.isLoggable(Level.FINER)) {
                 log.finer(String.format("Signaling %s --> %s", id, parameter));
             }
-            pvReader.processConnectionInfo(new PVConnectionInfo(true, parameter));
+            channelHandler.processConnectionInfo(new PVConnectionInfo(true, parameter));
         });
     }
 
     @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
-            ParameterChannelHandler pvReader = pvReadersById.get(pval.getId());
-            if (pvReader != null) {
+            ParameterChannelHandler channelHandler = channelHandlersById.get(pval.getId());
+            if (channelHandler != null) {
                 if (log.isLoggable(Level.FINER)) {
-                    log.finer(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(),
+                    log.finer(String.format("Request to update channel %s to %s", channelHandler.getId().getName(),
                             pval.getEngValue()));
                 }
-                pvReader.processParameterValue(pval);
+                channelHandler.processParameterValue(pval);
             }
         }
     }
 
     private void reportConnectionState() {
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
-        pvReadersById.forEach((id, pvReader) -> {
+        channelHandlersById.forEach((id, channelHandler) -> {
             ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
-            pvReader.processConnectionInfo(new PVConnectionInfo(connected, p));
+            channelHandler.processConnectionInfo(new PVConnectionInfo(connected, p));
         });
     }
 }

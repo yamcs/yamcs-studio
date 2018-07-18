@@ -159,6 +159,10 @@ public class StatusLineContributionItem extends ContributionItem {
         }
     }
 
+    public boolean isDisposed() {
+        return label == null || label.isDisposed();
+    }
+
     /**
      * An accessor for the current location of this status line contribution item -- relative to the display.
      *

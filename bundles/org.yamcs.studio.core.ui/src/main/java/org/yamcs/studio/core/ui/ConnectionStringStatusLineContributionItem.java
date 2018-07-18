@@ -73,11 +73,10 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
     @Override
     public void onYamcsConnectionFailed(Throwable t) {
-        Display display = Display.getDefault();
-        if (display.isDisposed()) {
+        if (isDisposed()) {
             return;
         }
-        display.asyncExec(() -> {
+        Display.getDefault().asyncExec(() -> {
             setErrorText(null, null);
             setImage(null);
             setText("Offline");
