@@ -18,7 +18,7 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
-import org.yamcs.studio.css.core.pvmanager.YamcsPVReader;
+import org.yamcs.studio.css.core.pvmanager.ParameterChannelHandler;
 
 public class PVCatalogue implements YamcsConnectionListener, InstanceListener, ParameterListener {
 
@@ -26,7 +26,7 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
 
     // Store pvreaders while connection is not established
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
-    private Map<NamedObjectId, YamcsPVReader> pvReadersById = new LinkedHashMap<>();
+    private Map<NamedObjectId, ParameterChannelHandler> pvReadersById = new LinkedHashMap<>();
 
     public static PVCatalogue getInstance() {
         return Activator.getDefault().getPVCatalogue();
@@ -58,21 +58,27 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
         reportConnectionState();
     }
 
-    public synchronized void register(YamcsPVReader pvReader) {
+    public synchronized void register(ParameterChannelHandler pvReader) {
         pvReadersById.put(pvReader.getId(), pvReader);
         // Report current connection state
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
         ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(pvReader.getId());
         pvReader.processConnectionInfo(new PVConnectionInfo(connected, p));
         // Register (pending) websocket request
-        NamedObjectList idList = pvReader.toNamedObjectList();
+        NamedObjectList idList = toNamedObjectList(pvReader.getId());
         ParameterCatalogue.getInstance().subscribeParameters(idList);
     }
 
-    public synchronized void unregister(YamcsPVReader pvReader) {
+    public synchronized void unregister(ParameterChannelHandler pvReader) {
         pvReadersById.remove(pvReader.getId());
-        NamedObjectList idList = pvReader.toNamedObjectList();
-        ParameterCatalogue.getInstance().unsubscribeParameters(idList);
+        if (pvReader.isConnected()) {
+            NamedObjectList idList = toNamedObjectList(pvReader.getId());
+            ParameterCatalogue.getInstance().unsubscribeParameters(idList);
+        }
+    }
+
+    private NamedObjectList toNamedObjectList(NamedObjectId id) {
+        return NamedObjectList.newBuilder().addList(id).build();
     }
 
     @Override
@@ -89,7 +95,7 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
     @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
-            YamcsPVReader pvReader = pvReadersById.get(pval.getId());
+            ParameterChannelHandler pvReader = pvReadersById.get(pval.getId());
             if (pvReader != null) {
                 if (log.isLoggable(Level.FINER)) {
                     log.finer(String.format("Request to update pvreader %s to %s", pvReader.getId().getName(),

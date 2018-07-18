@@ -30,7 +30,7 @@ import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
  * Datasource level. Then we wouldn't have to split out the software parameters under a different scheme.
  */
 public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsPVReader, YamcsConnectionListener, InstanceListener {
+        implements YamcsConnectionListener, InstanceListener {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
@@ -44,7 +44,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
-    @Override
     public NamedObjectId getId() {
         return id;
     }
@@ -158,7 +157,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     /**
      * Process a parameter value update to be sent to the display
      */
-    @Override
     public void processParameterValue(ParameterValue pval) {
         if (log.isLoggable(Level.FINEST)) {
             log.finest(String.format("Incoming value %s", pval));
@@ -172,7 +170,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         return TYPE_ADAPTER;
     }
 
-    @Override
     public void processConnectionInfo(PVConnectionInfo info) {
         if (log.isLoggable(Level.FINEST)) {
             log.finest(String.format("Processing %s", info));
@@ -182,7 +179,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         processConnection(info);
     }
 
-    @Override
     public void reportException(Exception e) { // Expose protected method
         reportExceptionToAllReadersAndWriters(e);
     }
