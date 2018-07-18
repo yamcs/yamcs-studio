@@ -10,7 +10,7 @@ import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.utils.TimeEncoding;
 
 public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
@@ -70,7 +70,7 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
 
     @Override
     public void onYamcsConnected() {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("time", "subscribe"), this);
         distributeTime(TimeEncoding.INVALID_INSTANT);
     }

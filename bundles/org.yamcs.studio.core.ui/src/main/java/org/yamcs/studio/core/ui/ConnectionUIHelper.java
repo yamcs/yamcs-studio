@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class ConnectionUIHelper implements YamcsConnectionListener {
@@ -76,7 +76,7 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
         @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
-            YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+            YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             try {
                 Future<YamcsConnectionProperties> future = yamcsClient.connect(yprops);
                 while (!monitor.isCanceled() && !future.isDone()) {

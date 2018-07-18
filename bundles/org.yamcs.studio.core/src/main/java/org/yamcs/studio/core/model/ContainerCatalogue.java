@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import org.yamcs.protobuf.Mdb.ContainerInfo;
 import org.yamcs.protobuf.Rest.ListContainerInfoResponse;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -78,7 +78,7 @@ public class ContainerCatalogue implements Catalogue {
 
     private void loadContainers() {
         log.fine("Fetching available Containers");
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         yamcsClient.get("/mdb/" + instance + "/containers", null).whenComplete((data, exc) -> {
             try {

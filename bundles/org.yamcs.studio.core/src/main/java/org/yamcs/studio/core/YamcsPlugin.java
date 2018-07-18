@@ -12,7 +12,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 import org.yamcs.YamcsException;
 import org.yamcs.api.ws.ConnectionListener;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.Catalogue;
@@ -33,7 +33,7 @@ public class YamcsPlugin extends Plugin {
 
     private static YamcsPlugin plugin;
 
-    private YamcsClient yamcsClient;
+    private YamcsStudioClient yamcsClient;
     private Set<YamcsConnectionListener> connectionListeners = new CopyOnWriteArraySet<>();
     private Map<Class<? extends Catalogue>, Catalogue> catalogues = new HashMap<>();
 
@@ -44,7 +44,7 @@ public class YamcsPlugin extends Plugin {
 
         TimeEncoding.setUp();
 
-        yamcsClient = new YamcsClient(getProductString(), true);
+        yamcsClient = new YamcsStudioClient(getProductString(), true);
         yamcsClient.addConnectionListener(new UIConnectionListener());
 
         ManagementCatalogue managementCatalogue = new ManagementCatalogue();
@@ -99,7 +99,7 @@ public class YamcsPlugin extends Plugin {
         return plugin;
     }
 
-    public static YamcsClient getYamcsClient() {
+    public static YamcsStudioClient getYamcsClient() {
         return plugin.yamcsClient;
     }
 

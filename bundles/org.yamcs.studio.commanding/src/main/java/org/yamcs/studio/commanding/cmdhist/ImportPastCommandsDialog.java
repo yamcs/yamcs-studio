@@ -20,7 +20,7 @@ import org.yamcs.api.YamcsApiException;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
@@ -120,7 +120,7 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         if (yamcsClient == null) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not import commands\n",
                     "Disconnected from Yamcs");

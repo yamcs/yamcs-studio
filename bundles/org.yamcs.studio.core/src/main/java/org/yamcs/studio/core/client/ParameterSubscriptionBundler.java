@@ -25,12 +25,12 @@ public class ParameterSubscriptionBundler implements Runnable {
 
     private static final Logger log = Logger.getLogger(ParameterSubscriptionBundler.class.getName());
 
-    private YamcsClient yamcsClient;
+    private YamcsStudioClient yamcsClient;
 
     // Order all subscribe/unsubscribe events
     private Queue<ParameterWebSocketRequest> pendingMessages = new ConcurrentLinkedQueue<>();
 
-    public ParameterSubscriptionBundler(YamcsClient yamcsClient) {
+    public ParameterSubscriptionBundler(YamcsStudioClient yamcsClient) {
         this.yamcsClient = yamcsClient;
     }
 

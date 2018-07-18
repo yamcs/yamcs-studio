@@ -14,7 +14,7 @@ import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -37,7 +37,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
 
     @Override
     public void onYamcsConnected() {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("events", "subscribe"), this);
     }
 
@@ -64,7 +64,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> fetchLatestEvents(String instance) {
         String resource = "/archive/" + instance + "/events";
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get(resource, null);
     }
 
@@ -83,7 +83,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
         } else if (stop != TimeEncoding.INVALID_INSTANT) {
             resource += "?stop=" + stop;
         }
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         EventBatchGenerator batchGenerator = new EventBatchGenerator(listener);
         return yamcsClient.streamGet(resource, null, batchGenerator).whenComplete((data, exc) -> {
             if (!batchGenerator.events.isEmpty()) {
@@ -101,8 +101,8 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
                 .setMessage(message).setGenerationTime(generationTime)
                 .setReceptionTime(receptionTime).setSeverity(severity).build();
 
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.post(resource, event);
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
     }
 
     private static class EventBatchGenerator implements BulkRestDataReceiver {

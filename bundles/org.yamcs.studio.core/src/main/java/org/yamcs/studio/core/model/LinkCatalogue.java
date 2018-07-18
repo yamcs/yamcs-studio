@@ -17,7 +17,7 @@ import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.LinkEvent;
 import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 
 /**
  * Provides access to aggregated state on yamcs data link information.
@@ -39,7 +39,7 @@ public class LinkCatalogue implements Catalogue, WebSocketClientCallback {
 
     @Override
     public void onYamcsConnected() {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("links", "subscribe"), this);
     }
 
@@ -105,13 +105,13 @@ public class LinkCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public CompletableFuture<byte[]> enableLink(String instance, String name) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("enabled").build();
         return yamcsClient.patch("/links/" + instance + "/" + name, req);
     }
 
     public CompletableFuture<byte[]> disableLink(String instance, String name) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         EditLinkRequest req = EditLinkRequest.newBuilder().setState("disabled").build();
         return yamcsClient.patch("/links/" + instance + "/" + name, req);
     }

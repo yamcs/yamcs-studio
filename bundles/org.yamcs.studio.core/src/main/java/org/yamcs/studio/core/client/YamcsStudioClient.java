@@ -43,9 +43,9 @@ import io.netty.handler.codec.http.HttpMethod;
  * TODO currently reconnection can only be cancelled on initial connect. We should also make it cancellable (via Job UI)
  * on auto reconnect.
  */
-public class YamcsClient implements WebSocketClientCallback {
+public class YamcsStudioClient implements WebSocketClientCallback {
 
-    private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
+    private static final Logger log = Logger.getLogger(YamcsStudioClient.class.getName());
 
     // WebSocketClient max frame payload length, otherwise we get "frame length 65535 exceeded" error for displays with
     // many parameters
@@ -74,7 +74,7 @@ public class YamcsClient implements WebSocketClientCallback {
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
     private Map<IProgressMonitor, Future<?>> cancellableJobs = new ConcurrentHashMap<>();
 
-    public YamcsClient(String application, boolean retry) {
+    public YamcsStudioClient(String application, boolean retry) {
         this.application = application;
         this.retry = retry;
 

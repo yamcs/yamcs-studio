@@ -22,7 +22,7 @@ import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.ParameterWebSocketRequest;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -100,7 +100,7 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
 
     private void loadMetaParameters() {
         log.fine("Fetching available parameters");
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         yamcsClient.get("/mdb/" + instance + "/parameters?details", null).whenComplete((data, exc) -> {
             if (exc == null) {
@@ -115,25 +115,25 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public CompletableFuture<byte[]> requestParameterDetail(String qualifiedName) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null);
     }
 
     public CompletableFuture<byte[]> fetchParameterValue(String instance, String qualifiedName) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null);
     }
 
     public CompletableFuture<byte[]> setParameter(String processor, NamedObjectId id, Value value) {
         String pResource = toURISegments(id);
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value);
     }
 
     public void subscribeParameters(NamedObjectList idList) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         if (yamcsClient.isConnected()) {
             yamcsClient.subscribe(new ParameterWebSocketRequest("subscribe", idList), this);
         }
@@ -150,7 +150,7 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public void unsubscribeParameters(NamedObjectList idList) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         if (yamcsClient.isConnected()) {
             yamcsClient.sendWebSocketMessage(new ParameterWebSocketRequest("unsubscribe", idList));
         }

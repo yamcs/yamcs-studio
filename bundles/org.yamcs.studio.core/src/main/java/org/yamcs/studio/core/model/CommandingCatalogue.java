@@ -31,7 +31,7 @@ import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -77,7 +77,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
 
     @Override
     public void onYamcsConnected() {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("cmdhistory", "subscribe"), this);
         yamcsClient.subscribe(new WebSocketRequest("cqueues", "subscribe"), this);
         initialiseState();
@@ -127,7 +127,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
 
     private void initialiseState() {
         log.fine("Fetching available commands");
-        YamcsClient restClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient restClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         restClient.get("/mdb/" + instance + "/commands?details", null).whenComplete((data, exc) -> {
             try {
@@ -155,20 +155,20 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> sendCommand(String processor, String commandName, IssueCommandRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.post("/processors/" + instance + "/" + processor + "/commands" + commandName, request);
     }
 
     public CompletableFuture<byte[]> editQueue(CommandQueueInfo queue, EditCommandQueueRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.patch(
                 "/processors/" + instance + "/" + queue.getProcessorName() + "/cqueues/" + queue.getName(), request);
     }
 
     public CompletableFuture<byte[]> editQueuedCommand(CommandQueueEntry entry, EditCommandQueueEntryRequest request) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.patch(
                 "/processors/" + instance + "/" + entry.getProcessorName() + "/cqueues/" + entry.getQueueName()
                         + "/entries/" + entry.getUuid(),
@@ -196,7 +196,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> updateCommandComment(String processor, CommandId cmdId, String newComment) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
 
         KeyValue keyValue = KeyValue.newBuilder().setKey("Comment").setValue(newComment).build();
         UpdateCommandHistoryRequest request = UpdateCommandHistoryRequest.newBuilder().setCmdId(cmdId)

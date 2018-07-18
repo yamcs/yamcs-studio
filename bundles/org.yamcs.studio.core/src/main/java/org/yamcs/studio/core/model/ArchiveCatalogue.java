@@ -9,7 +9,7 @@ import org.yamcs.protobuf.Rest.EditTagRequest;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.URLBuilder;
-import org.yamcs.studio.core.client.YamcsClient;
+import org.yamcs.studio.core.client.YamcsStudioClient;
 
 /**
  * Groups generic archive operations (index, tags).
@@ -40,7 +40,7 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.streamGet(urlb.toString(), null, receiver);
     }
 
@@ -53,24 +53,24 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.streamGet(urlb.toString(), null, receiver);
     }
 
     public CompletableFuture<byte[]> createTag(CreateTagRequest request) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.post("/archive/" + instance + "/tags", request);
     }
 
     public CompletableFuture<byte[]> editTag(long tagTime, int tagId, EditTagRequest request) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request);
     }
 
     public CompletableFuture<byte[]> deleteTag(long tagTime, int tagId) {
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         return yamcsClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null);
     }
@@ -84,7 +84,7 @@ public class ArchiveCatalogue implements Catalogue {
         if (interval.hasStop())
             urlb.setParam("stop", interval.getStopUTC());
 
-        YamcsClient yamcsClient = YamcsPlugin.getYamcsClient();
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get(urlb.toString(), null);
     }
 }
