@@ -24,13 +24,14 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
+
 /**
  * Base figure for a widget based on {@link AbstractBoolWidgetModel}.
  *
  * @author Xihui Chen
  *
  */
-public class AbstractBoolFigure extends Figure implements Introspectable{
+public class AbstractBoolFigure extends Figure implements Introspectable {
 
     public enum TotalBits {
         BITS_16,
@@ -38,7 +39,7 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
         BITS_64
     }
 
-    public enum BoolLabelPosition{
+    public enum BoolLabelPosition {
 
         DEFAULT("Default"),
         TOP("Top"),
@@ -51,16 +52,18 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
         BOTTOM_LEFT("Bottom Left"),
         BOTTOM_RIGHT("Bottom Right");
 
-        public static String[] stringValues(){
+        public static String[] stringValues() {
             String[] result = new String[values().length];
-            int i=0;
-            for(BoolLabelPosition h : values()){
+            int i = 0;
+            for (BoolLabelPosition h : values()) {
                 result[i++] = h.toString();
             }
             return result;
         }
+
         String descripion;
-        BoolLabelPosition(String description){
+
+        BoolLabelPosition(String description) {
             this.descripion = description;
         }
 
@@ -92,13 +95,12 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
             CustomMediaFactory.COLOR_GREEN);
 
     protected Color offColor = CustomMediaFactory.getInstance().getColor(
-            new RGB(0,128,0));
+            new RGB(0, 128, 0));
 
     private Point labelLocation;
 
-
     protected AbstractBoolFigure() {
-        boolLabel = new Label(offLabel){
+        boolLabel = new Label(offLabel) {
             @Override
             public boolean containsPoint(int x, int y) {
                 return false;
@@ -108,54 +110,54 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
     }
 
     protected void calculateLabelLocation(Point defaultLocation) {
-        if(boolLabelPosition == BoolLabelPosition.DEFAULT){
-            labelLocation =  defaultLocation;
+        if (boolLabelPosition == BoolLabelPosition.DEFAULT) {
+            labelLocation = defaultLocation;
             return;
         }
         Rectangle textArea = getClientArea();
         Dimension textSize = Draw2dSingletonUtil.getTextUtilities().getTextExtents(
                 boolLabel.getText(), getFont());
-            int x=0;
-            if(textArea.width > textSize.width){
-                switch (boolLabelPosition) {
-                case CENTER:
-                case TOP:
-                case BOTTOM:
-                    x = (textArea.width - textSize.width)/2;
-                    break;
-                case RIGHT:
-                case TOP_RIGHT:
-                case BOTTOM_RIGHT:
-                    x = textArea.width - textSize.width;
-                    break;
-                default:
-                    break;
-                }
+        int x = 0;
+        if (textArea.width > textSize.width) {
+            switch (boolLabelPosition) {
+            case CENTER:
+            case TOP:
+            case BOTTOM:
+                x = (textArea.width - textSize.width) / 2;
+                break;
+            case RIGHT:
+            case TOP_RIGHT:
+            case BOTTOM_RIGHT:
+                x = textArea.width - textSize.width;
+                break;
+            default:
+                break;
             }
+        }
 
-            int y=0;
-            if(textArea.height > textSize.height){
-                switch (boolLabelPosition) {
-                case CENTER:
-                case LEFT:
-                case RIGHT:
-                    y = (textArea.height - textSize.height)/2;
-                    break;
-                case BOTTOM:
-                case BOTTOM_LEFT:
-                case BOTTOM_RIGHT:
-                    y =textArea.height - textSize.height;
-                    break;
-                default:
-                    break;
-                }
+        int y = 0;
+        if (textArea.height > textSize.height) {
+            switch (boolLabelPosition) {
+            case CENTER:
+            case LEFT:
+            case RIGHT:
+                y = (textArea.height - textSize.height) / 2;
+                break;
+            case BOTTOM:
+            case BOTTOM_LEFT:
+            case BOTTOM_RIGHT:
+                y = textArea.height - textSize.height;
+                break;
+            default:
+                break;
             }
-            if(useLocalCoordinates())
-                labelLocation = new Point(x, y);
-            else
-                labelLocation = new Point(x + textArea.x, y + textArea.y);
+        }
+        if (useLocalCoordinates()) {
+            labelLocation = new Point(x, y);
+        } else {
+            labelLocation = new Point(x + textArea.x, y + textArea.y);
+        }
     }
-
 
     /**
      * @return the bit
@@ -171,17 +173,19 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
         return booleanValue;
     }
 
-    protected Point getLabelLocation(final int x, final int y){
+    protected Point getLabelLocation(final int x, final int y) {
         return getLabelLocation(new Point(x, y));
     }
 
     /**
-     * @param defaultLocation The default location.
+     * @param defaultLocation
+     *            The default location.
      * @return the location of the boolean label
      */
-    protected Point getLabelLocation(Point defaultLocation){
-        if(labelLocation == null)
+    protected Point getLabelLocation(Point defaultLocation) {
+        if (labelLocation == null) {
             calculateLabelLocation(defaultLocation);
+        }
         return labelLocation;
     }
 
@@ -195,8 +199,6 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
     public Color getOffColor() {
         return offColor;
     }
-
-
 
     /**
      * @return the offLabel
@@ -245,19 +247,21 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
     }
 
     /**
-     * @param bit the bit to set
+     * @param bit
+     *            the bit to set
      */
     public void setBit(int bit) {
-        if(this.bit == bit)
+        if (this.bit == bit) {
             return;
+        }
         this.bit = bit;
         updateBoolValue();
     }
 
-
-    public void setBooleanValue(boolean value){
-        if(this.booleanValue == value)
+    public void setBooleanValue(boolean value) {
+        if (this.booleanValue == value) {
             return;
+        }
         this.booleanValue = value;
         updateValue();
     }
@@ -283,71 +287,78 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
     }
 
     /**
-     * @param offColor the offColor to set
+     * @param offColor
+     *            the offColor to set
      */
     public void setOffColor(Color offColor) {
-        if(this.offColor != null && this.offColor.equals(offColor))
+        if (this.offColor != null && this.offColor.equals(offColor)) {
             return;
+        }
         this.offColor = offColor;
         repaint();
     }
 
     /**
-     * @param offLabel the offLabel to set
+     * @param offLabel
+     *            the offLabel to set
      */
     public void setOffLabel(String offLabel) {
-        if(this.offLabel != null && this.offLabel.equals(offLabel))
+        if (this.offLabel != null && this.offLabel.equals(offLabel)) {
             return;
+        }
         this.offLabel = offLabel;
-        if(!booleanValue)
+        if (!booleanValue) {
             boolLabel.setText(offLabel);
+        }
 
     }
 
     /**
-     * @param onColor the onColor to set
+     * @param onColor
+     *            the onColor to set
      */
     public void setOnColor(Color onColor) {
-        if(this.onColor != null && this.onColor.equals(onColor))
+        if (this.onColor != null && this.onColor.equals(onColor)) {
             return;
+        }
         this.onColor = onColor;
         repaint();
     }
 
     /**
-     * @param onLabel the onLabel to set
+     * @param onLabel
+     *            the onLabel to set
      */
     public void setOnLabel(String onLabel) {
-        if(this.onLabel != null && this.onLabel.equals(onLabel))
+        if (this.onLabel != null && this.onLabel.equals(onLabel)) {
             return;
+        }
         this.onLabel = onLabel;
-        if(booleanValue)
+        if (booleanValue) {
             boolLabel.setText(onLabel);
+        }
     }
 
     /**
-     * @param showBooleanLabel the showBooleanLabel to set
+     * @param showBooleanLabel
+     *            the showBooleanLabel to set
      */
     public void setShowBooleanLabel(boolean showBooleanLabel) {
-        if(this.showBooleanLabel == showBooleanLabel)
+        if (this.showBooleanLabel == showBooleanLabel) {
             return;
+        }
         this.showBooleanLabel = showBooleanLabel;
         boolLabel.setVisible(showBooleanLabel);
     }
 
-    /**
-     * @param value the value to set
-     */
     public void setValue(double value) {
-        setValue((long)value);
+        setValue((long) value);
     }
 
-    /**
-     * @param value the value to set
-     */
     public void setValue(long value) {
-        if(this.value == value)
+        if (this.value == value) {
             return;
+        }
         this.value = value;
         updateBoolValue();
         revalidate();
@@ -355,46 +366,46 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
     }
 
     /**
-     * update the boolValue from value and bit.
-     * All the boolValue based behavior changes should be implemented here by inheritance.
+     * update the boolValue from value and bit. All the boolValue based behavior changes should be implemented here by
+     * inheritance.
      */
     protected void updateBoolValue() {
-        //get boolValue
-        if(bit < 0)
+        // get boolValue
+        if (bit < 0) {
             booleanValue = (this.value != 0);
-        else if(bit >=0) {
-            booleanValue = ((value>>bit)&1L) >0;
+        } else if (bit >= 0) {
+            booleanValue = ((value >> bit) & 1L) > 0;
         }
-        //change boolLabel text
-        if(booleanValue)
+        // change boolLabel text
+        if (booleanValue) {
             boolLabel.setText(onLabel);
-        else
+        } else {
             boolLabel.setText(offLabel);
+        }
     }
 
     /**
      * update the value from boolValue
      */
     @SuppressWarnings("nls")
-    protected void updateValue(){
-        //get boolValue
-        if(bit < 0)
+    protected void updateValue() {
+        // get boolValue
+        if (bit < 0) {
             setValue(booleanValue ? 1 : 0);
-        else if(bit >=0) {
-            if(bit >= 64) {
+        } else if (bit >= 0) {
+            if (bit >= 64) {
                 // Log with exception to obtain call stack
                 Activator.getLogger().log(Level.WARNING, "Bit " + bit + "can not exceed 63.", new Exception());
-            }
-            else {
+            } else {
                 switch (totalBits) {
                 case BITS_16:
-                    setValue(booleanValue? value | ((short)1<<bit) : value & ~((short)1<<bit));
-                break;
+                    setValue(booleanValue ? value | ((short) 1 << bit) : value & ~((short) 1 << bit));
+                    break;
                 case BITS_32:
-                    setValue(booleanValue? value | ((int)1<<bit) : value & ~((int)1<<bit));
-                break;
+                    setValue(booleanValue ? value | ((int) 1 << bit) : value & ~((int) 1 << bit));
+                    break;
                 default:
-                    setValue(booleanValue? value | (1L<<bit) : value & ~(1L<<bit));
+                    setValue(booleanValue ? value | (1L << bit) : value & ~(1L << bit));
                     break;
                 }
             }
@@ -406,15 +417,15 @@ public class AbstractBoolFigure extends Figure implements Introspectable{
     }
 
     /**
-     * @param totalBits number of total bits
+     * @param totalBits
+     *            number of total bits
      */
     public void setTotalBits(TotalBits totalBits) {
         this.totalBits = totalBits;
     }
 
-
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
-
 }
