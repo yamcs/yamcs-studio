@@ -340,7 +340,9 @@ public class YamcsStudioClient implements WebSocketClientCallback {
             } catch (CancellationException | InterruptedException e) {
                 return Status.CANCEL_STATUS;
             } catch (ExecutionException e) {
-                log.log(Level.SEVERE, "Exception while executing job '" + jobName + "': " + e.getCause(), e.getCause());
+                Throwable cause = e.getCause();
+                log.log(Level.SEVERE, "Exception while executing job '" + jobName + "': " + cause.getMessage(),
+                        cause);
                 return Status.OK_STATUS;
             }
         });
