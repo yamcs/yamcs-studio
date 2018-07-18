@@ -169,19 +169,22 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
     }
 
     @Override
-    public void postStartup() {
-        IWorkbench workbench = PlatformUI.getWorkbench();
-
-        PreferenceManager pm = workbench.getPreferenceManager();
-        pm.remove("org.eclipse.help.ui.browsersPreferencePage");
-        pm.remove("org.eclipse.team.ui.TeamPreferences");
-
+    public void preStartup() {
         // Bootstrap DIIRT
         CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
         defaultDs.putDataSource(new ParameterDataSourceProvider());
         defaultDs.setConfiguration(
                 new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
         PVManager.setDefaultDataSource(defaultDs);
+    }
+
+    @Override
+    public void postStartup() {
+        IWorkbench workbench = PlatformUI.getWorkbench();
+
+        PreferenceManager pm = workbench.getPreferenceManager();
+        pm.remove("org.eclipse.help.ui.browsersPreferencePage");
+        pm.remove("org.eclipse.team.ui.TeamPreferences");
 
         YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
     }

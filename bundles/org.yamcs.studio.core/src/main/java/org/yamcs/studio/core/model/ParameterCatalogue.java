@@ -125,6 +125,7 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
                         }
                     } catch (InvalidProtocolBufferException e) {
                         log.log(Level.SEVERE, "Failed to decode server response", e);
+                        break;
                     }
                 } catch (InterruptedException e) {
                     return Status.CANCEL_STATUS;
