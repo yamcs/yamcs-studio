@@ -141,10 +141,6 @@ public class AddManualEventDialog extends TitleAreaDialog {
         severityCombo.add(EventSeverity.INFO.name(), EventSeverity.INFO_VALUE);
         severityCombo.add(EventSeverity.WARNING.name(), EventSeverity.WARNING_VALUE);
         severityCombo.add(EventSeverity.ERROR.name(), EventSeverity.ERROR_VALUE);
-        severityCombo.add(EventSeverity.WATCH.name(), EventSeverity.WATCH_VALUE);
-        severityCombo.add(EventSeverity.DISTRESS.name(), EventSeverity.DISTRESS_VALUE -1 ); //TODO use index, 
-        severityCombo.add(EventSeverity.CRITICAL.name(), EventSeverity.CRITICAL_VALUE -1);  //the value skips 4  
-        severityCombo.add(EventSeverity.SEVERE.name(), EventSeverity.SEVERE_VALUE -1);
         severityCombo.select(EventSeverity.INFO_VALUE);
 
         return container;
@@ -163,8 +159,8 @@ public class AddManualEventDialog extends TitleAreaDialog {
                 .fromCalendar(RCPUtils.toCalendar(generationDatePicker, generationTimePicker));
         long receptionTime = TimeCatalogue.getInstance().getMissionTime();
         EventSeverity severity = EventSeverity.internalGetValueMap()
-                .findValueByNumber(severityCombo.getSelectionIndex() > 3?
-                        severityCombo.getSelectionIndex() +1 :severityCombo.getSelectionIndex()); 
+                .findValueByNumber(severityCombo.getSelectionIndex() > 3 ? severityCombo.getSelectionIndex() + 1
+                        : severityCombo.getSelectionIndex());
 
         EventCatalogue catalogue = EventCatalogue.getInstance();
         try {

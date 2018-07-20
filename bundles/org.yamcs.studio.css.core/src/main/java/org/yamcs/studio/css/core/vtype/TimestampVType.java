@@ -22,7 +22,7 @@ public class TimestampVType extends YamcsVType implements VTimestamp {
     @Override
     public String toString() {
         Date dt = getValue();
-        long instant = TimeEncoding.fromUnixMillisec(dt.getTime());
+        long instant = TimeEncoding.fromUnixTime(dt.getTime());
         return YamcsUIPlugin.getDefault().formatInstant(instant);
     }
 }

@@ -56,14 +56,12 @@ public class YamcsAuthorizations {
         // Use deprecated api for compatibility with Yamcs v3
         switch (systemPrivilege) {
         case ControlCommandQueue:
-            return userInfo.getSystemPrivilegesList().contains("MayControlCommandQueue")
-                    || userInfo.getSystemPrivilegeList().contains("ControlCommandQueue");
+            return userInfo.getSystemPrivilegesList().contains("MayControlCommandQueue");
         case Command:
             return userInfo.getSystemPrivilegesList().contains("MayCommand")
-                    || userInfo.getSystemPrivilegesList().contains("MayCommandPayload")
-                    || userInfo.getSystemPrivilegeList().contains("Command");
+                    || userInfo.getSystemPrivilegesList().contains("MayCommandPayload");
         }
-        return userInfo.getSystemPrivilegeList().contains(systemPrivilege);
+        return userInfo.getSystemPrivilegesList().contains(systemPrivilege);
     }
 
     public boolean isAuthorizationEnabled() {
@@ -73,6 +71,10 @@ public class YamcsAuthorizations {
         // unsecured yamcs server. It would just ignore it, and then our client state would
         // be wrong
         YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
-        return (yprops == null) ? false : yprops.getPassword() != null;
+        if (yprops == null || yprops.getAuthenticationToken() == null) {
+            return false;
+        } else {
+            return yprops.getAuthenticationToken() != null;
+        }
     }
 }

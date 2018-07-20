@@ -85,8 +85,8 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
     private String getConnectionString(YamcsConnectionProperties yprops) {
         String subjectName = null;
-        if (yprops.getUsername() != null) {
-            subjectName = "" + yprops.getUsername();
+        if (yprops.getAuthenticationToken() != null) {
+            subjectName = "" + yprops.getAuthenticationToken().getPrincipal();
         }
         if (subjectName == null || isBlank(subjectName)) {
             subjectName = "anonymous";

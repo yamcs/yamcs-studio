@@ -35,10 +35,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
 
     private Image warningIcon;
     private Image infoIcon;
-    private Image distressIcon;
-    private Image criticalIcon;
     private Image severeIcon;
-    private Image watchIcon;
 
     private Color errorColor;
     private Color warningColor;
@@ -49,10 +46,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         this.table = table;
         if (PlatformUI.isWorkbenchRunning()) {
             infoIcon = getImage("icons/eview16/level0s.png");
-            watchIcon = getImage("icons/eview16/level1s.png");
             warningIcon = getImage("icons/eview16/level2s.png");
-            distressIcon = getImage("icons/eview16/level3s.png");
-            criticalIcon = getImage("icons/eview16/level4s.png");
             severeIcon = getImage("icons/eview16/level5s.png");
         }
 
@@ -196,12 +190,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             case INFO:
                 return null;
             case WARNING:
-            case WATCH:
                 return warningColor;
             case ERROR:
-            case CRITICAL:
-            case SEVERE:
-            case DISTRESS:
                 return errorColor;
             }
         }
@@ -213,15 +203,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             switch (evt.getSeverity()) {
             case INFO:
                 return infoIcon;
-            case WATCH:
-                return watchIcon;
             case WARNING:
                 return warningIcon;
-            case DISTRESS:
-                return distressIcon;
-            case CRITICAL:
-                return criticalIcon;
-            case SEVERE:
             case ERROR:
                 return severeIcon;
             }

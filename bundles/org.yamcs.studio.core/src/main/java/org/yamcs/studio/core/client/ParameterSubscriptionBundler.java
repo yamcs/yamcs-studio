@@ -7,11 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Web.ParameterSubscriptionResponse;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * Queues and merges outgoing WebSocket messages related to parameter subscription (or unsubscription). This because in
@@ -48,20 +43,10 @@ public class ParameterSubscriptionBundler implements Runnable {
                 a.merge(b);
             }
 
-            CompletableFuture<WebSocketReplyData> future = yamcsClient.getWebSocketClient().sendRequest(a);
+            CompletableFuture<Void> future = yamcsClient.getWebSocketClient().sendRequest(a);
             future.whenComplete((reply, exc) -> {
                 if (exc != null) {
                     log.log(Level.SEVERE, "Server exception while subscribing to parameters", exc);
-                } else {
-                    try {
-                        ParameterSubscriptionResponse response = ParameterSubscriptionResponse
-                                .parseFrom(reply.getData());
-                        for (NamedObjectId id : response.getInvalidList()) {
-                            log.fine("No parameter for id " + id);
-                        }
-                    } catch (InvalidProtocolBufferException e) {
-                        log.log(Level.WARNING, "Failed to decode parameter subscription response", e);
-                    }
                 }
             });
         }

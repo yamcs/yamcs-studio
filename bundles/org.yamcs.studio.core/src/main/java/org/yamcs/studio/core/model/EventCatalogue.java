@@ -101,8 +101,8 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
                 .setMessage(message).setGenerationTime(generationTime)
                 .setReceptionTime(receptionTime).setSeverity(severity).build();
 
-        return yamcsClient.post(resource, event);
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.post(resource, event);
     }
 
     private static class EventBatchGenerator implements BulkRestDataReceiver {

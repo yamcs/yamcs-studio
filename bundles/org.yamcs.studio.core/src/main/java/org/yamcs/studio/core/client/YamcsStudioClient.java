@@ -27,7 +27,6 @@ import org.yamcs.api.ws.ConnectionListener;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -107,7 +106,6 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(application);
         wsclient.enableReconnection(true);
-        wsclient.enableLegacyURLFallback(true); // Provides compatiblity with old Yamcs instances
         wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
 
         FutureTask<YamcsConnectionProperties> future = new FutureTask<>(() -> {
@@ -182,7 +180,7 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         return future;
     }
 
-    @Override
+    // @Override
     public void connecting() {
         for (ConnectionListener cl : connectionListeners) {
             cl.connecting(null);
@@ -244,7 +242,7 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         return instances.stream().map(r -> r.getName()).collect(Collectors.toList());
     }
 
-    public CompletableFuture<WebSocketReplyData> subscribe(WebSocketRequest req,
+    public CompletableFuture<Void> subscribe(WebSocketRequest req,
             WebSocketClientCallback messageHandler) {
         if (!subscribers.contains(messageHandler)) {
             subscribers.add(messageHandler);
@@ -257,7 +255,7 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         }
     }
 
-    public CompletableFuture<WebSocketReplyData> sendWebSocketMessage(WebSocketRequest req) {
+    public CompletableFuture<Void> sendWebSocketMessage(WebSocketRequest req) {
         if (req instanceof ParameterWebSocketRequest) {
             parameterSubscriptionBundler.queue((ParameterWebSocketRequest) req);
             return null; // TODO ?

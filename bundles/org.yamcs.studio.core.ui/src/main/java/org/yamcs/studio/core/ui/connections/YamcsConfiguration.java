@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.api.YamcsConnectionProperties.Protocol;
+import org.yamcs.security.UsernamePasswordToken;
 
 /**
  * UI class. Used to maintain state of a server in the connection manager dialog
@@ -126,7 +127,7 @@ public class YamcsConfiguration {
         YamcsConnectionProperties yprops = new YamcsConnectionProperties(primaryHost, primaryPort, instance);
         yprops.setProtocol(Protocol.http);
         if (!isAnonymous()) {
-            yprops.setCredentials(user, password.toCharArray());
+            yprops.setAuthenticationToken(new UsernamePasswordToken(user, password));
         }
         return yprops;
     }
@@ -136,7 +137,7 @@ public class YamcsConfiguration {
             YamcsConnectionProperties yprops = new YamcsConnectionProperties(failoverHost, failoverPort, instance);
             yprops.setProtocol(Protocol.http);
             if (!isAnonymous()) {
-                yprops.setCredentials(user, password.toCharArray());
+                yprops.setAuthenticationToken(new UsernamePasswordToken(user, password));
             }
             return yprops;
         } else {
