@@ -1,19 +1,21 @@
 package org.yamcs.studio.css.core;
 
+import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.csstudio.opibuilder.runmode.OPIRunnerPerspective;
+import org.csstudio.opibuilder.runmode.RunModeService;
+import org.csstudio.opibuilder.runmode.RunModeService.DisplayMode;
+import org.csstudio.opibuilder.runmode.RunnerInput;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.EventCatalogue;
@@ -28,6 +30,7 @@ import org.yamcs.studio.core.model.EventListener;
  * "OpenDisplay: [displayName], hostname: [hostname]"
  */
 public class DisplayOpener implements EventListener {
+
     private static DisplayOpener instance = new DisplayOpener();
     private static final Logger log = Logger.getLogger(DisplayOpener.class.getName());
 
@@ -36,9 +39,9 @@ public class DisplayOpener implements EventListener {
     Pattern p = Pattern.compile("OpenDisplay: (.*)");
 
     private DisplayOpener() {
-        if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null)
+        if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null) {
             EventCatalogue.getInstance().addEventListener(this);
-
+        }
     }
 
     public static DisplayOpener init() {
@@ -76,26 +79,34 @@ public class DisplayOpener implements EventListener {
             return;
         }
 
-        final String displayFName = displayName;
-
         // open the requested display
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                log.info("Opening display " + displayFName);
-                IWorkbench wb = PlatformUI.getWorkbench();
-                IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-                IWorkbenchPage page = win.getActivePage();
+        String finalDisplayName = displayName;
+        Display.getDefault().asyncExec(() -> {
+            log.info("Opening display " + finalDisplayName);
 
-                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(displayFName));
-                try {
-                    IDE.openEditor(page, file, true);
-                } catch (PartInitException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+            IWorkbenchWindow targetWindow = null;
+            for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+                if (window.getActivePage().getPerspective().getId().equals(OPIRunnerPerspective.ID)) {
+                    targetWindow = window;
                 }
             }
+
+            if (targetWindow == null) {
+                try {
+                    IWorkbenchPage runnerPage = RunModeService.createNewWorkbenchPage(Optional.empty());
+                    targetWindow = runnerPage.getWorkbenchWindow();
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, "Failed to launch display runtime", e);
+                    return;
+                }
+            }
+
+            targetWindow.getShell().setActive();
+
+            IPath path = new Path(finalDisplayName);
+            RunnerInput new_input = new RunnerInput(path, null);
+
+            RunModeService.openDisplayInView(targetWindow.getActivePage(), new_input, DisplayMode.NEW_TAB);
         });
     }
-
 }
