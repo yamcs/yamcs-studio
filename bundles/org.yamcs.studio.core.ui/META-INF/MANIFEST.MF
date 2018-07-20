@@ -7,7 +7,7 @@ Bundle-Name: Yamcs Studio Core UI
 Bundle-SymbolicName: org.yamcs.studio.core.ui;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.0.4.qualifier
+Bundle-Version: 1.0.4
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.console,
  org.eclipse.core.runtime,
