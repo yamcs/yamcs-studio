@@ -106,41 +106,29 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
             log.fine("Fetching available parameters");
             YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            int pageSize = 500;
-            int page = 1;
             List<ParameterInfo> parameters = new ArrayList<>();
-            while (true) {
-                int limit = pageSize + 1;
-                int pos = (page - 1) * pageSize;
-                String url = "/mdb/" + instance + "/parameters?details&limit=" + limit + "&pos=" + pos;
+            String url = "/mdb/" + instance + "/parameters?details";
+            try {
+                byte[] data = yamcsClient.get(url, null).get();
                 try {
-                    byte[] data = yamcsClient.get(url, null).get();
-                    try {
-                        ListParameterInfoResponse response = ListParameterInfoResponse.parseFrom(data);
-                        if (response.getParameterCount() == limit) {
-                            parameters.addAll(response.getParameterList().subList(0, limit - 1));
-                        } else {
-                            parameters.addAll(response.getParameterList());
-                            break;
-                        }
-                    } catch (InvalidProtocolBufferException e) {
-                        log.log(Level.SEVERE, "Failed to decode server response", e);
-                        break;
-                    }
-                } catch (InterruptedException e) {
-                    return Status.CANCEL_STATUS;
-                } catch (ExecutionException e) {
-                    Throwable cause = e.getCause();
-                    log.log(Level.SEVERE, "Exception while loading parameters: " + cause.getMessage(), cause);
-                    return Status.OK_STATUS;
+                    ListParameterInfoResponse response = ListParameterInfoResponse.parseFrom(data);
+                    parameters.addAll(response.getParameterList());
+                    processMetaParameters(parameters);
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server response", e);
                 }
-                page++;
+            } catch (InterruptedException e) {
+                return Status.CANCEL_STATUS;
+            } catch (ExecutionException e) {
+                Throwable cause = e.getCause();
+                log.log(Level.SEVERE, "Exception while loading parameters: " + cause.getMessage(), cause);
             }
-            processMetaParameters(parameters);
+
             return Status.OK_STATUS;
         });
         job.setPriority(Job.LONG);
         job.schedule(1000L);
+
     }
 
     public CompletableFuture<byte[]> requestParameterDetail(String qualifiedName) {
