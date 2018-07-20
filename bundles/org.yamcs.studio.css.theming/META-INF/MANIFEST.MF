@@ -6,7 +6,7 @@ Bundle-Name: Yamcs Studio Theming
 Bundle-SymbolicName: org.yamcs.studio.css.theming;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.0.4.qualifier
+Bundle-Version: 1.1.0.qualifier
 Require-Bundle: org.eclipse.jface.text,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
