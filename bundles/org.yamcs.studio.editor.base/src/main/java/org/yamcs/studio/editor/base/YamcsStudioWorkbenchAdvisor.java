@@ -172,7 +172,8 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
     public void preStartup() {
         // Bootstrap DIIRT
         CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
-        defaultDs.putDataSource(new ParameterDataSourceProvider());
+        defaultDs.putDataSource(new ParameterDataSourceProvider("para"));
+        defaultDs.putDataSource(new ParameterDataSourceProvider("sw"));
         defaultDs.setConfiguration(
                 new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
         PVManager.setDefaultDataSource(defaultDs);

@@ -5,9 +5,15 @@ import org.diirt.datasource.DataSourceProvider;
 
 public class ParameterDataSourceProvider extends DataSourceProvider {
 
+    private String name;
+
+    public ParameterDataSourceProvider(String name) {
+        this.name = name;
+    }
+
     @Override
     public String getName() {
-        return "para";
+        return name;
     }
 
     @Override
