@@ -48,8 +48,9 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
         String errorMessage = null;
         Calendar start = RCPUtils.toCalendar(startDate, startTime);
         Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
-        if (start.after(stop))
+        if (start.after(stop)) {
             errorMessage = "Stop has to be greater than start";
+        }
 
         setErrorMessage(errorMessage);
         getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
@@ -124,7 +125,7 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
         EventCatalogue catalogue = EventCatalogue.getInstance();
         catalogue.downloadEvents(start, stop, batch -> {
-            Display.getDefault().asyncExec(() -> eventLog.addEvents(batch));
+            Display.getDefault().asyncExec(() -> eventLog.addEvents(batch, true));
         }).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {

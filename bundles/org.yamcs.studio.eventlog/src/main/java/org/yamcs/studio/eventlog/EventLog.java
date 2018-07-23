@@ -1,6 +1,10 @@
 package org.yamcs.studio.eventlog;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,11 +38,16 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     public static final String CMDPARAM_EVENT_PROPERTY = "org.yamcs.studio.eventlog.copyDetails.property";
     public static final String STATE_SCROLL_LOCK = "org.eclipse.ui.commands.toggleState";
 
+    private static final long TABLE_UPDATE_RATE = 1000;
+
     private static final Logger log = Logger.getLogger(EventLog.class.getName());
 
     private EventLogTableViewer tableViewer;
     private EventLogContentProvider tableContentProvider;
     private MenuManager menuManager;
+
+    private List<Event> realtimeEvents = new ArrayList<>();
+    private ScheduledExecutorService tableUpdater = Executors.newSingleThreadScheduledExecutor();
 
     public EventLog(Composite parent, int style) {
         super(parent, style);
@@ -59,6 +68,17 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         });
 
         updateState();
+
+        tableUpdater.scheduleWithFixedDelay(() -> {
+            synchronized (realtimeEvents) {
+                if (realtimeEvents.isEmpty() || isDisposed()) {
+                    return;
+                }
+                List<Event> eventBatch = new ArrayList<>(realtimeEvents);
+                realtimeEvents.clear();
+                Display.getDefault().asyncExec(() -> addEvents(eventBatch, false));
+            }
+        }, TABLE_UPDATE_RATE, TABLE_UPDATE_RATE, TimeUnit.MILLISECONDS);
     }
 
     private void updateState() {
@@ -113,7 +133,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
             try {
                 ListEventsResponse response = ListEventsResponse.parseFrom(data);
                 Display.getDefault().asyncExec(() -> {
-                    addEvents(response.getEventList());
+                    addEvents(response.getEventList(), true);
                 });
             } catch (InvalidProtocolBufferException e) {
                 log.log(Level.SEVERE, "Failed to decode server message", e);
@@ -123,10 +143,9 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
 
     @Override
     public void processEvent(Event event) {
-        if (isDisposed()) {
-            return;
+        synchronized (realtimeEvents) {
+            realtimeEvents.add(event);
         }
-        Display.getDefault().asyncExec(() -> addEvent(event));
     }
 
     public void enableScrollLock(boolean enabled) {
@@ -140,11 +159,11 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         tableContentProvider.addEvent(event);
     }
 
-    public void addEvents(List<Event> events) {
+    public void addEvents(List<Event> events, boolean forceNoReveal) {
         if (isDisposed()) {
             return;
         }
-        tableContentProvider.addEvents(events);
+        tableContentProvider.addEvents(events, forceNoReveal);
     }
 
     // This method should be called when the stream of events to be imported is ended
@@ -164,6 +183,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
 
     @Override
     public void dispose() {
+        tableUpdater.shutdown();
         EventCatalogue.getInstance().addEventListener(this);
         YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().removeInstanceListener(this);

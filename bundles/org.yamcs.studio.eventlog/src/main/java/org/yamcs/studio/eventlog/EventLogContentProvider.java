@@ -106,7 +106,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         maybeSelectAndReveal(event);
     }
 
-    public void addEvents(List<Event> events) {
+    public void addEvents(List<Event> events, boolean forceNoReveal) {
         if (events.size() == 0) {
             return;
         }
@@ -125,6 +125,10 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         lastAddedEvent = events.get(events.size() - 1);
         table.setItemCount(sortedEvents.size());
         table.setRedraw(true);
+
+        if (!forceNoReveal) {
+            maybeSelectAndReveal(lastAddedEvent);
+        }
     }
 
     public void addedAllEvents() {
