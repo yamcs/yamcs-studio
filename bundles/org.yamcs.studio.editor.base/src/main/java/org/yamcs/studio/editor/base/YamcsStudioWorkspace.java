@@ -72,6 +72,7 @@ public class YamcsStudioWorkspace {
                 MessageDialog.openError(null, "Workspace Error", String.format(
                         "Workspace %s is in use or cannot be accessed. Select a different workspace.",
                         workspaceUrl.getPath()));
+                promptUser = true;
             }
         }
     }
