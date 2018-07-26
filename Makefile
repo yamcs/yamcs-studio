@@ -16,7 +16,6 @@ build: build-deps
 install:
 	install -d $(DESTDIR)$(PREFIX)
 	tar -xzf releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-*-linux.gtk.x86_64.tar.gz --strip-components=1 --directory $(DESTDIR)$(PREFIX)
-	chmod +x "$(DESTDIR)$(PREFIX)/Yamcs Studio"
 
 .PHONY: set-version
 set-version:
