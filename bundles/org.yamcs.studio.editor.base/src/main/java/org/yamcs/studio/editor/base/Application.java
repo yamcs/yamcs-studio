@@ -3,6 +3,10 @@ package org.yamcs.studio.editor.base;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,10 +38,19 @@ public class Application implements IApplication {
 
     @Override
     public Object start(IApplicationContext context) throws Exception {
-        configureLogging();
 
-        String workspace = System.getProperty("user.home") + File.separator + "yamcs-studio";
+        Path userHome = Paths.get(System.getProperty("user.home"));
+
+        String workspace = userHome.resolve("yamcs-studio").toString();
         boolean workspacePrompt = false;
+
+        // The location ~/.config conforms to XDG.
+        // For windows it'd be more standard if we could write to '~\Local Settings\Application Data' but I'm
+        // not aware of cross-platform API for this.
+        Path userDataDir = userHome.resolve(".config").resolve("yamcs-studio");
+        Files.createDirectories(userDataDir);
+
+        configureLogging(userDataDir);
 
         String args[] = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
         for (int i = 0; i < args.length; i++) {
@@ -83,7 +96,7 @@ public class Application implements IApplication {
         System.out.format("  %-40s : Prompt for the workspace\n", "-force-workspace-prompt");
     }
 
-    private void configureLogging() {
+    private void configureLogging(Path userDataDir) throws IOException {
         Logger root = Logger.getLogger("");
 
         // We use the convention where INFO goes to end-user (via 'Console View' inside Yamcs Studio)
@@ -97,13 +110,23 @@ public class Application implements IApplication {
         Logger.getLogger("org.csstudio").setLevel(Level.FINE);
         Logger.getLogger("org.yamcs.studio").setLevel(Level.FINE);
 
+        // Java installs only a console handler. Add a file handler as well.
+        Path logDir = userDataDir.resolve("logs");
+        Files.createDirectories(logDir);
+        String pattern = logDir.resolve("main.log").toString();
+        int limit = 10_000_000; // ~10 MB
+        int count = 10;
+        FileHandler fileHandler = new FileHandler(pattern, limit, count);
+        fileHandler.setFormatter(new CompactFormatter());
+        root.addHandler(fileHandler);
+
         // At this point in the startup there should be only one handler (for stdout)
         for (Handler handler : root.getHandlers()) {
             handler.setLevel(Level.FINE);
             handler.setFormatter(new CompactFormatter());
         }
 
-        // A second handler will be created by the workbench window advisor when the ConsoleView
+        // A third user-level handler will be created by the workbench window advisor when the ConsoleView
         // is available.
     }
 
