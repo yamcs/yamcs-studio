@@ -47,7 +47,6 @@
               *; resolution:=optional
             </Import-Package>
             <Export-Package>
-              com.csvreader,
               com.google.protobuf,
               io.netty.channel,
               io.netty.handler.codec.http,
@@ -60,7 +59,8 @@
               org.yamcs.protobuf,
               org.yamcs.security,
               org.yamcs.utils,
-              org.yamcs.xtce
+              org.yamcs.xtce,
+              org.yamcs.xtce.xml
             </Export-Package>
           </instructions>
         </configuration>
