@@ -1,11 +1,8 @@
 package org.yamcs.studio.commanding.cmdhist;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -20,8 +17,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-
-import com.csvreader.CsvWriter;
 
 public class ExportCommandsHandler extends AbstractHandler {
 
@@ -53,30 +48,23 @@ public class ExportCommandsHandler extends AbstractHandler {
     }
 
     private void writeEvents(File targetFile, Table table) throws IOException {
-        CsvWriter writer = null;
+        try (FileWriter writer = new FileWriter(targetFile)) {
+            boolean first = true;
+            for (TableColumn tc : table.getColumns()) {
+                if (!first) {
+                    writer.write("\t");
+                }
+                writer.write(tc.getText());
+                first = false;
+            }
 
-        List<String> columnNames = new ArrayList<>();
-        for (TableColumn tc : table.getColumns()) {
-            columnNames.add(tc.getText());
-        }
-
-        try {
-            writer = new CsvWriter(new FileOutputStream(targetFile), '\t', Charset.forName("UTF-8"));
-
-            // write header
-            writer.writeRecord(columnNames.toArray(new String[columnNames.size()]));
-            writer.setForceQualifier(true);
-
-            // write content
             for (TableItem item : table.getItems()) {
                 String[] rec = new String[table.getColumnCount()];
                 for (int i = 0; i < table.getColumnCount(); i++) {
                     rec[i] = item.getText(i);
                 }
-                writer.writeRecord(rec);
+                writer.write(String.join("\t", rec));
             }
-        } finally {
-            writer.close();
         }
     }
 

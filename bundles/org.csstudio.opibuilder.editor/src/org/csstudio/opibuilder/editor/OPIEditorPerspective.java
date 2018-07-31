@@ -16,6 +16,7 @@ public class OPIEditorPerspective implements IPerspectiveFactory {
     private static final String ID_HELP_VIEW = "org.eclipse.help.ui.HelpView";
 
     private static final String ID_FUNCTIONS_VIEW = "org.yamcs.studio.editor.base.views.FunctionsView";
+    private static final String ID_PARAMETERS_VIEW = "org.yamcs.studio.editor.base.views.ParametersView";
     private static final String ID_EXPLORER = "org.yamcs.studio.explorer.view";
 
     @Override
@@ -34,6 +35,7 @@ public class OPIEditorPerspective implements IPerspectiveFactory {
 
         bottom.addView(ID_CONSOLE_VIEW);
         bottom.addView(ID_FUNCTIONS_VIEW);
+        bottom.addView(ID_PARAMETERS_VIEW);
         bottom.addPlaceholder(IPageLayout.ID_PROGRESS_VIEW);
 
         layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
