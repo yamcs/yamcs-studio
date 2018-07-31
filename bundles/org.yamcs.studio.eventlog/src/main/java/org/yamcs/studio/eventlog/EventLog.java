@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.RegistryToggleState;
 import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.YamcsConnectionListener;
@@ -65,6 +66,31 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         // Default action is to open Event properties
         tableViewer.getTable().addListener(SWT.MouseDoubleClick, evt -> {
             RCPUtils.runCommand(EventLog.CMD_EVENT_PROPERTIES);
+        });
+
+        // Listen to v_scroll to autotoggle scroll lock
+        tableViewer.getTable().getVerticalBar().addListener(SWT.Selection, evt -> {
+            // User controls sort direction, so events may be inserted anywhere really.
+            // Probably the most intuitive, is to autolock if the user is either at the very top or the very bottom of
+            // the scrollbar.
+            int sel = tableViewer.getTable().getVerticalBar().getSelection();
+            int thumb = tableViewer.getTable().getVerticalBar().getThumb();
+            int min = tableViewer.getTable().getVerticalBar().getMinimum();
+            int max = tableViewer.getTable().getVerticalBar().getMaximum();
+
+            ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+            Command command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
+            State lockState = command.getState(RegistryToggleState.STATE_ID);
+            boolean locked = ((Boolean) lockState.getValue()).booleanValue();
+            boolean onEdge = sel <= min || sel + thumb >= max;
+
+            if (locked && onEdge) {
+                lockState.setValue(false);
+                enableScrollLock(false);
+            } else if (!locked && !onEdge) {
+                lockState.setValue(true);
+                enableScrollLock(true);
+            }
         });
 
         updateState();
