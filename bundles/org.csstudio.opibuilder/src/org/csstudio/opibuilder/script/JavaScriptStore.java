@@ -20,7 +20,7 @@ public class JavaScriptStore extends AbstractScriptStore {
 
     // Adds support for importPackage() to Nashorn scripts.
     // This is an old function that existed back in the Rhino days
-    private static final String COMPAT_PREFIX = "load(\"nashorn:mozilla_compat.js\");\n";
+    public static final String COMPAT_PREFIX = "load(\"nashorn:mozilla_compat.js\");\n";
 
     private ScriptEngine engine;
     private Bindings bindings;

@@ -1,5 +1,6 @@
 package org.csstudio.opibuilder.widgetActions;
 
+import java.io.BufferedReader;
 import java.util.logging.Level;
 
 import javax.script.Bindings;
@@ -9,6 +10,7 @@ import javax.script.ScriptEngine;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.csstudio.opibuilder.script.JavaScriptStore;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptStoreFactory;
 import org.csstudio.opibuilder.util.ConsoleService;
@@ -23,8 +25,8 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * The action executing javascript with the default javascript engine embedded in the JDK.
- * The default JDK javascript engine is Rhino for Java 7, Nashorn for Java 8.
+ * The action executing javascript with the default javascript engine embedded in the JDK. The default JDK javascript
+ * engine is Rhino for Java 7, Nashorn for Java 8.
  */
 class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
 
@@ -44,7 +46,7 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
 
     @Override
     public void run() {
-        if(scriptEngine == null){
+        if (scriptEngine == null) {
             try {
                 scriptEngine = ScriptStoreFactory.getJavaScriptEngine();
             } catch (Exception exception) {
@@ -53,9 +55,9 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
             }
             scriptScope = scriptEngine.createBindings();
             GraphicalViewer viewer = getWidgetModel().getRootDisplayModel().getViewer();
-            if(viewer != null){
+            if (viewer != null) {
                 Object obj = viewer.getEditPartRegistry().get(getWidgetModel());
-                if(obj != null && obj instanceof AbstractBaseEditPart){
+                if (obj != null && obj instanceof AbstractBaseEditPart) {
                     scriptScope.put(ScriptService.DISPLAY, viewer.getContents());
                     scriptScope.put(ScriptService.WIDGET, obj);
                 }
@@ -65,10 +67,8 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
 
             @Override
             protected IStatus run(IProgressMonitor monitor) {
-                String taskName = isEmbedded()?"Execute JavaScript" :
-                    "Connecting to " + getAbsolutePath();
-                monitor.beginTask(taskName,
-                        IProgressMonitor.UNKNOWN);
+                String taskName = isEmbedded() ? "Execute JavaScript" : "Connecting to " + getAbsolutePath();
+                monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
                 runTask();
                 monitor.done();
                 return Status.OK_STATUS;
@@ -82,44 +82,40 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
         Display display = getWidgetModel().getRootDisplayModel().getViewer().getControl().getDisplay();
 
         try {
-            if(script == null){
-                //read file
-                if(!isEmbedded())
-                    getReader();
-
-                //compile
-                UIBundlingThread.getInstance().addRunnable(display, new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            if(isEmbedded())
-                                script = ((Compilable) scriptEngine).compile(getScriptText());
-                            else{
-                                script = ((Compilable) scriptEngine).compile(getReader());
-                            }
-                        } catch (Exception e) {
-                            final String message = "Failed to compile JavaScript: " + getAbsolutePath();
-                            OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                            ConsoleService.getInstance().writeError(message + "\n" + e.getMessage()); //$NON-NLS-1$
-                        }
-                        closeReader();
-                    }
-                });
-
-            }
-
-            UIBundlingThread.getInstance().addRunnable(display, new Runnable() {
-                @Override
-                public void run() {
-
+            if (script == null) {
+                UIBundlingThread.getInstance().addRunnable(display, () -> {
                     try {
-                        script.eval(scriptScope);
+                        if (isEmbedded()) {
+                            String scriptText = JavaScriptStore.COMPAT_PREFIX + getScriptText();
+                            script = ((Compilable) scriptEngine).compile(scriptText);
+                        } else {
+                            BufferedReader reader = getReader();
+                            StringBuilder buf = new StringBuilder(JavaScriptStore.COMPAT_PREFIX);
+                            try {
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    buf.append(line);
+                                }
+                            } finally {
+                                closeReader();
+                            }
+                            script = ((Compilable) scriptEngine).compile(buf.toString());
+                        }
                     } catch (Exception e) {
-                        final String message =  "Error exists in script " + getAbsolutePath();
+                        final String message = "Failed to compile JavaScript: " + getAbsolutePath();
                         OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                         ConsoleService.getInstance().writeError(message + "\n" + e.getMessage()); //$NON-NLS-1$
                     }
+                });
+            }
+
+            UIBundlingThread.getInstance().addRunnable(display, () -> {
+                try {
+                    script.eval(scriptScope);
+                } catch (Exception e) {
+                    final String message = "Error exists in script " + getAbsolutePath();
+                    OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
+                    ConsoleService.getInstance().writeError(message + "\n" + e.getMessage()); //$NON-NLS-1$
                 }
             });
         } catch (Exception e) {
@@ -129,8 +125,8 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
         }
     }
 
-        @Override
-        public ActionType getActionType() {
-            return ActionType.EXECUTE_JAVASCRIPT;
-        }
+    @Override
+    public ActionType getActionType() {
+        return ActionType.EXECUTE_JAVASCRIPT;
     }
+}
