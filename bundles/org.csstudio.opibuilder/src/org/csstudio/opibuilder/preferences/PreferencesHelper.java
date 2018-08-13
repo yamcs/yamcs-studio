@@ -55,19 +55,7 @@ public class PreferencesHelper {
     // The widgets that are hidden from palette.
     public static final String HIDDEN_WIDGETS = "hidden_widgets";
 
-    // WebOPI preferences
-
-    public static final String OPI_REPOSITORY = "opi_repository";
-    public static final String SECURE_WHOLE_SITE = "secure_whole_site";
-    public static final String UNSECURED_OPI_PATHS = "unsecured_opi_paths";
-    public static final String SECURED_OPI_PATHS = "secured_opi_paths";
-
-    public static final String STARTUP_OPI = "startup_opi";
-    public static final String MOBILE_STARTUP_OPI = "mobile_startup_opi";
-
     private static final char ROW_SEPARATOR = '|';
-
-    public static final String DEFAULT_EMAIL_SENDER = "default_email_sender";
 
     public static final String ABOUT_SHOW_LINKS = "about_show_links";
     public static final String PIXELS = "pixels";
@@ -233,9 +221,6 @@ public class PreferencesHelper {
         } else {
             rawString = "|" + rawString;
         }
-        // a hack to hide deprecated native widgets
-        rawString = "org.csstudio.opibuilder.widgets.NativeButton|org.csstudio.opibuilder.widgets.NativeText"
-                + rawString;
 
         try {
             return StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
@@ -310,36 +295,6 @@ public class PreferencesHelper {
     }
 
     /**
-     * @return the absolute path of the startup opi. null if not configured.
-     */
-    public static IPath getStartupOPI() {
-        String startOPI = getString(STARTUP_OPI);
-        if (startOPI == null || startOPI.trim().isEmpty()) {
-            return null;
-        }
-        return getExistFileInRepoAndSearchPath(startOPI);
-    }
-
-    /**
-     * @return the absolute path of the startup opi. null if not configured.
-     */
-    public static IPath getMobileStartupOPI() {
-        String startOPI = getString(MOBILE_STARTUP_OPI);
-        if (startOPI == null || startOPI.trim().isEmpty()) {
-            return null;
-        }
-        return getExistFileInRepoAndSearchPath(startOPI);
-    }
-
-    public static IPath getOPIRepository() {
-        String opiRepo = getString(OPI_REPOSITORY);
-        if (opiRepo == null || opiRepo.trim().isEmpty()) {
-            return null;
-        }
-        return ResourceUtil.getPathFromString(opiRepo);
-    }
-
-    /**
      * Return the absolute path based on OPI Repository.
      * 
      * @param pathString
@@ -353,10 +308,6 @@ public class PreferencesHelper {
         if (opiPath.isAbsolute()) {
             return opiPath;
         }
-        IPath repoPath = getOPIRepository();
-        if (repoPath != null) {
-            opiPath = repoPath.append(opiPath);
-        }
         return opiPath;
     }
 
@@ -369,74 +320,10 @@ public class PreferencesHelper {
         if (opiPath.isAbsolute()) {
             return opiPath;
         }
-        IPath repoPath = getOPIRepository();
-        if (repoPath != null) {
-            opiPath = repoPath.append(originPath);
-            if (ResourceUtil.isExsitingFile(opiPath, true)) {
-                return opiPath;
-            }
-        }
         IPath sPath = ResourceUtil.getFileOnSearchPath(originPath, true);
         if (sPath == null) {
             return opiPath;
         }
         return sPath;
-    }
-
-    public static String getDefaultEmailSender() {
-        final IPreferencesService prefs = Platform.getPreferencesService();
-        if (prefs == null) {
-            return null;
-        }
-        return prefs.getString(OPIBuilderPlugin.PLUGIN_ID,
-                DEFAULT_EMAIL_SENDER, null, null);
-    }
-
-    /**
-     * @return the opi directory that needs to be secured. null if not configured.
-     * @throws Exception
-     */
-    public static String[] getSecuredOpiPaths() throws Exception {
-        String s = getString(SECURED_OPI_PATHS);
-        if (s == null || s.trim().isEmpty()) {
-            return null;
-        }
-        String[] rows = StringSplitter.splitIgnoreInQuotes(s, ROW_SEPARATOR, true);
-        for (int i = 0; i < rows.length; i++) {
-            rows[i] = getAbsolutePathOnRepo(rows[i]).toString();
-        }
-        return rows;
-    }
-
-    /**
-     * @return the opi directory that don't need to be secured if whole site is secured. null if not configured.
-     * @throws Exception
-     */
-    public static String[] getUnSecuredOpiPaths() throws Exception {
-        String s = getString(UNSECURED_OPI_PATHS);
-        if (s == null || s.trim().isEmpty()) {
-            return null;
-        }
-        String[] rows = StringSplitter.splitIgnoreInQuotes(s, ROW_SEPARATOR, true);
-        for (int i = 0; i < rows.length; i++) {
-            rows[i] = getAbsolutePathOnRepo(rows[i]).toString();
-        }
-        return rows;
-    }
-
-    /**
-     * @return true if whole site is secured.
-     */
-    public static boolean isWholeSiteSecured() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, SECURE_WHOLE_SITE, false, null);
-    }
-
-    /**
-     * @return true if whole site is secured.
-     */
-    public static boolean isAboutShowLinks() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, ABOUT_SHOW_LINKS, true, null);
     }
 }
