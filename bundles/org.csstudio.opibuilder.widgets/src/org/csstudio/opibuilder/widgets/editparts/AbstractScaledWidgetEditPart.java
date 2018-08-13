@@ -7,17 +7,18 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
+import java.util.logging.Level;
+
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel;
 import org.csstudio.simplepv.VTypeHelper;
 import org.csstudio.swt.widgets.figures.AbstractScaledWidgetFigure;
+import org.csstudio.utility.batik.Activator;
 import org.diirt.vtype.VType;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale;
 
 /**
@@ -60,142 +61,92 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
      */
     protected void registerCommonPropertyChangeHandlers() {
         // value
-        IWidgetPropertyChangeHandler valueHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                if (newValue == null)
-                    return false;
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setValue(VTypeHelper.getDouble((VType) newValue));
+        IWidgetPropertyChangeHandler valueHandler = (oldValue, newValue, refreshableFigure) -> {
+            if (newValue == null) {
                 return false;
             }
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setValue(VTypeHelper.getDouble((VType) newValue));
+            return false;
         };
         setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, valueHandler);
 
         // minimum
-        IWidgetPropertyChangeHandler minimumHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setRange((Double) newValue, ((AbstractScaledWidgetModel) getModel()).getMaximum());
-                return false;
-            }
+        IWidgetPropertyChangeHandler minimumHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setRange((Double) newValue, ((AbstractScaledWidgetModel) getModel()).getMaximum());
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_MIN, minimumHandler);
 
         // maximum
-        IWidgetPropertyChangeHandler maximumHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setRange(((AbstractScaledWidgetModel) getModel()).getMinimum(), (Double) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler maximumHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setRange(((AbstractScaledWidgetModel) getModel()).getMinimum(), (Double) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_MAX, maximumHandler);
 
         // major tick step hint
-        IWidgetPropertyChangeHandler majorTickHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setMajorTickMarkStepHint((Integer) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler majorTickHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setMajorTickMarkStepHint((Integer) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_MAJOR_TICK_STEP_HINT, majorTickHandler);
 
         // logScale
-        IWidgetPropertyChangeHandler logScaleHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setLogScale((Boolean) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler logScaleHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setLogScale((Boolean) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_LOG_SCALE, logScaleHandler);
 
         // showScale
-        IWidgetPropertyChangeHandler showScaleHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setShowScale((Boolean) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler showScaleHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setShowScale((Boolean) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SHOW_SCALE, showScaleHandler);
 
         // showMinorTicks
-        IWidgetPropertyChangeHandler showMinorTicksHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setShowMinorTicks((Boolean) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler showMinorTicksHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setShowMinorTicks((Boolean) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SHOW_MINOR_TICKS, showMinorTicksHandler);
 
         // Transparent
-        IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.setTransparent((Boolean) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler transparentHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.setTransparent((Boolean) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_TRANSPARENT, transparentHandler);
 
-        IWidgetPropertyChangeHandler scaleFontHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
-                figure.getScale().setFont(((OPIFont) newValue).getSWTFont());
-                return false;
-            }
+        IWidgetPropertyChangeHandler scaleFontHandler = (oldValue, newValue, refreshableFigure) -> {
+            AbstractScaledWidgetFigure figure = (AbstractScaledWidgetFigure) refreshableFigure;
+            figure.getScale().setFont(((OPIFont) newValue).getSWTFont());
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SCALE_FONT, scaleFontHandler);
 
         // scale format
-        IWidgetPropertyChangeHandler numericFormatHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                AbstractScaledWidgetFigure scaleFigure = (AbstractScaledWidgetFigure) figure;
-                setScaleFormat(scaleFigure, (String) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler numericFormatHandler = (oldValue, newValue, figure) -> {
+            AbstractScaledWidgetFigure scaleFigure = (AbstractScaledWidgetFigure) figure;
+            setScaleFormat(scaleFigure, (String) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_SCALE_FORMAT, numericFormatHandler);
 
         // value label format
-        IWidgetPropertyChangeHandler valueFormatHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                AbstractScaledWidgetFigure scaleFigure = (AbstractScaledWidgetFigure) figure;
-                setValueLabelFormat(scaleFigure, (String) newValue);
-                return false;
-            }
+        IWidgetPropertyChangeHandler valueFormatHandler = (oldValue, newValue, figure) -> {
+            AbstractScaledWidgetFigure scaleFigure = (AbstractScaledWidgetFigure) figure;
+            setValueLabelFormat(scaleFigure, (String) newValue);
+            return false;
         };
         setPropertyChangeHandler(AbstractScaledWidgetModel.PROP_VALUE_LABEL_FORMAT, valueFormatHandler);
 
@@ -203,16 +154,15 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
 
     private void setScaleFormat(AbstractScaledWidgetFigure scaleFigure, String numericFormat) {
         AbstractScale scale = scaleFigure.getScale();
-        if (numericFormat.trim().equals("")) //$NON-NLS-1$
+        if (numericFormat.trim().equals("")) {
             scale.setAutoFormat(true);
-        else {
+        } else {
             try {
                 scale.setAutoFormat(false);
                 scale.setFormatPattern(numericFormat);
             } catch (Exception e) {
-                ConsoleService.getInstance().writeError(numericFormat +
-                        " is illegal Numeric Format." +
-                        " The scale will be auto formatted.");
+                Activator.getLogger().log(Level.SEVERE, numericFormat +
+                        " is not a valid numeric format. The scale will be auto formatted.");
                 scale.setAutoFormat(true);
             }
         }
@@ -225,24 +175,24 @@ public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditP
         try {
             scaleFigure.setValueLabelFormat(valueLabelFormat);
         } catch (Exception e) {
-            ConsoleService.getInstance().writeError(valueLabelFormat +
-                    " is illegal Numeric Format." +
+            Activator.getLogger().log(Level.SEVERE, valueLabelFormat +
+                    " is not a valid numeric format." +
                     " The value label will be formatted in the same way as scale.");
-            scaleFigure.setValueLabelFormat(""); //$NON-NLS-1$
+            scaleFigure.setValueLabelFormat("");
         }
     }
 
     @Override
     public void setValue(Object value) {
-        if (value instanceof Number)
+        if (value instanceof Number) {
             ((AbstractScaledWidgetFigure) getFigure()).setValue(((Number) value).doubleValue());
-        else
+        } else {
             super.setValue(value);
+        }
     }
 
     @Override
     public Double getValue() {
         return ((AbstractScaledWidgetFigure) getFigure()).getValue();
     }
-
 }

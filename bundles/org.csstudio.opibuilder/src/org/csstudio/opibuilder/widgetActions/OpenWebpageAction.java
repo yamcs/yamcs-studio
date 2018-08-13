@@ -13,9 +13,7 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -49,9 +47,7 @@ public class OpenWebpageAction extends AbstractWidgetAction {
             PlatformUI.getWorkbench().getBrowserSupport()
                     .createBrowser("opi_web_browser").openURL(new URL(hyperLink));
         } catch (Exception e) {
-            String message = NLS.bind("Failed to open the hyperlink: {0}\n{1}", hyperLink, e);
-            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to open " + hyperLink, e);
-            ConsoleService.getInstance().writeError(message);
+            OPIBuilderPlugin.getLogger().log(Level.SEVERE, "Failed to open " + hyperLink, e);
         }
     }
 

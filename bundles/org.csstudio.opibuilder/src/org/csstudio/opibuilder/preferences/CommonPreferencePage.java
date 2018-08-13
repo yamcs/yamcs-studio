@@ -69,12 +69,6 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
                         "OPI need to be re-opened to make this take effect.");
         addField(advanceGraphicsEditor);
 
-        BooleanFieldEditor displaySysOutEditor = new BooleanFieldEditor(PreferencesHelper.DISPLAY_SYSTEM_OUTPUT,
-                "Display system output to BOY Console", parent);
-        displaySysOutEditor.getDescriptionControl(parent).setToolTipText(
-                "Enable this may result in undesired \ninformation displayed in BOY Console.");
-        addField(displaySysOutEditor);
-
         BooleanFieldEditor default_type_editor = new BooleanFieldEditor(PreferencesHelper.DEFAULT_TO_CLASSIC_STYLE,
                 "Default to 'classic' widget style", parent);
         default_type_editor.getDescriptionControl(parent).setToolTipText(
@@ -96,8 +90,9 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
 
     @Override
     public boolean performOk() {
-        if (!isValid())
+        if (!isValid()) {
             return false;
+        }
         return super.performOk();
     }
 

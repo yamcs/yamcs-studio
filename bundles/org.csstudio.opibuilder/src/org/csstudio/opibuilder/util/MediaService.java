@@ -45,14 +45,14 @@ import org.eclipse.ui.PlatformUI;
  */
 public final class MediaService {
 
-    public static final String DEFAULT_FONT = "Default"; //$NON-NLS-1$
+    public static final String DEFAULT_FONT = "Default";
 
-    public static final String DEFAULT_BOLD_FONT = "Default Bold"; //$NON-NLS-1$
+    public static final String DEFAULT_BOLD_FONT = "Default Bold";
 
-    public static final String HEADER1 = "Header 1"; //$NON-NLS-1$
-    public static final String HEADER2 = "Header 2"; //$NON-NLS-1$
-    public static final String HEADER3 = "Header 3"; //$NON-NLS-1$
-    public static final String FINE_PRINT = "Fine Print"; //$NON-NLS-1$
+    public static final String HEADER1 = "Header 1";
+    public static final String HEADER2 = "Header 2";
+    public static final String HEADER3 = "Header 3";
+    public static final String FINE_PRINT = "Fine Print";
     /**
      * The shared instance of this class.
      */
@@ -72,14 +72,15 @@ public final class MediaService {
      * @return the instance
      */
     public synchronized static final MediaService getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new MediaService();
+        }
         return instance;
     }
 
     public MediaService() {
-        colorMap = new LinkedHashMap<String, OPIColor>();
-        fontMap = new LinkedHashMap<String, OPIFont>();
+        colorMap = new LinkedHashMap<>();
+        fontMap = new LinkedHashMap<>();
         reloadColorFile();
         reloadFontFile();
     }
@@ -141,16 +142,11 @@ public final class MediaService {
         job.schedule();
         try {
             if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
-                PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        MessageDialog.openWarning(null, "Warning", NLS.bind(
+                PlatformUI.getWorkbench().getDisplay()
+                        .asyncExec(() -> MessageDialog.openWarning(null, "Warning", NLS.bind(
                                 "Failed to load OPI color file {0} in 2 seconds. "
                                         + "It will continue to load it in a background job.",
-                                colorFilePath));
-                    }
-                });
+                                colorFilePath)));
 
             }
         } catch (InterruptedException e) {
@@ -164,18 +160,13 @@ public final class MediaService {
     public synchronized void reloadFontFile() {
         fontMap.clear();
         final StringBuilder systemFontName = new StringBuilder();
-        if (Display.getCurrent()!= null) {
+        if (Display.getCurrent() != null) {
             loadPredefinedFonts();
             systemFontName.append(Display.getCurrent().getSystemFont().getFontData()[0]
                     .getName());
-        } else{
-            DisplayUtils.getDisplay().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    loadPredefinedFonts();
-                }
-            });
-            systemFontName.append("Verdana"); //$NON-NLS-1$
+        } else {
+            DisplayUtils.getDisplay().asyncExec(() -> loadPredefinedFonts());
+            systemFontName.append("Verdana");
         }
         fontFilePath = PreferencesHelper.getFontFilePath();
 
@@ -194,16 +185,11 @@ public final class MediaService {
 
         try {
             if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
-                PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        MessageDialog.openWarning(null, "Warning", NLS.bind(
+                PlatformUI.getWorkbench().getDisplay()
+                        .asyncExec(() -> MessageDialog.openWarning(null, "Warning", NLS.bind(
                                 "Failed to load OPI font file {0} in 2 seconds. "
                                         + "It will continue to load it in a background job.",
-                                fontFilePath));
-                    }
-                });
+                                fontFilePath)));
             }
         } catch (InterruptedException e) {
         }
@@ -229,16 +215,17 @@ public final class MediaService {
             // fill the color map.
             while ((line = reader.readLine()) != null) {
                 // support comments
-                if (line.trim().startsWith("#") || line.trim().startsWith("//")) //$NON-NLS-1$ //$NON-NLS-2$
+                if (line.trim().startsWith("#") || line.trim().startsWith("//")) {
                     continue;
+                }
                 int i;
                 if ((i = line.indexOf('=')) != -1) {
                     String name = line.substring(0, i).trim();
                     try {
                         // Display builder allows both R, G, B
-                        //    NAME=255, 255, 255
+                        // NAME=255, 255, 255
                         // and
-                        //    NAME=255, 255, 255, 255
+                        // NAME=255, 255, 255, 255
                         // with optional alpha value.
                         // This call handles both by ignoring the alpha value
                         RGB color = StringConverter.asRGB(line.substring(i + 1).trim());
@@ -247,7 +234,6 @@ public final class MediaService {
                     } catch (DataFormatException e) {
                         String message = "Format error in color definition file.";
                         OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                        ConsoleService.getInstance().writeError(message);
                     }
                 }
             }
@@ -256,13 +242,12 @@ public final class MediaService {
         } catch (Exception e) {
             String message = "Failed to read color definition file.";
             OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-            ConsoleService.getInstance().writeWarning(message);
         }
     }
 
     private void loadFontFile(String systemFontName) {
-        Map<String, OPIFont> rawFontMap = new LinkedHashMap<String, OPIFont>();
-        Set<String> trimmedNameSet = new LinkedHashSet<String>();
+        Map<String, OPIFont> rawFontMap = new LinkedHashMap<>();
+        Set<String> trimmedNameSet = new LinkedHashSet<>();
         fontFilePath = PreferencesHelper.getFontFilePath();
         if (fontFilePath == null || fontFilePath.isEmpty()) {
             return;
@@ -277,40 +262,42 @@ public final class MediaService {
             // fill the font map.
             while ((line = reader.readLine()) != null) {
                 // support comments
-                if (line.trim().startsWith("#") || line.trim().startsWith("//")) //$NON-NLS-1$ //$NON-NLS-2$
+                if (line.trim().startsWith("#") || line.trim().startsWith("//")) {
                     continue;
+                }
                 int i;
                 if ((i = line.indexOf('=')) != -1) {
                     boolean isPixels = false;
                     String name = line.substring(0, i).trim();
                     String trimmedName = name;
-                    if (name.contains("(")) //$NON-NLS-1$
-                        trimmedName = name.substring(0, name.indexOf("(")); //$NON-NLS-1$
+                    if (name.contains("(")) {
+                        trimmedName = name.substring(0, name.indexOf("("));
+                    }
                     trimmedNameSet.add(trimmedName);
                     try {
                         String trimmedLine = line.substring(i + 1).trim();
-                        if (trimmedLine.endsWith("px")) { //$NON-NLS-1$
+                        if (trimmedLine.endsWith("px")) {
                             isPixels = true;
-                            trimmedLine = trimmedLine.substring(0, trimmedLine.length()-2);
-                        } else if (line.endsWith("pt")) { //$NON-NLS-1$
-                            trimmedLine = trimmedLine.substring(0, trimmedLine.length()-2);
+                            trimmedLine = trimmedLine.substring(0, trimmedLine.length() - 2);
+                        } else if (line.endsWith("pt")) {
+                            trimmedLine = trimmedLine.substring(0, trimmedLine.length() - 2);
                         }
 
                         // BOY only handles "Liberation Sans-regular-12",
                         // while Display Builder allows additional spaces as in
                         // "Liberation Sans - regular - 12".
                         // Patch line to be upwards-compatible
-                        trimmedLine = trimmedLine.replaceAll(" +- +", "-"); //$NON-NLS-1$ //$NON-NLS-2$
+                        trimmedLine = trimmedLine.replaceAll(" +- +", "-"); //$NON-NLS-2$
                         FontData fontdata = StringConverter.asFontData(trimmedLine);
-                        if (fontdata.getName().equals("SystemDefault")) //$NON-NLS-1$
+                        if (fontdata.getName().equals("SystemDefault")) {
                             fontdata.setName(systemFontName);
+                        }
                         OPIFont font = new OPIFont(trimmedName, fontdata);
                         font.setSizeInPixels(isPixels);
                         rawFontMap.put(name, font);
                     } catch (DataFormatException e) {
                         String message = "Format error in font definition file.";
                         OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                        ConsoleService.getInstance().writeError(message);
                     }
                 }
             }
@@ -319,22 +306,22 @@ public final class MediaService {
         } catch (Exception e) {
             String message = "Failed to read font definition file.";
             OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-            ConsoleService.getInstance().writeWarning(message);
         }
 
         String osname = getOSName();
         for (String trimmedName : trimmedNameSet) {
-            String equippedName = trimmedName + "(" + osname + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-            if (rawFontMap.containsKey(equippedName))
+            String equippedName = trimmedName + "(" + osname + ")"; //$NON-NLS-2$
+            if (rawFontMap.containsKey(equippedName)) {
                 fontMap.put(trimmedName, rawFontMap.get(equippedName));
-            else if (rawFontMap.containsKey(trimmedName))
+            } else if (rawFontMap.containsKey(trimmedName)) {
                 fontMap.put(trimmedName, rawFontMap.get(trimmedName));
+            }
         }
 
     }
 
     private String getOSName() {
-        String osname = System.getProperty("os.name").trim(); //$NON-NLS-1$
+        String osname = System.getProperty("os.name").trim();
         String wsname = Util.getWS().trim();
         osname = StringConverter.removeWhiteSpaces(osname).toLowerCase();
         if (wsname != null && wsname.length() > 0) {
@@ -345,17 +332,16 @@ public final class MediaService {
     }
 
     /**
-     * Get the color from the predefined color map, which is defined in the
-     * color file.
+     * Get the color from the predefined color map, which is defined in the color file.
      *
      * @param name
      *            the predefined name of the color.
-     * @return the RGB color, or the default RGB value if the name doesn't exist
-     *         in the color file.
+     * @return the RGB color, or the default RGB value if the name doesn't exist in the color file.
      */
     public RGB getColor(String name) {
-        if (colorMap.containsKey(name))
+        if (colorMap.containsKey(name)) {
             return colorMap.get(name).getRGBValue();
+        }
         return DEFAULT_UNKNOWN_COLOR;
     }
 
@@ -364,8 +350,7 @@ public final class MediaService {
     }
 
     /**
-     * Get OPIColor based on name. If no such name exist, use the rgb value as
-     * its color.
+     * Get OPIColor based on name. If no such name exist, use the rgb value as its color.
      *
      * @param name
      *            name of OPIColor
@@ -374,8 +359,9 @@ public final class MediaService {
      * @return the OPIColor.
      */
     public OPIColor getOPIColor(String name, RGB rgb) {
-        if (colorMap.containsKey(name))
+        if (colorMap.containsKey(name)) {
             return colorMap.get(name);
+        }
         return new OPIColor(name, rgb, true);
     }
 
@@ -397,24 +383,28 @@ public final class MediaService {
     }
 
     /**
-     * Get a copy the OPIFont from the configured defaults based on name.
-     * Use the provided fontData if the name is not in the cache.
+     * Get a copy the OPIFont from the configured defaults based on name. Use the provided fontData if the name is not
+     * in the cache.
      *
-     * @param name of predefined font
-     * @param fontData to use if name is not in cache
+     * @param name
+     *            of predefined font
+     * @param fontData
+     *            to use if name is not in cache
      * @return new OPIFont
      */
     public OPIFont getOPIFont(String name, FontData fontData) {
-        if (fontMap.containsKey(name))
+        if (fontMap.containsKey(name)) {
             return new OPIFont(fontMap.get(name));
+        }
         return new OPIFont(name, fontData);
     }
 
     /**
-     * Get a copy of the OPIFont from the configured defaults based on name.
-     * Use {@link #DEFAULT_UNKNOWN_FONT} if the name is not in the cache.
+     * Get a copy of the OPIFont from the configured defaults based on name. Use {@link #DEFAULT_UNKNOWN_FONT} if the
+     * name is not in the cache.
      *
-     * @param name of predefined font
+     * @param name
+     *            of predefined font
      * @return new OPIFont
      * @see #getOPIFont(String, FontData)
      */
@@ -424,6 +414,7 @@ public final class MediaService {
 
     /**
      * Return an array of a copy of all predefined fonts.
+     * 
      * @return array of predefined fonts
      */
     public OPIFont[] getAllPredefinedFonts() {

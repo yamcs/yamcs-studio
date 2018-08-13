@@ -16,7 +16,6 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptStoreFactory;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.csstudio.ui.util.thread.UIBundlingThread;
@@ -61,7 +60,6 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
             } catch (Exception e) {
                 final String message = "Failed to initialize PythonInterpreter";
                 OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                ConsoleService.getInstance().writeError(message + "\n" + e); //$NON-NLS-1$
             }
             // read file
             IPath absolutePath = getAbsolutePath();
@@ -115,35 +113,29 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
             if (code == null) {
 
                 // compile
-                if (isEmbedded())
+                if (isEmbedded()) {
                     code = interpreter.compile(getScriptText());
-                else {
+                } else {
                     InputStream inputStream = getInputStream();
                     code = interpreter.compile(new InputStreamReader(inputStream));
                     inputStream.close();
                 }
             }
 
-            UIBundlingThread.getInstance().addRunnable(display, new Runnable() {
+            UIBundlingThread.getInstance().addRunnable(display, () -> {
 
-                @Override
-                public void run() {
-
-                    try {
-                        interpreter.set(ScriptService.WIDGET, widgetEditPart);
-                        interpreter.set(ScriptService.DISPLAY, displayEditpart);
-                        interpreter.exec(code);
-                    } catch (Exception e) {
-                        final String message = "Error exists in script " + getPath();
-                        OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                        ConsoleService.getInstance().writeError(message + "\n" + e); //$NON-NLS-1$
-                    }
+                try {
+                    interpreter.set(ScriptService.WIDGET, widgetEditPart);
+                    interpreter.set(ScriptService.DISPLAY, displayEditpart);
+                    interpreter.exec(code);
+                } catch (Exception e) {
+                    final String message = "Error exists in script " + getPath();
+                    OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             });
         } catch (Exception e) {
             final String message = "Failed to execute Python Script: " + getPath();
             OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-            ConsoleService.getInstance().writeError(message + "\n" + e); //$NON-NLS-1$
         }
     }
 

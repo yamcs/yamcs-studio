@@ -16,7 +16,6 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.datadefinition.AbstractComplexData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.support.PropertySSHelper;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
@@ -38,14 +37,13 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
      * @param prop_id
      *            the property id which should be unique in a widget model.
      * @param description
-     *            the description of the property, which will be shown as the
-     *            property name in property sheet.
+     *            the description of the property, which will be shown as the property name in property sheet.
      * @param category
      *            the category of the widget.
      * @param defaultData
      *            default value. It cannot be null.
      * @param dialogTitle
-     *               title of the dialog for editing the complex data.
+     *            title of the dialog for editing the complex data.
      */
     public ComplexDataProperty(String prop_id, String description,
             WidgetPropertyCategory category,
@@ -56,8 +54,9 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
 
     @Override
     public Object checkValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         AbstractComplexData acceptableValue = null;
         if (value instanceof AbstractComplexData) {
             ((AbstractComplexData) value).setWidgetModel(widgetModel);
@@ -69,10 +68,11 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if (PropertySSHelper.getIMPL() == null)
+        if (PropertySSHelper.getIMPL() == null) {
             return null;
+        }
         return PropertySSHelper.getIMPL().getComplexDataPropertyDescriptor(prop_id,
-                        description, dialogTitle);
+                description, dialogTitle);
     }
 
     @Override
@@ -99,9 +99,7 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
                             + ". "
                             + "The default property value will be setted instead. \n"
                             + e;
-                    OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                            errorMessage, e);
-                    ConsoleService.getInstance().writeWarning(errorMessage);
+                    OPIBuilderPlugin.getLogger().log(Level.WARNING, errorMessage, e);
                 }
             }
         }

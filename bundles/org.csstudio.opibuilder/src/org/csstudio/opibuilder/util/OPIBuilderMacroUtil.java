@@ -8,7 +8,9 @@
 package org.csstudio.opibuilder.util;
 
 import java.util.Map;
+import java.util.logging.Level;
 
+import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
@@ -20,9 +22,9 @@ import org.csstudio.opibuilder.preferences.PreferencesHelper;
  *
  */
 public class OPIBuilderMacroUtil {
-    public static final String DNAME = "DNAME"; //$NON-NLS-1$
-    public static final String DID = "DID"; //$NON-NLS-1$
-    public static final String DLOC = "DLOC"; //$NON-NLS-1$
+    public static final String DNAME = "DNAME";
+    public static final String DID = "DID";
+    public static final String DLOC = "DLOC";
 
     /**
      * Replace the macros in the input with the real value. Simply calls the three argument version below
@@ -36,7 +38,7 @@ public class OPIBuilderMacroUtil {
         try {
             return MacroUtil.replaceMacros(input, new WidgetMacroTableProvider(widgetModel));
         } catch (InfiniteLoopException e) {
-            ConsoleService.getInstance().writeWarning(e.getMessage());
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, e.getMessage(), e);
             return input;
         }
     }
@@ -49,13 +51,14 @@ public class OPIBuilderMacroUtil {
     public static Map<String, String> getWidgetMacroMap(
             AbstractWidgetModel widgetModel) {
         Map<String, String> macroMap;
-        if (widgetModel instanceof AbstractContainerModel)
+        if (widgetModel instanceof AbstractContainerModel) {
             macroMap = ((AbstractContainerModel) widgetModel).getMacroMap();
-        else {
-            if (widgetModel.getParent() != null)
+        } else {
+            if (widgetModel.getParent() != null) {
                 macroMap = widgetModel.getParent().getMacroMap();
-            else
+            } else {
                 macroMap = PreferencesHelper.getMacros();
+            }
         }
         return macroMap;
     }
@@ -79,19 +82,19 @@ class WidgetMacroTableProvider implements IMacroTableProvider {
 
     @Override
     public String getMacroValue(String macroName) {
-        if (macroMap != null && macroMap.containsKey(macroName))
+        if (macroMap != null && macroMap.containsKey(macroName)) {
             return macroMap.get(macroName);
-        else if (widgetModel.getAllPropertyIDs().contains(macroName)) {
+        } else if (widgetModel.getAllPropertyIDs().contains(macroName)) {
             Object propertyValue = widgetModel.getRawPropertyValue(macroName);
-            if (propertyValue != null)
+            if (propertyValue != null) {
                 return propertyValue.toString();
+            }
         }
-        if (macroName.equals(OPIBuilderMacroUtil.DID))
-            return OPIBuilderMacroUtil.DID + "_" + //$NON-NLS-1$
-                    widgetModel.getRootDisplayModel().getDisplayID();
-        else if (macroName.equals(OPIBuilderMacroUtil.DNAME))
+        if (macroName.equals(OPIBuilderMacroUtil.DID)) {
+            return OPIBuilderMacroUtil.DID + "_" + widgetModel.getRootDisplayModel().getDisplayID();
+        } else if (macroName.equals(OPIBuilderMacroUtil.DNAME)) {
             return widgetModel.getRootDisplayModel().getName();
-        else if (macroName.equals(OPIBuilderMacroUtil.DLOC)) {
+        } else if (macroName.equals(OPIBuilderMacroUtil.DLOC)) {
             String uri = ResourceUtil.workspacePathToSysPath(widgetModel.getRootDisplayModel().getOpiFilePath())
                     .toFile().getParentFile().toURI().toString();
             // Fix the file protocol: we need 'file:///' for absolute paths

@@ -20,7 +20,6 @@ import org.csstudio.opibuilder.editparts.DisplayEditpart;
 import org.csstudio.opibuilder.model.AbstractLinkingContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.DisplayModel;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.simplepv.IPV;
 import org.csstudio.simplepv.IPVListener;
@@ -116,17 +115,19 @@ public abstract class AbstractScriptStore implements IScriptStore {
                 // so all the recently added (.. instanceof ..Linking..) can be removed.
                 final AbstractWidgetModel model = editPart.getWidgetModel();
                 final DisplayModel root;
-                if (model instanceof AbstractLinkingContainerModel)
+                if (model instanceof AbstractLinkingContainerModel) {
                     root = ((AbstractLinkingContainerModel) model).getDisplayModel();
-                else
+                } else {
                     root = model.getRootDisplayModel();
+                }
                 absoluteScriptPath = root.getOpiFilePath().removeLastSegments(1).append(absoluteScriptPath);
                 // ---
                 if (!ResourceUtil.isExsitingFile(absoluteScriptPath, true)) {
                     // search from OPI search path
                     absoluteScriptPath = ResourceUtil.getFileOnSearchPath(scriptData.getPath(), true);
-                    if (absoluteScriptPath == null)
+                    if (absoluteScriptPath == null) {
                         throw new FileNotFoundException(scriptData.getPath().toString());
+                    }
                 }
             }
         }
@@ -141,9 +142,9 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
         if (scriptData instanceof RuleScriptData) {
             compileString(((RuleScriptData) scriptData).getScriptString());
-        } else if (scriptData.isEmbedded())
+        } else if (scriptData.isEmbedded()) {
             compileString(scriptData.getScriptText());
-        else {
+        } else {
             // read file
             InputStream inputStream = ResourceUtil.pathToInputStream(absoluteScriptPath, false);
 
@@ -194,8 +195,9 @@ public abstract class AbstractScriptStore implements IScriptStore {
         // register pv listener
         int i = 0;
         for (IPV pv : pvArray) {
-            if (pv == null)
+            if (pv == null) {
                 continue;
+            }
             if (!scriptData.getPVList().get(i++).trigger) {
                 // execute the script if it was suppressed.
                 pv.addListener(suppressPVListener);
@@ -244,39 +246,33 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
     private void executeScriptInUIThread(final IPV triggerPV) {
         Display display = editPart.getRoot().getViewer().getControl().getDisplay();
-        UIBundlingThread.getInstance().addRunnable(display, new Runnable() {
-            @Override
-            public void run() {
-                if ((!scriptData.isStopExecuteOnError() || !errorInScript) && !unRegistered) {
-                    try {
-                        execScript(triggerPV);
-                    } catch (Exception e) {
-                        errorInScript = true;
-                        final String notExecuteWarning = "\nThe script or rule will not be executed afterwards. " +
-                                "You can change this setting in script dialog.";
-                        final String message = NLS
-                                .bind("Error in {0}.{1}\n{2}",
-                                        new String[] { errorSource,
-                                                !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning, //$NON-NLS-1$
-                                                e.toString() });
-                        ConsoleService.getInstance().writeError(message);
-                        if (OPIBuilderPlugin.getLogger().isLoggable(Level.FINEST)) {
-                            OPIBuilderPlugin.getLogger().log(Level.FINEST, message, e);
-                        } else {
-                            OPIBuilderPlugin.getLogger().log(Level.WARNING, message);
-                        }
-                    }
+        UIBundlingThread.getInstance().addRunnable(display, () -> {
+            if ((!scriptData.isStopExecuteOnError() || !errorInScript) && !unRegistered) {
+                try {
+                    execScript(triggerPV);
+                } catch (Exception e) {
+                    errorInScript = true;
+                    final String notExecuteWarning = "\nThe script or rule will not be executed afterwards. " +
+                            "You can change this setting in script dialog.";
+                    final String message = NLS
+                            .bind("Error in {0}.{1}\n{2}",
+                                    new String[] { errorSource,
+                                            !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning, //$NON-NLS-1$
+                                            e.toString() });
+                    OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             }
         });
     }
 
     private boolean checkPVsConnected(ScriptData scriptData, IPV[] pvArray) {
-        if (!scriptData.isCheckConnectivity())
+        if (!scriptData.isCheckConnectivity()) {
             return true;
+        }
         for (IPV pv : pvArray) {
-            if (!pv.isConnected())
+            if (!pv.isConnected()) {
                 return false;
+            }
         }
         return true;
 
@@ -308,8 +304,9 @@ public abstract class AbstractScriptStore implements IScriptStore {
      * @return the display editPart
      */
     public DisplayEditpart getDisplayEditPart() {
-        if (getEditPart().isActive())
+        if (getEditPart().isActive()) {
             return (DisplayEditpart) (getEditPart().getViewer().getContents());
+        }
         return null;
     }
 

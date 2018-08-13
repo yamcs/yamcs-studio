@@ -7,19 +7,18 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.csstudio.opibuilder.dnd.DropPVtoPVWidgetEditPolicy;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.util.OPIFont;
+import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.model.XYGraphModel;
 import org.csstudio.opibuilder.widgets.model.XYGraphModel.AxisProperty;
 import org.csstudio.opibuilder.widgets.model.XYGraphModel.TraceProperty;
@@ -84,8 +83,9 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
         for (int i = 0; i < XYGraphModel.MAX_AXES_AMOUNT; i++) {
             if (i >= 2) {
                 axisList.add(new Axis("", true));
-                if (i < model.getAxesAmount())
+                if (i < model.getAxesAmount()) {
                     xyGraphFigure.getXYGraph().addAxis(axisList.get(i));
+                }
             }
             for (AxisProperty axisProperty : AxisProperty.values()) {
                 // there is no primary and y-axis property for primary axes.
@@ -127,112 +127,73 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
         registerTracePropertyChangeHandlers();
 
         // Title
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
-                graph.getXYGraph().setTitle((String) newValue);
-                return true;
-            }
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+            ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
+            graph.getXYGraph().setTitle((String) newValue);
+            return true;
         };
         setPropertyChangeHandler(XYGraphModel.PROP_TITLE, handler);
 
         // Title Font
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
-                graph.getXYGraph().setTitleFont(
-                        CustomMediaFactory.getInstance().getFont(((OPIFont) newValue).getFontData()));
-                return true;
-            }
+        handler = (oldValue, newValue, refreshableFigure) -> {
+            ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
+            graph.getXYGraph().setTitleFont(
+                    CustomMediaFactory.getInstance().getFont(((OPIFont) newValue).getFontData()));
+            return true;
         };
         setPropertyChangeHandler(XYGraphModel.PROP_TITLE_FONT, handler);
 
         // Show plot area border
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
-                graph.getXYGraph().getPlotArea().setShowBorder((Boolean) newValue);
-                return true;
-            }
+        handler = (oldValue, newValue, refreshableFigure) -> {
+            ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
+            graph.getXYGraph().getPlotArea().setShowBorder((Boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(XYGraphModel.PROP_SHOW_PLOTAREA_BORDER, handler);
 
         // Plot area background color
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
-                graph.getXYGraph().getPlotArea().setBackgroundColor(
-                        CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
-                return true;
-            }
+        handler = (oldValue, newValue, refreshableFigure) -> {
+            ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
+            graph.getXYGraph().getPlotArea().setBackgroundColor(
+                    CustomMediaFactory.getInstance().getColor(((OPIColor) newValue).getRGBValue()));
+            return true;
         };
         setPropertyChangeHandler(XYGraphModel.PROP_PLOTAREA_BACKCOLOR, handler);
 
         // Transparent
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
-                graph.setTransparent((Boolean) newValue);
-                return true;
-            }
+        handler = (oldValue, newValue, refreshableFigure) -> {
+            ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
+            graph.setTransparent((Boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(XYGraphModel.PROP_TRANSPARENT, handler);
 
         // Show legend
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
-                graph.getXYGraph().setShowLegend((Boolean) newValue);
-                return true;
-            }
+        handler = (oldValue, newValue, refreshableFigure) -> {
+            ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
+            graph.getXYGraph().setShowLegend((Boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(XYGraphModel.PROP_SHOW_LEGEND, handler);
 
         // Show Toolbar
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue,
-                    final IFigure refreshableFigure) {
-                ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
-                graph.setShowToolbar((Boolean) newValue);
-                return true;
-            }
+        handler = (oldValue, newValue, refreshableFigure) -> {
+            ToolbarArmedXYGraph graph = (ToolbarArmedXYGraph) refreshableFigure;
+            graph.setShowToolbar((Boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(XYGraphModel.PROP_SHOW_TOOLBAR, handler);
 
         // trigger pv value
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                for (int i = 0; i < getWidgetModel().getTracesAmount(); i++) {
-                    CircularBufferDataProvider dataProvider = (CircularBufferDataProvider) traceList.get(i)
-                            .getDataProvider();
-                    if (dataProvider.getUpdateMode() == UpdateMode.TRIGGER) {
-                        dataProvider.triggerUpdate();
-                    }
+        handler = (oldValue, newValue, figure) -> {
+            for (int i = 0; i < getWidgetModel().getTracesAmount(); i++) {
+                CircularBufferDataProvider dataProvider = (CircularBufferDataProvider) traceList.get(i)
+                        .getDataProvider();
+                if (dataProvider.getUpdateMode() == UpdateMode.TRIGGER) {
+                    dataProvider.triggerUpdate();
                 }
-                return false;
             }
+            return false;
         };
 
         setPropertyChangeHandler(XYGraphModel.PROP_TRIGGER_PV_VALUE, handler);
@@ -243,44 +204,35 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
     }
 
     private void registerAxesAmountChangeHandler() {
-        final IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure refreshableFigure) {
-                XYGraphModel model = (XYGraphModel) getModel();
-                IXYGraph xyGraph = ((ToolbarArmedXYGraph) refreshableFigure).getXYGraph();
-                int currentAxisAmount = xyGraph.getAxisList().size();
-                // add axis
-                if ((Integer) newValue > currentAxisAmount) {
-                    for (int i = 0; i < (Integer) newValue - currentAxisAmount; i++) {
-                        for (AxisProperty axisProperty : AxisProperty.values()) {
-                            String propID = XYGraphModel.makeAxisPropID(
-                                    axisProperty.propIDPre, i + currentAxisAmount);
-                            model.setPropertyVisible(propID, true);
-                        }
-                        xyGraph.addAxis(axisList.get(i + currentAxisAmount));
+        final IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+            XYGraphModel model = (XYGraphModel) getModel();
+            IXYGraph xyGraph = ((ToolbarArmedXYGraph) refreshableFigure).getXYGraph();
+            int currentAxisAmount = xyGraph.getAxisList().size();
+            // add axis
+            if ((Integer) newValue > currentAxisAmount) {
+                for (int i1 = 0; i1 < (Integer) newValue - currentAxisAmount; i1++) {
+                    for (AxisProperty axisProperty1 : AxisProperty.values()) {
+                        String propID1 = XYGraphModel.makeAxisPropID(
+                                axisProperty1.propIDPre, i1 + currentAxisAmount);
+                        model.setPropertyVisible(propID1, true);
                     }
-                } else if ((Integer) newValue < currentAxisAmount) { // remove axis
-                    for (int i = 0; i < currentAxisAmount - (Integer) newValue; i++) {
-                        for (AxisProperty axisProperty : AxisProperty.values()) {
-                            String propID = XYGraphModel.makeAxisPropID(
-                                    axisProperty.propIDPre, i + (Integer) newValue);
-                            model.setPropertyVisible(propID, false);
-                        }
-                        xyGraph.removeAxis(axisList.get(i + (Integer) newValue));
-                    }
+                    xyGraph.addAxis(axisList.get(i1 + currentAxisAmount));
                 }
-                return true;
+            } else if ((Integer) newValue < currentAxisAmount) { // remove axis
+                for (int i2 = 0; i2 < currentAxisAmount - (Integer) newValue; i2++) {
+                    for (AxisProperty axisProperty2 : AxisProperty.values()) {
+                        String propID2 = XYGraphModel.makeAxisPropID(
+                                axisProperty2.propIDPre, i2 + (Integer) newValue);
+                        model.setPropertyVisible(propID2, false);
+                    }
+                    xyGraph.removeAxis(axisList.get(i2 + (Integer) newValue));
+                }
             }
+            return true;
         };
         getWidgetModel().getProperty(XYGraphModel.PROP_AXIS_COUNT)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
-                    }
-                });
+                .addPropertyChangeListener(
+                        evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
         // setPropertyChangeHandler(XYGraphModel.PROP_AXES_AMOUNT, handler);
     }
 
@@ -378,15 +330,16 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             break;
         case SCALE_FORMAT:
             if (((String) newValue).trim().equals("")) { //$NON-NLS-1$
-                if (!axis.isDateEnabled())
+                if (!axis.isDateEnabled()) {
                     axis.setAutoFormat(true);
+                }
             } else {
                 axis.setAutoFormat(false);
                 try {
                     axis.setFormatPattern((String) newValue);
                 } catch (Exception e) {
-                    ConsoleService.getInstance().writeError((String) newValue +
-                            " is illegal Numeric Format." +
+                    Activator.getLogger().log(Level.SEVERE, (String) newValue +
+                            " is not a valid numeric format." +
                             " The axis will be auto formatted.");
                     axis.setAutoFormat(true);
                 }
@@ -398,46 +351,39 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
     }
 
     private void registerTraceAmountChangeHandler() {
-        final IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure refreshableFigure) {
-                XYGraphModel model = (XYGraphModel) getModel();
-                IXYGraph xyGraph = ((ToolbarArmedXYGraph) refreshableFigure).getXYGraph();
-                int currentTracesAmount = xyGraph.getPlotArea().getTraceList().size();
-                // add trace
-                if ((Integer) newValue > currentTracesAmount) {
-                    for (int i = 0; i < (Integer) newValue - currentTracesAmount; i++) {
-                        for (TraceProperty traceProperty : TraceProperty.values()) {
-                            if (traceProperty == TraceProperty.XPV_VALUE ||
-                                    traceProperty == TraceProperty.YPV_VALUE)
-                                continue;
-                            String propID = XYGraphModel.makeTracePropID(
-                                    traceProperty.propIDPre, i + currentTracesAmount);
-                            model.setPropertyVisible(propID, true);
+        final IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+            XYGraphModel model = (XYGraphModel) getModel();
+            IXYGraph xyGraph = ((ToolbarArmedXYGraph) refreshableFigure).getXYGraph();
+            int currentTracesAmount = xyGraph.getPlotArea().getTraceList().size();
+            // add trace
+            if ((Integer) newValue > currentTracesAmount) {
+                for (int i1 = 0; i1 < (Integer) newValue - currentTracesAmount; i1++) {
+                    for (TraceProperty traceProperty1 : TraceProperty.values()) {
+                        if (traceProperty1 == TraceProperty.XPV_VALUE ||
+                                traceProperty1 == TraceProperty.YPV_VALUE) {
+                            continue;
                         }
-                        xyGraph.addTrace(traceList.get(i + currentTracesAmount));
+                        String propID1 = XYGraphModel.makeTracePropID(
+                                traceProperty1.propIDPre, i1 + currentTracesAmount);
+                        model.setPropertyVisible(propID1, true);
                     }
-                } else if ((Integer) newValue < currentTracesAmount) { // remove trace
-                    for (int i = 0; i < currentTracesAmount - (Integer) newValue; i++) {
-                        for (TraceProperty traceProperty : TraceProperty.values()) {
-                            String propID = XYGraphModel.makeTracePropID(
-                                    traceProperty.propIDPre, i + (Integer) newValue);
-                            model.setPropertyVisible(propID, false);
-                        }
-                        xyGraph.removeTrace(traceList.get(i + (Integer) newValue));
-                    }
+                    xyGraph.addTrace(traceList.get(i1 + currentTracesAmount));
                 }
-                return true;
+            } else if ((Integer) newValue < currentTracesAmount) { // remove trace
+                for (int i2 = 0; i2 < currentTracesAmount - (Integer) newValue; i2++) {
+                    for (TraceProperty traceProperty2 : TraceProperty.values()) {
+                        String propID2 = XYGraphModel.makeTracePropID(
+                                traceProperty2.propIDPre, i2 + (Integer) newValue);
+                        model.setPropertyVisible(propID2, false);
+                    }
+                    xyGraph.removeTrace(traceList.get(i2 + (Integer) newValue));
+                }
             }
+            return true;
         };
         getWidgetModel().getProperty(XYGraphModel.PROP_TRACE_COUNT)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
-                    }
-                });
+                .addPropertyChangeListener(
+                        evt -> handler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure()));
 
         // setPropertyChangeHandler(XYGraphModel.PROP_TRACES_AMOUNT, handler);
     }
@@ -461,23 +407,17 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                 if (concatenate) {
                     // cannot use setPropertyChangeHandler because the PV value has to be buffered
                     // which means that it cannot be ignored.
-                    getWidgetModel().getProperty(propID).addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(final PropertyChangeEvent evt) {
-                            UIBundlingThread.getInstance().addRunnable(
-                                    getViewer().getControl().getDisplay(), new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (isActive()) {
-                                                handler.handleChange(
-                                                        evt.getOldValue(), evt.getNewValue(), getFigure());
-                                            }
+                    getWidgetModel().getProperty(propID)
+                            .addPropertyChangeListener(evt -> UIBundlingThread.getInstance().addRunnable(
+                                    getViewer().getControl().getDisplay(), () -> {
+                                        if (isActive()) {
+                                            handler.handleChange(
+                                                    evt.getOldValue(), evt.getNewValue(), getFigure());
                                         }
-                                    });
-                        }
-                    });
-                } else
+                                    }));
+                } else {
                     setPropertyChangeHandler(propID, handler);
+                }
             }
         }
         for (int i = XYGraphModel.MAX_TRACES_AMOUNT - 1; i >= model.getTracesAmount(); i--) {
@@ -540,22 +480,26 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             dataProvider.setUpdateMode(UpdateMode.values()[(Integer) newValue]);
             break;
         case XAXIS_INDEX:
-            if (!axisList.get((Integer) newValue).isYAxis())
+            if (!axisList.get((Integer) newValue).isYAxis()) {
                 trace.setXAxis(axisList.get((Integer) newValue));
+            }
             break;
         case YAXIS_INDEX:
-            if (axisList.get((Integer) newValue).isYAxis())
+            if (axisList.get((Integer) newValue).isYAxis()) {
                 trace.setYAxis(axisList.get((Integer) newValue));
+            }
             break;
         case XPV:
-            if (newValue.toString() != null && newValue.toString().trim().length() > 0)
+            if (newValue.toString() != null && newValue.toString().trim().length() > 0) {
                 dataProvider.setChronological(false);
-            else
+            } else {
                 dataProvider.setChronological(true);
+            }
             break;
         case XPV_VALUE:
-            if (newValue == null || !(newValue instanceof VType))
+            if (newValue == null || !(newValue instanceof VType)) {
                 break;
+            }
             if (dataProvider.isConcatenate_data()) {
                 IPV pv = getPV(xPVPropID);
                 if (pv != null) {
@@ -563,12 +507,14 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                         setXValue(dataProvider, o);
                     }
                 }
-            } else
+            } else {
                 setXValue(dataProvider, (VType) newValue);
+            }
             break;
         case YPV_VALUE:
-            if (newValue == null || !(newValue instanceof VType))
+            if (newValue == null || !(newValue instanceof VType)) {
                 break;
+            }
             if (dataProvider.isConcatenate_data()) {
                 IPV pv = getPV(yPVPropID);
                 if (pv != null) {
@@ -577,8 +523,9 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                         setYValue(trace, dataProvider, o);
                     }
                 }
-            } else
+            } else {
                 setYValue(trace, dataProvider, (VType) newValue);
+            }
             break;
         case VISIBLE:
             trace.setVisible((Boolean) newValue);
@@ -591,8 +538,9 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
     private void setXValue(CircularBufferDataProvider dataProvider, VType value) {
         if (VTypeHelper.getSize(value) > 1) {
             dataProvider.setCurrentXDataArray(VTypeHelper.getDoubleArray(value));
-        } else
+        } else {
             dataProvider.setCurrentXData(VTypeHelper.getDouble(value));
+        }
     }
 
     private void setYValue(Trace trace,
@@ -604,8 +552,9 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
         } else {
             if (VTypeHelper.getSize(y_value) > 1) {
                 dataProvider.setCurrentYDataArray(VTypeHelper.getDoubleArray(y_value));
-            } else
+            } else {
                 dataProvider.setCurrentYData(VTypeHelper.getDouble(y_value));
+            }
         }
     }
 

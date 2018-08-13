@@ -13,7 +13,6 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.script.JavaScriptStore;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptStoreFactory;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.csstudio.ui.util.thread.UIBundlingThread;
@@ -104,7 +103,6 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
                     } catch (Exception e) {
                         final String message = "Failed to compile JavaScript: " + getAbsolutePath();
                         OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                        ConsoleService.getInstance().writeError(message + "\n" + e.getMessage()); //$NON-NLS-1$
                     }
                 });
             }
@@ -115,13 +113,11 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
                 } catch (Exception e) {
                     final String message = "Error exists in script " + getAbsolutePath();
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                    ConsoleService.getInstance().writeError(message + "\n" + e.getMessage()); //$NON-NLS-1$
                 }
             });
         } catch (Exception e) {
             final String message = "Failed to execute JavaScript: " + getAbsolutePath();
             OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-            ConsoleService.getInstance().writeError(message + "\n" + e.getMessage()); //$NON-NLS-1$
         }
     }
 

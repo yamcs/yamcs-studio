@@ -7,17 +7,17 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.logging.Level;
 
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.scriptUtil.GUIUtil;
-import org.csstudio.opibuilder.util.ConsoleService;
+import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel.Style;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.TextInputModel;
@@ -125,7 +125,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
             if (model.isLimitsFromPV()) {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
-                    if (pvLoadLimitsListener == null)
+                    if (pvLoadLimitsListener == null) {
                         pvLoadLimitsListener = new IPVListener.Stub() {
                             @Override
                             public void valueChanged(IPV pv) {
@@ -146,6 +146,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                                 }
                             }
                         };
+                    }
                     pv.addListener(pvLoadLimitsListener);
                 }
             }
@@ -156,18 +157,21 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @param text
      */
     public void outputPVValue(String text) {
-        if (!getWidgetModel().getConfirmMessage().isEmpty())
+        if (!getWidgetModel().getConfirmMessage().isEmpty()) {
             if (!GUIUtil.openConfirmDialog("PV Name: " + getPVName() +
                     "\nNew Value: " + text + "\n\n" +
-                    getWidgetModel().getConfirmMessage()))
+                    getWidgetModel().getConfirmMessage())) {
                 return;
+            }
+        }
         try {
             Object result;
             if (getWidgetModel().getFormat() != FormatEnum.STRING
                     && text.trim().indexOf(SPACE) != -1) {
                 result = parseStringArray(text);
-            } else
+            } else {
                 result = parseString(text);
+            }
             setPVValue(AbstractPVWidgetModel.PROP_PVNAME, result);
         } catch (Exception e) {
             String msg = NLS
@@ -177,7 +181,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                                     getWidgetModel().getName(),
                                     text })
                     + e.toString();
-            ConsoleService.getInstance().writeError(msg);
+            Activator.getLogger().log(Level.SEVERE, msg);
         }
     }
 
@@ -186,62 +190,37 @@ public class TextInputEditpart extends TextUpdateEditPart {
         super.registerPropertyChangeHandlers();
         if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             removeAllPropertyChangeHandlers(LabelModel.PROP_TEXT);
-            IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-                @Override
-                public boolean handleChange(Object oldValue, Object newValue,
-                        final IFigure figure) {
-                    String text = (String) newValue;
+            IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+                String text = (String) newValue;
 
-                    if (getPV() == null) {
-                        setFigureText(text);
-                        if (getWidgetModel().isAutoSize()) {
-                            Display.getCurrent().timerExec(10, new Runnable() {
-                                @Override
-                                public void run() {
-                                    performAutoSize();
-                                }
-                            });
-                        }
+                if (getPV() == null) {
+                    setFigureText(text);
+                    if (getWidgetModel().isAutoSize()) {
+                        Display.getCurrent().timerExec(10, () -> performAutoSize());
                     }
-                    // Output pv value even if pv name is empty, so setPVValuelistener can be triggered.
-                    outputPVValue(text);
-                    return false;
                 }
+                // Output pv value even if pv name is empty, so setPVValuelistener can be triggered.
+                outputPVValue(text);
+                return false;
             };
             setPropertyChangeHandler(LabelModel.PROP_TEXT, handler);
         }
 
-        IWidgetPropertyChangeHandler pvNameHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                registerLoadLimitsListener();
-                return false;
-            }
+        IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {
+            registerLoadLimitsListener();
+            return false;
         };
         setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME,
                 pvNameHandler);
 
-        PropertyChangeListener updatePropSheetListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent arg0) {
-                updatePropSheet();
-            }
-        };
+        PropertyChangeListener updatePropSheetListener = arg0 -> updatePropSheet();
         getWidgetModel().getProperty(TextInputModel.PROP_LIMITS_FROM_PV)
                 .addPropertyChangeListener(updatePropSheetListener);
 
         getWidgetModel().getProperty(TextInputModel.PROP_SELECTOR_TYPE)
                 .addPropertyChangeListener(updatePropSheetListener);
 
-        PropertyChangeListener reCreateWidgetListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                reCreateWidget();
-            }
-        };
+        PropertyChangeListener reCreateWidgetListener = evt -> reCreateWidget();
 
         getWidgetModel().getProperty(TextInputModel.PROP_STYLE)
                 .addPropertyChangeListener(reCreateWidgetListener);
@@ -271,8 +250,9 @@ public class TextInputEditpart extends TextUpdateEditPart {
                     return super.handleButtonUp(button);
                 }
             };
-        } else
+        } else {
             return super.getDragTracker(request);
+        }
     }
 
     @Override
@@ -280,8 +260,9 @@ public class TextInputEditpart extends TextUpdateEditPart {
         if (getFigure().isEnabled()
                 && ((request.getType() == RequestConstants.REQ_DIRECT_EDIT &&
                         getExecutionMode() != ExecutionMode.RUN_MODE) ||
-                        request.getType() == RequestConstants.REQ_OPEN))
+                        request.getType() == RequestConstants.REQ_OPEN)) {
             performDirectEdit();
+        }
     }
 
     @Override
@@ -304,10 +285,11 @@ public class TextInputEditpart extends TextUpdateEditPart {
             double[] result = new double[texts.length];
             for (int i = 0; i < texts.length; i++) {
                 Object o = parseString(texts[i]);
-                if (o instanceof Number)
+                if (o instanceof Number) {
                     result[i] = ((Number) o).doubleValue();
-                else
+                } else {
                     throw new ParseException(texts[i] + " cannot be parsed as a number!", i);
+                }
             }
             return result;
         }
@@ -326,8 +308,9 @@ public class TextInputEditpart extends TextUpdateEditPart {
         VType pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
         FormatEnum formatEnum = getWidgetModel().getFormat();
 
-        if (pvValue == null)
+        if (pvValue == null) {
             return text;
+        }
 
         return parseStringForPVManagerPV(formatEnum, text, pvValue);
 
@@ -388,8 +371,9 @@ public class TextInputEditpart extends TextUpdateEditPart {
                             return text;
                         }
                     }
-                } else
+                } else {
                     return text;
+                }
             }
         } else if (pvValue instanceof Array) {
             if (pvValue instanceof VNumberArray) {
@@ -443,18 +427,20 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     private double parseDouble(final String text, final boolean coerce)
             throws ParseException {
-        if (text.contains("\n") && !text.endsWith("\n"))
+        if (text.contains("\n") && !text.endsWith("\n")) {
             throw new ParseException(NLS.bind("{0} cannot be parsed to double", text), text.indexOf("\n"));
-        double value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue(); // $NON-NLS-1$ //$NON-NLS-2$
+        }
+        double value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue(); // $NON-NLS-1$
         if (coerce) {
             double min = getWidgetModel().getMinimum();
             double max = getWidgetModel().getMaximum();
             // Only apply sensible limits, not min==max==0
             if (min < max) {
-                if (value < min)
+                if (value < min) {
                     value = min;
-                else if (value > max)
+                } else if (value > max) {
                     value = max;
+                }
             }
         }
         return value;
@@ -474,10 +460,11 @@ public class TextInputEditpart extends TextUpdateEditPart {
             double max = getWidgetModel().getMaximum();
             // Only apply sensible limits, not min==max==0
             if (min < max) {
-                if (i < min)
+                if (i < min) {
                     i = (long) min;
-                else if (i > max)
+                } else if (i > max) {
                     i = (long) max;
+                }
             }
         }
         return (int) i; // EPICS_V3_PV doesn't support Long
@@ -556,10 +543,11 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 double max = getWidgetModel().getMaximum();
                 // Only apply sensible limits, not min==max==0
                 if (min < max) {
-                    if (value < min)
+                    if (value < min) {
                         value = min;
-                    else if (value > max)
+                    } else if (value > max) {
                         value = max;
+                    }
                 }
             }
         }
@@ -607,26 +595,29 @@ public class TextInputEditpart extends TextUpdateEditPart {
 
     @Override
     protected void setFigureText(String text) {
-        if (delegate instanceof NativeTextEditpartDelegate)
+        if (delegate instanceof NativeTextEditpartDelegate) {
             ((NativeTextEditpartDelegate) delegate).setFigureText(text);
-        else
+        } else {
             super.setFigureText(text);
+        }
     }
 
     @Override
     protected void performAutoSize() {
-        if (delegate instanceof NativeTextEditpartDelegate)
+        if (delegate instanceof NativeTextEditpartDelegate) {
             ((NativeTextEditpartDelegate) delegate).performAutoSize();
-        else
+        } else {
             super.performAutoSize();
+        }
     }
 
     @Override
     public String getValue() {
-        if (delegate instanceof NativeTextEditpartDelegate)
+        if (delegate instanceof NativeTextEditpartDelegate) {
             return ((NativeTextEditpartDelegate) delegate).getValue();
-        else
+        } else {
             return super.getValue();
+        }
     }
 
 }

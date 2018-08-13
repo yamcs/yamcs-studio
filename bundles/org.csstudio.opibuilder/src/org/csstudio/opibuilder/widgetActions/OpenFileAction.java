@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.properties.FilePathProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
@@ -61,14 +60,16 @@ public class OpenFileAction extends AbstractWidgetAction {
             public IStatus runInUIThread(IProgressMonitor monitor) {
                 // Open editor on new file.
                 IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-                if (dw == null)
+                if (dw == null) {
                     return Status.OK_STATUS; // Not really OK..
+                }
                 try {
                     IWorkbenchPage page = Objects.requireNonNull(dw.getActivePage());
 
                     IPath absolutePath = getPath();
-                    if (!absolutePath.isAbsolute())
+                    if (!absolutePath.isAbsolute()) {
                         absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), absolutePath);
+                    }
 
                     // Workspace file?
                     IFile file = ResourceUtil.getIFileFromIPath(absolutePath);
@@ -90,8 +91,7 @@ public class OpenFileAction extends AbstractWidgetAction {
                 } catch (Exception e) {
                     String message = "Failed to open file " + getPath();
                     ExceptionDetailsErrorDialog.openError(dw.getShell(), "Failed to open file", message, e);
-                    OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                    ConsoleService.getInstance().writeError(message);
+                    OPIBuilderPlugin.getLogger().log(Level.SEVERE, message, e);
                 }
                 return Status.OK_STATUS;
             }

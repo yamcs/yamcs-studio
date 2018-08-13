@@ -13,7 +13,6 @@ import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.simplepv.IPV;
 import org.eclipse.osgi.util.NLS;
 
@@ -42,8 +41,9 @@ public class ScriptService {
         public static String[] stringValues() {
             String[] sv = new String[values().length];
             int i = 0;
-            for (ScriptType p : values())
+            for (ScriptType p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
     }
@@ -82,8 +82,9 @@ public class ScriptService {
     }
 
     public synchronized static ScriptService getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new ScriptService();
+        }
         return instance;
     }
 
@@ -103,9 +104,7 @@ public class ScriptService {
         } catch (Exception e) {
             String name = scriptData instanceof RuleScriptData ? ((RuleScriptData) scriptData).getRuleData().getName()
                     : scriptData.getPath().toString();
-            String errorInfo = NLS.bind("Failed to register {0}. \n{1}",
-                    name, e);
-            ConsoleService.getInstance().writeError(errorInfo);
+            String errorInfo = NLS.bind("Failed to register {0}. \n{1}", name, e);
             OPIBuilderPlugin.getLogger().log(Level.WARNING, errorInfo, e);
         }
         // }
@@ -119,8 +118,9 @@ public class ScriptService {
     }
 
     public void unRegisterScript(ScriptData scriptData) {
-        if (scriptMap.get(scriptData) != null)
+        if (scriptMap.get(scriptData) != null) {
             scriptMap.get(scriptData).unRegister();
+        }
         scriptMap.remove(scriptData);
     }
 

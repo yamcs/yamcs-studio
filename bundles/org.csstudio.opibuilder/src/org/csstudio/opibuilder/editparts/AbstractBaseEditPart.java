@@ -21,8 +21,6 @@
  */
 package org.csstudio.opibuilder.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +44,6 @@ import org.csstudio.opibuilder.script.ScriptData;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptsInput;
 import org.csstudio.opibuilder.util.BOYPVFactory;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.util.OPIFont;
@@ -98,15 +95,18 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                 String value) {
             if (name.equals("executionMode") && //$NON-NLS-1$
                     value.equals("EDIT_MODE") && //$NON-NLS-1$
-                    getExecutionMode() == ExecutionMode.EDIT_MODE)
+                    getExecutionMode() == ExecutionMode.EDIT_MODE) {
                 return true;
+            }
             if (name.equals("executionMode") && //$NON-NLS-1$
                     value.equals("RUN_MODE") && //$NON-NLS-1$
-                    getExecutionMode() == ExecutionMode.RUN_MODE)
+                    getExecutionMode() == ExecutionMode.RUN_MODE) {
                 return true;
+            }
             if (name.equals("hasPVs") && //$NON-NLS-1$
-                    value.equals("true")) //$NON-NLS-1$
+                    value.equals("true")) {
                 return (getAllPVs() != null && getAllPVs().size() > 0);
+            }
             return false;
         }
     }
@@ -199,10 +199,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                                         .bind("Unable to connect to PV: {0}! \n"
                                                 + "This may cause error when executing the script.",
                                                 pvName);
-                                OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                                        message, e);
-                                ConsoleService.getInstance()
-                                        .writeError(message);
+                                OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                                 pvArray[i] = null;
                             }
                         }
@@ -212,24 +209,23 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                     ScriptService.getInstance().registerScript(scriptData,
                             AbstractBaseEditPart.this, pvArray);
 
-                    UIBundlingThread.getInstance().addRunnable(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isActive()) {
-                                // already deactivated
-                                return;
+                    UIBundlingThread.getInstance().addRunnable(() -> {
+                        if (!isActive()) {
+                            // already deactivated
+                            return;
+                        }
+                        hasStartedPVs = true;
+                        for (IPV pv : pvArray) {
+                            if (pv != null && !pv.isStarted()) {
+                                try {
+                                    pv.start();
+                                } catch (Exception e) {
+                                    OPIBuilderPlugin
+                                            .getLogger()
+                                            .log(Level.WARNING,
+                                                    "Unable to start PV " + pv.getName(), e); //$NON-NLS-1$
+                                }
                             }
-                            hasStartedPVs = true;
-                            for (IPV pv : pvArray)
-                                if (pv != null && !pv.isStarted())
-                                    try {
-                                        pv.start();
-                                    } catch (Exception e) {
-                                        OPIBuilderPlugin
-                                                .getLogger()
-                                                .log(Level.WARNING,
-                                                        "Unable to start PV " + pv.getName(), e); //$NON-NLS-1$
-                                    }
                         }
                     });
                 }
@@ -238,13 +234,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         }
 
         // Rap specified code
-        displayDisposeListener = new Runnable() {
-
-            @Override
-            public void run() {
-                deactivate();
-            }
-        };
+        displayDisposeListener = () -> deactivate();
 
     }
 
@@ -262,8 +252,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     }
 
     protected void addToConnectionHandler(String pvName, IPV pv) {
-        if (connectionHandler == null)
+        if (connectionHandler == null) {
             connectionHandler = createConnectionHandler();
+        }
         connectionHandler.addPV(pvName, pv);
     }
 
@@ -363,21 +354,22 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         try {
             action = getWidgetModel().getActionsInput().getActionsList()
                     .get(index);
-            if (action != null)
+            if (action != null) {
                 action.run();
-            else
+            } else {
                 throw new IndexOutOfBoundsException();
+            }
         } catch (IndexOutOfBoundsException e) {
-            ConsoleService.getInstance().writeError(
-                    NLS.bind("No action at index {0} is configured for {1}",
-                            index, getWidgetModel().getName()));
+            OPIBuilderPlugin.getLogger().log(Level.SEVERE, NLS.bind("No action at index {0} is configured for {1}",
+                    index, getWidgetModel().getName()));
         }
     }
 
     @Override
     public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
-        if (key == IActionFilter.class)
+        if (key == IActionFilter.class) {
             return new BaseEditPartActionFilter();
+        }
         return super.getAdapter(key);
     }
 
@@ -386,8 +378,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      *         this widget.
      */
     public Map<String, IPV> getAllPVs() {
-        if (getConnectionHandler() != null)
+        if (getConnectionHandler() != null) {
             return getConnectionHandler().getAllPVs();
+        }
         return null;
     }
 
@@ -399,8 +392,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @return the PV. null if no such PV exists.
      */
     public IPV getPVByName(String pvName) {
-        if (getConnectionHandler() != null)
+        if (getConnectionHandler() != null) {
             return getConnectionHandler().getAllPVs().get(pvName);
+        }
         return null;
     }
 
@@ -440,8 +434,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @since 2.0.0
      */
     public synchronized Object getVar(String varName) {
-        if (externalObjectsMap != null)
+        if (externalObjectsMap != null) {
             return externalObjectsMap.get(varName);
+        }
         return null;
     }
 
@@ -454,11 +449,12 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                 && actionsInput.getActionsList().size() > 0
                 && (actionsInput.isFirstActionHookedUpToWidget() || actionsInput
                         .isHookUpAllActionsToWidget())) {
-            if (actionsInput.isHookUpAllActionsToWidget())
+            if (actionsInput.isHookUpAllActionsToWidget()) {
                 return getWidgetModel().getActionsInput().getActionsList();
-            else
+            } else {
                 return getWidgetModel().getActionsInput().getActionsList()
                         .subList(0, 1);
+            }
 
         }
         return null;
@@ -501,14 +497,16 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
             figure.addMouseListener(new MouseListener.Stub() {
                 @Override
                 public void mousePressed(MouseEvent me) {
-                    if (me.button != 1)
+                    if (me.button != 1) {
                         return;
+                    }
                     for (AbstractWidgetAction action : actions) {
-                        if (action instanceof OpenDisplayAction)
+                        if (action instanceof OpenDisplayAction) {
                             ((OpenDisplayAction) action).runWithModifiers((me.getState() & SWT.CONTROL) != 0,
                                     (me.getState() & SWT.SHIFT) != 0);
-                        else
+                        } else {
                             action.run();
+                        }
                     }
                 }
             });
@@ -521,39 +519,47 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @param figure
      */
     protected void initFigure(final IFigure figure) {
-        if (figure == null)
+        if (figure == null) {
             throw new IllegalArgumentException(
                     "Editpart does not provide a figure!"); //$NON-NLS-1$
+        }
         Set<String> allPropIds = getWidgetModel().getAllPropertyIDs();
-        if (allPropIds.contains(AbstractWidgetModel.PROP_COLOR_BACKGROUND))
+        if (allPropIds.contains(AbstractWidgetModel.PROP_COLOR_BACKGROUND)) {
             figure.setBackgroundColor(CustomMediaFactory.getInstance()
                     .getColor(getWidgetModel().getBackgroundColor()));
+        }
 
-        if (allPropIds.contains(AbstractWidgetModel.PROP_COLOR_FOREGROUND))
+        if (allPropIds.contains(AbstractWidgetModel.PROP_COLOR_FOREGROUND)) {
             figure.setForegroundColor(CustomMediaFactory.getInstance()
                     .getColor(getWidgetModel().getForegroundColor()));
+        }
 
-        if (allPropIds.contains(AbstractWidgetModel.PROP_FONT))
+        if (allPropIds.contains(AbstractWidgetModel.PROP_FONT)) {
             figure.setFont(getWidgetModel().getFont().getSWTFont());
+        }
 
-        if (allPropIds.contains(AbstractWidgetModel.PROP_VISIBLE))
+        if (allPropIds.contains(AbstractWidgetModel.PROP_VISIBLE)) {
             figure.setVisible(getExecutionMode() == ExecutionMode.RUN_MODE ? getWidgetModel()
                     .isVisible() : true);
+        }
 
-        if (allPropIds.contains(AbstractWidgetModel.PROP_ENABLED))
+        if (allPropIds.contains(AbstractWidgetModel.PROP_ENABLED)) {
             figure.setEnabled(getWidgetModel().isEnabled());
+        }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_WIDTH)
-                && allPropIds.contains(AbstractWidgetModel.PROP_HEIGHT))
+                && allPropIds.contains(AbstractWidgetModel.PROP_HEIGHT)) {
             figure.setSize(getWidgetModel().getSize());
+        }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_BORDER_COLOR)
                 && allPropIds.contains(AbstractWidgetModel.PROP_BORDER_STYLE)
-                && allPropIds.contains(AbstractWidgetModel.PROP_BORDER_WIDTH))
+                && allPropIds.contains(AbstractWidgetModel.PROP_BORDER_WIDTH)) {
             figure.setBorder(BorderFactory.createBorder(getWidgetModel()
                     .getBorderStyle(), getWidgetModel().getBorderWidth(),
                     getWidgetModel().getBorderColor(), getWidgetModel()
                             .getName()));
+        }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_TOOLTIP)) {
             if (!getWidgetModel().getTooltip().equals("")) { //$NON-NLS-1$
@@ -580,14 +586,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     }
 
     protected void registerBasePropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler refreshVisualHandler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                refreshVisuals();
-                return false;
-            }
+        IWidgetPropertyChangeHandler refreshVisualHandler = (oldValue, newValue, figure) -> {
+            refreshVisuals();
+            return false;
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_XPOS,
                 refreshVisualHandler);
@@ -600,140 +601,100 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
 
         // add connection should not be ignored by widget listener.
         getWidgetModel().getProperty(AbstractWidgetModel.PROP_SRC_CONNECTIONS)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        refreshSourceConnections();
-                    }
-                });
+                .addPropertyChangeListener(evt -> refreshSourceConnections());
 
         getWidgetModel().getProperty(AbstractWidgetModel.PROP_TGT_CONNECTIONS)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        refreshTargetConnections();
-                    }
-                });
+                .addPropertyChangeListener(evt -> refreshTargetConnections());
 
-        IWidgetPropertyChangeHandler backColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                figure.setBackgroundColor(CustomMediaFactory.getInstance()
-                        .getColor(((OPIColor) newValue).getRGBValue()));
-                return true;
-            }
+        IWidgetPropertyChangeHandler backColorHandler = (oldValue, newValue, figure) -> {
+            figure.setBackgroundColor(CustomMediaFactory.getInstance()
+                    .getColor(((OPIColor) newValue).getRGBValue()));
+            return true;
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_COLOR_BACKGROUND,
                 backColorHandler);
 
-        IWidgetPropertyChangeHandler foreColorHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                figure.setForegroundColor(CustomMediaFactory.getInstance()
-                        .getColor(((OPIColor) newValue).getRGBValue()));
-                return true;
-            }
+        IWidgetPropertyChangeHandler foreColorHandler = (oldValue, newValue, figure) -> {
+            figure.setForegroundColor(CustomMediaFactory.getInstance()
+                    .getColor(((OPIColor) newValue).getRGBValue()));
+            return true;
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_COLOR_FOREGROUND,
                 foreColorHandler);
 
-        IWidgetPropertyChangeHandler fontHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                figure.setFont(((OPIFont) newValue).getSWTFont());
-                return false;
-            }
+        IWidgetPropertyChangeHandler fontHandler = (oldValue, newValue, figure) -> {
+            figure.setFont(((OPIFont) newValue).getSWTFont());
+            return false;
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_FONT, fontHandler);
 
-        IWidgetPropertyChangeHandler borderHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                setFigureBorder(calculateBorder());
-                return true;
-            }
+        IWidgetPropertyChangeHandler borderHandler = (oldValue, newValue, figure) -> {
+            setFigureBorder(calculateBorder());
+            return true;
         };
 
         setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_STYLE, borderHandler);
         setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_COLOR, borderHandler);
         setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_WIDTH, borderHandler);
 
-        IWidgetPropertyChangeHandler labelBorderHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                if (figure.getBorder() instanceof LabeledBorder)
-                    figure.setBorder(BorderFactory.createBorder(
-                            getWidgetModel().getBorderStyle(), getWidgetModel()
-                                    .getBorderWidth(),
-                            getWidgetModel()
-                                    .getBorderColor(),
-                            getWidgetModel().getName()));
-                return true;
+        IWidgetPropertyChangeHandler labelBorderHandler = (oldValue, newValue, figure) -> {
+            if (figure.getBorder() instanceof LabeledBorder) {
+                figure.setBorder(BorderFactory.createBorder(
+                        getWidgetModel().getBorderStyle(), getWidgetModel()
+                                .getBorderWidth(),
+                        getWidgetModel()
+                                .getBorderColor(),
+                        getWidgetModel().getName()));
             }
+            return true;
         };
 
         setPropertyChangeHandler(AbstractWidgetModel.PROP_NAME, labelBorderHandler);
         setPropertyChangeHandler(AbstractWidgetModel.PROP_FONT, labelBorderHandler);
 
-        IWidgetPropertyChangeHandler enableHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                figure.setEnabled((Boolean) newValue);
-                figure.repaint();
-                return true;
-            }
+        IWidgetPropertyChangeHandler enableHandler = (oldValue, newValue, figure) -> {
+            figure.setEnabled((Boolean) newValue);
+            figure.repaint();
+            return true;
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_ENABLED,
                 enableHandler);
 
-        IWidgetPropertyChangeHandler tooltipHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                if (newValue.toString().equals("")) //$NON-NLS-1$
-                    figure.setToolTip(null);
-                else {
-                    if (tooltipLabel == null)
-                        tooltipLabel = new TooltipLabel(AbstractBaseEditPart.this);
-                    figure.setToolTip(tooltipLabel);
+        IWidgetPropertyChangeHandler tooltipHandler = (oldValue, newValue, figure) -> {
+            if (newValue.toString().equals("")) {
+                figure.setToolTip(null);
+            } else {
+                if (tooltipLabel == null) {
+                    tooltipLabel = new TooltipLabel(AbstractBaseEditPart.this);
                 }
-                return false;
+                figure.setToolTip(tooltipLabel);
             }
+            return false;
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_TOOLTIP,
                 tooltipHandler);
 
-        IWidgetPropertyChangeHandler visibilityHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                boolean visible = (Boolean) newValue;
-                final IFigure figure = getFigure();
-                if (getExecutionMode() == ExecutionMode.RUN_MODE) {
-                    figure.setVisible(visible);
-                } else {
-                    if (!visible) {
-                        figure.setVisible(false);
+        IWidgetPropertyChangeHandler visibilityHandler = (oldValue, newValue, refreshableFigure) -> {
+            boolean visible = (Boolean) newValue;
+            final IFigure figure = getFigure();
+            if (getExecutionMode() == ExecutionMode.RUN_MODE) {
+                figure.setVisible(visible);
+            } else {
+                if (!visible) {
+                    figure.setVisible(false);
 
-                        UIJob job = new UIJob("reset") {
-                            @Override
-                            public IStatus runInUIThread(
-                                    final IProgressMonitor monitor) {
-                                figure.setVisible(true);
-                                return Status.OK_STATUS;
-                            }
-                        };
-                        job.schedule(2000);
-                    }
+                    UIJob job = new UIJob("reset") {
+                        @Override
+                        public IStatus runInUIThread(
+                                final IProgressMonitor monitor) {
+                            figure.setVisible(true);
+                            return Status.OK_STATUS;
+                        }
+                    };
+                    job.schedule(2000);
                 }
-                return true;
             }
+            return true;
         };
         setPropertyChangeHandler(AbstractWidgetModel.PROP_VISIBLE,
                 visibilityHandler);
@@ -759,8 +720,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     }
 
     protected void removeFromConnectionHandler(String pvName) {
-        if (connectionHandler != null)
+        if (connectionHandler != null) {
             connectionHandler.removePV(pvName);
+        }
     }
 
     /**
@@ -813,8 +775,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @since 2.0.0
      */
     public synchronized void setVar(String varName, Object varValue) {
-        if (externalObjectsMap == null)
+        if (externalObjectsMap == null) {
             externalObjectsMap = new HashMap<>();
+        }
         externalObjectsMap.put(varName, varValue);
     }
 
@@ -957,8 +920,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     @Override
     public ConnectionAnchor getSourceConnectionAnchor(
             ConnectionEditPart connection) {
-        if (anchorMap == null)
+        if (anchorMap == null) {
             fillAnchorMap();
+        }
         ConnectionModel conn = (ConnectionModel) connection.getModel();
         return anchorMap.get(conn.getSourceTerminal());
     }
@@ -972,8 +936,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     @Override
     public ConnectionAnchor getTargetConnectionAnchor(
             ConnectionEditPart connection) {
-        if (anchorMap == null)
+        if (anchorMap == null) {
             fillAnchorMap();
+        }
         ConnectionModel conn = (ConnectionModel) connection.getModel();
         return anchorMap.get(conn.getTargetTerminal());
     }
@@ -992,8 +957,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @return terminal name of the anchor. null if no name was found.
      */
     public String getTerminalNameFromAnchor(ConnectionAnchor anchor) {
-        if (anchorMap == null)
+        if (anchorMap == null) {
             fillAnchorMap();
+        }
         for (Entry<String, ConnectionAnchor> entry : anchorMap.entrySet()) {
             if (entry.getValue().equals(anchor)) {
                 return entry.getKey();
@@ -1018,8 +984,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @return all the anchors on this widget as in a anchor map. key is the connection terminal name.
      */
     public Map<String, ConnectionAnchor> getAnchorMap() {
-        if (anchorMap == null)
+        if (anchorMap == null) {
             fillAnchorMap();
+        }
         return anchorMap;
     }
 
@@ -1031,8 +998,9 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      * @return the closest anchor to point p
      */
     protected ConnectionAnchor getClosestAnchorAt(Point p) {
-        if (anchorMap == null)
+        if (anchorMap == null) {
             fillAnchorMap();
+        }
         ConnectionAnchor closest = null;
         double min = Long.MAX_VALUE;
         for (ConnectionAnchor anchor : anchorMap.values()) {
@@ -1085,12 +1053,6 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
      */
     public final void setValueInUIThread(final Object value) {
         UIBundlingThread.getInstance().addRunnable(
-                getViewer().getControl().getDisplay(), new Runnable() {
-
-                    @Override
-                    public void run() {
-                        setValue(value);
-                    }
-                });
+                getViewer().getControl().getDisplay(), () -> setValue(value));
     }
 }

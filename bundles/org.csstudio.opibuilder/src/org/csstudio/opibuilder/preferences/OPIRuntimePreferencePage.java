@@ -8,10 +8,8 @@
 package org.csstudio.opibuilder.preferences;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.opibuilder.preferences.PreferencesHelper.ConsolePopupLevel;
 import org.csstudio.simplepv.SimplePVLayer;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -135,14 +133,6 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
             entries[i][0] = allPVFactories[i];
             entries[i][1] = allPVFactories[i];
         }
-
-        ComboFieldEditor popupConsoleEditor = new ComboFieldEditor(PreferencesHelper.POPUP_CONSOLE,
-                "Console Popup Level", new String[][] {
-                        { "Error, Warning and Info", ConsolePopupLevel.ALL.toString() },
-                        { "Only Info", ConsolePopupLevel.ONLY_INFO.toString() },
-                        { "Don't Popup", ConsolePopupLevel.NO_POP.toString() } },
-                parent);
-        addField(popupConsoleEditor);
 
         StringFieldEditor pythonPathEditor = new StringFieldEditor(PreferencesHelper.PYTHON_PATH, "PYTHONPATH", parent);
         pythonPathEditor.getTextControl(parent).setToolTipText("The path to search python modules");

@@ -32,14 +32,6 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class PreferencesHelper {
 
-    public enum ConsolePopupLevel {
-        NO_POP, ONLY_INFO, ALL;
-    }
-
-    public enum PVConnectionLayer {
-        PV_MANAGER, UTILITY_PV;
-    }
-
     public static final String COLOR_FILE = "color_file";
     public static final String FONT_FILE = "font_file";
     public static final String RUN_MACROS = "macros";
@@ -47,16 +39,14 @@ public class PreferencesHelper {
     public static final String OPI_GUI_REFRESH_CYCLE = "opi_gui_refresh_cycle";
     public static final String NO_EDIT = "no_edit";
     public static final String DISABLE_ADVANCED_GRAPHICS = "disable_advanced_graphics";
-    public static final String POPUP_CONSOLE = "popup_console";
     public static final String SCHEMA_OPI = "schema_opi";
     public static final String PYTHON_PATH = "python_path";
-    public static final String DISPLAY_SYSTEM_OUTPUT = "display_system_output";
-    public static final String SHOW_COMPACT_MODE_DIALOG = "show_compact_mode_dialog";//$NON-NLS-1$
-    public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";//$NON-NLS-1$
-    public static final String START_WINDOW_IN_COMPACT_MODE = "start_window_in_compact_mode";//$NON-NLS-1$
-    public static final String URL_FILE_LOADING_TIMEOUT = "url_file_loading_timeout";//$NON-NLS-1$
-    public static final String PULSING_ALARM_MINOR_PERIOD = "pulsing_alarm_minor_period";//$NON-NLS-1$
-    public static final String PULSING_ALARM_MAJOR_PERIOD = "pulsing_alarm_major_period";//$NON-NLS-1$
+    public static final String SHOW_COMPACT_MODE_DIALOG = "show_compact_mode_dialog";
+    public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";
+    public static final String START_WINDOW_IN_COMPACT_MODE = "start_window_in_compact_mode";
+    public static final String URL_FILE_LOADING_TIMEOUT = "url_file_loading_timeout";
+    public static final String PULSING_ALARM_MINOR_PERIOD = "pulsing_alarm_minor_period";
+    public static final String PULSING_ALARM_MAJOR_PERIOD = "pulsing_alarm_major_period";
     public static final String OPI_SEARCH_PATH = "opi_search_path";
     public static final String DEFAULT_TO_CLASSIC_STYLE = "default_to_classic_style";
     public static final String SHOW_OPI_RUNTIME_STACKS = "show_opi_runtime_stacks";
@@ -151,13 +141,6 @@ public class PreferencesHelper {
     public static boolean isNoEdit() {
         final IPreferencesService service = Platform.getPreferencesService();
         return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, NO_EDIT, false, null);
-    }
-
-    public static ConsolePopupLevel getConsolePopupLevel() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        String popupLevelString = service.getString(
-                OPIBuilderPlugin.PLUGIN_ID, POPUP_CONSOLE, ConsolePopupLevel.ALL.toString(), null);
-        return ConsolePopupLevel.valueOf(popupLevelString);
     }
 
     public static boolean isDefaultStyleClassic() {
@@ -286,11 +269,6 @@ public class PreferencesHelper {
             }
         }
         return Optional.of(sb.toString());
-    }
-
-    public static boolean isDisplaySystemOutput() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, DISPLAY_SYSTEM_OUTPUT, false, null);
     }
 
     public static boolean isShowCompactModeDialog() {

@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.properties.FilePathProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.eclipse.core.runtime.IPath;
@@ -59,12 +58,13 @@ public class PlayWavFileAction extends AbstractWidgetAction {
                 try {
                     // a better way to play wav.
                     URL url;
-                    if (ResourceUtil.isExistingWorkspaceFile(path))
+                    if (ResourceUtil.isExistingWorkspaceFile(path)) {
                         url = new File(ResourceUtil.workspacePathToSysPath(path).toOSString()).toURI().toURL();
-                    else if (ResourceUtil.isExistingLocalFile(path))
+                    } else if (ResourceUtil.isExistingLocalFile(path)) {
                         url = new File(path.toOSString()).toURI().toURL();
-                    else
+                    } else {
                         url = new URL(path.toString());
+                    }
                     Applet.newAudioClip(url).play();
                     // final InputStream in = ResourceUtil.pathToInputStream(
                     // getAbsolutePath(), false);
@@ -115,8 +115,7 @@ public class PlayWavFileAction extends AbstractWidgetAction {
                     // playWavJob.schedule();
                 } catch (Exception e) {
                     String message = "Failed to connect to wave file " + getPath();
-                    OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-                    ConsoleService.getInstance().writeError(message + "\n" + e.getMessage());
+                    OPIBuilderPlugin.getLogger().log(Level.SEVERE, message, e);
                 } finally {
                     monitor.done();
                 }

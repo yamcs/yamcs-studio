@@ -8,9 +8,9 @@
 package org.csstudio.opibuilder.actions;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.action.IAction;
@@ -21,15 +21,18 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Show the predefined macros of the selected widget in console and message dialog.
+/**
+ * Show the predefined macros of the selected widget in console and message dialog.
+ * 
  * @author Xihui Chen
  *
  */
 public class ShowMacrosAction implements IObjectActionDelegate {
 
+    private static final Logger log = Logger.getLogger(ShowMacrosAction.class.getName());
+
     private IStructuredSelection selection;
     private IWorkbenchPart targetPart;
-
 
     @Override
     public void run(IAction action) {
@@ -37,17 +40,17 @@ public class ShowMacrosAction implements IObjectActionDelegate {
         String message = NLS.bind("The predefined macros of {0}:\n", widget.getName());
         StringBuilder sb = new StringBuilder(message);
         Map<String, String> macroMap = OPIBuilderMacroUtil.getWidgetMacroMap(widget);
-        for(final Map.Entry<String, String> entry: macroMap.entrySet()){
+        for (final Map.Entry<String, String> entry : macroMap.entrySet()) {
             sb.append(entry.getKey() + "=" + entry.getValue() + "\n");
         }
         sb.append("\n");
         sb.append("Note: Macros are loaded during OPI opening, so this won't reflect the macro changes after opening." +
                 "To reflect the latest changes, please reopen the OPI and show macros again.");
-        //show the dialog first, because on some linux systems the console print brings the workbench window to top,
-        //blocking entire CSS
+        // show the dialog first, because on some linux systems the console print brings the workbench window to top,
+        // blocking entire CSS
         MessageDialog.openInformation(targetPart.getSite().getShell(),
                 "Predefined Macros", sb.toString());
-        ConsoleService.getInstance().writeInfo(sb.toString());
+        log.info(sb.toString());
     }
 
     @Override
@@ -62,11 +65,11 @@ public class ShowMacrosAction implements IObjectActionDelegate {
         this.targetPart = targetPart;
     }
 
-
-    private EditPart getSelectedWidget(){
-        if(selection.getFirstElement() instanceof EditPart){
-            return (EditPart)selection.getFirstElement();
-        }else
+    private EditPart getSelectedWidget() {
+        if (selection.getFirstElement() instanceof EditPart) {
+            return (EditPart) selection.getFirstElement();
+        } else {
             return null;
+        }
     }
 }

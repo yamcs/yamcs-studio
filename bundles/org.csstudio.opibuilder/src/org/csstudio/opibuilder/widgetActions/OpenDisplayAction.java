@@ -10,7 +10,9 @@ package org.csstudio.opibuilder.widgetActions;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 
+import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractContainerModel;
 import org.csstudio.opibuilder.properties.ComboProperty;
 import org.csstudio.opibuilder.properties.FilePathProperty;
@@ -19,7 +21,6 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.runmode.IOPIRuntime;
 import org.csstudio.opibuilder.runmode.RunModeService;
 import org.csstudio.opibuilder.runmode.RunModeService.DisplayMode;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
@@ -30,59 +31,55 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.jdom.Element;
 
-/** Action for executing a display.
+/**
+ * Action for executing a display.
  *
- *  <p>Properties, configured when the action is added to a widget,
- *  suggest how the display should be opened:
- *  Replace existing display, or open new standalone shell, or ..
+ * <p>
+ * Properties, configured when the action is added to a widget, suggest how the display should be opened: Replace
+ * existing display, or open new standalone shell, or ..
  *
- *  <p>User can override via key modifiers:
- *  <ul>
- *  <li>Ctrl - Opens a new view in existing workbench window
- *  <li>Shift - Open a new view in new workbench window
- *  <li>Ctrl + Shift - Open a new standalone shell
- *  </ul>
+ * <p>
+ * User can override via key modifiers:
+ * <ul>
+ * <li>Ctrl - Opens a new view in existing workbench window
+ * <li>Shift - Open a new view in new workbench window
+ * <li>Ctrl + Shift - Open a new standalone shell
+ * </ul>
  *
- *  These key modifiers need to be passed by the context menu or
- *  whatever usually invokes the 'run()' method by calling the specialized
- *  runWithModifiers()
+ * These key modifiers need to be passed by the context menu or whatever usually invokes the 'run()' method by calling
+ * the specialized runWithModifiers()
  *
- *  @author Xihui Chen - Original author
- *  @author Will Rogers - Shell support
- *  @author Kay Kasemir
+ * @author Xihui Chen - Original author
+ * @author Will Rogers - Shell support
+ * @author Kay Kasemir
  */
-public class OpenDisplayAction extends AbstractWidgetAction
-{
+public class OpenDisplayAction extends AbstractWidgetAction {
     public static final String PROP_PATH = "path";
     public static final String PROP_MACROS = "macros";
     public static final String PROP_MODE = "mode";
 
     @Override
-    protected void configureProperties()
-    {
+    protected void configureProperties() {
         addProperty(new FilePathProperty(PROP_PATH, "File Path",
-                    WidgetPropertyCategory.Basic, new Path(""),
-                    new String[] { "opi" }, false)
-        {
+                WidgetPropertyCategory.Basic, new Path(""),
+                new String[] { "opi" }, false) {
             @Override
-            public Object readValueFromXML(Element propElement)
-            {
+            public Object readValueFromXML(Element propElement) {
                 handleLegacySettings(propElement);
                 return super.readValueFromXML(propElement);
             }
         });
         addProperty(new MacrosProperty(PROP_MACROS, "Macros",
-                    WidgetPropertyCategory.Basic, new MacrosInput(
-                    new LinkedHashMap<String, String>(), true)));
+                WidgetPropertyCategory.Basic, new MacrosInput(
+                        new LinkedHashMap<String, String>(), true)));
         addProperty(new ComboProperty(PROP_MODE, "Mode",
-                    WidgetPropertyCategory.Basic, DisplayMode.stringValues(),
-                    DisplayMode.REPLACE.ordinal()));
+                WidgetPropertyCategory.Basic, DisplayMode.stringValues(),
+                DisplayMode.REPLACE.ordinal()));
     }
 
-    protected void handleLegacySettings(final Element path_element)
-    {
+    protected void handleLegacySettings(final Element path_element) {
         // Original OpenDisplayAction had property "replace".
-        // True  - Replace existing display
+        // True - Replace existing display
         // False - Open new display
 
         // Later OpenDisplayAction had property "replace" with options
@@ -91,7 +88,7 @@ public class OpenDisplayAction extends AbstractWidgetAction
         // 2 - NEW_WINDOW.
         // On branch, this was added
         // (and 0/1 were swapped, but we ignore that
-        //  because it's incompatible with older displays):
+        // because it's incompatible with older displays):
         // 3 - NEW_SHELL
 
         // Original OpenOPIInViewAction had property "Position"
@@ -109,10 +106,8 @@ public class OpenDisplayAction extends AbstractWidgetAction
         // action_element.getName() should be "action"
 
         Element legacy = action_element.getChild("Position");
-        if (legacy != null)
-        {
-            switch (Integer.parseInt(legacy.getValue()))
-            {
+        if (legacy != null) {
+            switch (Integer.parseInt(legacy.getValue())) {
             case 0:
                 setPropertyValue(PROP_MODE, DisplayMode.NEW_TAB_LEFT.ordinal());
                 break;
@@ -136,12 +131,9 @@ public class OpenDisplayAction extends AbstractWidgetAction
         }
 
         legacy = action_element.getChild("replace");
-        if (legacy != null)
-        {
-            try
-            {
-                switch (Integer.parseInt(legacy.getValue()))
-                {
+        if (legacy != null) {
+            try {
+                switch (Integer.parseInt(legacy.getValue())) {
                 case 0:
                     setPropertyValue(PROP_MODE, DisplayMode.NEW_TAB.ordinal());
                     break;
@@ -154,75 +146,70 @@ public class OpenDisplayAction extends AbstractWidgetAction
                 default:
                     setPropertyValue(PROP_MODE, DisplayMode.REPLACE.ordinal());
                 }
-            }
-            catch (NumberFormatException e)
-            {   // Fall back for older files that stored True/false
-                if (Boolean.parseBoolean(legacy.getValue()))
+            } catch (NumberFormatException e) { // Fall back for older files that stored True/false
+                if (Boolean.parseBoolean(legacy.getValue())) {
                     setPropertyValue(PROP_MODE, DisplayMode.NEW_TAB.ordinal());
+                }
             }
         }
     }
 
-    private void openOPI(final IPath absolutePath, final boolean ctrlPressed, final boolean shiftPressed)
-    {
+    private void openOPI(final IPath absolutePath, final boolean ctrlPressed, final boolean shiftPressed) {
         DisplayMode mode = getDisplayMode();
 
-        if (ctrlPressed && !shiftPressed)
+        if (ctrlPressed && !shiftPressed) {
             mode = DisplayMode.NEW_TAB;
-        else if (!ctrlPressed && shiftPressed)
+        } else if (!ctrlPressed && shiftPressed) {
             mode = DisplayMode.NEW_WINDOW;
-        else if (ctrlPressed && shiftPressed)
+        } else if (ctrlPressed && shiftPressed) {
             mode = DisplayMode.NEW_SHELL;
+        }
 
-        final IOPIRuntime runtime =
-                getWidgetModel().getRootDisplayModel().getOpiRuntime();
-        RunModeService.openDisplay(absolutePath, Optional.ofNullable(getMacrosInput()), mode, Optional.ofNullable(runtime));
+        final IOPIRuntime runtime = getWidgetModel().getRootDisplayModel().getOpiRuntime();
+        RunModeService.openDisplay(absolutePath, Optional.ofNullable(getMacrosInput()), mode,
+                Optional.ofNullable(runtime));
     }
 
-    /** Run the action, i.e. open display, with optional modifiers
+    /**
+     * Run the action, i.e. open display, with optional modifiers
      *
-     *  @param ctrlPressed True if Ctrl was pressed while invoking the action
-     *  @param shiftPressed True if Shift was held while invoking the action
+     * @param ctrlPressed
+     *            True if Ctrl was pressed while invoking the action
+     * @param shiftPressed
+     *            True if Shift was held while invoking the action
      */
-    public void runWithModifiers(final boolean ctrlPressed, final boolean shiftPressed)
-    {
+    public void runWithModifiers(final boolean ctrlPressed, final boolean shiftPressed) {
         // Determine absolute path
         // TODO Do this in RuntimeDelegate, after settling View-or-Editor
         IPath absolutePath = getPath();
-        if (!absolutePath.isAbsolute())
-        {
+        if (!absolutePath.isAbsolute()) {
             absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(),
                     getPath());
-            if (!ResourceUtil.isExsitingFile(absolutePath, true))
-            {
-                //search from OPI search path
+            if (!ResourceUtil.isExsitingFile(absolutePath, true)) {
+                // search from OPI search path
                 absolutePath = ResourceUtil.getFileOnSearchPath(getPath(), true);
             }
         }
-        if (absolutePath != null  &&  ResourceUtil.isExsitingFile(absolutePath, true))
+        if (absolutePath != null && ResourceUtil.isExsitingFile(absolutePath, true)) {
             openOPI(absolutePath, ctrlPressed, shiftPressed);
-        else
-        {
+        } else {
             final String error = NLS.bind("The file {0} does not exist.", getPath().toString());
-            ConsoleService.getInstance().writeError(error);
+            OPIBuilderPlugin.getLogger().log(Level.SEVERE, error);
             MessageDialog.openError(Display.getDefault().getActiveShell(),
                     "File Open Error", error);
         }
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         runWithModifiers(false, false);
     }
 
-    protected IPath getPath()
-    {
+    protected IPath getPath() {
         return (IPath) getPropertyValue(PROP_PATH);
     }
 
-    protected MacrosInput getMacrosInput()
-    {
+    protected MacrosInput getMacrosInput() {
         MacrosInput result = new MacrosInput(
                 new LinkedHashMap<String, String>(), true);
 
@@ -230,29 +217,28 @@ public class OpenDisplayAction extends AbstractWidgetAction
                 .getCopy();
 
         if (macrosInput.isInclude_parent_macros()) {
-            Map<String, String> macrosMap = getWidgetModel() instanceof AbstractContainerModel ? ((AbstractContainerModel) getWidgetModel())
-                    .getParentMacroMap() : getWidgetModel().getParent()
-                    .getMacroMap();
+            Map<String, String> macrosMap = getWidgetModel() instanceof AbstractContainerModel
+                    ? ((AbstractContainerModel) getWidgetModel())
+                            .getParentMacroMap()
+                    : getWidgetModel().getParent()
+                            .getMacroMap();
             result.getMacrosMap().putAll(macrosMap);
         }
         result.getMacrosMap().putAll(macrosInput.getMacrosMap());
         return result;
     }
 
-    protected DisplayMode getDisplayMode()
-    {
-        return DisplayMode.values()[(Integer)getPropertyValue(PROP_MODE)];
+    protected DisplayMode getDisplayMode() {
+        return DisplayMode.values()[(Integer) getPropertyValue(PROP_MODE)];
     }
 
     @Override
-    public ActionType getActionType()
-    {
+    public ActionType getActionType() {
         return ActionType.OPEN_DISPLAY;
     }
 
     @Override
-    public String getDefaultDescription()
-    {
+    public String getDefaultDescription() {
         return "Open " + getPath();
     }
 }

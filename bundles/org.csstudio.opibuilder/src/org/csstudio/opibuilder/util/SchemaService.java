@@ -2,7 +2,6 @@ package org.csstudio.opibuilder.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,7 +24,6 @@ public final class SchemaService {
     private static SchemaService instance;
     private Map<String, AbstractWidgetModel> schemaWidgetsMap;
 
-
     /*
      * Instantiating the schema service with the modal process dialog uses the UI thread.
      * When process dialog is open in UI thread it interferes with connection which is drawn from/to linking containers.
@@ -35,26 +33,26 @@ public final class SchemaService {
      * Instance of SchemaService without dialog is created from first instance of WidgetNodeEditPolicy
     */
 
-
     private SchemaService(boolean dialog) {
         schemaWidgetsMap = new HashMap<>();
-        if (dialog){
-          reLoad();
-        }
-        else {
-          reLoadNoProgressMonitor();
+        if (dialog) {
+            reLoad();
+        } else {
+            reLoadNoProgressMonitor();
         }
     }
 
     public static final synchronized SchemaService getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new SchemaService(true);
+        }
         return instance;
     }
 
     public static final synchronized SchemaService getInstance(boolean dialog) {
-        if (instance == null)
+        if (instance == null) {
             instance = new SchemaService(dialog);
+        }
         return instance;
     }
 
@@ -81,16 +79,11 @@ public final class SchemaService {
         if (schemaOPI == null || schemaOPI.isEmpty()) {
             return;
         }
-        if(Display.getCurrent() != null){ // in UI thread, show progress dialog
-            IRunnableWithProgress job = new IRunnableWithProgress() {
-
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException,
-                        InterruptedException {
-                    monitor.beginTask("Connecting to " + schemaOPI,IProgressMonitor.UNKNOWN);
-                    loadSchema(schemaOPI);
-                    monitor.done();
-                }
+        if (Display.getCurrent() != null) { // in UI thread, show progress dialog
+            IRunnableWithProgress job = monitor -> {
+                monitor.beginTask("Connecting to " + schemaOPI, IProgressMonitor.UNKNOWN);
+                loadSchema(schemaOPI);
+                monitor.done();
             };
             try {
                 new ProgressMonitorDialog(
@@ -98,9 +91,9 @@ public final class SchemaService {
             } catch (Exception e) {
                 ErrorHandlerUtil.handleError("Failed to load schema", e);
             }
-        }
-        else
+        } else {
             loadSchema(schemaOPI);
+        }
     }
 
     /**
@@ -115,64 +108,69 @@ public final class SchemaService {
                     displayModel, Display.getDefault());
             schemaWidgetsMap.put(displayModel.getTypeID(), displayModel);
             loadModelFromContainer(displayModel);
-            if(!displayModel.getConnectionList().isEmpty()){
+            if (!displayModel.getConnectionList().isEmpty()) {
                 schemaWidgetsMap.put(
                         ConnectionModel.ID, displayModel.getConnectionList().get(0));
             }
         } catch (Exception e) {
             String message = "Failed to load schema file: " + schemaOPI;
-            OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                    message, e);
-            ConsoleService.getInstance().writeError(message + "\n" + e);//$NON-NLS-1$
-        }
-        finally {
-           if (inputStream != null)
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                ErrorHandlerUtil.handleError("Failed to close stream", e);
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    ErrorHandlerUtil.handleError("Failed to close stream", e);
+                }
             }
         }
     }
 
     private void loadModelFromContainer(AbstractContainerModel containerModel) {
-        for(AbstractWidgetModel model : containerModel.getChildren()){
-            //always add only the first model of its type that is found
-            //the main container might contain several instances of the same widget
-            //(e.g. GroupingContainer can appear multiple times; it is by default the base
-            //layer of a tab and sash - we don't want the tab to override our container settings)
+        for (AbstractWidgetModel model : containerModel.getChildren()) {
+            // always add only the first model of its type that is found
+            // the main container might contain several instances of the same widget
+            // (e.g. GroupingContainer can appear multiple times; it is by default the base
+            // layer of a tab and sash - we don't want the tab to override our container settings)
             if (!schemaWidgetsMap.containsKey(model.getTypeID())) {
                 schemaWidgetsMap.put(model.getTypeID(), model);
             }
-            if(model instanceof AbstractContainerModel)
-                    loadModelFromContainer((AbstractContainerModel) model);
+            if (model instanceof AbstractContainerModel) {
+                loadModelFromContainer((AbstractContainerModel) model);
+            }
         }
     }
 
     public void applySchema(AbstractWidgetModel widgetModel) {
-        if (schemaWidgetsMap.isEmpty())
+        if (schemaWidgetsMap.isEmpty()) {
             return;
+        }
         if (schemaWidgetsMap.containsKey(widgetModel.getTypeID())) {
             AbstractWidgetModel schemaWidgetModel = schemaWidgetsMap
                     .get(widgetModel.getTypeID());
             for (String id : schemaWidgetModel.getAllPropertyIDs()) {
-                widgetModel.setPropertyValue(id,schemaWidgetModel.getPropertyValue(id), false);
+                widgetModel.setPropertyValue(id, schemaWidgetModel.getPropertyValue(id), false);
             }
         }
     }
 
-    /**Return the default property value of the widget when it is created.
-     * @param typeId typeId of the widget.
-     * @param propId propId of the property.
+    /**
+     * Return the default property value of the widget when it is created.
+     * 
+     * @param typeId
+     *            typeId of the widget.
+     * @param propId
+     *            propId of the property.
      */
-    public Object getDefaultPropertyValue(String typeId, String propId){
-        if(schemaWidgetsMap.containsKey(typeId))
-                return schemaWidgetsMap.get(typeId).getPropertyValue(propId);
+    public Object getDefaultPropertyValue(String typeId, String propId) {
+        if (schemaWidgetsMap.containsKey(typeId)) {
+            return schemaWidgetsMap.get(typeId).getPropertyValue(propId);
+        }
         WidgetDescriptor desc = WidgetsService.getInstance().getWidgetDescriptor(typeId);
-        if(desc != null){
+        if (desc != null) {
             return desc.getWidgetModel().getPropertyValue(propId);
         }
-        if(typeId.equals(ConnectionModel.ID)){
+        if (typeId.equals(ConnectionModel.ID)) {
             return new ConnectionModel(null).getPropertyValue(propId);
         }
         return null;

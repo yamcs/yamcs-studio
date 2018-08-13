@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.script.ScriptService;
-import org.csstudio.opibuilder.util.ConsoleService;
 import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.SchemaService;
@@ -88,49 +87,34 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         ScriptService.getInstance();
 
-        if (PreferencesHelper.isDisplaySystemOutput()) {
-            ConsoleService.getInstance().turnOnSystemOutput();
-        }
+        preferenceLisener = event -> {
+            if (event.getProperty()
+                    .equals(PreferencesHelper.COLOR_FILE)) {
+                MediaService.getInstance().reloadColorFile();
+            } else if (event.getProperty().equals(
+                    PreferencesHelper.FONT_FILE)) {
+                MediaService.getInstance().reloadFontFile();
+            } else if (event.getProperty().equals(
+                    PreferencesHelper.OPI_GUI_REFRESH_CYCLE)) {
+                GUIRefreshThread.getInstance(true).reLoadGUIRefreshCycle();
+            } else if (event.getProperty().equals(
+                    PreferencesHelper.DISABLE_ADVANCED_GRAPHICS)) {
+                String disabled = PreferencesHelper.isAdvancedGraphicsDisabled() ? "true" : "false";//$NON-NLS-1$ //$NON-NLS-2$
+                // for swt.widgets
+                System.setProperty(
+                        "org.csstudio.swt.widget.prohibit_advanced_graphics", disabled);//$NON-NLS-1$
+                // for XYGraph
+                System.setProperty("prohibit_advanced_graphics", disabled); //$NON-NLS-1$
 
-        preferenceLisener = new IPropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent event) {
-                if (event.getProperty()
-                        .equals(PreferencesHelper.COLOR_FILE))
-                    MediaService.getInstance().reloadColorFile();
-                else if (event.getProperty().equals(
-                        PreferencesHelper.FONT_FILE))
-                    MediaService.getInstance().reloadFontFile();
-                else if (event.getProperty().equals(
-                        PreferencesHelper.OPI_GUI_REFRESH_CYCLE))
-                    GUIRefreshThread.getInstance(true).reLoadGUIRefreshCycle();
-                else if (event.getProperty().equals(
-                        PreferencesHelper.DISABLE_ADVANCED_GRAPHICS)) {
-                    String disabled = PreferencesHelper.isAdvancedGraphicsDisabled() ? "true" : "false";//$NON-NLS-1$ //$NON-NLS-2$
-                    // for swt.widgets
-                    System.setProperty(
-                            "org.csstudio.swt.widget.prohibit_advanced_graphics", disabled);//$NON-NLS-1$
-                    // for XYGraph
-                    System.setProperty("prohibit_advanced_graphics", disabled); //$NON-NLS-1$
-
-                } else if (event.getProperty().equals(
-                        PreferencesHelper.URL_FILE_LOADING_TIMEOUT))
-                    System.setProperty(
-                            "org.csstudio.swt.widget.url_file_load_timeout", //$NON-NLS-1$
-                            Integer.toString(PreferencesHelper
-                                    .getURLFileLoadingTimeout()));
-                else if (event.getProperty().equals(
-                        PreferencesHelper.SCHEMA_OPI)) {
-                    SchemaService.getInstance().reLoad();
-                } else if (event.getProperty().equals(
-                        PreferencesHelper.DISPLAY_SYSTEM_OUTPUT)) {
-                    if (PreferencesHelper.isDisplaySystemOutput())
-                        ConsoleService.getInstance().turnOnSystemOutput();
-                    else
-                        ConsoleService.getInstance().turnOffSystemOutput();
-                }
+            } else if (event.getProperty().equals(
+                    PreferencesHelper.URL_FILE_LOADING_TIMEOUT)) {
+                System.setProperty(
+                        "org.csstudio.swt.widget.url_file_load_timeout", //$NON-NLS-1$
+                        Integer.toString(PreferencesHelper
+                                .getURLFileLoadingTimeout()));
+            } else if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
+                SchemaService.getInstance().reLoad();
             }
-
         };
 
         getPluginPreferences().addPropertyChangeListener(preferenceLisener);
