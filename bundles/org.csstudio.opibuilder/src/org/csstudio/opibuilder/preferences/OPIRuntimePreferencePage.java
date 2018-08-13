@@ -35,9 +35,6 @@ import org.jdom.Verifier;
 public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
         implements IWorkbenchPreferencePage {
 
-    // private static final String RESTART_MESSAGE = "Changes only takes effect after restart.";
-    private static final String RESTART_MESSAGE = "Changes only takes effect after restart.";
-
     private String wrongMacroName = "";
 
     private StringTableFieldEditor macrosEditor;
@@ -71,8 +68,9 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
 
             @Override
             protected void doStore() {
-                if (!isValid())
+                if (!isValid()) {
                     return;
+                }
                 super.doStore();
             }
 
@@ -137,9 +135,6 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
             entries[i][0] = allPVFactories[i];
             entries[i][1] = allPVFactories[i];
         }
-        ComboFieldEditor pvConnectionLayerEditor = new ComboFieldEditor(PreferencesHelper.PV_CONNECTION_LAYER,
-                "PV Connection Layer", entries, parent);
-        addField(pvConnectionLayerEditor);
 
         ComboFieldEditor popupConsoleEditor = new ComboFieldEditor(PreferencesHelper.POPUP_CONSOLE,
                 "Console Popup Level", new String[][] {
@@ -180,10 +175,11 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
         if (src instanceof FieldEditor) {
             String prefName = ((FieldEditor) src).getPreferenceName();
             if (prefName.equals(PreferencesHelper.RUN_MACROS)) {
-                if ((Boolean) event.getNewValue())
+                if ((Boolean) event.getNewValue()) {
                     setMessage(null);
-                else
+                } else {
                     setMessage(wrongMacroName + " is not a valid Macro name!", ERROR);
+                }
             }
         }
     }
@@ -191,8 +187,9 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
     @Override
     public boolean performOk() {
         macrosEditor.tableEditor.getTableViewer().getTable().forceFocus();
-        if (!isValid())
+        if (!isValid()) {
             return false;
+        }
         return super.performOk();
     }
 

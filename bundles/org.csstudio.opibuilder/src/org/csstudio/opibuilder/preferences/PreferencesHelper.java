@@ -40,48 +40,46 @@ public class PreferencesHelper {
         PV_MANAGER, UTILITY_PV;
     }
 
-    public static final String COLOR_FILE = "color_file"; //$NON-NLS-1$
-    public static final String FONT_FILE = "font_file"; //$NON-NLS-1$
-    public static final String RUN_MACROS = "macros"; //$NON-NLS-1$
-    public static final String AUTOSAVE = "auto_save"; //$NON-NLS-1$
-    public static final String OPI_GUI_REFRESH_CYCLE = "opi_gui_refresh_cycle"; //$NON-NLS-1$
-    public static final String NO_EDIT = "no_edit"; //$NON-NLS-1$
-    public static final String DISABLE_ADVANCED_GRAPHICS = "disable_advanced_graphics"; //$NON-NLS-1$
-    public static final String POPUP_CONSOLE = "popup_console"; //$NON-NLS-1$
-    public static final String SCHEMA_OPI = "schema_opi"; //$NON-NLS-1$
-    public static final String PYTHON_PATH = "python_path"; //$NON-NLS-1$
-    public static final String DISPLAY_SYSTEM_OUTPUT = "display_system_output"; //$NON-NLS-1$
+    public static final String COLOR_FILE = "color_file";
+    public static final String FONT_FILE = "font_file";
+    public static final String RUN_MACROS = "macros";
+    public static final String AUTOSAVE = "auto_save";
+    public static final String OPI_GUI_REFRESH_CYCLE = "opi_gui_refresh_cycle";
+    public static final String NO_EDIT = "no_edit";
+    public static final String DISABLE_ADVANCED_GRAPHICS = "disable_advanced_graphics";
+    public static final String POPUP_CONSOLE = "popup_console";
+    public static final String SCHEMA_OPI = "schema_opi";
+    public static final String PYTHON_PATH = "python_path";
+    public static final String DISPLAY_SYSTEM_OUTPUT = "display_system_output";
     public static final String SHOW_COMPACT_MODE_DIALOG = "show_compact_mode_dialog";//$NON-NLS-1$
     public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";//$NON-NLS-1$
     public static final String START_WINDOW_IN_COMPACT_MODE = "start_window_in_compact_mode";//$NON-NLS-1$
     public static final String URL_FILE_LOADING_TIMEOUT = "url_file_loading_timeout";//$NON-NLS-1$
     public static final String PULSING_ALARM_MINOR_PERIOD = "pulsing_alarm_minor_period";//$NON-NLS-1$
     public static final String PULSING_ALARM_MAJOR_PERIOD = "pulsing_alarm_major_period";//$NON-NLS-1$
-    public static final String OPI_SEARCH_PATH = "opi_search_path"; //$NON-NLS-1$
-    public static final String PV_CONNECTION_LAYER = "pv_connection_layer"; //$NON-NLS-1$
-    public static final String DEFAULT_TO_CLASSIC_STYLE = "default_to_classic_style"; //$NON-NLS-1$
-    public static final String SHOW_OPI_RUNTIME_STACKS = "show_opi_runtime_stacks"; //$NON-NLS-1$
-    public static final String SWITCH_TO_OPI_EDITOR_PERSPECTIVE = "switch_to_opi_editor_perspective"; //$NON-NLS-1$
+    public static final String OPI_SEARCH_PATH = "opi_search_path";
+    public static final String DEFAULT_TO_CLASSIC_STYLE = "default_to_classic_style";
+    public static final String SHOW_OPI_RUNTIME_STACKS = "show_opi_runtime_stacks";
     public static final String FONT_DEFAULT_PIXELS_OR_POINTS = "font_default_pixels_or_points";
 
     // The widgets that are hidden from palette.
-    public static final String HIDDEN_WIDGETS = "hidden_widgets"; //$NON-NLS-1$
+    public static final String HIDDEN_WIDGETS = "hidden_widgets";
 
     // WebOPI preferences
 
-    public static final String OPI_REPOSITORY = "opi_repository"; //$NON-NLS-1$
-    public static final String SECURE_WHOLE_SITE = "secure_whole_site"; //$NON-NLS-1$
-    public static final String UNSECURED_OPI_PATHS = "unsecured_opi_paths"; //$NON-NLS-1$
-    public static final String SECURED_OPI_PATHS = "secured_opi_paths"; //$NON-NLS-1$
+    public static final String OPI_REPOSITORY = "opi_repository";
+    public static final String SECURE_WHOLE_SITE = "secure_whole_site";
+    public static final String UNSECURED_OPI_PATHS = "unsecured_opi_paths";
+    public static final String SECURED_OPI_PATHS = "secured_opi_paths";
 
-    public static final String STARTUP_OPI = "startup_opi"; //$NON-NLS-1$
-    public static final String MOBILE_STARTUP_OPI = "mobile_startup_opi"; //$NON-NLS-1$
+    public static final String STARTUP_OPI = "startup_opi";
+    public static final String MOBILE_STARTUP_OPI = "mobile_startup_opi";
 
     private static final char ROW_SEPARATOR = '|';
 
-    public static final String DEFAULT_EMAIL_SENDER = "default_email_sender"; //$NON-NLS-1$
+    public static final String DEFAULT_EMAIL_SENDER = "default_email_sender";
 
-    public static final String ABOUT_SHOW_LINKS = "about_show_links"; //$NON-NLS-1$
+    public static final String ABOUT_SHOW_LINKS = "about_show_links";
     public static final String PIXELS = "pixels";
     public static final String POINTS = "points";
 
@@ -113,8 +111,9 @@ public class PreferencesHelper {
      */
     public static IPath getColorFilePath() {
         String colorFilePath = getString(COLOR_FILE);
-        if (colorFilePath == null || colorFilePath.trim().isEmpty())
+        if (colorFilePath == null || colorFilePath.trim().isEmpty()) {
             return null;
+        }
         return getAbsolutePathOnRepo(colorFilePath);
     }
 
@@ -125,8 +124,9 @@ public class PreferencesHelper {
      */
     public static IPath getFontFilePath() {
         String fontFilePath = getString(FONT_FILE);
-        if (fontFilePath == null || fontFilePath.trim().isEmpty())
+        if (fontFilePath == null || fontFilePath.trim().isEmpty()) {
             return null;
+        }
         return getAbsolutePathOnRepo(fontFilePath);
     }
 
@@ -137,8 +137,9 @@ public class PreferencesHelper {
      */
     public static IPath getSchemaOPIPath() {
         String schemaOPIPath = getString(SCHEMA_OPI);
-        if (schemaOPIPath == null || schemaOPIPath.trim().isEmpty())
+        if (schemaOPIPath == null || schemaOPIPath.trim().isEmpty()) {
             return null;
+        }
         return getExistFileInRepoAndSearchPath(schemaOPIPath);
     }
 
@@ -157,13 +158,6 @@ public class PreferencesHelper {
         String popupLevelString = service.getString(
                 OPIBuilderPlugin.PLUGIN_ID, POPUP_CONSOLE, ConsolePopupLevel.ALL.toString(), null);
         return ConsolePopupLevel.valueOf(popupLevelString);
-    }
-
-    /**
-     * @return the pv factory id of the pv connection layer.
-     */
-    public static String getPVConnectionLayer() {
-        return getString(PV_CONNECTION_LAYER);
     }
 
     public static boolean isDefaultStyleClassic() {
@@ -211,13 +205,14 @@ public class PreferencesHelper {
                 LinkedHashMap<String, String> macros = new LinkedHashMap<>();
                 List<String[]> items = StringTableFieldEditor.decodeStringTable(getString(RUN_MACROS));
                 for (String[] item : items) {
-                    if (item.length == 2)
+                    if (item.length == 2) {
                         macros.put(item[0], item[1]);
+                    }
                 }
                 return macros;
 
             } catch (Exception e) {
-                OPIBuilderPlugin.getLogger().log(Level.WARNING, "Macro error", e); //$NON-NLS-1$
+                OPIBuilderPlugin.getLogger().log(Level.WARNING, "Macro error", e);
                 return new LinkedHashMap<>();
             }
         }
@@ -231,8 +226,9 @@ public class PreferencesHelper {
      */
     public static IPath[] getOPISearchPaths() throws Exception {
         String rawString = getString(OPI_SEARCH_PATH);
-        if (rawString == null || rawString.trim().isEmpty())
+        if (rawString == null || rawString.trim().isEmpty()) {
             return null;
+        }
         String[] rows = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
         IPath[] result = new IPath[rows.length];
         int i = 0;
@@ -249,12 +245,13 @@ public class PreferencesHelper {
     public static String[] getHiddenWidgets() {
         String rawString = getString(HIDDEN_WIDGETS);
 
-        if (rawString == null || rawString.trim().isEmpty())
+        if (rawString == null || rawString.trim().isEmpty()) {
             rawString = "";
-        else
+        } else {
             rawString = "|" + rawString;
+        }
         // a hack to hide deprecated native widgets
-        rawString = "org.csstudio.opibuilder.widgets.NativeButton|org.csstudio.opibuilder.widgets.NativeText" //$NON-NLS-1$
+        rawString = "org.csstudio.opibuilder.widgets.NativeButton|org.csstudio.opibuilder.widgets.NativeText"
                 + rawString;
 
         try {
@@ -271,19 +268,22 @@ public class PreferencesHelper {
      */
     public static Optional<String> getPythonPath() throws Exception {
         final String rawString = getString(PYTHON_PATH);
-        if (rawString == null || rawString.isEmpty())
+        if (rawString == null || rawString.isEmpty()) {
             return Optional.empty();
+        }
         final String[] rawPaths = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
         final StringBuilder sb = new StringBuilder();
         for (String rawPath : rawPaths) {
-            if (sb.length() > 0)
+            if (sb.length() > 0) {
                 sb.append(System.getProperty("path.separator"));
+            }
             final IPath path = new Path(rawPath);
             final IPath location = ResourceUtil.workspacePathToSysPath(path);
-            if (location != null)
+            if (location != null) {
                 sb.append(location.toOSString());
-            else
+            } else {
                 sb.append(rawPath);
+            }
         }
         return Optional.of(sb.toString());
     }
@@ -336,8 +336,9 @@ public class PreferencesHelper {
      */
     public static IPath getStartupOPI() {
         String startOPI = getString(STARTUP_OPI);
-        if (startOPI == null || startOPI.trim().isEmpty())
+        if (startOPI == null || startOPI.trim().isEmpty()) {
             return null;
+        }
         return getExistFileInRepoAndSearchPath(startOPI);
     }
 
@@ -346,15 +347,17 @@ public class PreferencesHelper {
      */
     public static IPath getMobileStartupOPI() {
         String startOPI = getString(MOBILE_STARTUP_OPI);
-        if (startOPI == null || startOPI.trim().isEmpty())
+        if (startOPI == null || startOPI.trim().isEmpty()) {
             return null;
+        }
         return getExistFileInRepoAndSearchPath(startOPI);
     }
 
     public static IPath getOPIRepository() {
         String opiRepo = getString(OPI_REPOSITORY);
-        if (opiRepo == null || opiRepo.trim().isEmpty())
+        if (opiRepo == null || opiRepo.trim().isEmpty()) {
             return null;
+        }
         return ResourceUtil.getPathFromString(opiRepo);
     }
 
@@ -366,39 +369,47 @@ public class PreferencesHelper {
      */
     protected static IPath getAbsolutePathOnRepo(String pathString) {
         IPath opiPath = ResourceUtil.getPathFromString(pathString);
-        if (opiPath == null)
+        if (opiPath == null) {
             return null;
-        if (opiPath.isAbsolute())
+        }
+        if (opiPath.isAbsolute()) {
             return opiPath;
+        }
         IPath repoPath = getOPIRepository();
-        if (repoPath != null)
+        if (repoPath != null) {
             opiPath = repoPath.append(opiPath);
+        }
         return opiPath;
     }
 
     protected static IPath getExistFileInRepoAndSearchPath(String pathString) {
         IPath originPath = ResourceUtil.getPathFromString(pathString);
         IPath opiPath = originPath;
-        if (opiPath == null)
+        if (opiPath == null) {
             return null;
-        if (opiPath.isAbsolute())
+        }
+        if (opiPath.isAbsolute()) {
             return opiPath;
+        }
         IPath repoPath = getOPIRepository();
         if (repoPath != null) {
             opiPath = repoPath.append(originPath);
-            if (ResourceUtil.isExsitingFile(opiPath, true))
+            if (ResourceUtil.isExsitingFile(opiPath, true)) {
                 return opiPath;
+            }
         }
         IPath sPath = ResourceUtil.getFileOnSearchPath(originPath, true);
-        if (sPath == null)
+        if (sPath == null) {
             return opiPath;
+        }
         return sPath;
     }
 
     public static String getDefaultEmailSender() {
         final IPreferencesService prefs = Platform.getPreferencesService();
-        if (prefs == null)
+        if (prefs == null) {
             return null;
+        }
         return prefs.getString(OPIBuilderPlugin.PLUGIN_ID,
                 DEFAULT_EMAIL_SENDER, null, null);
     }
@@ -409,8 +420,9 @@ public class PreferencesHelper {
      */
     public static String[] getSecuredOpiPaths() throws Exception {
         String s = getString(SECURED_OPI_PATHS);
-        if (s == null || s.trim().isEmpty())
+        if (s == null || s.trim().isEmpty()) {
             return null;
+        }
         String[] rows = StringSplitter.splitIgnoreInQuotes(s, ROW_SEPARATOR, true);
         for (int i = 0; i < rows.length; i++) {
             rows[i] = getAbsolutePathOnRepo(rows[i]).toString();
@@ -424,8 +436,9 @@ public class PreferencesHelper {
      */
     public static String[] getUnSecuredOpiPaths() throws Exception {
         String s = getString(UNSECURED_OPI_PATHS);
-        if (s == null || s.trim().isEmpty())
+        if (s == null || s.trim().isEmpty()) {
             return null;
+        }
         String[] rows = StringSplitter.splitIgnoreInQuotes(s, ROW_SEPARATOR, true);
         for (int i = 0; i < rows.length; i++) {
             rows[i] = getAbsolutePathOnRepo(rows[i]).toString();

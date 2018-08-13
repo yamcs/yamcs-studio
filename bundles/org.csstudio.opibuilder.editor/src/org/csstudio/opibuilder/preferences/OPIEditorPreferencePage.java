@@ -8,7 +8,6 @@
 package org.csstudio.opibuilder.preferences;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -16,15 +15,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-/**The preference page for OPIBuilder
+/**
+ * The preference page for OPIBuilder
+ * 
  * @author Xihui Chen
  *
  */
-public class OPIEditorPreferencePage extends FieldEditorPreferencePage
-        implements IWorkbenchPreferencePage {
+public class OPIEditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     // private static final String RESTART_MESSAGE = "Changes only takes effect after restart.";
-
 
     public OPIEditorPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
@@ -35,33 +34,23 @@ public class OPIEditorPreferencePage extends FieldEditorPreferencePage
 
     @Override
     protected void createFieldEditors() {
-        final Composite parent = getFieldEditorParent();
+        Composite parent = getFieldEditorParent();
 
-        WorkspaceFileFieldEditor schemaOPIEditor =
-            new WorkspaceFileFieldEditor(PreferencesHelper.SCHEMA_OPI,
-                "Schema OPI: ", new String[]{"opi"}, parent);//$NON-NLS-2$
+        WorkspaceFileFieldEditor schemaOPIEditor = new WorkspaceFileFieldEditor(PreferencesHelper.SCHEMA_OPI,
+                "Schema OPI: ", new String[] { "opi" }, parent);
         schemaOPIEditor.getTextControl(parent).setToolTipText(
                 "The opi file that defines the default widget properties value");
         addField(schemaOPIEditor);
 
-        BooleanFieldEditor autoSaveEditor =
-            new BooleanFieldEditor(PreferencesHelper.AUTOSAVE,
-                    "Automatically save file before running.", parent);
+        BooleanFieldEditor autoSaveEditor = new BooleanFieldEditor(PreferencesHelper.AUTOSAVE,
+                "Automatically save file before running.", parent);
         addField(autoSaveEditor);
 
-        RadioGroupFieldEditor perspectiveEditor = new RadioGroupFieldEditor(
-                PreferencesHelper.SWITCH_TO_OPI_EDITOR_PERSPECTIVE,
-                "Switch to OPI Editor perspective when opening opi file?", 3,
-                new String[][] {{"Always", MessageDialogWithToggle.ALWAYS},
-                                {"Never", MessageDialogWithToggle.NEVER},
-                                {"Prompt", MessageDialogWithToggle.PROMPT}},
-                parent, true);
-        addField(perspectiveEditor);
         RadioGroupFieldEditor fontInPixelsEditor = new RadioGroupFieldEditor(
                 PreferencesHelper.FONT_DEFAULT_PIXELS_OR_POINTS,
                 "Default sizing for fonts", 2,
-                new String[][] {{"Points", PreferencesHelper.POINTS},
-                                {"Pixels", PreferencesHelper.PIXELS}},
+                new String[][] { { "Points", PreferencesHelper.POINTS },
+                        { "Pixels", PreferencesHelper.PIXELS } },
                 parent, true);
         addField(fontInPixelsEditor);
 
@@ -74,9 +63,9 @@ public class OPIEditorPreferencePage extends FieldEditorPreferencePage
 
     @Override
     public boolean performOk() {
-        if(!isValid())
+        if (!isValid()) {
             return false;
+        }
         return super.performOk();
     }
-
 }
