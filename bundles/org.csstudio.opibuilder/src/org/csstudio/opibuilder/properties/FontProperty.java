@@ -26,12 +26,10 @@ public class FontProperty extends AbstractWidgetProperty {
      */
     public static final String XML_ELEMENT_FONT = "fontdata";
 
-
     /**
      * XML attribute name <code>fontName</code>.
      */
-    public static final String XML_ELEMENT_FONTNAME= "opifont.name";
-
+    public static final String XML_ELEMENT_FONTNAME = "opifont.name";
 
     /**
      * XML attribute name <code>fontName</code>.
@@ -50,56 +48,65 @@ public class FontProperty extends AbstractWidgetProperty {
 
     public static final String XML_ATTRIBUTE_FONT_PIXELS = "pixels";
 
-
     private static final String QUOTE = "\"";
 
-
-    /**Font Property Constructor. The property value type is {@link OPIFont}.
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created.
+    /**
+     * Font Property Constructor. The property value type is {@link OPIFont}.
+     * 
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created.
      */
     public FontProperty(String prop_id, String description,
             WidgetPropertyCategory category, FontData defaultValue) {
         super(prop_id, description, category, new OPIFont(defaultValue));
     }
-    /**Font Property Constructor. The property value type is {@link OPIFont}.
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created.
-     * It must be a exist font macro name in font file.
+
+    /**
+     * Font Property Constructor. The property value type is {@link OPIFont}.
+     * 
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created. It must be a exist font macro name in font file.
      */
     public FontProperty(String prop_id, String description,
             WidgetPropertyCategory category, String defaultValue) {
         super(prop_id, description, category, MediaService.getInstance().getOPIFont(defaultValue));
     }
 
-
-
     /* (non-Javadoc)
      * @see org.csstudio.opibuilder.properties.AbstractWidgetProperty#checkValue(java.lang.Object)
      */
     @Override
     public Object checkValue(Object value) {
-        if(value == null)
+        if (value == null) {
             return null;
+        }
 
         Object acceptedValue = value;
 
-        if(value instanceof OPIFont){
+        if (value instanceof OPIFont) {
             // Avoid getFontData() as this method can be called from off the UI thread.
-            if(((OPIFont)value).getRawFontData() == null)
+            if (((OPIFont) value).getRawFontData() == null) {
                 acceptedValue = null;
-        }else if (value instanceof FontData) {
-            acceptedValue = new OPIFont((FontData)value);
-        }else if(value instanceof String){
-            acceptedValue = MediaService.getInstance().getOPIFont((String)value);
-        }else
+            }
+        } else if (value instanceof FontData) {
+            acceptedValue = new OPIFont((FontData) value);
+        } else if (value instanceof String) {
+            acceptedValue = MediaService.getInstance().getOPIFont((String) value);
+        } else {
             acceptedValue = null;
+        }
 
         return acceptedValue;
     }
@@ -109,22 +116,23 @@ public class FontProperty extends AbstractWidgetProperty {
      */
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if(PropertySSHelper.getIMPL() == null)
+        if (PropertySSHelper.getIMPL() == null) {
             return null;
+        }
         return PropertySSHelper.getIMPL().getOPIFontPropertyDescriptor(prop_id, description);
     }
 
     @Override
     public void writeToXML(Element propElement) {
-        OPIFont opiFont = (OPIFont)getPropertyValue();
+        OPIFont opiFont = (OPIFont) getPropertyValue();
 
         Element fontElement;
 
-        if(!opiFont.isPreDefined()){
-            fontElement= new Element(XML_ELEMENT_FONT);
-        }else{
+        if (opiFont.isPreDefined()) {
             fontElement = new Element(XML_ELEMENT_FONTNAME);
             fontElement.setText(opiFont.getFontMacroName());
+        } else {
+            fontElement = new Element(XML_ELEMENT_FONT);
         }
         FontData fontData = opiFont.getRawFontData();
         fontElement.setAttribute(XML_ATTRIBUTE_FONT_NAME, fontData.getName());
@@ -140,23 +148,23 @@ public class FontProperty extends AbstractWidgetProperty {
     @Override
     public Object readValueFromXML(Element propElement) {
         Element fontElement = propElement.getChild(XML_ELEMENT_FONT);
-        if(fontElement !=null){
+        if (fontElement != null) {
             // Create the OPIFont with the raw font data from the XML.
             OPIFont font = new OPIFont(
                     new FontData(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_NAME),
-                                 (int) Double.parseDouble(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_HEIGHT)),
-                                 Integer.parseInt(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_STYLE))));
+                            (int) Double.parseDouble(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_HEIGHT)),
+                            Integer.parseInt(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_STYLE))));
             font.setSizeInPixels(Boolean.parseBoolean(fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_PIXELS)));
             return font;
-        }else{
+        } else {
             fontElement = propElement.getChild(XML_ELEMENT_FONTNAME);
-            if(fontElement != null){
+            if (fontElement != null) {
                 OPIFont font = null;
                 String fontName = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_NAME);
                 String fontHeight = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_HEIGHT);
                 String fontStyle = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_STYLE);
                 String heightInPixels = fontElement.getAttributeValue(XML_ATTRIBUTE_FONT_PIXELS);
-                if(fontName != null && fontHeight != null && fontStyle != null){
+                if (fontName != null && fontHeight != null && fontStyle != null) {
                     FontData fd = new FontData(fontName, (int) Double.parseDouble(fontHeight),
                             Integer.parseInt(fontStyle));
                     font = MediaService.getInstance().getOPIFont(fontElement.getText(), fd);
@@ -165,7 +173,7 @@ public class FontProperty extends AbstractWidgetProperty {
                 }
                 if (!font.isPreDefined()) {
                     // If this was serialised without a height in pixels attribute, it was from
-                    // an older verison of BOY where points were assumed.  To ensure the screens are not
+                    // an older verison of BOY where points were assumed. To ensure the screens are not
                     // changed when re-saved, make this explicit.
                     if (heightInPixels != null) {
                         boolean inPixels = Boolean.parseBoolean(heightInPixels);
@@ -175,9 +183,9 @@ public class FontProperty extends AbstractWidgetProperty {
                     }
                 }
                 return font;
-            }
-            else
+            } else {
                 return null;
+            }
         }
     }
 
@@ -188,13 +196,13 @@ public class FontProperty extends AbstractWidgetProperty {
 
     @Override
     public String toStringInRuleScript(Object propValue) {
-        OPIFont opiFont = (OPIFont)propValue;
-        if(opiFont.isPreDefined())
+        OPIFont opiFont = (OPIFont) propValue;
+        if (opiFont.isPreDefined()) {
             return QUOTE + opiFont.getFontMacroName() + QUOTE;
-        else{
+        } else {
             FontData fontData = opiFont.getFontData();
             return "ColorFontUtil.getFont(\"" +
-                fontData.getName() + QUOTE + "," + fontData.getHeight() + "," + fontData.getStyle() + ")";
+                    fontData.getName() + QUOTE + "," + fontData.getHeight() + "," + fontData.getStyle() + ")";
         }
     }
 
