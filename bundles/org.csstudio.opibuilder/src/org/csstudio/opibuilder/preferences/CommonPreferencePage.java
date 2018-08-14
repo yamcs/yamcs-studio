@@ -28,7 +28,7 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
     public CommonPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(OPIBuilderPlugin.getDefault().getPreferenceStore());
-        setMessage("BOY Common Preferences");
+        setMessage("Common Display Preferences");
     }
 
     @Override
@@ -36,11 +36,11 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
         final Composite parent = getFieldEditorParent();
 
         WorkspaceFileFieldEditor colorEditor = new WorkspaceFileFieldEditor(PreferencesHelper.COLOR_FILE,
-                "Color File: ", new String[] { "def" }, parent);//$NON-NLS-2$
+                "Color File: ", new String[] { "def" }, parent);
         addField(colorEditor);
 
         WorkspaceFileFieldEditor fontEditor = new WorkspaceFileFieldEditor(PreferencesHelper.FONT_FILE,
-                "Font File: ", new String[] { "def" }, parent);//$NON-NLS-2$
+                "Font File: ", new String[] { "def" }, parent);
         addField(fontEditor);
 
         BooleanFieldEditor noEditModeEditor = new BooleanFieldEditor(PreferencesHelper.NO_EDIT,
