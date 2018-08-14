@@ -173,13 +173,13 @@ public class RuleData implements IAdaptable{
             if(needStr)
                 sb.append("var pvStr" + i + " = PVUtil."+ "getString(pvs[" + i + "]);\n"); 
             if(needSev)
-                sb.append("var pvSev" + i + " = PVUtil.getSeverity(pvs[" + i + "]);\n");//$NON-NLS-1$
+                sb.append("var pvSev" + i + " = PVUtil.getSeverity(pvs[" + i + "]);\n");
         }
         int i=0;
         for(Expression exp : expressionList){
             sb.append(i == 0 ? "if(" : "else if(");   
             sb.append(expressionList.get(i++).getBooleanExpression());
-            sb.append(")\n");//$NON-NLS-1$
+            sb.append(")\n");
 
             sb.append("\twidget.setPropertyValue(\"" + propId + "\",");
 

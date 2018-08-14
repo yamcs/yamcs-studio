@@ -134,7 +134,7 @@ public class InstallOPIExamplesAction extends Action implements IWorkbenchWindow
             for (File file : files) {
                 monitor.subTask("Copying " + file.getName());
                 if (file.isDirectory()) {
-                    if (!file.getName().equals("CVS")) {//$NON-NLS-1$
+                    if (!file.getName().equals("CVS")) {
                         IFolder folder = container.getFolder(new Path(file
                                 .getName()));
                         if (!folder.exists()) {

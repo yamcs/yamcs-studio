@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.Display;
  */
 public class WritePVAction extends AbstractWidgetAction {
 
-    public static final String PROP_PVNAME = "pv_name";//$NON-NLS-1$
-    public static final String PROP_VALUE = "value";//$NON-NLS-1$
-    public static final String PROP_TIMEOUT = "timeout";//$NON-NLS-1$
+    public static final String PROP_PVNAME = "pv_name";
+    public static final String PROP_VALUE = "value";
+    public static final String PROP_TIMEOUT = "timeout";
     public static final String PROP_CONFIRM_MESSAGE = "confirm_message";
     private Display display;
 

@@ -316,7 +316,7 @@ public abstract class AbstractWidgetProperty {
 
     @Override
     public String toString() {
-        return widgetModel.getName() + "." + prop_id + ": " + getPropertyValue().toString();//$NON-NLS-1$
+        return widgetModel.getName() + "." + prop_id + ": " + getPropertyValue().toString();
     }
 
 

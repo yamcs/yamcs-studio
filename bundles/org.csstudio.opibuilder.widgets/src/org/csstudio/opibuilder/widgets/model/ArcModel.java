@@ -25,17 +25,17 @@ public class ArcModel extends AbstractShapeModel {
     /**
      * True if the arc should be filled.
      */
-    public static final String PROP_FILL = "fill";//$NON-NLS-1$
+    public static final String PROP_FILL = "fill";
 
     /**
      * Start angle (in degree) of the arc.
      */
-    public static final String PROP_START_ANGLE = "start_angle";//$NON-NLS-1$
+    public static final String PROP_START_ANGLE = "start_angle";
 
     /**
      * Total angle (in degree) of the arc.
      */
-    public static final String PROP_TOTAL_ANGLE = "total_angle";//$NON-NLS-1$
+    public static final String PROP_TOTAL_ANGLE = "total_angle";
 
 
     public ArcModel() {

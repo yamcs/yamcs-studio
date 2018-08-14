@@ -36,7 +36,7 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
     /**
      * The color of the selected item.
      */
-    public static final String PROP_SELECTED_COLOR = "selected_color";//$NON-NLS-1$
+    public static final String PROP_SELECTED_COLOR = "selected_color";
 
     /**
      * Unique identifier.

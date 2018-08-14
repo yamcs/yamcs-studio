@@ -46,7 +46,7 @@ public class NewJavaScriptWizard extends Wizard implements INewWizard {
 
         try {
             workbench.getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new FileEditorInput(file), "org.csstudio.opibuilder.jseditor");//$NON-NLS-1$
+                    new FileEditorInput(file), "org.csstudio.opibuilder.jseditor");
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open JavaScript File error",
                     "Failed to open the newly created JavaScript File. \n" + e.getMessage());

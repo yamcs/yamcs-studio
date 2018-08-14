@@ -36,7 +36,7 @@ public class ChangeOrderAction extends SelectionAction {
         TO_FRONT("Bring to Front", "icons/shape_move_front.png"),
         TO_BACK("Send to Back", "icons/shape_move_back.png"),   
         STEP_FRONT("Bring Forward", "icons/shape_move_forwards.png"),
-        STEP_BACK("Send Backward", "icons/shape_move_backwards.png");//$NON-NLS-2$
+        STEP_BACK("Send Backward", "icons/shape_move_backwards.png");
 
         private String label;
         private String iconPath;

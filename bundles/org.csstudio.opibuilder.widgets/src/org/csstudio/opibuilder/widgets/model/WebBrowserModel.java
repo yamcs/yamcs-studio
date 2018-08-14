@@ -21,9 +21,9 @@ import org.eclipse.swt.graphics.RGB;
 public class WebBrowserModel extends AbstractWidgetModel {
 
 
-    public final String ID = "org.csstudio.opibuilder.widgets.webbrowser";//$NON-NLS-1$
-    public static final String PROP_URL = "url";//$NON-NLS-1$
-    public static final String PROP_SHOW_TOOLBAR = "show_toolbar";//$NON-NLS-1$
+    public final String ID = "org.csstudio.opibuilder.widgets.webbrowser";
+    public static final String PROP_URL = "url";
+    public static final String PROP_SHOW_TOOLBAR = "show_toolbar";
 
     public WebBrowserModel() {
         setBorderStyle(BorderStyle.LINE);

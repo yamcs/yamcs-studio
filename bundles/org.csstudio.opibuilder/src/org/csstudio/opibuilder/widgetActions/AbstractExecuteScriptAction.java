@@ -28,9 +28,9 @@ import org.eclipse.core.runtime.Path;
  */
 public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
 
-    public static final String PROP_PATH = "path";//$NON-NLS-1$
-    public static final String PROP_EMBEDDED = "embedded";//$NON-NLS-1$
-    public static final String PROP_SCRIPT_TEXT = "scriptText";//$NON-NLS-1$
+    public static final String PROP_PATH = "path";
+    public static final String PROP_EMBEDDED = "embedded";
+    public static final String PROP_SCRIPT_TEXT = "scriptText";
 
     private BufferedReader reader = null;
     private InputStream inputStream = null;

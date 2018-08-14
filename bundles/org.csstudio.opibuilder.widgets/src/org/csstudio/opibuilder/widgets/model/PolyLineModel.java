@@ -34,7 +34,7 @@ public class PolyLineModel extends AbstractPolyModel {
     public static final String ID = "org.csstudio.opibuilder.widgets.polyline";
 
 
-    public static final String PROP_ARROW = "arrows";//$NON-NLS-1$
+    public static final String PROP_ARROW = "arrows";
 
     public static final String PROP_FILL_ARROW = "fill_arrow";
 

@@ -432,15 +432,15 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
         id = ActionFactory.SELECT_ALL.getId();
         action = getActionRegistry().getAction(id);
-        action.setActionDefinitionId("org.eclipse.ui.edit.selectAll");//$NON-NLS-1$
+        action.setActionDefinitionId("org.eclipse.ui.edit.selectAll");
 
         id = ActionFactory.UNDO.getId();
         action = getActionRegistry().getAction(id);
-        action.setActionDefinitionId("org.eclipse.ui.edit.undo");//$NON-NLS-1$
+        action.setActionDefinitionId("org.eclipse.ui.edit.undo");
 
         id = ActionFactory.REDO.getId();
         action = getActionRegistry().getAction(id);
-        action.setActionDefinitionId("org.eclipse.ui.edit.redo");//$NON-NLS-1$
+        action.setActionDefinitionId("org.eclipse.ui.edit.redo");
 
         action = new AlignmentAction((IWorkbenchPart) this,
                 PositionConstants.LEFT);

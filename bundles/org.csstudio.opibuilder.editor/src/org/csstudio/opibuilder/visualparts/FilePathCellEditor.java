@@ -138,7 +138,7 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
                 rsd.setSelectedResource(_path);
             else{
                 //select current path
-                rsd.setSelectedResource(new Path("./"));//$NON-NLS-1$
+                rsd.setSelectedResource(new Path("./"));
             }
 
             if (rsd.open() == Window.OK) {

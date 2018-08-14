@@ -145,21 +145,21 @@ public class ConnectionModel extends AbstractWidgetModel {
     /**
      * Width of the line.
      */
-    public static final String PROP_LINE_WIDTH = "line_width";//$NON-NLS-1$
+    public static final String PROP_LINE_WIDTH = "line_width";
 
     /**
      * Style of the line.
      */
-    public static final String PROP_LINE_STYLE = "line_style";//$NON-NLS-1$
+    public static final String PROP_LINE_STYLE = "line_style";
 
     /**
      * Color of the line.
      */
-    public static final String PROP_LINE_COLOR = "line_color";//$NON-NLS-1$
+    public static final String PROP_LINE_COLOR = "line_color";
 
-    public static final String PROP_ROUTER = "router";//$NON-NLS-1$
+    public static final String PROP_ROUTER = "router";
 
-    public static final String PROP_ARROW_TYPE = "arrows";//$NON-NLS-1$
+    public static final String PROP_ARROW_TYPE = "arrows";
 
     public static final String PROP_FILL_ARROW = "fill_arrow";
 
@@ -173,12 +173,12 @@ public class ConnectionModel extends AbstractWidgetModel {
     /**
      * Source Terminal
      */
-    public static final String PROP_SRC_TERM = "src_term";//$NON-NLS-1$
+    public static final String PROP_SRC_TERM = "src_term";
 
     /**
      * Target Terminal
      */
-    public static final String PROP_TGT_TERM = "tgt_term";//$NON-NLS-1$
+    public static final String PROP_TGT_TERM = "tgt_term";
 
     /**
      * The source widget UID

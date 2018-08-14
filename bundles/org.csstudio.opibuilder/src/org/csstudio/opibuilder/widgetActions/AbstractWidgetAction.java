@@ -34,7 +34,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     private boolean enabled = true;
 
     private AbstractWidgetModel widgetModel;
-    public static final String PROP_DESCRIPTION = "description";//$NON-NLS-1$
+    public static final String PROP_DESCRIPTION = "description";
 
     public AbstractWidgetAction() {
         propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();

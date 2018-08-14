@@ -34,11 +34,11 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         DOUBLE_ARRAY("double[]"),
         STRING_ARRAY("String[]"),       
         INT_ARRAY("int[]"),       
-        BYTE_ARRAY("byte[]"),//$NON-NLS-1$
-        LONG_ARRAY("long[]"),//$NON-NLS-1$
-        SHORT_ARRAY("short[]"),//$NON-NLS-1$
-        FLOAT_ARRAY("float[]"),//$NON-NLS-1$
-        OBJECT_ARRAY("Object[]");//$NON-NLS-1$
+        BYTE_ARRAY("byte[]"),
+        LONG_ARRAY("long[]"),
+        SHORT_ARRAY("short[]"),
+        FLOAT_ARRAY("float[]"),
+        OBJECT_ARRAY("Object[]");
 
         private String description;
         private ArrayDataType(String description) {

@@ -46,13 +46,13 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
 
     public enum AxisProperty {
         TITLE("axis_title", "Axis Title"),
-        TITLE_FONT("title_font", "Title Font"), //$NON-NLS-1$
+        TITLE_FONT("title_font", "Title Font"), 
         SCALE_FONT("scale_font", "Scale Font"),
-        AXIS_COLOR("axis_color", "Axis Color"), //$NON-NLS-1$
-        SHOW_MINOR_TICKS("show_minor_ticks", "Show Minor Ticks"), //$NON-NLS-1$
-        MAJOR_TICK_STEP_HINT("major_tick_step_hint", "Major Tick Step Hint"), //$NON-NLS-1$
-        MAX("maximum", "Maximum"), //$NON-NLS-1$
-        MIN("minimum", "Minimum"), //$NON-NLS-1$
+        AXIS_COLOR("axis_color", "Axis Color"), 
+        SHOW_MINOR_TICKS("show_minor_ticks", "Show Minor Ticks"), 
+        MAJOR_TICK_STEP_HINT("major_tick_step_hint", "Major Tick Step Hint"), 
+        MAX("maximum", "Maximum"), 
+        MIN("minimum", "Minimum"), 
         VISIBLE("visible", "Visible");
 
         public String propIDPre;
@@ -70,15 +70,15 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     }
 
     public enum ROIProperty {
-        TITLE("title", "Title"), //$NON-NLS-1$
-        VISIBLE("visible", "Visible"), //$NON-NLS-1$
-        XPV("x_pv", "X PV"), //$NON-NLS-1$
-        YPV("y_pv", "Y PV"), //$NON-NLS-1$
-        XPV_VALUE("x_pv_value", "X PV Value"), //$NON-NLS-1$
-        YPV_VALUE("y_pv_value", "Y PV Value"), //$NON-NLS-1$
-        WPV("width_pv", "Width PV"), //$NON-NLS-1$
-        HPV("height_pv", "Height PV"), //$NON-NLS-1$
-        WPV_VALUE("w_pv_value", "W PV Value"), //$NON-NLS-1$
+        TITLE("title", "Title"), 
+        VISIBLE("visible", "Visible"), 
+        XPV("x_pv", "X PV"), 
+        YPV("y_pv", "Y PV"), 
+        XPV_VALUE("x_pv_value", "X PV Value"), 
+        YPV_VALUE("y_pv_value", "Y PV Value"), 
+        WPV("width_pv", "Width PV"), 
+        HPV("height_pv", "Height PV"), 
+        WPV_VALUE("w_pv_value", "W PV Value"), 
         HPV_VALUE("h_pv_value", "H PV Value");
 
         public String propIDPre;
@@ -155,22 +155,22 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     /**
      * The output PV to which the horizontal profile data on X axis will be written.
      */
-    public static final String PROP_HORIZON_PROFILE_X_PV_NAME = "horizon_profile_x_pv_name";//$NON-NLS-1$
-    public static final String PROP_HORIZON_PROFILE_X_PV_VALUE = "horizon_profile_x_pv_value";//$NON-NLS-1$
+    public static final String PROP_HORIZON_PROFILE_X_PV_NAME = "horizon_profile_x_pv_name";
+    public static final String PROP_HORIZON_PROFILE_X_PV_VALUE = "horizon_profile_x_pv_value";
     /**
      * The output PV to which the vertical profile data on X axis will be written.
      */
-    public static final String PROP_VERTICAL_PROFILE_X_PV_NAME = "vertical_profile_x_pv_name";//$NON-NLS-1$
-    public static final String PROP_VERTICAL_PROFILE_X_PV_VALUE = "vertial_profile_x_pv_value";//$NON-NLS-1$
+    public static final String PROP_VERTICAL_PROFILE_X_PV_NAME = "vertical_profile_x_pv_name";
+    public static final String PROP_VERTICAL_PROFILE_X_PV_VALUE = "vertial_profile_x_pv_value";
     /**
      * The output PV to which the horizontal profile data on Y axis will be written.
      */
-    public static final String PROP_HORIZON_PROFILE_Y_PV_NAME = "horizon_profile_y_pv_name";//$NON-NLS-1$
-    public static final String PROP_HORIZON_PROFILE_Y_PV_VALUE = "horizon_profile_y_pv_value";//$NON-NLS-1$
+    public static final String PROP_HORIZON_PROFILE_Y_PV_NAME = "horizon_profile_y_pv_name";
+    public static final String PROP_HORIZON_PROFILE_Y_PV_VALUE = "horizon_profile_y_pv_value";
     /**
      * The output PV to which the vertical profile data on Y axis will be written.
      */
-    public static final String PROP_VERTICAL_PROFILE_Y_PV_NAME = "vertical_profile_y_pv_name";//$NON-NLS-1$
+    public static final String PROP_VERTICAL_PROFILE_Y_PV_NAME = "vertical_profile_y_pv_name";
     public static final String PROP_VERTICAL_PROFILE_Y_PV_VALUE = "vertial_profile_y_pv_value";
 
     /** PV to which information about the pixel at the cursor location is written */

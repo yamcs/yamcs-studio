@@ -216,7 +216,7 @@ public class LabelFigure extends Figure implements Introspectable{
     public void setText(String s) {
         // "text" will never be null.
         if (s == null)
-            s = "";//$NON-NLS-1$
+            s = "";
         if (text.equals(s))
             return;
         text = s;

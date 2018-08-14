@@ -401,7 +401,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     public void setText(String s) {
         // "text" will never be null.
         if (s == null)
-            s = "";//$NON-NLS-1$
+            s = "";
         if (text.equals(s))
             return;
         clearLocationSize();

@@ -49,7 +49,7 @@ public class NewOPIFileWizard extends Wizard implements INewWizard {
 
         try {
             workbench.getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new FileEditorInput(file), "org.csstudio.opibuilder.OPIEditor");//$NON-NLS-1$
+                    new FileEditorInput(file), "org.csstudio.opibuilder.OPIEditor");
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open OPI File error",
                     "Failed to open the newly created OPI File. \n" + e.getMessage());

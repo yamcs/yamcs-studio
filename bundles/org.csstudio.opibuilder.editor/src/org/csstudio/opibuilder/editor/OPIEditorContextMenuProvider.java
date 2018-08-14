@@ -127,8 +127,8 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         }
         menu.appendToGroup(GEFActionConstants.GROUP_COPY, orientationMenu);
 
-//        MenuManager cssMenu = new MenuManager("CSS", "css");//$NON-NLS-1$
-//        cssMenu.add(new Separator("additions"));//$NON-NLS-1$
+//        MenuManager cssMenu = new MenuManager("CSS", "css");
+//        cssMenu.add(new Separator("additions"));
 //        menu.add(cssMenu);
     }
 

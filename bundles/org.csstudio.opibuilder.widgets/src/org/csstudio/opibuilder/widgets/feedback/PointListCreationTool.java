@@ -145,7 +145,7 @@ public final class PointListCreationTool extends TargetingTool {
      */
     @Override
     protected String getDebugName() {
-        return "Creation Tool";//$NON-NLS-1$
+        return "Creation Tool";
     }
 
     /**

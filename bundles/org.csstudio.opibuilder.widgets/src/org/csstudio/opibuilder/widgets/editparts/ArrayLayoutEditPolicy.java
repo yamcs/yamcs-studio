@@ -144,7 +144,7 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
         ChangeBoundsRequest request = (ChangeBoundsRequest) generic;
         List<?> editParts = request.getEditParts();
         CompoundCommand command = new CompoundCommand();
-        command.setDebugLabel("Add in ConstrainedLayoutEditPolicy");//$NON-NLS-1$
+        command.setDebugLabel("Add in ConstrainedLayoutEditPolicy");
         GraphicalEditPart child;
         if(editParts.size()>0){
             child = (GraphicalEditPart) editParts.get(0);

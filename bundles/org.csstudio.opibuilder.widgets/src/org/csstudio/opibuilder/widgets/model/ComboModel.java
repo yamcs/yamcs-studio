@@ -23,16 +23,16 @@ import org.eclipse.swt.graphics.RGB;
 public class ComboModel extends AbstractPVWidgetModel {
 
 
-    public final String ID = "org.csstudio.opibuilder.widgets.combo";//$NON-NLS-1$
+    public final String ID = "org.csstudio.opibuilder.widgets.combo";
     /**
      * Items of the combo.
      */
-    public static final String PROP_ITEMS = "items";//$NON-NLS-1$
+    public static final String PROP_ITEMS = "items";
 
     /**
      * True if items are read from the input PV which must be an Enum PV.
      */
-    public static final String PROP_ITEMS_FROM_PV = "items_from_pv";//$NON-NLS-1$
+    public static final String PROP_ITEMS_FROM_PV = "items_from_pv";
 
     public ComboModel() {
         setBackgroundColor(new RGB(255,255,255));

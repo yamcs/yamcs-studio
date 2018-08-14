@@ -28,11 +28,11 @@ public class GroupingContainerModel extends AbstractContainerModel {
     public static final String PROP_TRANSPARENT = "transparent";   
 
     /** True if children widgets are not selectable.*/
-    public static final String PROP_LOCK_CHILDREN = "lock_children";//$NON-NLS-1$
+    public static final String PROP_LOCK_CHILDREN = "lock_children";
     /**
      * True if scrollbar is visible when children widgets are out of range.
      */
-    public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar";//$NON-NLS-1$
+    public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar";
 
 
     /**Forward background and foreground color properties change to children. */

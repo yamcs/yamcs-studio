@@ -149,8 +149,8 @@ public class ActionsProperty extends AbstractWidgetProperty {
     @Override
     public void writeToXML(Element propElement) {
         ActionsInput actionsInput = (ActionsInput) getPropertyValue();
-        propElement.setAttribute(XML_ATTRIBUTE_HOOK_FIRST, "" + actionsInput.isFirstActionHookedUpToWidget()); ////$NON-NLS-1$
-        propElement.setAttribute(XML_ATTRIBUTE_HOOK_ALL, "" + actionsInput.isHookUpAllActionsToWidget()); ////$NON-NLS-1$
+        propElement.setAttribute(XML_ATTRIBUTE_HOOK_FIRST, "" + actionsInput.isFirstActionHookedUpToWidget()); //
+        propElement.setAttribute(XML_ATTRIBUTE_HOOK_ALL, "" + actionsInput.isHookUpAllActionsToWidget()); //
 
         for (AbstractWidgetAction action : actionsInput.getActionsList()) {
             Element actionElement = new Element(XML_ELEMENT_ACTION);

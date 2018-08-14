@@ -122,7 +122,7 @@ public final class ResourceAndContainerGroup implements Listener {
     /**
      * Problem indicator.
      */
-    private String _problemMessage = "";//$NON-NLS-1$
+    private String _problemMessage = "";
 
     /**
      * The default file extension.
@@ -466,7 +466,7 @@ public final class ResourceAndContainerGroup implements Listener {
             return false;
         }
         _problemType = PROBLEM_NONE;
-        _problemMessage = "";//$NON-NLS-1$
+        _problemMessage = "";
 
         if (!validateContainer() || !validateResourceName()) {
             return false;
@@ -519,7 +519,7 @@ public final class ResourceAndContainerGroup implements Listener {
     private boolean validateResourceName() {
         String resourceName = getResourceNameWithExtension();
 
-        if (resourceName.equals("")) {//$NON-NLS-1$
+        if (resourceName.equals("")) {
             _problemType = PROBLEM_RESOURCE_EMPTY;
             _problemMessage = NLS.bind(
                     Messages.ResourceAndContainerGroup_PROBLEM_EMPTY_NAME,

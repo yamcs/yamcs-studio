@@ -27,7 +27,7 @@ public class WidgetActionFactory {
         EXECUTE_PYTHONSCRIPT("Execute Python Script", createImage("icons/exePy.gif")),
         PLAY_SOUND("Play WAV File", createImage("icons/sound.gif")),
         OPEN_FILE("Open File", createImage("icons/openFile.png")),
-        OPEN_WEBPAGE("Open Webpage", createImage("icons/hyperlink.gif"));//$NON-NLS-2$
+        OPEN_WEBPAGE("Open Webpage", createImage("icons/hyperlink.gif"));
 
         private ImageDescriptor iconImage;
         private String description;

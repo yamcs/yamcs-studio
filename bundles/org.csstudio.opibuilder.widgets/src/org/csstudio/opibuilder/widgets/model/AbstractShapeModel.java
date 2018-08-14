@@ -29,17 +29,17 @@ public abstract class AbstractShapeModel extends AbstractPVWidgetModel {
     /**
      * Width of the line.
      */
-    public static final String PROP_LINE_WIDTH = "line_width";//$NON-NLS-1$
+    public static final String PROP_LINE_WIDTH = "line_width";
 
     /**
      * Style of the line.
      */
-    public static final String PROP_LINE_STYLE = "line_style";//$NON-NLS-1$
+    public static final String PROP_LINE_STYLE = "line_style";
 
     /**
      * Color of the line.
      */
-    public static final String PROP_LINE_COLOR = "line_color";//$NON-NLS-1$
+    public static final String PROP_LINE_COLOR = "line_color";
 
     /**
      * The widget can be filled with foreground color if this is not zero.

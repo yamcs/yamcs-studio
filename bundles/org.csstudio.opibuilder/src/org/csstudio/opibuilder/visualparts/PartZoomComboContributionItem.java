@@ -46,7 +46,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      *            used to add a PartListener
      */
     public PartZoomComboContributionItem(IPartService partService) {
-        this(partService, "8888%");//$NON-NLS-1$
+        this(partService, "8888%");
     }
 
     /**
@@ -192,7 +192,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
      */
     @Override
     public final void fill(Menu parent, int index) {
-        Assert.isTrue(false, "Can't add a control to a menu");//$NON-NLS-1$
+        Assert.isTrue(false, "Can't add a control to a menu");
     }
 
     /**
