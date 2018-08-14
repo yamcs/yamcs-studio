@@ -67,21 +67,16 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
         ScriptService.getInstance();
 
         preferenceLisener = event -> {
-            if (event.getProperty()
-                    .equals(PreferencesHelper.COLOR_FILE)) {
+            if (event.getProperty().equals(PreferencesHelper.COLOR_FILE)) {
                 MediaService.getInstance().reloadColorFile();
-            } else if (event.getProperty().equals(
-                    PreferencesHelper.FONT_FILE)) {
+            } else if (event.getProperty().equals(PreferencesHelper.FONT_FILE)) {
                 MediaService.getInstance().reloadFontFile();
-            } else if (event.getProperty().equals(
-                    PreferencesHelper.OPI_GUI_REFRESH_CYCLE)) {
+            } else if (event.getProperty().equals(PreferencesHelper.OPI_GUI_REFRESH_CYCLE)) {
                 GUIRefreshThread.getInstance(true).reLoadGUIRefreshCycle();
-            } else if (event.getProperty().equals(
-                    PreferencesHelper.DISABLE_ADVANCED_GRAPHICS)) {
+            } else if (event.getProperty().equals(PreferencesHelper.DISABLE_ADVANCED_GRAPHICS)) {
                 String disabled = PreferencesHelper.isAdvancedGraphicsDisabled() ? "true" : "false";
                 // for swt.widgets
-                System.setProperty(
-                        "org.csstudio.swt.widget.prohibit_advanced_graphics", disabled);
+                System.setProperty("org.csstudio.swt.widget.prohibit_advanced_graphics", disabled);
                 // for XYGraph
                 System.setProperty("prohibit_advanced_graphics", disabled);
             } else if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
@@ -107,7 +102,6 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
-        ScriptService.getInstance().exit();
         getPluginPreferences().removePropertyChangeListener(preferenceLisener);
     }
 

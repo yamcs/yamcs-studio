@@ -112,11 +112,6 @@ public class ScriptService {
 
     }
 
-    public void exit() {
-        ScriptStoreFactory.exit();
-        instance = null;
-    }
-
     public void unRegisterScript(ScriptData scriptData) {
         if (scriptMap.get(scriptData) != null) {
             scriptMap.get(scriptData).unRegister();

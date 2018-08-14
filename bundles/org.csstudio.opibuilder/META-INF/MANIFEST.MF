@@ -50,7 +50,5 @@ Export-Package: org.csstudio.opibuilder,
  org.csstudio.opibuilder.visualparts,
  org.csstudio.opibuilder.widgetActions,
  org.csstudio.platform.data
-Bundle-ClassPath: lib/rhino/js.jar,
- .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.csstudio.opibuilder

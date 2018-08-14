@@ -10,15 +10,16 @@ package org.csstudio.opibuilder.util;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 import org.csstudio.java.string.StringSplitter;
 import org.csstudio.opibuilder.properties.MacrosProperty;
 
-/**The value type definition for {@link MacrosProperty}, which describes the input
- * for a Macros Property.
- * TODO Combine with MacroTable
- * TODO Hide the actual map implementation
- * TODO Why does the order of macros matter? For environment vars, the order doesn't matter. Can still replace macros recursively as in $($(M))
+/**
+ * The value type definition for {@link MacrosProperty}, which describes the input for a Macros Property. TODO Combine
+ * with MacroTable TODO Hide the actual map implementation TODO Why does the order of macros matter? For environment
+ * vars, the order doesn't matter. Can still replace macros recursively as in $($(M))
+ * 
  * @author Xihui Chen
  */
 public class MacrosInput {
@@ -27,9 +28,9 @@ public class MacrosInput {
 
     private boolean include_parent_macros;
 
-    private static final char ITEM_SEPARATOR = ','; //$NON-NLS-1$
-    private static final char MACRO_SEPARATOR = '='; //$NON-NLS-1$
-    private static final char QUOTE = '\"'; //$NON-NLS-1$
+    private static final char ITEM_SEPARATOR = ',';
+    private static final char MACRO_SEPARATOR = '=';
+    private static final char QUOTE = '\"';
 
     public MacrosInput(LinkedHashMap<String, String> macros, boolean include_parent_macros) {
         this.macrosMap = macros;
@@ -44,17 +45,20 @@ public class MacrosInput {
     }
 
     /**
-     * @param macrosMap the macrosMap to set
+     * @param macrosMap
+     *            the macrosMap to set
      */
     public final void setMacrosMap(LinkedHashMap<String, String> macrosMap) {
         this.macrosMap = macrosMap;
     }
 
-    /**Add or replace a macro.
+    /**
+     * Add or replace a macro.
+     * 
      * @param macroName
      * @param macroValue
      */
-    public final void put(String macroName, String macroValue){
+    public final void put(String macroName, String macroValue) {
         macrosMap.put(macroName, macroValue);
     }
 
@@ -66,13 +70,14 @@ public class MacrosInput {
     }
 
     /**
-     * @param include_parent_macros the include_parent_macros to set
+     * @param include_parent_macros
+     *            the include_parent_macros to set
      */
     public final void setInclude_parent_macros(boolean include_parent_macros) {
         this.include_parent_macros = include_parent_macros;
     }
 
-    public MacrosInput getCopy(){
+    public MacrosInput getCopy() {
         MacrosInput result = new MacrosInput(
                 new LinkedHashMap<String, String>(), include_parent_macros);
         result.getMacrosMap().putAll(macrosMap);
@@ -81,49 +86,46 @@ public class MacrosInput {
 
     @Override
     public String toString() {
-        return (include_parent_macros? "{" + "Parent Macros" + //$NON-NLS-1$
+        return (include_parent_macros ? "{" + "Parent Macros" + //$NON-NLS-1$
                 "} " : "") + macrosMap.toString();
     }
 
     @Override
-    public int hashCode(){
-         int result = HashCodeUtil.SEED;
-         //collect the contributions of various fields
-         result = HashCodeUtil.hash(result, include_parent_macros);
-         result = HashCodeUtil.hash(result, macrosMap);
-         result = HashCodeUtil.hash(result, macrosMap.keySet().toArray());
-         return result;
+    public int hashCode() {
+        return Objects.hash(include_parent_macros, macrosMap, macrosMap.keySet().toArray());
     }
-
 
     @Override
     public boolean equals(Object obj) {
-        if(obj != null && obj instanceof MacrosInput){
-            MacrosInput input = (MacrosInput)obj;
-            if(include_parent_macros != input.isInclude_parent_macros())
+        if (obj != null && obj instanceof MacrosInput) {
+            MacrosInput input = (MacrosInput) obj;
+            if (include_parent_macros != input.isInclude_parent_macros()) {
                 return false;
-            if(!macrosMap.equals(input.getMacrosMap()))
+            }
+            if (!macrosMap.equals(input.getMacrosMap())) {
                 return false;
+            }
             List<Object> keyList = Arrays.asList(macrosMap.keySet().toArray());
             List<Object> inputKeyList = Arrays.asList(input.getMacrosMap().keySet().toArray());
-            if(keyList.equals(inputKeyList))
+            if (keyList.equals(inputKeyList)) {
                 return true;
-            else
+            } else {
                 return false;
+            }
 
-        }else
+        } else {
             return false;
+        }
 
     }
-
 
     /**
      * @return a String with format like this: "true", "macro1 = hello", "macro2 = hello2"
      */
-    public String toPersistenceString(){
+    public String toPersistenceString() {
         StringBuilder result = new StringBuilder();
         result.append(QUOTE + Boolean.toString(include_parent_macros) + QUOTE);
-        for(String key : macrosMap.keySet()){
+        for (String key : macrosMap.keySet()) {
             result.append(ITEM_SEPARATOR + "" + QUOTE + key + //$NON-NLS-1$
                     MACRO_SEPARATOR + macrosMap.get(key) + QUOTE);
         }
@@ -131,23 +133,26 @@ public class MacrosInput {
     }
 
     // TODO Offer a parser just for "macro1 = hello", "macro2 = hello2" without the inital "true", "false
-    /**Parse MacrosInput from persistence string.
+    /**
+     * Parse MacrosInput from persistence string.
+     * 
      * @param s
      * @return
      * @throws Exception
      */
-    public static MacrosInput recoverFromString(String s) throws Exception{
+    public static MacrosInput recoverFromString(String s) throws Exception {
         String[] items = StringSplitter.splitIgnoreInQuotes(s, ITEM_SEPARATOR, true);
         MacrosInput macrosInput = new MacrosInput(new LinkedHashMap<String, String>(), true);
-        for(int i= 0; i<items.length; i++){
-            if(i == 0)
+        for (int i = 0; i < items.length; i++) {
+            if (i == 0) {
                 macrosInput.setInclude_parent_macros(Boolean.valueOf(items[i]));
-            else{
+            } else {
                 String[] macro = StringSplitter.splitIgnoreInQuotes(items[i], MACRO_SEPARATOR, true);
-                if(macro.length == 2)
+                if (macro.length == 2) {
                     macrosInput.getMacrosMap().put(macro[0], macro[1]);
-                else if(macro.length == 1) //if it is an empty value macro
+                } else if (macro.length == 1) {
                     macrosInput.getMacrosMap().put(macro[0], ""); //$NON-NLS-1$
+                }
             }
         }
         return macrosInput;

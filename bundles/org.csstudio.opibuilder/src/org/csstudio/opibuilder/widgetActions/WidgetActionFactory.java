@@ -8,8 +8,6 @@
 package org.csstudio.opibuilder.widgetActions;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.opibuilder.script.ScriptStoreFactory;
-import org.csstudio.opibuilder.script.ScriptStoreFactory.JavaScriptEngine;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -48,11 +46,13 @@ public class WidgetActionFactory {
          */
         public static ActionType parseAction(String actionString) {
             // Map legacy actions
-            if ("OPEN_OPI_IN_VIEW".equals(actionString))
+            if ("OPEN_OPI_IN_VIEW".equals(actionString)) {
                 return OPEN_DISPLAY;
+            }
             for (ActionType type : values()) {
-                if (actionString.equals(type.toString()))
+                if (actionString.equals(type.toString())) {
                     return type;
+                }
             }
             return null;
         }
@@ -91,11 +91,7 @@ public class WidgetActionFactory {
         case EXECUTE_CMD:
             return new ExecuteCommandAction();
         case EXECUTE_JAVASCRIPT:
-            if (ScriptStoreFactory.getDefaultJavaScriptEngine() == JavaScriptEngine.RHINO) {
-                return new ExecuteJavaScriptRhinoAction();
-            } else {
-                return new ExecuteJavaScriptJdkAction();
-            }
+            return new ExecuteJavaScriptAction();
         case EXECUTE_PYTHONSCRIPT:
             return new ExecutePythonScriptAction();
         case OPEN_WEBPAGE:

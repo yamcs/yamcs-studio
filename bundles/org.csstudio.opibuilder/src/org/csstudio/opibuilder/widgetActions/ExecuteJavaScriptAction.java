@@ -1,16 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.widgetActions;
 
+import java.io.BufferedReader;
 import java.util.logging.Level;
+
+import javax.script.Bindings;
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
+import org.csstudio.opibuilder.script.JavaScriptStore;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptStoreFactory;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
@@ -22,48 +22,42 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.swt.widgets.Display;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.ScriptableObject;
 
 /**
- * The action executing javascript with Mozilla Rhino script engine.
- * 
- * @author Xihui Chen
- *
+ * The action executing javascript with the default javascript engine embedded in JDK.
  */
-public class ExecuteJavaScriptRhinoAction extends AbstractExecuteScriptAction {
+class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
 
-    private Script script;
-    private ImporterTopLevel scriptScope;
-    private Context scriptContext;
+    private ScriptEngine scriptEngine;
+    private Bindings scriptScope;
+    private CompiledScript script;
 
     @Override
-    public ActionType getActionType() {
-        return ActionType.EXECUTE_JAVASCRIPT;
+    protected String getFileExtension() {
+        return ScriptService.JS;
+    }
+
+    @Override
+    protected String getScriptHeader() {
+        return ScriptService.DEFAULT_JS_HEADER;
     }
 
     @Override
     public void run() {
-        if (scriptContext == null) {
+        if (scriptEngine == null) {
             try {
-                scriptContext = ScriptStoreFactory.getRhinoContext();
+                scriptEngine = ScriptStoreFactory.getJavaScriptEngine();
             } catch (Exception exception) {
                 ErrorHandlerUtil.handleError("Failed to get Script Context", exception);
                 return;
             }
-            scriptScope = new ImporterTopLevel(scriptContext);
+            scriptScope = scriptEngine.createBindings();
             GraphicalViewer viewer = getWidgetModel().getRootDisplayModel().getViewer();
             if (viewer != null) {
                 Object obj = viewer.getEditPartRegistry().get(getWidgetModel());
                 if (obj != null && obj instanceof AbstractBaseEditPart) {
-                    Object displayObject = Context.javaToJS(viewer.getContents(), scriptScope);
-                    Object widgetObject = Context.javaToJS(obj, scriptScope);
-                    ScriptableObject.putProperty(scriptScope,
-                            ScriptService.DISPLAY, displayObject);
-                    ScriptableObject.putProperty(scriptScope,
-                            ScriptService.WIDGET, widgetObject);
+                    scriptScope.put(ScriptService.DISPLAY, viewer.getContents());
+                    scriptScope.put(ScriptService.WIDGET, obj);
                 }
             }
         }
@@ -72,8 +66,7 @@ public class ExecuteJavaScriptRhinoAction extends AbstractExecuteScriptAction {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 String taskName = isEmbedded() ? "Execute JavaScript" : "Connecting to " + getAbsolutePath();
-                monitor.beginTask(taskName,
-                        IProgressMonitor.UNKNOWN);
+                monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
                 runTask();
                 monitor.done();
                 return Status.OK_STATUS;
@@ -88,32 +81,34 @@ public class ExecuteJavaScriptRhinoAction extends AbstractExecuteScriptAction {
 
         try {
             if (script == null) {
-                // read file
-                if (!isEmbedded()) {
-                    getReader();
-                }
-
-                // compile
                 UIBundlingThread.getInstance().addRunnable(display, () -> {
                     try {
                         if (isEmbedded()) {
-                            script = scriptContext.compileString(getScriptText(), "script", 1, null);
+                            String scriptText = JavaScriptStore.COMPAT_PREFIX + getScriptText();
+                            script = ((Compilable) scriptEngine).compile(scriptText);
                         } else {
-                            script = scriptContext.compileReader(getReader(), "script", 1, null);
+                            BufferedReader reader = getReader();
+                            StringBuilder buf = new StringBuilder(JavaScriptStore.COMPAT_PREFIX);
+                            try {
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    buf.append(line);
+                                }
+                            } finally {
+                                closeReader();
+                            }
+                            script = ((Compilable) scriptEngine).compile(buf.toString());
                         }
                     } catch (Exception e) {
                         final String message = "Failed to compile JavaScript: " + getAbsolutePath();
                         OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                     }
-                    closeReader();
                 });
-
             }
 
             UIBundlingThread.getInstance().addRunnable(display, () -> {
-
                 try {
-                    script.exec(scriptContext, scriptScope);
+                    script.eval(scriptScope);
                 } catch (Exception e) {
                     final String message = "Error exists in script " + getAbsolutePath();
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
@@ -126,13 +121,7 @@ public class ExecuteJavaScriptRhinoAction extends AbstractExecuteScriptAction {
     }
 
     @Override
-    protected String getFileExtension() {
-        return ScriptService.JS;
+    public ActionType getActionType() {
+        return ActionType.EXECUTE_JAVASCRIPT;
     }
-
-    @Override
-    protected String getScriptHeader() {
-        return ScriptService.DEFAULT_JS_HEADER;
-    }
-
 }
