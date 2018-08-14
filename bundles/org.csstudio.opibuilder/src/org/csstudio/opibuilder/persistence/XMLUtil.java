@@ -360,8 +360,7 @@ public class XMLUtil {
                 rootWidgetModel = desc.getWidgetModel();
             }
             if (rootWidgetModel == null) {
-                String errorMessage = NLS.bind("Fail to load the widget: {0}\n " +
-                        "The widget may not exist, as a consequence, the widget will be ignored.", typeId);
+                String errorMessage = NLS.bind("Unknown widget: {0}", typeId);
                 ErrorHandlerUtil.handleError(errorMessage, new Exception("Widget does not exist."));
                 return null;
             }
