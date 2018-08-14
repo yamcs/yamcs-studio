@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.PrintDisplayAction;
 import org.csstudio.opibuilder.actions.RefreshOPIAction;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
@@ -25,6 +24,7 @@ import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.UpdateListener;
 import org.eclipse.draw2d.UpdateManager;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditDomain;
@@ -283,7 +283,31 @@ public class OPIRuntimeDelegate implements IAdaptable {
 
     private void hideCloseButton(final IWorkbenchPartSite site) {
         if (!displayModel.isShowCloseButton()) {
-            Display.getCurrent().asyncExec(() -> OPIBuilderPlugin.getUIHelper().enableClose(site, false));
+            Display.getCurrent().asyncExec(() -> {
+                // TODO Improve implementation
+
+                // Configure the E4 model element.
+                // Issue 1:
+                // When opening the display for the first time,
+                // the 'x' in the tab is still displayed.
+                // Only on _restart_ of the app will the tab be displayed
+                // without the 'x' to close it.
+                // Issue 2:
+                // Part can still be closed via Ctrl-W (Command-W on OS X)
+                // or via menu File/close.
+                MPart part = site.getService(MPart.class);
+                part.setCloseable(false);
+
+                // Original RCP code
+                // PartPane currentEditorPartPane = ((PartSite) site)
+                // .getPane();
+                // PartStack stack = currentEditorPartPane.getStack();
+                // Control control = stack.getControl();
+                // if (control instanceof CTabFolder) {
+                // CTabFolder tabFolder = (CTabFolder) control;
+                // tabFolder.getSelection().setShowClose(false);
+                // }
+            });
         }
     }
 

@@ -13,28 +13,27 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
 
-/** Factory for restoring a persisted {@link PathEditorInput}
- *  @author Kay Kasemir
+/**
+ * Factory for restoring a persisted {@link PathEditorInput}
+ * 
+ * @author Kay Kasemir
  */
-@SuppressWarnings("nls")
-public class PathEditorInputFactory implements IElementFactory
-{
-    /** Factory ID registered via plugin.xml */
-    final public static String ID = "org.csstudio.utility.singlesource.PathEditorInputFactory";
+public class PathEditorInputFactory implements IElementFactory {
 
-    /** Memento tag for the path */
-    final public static String TAG_PATH = "path";
+    public static final String ID = "org.csstudio.utility.singlesource.PathEditorInputFactory";
+
+    public static final String TAG_PATH = "path";
 
     /** {@inheritDoc} */
     @Override
-    public IAdaptable createElement(final IMemento memento)
-    {
-        final String port_path = memento.getString(TAG_PATH);
-        if (port_path == null)
+    public IAdaptable createElement(final IMemento memento) {
+        String port_path = memento.getString(TAG_PATH);
+        if (port_path == null) {
             return null;
+        }
 
         // TODO Use URL Path
-        final IPath path = Path.fromPortableString(port_path);
+        IPath path = Path.fromPortableString(port_path);
         return new PathEditorInput(path);
     }
 }

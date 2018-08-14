@@ -17,6 +17,9 @@ import org.csstudio.opibuilder.util.MacrosInput;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
@@ -36,26 +39,26 @@ import org.eclipse.ui.PlatformUI;
 public class RunModeService {
     /** How/where a new display is presented */
     public enum DisplayMode {
-        /** Replace current view or shell with new display content */
-        REPLACE("Replace Current"),
+    /** Replace current view or shell with new display content */
+    REPLACE("Replace Current"),
 
-        /** New view part within existing workbench */
-        NEW_TAB("Workbench Tab"),
+    /** New view part within existing workbench */
+    NEW_TAB("Workbench Tab"),
 
-        /** .. in desired location, if possible */
-        NEW_TAB_LEFT("Workbench Tab (Left)"),
-        NEW_TAB_RIGHT("Workbench Tab (Right)"),
-        NEW_TAB_TOP("Workbench Tab (Top)"),
-        NEW_TAB_BOTTOM("Workbench Tab (Bottom)"),
+    /** .. in desired location, if possible */
+    NEW_TAB_LEFT("Workbench Tab (Left)"),
+    NEW_TAB_RIGHT("Workbench Tab (Right)"),
+    NEW_TAB_TOP("Workbench Tab (Top)"),
+    NEW_TAB_BOTTOM("Workbench Tab (Bottom)"),
 
-        /** .. detached */
-        NEW_TAB_DETACHED("Detached Tab"),
+    /** .. detached */
+    NEW_TAB_DETACHED("Detached Tab"),
 
-        /** New view part in new workbench window */
-        NEW_WINDOW("New workbench"),
+    /** New view part in new workbench window */
+    NEW_WINDOW("New workbench"),
 
-        /** New standalone Shell */
-        NEW_SHELL("Standalone window");
+    /** New standalone Shell */
+    NEW_SHELL("Standalone window");
 
         private String description;
 
@@ -66,8 +69,9 @@ public class RunModeService {
         public static String[] stringValues() {
             String[] sv = new String[values().length];
             int i = 0;
-            for (DisplayMode p : values())
+            for (DisplayMode p : values()) {
                 sv[i++] = p.description;
+            }
             return sv;
         }
     }
@@ -89,9 +93,9 @@ public class RunModeService {
         RunnerInput input = new RunnerInput(path, null, macros.orElse(null));
         try {
             if (mode == DisplayMode.REPLACE) { // Anything to replace?
-                if (!runtime.isPresent())
+                if (!runtime.isPresent()) {
                     mode = DisplayMode.NEW_TAB;
-                else { // Replace display in current runtime
+                } else { // Replace display in current runtime
                     final DisplayOpenManager manager = runtime.get().getAdapter(DisplayOpenManager.class);
                     if (manager != null) {
                         manager.openNewDisplay();
@@ -117,8 +121,9 @@ public class RunModeService {
             case NEW_WINDOW:
                 final IWorkbenchPage page = createNewWorkbenchPage(Optional.empty());
                 final Shell shell = page.getWorkbenchWindow().getShell();
-                if (shell.getMinimized())
+                if (shell.getMinimized()) {
                     shell.setMinimized(false);
+                }
                 shell.forceActive();
                 shell.forceFocus();
                 openDisplayInView(page, input, DisplayMode.NEW_TAB);
@@ -148,8 +153,9 @@ public class RunModeService {
         final IWorkbenchWindow window = PlatformUI.getWorkbench().openWorkbenchWindow(
                 OPIRunnerPerspective.ID, null);
         if (bounds.isPresent()) {
-            if (bounds.get().x >= 0 && bounds.get().y > 1)
+            if (bounds.get().x >= 0 && bounds.get().y > 1) {
                 window.getShell().setLocation(bounds.get().x, bounds.get().y);
+            }
             window.getShell().setSize(bounds.get().width + 45, bounds.get().height + 165);
         }
         return window.getActivePage();
@@ -169,7 +175,7 @@ public class RunModeService {
         UIBundlingThread.getInstance().addRunnable(() -> {
             try {
                 // Check for existing view with same input.
-                for (IViewReference viewReference : page.getViewReferences())
+                for (IViewReference viewReference : page.getViewReferences()) {
                     if (viewReference.getId().startsWith(OPIView.ID)) {
                         final IViewPart view = viewReference.getView(true);
                         if (view instanceof OPIView) {
@@ -179,10 +185,12 @@ public class RunModeService {
                                         IWorkbenchPage.VIEW_ACTIVATE);
                                 return;
                             }
-                        } else
+                        } else {
                             OPIBuilderPlugin.getLogger().log(Level.WARNING,
                                     "Found view " + view.getTitle() + " but its type is " + view.getClass().getName());
+                        }
                     }
+                }
 
                 // Open new View
                 // Create view ID that - when used with OPIRunnerPerspective -
@@ -209,8 +217,9 @@ public class RunModeService {
                     position = Position.DEFAULT_VIEW;
                 }
                 final IViewPart view = page.showView(position.getOPIViewID(), secondID, IWorkbenchPage.VIEW_ACTIVATE);
-                if (!(view instanceof OPIView))
+                if (!(view instanceof OPIView)) {
                     throw new PartInitException("Expected OPIView, got " + view);
+                }
                 final OPIView opiView = (OPIView) view;
 
                 // Set content of view
@@ -218,7 +227,17 @@ public class RunModeService {
 
                 // Adjust position
                 if (position == Position.DETACHED) {
-                    OPIBuilderPlugin.getUIHelper().detachView(opiView);
+                    // TODO Use more generic IWorkbenchPart?, getPartSite()?
+                    // Pre-E4 code:
+                    // ((WorkbenchPage)page).detachView(page.findViewReference(OPIView.ID, secondID));
+                    // See http://tomsondev.bestsolution.at/2012/07/13/so-you-used-internal-api/
+                    final EModelService model = opiView.getSite().getService(EModelService.class);
+                    MPartSashContainerElement p = opiView.getSite().getService(MPart.class);
+                    // Part may be shared by several perspectives, get the shared instance
+                    if (p.getCurSharedRef() != null) {
+                        p = p.getCurSharedRef();
+                    }
+                    model.detach(p, 100, 100, 600, 800);
                     opiView.positionFromModel();
                 }
             } catch (Exception e) {

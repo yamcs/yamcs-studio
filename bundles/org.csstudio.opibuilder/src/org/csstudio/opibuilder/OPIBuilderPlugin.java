@@ -14,8 +14,6 @@ import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.SchemaService;
-import org.csstudio.utility.singlesource.ResourceHelper;
-import org.csstudio.utility.singlesource.UIHelper;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -30,47 +28,30 @@ import org.osgi.framework.BundleContext;
 @SuppressWarnings("deprecation")
 public class OPIBuilderPlugin extends AbstractUIPlugin {
 
-    // The plug-in ID
-    public static final String PLUGIN_ID = "org.csstudio.opibuilder"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.csstudio.opibuilder";
 
     /**
      * The ID of the widget extension point.
      */
-    public static final String EXTPOINT_WIDGET = PLUGIN_ID + ".widget"; //$NON-NLS-1$
+    public static final String EXTPOINT_WIDGET = PLUGIN_ID + ".widget";
 
     /**
      * The ID of the widget extension point.
      */
-    public static final String EXTPOINT_FEEDBACK_FACTORY = PLUGIN_ID + ".graphicalFeedbackFactory"; //$NON-NLS-1$
+    public static final String EXTPOINT_FEEDBACK_FACTORY = PLUGIN_ID + ".graphicalFeedbackFactory";
 
-    /** File extension used for OPI files */
-    public static final String OPI_FILE_EXTENSION = "opi"; //$NON-NLS-1$
+    public static final String OPI_FILE_EXTENSION = "opi";
 
-    public static final String KEY_IS_MOBILE = "org.csstudio.rap.isMobile"; //$NON-NLS-1$
+    private static final Logger logger = Logger.getLogger(PLUGIN_ID);
 
-    final private static Logger logger = Logger.getLogger(PLUGIN_ID);
-
-    // The shared instance
     private static OPIBuilderPlugin plugin;
-
-    private static ResourceHelper resources;
-
-    private static UIHelper ui;
 
     private IPropertyChangeListener preferenceLisener;
 
-    /**
-     * The constructor
-     */
     public OPIBuilderPlugin() {
         plugin = this;
     }
 
-    /**
-     * Returns the shared instance
-     *
-     * @return the shared instance
-     */
     public static OPIBuilderPlugin getDefault() {
         return plugin;
     }
@@ -78,8 +59,6 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
-        resources = new ResourceHelper();
-        ui = new UIHelper();
 
         // set this to resolve Xincludes in XMLs
         System.setProperty("org.apache.xerces.xni.parser.XMLParserConfiguration",
@@ -134,13 +113,5 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
     public static Logger getLogger() {
         return logger;
-    }
-
-    public static ResourceHelper getResourceHelper() {
-        return resources;
-    }
-
-    public static UIHelper getUIHelper() {
-        return ui;
     }
 }

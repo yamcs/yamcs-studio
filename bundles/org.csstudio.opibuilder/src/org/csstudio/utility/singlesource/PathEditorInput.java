@@ -7,7 +7,12 @@
  ******************************************************************************/
 package org.csstudio.utility.singlesource;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
+import java.io.File;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IMemento;
@@ -52,8 +57,9 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
     /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof IPathEditorInput))
+        if (!(obj instanceof IPathEditorInput)) {
             return false;
+        }
         final IPath other = ((IPathEditorInput) obj).getPath();
         // Try shortcut if it's the same PathEditorInput and thus path,
         // else compare portable representation
@@ -64,7 +70,21 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
     /** {@inheritDoc} */
     @Override
     public boolean exists() {
-        return OPIBuilderPlugin.getResourceHelper().exists(path);
+        // Try workspace file
+        final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+        if (resource != null &&
+                resource.isAccessible() &&
+                resource instanceof IFile) {
+            return true;
+        }
+
+        // Try file outside of the workspace
+        File file = path.toFile();
+        if (file != null) {
+            return file.exists();
+        }
+
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -92,10 +112,14 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Object getAdapter(final Class adapter) {
-        return OPIBuilderPlugin.getResourceHelper().adapt(path, adapter);
+        if (path == null) {
+            return null;
+        }
+        final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        return root.getFile(path);
     }
 
     /** {@inheritDoc} */
