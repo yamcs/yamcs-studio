@@ -22,7 +22,6 @@ import org.csstudio.swt.widgets.symbol.util.ImageUtils;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
 import org.csstudio.swt.widgets.util.IJobErrorHandler;
 import org.csstudio.swt.widgets.util.ResourceUtil;
-import org.csstudio.swt.widgets.util.SingleSourceHelper;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -90,10 +89,11 @@ public class GIFSymbolImage extends AbstractSymbolImage {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        if (visible)
+        if (visible) {
             startAnimation();
-        else
+        } else {
             stopAnimation();
+        }
     }
 
     // ************************************************************
@@ -102,8 +102,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
 
     @Override
     public void paintFigure(final Graphics gfx) {
-        if (disposed || loadingImage || originalImageData == null)
+        if (disposed || loadingImage || originalImageData == null) {
             return;
+        }
         // Generate Data
         if (imageData == null) {
             generateAnimatedData();
@@ -134,8 +135,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             }
         }
         // Calculate areas
-        if (bounds == null || imgDimension == null)
+        if (bounds == null || imgDimension == null) {
             return;
+        }
         Rectangle srcArea = new Rectangle(leftCrop, topCrop, imgDimension.width, imgDimension.height);
         Rectangle destArea = new Rectangle(bounds.x, bounds.y, imgDimension.width, imgDimension.height);
         if (backgroundColor != null) {
@@ -164,7 +166,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
 
     private Image generateImage(int index) {
         Image offScreenImage = new Image(Display.getDefault(), image.getBounds().width, image.getBounds().height);
-        GC offScreenImageGC = SingleSourceHelper.getImageGC(offScreenImage);
+        GC offScreenImageGC = new GC(offScreenImage);
 
         ImageData imageData = imageDataArray[index];
         Image refresh_image = new Image(Display.getDefault(), imageData);
@@ -199,8 +201,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             imageDataArray = new ImageData[originalImageDataArray.length];
             for (int i = 0; i < originalImageDataArray.length; i++) {
                 imageDataArray[i] = (ImageData) originalImageDataArray[i].clone();
-                if (!colorToChange.equals(currentColor))
+                if (!colorToChange.equals(currentColor)) {
                     imageDataArray[i] = ImageUtils.changeImageColor(currentColor, imageDataArray[i]);
+                }
                 imageDataArray[i] = ImageUtils.applyMatrix(imageDataArray[i], permutationMatrix);
                 if (stretch && bounds != null) {
                     imageDataArray[i] = imageDataArray[i].scaledTo(bounds.width + leftCrop + rightCrop, bounds.height
@@ -210,8 +213,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             imageData = imageDataArray[0];
         } else {
             imageData = (ImageData) originalImageData.clone();
-            if (!colorToChange.equals(currentColor))
+            if (!colorToChange.equals(currentColor)) {
                 imageData = ImageUtils.changeImageColor(currentColor, imageData);
+            }
             imageData = ImageUtils.applyMatrix(imageData, permutationMatrix);
             if (stretch && bounds != null) {
                 imageData = imageData.scaledTo(bounds.width + leftCrop + rightCrop, bounds.height + topCrop
@@ -232,8 +236,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         int cropedHeight = imageData.height - bottomCrop - topCrop;
         Dimension newImgDimension = new Dimension(cropedWidth, cropedHeight);
         if (imgDimension == null || newImgDimension.width != imgDimension.width
-                || newImgDimension.height != imgDimension.height)
+                || newImgDimension.height != imgDimension.height) {
             fireSizeChanged();
+        }
         imgDimension = newImgDimension;
     }
 
@@ -311,48 +316,42 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             lastUpdateTime = 0;
             interval_ms = 0;
             refreshing = true;
-            Runnable animationTask = new Runnable() {
-                @Override
-                public void run() {
-                    UIBundlingThread.getInstance().addRunnable(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            synchronized (GIFSymbolImage.this) {
-                                if (refreshing && (loader.repeatCount == 0 || repeatCount > 0)) {
-                                    long currentTime = System.currentTimeMillis();
-                                    // use Math.abs() to ensure that the system
-                                    // time adjust won't cause problem
-                                    if (Math.abs(currentTime - lastUpdateTime) >= interval_ms) {
-                                        setShowIndex(animationIndex);
-                                        lastUpdateTime = currentTime;
-                                        int ms = originalImageDataArray[animationIndex].delayTime * 10;
-                                        animationIndex = (animationIndex + 1) % originalImageDataArray.length;
-                                        if (ms < 20)
-                                            ms += 30;
-                                        if (ms < 30)
-                                            ms += 10;
-                                        interval_ms = ms;
-                                        /*
-                                         * If we have just drawn the last image, decrement the repeat count and start
-                                         * again.
-                                         */
-                                        if (loader.repeatCount > 0
-                                                && animationIndex == originalImageDataArray.length - 1)
-                                            repeatCount--;
-                                    }
-                                } else if (loader.repeatCount > 0 && repeatCount <= 0) {
-                                    // stop thread when animation finished
-                                    if (scheduledFuture != null) {
-                                        scheduledFuture.cancel(true);
-                                        scheduledFuture = null;
-                                    }
-                                }
+            Runnable animationTask = () -> UIBundlingThread.getInstance().addRunnable(() -> {
+                synchronized (GIFSymbolImage.this) {
+                    if (refreshing && (loader.repeatCount == 0 || repeatCount > 0)) {
+                        long currentTime = System.currentTimeMillis();
+                        // use Math.abs() to ensure that the system
+                        // time adjust won't cause problem
+                        if (Math.abs(currentTime - lastUpdateTime) >= interval_ms) {
+                            setShowIndex(animationIndex);
+                            lastUpdateTime = currentTime;
+                            int ms = originalImageDataArray[animationIndex].delayTime * 10;
+                            animationIndex = (animationIndex + 1) % originalImageDataArray.length;
+                            if (ms < 20) {
+                                ms += 30;
+                            }
+                            if (ms < 30) {
+                                ms += 10;
+                            }
+                            interval_ms = ms;
+                            /*
+                             * If we have just drawn the last image, decrement the repeat count and start
+                             * again.
+                             */
+                            if (loader.repeatCount > 0
+                                    && animationIndex == originalImageDataArray.length - 1) {
+                                repeatCount--;
                             }
                         }
-                    });
+                    } else if (loader.repeatCount > 0 && repeatCount <= 0) {
+                        // stop thread when animation finished
+                        if (scheduledFuture != null) {
+                            scheduledFuture.cancel(true);
+                            scheduledFuture = null;
+                        }
+                    }
                 }
-            };
+            });
             if (scheduledFuture != null) {
                 scheduledFuture.cancel(true);
                 scheduledFuture = null;
@@ -362,8 +361,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
                 Date now = new Date();
                 Date nearestSecond = DateUtils.round(now, Calendar.SECOND);
                 initialDelay = nearestSecond.getTime() - now.getTime();
-                if (initialDelay < 0)
+                if (initialDelay < 0) {
                     initialDelay = MILLISEC_IN_SEC + initialDelay;
+                }
             }
             scheduledFuture = ExecutionService.getInstance().getScheduledExecutorService()
                     .scheduleAtFixedRate(animationTask, initialDelay, 10, TimeUnit.MILLISECONDS);
@@ -371,8 +371,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
     }
 
     private synchronized void setShowIndex(int showIndex) {
-        if (showIndex >= imageDataArray.length || this.showIndex == showIndex)
+        if (showIndex >= imageDataArray.length || this.showIndex == showIndex) {
             return;
+        }
         this.showIndex = showIndex;
         repaint();
     }
@@ -383,8 +384,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
 
     @Override
     public void syncLoadImage() {
-        if (imagePath == null)
+        if (imagePath == null) {
             return;
+        }
         loadingImage = true;
         if (animated) {
             stopAnimation();
@@ -396,8 +398,9 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         try {
             stream = ResourceUtil.pathToInputStream(imagePath.toPortableString());
             ImageData[] dataArray = loader.load(stream);
-            if (dataArray == null || dataArray.length < 1)
+            if (dataArray == null || dataArray.length < 1) {
                 return;
+            }
             originalImageDataArray = dataArray;
             originalImageData = originalImageDataArray[0];
             animated = originalImageDataArray.length > 1;
@@ -405,24 +408,28 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             Activator.getLogger().log(Level.WARNING, "ERROR in loading PNG image " + imagePath, e);
         } finally {
             try {
-                if (stream != null)
+                if (stream != null) {
                     stream.close();
-                if (tempImage != null && !tempImage.isDisposed())
+                }
+                if (tempImage != null && !tempImage.isDisposed()) {
                     tempImage.dispose();
+                }
             } catch (IOException e) {
                 Activator.getLogger().log(Level.WARNING, "ERROR in closing GIF image stream ", e);
             }
         }
         loadingImage = false;
         resetData();
-        if (animated)
+        if (animated) {
             startAnimation();
+        }
     }
 
     @Override
     public void asyncLoadImage() {
-        if (imagePath == null)
+        if (imagePath == null) {
             return;
+        }
         loadingImage = true;
         if (animated) {
             stopAnimation();
@@ -457,21 +464,18 @@ public class GIFSymbolImage extends AbstractSymbolImage {
             public void runWithInputStream(InputStream stream) {
                 synchronized (GIFSymbolImage.this) {
                     ImageData[] dataArray = loader.load(stream);
-                    if (dataArray == null || dataArray.length < 1)
+                    if (dataArray == null || dataArray.length < 1) {
                         return;
+                    }
                     originalImageDataArray = dataArray;
                     originalImageData = originalImageDataArray[0];
                     animated = originalImageDataArray.length > 1;
                     loadingImage = false;
                     resetData();
-                    if (animated)
+                    if (animated) {
                         startAnimation();
-                    Display.getDefault().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            fireSymbolImageLoaded();
-                        }
-                    });
+                    }
+                    Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
                 }
             }
         };

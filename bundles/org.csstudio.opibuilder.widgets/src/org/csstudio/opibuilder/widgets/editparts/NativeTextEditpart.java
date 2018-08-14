@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.csstudio.opibuilder.editparts.ExecutionMode;
@@ -17,7 +16,6 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.NativeTextFigure;
 import org.csstudio.opibuilder.widgets.model.NativeTextModel;
 import org.csstudio.opibuilder.widgets.model.TextInputModel;
-import org.csstudio.opibuilder.widgets.util.SingleSourceHelper;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPolicy;
@@ -26,8 +24,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -52,23 +48,29 @@ public class NativeTextEditpart extends TextInputEditpart {
 
         int style = SWT.NONE;
         NativeTextModel model = getWidgetModel();
-        if (model.isShowNativeBorder())
+        if (model.isShowNativeBorder()) {
             style |= SWT.BORDER;
+        }
         if (model.isMultilineInput()) {
             style |= SWT.MULTI;
-            if (model.isShowHScroll())
+            if (model.isShowHScroll()) {
                 style |= SWT.H_SCROLL;
-            if (model.isShowVScroll())
+            }
+            if (model.isShowVScroll()) {
                 style |= SWT.V_SCROLL;
-            if (model.isWrapWords())
+            }
+            if (model.isWrapWords()) {
                 style |= SWT.WRAP;
+            }
         } else {
             style |= SWT.SINGLE;
-            if (model.isPasswordInput())
+            if (model.isPasswordInput()) {
                 style |= SWT.PASSWORD;
+            }
         }
-        if (model.isReadOnly())
+        if (model.isReadOnly()) {
             style |= SWT.READ_ONLY;
+        }
         switch (model.getHorizontalAlignment()) {
         case CENTER:
             style |= SWT.CENTER;
@@ -104,24 +106,21 @@ public class NativeTextEditpart extends TextInputEditpart {
                     }
                 });
             } else {
-                text.addListener(SWT.DefaultSelection, new Listener() {
-                    @Override
-                    public void handleEvent(Event e) {
-                        outputText(text.getText());
-                        switch (getWidgetModel().getFocusTraverse()) {
-                        case LOSE:
-                            text.getShell().setFocus();
-                            break;
-                        case NEXT:
-                            SingleSourceHelper.swtControlTraverse(text, SWT.TRAVERSE_TAB_PREVIOUS);
-                            break;
-                        case PREVIOUS:
-                            SingleSourceHelper.swtControlTraverse(text, SWT.TRAVERSE_TAB_NEXT);
-                            break;
-                        case KEEP:
-                        default:
-                            break;
-                        }
+                text.addListener(SWT.DefaultSelection, e -> {
+                    outputText(text.getText());
+                    switch (getWidgetModel().getFocusTraverse()) {
+                    case LOSE:
+                        text.getShell().setFocus();
+                        break;
+                    case NEXT:
+                        text.traverse(SWT.TRAVERSE_TAB_PREVIOUS);
+                        break;
+                    case PREVIOUS:
+                        text.traverse(SWT.TRAVERSE_TAB_NEXT);
+                        break;
+                    case KEEP:
+                    default:
+                        break;
                     }
                 });
             }
@@ -137,10 +136,11 @@ public class NativeTextEditpart extends TextInputEditpart {
             text.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    if (getPV() != null)
+                    if (getPV() != null) {
                         text.setText(getWidgetModel().getText());
-                    else if (figure.isEnabled())
+                    } else if (figure.isEnabled()) {
                         outputText(text.getText());
+                    }
                 }
             });
         }
@@ -175,8 +175,9 @@ public class NativeTextEditpart extends TextInputEditpart {
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        if (getExecutionMode() == ExecutionMode.RUN_MODE)
+        if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, null);
+        }
     }
 
     @Override
@@ -189,28 +190,18 @@ public class NativeTextEditpart extends TextInputEditpart {
         super.registerPropertyChangeHandlers();
         removeAllPropertyChangeHandlers(NativeTextModel.PROP_ALIGN_H);
 
-        PropertyChangeListener updatePropSheetListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                updatePropSheet();
-            }
-        };
+        PropertyChangeListener updatePropSheetListener = evt -> updatePropSheet();
 
         getWidgetModel().getProperty(NativeTextModel.PROP_MULTILINE_INPUT)
                 .addPropertyChangeListener(updatePropSheetListener);
 
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                AbstractWidgetModel model = getWidgetModel();
-                AbstractContainerModel parent = model.getParent();
-                parent.removeChild(model);
-                parent.addChild(model);
-                parent.selectWidget(model, true);
-                return false;
-            }
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+            AbstractWidgetModel model = getWidgetModel();
+            AbstractContainerModel parent = model.getParent();
+            parent.removeChild(model);
+            parent.addChild(model);
+            parent.selectWidget(model, true);
+            return false;
         };
         setPropertyChangeHandler(NativeTextModel.PROP_SHOW_NATIVE_BORDER, handler);
         setPropertyChangeHandler(NativeTextModel.PROP_MULTILINE_INPUT, handler);
@@ -244,8 +235,9 @@ public class NativeTextEditpart extends TextInputEditpart {
     @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class key) {
-        if (key == ITextFigure.class)
+        if (key == ITextFigure.class) {
             return getFigure();
+        }
 
         return super.getAdapter(key);
     }

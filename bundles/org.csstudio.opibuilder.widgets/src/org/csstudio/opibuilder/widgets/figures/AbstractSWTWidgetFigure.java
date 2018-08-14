@@ -14,24 +14,21 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.util.GUIRefreshThread;
-import org.csstudio.opibuilder.widgets.util.SingleSourceHelper;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AncestorListener;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.UpdateListener;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
@@ -156,13 +153,7 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             }
         };
         addAncestorListener(ancestorListener);
-        addFigureListener(new FigureListener() {
-
-            @Override
-            public void figureMoved(IFigure source) {
-                relocateWidget();
-            }
-        });
+        addFigureListener(source -> relocateWidget());
 
         // hook swt widget with GEF
         composite.getDisplay().asyncExec(new Runnable() {
@@ -175,20 +166,14 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                     // throw new RuntimeException("getSWTWidget() is null or disposed!");
                 }
                 // newly created widget on top
-                if (wrapComposite == null)
+                if (wrapComposite == null) {
                     swtWidget.moveAbove(null);
-                // if(!runmode)
-                // swtWidget.setEnabled(false);
-                // select the swt widget when menu about to show
+                    // if(!runmode)
+                    // swtWidget.setEnabled(false);
+                    // select the swt widget when menu about to show
+                }
 
-                MenuDetectListener menuDetectListener = new MenuDetectListener() {
-
-                    @Override
-                    public void menuDetected(MenuDetectEvent e) {
-                        editPart.getViewer().select(editPart);
-
-                    }
-                };
+                MenuDetectListener menuDetectListener = e -> editPart.getViewer().select(editPart);
 
                 hookGEFToSWTWidget(swtWidget, menuDetectListener);
 
@@ -207,7 +192,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             private void hookGEFToSWTWidget(final Control swtWidget,
                     MenuDetectListener menuDetectListener) {
                 swtWidget.addMenuDetectListener(menuDetectListener);
-                SingleSourceHelper.swtWidgetAddMouseTrackListener(swtWidget, new ToolTipListener(swtWidget));
+
+                addMouseTrackListener(swtWidget, new ToolTipListener(swtWidget));
+
                 // hack for composite widget with multiple children.
                 if (swtWidget instanceof Composite) {
                     for (Control control : ((Composite) swtWidget).getChildren()) {
@@ -217,6 +204,15 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             }
         });
 
+    }
+
+    private void addMouseTrackListener(Control control, MouseTrackListener listener) {
+        control.addMouseTrackListener(listener);
+        if (control instanceof Composite) {
+            for (Control c : ((Composite) control).getChildren()) {
+                addMouseTrackListener(c, listener);
+            }
+        }
     }
 
     /**
@@ -258,10 +254,11 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
      * @return the composite
      */
     private Composite getParentComposite() {
-        if (wrapComposite != null)
+        if (wrapComposite != null) {
             return wrapComposite;
-        else
+        } else {
             return composite;
+        }
     }
 
     @Override
@@ -277,8 +274,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         super.setEnabled(value);
         if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             getSWTWidget().setEnabled(runmode && value);
-            if (wrapComposite != null)
+            if (wrapComposite != null) {
                 wrapComposite.setEnabled(runmode && value);
+            }
         }
     }
 
@@ -296,39 +294,46 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
             isShowing = !isShowing;
             if (wrapComposite != null) {
                 wrapComposite.setVisible(isShowing);
-            } else
+            } else {
                 getSWTWidget().setVisible(isShowing);
+            }
         }
     }
 
     @Override
     public Color getForegroundColor() {
-        if (getSWTWidget() != null && !getSWTWidget().isDisposed())
+        if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             return getSWTWidget().getForeground();
+        }
         return super.getForegroundColor();
     }
 
     @Override
     public Color getBackgroundColor() {
-        if (getSWTWidget() != null && !getSWTWidget().isDisposed())
+        if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             return getSWTWidget().getBackground();
+        }
         return super.getBackgroundColor();
     }
 
     @Override
     public void setForegroundColor(Color fg) {
-        if (!runmode)
+        if (!runmode) {
             super.setForegroundColor(fg);
-        if (getSWTWidget() != null && !getSWTWidget().isDisposed())
+        }
+        if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             getSWTWidget().setForeground(fg);
+        }
     }
 
     @Override
     public void setBackgroundColor(Color bg) {
-        if (!runmode)
+        if (!runmode) {
             super.setBackgroundColor(bg);
-        if (getSWTWidget() != null && !getSWTWidget().isDisposed())
+        }
+        if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             getSWTWidget().setBackground(bg);
+        }
     }
 
     @Override
@@ -402,12 +407,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         }
 
         GUIRefreshThread.getInstance(runmode).addIgnorableTask(
-                new WidgetIgnorableUITask(this, new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (!getSWTWidget().isDisposed() && getParent() != null)
-                            doRelocateWidget();
+                new WidgetIgnorableUITask(this, () -> {
+                    if (!getSWTWidget().isDisposed() && getParent() != null) {
+                        doRelocateWidget();
                     }
                 }, composite.getDisplay()));
 
@@ -428,8 +430,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                 getSWTWidget().setFont(CustomMediaFactory.getInstance().getFont(newFontData));
                 lastScale = scale;
             }
-        } else if (getSWTWidget().getFont() != getFont())
+        } else if (getSWTWidget().getFont() != getFont()) {
             getSWTWidget().setFont(getFont());
+        }
 
         // The trim should not be added here
         // if(getSWTWidget() instanceof Scrollable){
@@ -469,8 +472,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
                     sizeWasSet = true;
                 } else {
                     Point oldLoc = getSWTWidget().getLocation();
-                    if (oldLoc.x != 0 || oldLoc.y != 0)
+                    if (oldLoc.x != 0 || oldLoc.y != 0) {
                         getSWTWidget().setLocation(0, 0);
+                    }
                 }
             }
         }
@@ -478,17 +482,20 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
         if (!sizeWasSet) {
             if (wrapComposite != null) {
                 Rectangle oldBounds = new Rectangle(wrapComposite.getBounds());
-                if (!oldBounds.equals(rect))
+                if (!oldBounds.equals(rect)) {
                     wrapComposite.setBounds(rect.x, rect.y, rect.width,
                             rect.height);
+                }
                 Point oldSize = getSWTWidget().getSize();
-                if (oldSize.x != rect.width || oldSize.y != rect.height)
+                if (oldSize.x != rect.width || oldSize.y != rect.height) {
                     getSWTWidget().setSize(rect.width, rect.height);
+                }
             } else if (!getSWTWidget().getBounds().equals(
                     new org.eclipse.swt.graphics.Rectangle(rect.x, rect.y,
-                            rect.width, rect.height)))
+                            rect.width, rect.height))) {
                 getSWTWidget().setBounds(rect.x, rect.y, rect.width,
                         rect.height);
+            }
 
         }
     }
@@ -496,8 +503,9 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
     @Override
     public void setFont(Font f) {
         super.setFont(f);
-        if (getSWTWidget() != null && !getSWTWidget().isDisposed())
+        if (getSWTWidget() != null && !getSWTWidget().isDisposed()) {
             getSWTWidget().setFont(f);
+        }
     }
 
     /**
@@ -505,30 +513,25 @@ public abstract class AbstractSWTWidgetFigure<T extends Control> extends Figure 
      * should not dispose the SWT widget again.
      */
     protected void dispose() {
-        if (updateFlag && updateManagerListener != null)
+        if (updateFlag && updateManagerListener != null) {
             getUpdateManager().removeUpdateListener(updateManagerListener);
+        }
         removeAncestorListener(ancestorListener);
         Runnable task;
         if (wrapComposite != null) {
-            task = new Runnable() {
-                @Override
-                public void run() {
-                    if (!wrapComposite.isDisposed()) {
-                        getSWTWidget().setMenu(null);
-                        wrapComposite.dispose();
-                        wrapComposite = null;
-                    }
+            task = () -> {
+                if (!wrapComposite.isDisposed()) {
+                    getSWTWidget().setMenu(null);
+                    wrapComposite.dispose();
+                    wrapComposite = null;
                 }
             };
         } else {
-            task = new Runnable() {
-                @Override
-                public void run() {
-                    if (!getSWTWidget().isDisposed()) {
-                        getSWTWidget().setMenu(null);
-                        getSWTWidget().dispose();
-                        // composite.update();
-                    }
+            task = () -> {
+                if (!getSWTWidget().isDisposed()) {
+                    getSWTWidget().setMenu(null);
+                    getSWTWidget().dispose();
+                    // composite.update();
                 }
             };
         }

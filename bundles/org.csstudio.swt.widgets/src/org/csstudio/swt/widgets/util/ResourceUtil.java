@@ -17,10 +17,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -91,7 +93,7 @@ public class ResourceUtil {
             protected IStatus run(IProgressMonitor monitor) {
                 monitor.beginTask("Connecting to " + path, IProgressMonitor.UNKNOWN);
                 try {
-                    InputStream inputStream = SingleSourceHelper.workspaceFileToInputStream(path);
+                    InputStream inputStream = workspaceFileToInputStream(path);
                     if (inputStream == null) {
                         inputStream = new ByteArrayInputStream(cache.getUnchecked(path.toPortableString()));
                         // System.out.println("hit: "+cache.stats().hitCount()+
@@ -110,6 +112,44 @@ public class ResourceUtil {
             }
         };
         job.schedule();
+    }
+
+    private static InputStream workspaceFileToInputStream(IPath path) {
+        // Try workspace location
+        final IFile workspace_file = getIFileFromIPath(path);
+        // Valid file should either open, or give meaningful exception
+        if (workspace_file != null && workspace_file.exists()) {
+            try {
+                return workspace_file.getContents();
+            } catch (CoreException e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get the IFile from IPath.
+     * 
+     * @param path
+     *            Path to file in workspace
+     * @return the IFile. <code>null</code> if no IFile on the path, file does not exist, internal error.
+     */
+    private static IFile getIFileFromIPath(final IPath path) {
+        try {
+            final IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(
+                    path, false);
+            if (r != null && r instanceof IFile) {
+                final IFile file = (IFile) r;
+                if (file.exists()) {
+                    return file;
+                }
+            }
+        } catch (Exception ex) {
+            // Ignored
+        }
+        return null;
     }
 
     /**
