@@ -7,9 +7,7 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
-import org.csstudio.opibuilder.actions.CompactModeAction;
 import org.csstudio.opibuilder.model.DisplayModel;
-import org.csstudio.opibuilder.util.WorkbenchWindowService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -28,7 +26,7 @@ import org.eclipse.ui.part.EditorPart;
 // DO NOT REMOVE. RAP NEEDS THIS!
 public class OPIRunner extends EditorPart implements IOPIRuntime {
 
-    public static final String ID = "org.csstudio.opibuilder.OPIRunner"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.OPIRunner";
 
     private OPIRuntimeDelegate opiRuntimeDelegate;
 
@@ -81,33 +79,23 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
     public void createPartControl(final Composite parent) {
         opiRuntimeDelegate.createGUI(parent);
         // if this is the first OPI in this window, resize the window to match the OPI size.
-        // Make it in compact mode if it is configured.
-        Display.getCurrent().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                if (getSite().getWorkbenchWindow().getActivePage()
-                        .getEditorReferences().length == 1 &&
-                        getSite().getWorkbenchWindow().getActivePage().getViewReferences().length == 0) {
-                    int trimWidth = 45, trimHeight = 165;
-                    CompactModeAction action = WorkbenchWindowService.getInstance().getCompactModeAction(
-                            getSite().getWorkbenchWindow());
-                    if (WorkbenchWindowService.isInCompactMode()) {
-                        if (!action.isInCompactMode())
-                            action.run();
-                        trimHeight = 65;
-                    }
-                    final Rectangle bounds;
-                    if (opiRuntimeDelegate.getDisplayModel() != null)
-                        bounds = opiRuntimeDelegate.getDisplayModel()
-                                .getBounds();
-                    else
-                        bounds = new Rectangle(-1, -1, 800, 600);
-                    if (bounds.x >= 0 && bounds.y >= 0)
-                        parent.getShell().setLocation(bounds.x, bounds.y);
-                    parent.getShell().setSize(bounds.width + trimWidth,
-                            bounds.height + trimHeight);
+        Display.getCurrent().asyncExec(() -> {
+            if (getSite().getWorkbenchWindow().getActivePage()
+                    .getEditorReferences().length == 1 &&
+                    getSite().getWorkbenchWindow().getActivePage().getViewReferences().length == 0) {
+                int trimWidth = 45, trimHeight = 165;
+                final Rectangle bounds;
+                if (opiRuntimeDelegate.getDisplayModel() != null) {
+                    bounds = opiRuntimeDelegate.getDisplayModel()
+                            .getBounds();
+                } else {
+                    bounds = new Rectangle(-1, -1, 800, 600);
                 }
+                if (bounds.x >= 0 && bounds.y >= 0) {
+                    parent.getShell().setLocation(bounds.x, bounds.y);
+                }
+                parent.getShell().setSize(bounds.width + trimWidth,
+                        bounds.height + trimHeight);
             }
         });
 
@@ -121,8 +109,9 @@ public class OPIRunner extends EditorPart implements IOPIRuntime {
     public <T> T getAdapter(Class<T> adapter) {
         if (opiRuntimeDelegate != null) {
             T obj = opiRuntimeDelegate.getAdapter(adapter);
-            if (obj != null)
+            if (obj != null) {
                 return obj;
+            }
         }
         return super.getAdapter(adapter);
 

@@ -137,19 +137,9 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
         pythonPathEditor.getTextControl(parent).setToolTipText("The path to search python modules");
         addField(pythonPathEditor);
 
-        BooleanFieldEditor showCompactModeDialogEditor = new BooleanFieldEditor(
-                PreferencesHelper.SHOW_COMPACT_MODE_DIALOG,
-                "Show tip dialog about how to exit compact mode", parent);
-        addField(showCompactModeDialogEditor);
-
         BooleanFieldEditor showFullScreenDialogEditor = new BooleanFieldEditor(PreferencesHelper.SHOW_FULLSCREEN_DIALOG,
                 "Show tip dialog about how to exit fullscreen", parent);
         addField(showFullScreenDialogEditor);
-
-        BooleanFieldEditor startWindowInCompactEditor = new BooleanFieldEditor(
-                PreferencesHelper.START_WINDOW_IN_COMPACT_MODE,
-                "Start application window in compact mode.", parent);
-        addField(startWindowInCompactEditor);
     }
 
     @Override

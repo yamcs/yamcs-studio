@@ -170,53 +170,6 @@ $(pv_value)</tooltip>
       <x>186</x>
     </widget>
   </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="1.0">
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <visible>true</visible>
-    <wuid>55030127:133cbc5de60:-7f1d</wuid>
-    <scripts />
-    <height>40</height>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <name>Action Button</name>
-    <pv_name />
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <widget_type>Action Button</widget_type>
-    <enabled>true</enabled>
-    <text>$(actions)</text>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <font>
-      <opifont.name>Default</opifont.name>
-    </font>
-    <width>217</width>
-    <border_style>0</border_style>
-    <push_action_index>0</push_action_index>
-    <image />
-    <rules />
-    <pv_value />
-    <toggle_button>false</toggle_button>
-    <border_width>1</border_width>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <y>54</y>
-    <actions hook="false" hook_all="false">
-      <action type="EXECUTE_JAVASCRIPT">
-        <path />
-        <scriptText>importPackage(Packages.org.csstudio.opibuilder.scriptUtil);&#xD;
-GUIUtil.compactMode();</scriptText>
-        <embedded>true</embedded>
-        <description>Enter/Exit Compact Mode (F8)</description>
-      </action>
-    </actions>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <x>402</x>
-  </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.groupingContainer" version="1.0">
     <macros>
       <include_parent_macros>true</include_parent_macros>

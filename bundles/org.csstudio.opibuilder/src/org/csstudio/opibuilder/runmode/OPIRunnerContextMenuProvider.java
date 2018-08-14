@@ -42,20 +42,11 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
 
     private IOPIRuntime opiRuntime;
 
-    /**
-     * Constructor.
-     *
-     * @param viewer
-     *            the graphical viewer
-     */
     public OPIRunnerContextMenuProvider(final EditPartViewer viewer, final IOPIRuntime opiRuntime) {
         super(viewer);
         this.opiRuntime = opiRuntime;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void buildContextMenu(final IMenuManager menu) {
         addSettingPropertiesAction(menu);
@@ -64,37 +55,29 @@ public final class OPIRunnerContextMenuProvider extends ContextMenuProvider {
 
         ActionRegistry actionRegistry = (ActionRegistry) opiRuntime.getAdapter(ActionRegistry.class);
         IAction action = actionRegistry.getAction(ActionFactory.REFRESH.getId());
-        if (action != null)
+        if (action != null) {
             menu.appendToGroup(GEFActionConstants.GROUP_PRINT, action);
+        }
 
         IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
-        // Only show 'full screen' and 'compact mode' options for OPIView,
-        // not for OPIShell.
+        // Only show 'full screen' option for OPIView, not for OPIShell.
         if (opiRuntime instanceof OPIView || opiRuntime instanceof OPIRunner) {
             menu.appendToGroup(GEFActionConstants.GROUP_EDIT,
                     WorkbenchWindowService.getInstance().getFullScreenAction(activeWindow));
-            menu.appendToGroup(GEFActionConstants.GROUP_EDIT,
-                    WorkbenchWindowService.getInstance().getCompactModeAction(activeWindow));
         }
-
-        // actionRegistry.getAction(CompactModeAction.ID));
 
         // ELog and EMail actions may not be available
         action = actionRegistry.getAction(ActionFactory.PRINT.getId());
         if (action != null) {
             menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
         }
-
-        // MenuManager cssMenu = new MenuManager("CSS", "css");
-        // cssMenu.add(new Separator("additions")); //$NON-NLS-1$
-        // menu.add(cssMenu);
     }
 
     @Override
     protected boolean allowItem(IContributionItem itemToAdd) {
         // org.eclipse.wst.sse.ui adds some junk, which we don't need
-        if ("sourceMenuId".equals(itemToAdd.getId())) { //$NON-NLS-1$
+        if ("sourceMenuId".equals(itemToAdd.getId())) {
             return false;
         }
         return super.allowItem(itemToAdd);

@@ -24,12 +24,6 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.ui.category.views"
-            description="Enter/Exit compact mode"
-            id="org.csstudio.opibuilder.actions.compactMode"
-            name="Compact Mode">
-      </command>
-      <command
-            categoryId="org.eclipse.ui.category.views"
             description="Enter/Exit Full Screen"
             id="org.csstudio.opibuilder.actions.fullscreen"
             name="Full Screen">
@@ -54,12 +48,6 @@
             id="org.csstudio.opibuilder.keybinding.scheme"
             name="OPIBuilderKeyBindingScheme">
       </scheme>
-      <key
-            commandId="org.csstudio.opibuilder.actions.compactMode"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="F8">
-      </key>
       <key
             commandId="org.csstudio.opibuilder.actions.fullscreen"
             contextId="org.eclipse.ui.contexts.window"
@@ -87,13 +75,6 @@
             id="org.csstudio.opibuilder.actionSet"
             label="OPI Actions"
             visible="true">
-         <action
-               class="org.csstudio.opibuilder.actions.CompactModeAction"
-               definitionId="org.csstudio.opibuilder.actions.compactMode"
-               id="org.csstudio.opibuilder.compactModeAction"
-               label="Compact Mode"
-               style="push">
-         </action>
          <action
                class="org.csstudio.opibuilder.actions.FullScreenAction"
                definitionId="org.csstudio.opibuilder.actions.fullscreen"
