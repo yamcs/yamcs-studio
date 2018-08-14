@@ -43,10 +43,6 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
                 "Font File: ", new String[] { "def" }, parent);
         addField(fontEditor);
 
-        BooleanFieldEditor noEditModeEditor = new BooleanFieldEditor(PreferencesHelper.NO_EDIT,
-                "No-Editing mode", parent);
-        addField(noEditModeEditor);
-
         BooleanFieldEditor advanceGraphicsEditor = new BooleanFieldEditor(PreferencesHelper.DISABLE_ADVANCED_GRAPHICS,
                 "Disable Advanced Graphics", parent);
         advanceGraphicsEditor.getDescriptionControl(parent).setToolTipText(
