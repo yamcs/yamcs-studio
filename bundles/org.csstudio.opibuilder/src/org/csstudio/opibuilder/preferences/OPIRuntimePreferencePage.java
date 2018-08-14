@@ -73,8 +73,7 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
             }
 
             @Override
-            protected void doFillIntoGrid(Composite parent,
-                    int numColumns) {
+            protected void doFillIntoGrid(Composite parent, int numColumns) {
                 super.doFillIntoGrid(parent, numColumns);
                 tableEditor.getTableViewer().getTable().addKeyListener(new KeyAdapter() {
                     @Override

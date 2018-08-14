@@ -53,12 +53,6 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
                 "This will disable alpha, anti-alias and gradient effect. " +
                         "OPI need to be re-opened to make this take effect.");
         addField(advanceGraphicsEditor);
-
-        BooleanFieldEditor default_type_editor = new BooleanFieldEditor(PreferencesHelper.DEFAULT_TO_CLASSIC_STYLE,
-                "Default to 'classic' widget style", parent);
-        default_type_editor.getDescriptionControl(parent).setToolTipText(
-                "Should widgets with 'classic' as well as 'native' style default to 'classic'?");
-        addField(default_type_editor);
     }
 
     @Override
