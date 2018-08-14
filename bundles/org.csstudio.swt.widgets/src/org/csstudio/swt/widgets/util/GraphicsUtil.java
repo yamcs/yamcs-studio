@@ -7,45 +7,30 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.util;
 
-import org.csstudio.swt.widgets.Preferences;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.graphics.RGB;
 
-/**The utility class contains functions that all related with graphics.
+/**
+ * The utility class contains functions that all related with graphics.
+ * 
  * @author Xihui Chen
  *
  */
 public class GraphicsUtil {
 
-    public static synchronized boolean testPatternSupported(Graphics graphics){
-        if(!useAdvancedGraphics())
-            return false;
-
+    public static synchronized boolean testPatternSupported(Graphics graphics) {
         boolean support3D = true;
-        //just test if pattern is supported on the platform.
+        // just test if pattern is supported on the platform.
         try {
             graphics.setBackgroundPattern(null);
         } catch (Exception e) {
-            support3D= false;
+            support3D = false;
         }
 
         return support3D;
-    }
-
-    /**
-     * If advanced graphics is enabled by system setting.
-     */
-    public static boolean useAdvancedGraphics() {
-        if(!Preferences.useAdvancedGraphics())
-            return false;
-        String value = System.getProperty(Preferences.PROHIBIT_ADVANCED_GRAPHICS);
-        if(value != null && value.equals("true"))
-            return false;
-        return true;
     }
 
     public static Pattern createScaledPattern(Graphics graphics, Device device,
@@ -64,7 +49,6 @@ public class GraphicsUtil {
                 (float) (x2 * scale), (float) (y2 * scale), color1, color2);
     }
 
-
     /**
      * Mixes the passed Colors and returns the resulting Color.
      *
@@ -79,13 +63,11 @@ public class GraphicsUtil {
      */
     public static RGB mixColors(RGB c1, RGB c2, double weight) {
         return new RGB((int) (c1.red * weight + c2.red
-                * (1 - weight)), (int) (c1.green * weight + c2.green
-                * (1 - weight)), (int) (c1.blue * weight + c2.blue
-                * (1 - weight)));
+                * (1 - weight)), (int) (c1.green * weight
+                        + c2.green
+                                * (1 - weight)),
+                (int) (c1.blue * weight + c2.blue
+                        * (1 - weight)));
     }
-
-
-
-
 
 }

@@ -26,19 +26,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -53,7 +49,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 
-/**The dialog for rule data editing.
+/**
+ * The dialog for rule data editing.
+ * 
  * @author Xihui Chen
  *
  */
@@ -75,16 +73,15 @@ public class RuleDataEditDialog extends HelpTrayDialog {
     private RuleData ruleData;
     private List<Expression> expressionList;
 
-
     private List<String> propIDList;
     private TableViewerColumn valueColumn;
 
-    private static String[] UNCHANGEABLE_PROPERTIES = new String[]{
-        AbstractWidgetModel.PROP_ACTIONS,
-        AbstractWidgetModel.PROP_WIDGET_TYPE,
-        AbstractWidgetModel.PROP_SCRIPTS,
-        AbstractWidgetModel.PROP_RULES,
-        AbstractContainerModel.PROP_MACROS};
+    private static String[] UNCHANGEABLE_PROPERTIES = new String[] {
+            AbstractWidgetModel.PROP_ACTIONS,
+            AbstractWidgetModel.PROP_WIDGET_TYPE,
+            AbstractWidgetModel.PROP_SCRIPTS,
+            AbstractWidgetModel.PROP_RULES,
+            AbstractContainerModel.PROP_MACROS };
 
     public RuleDataEditDialog(Shell parentShell, RuleData ruleData) {
         super(parentShell);
@@ -94,15 +91,16 @@ public class RuleDataEditDialog extends HelpTrayDialog {
 
         Set<String> propIDSet = ruleData.getWidgetModel().getAllPropertyIDs();
 
-        for(String p : UNCHANGEABLE_PROPERTIES){
+        for (String p : UNCHANGEABLE_PROPERTIES) {
             propIDSet.remove(p);
         }
-        for(String id : propIDSet.toArray(new String[0])){
+        for (String id : propIDSet.toArray(new String[0])) {
             AbstractWidgetProperty prop = ruleData.getWidgetModel().getProperty(id);
-            if(prop.configurableByRule())
+            if (prop.configurableByRule()) {
                 continue;
-            else
+            } else {
                 propIDSet.remove(id);
+            }
         }
         String[] propArray = propIDSet.toArray(new String[0]);
         Arrays.sort(propArray);
@@ -112,16 +110,16 @@ public class RuleDataEditDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html";;
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html";
     }
 
     @Override
     protected void okPressed() {
         boolean hasTrigger = false;
-        for(PVTuple pvTuple : ruleData.getPVList()){
+        for (PVTuple pvTuple : ruleData.getPVList()) {
             hasTrigger |= pvTuple.trigger;
         }
-        if(!hasTrigger){
+        if (!hasTrigger) {
             MessageDialog.openWarning(getShell(), "Warning",
                     NLS.bind("At least one trigger PV must be selected for the rule:\n{0}",
                             ruleData.getName()));
@@ -185,64 +183,59 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         nameText = new Text(topComposite, SWT.BORDER);
         nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         nameText.setText(ruleData.getName());
-        nameText.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText(ModifyEvent e) {
-                ruleData.setName(nameText.getText());
-            }
-        });
+        nameText.addModifyListener(e -> ruleData.setName(nameText.getText()));
         createLabel(topComposite, "Property: ");
 
-        propCombo = new Combo(topComposite, SWT.DROP_DOWN|SWT.READ_ONLY);
+        propCombo = new Combo(topComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
         propCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
         String[] comboItems = new String[propIDList.size()];
-        int i=0;
-        for(String id : propIDList){
+        int i = 0;
+        for (String id : propIDList) {
             comboItems[i++] = ruleData.getWidgetModel().getProperty(id).getDescription() +
-                " (" + id + ")";
+                    " (" + id + ")";
         }
         propCombo.setItems(comboItems);
         propCombo.select(propIDList.indexOf(ruleData.getPropId()));
         propCombo.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(propIDList.get(propCombo.getSelectionIndex()).equals(
-                        AbstractPVWidgetModel.PROP_PVVALUE)){
+                if (propIDList.get(propCombo.getSelectionIndex()).equals(
+                        AbstractPVWidgetModel.PROP_PVVALUE)) {
                     MessageDialog.openWarning(propCombo.getShell(), "Warning",
                             "Note: Changing pv_value property with rule or " +
-                            "script will not write value to the PV. " +
-                            "It only change the graphical value on the widget! " +
-                            "If you need to write a PV, please call PV.setValue() from script.");
+                                    "script will not write value to the PV. " +
+                                    "It only change the graphical value on the widget! " +
+                                    "If you need to write a PV, please call PV.setValue() from script.");
                 }
                 ruleData.setPropId(propIDList.get(propCombo.getSelectionIndex()));
-                if(ruleData.getProperty().getPropertyDescriptor() == null ||
-                        ruleData.getProperty().onlyAcceptExpressionInRule()){
+                if (ruleData.getProperty().getPropertyDescriptor() == null ||
+                        ruleData.getProperty().onlyAcceptExpressionInRule()) {
                     ruleData.setOutputExpValue(true);
                     outPutExpButton.setSelection(true);
                     outPutExpButton.setEnabled(false);
-                    for(Expression exp : expressionList)
+                    for (Expression exp : expressionList) {
                         exp.setValue("");
+                    }
                     valueColumn.getColumn().setText("Output Expression");
-                }else
+                } else {
                     outPutExpButton.setEnabled(true);
-                if(!ruleData.isOutputExpValue()){
-                    for(Expression exp : expressionList)
-                        exp.setValue(ruleData.isOutputExpValue() ?
-                                "" : ruleData.getProperty().getDefaultValue());
+                }
+                if (!ruleData.isOutputExpValue()) {
+                    for (Expression exp : expressionList) {
+                        exp.setValue(ruleData.isOutputExpValue() ? "" : ruleData.getProperty().getDefaultValue());
+                    }
                 }
                 expressionViewer.refresh();
             }
         });
-
 
         outPutExpButton = new Button(topComposite, SWT.CHECK);
         gd = new GridData();
         gd.horizontalSpan = 2;
         outPutExpButton.setLayoutData(gd);
         outPutExpButton.setText("Output Expression");
-        if(ruleData.getProperty().getPropertyDescriptor() == null ||
-                ruleData.getProperty().onlyAcceptExpressionInRule()){
+        if (ruleData.getProperty().getPropertyDescriptor() == null ||
+                ruleData.getProperty().onlyAcceptExpressionInRule()) {
             ruleData.setOutputExpValue(true);
             outPutExpButton.setEnabled(false);
         }
@@ -251,11 +244,11 @@ public class RuleDataEditDialog extends HelpTrayDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 ruleData.setOutputExpValue(outPutExpButton.getSelection());
-                for(Expression exp : expressionList)
-                    exp.setValue(ruleData.isOutputExpValue() ?
-                            "" : ruleData.getProperty().getDefaultValue());
+                for (Expression exp : expressionList) {
+                    exp.setValue(ruleData.isOutputExpValue() ? "" : ruleData.getProperty().getDefaultValue());
+                }
                 valueColumn.getColumn().setText(
-                        ruleData.isOutputExpValue()? "Output Expression" : "Output Value");
+                        ruleData.isOutputExpValue() ? "Output Expression" : "Output Value");
                 expressionViewer.refresh();
             }
         });
@@ -297,13 +290,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
 
         expressionViewer = createExpressionsTableViewer(toolBarComposite);
         expressionViewer.setInput(expressionList);
-        expressionViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                refreshActionBarOnSelection();
-            }
-        });
+        expressionViewer.addSelectionChangedListener(event -> refreshActionBarOnSelection());
 
         // Right panel: Input PVs for selected script
         final Composite rightComposite = new Composite(mainComposite, SWT.NONE);
@@ -317,8 +304,9 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         pvsEditor = new PVTupleTableEditor(rightComposite, ruleData.getPVList(), SWT.BORDER);
         pvsEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        if(expressionList.size() > 0)
+        if (expressionList.size() > 0) {
             setExpressionViewerSelection(expressionList.get(0));
+        }
 
         final Composite bottomComposite = new Composite(mainComposite, SWT.None);
         bottomComposite.setLayout(new GridLayout(1, false));
@@ -331,8 +319,8 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         gd = new GridData(SWT.LEFT, SWT.TOP, false, false);
         generateScriptButton.setLayoutData(gd);
 
-
-        final Text scriptText = new Text(bottomComposite, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
+        final Text scriptText = new Text(bottomComposite,
+                SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         scriptText.setLayoutData(gd);
 
@@ -361,16 +349,14 @@ public class RuleDataEditDialog extends HelpTrayDialog {
 
     }
 
-
-    private void setExpressionViewerSelection(Expression expression){
+    private void setExpressionViewerSelection(Expression expression) {
         expressionViewer.refresh();
-        if(expression == null)
+        if (expression == null) {
             expressionViewer.setSelection(StructuredSelection.EMPTY);
-        else {
+        } else {
             expressionViewer.setSelection(new StructuredSelection(expression));
         }
     }
-
 
     /**
      * Creates and configures a {@link TableViewer}.
@@ -392,15 +378,17 @@ public class RuleDataEditDialog extends HelpTrayDialog {
 
             @Override
             protected void setValue(Object element, Object value) {
-                if(element instanceof Expression)
-                    ((Expression)element).setBooleanExpression(value.toString());
+                if (element instanceof Expression) {
+                    ((Expression) element).setBooleanExpression(value.toString());
+                }
                 viewer.refresh();
             }
 
             @Override
             protected Object getValue(Object element) {
-                if(element instanceof Expression)
-                    return ((Expression)element).getBooleanExpression();
+                if (element instanceof Expression) {
+                    return ((Expression) element).getBooleanExpression();
+                }
                 return null;
             }
 
@@ -417,37 +405,38 @@ public class RuleDataEditDialog extends HelpTrayDialog {
 
         valueColumn = new TableViewerColumn(viewer, SWT.NONE);
         valueColumn.getColumn().setText(
-                ruleData.isOutputExpValue()? "Output Expression" : "Output Value");
+                ruleData.isOutputExpValue() ? "Output Expression" : "Output Value");
         valueColumn.getColumn().setMoveable(false);
         valueColumn.getColumn().setWidth(200);
         EditingSupport editingSupport = new EditingSupport(viewer) {
 
             @Override
             protected void setValue(Object element, Object value) {
-                if(element instanceof Expression){
-                    ((Expression)element).setValue(value);
+                if (element instanceof Expression) {
+                    ((Expression) element).setValue(value);
                 }
                 viewer.refresh();
             }
 
             @Override
             protected Object getValue(Object element) {
-                if(element instanceof Expression){
-                    if(((Expression)element).getValue() == null)
-                            return "";
-                    return ((Expression)element).getValue();
+                if (element instanceof Expression) {
+                    if (((Expression) element).getValue() == null) {
+                        return "";
+                    }
+                    return ((Expression) element).getValue();
                 }
                 return null;
             }
 
             @Override
             protected CellEditor getCellEditor(Object element) {
-                if(element instanceof Expression){
-                    if(ruleData.isOutputExpValue() || ruleData.getProperty().getPropertyDescriptor() == null)
+                if (element instanceof Expression) {
+                    if (ruleData.isOutputExpValue() || ruleData.getProperty().getPropertyDescriptor() == null) {
                         return new TextCellEditor(viewer.getTable());
-                    else
-                        return ruleData.getProperty().getPropertyDescriptor().
-                            createPropertyEditor(viewer.getTable());
+                    } else {
+                        return ruleData.getProperty().getPropertyDescriptor().createPropertyEditor(viewer.getTable());
+                    }
                 }
                 return null;
             }
@@ -459,16 +448,12 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         };
         valueColumn.setEditingSupport(editingSupport);
 
-
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new ExpressionLabelProvider());
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         viewer.getTable().setLayoutData(gd);
         return viewer;
     }
-
-
-
 
     /**
      * Creates the actions.
@@ -477,8 +462,8 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         addAction = new Action("Add") {
             @Override
             public void run() {
-                Expression expression = new Expression("", ruleData.isOutputExpValue() ? "" :
-                        ruleData.getProperty().getDefaultValue());
+                Expression expression = new Expression("",
+                        ruleData.isOutputExpValue() ? "" : ruleData.getProperty().getDefaultValue());
                 expressionList.add(expression);
                 expressionViewer.refresh();
                 setExpressionViewerSelection(expression);
@@ -510,8 +495,6 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                         "icons/copy.gif"));
         copyAction.setEnabled(false);
 
-
-
         removeAction = new Action() {
             @Override
             public void run() {
@@ -519,7 +502,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                         .getSelection();
                 if (!selection.isEmpty()
                         && selection.getFirstElement() instanceof Expression) {
-                    expressionList.remove((Expression)selection.getFirstElement());
+                    expressionList.remove((Expression) selection.getFirstElement());
                     setExpressionViewerSelection(null);
                     this.setEnabled(false);
                 }
@@ -543,9 +526,9 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                     Expression expression = (Expression) selection
                             .getFirstElement();
                     int i = expressionList.indexOf(expression);
-                    if(i>0){
+                    if (i > 0) {
                         expressionList.remove(expression);
-                        expressionList.add(i-1, expression);
+                        expressionList.add(i - 1, expression);
                         setExpressionViewerSelection(expression);
                     }
                 }
@@ -568,9 +551,9 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                     Expression expression = (Expression) selection
                             .getFirstElement();
                     int i = expressionList.indexOf(expression);
-                    if(i<expressionList.size()-1){
+                    if (i < expressionList.size() - 1) {
                         expressionList.remove(expression);
-                        expressionList.add(i+1, expression);
+                        expressionList.add(i + 1, expression);
                         setExpressionViewerSelection(expression);
                     }
                 }
@@ -585,7 +568,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
     }
 
     class ExpressionLabelProvider extends LabelProvider implements
-                ITableLabelProvider {
+            ITableLabelProvider {
 
         /**
          * {@inheritDoc}
@@ -596,11 +579,13 @@ public class RuleDataEditDialog extends HelpTrayDialog {
             if (columnIndex == 1 && !ruleData.isOutputExpValue() && element instanceof Expression) {
                 Expression expression = (Expression) element;
 
-                if(ruleData.getProperty().getPropertyDescriptor() == null)
+                if (ruleData.getProperty().getPropertyDescriptor() == null) {
                     return null;
-                if (ruleData.getProperty().getPropertyDescriptor().getLabelProvider() != null)
-                    return ruleData.getProperty().getPropertyDescriptor().getLabelProvider().
-                            getImage(expression.getValue());
+                }
+                if (ruleData.getProperty().getPropertyDescriptor().getLabelProvider() != null) {
+                    return ruleData.getProperty().getPropertyDescriptor().getLabelProvider()
+                            .getImage(expression.getValue());
+                }
             }
             return null;
         }
@@ -622,10 +607,11 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                         && ruleData.getProperty().getPropertyDescriptor().getLabelProvider() != null) {
                     return ruleData.getProperty().getPropertyDescriptor().getLabelProvider().getText(
                             expression.getValue());
-                }else if(expression.getValue() == null)
+                } else if (expression.getValue() == null) {
                     return "";
-                else
+                } else {
                     return expression.getValue().toString();
+                }
             }
             if (element != null) {
                 return element.toString();
@@ -634,4 +620,3 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         }
     }
 }
-

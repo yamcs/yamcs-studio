@@ -15,7 +15,6 @@ import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.SchemaService;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -73,30 +72,12 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
                 MediaService.getInstance().reloadFontFile();
             } else if (event.getProperty().equals(PreferencesHelper.OPI_GUI_REFRESH_CYCLE)) {
                 GUIRefreshThread.getInstance(true).reLoadGUIRefreshCycle();
-            } else if (event.getProperty().equals(PreferencesHelper.DISABLE_ADVANCED_GRAPHICS)) {
-                String disabled = PreferencesHelper.isAdvancedGraphicsDisabled() ? "true" : "false";
-                // for swt.widgets
-                System.setProperty("org.csstudio.swt.widget.prohibit_advanced_graphics", disabled);
-                // for XYGraph
-                System.setProperty("prohibit_advanced_graphics", disabled);
             } else if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
                 SchemaService.getInstance().reLoad();
             }
         };
 
         getPluginPreferences().addPropertyChangeListener(preferenceLisener);
-
-        @SuppressWarnings("serial")
-        // need to run preferenceListener at startup
-        // A hack to make protected constructor public.
-        class HackPropertyChangeEvent extends PropertyChangeEvent {
-            public HackPropertyChangeEvent(Object source, String property, Object oldValue, Object newValue) {
-                super(source, property, oldValue, newValue);
-            }
-        }
-        preferenceLisener.propertyChange(
-                new HackPropertyChangeEvent(
-                        this, PreferencesHelper.DISABLE_ADVANCED_GRAPHICS, null, null));
     }
 
     @Override

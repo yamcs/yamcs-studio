@@ -18,11 +18,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -45,7 +41,9 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
-/**The dialog for selecting OPIColor.
+/**
+ * The dialog for selecting OPIColor.
+ * 
  * @author Xihui Chen
  *
  */
@@ -73,11 +71,12 @@ public class OPIColorDialog extends HelpTrayDialog {
         setShellStyle(getShellStyle() | SWT.RESIZE);
         this.title = dialogTitle;
         this.opiColor = color.getCopy();
-//        if(color.isPreDefined())
-//            this.opiColor = new OPIColor(color.getColorName(),
-//                    new RGB(color.getRGBValue().red, color.getRGBValue().green, color.getRGBValue().blue));
-//        else
-//            this.opiColor = new OPIColor(new RGB(color.getRGBValue().red, color.getRGBValue().green, color.getRGBValue().blue));
+        // if(color.isPreDefined())
+        // this.opiColor = new OPIColor(color.getColorName(),
+        // new RGB(color.getRGBValue().red, color.getRGBValue().green, color.getRGBValue().blue));
+        // else
+        // this.opiColor = new OPIColor(new RGB(color.getRGBValue().red, color.getRGBValue().green,
+        // color.getRGBValue().blue));
     }
 
     /**
@@ -93,7 +92,7 @@ public class OPIColorDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html";;
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html";
     }
 
     @Override
@@ -116,7 +115,6 @@ public class OPIColorDialog extends HelpTrayDialog {
         preDefinedColorsViewer.setInput(
                 MediaService.getInstance().getAllPredefinedColors());
 
-
         Composite rightComposite = new Composite(mainComposite, SWT.None);
         rightComposite.setLayout(new GridLayout(1, false));
         gd = new GridData(SWT.LEFT, SWT.BEGINNING, true, true);
@@ -127,13 +125,13 @@ public class OPIColorDialog extends HelpTrayDialog {
         Button colorDialogButton = new Button(rightComposite, SWT.PUSH);
         colorDialogButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
         colorDialogButton.setText("Choose from Color Dialog");
-        colorDialogButton.addSelectionListener(new SelectionAdapter(){
+        colorDialogButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 ColorDialog dialog = new ColorDialog(Display.getCurrent().getActiveShell());
                 dialog.setRGB(opiColor.getRGBValue());
                 RGB rgb = dialog.open();
-                if(rgb != null){
+                if (rgb != null) {
                     opiColor.setColorValue(rgb);
                     preDefinedColorsViewer.setSelection(null);
 
@@ -163,21 +161,22 @@ public class OPIColorDialog extends HelpTrayDialog {
         outputTextLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         outputTextLabel.setText(opiColor.getColorName());
 
-        if(opiColor.isPreDefined())
+        if (opiColor.isPreDefined()) {
             preDefinedColorsViewer.setSelection(new StructuredSelection(opiColor));
-        else
+        } else {
             preDefinedColorsViewer.setSelection(null);
+        }
         return parent_Composite;
     }
-
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
-        //this will help resolve a bug on GTK: The table widget in GTK
-        //will force one item selected if it got the focus.
+        // this will help resolve a bug on GTK: The table widget in GTK
+        // will force one item selected if it got the focus.
         getButton(IDialogConstants.OK_ID).setFocus();
     }
+
     /**
      * @param rightComposite
      */
@@ -201,8 +200,6 @@ public class OPIColorDialog extends HelpTrayDialog {
         redSpinner = new Spinner(rgbGroup, SWT.BORDER);
         redSpinner.setMaximum(255);
         redSpinner.setLayoutData(rgbGD);
-
-
 
         greenLabel = new Label(rgbGroup, SWT.NONE);
         greenLabel.setText("Green");
@@ -236,8 +233,8 @@ public class OPIColorDialog extends HelpTrayDialog {
         blueSpinner.addSelectionListener(new RGBEditListener(2));
 
         rgbGroup.setTabList(new Control[] {
-            redScale, greenScale, blueScale,
-            redSpinner, greenSpinner, blueSpinner
+                redScale, greenScale, blueScale,
+                redSpinner, greenSpinner, blueSpinner
         });
 
     }
@@ -259,25 +256,14 @@ public class OPIColorDialog extends HelpTrayDialog {
             }
         });
         viewer.setLabelProvider(new WorkbenchLabelProvider());
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                refreshGUIOnSelection();
-            }
-        });
+        viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
         viewer.getTable().setLayoutData(
                 new GridData(SWT.FILL, SWT.FILL, true, true));
 
         MenuManager menuManager = new MenuManager();
         menuManager.add(new ReloadColorFileAction());
         viewer.getTable().setMenu(menuManager.createContextMenu(viewer.getTable()));
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                okPressed();
-            }
-        });
+        viewer.addDoubleClickListener(event -> okPressed());
         return viewer;
     }
 
@@ -287,9 +273,9 @@ public class OPIColorDialog extends HelpTrayDialog {
     private void refreshGUIOnSelection() {
         IStructuredSelection selection = (IStructuredSelection) preDefinedColorsViewer
                 .getSelection();
-        if(!selection.isEmpty()
-                && selection.getFirstElement() instanceof OPIColor){
-            opiColor = ((OPIColor)selection.getFirstElement()).getCopy();
+        if (!selection.isEmpty()
+                && selection.getFirstElement() instanceof OPIColor) {
+            opiColor = ((OPIColor) selection.getFirstElement()).getCopy();
             setRGBEditValue(opiColor.getRGBValue());
             outputTextLabel.setText(opiColor.getColorName());
             colorCanvas.setBackground(CustomMediaFactory.getInstance().getColor(opiColor.getRGBValue()));
@@ -328,20 +314,20 @@ public class OPIColorDialog extends HelpTrayDialog {
         blueSpinner.setSelection(rgb.blue);
     }
 
-    class RGBEditListener extends SelectionAdapter{
+    class RGBEditListener extends SelectionAdapter {
         private int type;
         private Scale scale;
         private Spinner spinner;
 
         public RGBEditListener(int type) {
             this.type = type;
-            if(type ==0){
+            if (type == 0) {
                 scale = redScale;
                 spinner = redSpinner;
-            }else if (type == 1){
+            } else if (type == 1) {
                 scale = greenScale;
                 spinner = greenSpinner;
-            }else if (type == 2){
+            } else if (type == 2) {
                 scale = blueScale;
                 spinner = blueSpinner;
             }
@@ -353,19 +339,20 @@ public class OPIColorDialog extends HelpTrayDialog {
             RGB rgb = opiColor.getRGBValue();
             int newValue = 0;
 
-            if(e.getSource() instanceof Scale){
-                newValue = ((Scale)e.getSource()).getSelection();
+            if (e.getSource() instanceof Scale) {
+                newValue = ((Scale) e.getSource()).getSelection();
                 spinner.setSelection(newValue);
-            }else if(e.getSource() instanceof Spinner){
-                newValue = ((Spinner)e.getSource()).getSelection();
+            } else if (e.getSource() instanceof Spinner) {
+                newValue = ((Spinner) e.getSource()).getSelection();
                 scale.setSelection(newValue);
             }
-            if(type == 0)
+            if (type == 0) {
                 rgb.red = newValue;
-            else if(type == 1)
+            } else if (type == 1) {
                 rgb.green = newValue;
-            else if(type == 2)
+            } else if (type == 2) {
                 rgb.blue = newValue;
+            }
             opiColor.setColorValue(rgb);
             preDefinedColorsViewer.setSelection(null);
             colorCanvas.setBackground(CustomMediaFactory.getInstance().getColor(opiColor.getRGBValue()));
@@ -373,7 +360,7 @@ public class OPIColorDialog extends HelpTrayDialog {
         }
     }
 
-    class ReloadColorFileAction extends Action{
+    class ReloadColorFileAction extends Action {
         public ReloadColorFileAction() {
             setText("Reload List From Color File");
             setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
@@ -387,11 +374,8 @@ public class OPIColorDialog extends HelpTrayDialog {
 
                 @Override
                 protected IStatus run(IProgressMonitor monitor) {
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if(!preDefinedColorsViewer.getControl().isDisposed())
+                    Display.getDefault().asyncExec(() -> {
+                        if (!preDefinedColorsViewer.getControl().isDisposed()) {
                             preDefinedColorsViewer.setInput(MediaService.getInstance()
                                     .getAllPredefinedColors());
                         }
@@ -404,7 +388,6 @@ public class OPIColorDialog extends HelpTrayDialog {
             job.schedule();
 
         }
-
 
     }
 

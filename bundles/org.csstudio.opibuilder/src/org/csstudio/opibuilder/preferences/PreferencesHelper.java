@@ -37,7 +37,6 @@ public class PreferencesHelper {
     public static final String RUN_MACROS = "macros";
     public static final String AUTOSAVE = "auto_save";
     public static final String OPI_GUI_REFRESH_CYCLE = "opi_gui_refresh_cycle";
-    public static final String DISABLE_ADVANCED_GRAPHICS = "disable_advanced_graphics";
     public static final String SCHEMA_OPI = "schema_opi";
     public static final String PYTHON_PATH = "python_path";
     public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";
@@ -117,11 +116,6 @@ public class PreferencesHelper {
     public static boolean isAutoSaveBeforeRunning() {
         final IPreferencesService service = Platform.getPreferencesService();
         return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, AUTOSAVE, false, null);
-    }
-
-    public static boolean isAdvancedGraphicsDisabled() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, DISABLE_ADVANCED_GRAPHICS, false, null);
     }
 
     public static Integer getGUIRefreshCycle() {

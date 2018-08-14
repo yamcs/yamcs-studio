@@ -16,20 +16,19 @@ import org.csstudio.simplepv.FormatEnum;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.geometry.Point;
 
-/**The model for text indicator.
+/**
+ * The model for text indicator.
+ * 
  * @author Xihui Chen
  *
  */
 public class TextUpdateModel extends LabelModel {
 
-
-
-    public static final String PROP_FORMAT_TYPE = "format_type";   
-    public static final String PROP_PRECISION = "precision";   
-    public static final String PROP_PRECISION_FROM_DB = "precision_from_pv";   
+    public static final String PROP_FORMAT_TYPE = "format_type";
+    public static final String PROP_PRECISION = "precision";
+    public static final String PROP_PRECISION_FROM_DB = "precision_from_pv";
     public static final String PROP_SHOW_UNITS = "show_units";
     public static final String PROP_ROTATION = "rotation_angle";
-
 
     public TextUpdateModel() {
         setSize(100, 20);
@@ -38,18 +37,16 @@ public class TextUpdateModel extends LabelModel {
         setPropertyValue(PROP_WRAP_WORDS, false);
     }
 
-
     @Override
     public String getTypeID() {
-        return "org.csstudio.opibuilder.widgets.TextUpdate";;
+        return "org.csstudio.opibuilder.widgets.TextUpdate";
     }
-
 
     @Override
     protected void configureProperties() {
         pvModel = true;
         super.configureProperties();
-        WidgetPropertyCategory category = new WidgetPropertyCategory(){
+        WidgetPropertyCategory category = new WidgetPropertyCategory() {
             @Override
             public String toString() {
                 return "Format";
@@ -67,20 +64,20 @@ public class TextUpdateModel extends LabelModel {
         setPropertyVisible(PROP_SHOW_SCROLLBAR, false);
     }
 
-    public FormatEnum getFormat(){
-        return FormatEnum.values()[(Integer)getCastedPropertyValue(PROP_FORMAT_TYPE)];
+    public FormatEnum getFormat() {
+        return FormatEnum.values()[(Integer) getCastedPropertyValue(PROP_FORMAT_TYPE)];
     }
 
-    public int getPrecision(){
-        return (Integer)getCastedPropertyValue(PROP_PRECISION);
+    public int getPrecision() {
+        return (Integer) getCastedPropertyValue(PROP_PRECISION);
     }
 
-    public boolean isPrecisionFromDB(){
-        return (Boolean)getCastedPropertyValue(PROP_PRECISION_FROM_DB);
+    public boolean isPrecisionFromDB() {
+        return (Boolean) getCastedPropertyValue(PROP_PRECISION_FROM_DB);
     }
 
-    public boolean isShowUnits(){
-        return (Boolean)getCastedPropertyValue(PROP_SHOW_UNITS);
+    public boolean isShowUnits() {
+        return (Boolean) getCastedPropertyValue(PROP_SHOW_UNITS);
     }
 
     /**
@@ -89,29 +86,30 @@ public class TextUpdateModel extends LabelModel {
      * @return The rotation angle
      */
     public final double getRotationAngle() {
-            return (Double) getProperty(PROP_ROTATION).getPropertyValue();
+        return (Double) getProperty(PROP_ROTATION).getPropertyValue();
     }
 
     public final void setRotationAngle(final double angle) {
         setPropertyValue(PROP_ROTATION, angle);
     }
 
-
     @Override
     public void rotate90(boolean clockwise) {
         super.rotate90(clockwise);
-        if(clockwise)
-            setRotationAngle((getRotationAngle() + 90)%360);
-        else
-            setRotationAngle((getRotationAngle() + 270)%360);
+        if (clockwise) {
+            setRotationAngle((getRotationAngle() + 90) % 360);
+        } else {
+            setRotationAngle((getRotationAngle() + 270) % 360);
+        }
     }
 
     @Override
     public void rotate90(boolean clockwise, Point center) {
         super.rotate90(clockwise, center);
-        if(clockwise)
-            setRotationAngle((getRotationAngle() + 90)%360);
-        else
-            setRotationAngle((getRotationAngle() + 270)%360);
+        if (clockwise) {
+            setRotationAngle((getRotationAngle() + 90) % 360);
+        } else {
+            setRotationAngle((getRotationAngle() + 270) % 360);
+        }
     }
 }

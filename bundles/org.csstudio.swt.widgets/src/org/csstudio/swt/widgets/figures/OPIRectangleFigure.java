@@ -26,7 +26,6 @@ import java.beans.IntrospectionException;
 
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.introspection.ShapeWidgetIntrospector;
-import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.draw2d.ColorConstants;
@@ -65,7 +64,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
     private Color backGradientStartColor = ColorConstants.white;
     private Color foreGradientStartColor = ColorConstants.white;
     private boolean gradient = false;
-    private boolean useAdvancedGraphics = GraphicsUtil.useAdvancedGraphics();
 
     public OPIRectangleFigure(boolean runMode) {
         this.runMode = runMode;
@@ -78,17 +76,20 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
     protected synchronized void fillShape(final Graphics graphics) {
         Rectangle figureBounds = getClientArea();
         if (!transparent) {
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setBackgroundColor(getBackgroundColor());
-            if (gradient && useAdvancedGraphics) {
+            }
+            if (gradient) {
                 graphics.setForegroundColor(backGradientStartColor);
                 graphics.fillGradient(figureBounds, horizontalFill);
-            } else
+            } else {
                 graphics.fillRectangle(figureBounds);
+            }
         }
         if (getFill() > 0) {
-            if (isEnabled())
+            if (isEnabled()) {
                 graphics.setBackgroundColor(getForegroundColor());
+            }
             Rectangle fillRectangle;
             if (horizontalFill) {
                 int newW = (int) Math.round(figureBounds.width * (getFill() / 100));
@@ -98,11 +99,12 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
                 fillRectangle = new Rectangle(figureBounds.x, figureBounds.y + figureBounds.height - newH,
                         figureBounds.width, newH);
             }
-            if (gradient && useAdvancedGraphics) {
+            if (gradient) {
                 graphics.setForegroundColor(foreGradientStartColor);
                 graphics.fillGradient(fillRectangle, horizontalFill);
-            } else
+            } else {
                 graphics.fillRectangle(fillRectangle);
+            }
         }
     }
 
@@ -201,8 +203,9 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
         r.y += inset1;
         r.width -= inset1 + inset2;
         r.height -= inset1 + inset2;
-        if (isEnabled())
+        if (isEnabled()) {
             graphics.setForegroundColor(lineColor);
+        }
         graphics.drawRectangle(r);
     }
 
@@ -213,8 +216,9 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      *            the fill grade.
      */
     public void setFill(final double fill) {
-        if (this.fill == fill)
+        if (this.fill == fill) {
             return;
+        }
         this.fill = fill;
         repaint();
     }
@@ -226,8 +230,9 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      *            The orientation.
      */
     public void setHorizontalFill(final boolean horizontal) {
-        if (this.horizontalFill == horizontal)
+        if (this.horizontalFill == horizontal) {
             return;
+        }
         this.horizontalFill = horizontal;
         repaint();
     }
@@ -237,8 +242,9 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      *            the lineColor to set
      */
     public void setLineColor(Color lineColor) {
-        if (this.lineColor != null && this.lineColor.equals(lineColor))
+        if (this.lineColor != null && this.lineColor.equals(lineColor)) {
             return;
+        }
         this.lineColor = lineColor;
         repaint();
     }
@@ -250,8 +256,9 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
      *            the transparent state.
      */
     public void setTransparent(final boolean transparent) {
-        if (this.transparent == transparent)
+        if (this.transparent == transparent) {
             return;
+        }
         this.transparent = transparent;
         repaint();
     }
@@ -262,10 +269,11 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
 
     @Override
     public boolean containsPoint(int x, int y) {
-        if (runMode && !selectable)
+        if (runMode && !selectable) {
             return false;
-        else
+        } else {
             return super.containsPoint(x, y);
+        }
     }
 
 }

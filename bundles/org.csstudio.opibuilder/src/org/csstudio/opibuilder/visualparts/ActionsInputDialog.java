@@ -40,9 +40,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -61,8 +59,10 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
-/**The dialog to configure actions input.
- * @author Xihui Chen,  Kai Meyer (part of the code is copied from SDS)
+/**
+ * The dialog to configure actions input.
+ * 
+ * @author Xihui Chen, Kai Meyer (part of the code is copied from SDS)
  *
  */
 public class ActionsInputDialog extends HelpTrayDialog {
@@ -113,7 +113,7 @@ public class ActionsInputDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Actions.html";;
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Actions.html";
     }
 
     /**
@@ -199,12 +199,12 @@ public class ActionsInputDialog extends HelpTrayDialog {
         Composite bottomComposite = new Composite(mainComposite, SWT.NONE);
         bottomComposite.setLayout(new GridLayout(1, false));
         bottomComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-        if(showHookOption){
+        if (showHookOption) {
             hookFirstCheckBox = new Button(bottomComposite, SWT.CHECK);
             hookFirstCheckBox.setSelection(hookedUpFirstActionToWidget);
             hookFirstCheckBox.setText("Hook the first action to the mouse click event on widget.");
             hookFirstCheckBox.setEnabled(!hookedUpAllActionsToWidget);
-            hookFirstCheckBox.addSelectionListener(new SelectionAdapter(){
+            hookFirstCheckBox.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     hookedUpFirstActionToWidget = hookFirstCheckBox.getSelection();
@@ -215,21 +215,21 @@ public class ActionsInputDialog extends HelpTrayDialog {
         final Button hookAllCheckBox = new Button(bottomComposite, SWT.CHECK);
         hookAllCheckBox.setSelection(hookedUpAllActionsToWidget);
         hookAllCheckBox.setText("Hook all actions to the mouse click event on widget.");
-        hookAllCheckBox.addSelectionListener(new SelectionAdapter(){
+        hookAllCheckBox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 hookedUpAllActionsToWidget = hookAllCheckBox.getSelection();
-                if(hookFirstCheckBox != null)
+                if (hookFirstCheckBox != null) {
                     hookFirstCheckBox.setEnabled(!hookedUpAllActionsToWidget);
+                }
             }
         });
 
-        if(actionsList.size() > 0){
+        if (actionsList.size() > 0) {
             refreshActionsViewer(actionsList.get(0));
         }
 
         return parent_Composite;
-
 
     }
 
@@ -249,7 +249,6 @@ public class ActionsInputDialog extends HelpTrayDialog {
         EditingSupport editingSupport = new PropertiesEditingSupport(viewer,
                 viewer.getTable());
         tvColumn.setEditingSupport(editingSupport);
-
 
         viewer.setContentProvider(new WidgetPropertiesContentProvider());
         viewer.setLabelProvider(new PropertiesLabelProvider());
@@ -284,16 +283,14 @@ public class ActionsInputDialog extends HelpTrayDialog {
         }
     }
 
-
-    private void refreshActionsViewer(AbstractWidgetAction widgetAction){
+    private void refreshActionsViewer(AbstractWidgetAction widgetAction) {
         actionsViewer.refresh();
-        if(widgetAction == null)
+        if (widgetAction == null) {
             actionsViewer.setSelection(StructuredSelection.EMPTY);
-        else {
+        } else {
             actionsViewer.setSelection(new StructuredSelection(widgetAction));
         }
     }
-
 
     /**
      * Creates and configures a {@link TableViewer}.
@@ -309,25 +306,20 @@ public class ActionsInputDialog extends HelpTrayDialog {
             @SuppressWarnings("unchecked")
             @Override
             public Object[] getElements(final Object element) {
-                return (((List<AbstractWidgetAction>)element).toArray());
+                return (((List<AbstractWidgetAction>) element).toArray());
             }
         });
-        viewer.setLabelProvider(new WorkbenchLabelProvider(){
+        viewer.setLabelProvider(new WorkbenchLabelProvider() {
             @Override
             protected String decorateText(String input, Object element) {
                 return input + "(index: " + actionsList.indexOf(element) + ")";
             }
         });
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged(final SelectionChangedEvent event) {
-                refreshGUIOnSelection();
-            }
-        });
+        viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
         viewer.getTable().setLayoutData(
                 new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
-
 
     /**
      * Creates the popup-menu for adding a {@link AbstractWidgetActionModel}.
@@ -335,8 +327,7 @@ public class ActionsInputDialog extends HelpTrayDialog {
      * @param control
      *            The {@link Control} for the menu
      * @param withRemoveAction
-     *            Indicates if an action to remove a {@link AbstractWidgetActionModel}
-     *            should be added
+     *            Indicates if an action to remove a {@link AbstractWidgetActionModel} should be added
      * @return The resulting menu
      */
     private Menu createMenu(final Control control,
@@ -351,7 +342,6 @@ public class ActionsInputDialog extends HelpTrayDialog {
         }
         return listMenu.createContextMenu(control);
     }
-
 
     /**
      * Creates the actions.
@@ -402,8 +392,7 @@ public class ActionsInputDialog extends HelpTrayDialog {
                         .getSelection();
                 if (!selection.isEmpty()
                         && selection.getFirstElement() instanceof AbstractWidgetAction) {
-                    AbstractWidgetAction newAction =
-                        ((AbstractWidgetAction)selection.getFirstElement()).getCopy();
+                    AbstractWidgetAction newAction = ((AbstractWidgetAction) selection.getFirstElement()).getCopy();
                     actionsInput.addAction(newAction);
                     actionsViewer.setSelection(new StructuredSelection(newAction));
                     refreshActionsViewer(newAction);
@@ -418,7 +407,6 @@ public class ActionsInputDialog extends HelpTrayDialog {
                         "icons/copy.gif"));
         copyAction.setEnabled(false);
 
-
         removeAction = new Action() {
             @Override
             public void run() {
@@ -426,7 +414,7 @@ public class ActionsInputDialog extends HelpTrayDialog {
                         .getSelection();
                 if (!selection.isEmpty()
                         && selection.getFirstElement() instanceof AbstractWidgetAction) {
-                    actionsList.remove((AbstractWidgetAction)selection.getFirstElement());
+                    actionsList.remove((AbstractWidgetAction) selection.getFirstElement());
                     refreshActionsViewer(null);
                     this.setEnabled(false);
                 }
@@ -450,9 +438,9 @@ public class ActionsInputDialog extends HelpTrayDialog {
                     AbstractWidgetAction widgetAction = (AbstractWidgetAction) selection
                             .getFirstElement();
                     int i = actionsList.indexOf(widgetAction);
-                    if(i>0){
+                    if (i > 0) {
                         actionsList.remove(widgetAction);
-                        actionsList.add(i-1, widgetAction);
+                        actionsList.add(i - 1, widgetAction);
                         refreshActionsViewer(widgetAction);
                     }
                 }
@@ -475,9 +463,9 @@ public class ActionsInputDialog extends HelpTrayDialog {
                     AbstractWidgetAction widgetAction = (AbstractWidgetAction) selection
                             .getFirstElement();
                     int i = actionsList.indexOf(widgetAction);
-                    if(i<actionsList.size()-1){
+                    if (i < actionsList.size() - 1) {
                         actionsList.remove(widgetAction);
-                        actionsList.add(i+1, widgetAction);
+                        actionsList.add(i + 1, widgetAction);
                         refreshActionsViewer(widgetAction);
                     }
                 }
@@ -492,8 +480,7 @@ public class ActionsInputDialog extends HelpTrayDialog {
     }
 
     /**
-     * An {@link Action}, which adds a new {@link AbstractWidgetAction} of the
-     * given {@link ActionType}.
+     * An {@link Action}, which adds a new {@link AbstractWidgetAction} of the given {@link ActionType}.
      *
      * @author Xihui Chen
      *
@@ -523,7 +510,7 @@ public class ActionsInputDialog extends HelpTrayDialog {
         @Override
         public void run() {
             AbstractWidgetAction widgetAction = WidgetActionFactory.createWidgetAction(type);
-            if(widgetAction != null){
+            if (widgetAction != null) {
                 actionsInput.addAction(widgetAction);
                 refreshActionsViewer(widgetAction);
             }
@@ -531,17 +518,17 @@ public class ActionsInputDialog extends HelpTrayDialog {
         }
     }
 
-
     final static class WidgetPropertiesContentProvider extends
             ArrayContentProvider {
         @Override
         public Object[] getElements(Object inputElement) {
             if (inputElement instanceof AbstractWidgetProperty[]) {
                 AbstractWidgetProperty[] oldProperties = (AbstractWidgetProperty[]) inputElement;
-                List<AbstractWidgetProperty> newPropertiesList = new ArrayList<AbstractWidgetProperty>();
+                List<AbstractWidgetProperty> newPropertiesList = new ArrayList<>();
                 for (AbstractWidgetProperty property : oldProperties) {
-                    if (property.isVisibleInPropSheet())
+                    if (property.isVisibleInPropSheet()) {
                         newPropertiesList.add(property);
+                    }
                 }
 
                 return newPropertiesList.toArray();
@@ -549,7 +536,5 @@ public class ActionsInputDialog extends HelpTrayDialog {
             return super.getElements(inputElement);
         }
     }
-
-
 
 }

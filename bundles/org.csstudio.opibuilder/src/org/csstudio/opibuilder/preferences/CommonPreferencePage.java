@@ -8,7 +8,6 @@
 package org.csstudio.opibuilder.preferences;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
@@ -42,13 +41,6 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
         WorkspaceFileFieldEditor fontEditor = new WorkspaceFileFieldEditor(PreferencesHelper.FONT_FILE,
                 "Font File: ", new String[] { "def" }, parent);
         addField(fontEditor);
-
-        BooleanFieldEditor advanceGraphicsEditor = new BooleanFieldEditor(PreferencesHelper.DISABLE_ADVANCED_GRAPHICS,
-                "Disable Advanced Graphics", parent);
-        advanceGraphicsEditor.getDescriptionControl(parent).setToolTipText(
-                "This will disable alpha, anti-alias and gradient effect. " +
-                        "OPI need to be re-opened to make this take effect.");
-        addField(advanceGraphicsEditor);
     }
 
     @Override

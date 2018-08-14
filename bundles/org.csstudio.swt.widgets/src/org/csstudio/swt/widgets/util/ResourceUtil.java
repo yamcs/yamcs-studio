@@ -17,7 +17,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
-import org.csstudio.swt.widgets.Preferences;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -64,10 +63,11 @@ public class ResourceUtil {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IWorkspaceRoot root = workspace.getRoot();
         IResource resource = root.findMember(path);
-        if (resource != null)
+        if (resource != null) {
             return resource.getLocation(); // existing resource
-        else
+        } else {
             return root.getFile(path).getLocation(); // for not existing resource
+        }
     }
 
     /**
@@ -125,8 +125,9 @@ public class ResourceUtil {
         // Not a workspace file. Try local file system
         File local_file = new File(path);
         // Path URL for "file:..." so that it opens as FileInputStream
-        if (local_file.getPath().startsWith("file:"))
+        if (local_file.getPath().startsWith("file:")) {
             local_file = new File(local_file.getPath().substring(5));
+        }
         String urlString;
         try {
             return new FileInputStream(local_file);
@@ -141,8 +142,9 @@ public class ResourceUtil {
             // urlString = urlString.replaceFirst(":/", "://");
             // Does it now look like a URL? If not, report the original local
             // file problem
-            if (!isURL(urlString))
+            if (!isURL(urlString)) {
                 throw new Exception("Cannot open " + ex.getMessage(), ex);
+            }
         }
 
         // Must be a URL
@@ -155,18 +157,7 @@ public class ResourceUtil {
 
     private static InputStream openURLStream(final URL url) throws IOException {
         URLConnection connection = url.openConnection();
-        int timeout = 0;
-        String value = System.getProperty(Preferences.URL_FILE_LOAD_TIMEOUT);
-        if (value != null) {
-            try {
-                timeout = Integer.parseInt(value);
-            } catch (NumberFormatException e) {
-            }
-        }
-        if (timeout == 0) {
-            timeout = Preferences.getURLFileLoadTimeout();
-        }
-        connection.setReadTimeout(timeout);
+        connection.setReadTimeout(5000);
         return connection.getInputStream();
     }
 
