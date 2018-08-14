@@ -46,7 +46,6 @@ import org.eclipse.osgi.util.NLS;
  *
  * @author Kay Kasemir, Xihui Chen
  */
-@SuppressWarnings("nls")
 public final class CommandExecutor {
     final private String dir_name;
     final private String command;

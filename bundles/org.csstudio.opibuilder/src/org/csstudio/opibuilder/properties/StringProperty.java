@@ -79,7 +79,7 @@ public class StringProperty extends AbstractWidgetProperty {
             propElement.setContent(new CDATA(getPropertyValue().toString()));
         } else {
             String reShapedString = getPropertyValue().toString().replaceAll(
-                    "\\x0D\\x0A?", new String(new byte[] { 13, 10 })); //$NON-NLS-1$
+                    "\\x0D\\x0A?", new String(new byte[] { 13, 10 }));
             propElement.setText(reShapedString);
         }
     }

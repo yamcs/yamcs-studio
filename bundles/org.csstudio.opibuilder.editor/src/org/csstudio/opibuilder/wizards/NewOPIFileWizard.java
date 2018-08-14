@@ -34,7 +34,7 @@ public class NewOPIFileWizard extends Wizard implements INewWizard {
 
     @Override
     public void addPages() {
-        opiFilePage =new NewOPIFileWizardPage("OPIFilePage", selection); //$NON-NLS-1$
+        opiFilePage =new NewOPIFileWizardPage("OPIFilePage", selection);
         addPage(opiFilePage);
     }
 

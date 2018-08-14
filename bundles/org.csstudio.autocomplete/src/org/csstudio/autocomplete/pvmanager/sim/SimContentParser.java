@@ -20,7 +20,7 @@ import org.csstudio.autocomplete.parser.IContentParser;
  */
 public class SimContentParser implements IContentParser {
 
-    public static final String SIM_SOURCE = "sim://"; //$NON-NLS-1$
+    public static final String SIM_SOURCE = "sim://";
 
     @Override
     public boolean accept(final ContentDescriptor desc) {

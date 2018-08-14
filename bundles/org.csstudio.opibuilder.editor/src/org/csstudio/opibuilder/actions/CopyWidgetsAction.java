@@ -46,7 +46,7 @@ public class CopyWidgetsAction extends SelectionAction {
     public CopyWidgetsAction(OPIEditor part) {
         super(part);
         setText("Copy");
-        setActionDefinitionId("org.eclipse.ui.edit.copy"); //$NON-NLS-1$
+        setActionDefinitionId("org.eclipse.ui.edit.copy");
         setId(ActionFactory.COPY.getId());
         ISharedImages sharedImages =
             part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();

@@ -121,7 +121,7 @@ public class PropertiesSelectDialog extends Dialog {
         @Override
         public String getText(Object element) {
             String propID = (String)element;
-            return widgetModel.getProperty(propID).getDescription() + " (" + propID + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+            return widgetModel.getProperty(propID).getDescription() + " (" + propID + ")";
         }
     }
 

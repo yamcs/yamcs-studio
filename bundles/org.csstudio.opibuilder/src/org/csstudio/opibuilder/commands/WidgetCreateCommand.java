@@ -137,8 +137,8 @@ public class WidgetCreateCommand extends Command {
             for (AbstractWidgetModel child : container.getChildren()) {
                 String key = child.getName();
                 int tailNo = 0;
-                if (key.matches(".*_\\d+")) { //$NON-NLS-1$
-                    int i = key.lastIndexOf('_'); //$NON-NLS-1$
+                if (key.matches(".*_\\d+")) {
+                    int i = key.lastIndexOf('_');
                     tailNo = Integer.parseInt(key.substring(i + 1));
                     key = key.substring(0, i);
                 }
@@ -148,11 +148,11 @@ public class WidgetCreateCommand extends Command {
                     nameMap.put(key, 0);
             }
             String nameHead = newWidget.getName();
-            if (nameHead.matches(".*_\\d+")) { //$NON-NLS-1$
-                nameHead = nameHead.substring(0, nameHead.lastIndexOf('_')); //$NON-NLS-1$
+            if (nameHead.matches(".*_\\d+")) {
+                nameHead = nameHead.substring(0, nameHead.lastIndexOf('_'));
             }
             newWidget.setName(nameHead
-                    + "_" //$NON-NLS-1$
+                    + "_"
                     + (nameMap.get(nameHead) == null ? 0 : nameMap
                             .get(nameHead) + 1));
         }

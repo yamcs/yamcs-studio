@@ -50,7 +50,7 @@ abstract class AbstractPolyFeedbackFactory implements
     /**
      * An identifier which is used as key for extended data in request objects.
      */
-    public static final String PROP_POINTS = "points"; //$NON-NLS-1$
+    public static final String PROP_POINTS = "points";
 
     /**
      * Subclasses should return an appropriate feedback figure. This basically
@@ -67,7 +67,7 @@ abstract class AbstractPolyFeedbackFactory implements
     public final IFigure createDragSourceFeedbackFigure(
             final AbstractWidgetModel model, final Rectangle initalBounds) {
         assert model != null;
-        assert model instanceof AbstractPolyModel : "model instanceof AbstractPolyModel"; //$NON-NLS-1$
+        assert model instanceof AbstractPolyModel : "model instanceof AbstractPolyModel";
         assert initalBounds != null;
 
         // get the points from the model
@@ -92,10 +92,10 @@ abstract class AbstractPolyFeedbackFactory implements
             final AbstractWidgetModel model, final PrecisionRectangle bounds,
             final IFigure feedbackFigure, final ChangeBoundsRequest request) {
         assert model != null;
-        assert model instanceof AbstractPolyModel : "model instanceof AbstractPolyModel"; //$NON-NLS-1$
+        assert model instanceof AbstractPolyModel : "model instanceof AbstractPolyModel";
         assert bounds != null;
         assert feedbackFigure != null;
-        assert feedbackFigure instanceof PolyFeedbackFigureWithRectangle : "feedbackFigure instanceof AbstractPolyFeedbackFigure"; //$NON-NLS-1$
+        assert feedbackFigure instanceof PolyFeedbackFigureWithRectangle : "feedbackFigure instanceof AbstractPolyFeedbackFigure";
         assert request != null;
 
         PolyFeedbackFigureWithRectangle figure = (PolyFeedbackFigureWithRectangle) feedbackFigure;
@@ -153,7 +153,7 @@ abstract class AbstractPolyFeedbackFactory implements
     public final void showSizeOnDropFeedback(final CreateRequest createRequest,
             final IFigure feedbackFigure, final Insets insets) {
         assert createRequest != null;
-        assert feedbackFigure instanceof Polyline : "feedbackFigure instanceof Polyline"; //$NON-NLS-1$
+        assert feedbackFigure instanceof Polyline : "feedbackFigure instanceof Polyline";
         Polyline polyline = (Polyline) feedbackFigure;
 
         // the request should contain a point list, because the creation is done
@@ -186,7 +186,7 @@ abstract class AbstractPolyFeedbackFactory implements
     public final Command createInitialBoundsCommand(
             final AbstractWidgetModel widgetModel,
             final CreateRequest request, final Rectangle bounds) {
-        assert widgetModel instanceof AbstractPolyModel : "widgetModel instanceof AbstractPolyModel"; //$NON-NLS-1$
+        assert widgetModel instanceof AbstractPolyModel : "widgetModel instanceof AbstractPolyModel";
         assert request != null;
         assert bounds != null;
 
@@ -213,7 +213,7 @@ abstract class AbstractPolyFeedbackFactory implements
     public final Command createChangeBoundsCommand(
             final AbstractWidgetModel model,
             final ChangeBoundsRequest request, final Rectangle targetBounds) {
-        assert model instanceof AbstractPolyModel : "model instanceof AbstractPolyModel"; //$NON-NLS-1$
+        assert model instanceof AbstractPolyModel : "model instanceof AbstractPolyModel";
 
         Rectangle correctedBounds = targetBounds;
 //        if (model instanceof PolyLineModel) {
@@ -250,7 +250,7 @@ abstract class AbstractPolyFeedbackFactory implements
     @Override
     public final List<Handle> createCustomHandles(final GraphicalEditPart hostEP) {
         assert hostEP != null;
-        assert hostEP.getModel() instanceof AbstractPolyModel : "hostEP.getModel() instanceof AbstractPolyModel"; //$NON-NLS-1$
+        assert hostEP.getModel() instanceof AbstractPolyModel : "hostEP.getModel() instanceof AbstractPolyModel";
 
         // create some custom handles, which enable the user to drag arround
         // single points of the polyline

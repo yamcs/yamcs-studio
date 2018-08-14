@@ -93,17 +93,17 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         @Override
         public boolean testAttribute(Object target, String name,
                 String value) {
-            if (name.equals("executionMode") && //$NON-NLS-1$
-                    value.equals("EDIT_MODE") && //$NON-NLS-1$
+            if (name.equals("executionMode") &&
+                    value.equals("EDIT_MODE") &&
                     getExecutionMode() == ExecutionMode.EDIT_MODE) {
                 return true;
             }
-            if (name.equals("executionMode") && //$NON-NLS-1$
-                    value.equals("RUN_MODE") && //$NON-NLS-1$
+            if (name.equals("executionMode") &&
+                    value.equals("RUN_MODE") &&
                     getExecutionMode() == ExecutionMode.RUN_MODE) {
                 return true;
             }
-            if (name.equals("hasPVs") && //$NON-NLS-1$
+            if (name.equals("hasPVs") &&
                     value.equals("true")) {
                 return (getAllPVs() != null && getAllPVs().size() > 0);
             }
@@ -223,7 +223,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
                                     OPIBuilderPlugin
                                             .getLogger()
                                             .log(Level.WARNING,
-                                                    "Unable to start PV " + pv.getName(), e); //$NON-NLS-1$
+                                                    "Unable to start PV " + pv.getName(), e);
                                 }
                             }
                         }
@@ -521,7 +521,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
     protected void initFigure(final IFigure figure) {
         if (figure == null) {
             throw new IllegalArgumentException(
-                    "Editpart does not provide a figure!"); //$NON-NLS-1$
+                    "Editpart does not provide a figure!");
         }
         Set<String> allPropIds = getWidgetModel().getAllPropertyIDs();
         if (allPropIds.contains(AbstractWidgetModel.PROP_COLOR_BACKGROUND)) {
@@ -562,7 +562,7 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         }
 
         if (allPropIds.contains(AbstractWidgetModel.PROP_TOOLTIP)) {
-            if (!getWidgetModel().getTooltip().equals("")) { //$NON-NLS-1$
+            if (!getWidgetModel().getTooltip().equals("")) {
                 tooltipLabel = new TooltipLabel(this);
                 figure.setToolTip(tooltipLabel);
             }

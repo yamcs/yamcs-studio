@@ -70,7 +70,7 @@ public class ContentProposalPopup extends PopupDialog {
     /*
      * Empty string.
      */
-    private static final String EMPTY = ""; //$NON-NLS-1$
+    private static final String EMPTY = "";
 
     /*
      * The delay before showing a secondary popup.
@@ -1198,7 +1198,7 @@ public class ContentProposalPopup extends PopupDialog {
      * Select the proposal at the given index.
      */
     private void selectProposal(int index) {
-        Assert.isTrue(index >= 0, "Proposal index should never be negative"); //$NON-NLS-1$
+        Assert.isTrue(index >= 0, "Proposal index should never be negative");
         if (!isValid() || proposalList == null || index >= getTableLength()) {
             return;
         }

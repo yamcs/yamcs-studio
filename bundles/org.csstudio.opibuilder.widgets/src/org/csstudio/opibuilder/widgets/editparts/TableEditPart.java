@@ -96,12 +96,12 @@ public class TableEditPart extends AbstractBaseEditPart {
             @Override
             public boolean testAttribute(Object target, String name,
                     String value) {
-                if (name.equals("allowInsert") && value.equals("TRUE")) //$NON-NLS-1$ //$NON-NLS-2$
+                if (name.equals("allowInsert") && value.equals("TRUE"))
                     return spreadSheetTable.isEditable() &&
                             (getMenuTriggeredCell() != null || spreadSheetTable.isEmpty());
-                if (name.equals("allowDeleteRow") && value.equals("TRUE")) //$NON-NLS-1$ //$NON-NLS-2$
+                if (name.equals("allowDeleteRow") && value.equals("TRUE"))
                     return spreadSheetTable.isEditable() && (getMenuTriggeredCell() != null);
-                if (name.equals("allowDeleteColumn") && value.equals("TRUE")) //$NON-NLS-1$ //$NON-NLS-2$
+                if (name.equals("allowDeleteColumn") && value.equals("TRUE"))
                     return spreadSheetTable.isEditable() &&
                             (getMenuTriggeredCell() != null &&
                             spreadSheetTable.isColumnEditable(getMenuTriggeredCell().y));

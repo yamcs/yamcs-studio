@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
-@SuppressWarnings("nls")
 public class Preferences {
 
     final public static String DEFAULT_MAX_RESULTS = "default_max_results";

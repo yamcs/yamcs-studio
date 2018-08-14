@@ -14,12 +14,8 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -39,15 +35,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 
-/**The dialog for editing OPI Font.
+/**
+ * The dialog for editing OPI Font.
+ * 
  * @author chenxh
  *
  */
 public class OPIFontDialog extends HelpTrayDialog {
 
     /**
-     * Private class to encapsulate logic for the pixel or points
-     * radio button group.
+     * Private class to encapsulate logic for the pixel or points radio button group.
      */
     private class PixelsOrPointsBox {
 
@@ -112,7 +109,7 @@ public class OPIFontDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html"; //$NON-NLS-1$; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html";
     }
 
     @Override
@@ -141,7 +138,7 @@ public class OPIFontDialog extends HelpTrayDialog {
         gd.widthHint = 250;
         rightComposite.setLayoutData(gd);
 
-        @SuppressWarnings("unused")  // This label doesn't need to do anything but exist.
+        @SuppressWarnings("unused") // This label doesn't need to do anything but exist.
         Label spacer = new Label(rightComposite, SWT.NONE);
         Button fontDialogButton = new Button(rightComposite, SWT.PUSH);
         // Push radioButtons to bottom of rightComposite.
@@ -154,14 +151,14 @@ public class OPIFontDialog extends HelpTrayDialog {
 
         fontDialogButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
         fontDialogButton.setText("Choose from Font Dialog");
-        fontDialogButton.addSelectionListener(new SelectionAdapter(){
+        fontDialogButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FontDialog dialog = new FontDialog(Display.getCurrent().getActiveShell());
-                dialog.setFontList(new FontData[] {opiFont.getRawFontData()});
+                dialog.setFontList(new FontData[] { opiFont.getRawFontData() });
                 FontData fontdata = dialog.open();
                 pixelsOrPointsBox.setEnabled(true);
-                if(fontdata != null){
+                if (fontdata != null) {
                     opiFont = new OPIFont(fontdata);
                     opiFont.setSizeInPixels(pixelsOrPointsBox.isSizeInPixels());
                     preDefinedFontsViewer.setSelection(null);
@@ -196,18 +193,19 @@ public class OPIFontDialog extends HelpTrayDialog {
         outputTextLabel.setText(opiFont.getFontMacroName());
         outputTextLabel.setFont(opiFont.getSWTFont());
 
-        if(opiFont.isPreDefined())
+        if (opiFont.isPreDefined()) {
             preDefinedFontsViewer.setSelection(new StructuredSelection(opiFont));
-        else
+        } else {
             preDefinedFontsViewer.setSelection(null);
+        }
         return parent_Composite;
     }
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
-        //this will help resolve a bug on GTK: The table widget in GTK
-        //will force one item selected if it got the focus.
+        // this will help resolve a bug on GTK: The table widget in GTK
+        // will force one item selected if it got the focus.
         getButton(IDialogConstants.OK_ID).setFocus();
     }
 
@@ -228,24 +226,13 @@ public class OPIFontDialog extends HelpTrayDialog {
             }
         });
         viewer.setLabelProvider(new LabelProvider());
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                refreshGUIOnSelection();
-            }
-        });
+        viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
         viewer.getTable().setLayoutData(
                 new GridData(SWT.FILL, SWT.FILL, true, true));
         MenuManager menuManager = new MenuManager();
         menuManager.add(new ReloadFontFileAction());
         viewer.getTable().setMenu(menuManager.createContextMenu(viewer.getTable()));
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                okPressed();
-            }
-        });
+        viewer.addDoubleClickListener(event -> okPressed());
         return viewer;
     }
 
@@ -255,9 +242,9 @@ public class OPIFontDialog extends HelpTrayDialog {
     private void refreshGUIOnSelection() {
         IStructuredSelection selection = (IStructuredSelection) preDefinedFontsViewer
                 .getSelection();
-        if(!selection.isEmpty()
-                && selection.getFirstElement() instanceof OPIFont){
-            opiFont = new OPIFont((OPIFont)selection.getFirstElement());
+        if (!selection.isEmpty()
+                && selection.getFirstElement() instanceof OPIFont) {
+            opiFont = new OPIFont((OPIFont) selection.getFirstElement());
             outputTextLabel.setText(opiFont.getFontMacroName());
             outputTextLabel.setFont(CustomMediaFactory.getInstance().getFont(opiFont.getFontData()));
             pixelsOrPointsBox.setSizeInPixels(opiFont.isSizeInPixels());
@@ -285,7 +272,7 @@ public class OPIFontDialog extends HelpTrayDialog {
         return opiFont;
     }
 
-    class ReloadFontFileAction extends Action{
+    class ReloadFontFileAction extends Action {
         public ReloadFontFileAction() {
             setText("Reload List From Font File");
             setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(

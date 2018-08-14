@@ -55,7 +55,7 @@ static class LabelEditCommand extends Command    {
     if (s != null)
         newText = s;
     else
-        newText = "";  //$NON-NLS-1$
+        newText = ""; 
     }
 
     @Override

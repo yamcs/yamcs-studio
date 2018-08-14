@@ -348,7 +348,7 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
         if (isShowUnits && VTypeHelper.getDisplayInfo(value) != null) {
             String units = VTypeHelper.getDisplayInfo(value).getUnits();
             if (units != null && units.trim().length() > 0)
-                text = text + " " + units; //$NON-NLS-1$
+                text = text + " " + units;
         }
 
         // synchronize the property value without fire listeners.

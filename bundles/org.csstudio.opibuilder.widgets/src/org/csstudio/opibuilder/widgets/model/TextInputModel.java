@@ -61,28 +61,28 @@ public class TextInputModel extends TextUpdateModel {
     }
 
     /** The minimum input value allowed.*/
-    public static final String PROP_MIN = "minimum"; //$NON-NLS-1$
+    public static final String PROP_MIN = "minimum";
 
     /** The maximum input value allowed. */
-    public static final String PROP_MAX = "maximum"; //$NON-NLS-1$
+    public static final String PROP_MAX = "maximum";
 
     /** Load limit from PV. */
-    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv"; //$NON-NLS-1$
+    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv";
 
     /** Load limit from PV. */
-    public static final String PROP_DATETIME_FORMAT = "datetime_format"; //$NON-NLS-1$
+    public static final String PROP_DATETIME_FORMAT = "datetime_format";
 
     /** Load limit from PV. */
-    public static final String PROP_SELECTOR_TYPE = "selector_type"; //$NON-NLS-1$
+    public static final String PROP_SELECTOR_TYPE = "selector_type";
 
     /** Load limit from PV. */
-    public static final String PROP_FILE_SOURCE = "file_source"; //$NON-NLS-1$
+    public static final String PROP_FILE_SOURCE = "file_source";
 
     /** Load limit from PV. */
-    public static final String PROP_FILE_RETURN_PART = "file_return_part"; //$NON-NLS-1$
+    public static final String PROP_FILE_RETURN_PART = "file_return_part";
 
     /** Allow multi-line input. */
-    public static final String PROP_MULTILINE_INPUT = "multiline_input"; //$NON-NLS-1$
+    public static final String PROP_MULTILINE_INPUT = "multiline_input";
 
     /** The default value of the minimum property. */
     private static final double DEFAULT_MIN = Double.NEGATIVE_INFINITY;
@@ -91,22 +91,22 @@ public class TextInputModel extends TextUpdateModel {
     private static final double DEFAULT_MAX = Double.POSITIVE_INFINITY;
 
     /** The message which will be shown on confirm dialog. */
-    public static final String PROP_CONFIRM_MESSAGE = "confirm_message"; //$NON-NLS-1$
+    public static final String PROP_CONFIRM_MESSAGE = "confirm_message";
 
     //Properties for native text
-    public static final String PROP_SHOW_NATIVE_BORDER = "show_native_border"; //$NON-NLS-1$
+    public static final String PROP_SHOW_NATIVE_BORDER = "show_native_border";
 
-    public static final String PROP_PASSWORD_INPUT = "password_input"; //$NON-NLS-1$
+    public static final String PROP_PASSWORD_INPUT = "password_input";
 
-    public static final String PROP_READ_ONLY = "read_only"; //$NON-NLS-1$
+    public static final String PROP_READ_ONLY = "read_only";
 
-    public static final String PROP_SHOW_H_SCROLL = "show_h_scroll"; //$NON-NLS-1$
+    public static final String PROP_SHOW_H_SCROLL = "show_h_scroll";
 
-    public static final String PROP_SHOW_V_SCROLL = "show_v_scroll"; //$NON-NLS-1$
+    public static final String PROP_SHOW_V_SCROLL = "show_v_scroll";
 
-    public static final String PROP_NEXT_FOCUS = "next_focus"; //$NON-NLS-1$
+    public static final String PROP_NEXT_FOCUS = "next_focus";
 
-    public static final String PROP_STYLE = "style"; //$NON-NLS-1$
+    public static final String PROP_STYLE = "style";
 
     public TextInputModel() {
         setSize(100, 25);
@@ -115,7 +115,7 @@ public class TextInputModel extends TextUpdateModel {
 
     @Override
     public String getTypeID() {
-        return "org.csstudio.opibuilder.widgets.TextInput"; //$NON-NLS-1$;
+        return "org.csstudio.opibuilder.widgets.TextInput";;
     }
 
 
@@ -139,7 +139,7 @@ public class TextInputModel extends TextUpdateModel {
                 WidgetPropertyCategory.Behavior, false));
 
         addProperty(new StringProperty(PROP_DATETIME_FORMAT, "Datetime Format",
-                WidgetPropertyCategory.Display, "yyyy-MM-dd HH:mm:ss")); //$NON-NLS-1$
+                WidgetPropertyCategory.Display, "yyyy-MM-dd HH:mm:ss"));
         addProperty(new ComboProperty(PROP_SELECTOR_TYPE, "Selector Type",
                 WidgetPropertyCategory.Display, SelectorType.stringValues(), SelectorType.NONE.ordinal()));
         addProperty(new ComboProperty(PROP_FILE_SOURCE, "File Source",
@@ -148,7 +148,7 @@ public class TextInputModel extends TextUpdateModel {
                 WidgetPropertyCategory.Display, FileReturnPart.stringValues(), FileReturnPart.FULL_PATH.ordinal()));
 
         addProperty(new StringProperty(PROP_CONFIRM_MESSAGE, "Confirm Message",
-                WidgetPropertyCategory.Behavior, "", true));    //$NON-NLS-1$
+                WidgetPropertyCategory.Behavior, "", true));   
 
         addProperty(new BooleanProperty(PROP_SHOW_NATIVE_BORDER, "Show Native Border",
                 WidgetPropertyCategory.Display, true));
@@ -170,7 +170,7 @@ public class TextInputModel extends TextUpdateModel {
         setPropertyVisible(PROP_WRAP_WORDS, false);
         setPropertyVisible(PROP_ALIGN_V,false);
 
-        setText(""); //$NON-NLS-1$
+        setText("");
         setPropertyValue(PROP_BORDER_STYLE, BorderStyle.LOWERED.ordinal());
         setPropertyValue(PROP_BORDER_ALARMSENSITIVE, false);
     }
@@ -184,9 +184,9 @@ public class TextInputModel extends TextUpdateModel {
     public void processVersionDifference(Version boyVersionOnFile) {
         super.processVersionDifference(boyVersionOnFile);
         if(boyVersionOnFile.compareTo(VERSION_BEFORE_STYLE)<0){
-            if(getWidgetType().equals("Text") || //$NON-NLS-1$
-                    getWidgetType().equals("Native Text")){ //$NON-NLS-1$
-                setPropertyValue(PROP_WIDGET_TYPE, "Text Input"); //$NON-NLS-1$
+            if(getWidgetType().equals("Text") ||
+                    getWidgetType().equals("Native Text")){
+                setPropertyValue(PROP_WIDGET_TYPE, "Text Input");
                 setPropertyValue(PROP_STYLE, Style.NATIVE.ordinal());
             }
         }
@@ -277,7 +277,7 @@ public class TextInputModel extends TextUpdateModel {
                 @Override
                 public Object getInfo(String key) {
                     //get the propID that should be unique when it is put in an array
-                    if(key.equals(ArrayModel.ARRAY_UNIQUEPROP_ID)) //$NON-NLS-1$
+                    if(key.equals(ArrayModel.ARRAY_UNIQUEPROP_ID))
                         return Arrays.asList(PROP_TEXT);
                     return null;
                 }

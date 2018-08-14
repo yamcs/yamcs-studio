@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TextInputEditpart extends TextUpdateEditPart {
 
-    private static final char SPACE = ' '; // $NON-NLS-1$
+    private static final char SPACE = ' ';
     private static DecimalFormat DECIMAL_FORMAT = new DecimalFormat();
     private IPVListener pvLoadLimitsListener;
     private org.diirt.vtype.Display meta = null;
@@ -279,7 +279,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
      * @throws ParseException
      */
     private Object parseStringArray(final String text) throws ParseException {
-        String[] texts = text.split(" +"); //$NON-NLS-1$
+        String[] texts = text.split(" +");
         VType pvValue = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
         if (pvValue instanceof VNumberArray) {
             double[] result = new double[texts.length];
@@ -430,7 +430,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
         if (text.contains("\n") && !text.endsWith("\n")) {
             throw new ParseException(NLS.bind("{0} cannot be parsed to double", text), text.indexOf("\n"));
         }
-        double value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue(); // $NON-NLS-1$
+        double value = DECIMAL_FORMAT.parse(text.replace('e', 'E')).doubleValue();
         if (coerce) {
             double min = getWidgetModel().getMinimum();
             double max = getWidgetModel().getMaximum();
@@ -451,7 +451,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
         if (text.startsWith(TextUpdateEditPart.HEX_PREFIX)) {
             valueText = text.substring(TextUpdateEditPart.HEX_PREFIX.length());
         }
-        if (valueText.contains(" ")) { //$NON-NLS-1$
+        if (valueText.contains(" ")) {
             valueText = valueText.substring(0, valueText.indexOf(SPACE));
         }
         long i = Long.parseLong(valueText, 16);

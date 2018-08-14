@@ -18,21 +18,21 @@ public class DisplayScaleData extends AbstractComplexData {
      * Automatically scale all widgets when display resizes. The scale behavior of
      * each widget is determined by its scale options property.
      */
-    public final static String PROP_AUTO_SCALE_WIDGETS = "auto_scale_widgets"; //$NON-NLS-1$
+    public final static String PROP_AUTO_SCALE_WIDGETS = "auto_scale_widgets";
     /**
      * The minimum height of the display to be allowed after scaling.
      * The display will stop scaling height if height of the display
      * after scaled will be less than this value. It will use display's original height as
      * minimum height if this is set to -1.
      */
-    public final static String PROP_MIN_HEIGHT = "min_height"; //$NON-NLS-1$
+    public final static String PROP_MIN_HEIGHT = "min_height";
     /**
      * The minimum width of the display to be allowed after scaling.
      * The display will stop scaling width if height of the display
      * after scaled will be less than this value. It will use display's original width as
      * minimum width if this is set to -1.
      */
-    public final static String PROP_MIN_WIDTH = "min_width"; //$NON-NLS-1$
+    public final static String PROP_MIN_WIDTH = "min_width";
 
 
     @Override
@@ -64,7 +64,7 @@ public class DisplayScaleData extends AbstractComplexData {
 
     @Override
     public String toString() {
-        return ""+isAutoScaleWidgets() + " " + getMinimumWidth() + //$NON-NLS-1$ //$NON-NLS-2$
-                " " +getMinimumHeight(); //$NON-NLS-1$
+        return ""+isAutoScaleWidgets() + " " + getMinimumWidth() +
+                " " +getMinimumHeight();
     }
 }

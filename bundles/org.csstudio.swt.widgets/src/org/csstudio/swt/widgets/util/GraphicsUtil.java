@@ -42,8 +42,8 @@ public class GraphicsUtil {
     public static boolean useAdvancedGraphics() {
         if(!Preferences.useAdvancedGraphics())
             return false;
-        String value = System.getProperty(Preferences.PROHIBIT_ADVANCED_GRAPHICS); //$NON-NLS-1$
-        if(value != null && value.equals("true")) //$NON-NLS-1$
+        String value = System.getProperty(Preferences.PROHIBIT_ADVANCED_GRAPHICS);
+        if(value != null && value.equals("true"))
             return false;
         return true;
     }

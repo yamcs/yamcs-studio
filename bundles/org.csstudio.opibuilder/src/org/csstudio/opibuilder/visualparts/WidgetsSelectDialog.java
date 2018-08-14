@@ -55,7 +55,7 @@ public class WidgetsSelectDialog extends Dialog {
         this.widgetCount = widgetCount;
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
-        defaultSelectedWidgetID = "org.csstudio.opibuilder.widgets.TextUpdate"; //$NON-NLS-1$
+        defaultSelectedWidgetID = "org.csstudio.opibuilder.widgets.TextUpdate";
         this.onlyPVWidgets = onlyPVWidgets;
     }
 
@@ -119,7 +119,7 @@ public class WidgetsSelectDialog extends Dialog {
 
             Label messageLabel = new Label(bottomComposite, SWT.WRAP);
             messageLabel.setText(widgetCount + " widgets will be created." +
-                    (widgetCount > 20 ? " It may take a while to create them." :"")); //$NON-NLS-2$
+                    (widgetCount > 20 ? " It may take a while to create them." :""));
         }
 
 

@@ -86,7 +86,7 @@ public class ImageBoolIndicatorModel extends AbstractBoolWidgetModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.ImageBoolIndicator"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.ImageBoolIndicator";
 
     @Override
     public String getTypeID() {

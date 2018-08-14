@@ -113,7 +113,7 @@ public class ActionsInputDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Actions.html"; //$NON-NLS-1$; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Actions.html";;
     }
 
     /**

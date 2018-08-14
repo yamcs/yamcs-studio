@@ -30,7 +30,7 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.linkingContainer"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.linkingContainer";
 
     /**
      * Versions before this didn't have an updated resize behaviour.
@@ -57,24 +57,24 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
     /**
      * The ID of the resource property.
      */
-    public static final String PROP_OPI_FILE = "opi_file"; //$NON-NLS-1$
+    public static final String PROP_OPI_FILE = "opi_file";
 
     /**
      * The ID of the auto zoom property.
      */
     @Deprecated
-    public static final String PROP_ZOOMTOFITALL = "zoom_to_fit"; //$NON-NLS-1$
+    public static final String PROP_ZOOMTOFITALL = "zoom_to_fit";
 
     /**
      *  The ID of the auto scale property.
      */
     @Deprecated
-    public static final String PROP_AUTO_SIZE = "auto_size"; //$NON-NLS-1$
+    public static final String PROP_AUTO_SIZE = "auto_size";
 
     /**
      * How the widget should behave when the contents is not the same size as the widget.
      */
-    public static final String PROP_RESIZE_BEHAVIOUR = "resize_behaviour"; //$NON-NLS-1$
+    public static final String PROP_RESIZE_BEHAVIOUR = "resize_behaviour";
 
     /**
      * The default value of the height property.

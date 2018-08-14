@@ -35,7 +35,7 @@ public final class Messages extends NLS {
     /**
      * The bundle name of the localization messages ressources.
      */
-    private static final String BUNDLE_NAME = "org.csstudio.ui.util.internal.localization.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.csstudio.ui.util.internal.localization.messages";
 
     public static String AuthenticationPreferencePage_LOGIN_ON_STARTUP_OFFSITE;
 

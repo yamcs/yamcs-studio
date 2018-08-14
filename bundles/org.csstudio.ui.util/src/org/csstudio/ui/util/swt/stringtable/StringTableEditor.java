@@ -43,10 +43,10 @@ public class StringTableEditor extends Composite
         DROPDOWN
     }
 
-    private static final String DELETE = "delete"; //$NON-NLS-1$
-    private static final String DOWN = "down"; //$NON-NLS-1$
-    private static final String UP = "up"; //$NON-NLS-1$
-    private static final String EDIT = "edit"; //$NON-NLS-1$
+    private static final String DELETE = "delete";
+    private static final String DOWN = "down";
+    private static final String UP = "up";
+    private static final String EDIT = "edit";
     private final TableViewer tableViewer;
     private final static ImageRegistry images = new ImageRegistry();
     private Button editButton;
@@ -56,10 +56,10 @@ public class StringTableEditor extends Composite
 
     static {
         // Buttons: edit/up/down/delete
-        images.put(EDIT, Activator.getImageDescriptor("icons/edit.gif")); //$NON-NLS-1$
-        images.put(UP, Activator.getImageDescriptor("icons/up.gif")); //$NON-NLS-1$
-        images.put(DOWN, Activator.getImageDescriptor("icons/down.gif")); //$NON-NLS-1$
-        images.put(DELETE, Activator.getImageDescriptor("icons/delete.gif")); //$NON-NLS-1$
+        images.put(EDIT, Activator.getImageDescriptor("icons/edit.gif"));
+        images.put(UP, Activator.getImageDescriptor("icons/up.gif"));
+        images.put(DOWN, Activator.getImageDescriptor("icons/down.gif"));
+        images.put(DELETE, Activator.getImageDescriptor("icons/delete.gif"));
     }
 
     /** Creates an editable table.  The size of headers array implies the number of columns.
@@ -111,7 +111,7 @@ public class StringTableEditor extends Composite
         }
         if (editableArray.length != table_columns ||
             columnsMinWidth.length != table_columns)
-            throw new Error("Inconsistent table column count"); //$NON-NLS-1$
+            throw new Error("Inconsistent table column count");
 
         // StringTableEditor itself is a Composite that contains 2 columns:
         // Left column: Table
@@ -256,7 +256,7 @@ public class StringTableEditor extends Composite
 
                 if(index == StringTableContentProvider.ADD_ELEMENT) {
                     String[] emptyData = new String[numColumns];
-                    Arrays.fill(emptyData, ""); //$NON-NLS-1$
+                    Arrays.fill(emptyData, "");
                     rowEditDialog.setRowData(emptyData);
                 }else
                     rowEditDialog.setRowData(items.get(index));

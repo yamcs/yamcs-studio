@@ -142,7 +142,7 @@ public class ColorMapEditDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Widgets/IntensityGraph.html#colorMap"; //$NON-NLS-1$; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Widgets/IntensityGraph.html#colorMap";;
     }
 
     @Override
@@ -225,12 +225,12 @@ public class ColorMapEditDialog extends HelpTrayDialog {
         autoScaleCheckBox.setSelection(autoScale);
         autoScaleCheckBox.setText("Auto Scale");
         autoScaleCheckBox.setToolTipText("Scale the color map values to the range of" +
-                " (" + min + ", " + max + ")." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                " (" + min + ", " + max + ")." );
 
         Group group = new Group(rightComposite, SWT.None);
         group.setLayoutData(new GridData(SWT.FILL, SWT.END, true, true));
         group.setLayout(new GridLayout(2, false));
-        group.setText("Output" + " (" + min + "~" + max + ")" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-3$
+        group.setText("Output" + " (" + min + "~" + max + ")" );
 
         colorMapLabel = new Label(group, SWT.None);
         colorMapLabel.setLayoutData(new GridData(SWT.FILL, SWT.END, true, true));
@@ -575,7 +575,7 @@ public class ColorMapEditDialog extends HelpTrayDialog {
         @Override
         protected void setValue(Object element, Object value) {
             if(element instanceof ColorTuple){
-                String s = value == null ? "0" : value.toString(); //$NON-NLS-1$
+                String s = value == null ? "0" : value.toString();
                 try {
                     ((ColorTuple)element).value = Double.parseDouble(s);
                     getViewer().refresh();

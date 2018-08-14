@@ -231,11 +231,11 @@ public class TankFigure extends AbstractLinearMarkedFigure {
     static class TankLayout extends AbstractLayout {
 
         /** Used as a constraint for the scale. */
-        public static final String SCALE = "scale"; //$NON-NLS-1$
+        public static final String SCALE = "scale";
         /** Used as a constraint for the pipe indicator. */
-        public static final String TANK = "tank"; //$NON-NLS-1$
+        public static final String TANK = "tank";
         /** Used as a constraint for the alarm ticks */
-        public static final String MARKERS = "markers"; //$NON-NLS-1$
+        public static final String MARKERS = "markers";
         private LinearScale scale;
         private LinearScaledMarker marker;
         private Tank tank;

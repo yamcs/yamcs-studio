@@ -109,13 +109,13 @@ public class TextInputFigure extends TextFigure {
 
 
     private static final Image
-    openFileImg = createImage("icons/openFile.png"), //$NON-NLS-1$
-    calendarImg = createImage("icons/calendar.gif"); //$NON-NLS-1$
+    openFileImg = createImage("icons/openFile.png"),
+    calendarImg = createImage("icons/calendar.gif");
 
     private static final int SELECTOR_WIDTH = 25;
 
 
-    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss"; //$NON-NLS-1$
+    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
     private Date dateTime;
 

@@ -24,34 +24,34 @@ public class FontProperty extends AbstractWidgetProperty {
     /**
      * XML attribute name <code>font</code>.
      */
-    public static final String XML_ELEMENT_FONT = "fontdata"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_FONT = "fontdata";
 
 
     /**
      * XML attribute name <code>fontName</code>.
      */
-    public static final String XML_ELEMENT_FONTNAME= "opifont.name"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_FONTNAME= "opifont.name";
 
 
     /**
      * XML attribute name <code>fontName</code>.
      */
-    public static final String XML_ATTRIBUTE_FONT_NAME = "fontName"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_FONT_NAME = "fontName";
 
     /**
      * XML attribute name <code>fontName</code>.
      */
-    public static final String XML_ATTRIBUTE_FONT_HEIGHT = "height"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_FONT_HEIGHT = "height";
 
     /**
      * XML attribute name <code>fontName</code>.
      */
-    public static final String XML_ATTRIBUTE_FONT_STYLE = "style"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_FONT_STYLE = "style";
 
     public static final String XML_ATTRIBUTE_FONT_PIXELS = "pixels";
 
 
-    private static final String QUOTE = "\""; //$NON-NLS-1$
+    private static final String QUOTE = "\"";
 
 
     /**Font Property Constructor. The property value type is {@link OPIFont}.
@@ -129,9 +129,9 @@ public class FontProperty extends AbstractWidgetProperty {
         FontData fontData = opiFont.getRawFontData();
         fontElement.setAttribute(XML_ATTRIBUTE_FONT_NAME, fontData.getName());
         fontElement.setAttribute(XML_ATTRIBUTE_FONT_HEIGHT,
-                "" + fontData.getHeight()); //$NON-NLS-1$
+                "" + fontData.getHeight());
         fontElement.setAttribute(XML_ATTRIBUTE_FONT_STYLE,
-                "" + fontData.getStyle()); //$NON-NLS-1$
+                "" + fontData.getStyle());
         fontElement.setAttribute(XML_ATTRIBUTE_FONT_PIXELS, "" + opiFont.isSizeInPixels());
 
         propElement.addContent(fontElement);

@@ -273,7 +273,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart{
         LinkedHashMap<String,String> map = new LinkedHashMap<>();
         AbstractContainerModel loadTarget = displayModel;
 
-        if(!widgetModel.getGroupName().trim().equals("")){ //$NON-NLS-1$
+        if(!widgetModel.getGroupName().trim().equals("")){
             AbstractWidgetModel group =
                 displayModel.getChildByName(widgetModel.getGroupName());
             if(group != null && group instanceof AbstractContainerModel){
@@ -438,7 +438,7 @@ public class LinkingContainerEditpart extends AbstractLinkingContainerEditpart{
             @Override
             public boolean testAttribute(Object target, String name,
                     String value) {
-                if (name.equals("allowAutoSize") && value.equals("TRUE")) //$NON-NLS-1$ //$NON-NLS-2$
+                if (name.equals("allowAutoSize") && value.equals("TRUE"))
                     return getExecutionMode()==ExecutionMode.EDIT_MODE;
                 return super.testAttribute(target, name, value);
             }

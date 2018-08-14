@@ -80,7 +80,6 @@ import static org.csstudio.ui.util.ReflectUtil.*;
  * @author Gabriele Carcassi
  * @author Kay Kasemir
  */
-@SuppressWarnings("nls")
 abstract public class ControlSystemDragSource {
     final private DragSource source;
 

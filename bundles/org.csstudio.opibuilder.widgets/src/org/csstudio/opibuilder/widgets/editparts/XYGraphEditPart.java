@@ -329,7 +329,7 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             axis.setYAxis((Boolean) newValue);
             break;
         case SCALE_FORMAT:
-            if (((String) newValue).trim().equals("")) { //$NON-NLS-1$
+            if (((String) newValue).trim().equals("")) {
                 if (!axis.isDateEnabled()) {
                     axis.setAutoFormat(true);
                 }

@@ -28,17 +28,17 @@ public class LabelModel extends AbstractPVWidgetModel implements ITextModel{
     /**
      * The ID of the text property.
      */
-    public static final String PROP_TEXT= "text"; //$NON-NLS-1$
+    public static final String PROP_TEXT= "text";
     /** The ID of the <i>transparent</i> property. */
-    public static final String PROP_TRANSPARENT = "transparent";    //$NON-NLS-1$
+    public static final String PROP_TRANSPARENT = "transparent";   
 
     /** The ID of the <i>Auto Size</i> property. */
-    public static final String PROP_AUTOSIZE = "auto_size";    //$NON-NLS-1$
+    public static final String PROP_AUTOSIZE = "auto_size";   
 
-    public static final String PROP_ALIGN_H = "horizontal_alignment";    //$NON-NLS-1$
-    public static final String PROP_ALIGN_V = "vertical_alignment";    //$NON-NLS-1$
-    public static final String PROP_WRAP_WORDS = "wrap_words"; //$NON-NLS-1$
-    public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar"; //$NON-NLS-1$
+    public static final String PROP_ALIGN_H = "horizontal_alignment";   
+    public static final String PROP_ALIGN_V = "vertical_alignment";   
+    public static final String PROP_WRAP_WORDS = "wrap_words";
+    public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar";
     protected boolean pvModel = false;
 
     public LabelModel() {
@@ -87,7 +87,7 @@ public class LabelModel extends AbstractPVWidgetModel implements ITextModel{
 
     @Override
     public String getTypeID() {
-        return "org.csstudio.opibuilder.widgets.Label"; //$NON-NLS-1$
+        return "org.csstudio.opibuilder.widgets.Label";
     }
 
     @Override

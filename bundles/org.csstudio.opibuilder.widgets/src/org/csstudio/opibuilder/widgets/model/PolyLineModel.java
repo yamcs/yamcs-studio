@@ -31,14 +31,14 @@ public class PolyLineModel extends AbstractPolyModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.polyline"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.polyline";
 
 
     public static final String PROP_ARROW = "arrows";//$NON-NLS-1$
 
-    public static final String PROP_FILL_ARROW = "fill_arrow"; //$NON-NLS-1$
+    public static final String PROP_FILL_ARROW = "fill_arrow";
 
-    public static final String PROP_ARROW_LENGTH = "arrow_length"; //$NON-NLS-1$
+    public static final String PROP_ARROW_LENGTH = "arrow_length";
 
     public PolyLineModel() {
         setLineWidth(1);

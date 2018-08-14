@@ -27,15 +27,15 @@ public class ScrollBarFigureLayout
 {
 
 /** Used as a constraint for the up arrow figure. */
-public static final String UP_ARROW   = "up arrow";   //$NON-NLS-1$
+public static final String UP_ARROW   = "up arrow";  
 /** Used as a constraint for the down arrow figure. */
-public static final String DOWN_ARROW = "down arrow"; //$NON-NLS-1$
+public static final String DOWN_ARROW = "down arrow";
 /** Used as a constraint for the thumb figure. */
-public static final String THUMB      = "thumb";      //$NON-NLS-1$
+public static final String THUMB      = "thumb";     
 /** Used as a constraint for the page up figure. */
-public static final String PAGE_UP    = "page_up";    //$NON-NLS-1$
+public static final String PAGE_UP    = "page_up";   
 /** Used as a constraint for the page down figure. */
-public static final String PAGE_DOWN  = "page_down";  //$NON-NLS-1$
+public static final String PAGE_DOWN  = "page_down"; 
 
 IFigure up, down, thumb, pageUp, pageDown;
 

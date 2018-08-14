@@ -32,7 +32,7 @@ public class TipDialog extends MessageDialog {
     public TipDialog(Shell parentShell, int kind, String dialogTitle,
             String dialogMessage) {
         super(parentShell, dialogTitle, null, dialogMessage,
-                kind, getButtonLabels(kind), 0); //$NON-NLS-1$
+                kind, getButtonLabels(kind), 0);
     }
 
     public TipDialog(Shell parentShell, String dialogTitle,
@@ -89,7 +89,7 @@ public class TipDialog extends MessageDialog {
         }
         default: {
             throw new IllegalArgumentException(
-                    "Illegal value for kind in MessageDialog.open()"); //$NON-NLS-1$
+                    "Illegal value for kind in MessageDialog.open()");
         }
         }
         return dialogButtonLabels;

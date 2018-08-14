@@ -189,8 +189,8 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
     /**
      * The file extension for OPI files.
      */
-    public static final String OPI_FILE_EXTENSION = "opi"; //$NON-NLS-1$
-    public static final String ID = "org.csstudio.opibuilder.OPIEditor"; //$NON-NLS-1$
+    public static final String OPI_FILE_EXTENSION = "opi";
+    public static final String ID = "org.csstudio.opibuilder.OPIEditor";
 
     private PaletteRoot paletteRoot;
 
@@ -365,8 +365,8 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
             }
         }
         if (selectedWidgets.size() == 1) {
-            statusLine.setMessage(selectedWidgets.get(0).getWidgetModel().getName() + "(" //$NON-NLS-1$
-                    + selectedWidgets.get(0).getWidgetModel().getType() + ")"); //$NON-NLS-1$
+            statusLine.setMessage(selectedWidgets.get(0).getWidgetModel().getName() + "("
+                    + selectedWidgets.get(0).getWidgetModel().getType() + ")");
         } else if (selectedWidgets.size() >= 1) {
             statusLine.setMessage(selectedWidgets.size() + " widgets were selected");
         } else {
@@ -393,7 +393,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         super.createActions();
 
         ((IContextService) getEditorSite().getService(IContextService.class))
-                .activateContext("org.csstudio.opibuilder.opiEditor"); //$NON-NLS-1$
+                .activateContext("org.csstudio.opibuilder.opiEditor");
 
         ActionRegistry registry = getActionRegistry();
         IAction action;
@@ -415,7 +415,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
         String id = ActionFactory.DELETE.getId();
         action = getActionRegistry().getAction(id);
-        action.setActionDefinitionId("org.eclipse.ui.edit.delete"); //$NON-NLS-1$
+        action.setActionDefinitionId("org.eclipse.ui.edit.delete");
 
         action = new PasteWidgetsAction(this);
         registry.registerAction(action);
@@ -639,7 +639,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         } catch (CoreException e) {
             MessageDialog.openError(getSite().getShell(), "IO Error", e
                     .getMessage());
-            OPIBuilderPlugin.getLogger().log(Level.WARNING, "File save error", e); //$NON-NLS-1$
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, "File save error", e);
         }
     }
 
@@ -701,12 +701,12 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                     MessageDialog.openError(getSite().getShell(),
                             "IO Error", e1.getMessage());
                     OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                            "File open error", e1); //$NON-NLS-1$
+                            "File open error", e1);
                 } catch (CoreException e2) {
                     MessageDialog.openError(getSite().getShell(),
                             "Core Error", e2.getMessage());
                     OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                            "File open error", e2); //$NON-NLS-1$
+                            "File open error", e2);
                 }
             };
         }
@@ -902,7 +902,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         GraphicalViewer viewer = getGraphicalViewer();
 
         PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(),
-                "org.csstudio.opibuilder.opi_editor"); //$NON-NLS-1$
+                "org.csstudio.opibuilder.opi_editor");
 
         viewer.setContents(displayModel);
         displayModel.setViewer(viewer);
@@ -924,7 +924,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         try {
             String content = XMLUtil.XML_HEADER + XMLUtil.widgetToXMLString(displayModel, true);
             if (getEditorInput() instanceof FileEditorInput) {
-                InputStream in = new ByteArrayInputStream(content.getBytes("UTF-8")); //$NON-NLS-1$
+                InputStream in = new ByteArrayInputStream(content.getBytes("UTF-8"));
                 try {
                     IFile file = ((FileEditorInput) getEditorInput()).getFile();
                     file.setContents(
@@ -943,7 +943,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                             .toFile();
 
                     BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(new FileOutputStream(file), "UTF-8")); //$NON-NLS-1$
+                            new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
                     writer.write(content);
                     writer.flush();
                     writer.close();
@@ -972,7 +972,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                 "Save Failed!", e.getMessage() +
                         "\nThe original file might be deleted, moved or renamed. " +
                         "Please use File->Save as... to save this file.");
-        OPIBuilderPlugin.getLogger().log(Level.WARNING, "File save failed", e); //$NON-NLS-1$
+        OPIBuilderPlugin.getLogger().log(Level.WARNING, "File save failed", e);
     }
 
     protected FigureCanvas getFigureCanvas() {
@@ -1037,7 +1037,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
             };
             getViewer().setContextMenu(provider);
             getSite().registerContextMenu(
-                    "org.csstudio.opibuilder.outline.contextmenu", //$NON-NLS-1$
+                    "org.csstudio.opibuilder.outline.contextmenu",
                     provider, this);
             getSite().setSelectionProvider(getViewer());
             getViewer().setKeyHandler(getCommonKeyHandler());
@@ -1063,7 +1063,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
             };
             showOutlineAction.setImageDescriptor(
                     OPIBuilderPlugin.imageDescriptorFromPlugin(
-                            OPIBuilderPlugin.PLUGIN_ID, "icons/tree_mode.gif")); //$NON-NLS-1$
+                            OPIBuilderPlugin.PLUGIN_ID, "icons/tree_mode.gif"));
             showOutlineAction.setToolTipText("Show Tree View ");
             tbm.add(showOutlineAction);
             showOverviewAction = new Action() {
@@ -1074,7 +1074,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
             };
             showOverviewAction.setImageDescriptor(
                     OPIBuilderPlugin.imageDescriptorFromPlugin(
-                            OPIBuilderPlugin.PLUGIN_ID, "icons/overview.gif")); //$NON-NLS-1$
+                            OPIBuilderPlugin.PLUGIN_ID, "icons/overview.gif"));
             showOverviewAction.setToolTipText("Show Overview");
             tbm.add(showOverviewAction);
             showPage(ID_OUTLINE);

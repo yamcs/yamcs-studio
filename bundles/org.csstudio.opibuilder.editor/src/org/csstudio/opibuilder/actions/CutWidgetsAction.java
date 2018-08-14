@@ -25,7 +25,7 @@ public class CutWidgetsAction extends CopyWidgetsAction {
         super(part);
         this.deleteAction = deleteAction;
         setText("Cut");
-        setActionDefinitionId("org.eclipse.ui.edit.cut"); //$NON-NLS-1$
+        setActionDefinitionId("org.eclipse.ui.edit.cut");
         setId(ActionFactory.CUT.getId());
         ISharedImages sharedImages =
             part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();

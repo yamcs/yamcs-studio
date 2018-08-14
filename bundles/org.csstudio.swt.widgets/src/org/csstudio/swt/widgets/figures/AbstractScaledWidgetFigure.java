@@ -45,7 +45,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
 
     protected boolean logScale = false;
 
-    protected String valueLabelFormat = ""; //$NON-NLS-1$
+    protected String valueLabelFormat = "";
 
     @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
@@ -124,7 +124,7 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
      * @return the value text after format.
      */
     public String getValueText() {
-        if (valueLabelFormat.trim().equals("")) { //$NON-NLS-1$
+        if (valueLabelFormat.trim().equals("")) {
             return getScale().format(getValue());
         } else {
             return new DecimalFormat(valueLabelFormat).format(getValue());

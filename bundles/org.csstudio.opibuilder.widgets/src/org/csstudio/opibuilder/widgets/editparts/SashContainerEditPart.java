@@ -133,7 +133,7 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
         installEditPolicy(EditPolicy.LAYOUT_ROLE, null);
 
         //the snap feedback effect
-        installEditPolicy("Snap Feedback", null); //$NON-NLS-1$
+        installEditPolicy("Snap Feedback", null);
         if(getExecutionMode() == ExecutionMode.EDIT_MODE)
             installEditPolicy(DropPVtoPVWidgetEditPolicy.DROP_PV_ROLE, null);
 

@@ -31,9 +31,9 @@ import org.osgi.framework.Version;
 public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel{
 
     public enum ArrayDataType {
-        DOUBLE_ARRAY("double[]"), //$NON-NLS-1$
-        STRING_ARRAY("String[]"),        //$NON-NLS-1$
-        INT_ARRAY("int[]"),        //$NON-NLS-1$
+        DOUBLE_ARRAY("double[]"),
+        STRING_ARRAY("String[]"),       
+        INT_ARRAY("int[]"),       
         BYTE_ARRAY("byte[]"),//$NON-NLS-1$
         LONG_ARRAY("long[]"),//$NON-NLS-1$
         SHORT_ARRAY("short[]"),//$NON-NLS-1$
@@ -63,33 +63,33 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.array"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.array";
 
     /**
      * The key to get unique propId info from other widgets.
      */
-    public static final String ARRAY_UNIQUEPROP_ID = "array.uniquePropId.List"; //$NON-NLS-1$
+    public static final String ARRAY_UNIQUEPROP_ID = "array.uniquePropId.List";
 
     /**
      * Array Length
      */
-    public static final String PROP_ARRAY_LENGTH= "array_length"; //$NON-NLS-1$
+    public static final String PROP_ARRAY_LENGTH= "array_length";
 
     /**
      * If the array widget is layoutted in horizontal.
      */
-    public static final String PROP_HORIZONTAL= "horizontal"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL= "horizontal";
 
 
-    public static final String PROP_SHOW_SPINNER = "show_spinner"; //$NON-NLS-1$
+    public static final String PROP_SHOW_SPINNER = "show_spinner";
 
-    public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar"; //$NON-NLS-1$
+    public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar";
 
-    public static final String PROP_SPINNER_WIDTH = "spinner_width"; //$NON-NLS-1$
+    public static final String PROP_SPINNER_WIDTH = "spinner_width";
 
-    public static final String PROP_VISIBLE_ELEMENTS_COUNT = "vec"; //$NON-NLS-1$
+    public static final String PROP_VISIBLE_ELEMENTS_COUNT = "vec";
 
-    public static final String PROP_DATA_TYPE = "data_type"; //$NON-NLS-1$
+    public static final String PROP_DATA_TYPE = "data_type";
 
     private PVWidgetModelDelegate delegate;
 

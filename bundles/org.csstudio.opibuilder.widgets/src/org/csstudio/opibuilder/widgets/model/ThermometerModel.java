@@ -25,19 +25,19 @@ import org.eclipse.swt.graphics.RGB;
 public class ThermometerModel extends AbstractMarkedWidgetModel{
 
     /** The ID of the fill color property. */
-    public static final String PROP_FILL_COLOR = "fill_color"; //$NON-NLS-1$
+    public static final String PROP_FILL_COLOR = "fill_color";
 
     /** The ID of the fillcolor alarm sensitive property. */
-    public static final String PROP_FILLCOLOR_ALARM_SENSITIVE = "fillcolor_alarm_sensitive"; //$NON-NLS-1$
+    public static final String PROP_FILLCOLOR_ALARM_SENSITIVE = "fillcolor_alarm_sensitive";
 
     /** The ID of the show minor ticks property. */
-    public static final String PROP_SHOW_BULB = "show_bulb"; //$NON-NLS-1$
+    public static final String PROP_SHOW_BULB = "show_bulb";
 
     /** The ID of the fahrenheit property. */
-    public static final String PROP_UNIT = "unit"; //$NON-NLS-1$
+    public static final String PROP_UNIT = "unit";
 
     /** The ID of the effect 3D property. */
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
     /**
      * The ID of the fillbackground-Color property.
@@ -62,7 +62,7 @@ public class ThermometerModel extends AbstractMarkedWidgetModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.thermometer"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.thermometer";
 
     public ThermometerModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);

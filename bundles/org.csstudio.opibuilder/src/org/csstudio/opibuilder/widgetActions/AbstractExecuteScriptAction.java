@@ -83,7 +83,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
         if (isEmbedded()) {
             return desc;
         }
-        return desc + " " + getPath(); //$NON-NLS-1$
+        return desc + " " + getPath();
     }
 
     /**

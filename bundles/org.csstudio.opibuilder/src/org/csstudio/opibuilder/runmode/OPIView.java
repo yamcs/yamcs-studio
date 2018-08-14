@@ -62,7 +62,6 @@ import org.eclipse.ui.part.ViewPart;
  * @author Xihui Chen - Original author
  * @author Kay Kasemir
  */
-@SuppressWarnings("nls")
 public class OPIView extends ViewPart implements IOPIRuntime {
     /**
      * View ID registered in plugin.xml for use as a 'default' view.
@@ -314,7 +313,7 @@ public class OPIView extends ViewPart implements IOPIRuntime {
         // XML version of memento is written to E4 model.
         // If compatibility layer changes its memento persistence,
         // this will break...
-        final XMLMemento root = XMLMemento.createWriteRoot("view"); //$NON-NLS-1$
+        final XMLMemento root = XMLMemento.createWriteRoot("view");
         saveState(root);
         final StringWriter writer = new StringWriter();
         try {

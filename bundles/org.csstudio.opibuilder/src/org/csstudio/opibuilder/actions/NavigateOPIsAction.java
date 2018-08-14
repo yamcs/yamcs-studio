@@ -133,7 +133,7 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
                     .getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD));
             setDisabledImageDescriptor(sharedImages
                     .getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD_DISABLED));
-            setActionDefinitionId("org.eclipse.ui.navigate.forwardHistory"); //$NON-NLS-1$
+            setActionDefinitionId("org.eclipse.ui.navigate.forwardHistory");
         } else {
             setText("&Back");
             setToolTipText(BACK);
@@ -142,7 +142,7 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
                     .getImageDescriptor(ISharedImages.IMG_TOOL_BACK));
             setDisabledImageDescriptor(sharedImages
                     .getImageDescriptor(ISharedImages.IMG_TOOL_BACK_DISABLED));
-            setActionDefinitionId("org.eclipse.ui.navigate.backwardHistory"); //$NON-NLS-1$
+            setActionDefinitionId("org.eclipse.ui.navigate.backwardHistory");
         }
         setMenuCreator(new MenuCreator());
     }

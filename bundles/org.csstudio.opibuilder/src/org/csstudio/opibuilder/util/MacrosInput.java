@@ -86,7 +86,7 @@ public class MacrosInput {
 
     @Override
     public String toString() {
-        return (include_parent_macros ? "{" + "Parent Macros" + //$NON-NLS-1$
+        return (include_parent_macros ? "{" + "Parent Macros" +
                 "} " : "") + macrosMap.toString();
     }
 
@@ -126,7 +126,7 @@ public class MacrosInput {
         StringBuilder result = new StringBuilder();
         result.append(QUOTE + Boolean.toString(include_parent_macros) + QUOTE);
         for (String key : macrosMap.keySet()) {
-            result.append(ITEM_SEPARATOR + "" + QUOTE + key + //$NON-NLS-1$
+            result.append(ITEM_SEPARATOR + "" + QUOTE + key +
                     MACRO_SEPARATOR + macrosMap.get(key) + QUOTE);
         }
         return result.toString();
@@ -151,7 +151,7 @@ public class MacrosInput {
                 if (macro.length == 2) {
                     macrosInput.getMacrosMap().put(macro[0], macro[1]);
                 } else if (macro.length == 1) {
-                    macrosInput.getMacrosMap().put(macro[0], ""); //$NON-NLS-1$
+                    macrosInput.getMacrosMap().put(macro[0], "");
                 }
             }
         }

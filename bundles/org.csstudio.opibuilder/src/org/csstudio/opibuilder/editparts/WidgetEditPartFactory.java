@@ -52,7 +52,6 @@ public class WidgetEditPartFactory implements EditPartFactory {
         return part;
     }
 
-    @SuppressWarnings("nls")
     private EditPart getPartForModel(Object model){
         if(model instanceof DisplayModel)
             return new DisplayEditpart();

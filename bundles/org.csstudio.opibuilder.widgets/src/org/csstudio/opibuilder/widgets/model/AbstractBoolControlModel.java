@@ -25,16 +25,16 @@ public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
     /**
      * If the button should be a toggle button.
      */
-    public static final String PROP_TOGGLE_BUTTON= "toggle_button"; //$NON-NLS-1$
+    public static final String PROP_TOGGLE_BUTTON= "toggle_button";
 
     /** If a confirm dialog should be shown before performing action. */
-    public static final String PROP_CONFIRM_DIALOG = "show_confirm_dialog"; //$NON-NLS-1$
+    public static final String PROP_CONFIRM_DIALOG = "show_confirm_dialog";
 
     /** The password needed to perform action*/
-    public static final String PROP_PASSWORD = "password"; //$NON-NLS-1$
+    public static final String PROP_PASSWORD = "password";
 
     /** The message which will be shown on confirm dialog. */
-    public static final String PROP_CONFIRM_TIP = "confirm_message"; //$NON-NLS-1$
+    public static final String PROP_CONFIRM_TIP = "confirm_message";
 
 
     public static final String DEFAULT_CONFIRM_TIP = "Are you sure you want to do this?";
@@ -43,14 +43,14 @@ public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
      * The action which will be executed when widget is pushed. It is the index the actions in
      * actions property.
      */
-    public static final String PROP_PUSH_ACTION_INDEX = "push_action_index"; //$NON-NLS-1$
+    public static final String PROP_PUSH_ACTION_INDEX = "push_action_index";
 
 
     /**
      * The action which will be executed when widget is released. It is the index the action in
      * actions property.
      */
-    public static final String PROP_RELEASED_ACTION_INDEX = "released_action_index"; //$NON-NLS-1$
+    public static final String PROP_RELEASED_ACTION_INDEX = "released_action_index";
 
     private static final boolean DEFAULT_TOGGLE_BUTTON = true;
 
@@ -75,7 +75,7 @@ public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.sns.widgets.LED"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.sns.widgets.LED";
 
     @Override
     public String getTypeID() {

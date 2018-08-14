@@ -28,7 +28,7 @@ public class PVNameTextCellEditor extends TextCellEditor {
 
     public PVNameTextCellEditor(Composite parent) {
         super(parent);
-        AutoCompleteWidget autoCompleteWidget = new AutoCompleteWidget(this, AutoCompleteTypes.Formula); //$NON-NLS-1$
+        AutoCompleteWidget autoCompleteWidget = new AutoCompleteWidget(this, AutoCompleteTypes.Formula);
         autoCompleteWidget.getContentProposalAdapter().addContentProposalListener(
                 new IContentProposalListener2() {
 

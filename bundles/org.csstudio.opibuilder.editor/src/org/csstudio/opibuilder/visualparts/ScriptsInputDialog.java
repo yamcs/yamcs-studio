@@ -402,7 +402,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
                     RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
                             Display.getCurrent().getActiveShell(), startPath,
                             "Select a script file", new String[] { ScriptService.JS });
-                    rsd.setSelectedResource(new Path("./")); //$NON-NLS-1$
+                    rsd.setSelectedResource(new Path("./"));
                     if (rsd.open() == Window.OK) {
                         if (rsd.getSelectedResource() != null) {
                             path = rsd.getSelectedResource();
@@ -419,7 +419,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
         addAction.setToolTipText("Add a script");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif")); //$NON-NLS-1$
+                        "icons/add.gif"));
 
         editAction = new Action("Edit") {
             @Override
@@ -459,7 +459,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
         editAction.setToolTipText("Edit/Change script path");
         editAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/edit.gif")); //$NON-NLS-1$
+                        "icons/edit.gif"));
         editAction.setEnabled(false);
         removeAction = new Action() {
             @Override
@@ -479,7 +479,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
                 .setToolTipText("Remove the selected script from the list");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif")); //$NON-NLS-1$
+                        "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
@@ -504,7 +504,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
         moveUpAction.setToolTipText("Move selected script up");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif")); //$NON-NLS-1$
+                        "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
@@ -529,7 +529,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
         moveDownAction.setToolTipText("Move selected script down");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif")); //$NON-NLS-1$
+                        "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
 
         convertToEmbedAction = new Action() {

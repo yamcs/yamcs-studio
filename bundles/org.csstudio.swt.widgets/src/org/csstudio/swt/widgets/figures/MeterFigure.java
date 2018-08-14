@@ -156,15 +156,15 @@ public class MeterFigure extends AbstractRoundRampedFigure {
         int M = 0;
 
         /** Used as a constraint for the scale. */
-        public static final String SCALE = "scale";   //$NON-NLS-1$
+        public static final String SCALE = "scale";  
         /** Used as a constraint for the Needle. */
-        public static final String NEEDLE = "needle"; //$NON-NLS-1$
+        public static final String NEEDLE = "needle";
         /** Used as a constraint for the Ramp */
-        public static final String RAMP = "ramp";      //$NON-NLS-1$
+        public static final String RAMP = "ramp";     
         /** Used as a constraint for the needleCenter */
-        //public static final String NEEDLE_CENTER = "needleCenter";      //$NON-NLS-1$
+        //public static final String NEEDLE_CENTER = "needleCenter";     
         /** Used as a constraint for the value label*/
-        public static final String VALUE_LABEL = "valueLabel";      //$NON-NLS-1$
+        public static final String VALUE_LABEL = "valueLabel";     
 
 
 

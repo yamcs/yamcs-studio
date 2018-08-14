@@ -31,8 +31,8 @@ import org.csstudio.autocomplete.proposals.TopProposalFinder;
  */
 public class SysContentProvider implements IAutoCompleteProvider {
 
-    public static final String SYSTEM_FUNCTION = "system"; //$NON-NLS-1$
-    public static final String SYSTEM_SEPARATOR = "."; //$NON-NLS-1$
+    public static final String SYSTEM_FUNCTION = "system";
+    public static final String SYSTEM_SEPARATOR = ".";
 
     @Override
     public boolean accept(final ContentType type) {

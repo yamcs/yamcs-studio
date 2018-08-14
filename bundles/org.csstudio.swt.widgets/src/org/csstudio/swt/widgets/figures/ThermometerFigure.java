@@ -44,9 +44,9 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
      *
      */
     public enum TemperatureUnit {
-        CELSIUS("Celsius", "\u2103"), //$NON-NLS-2$
-        FAHRENHEIT("Fahrenheit", "\u2109"), //$NON-NLS-2$
-        KELVIN("Kelvin", "K"), NONE("None", ""); //$NON-NLS-4$
+        CELSIUS("Celsius", "\u2103"),
+        FAHRENHEIT("Fahrenheit", "\u2109"),
+        KELVIN("Kelvin", "K"), NONE("None", "");
 
         public static String[] stringValues() {
             String[] result = new String[values().length];
@@ -398,15 +398,15 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
     static class ThermoLayout extends AbstractLayout {
 
         /** Used as a constraint for the scale. */
-        public static final String SCALE = "scale"; //$NON-NLS-1$
+        public static final String SCALE = "scale";
         /** Used as a constraint for the pipe indicator. */
-        public static final String PIPE = "pipe"; //$NON-NLS-1$
+        public static final String PIPE = "pipe";
         /** Used as a constraint for the alarm ticks */
-        public static final String MARKERS = "markers"; //$NON-NLS-1$
+        public static final String MARKERS = "markers";
         /** Used as a constraint for the bulb in the below of pipe. */
-        public static final String BULB = "bulb"; //$NON-NLS-1$
+        public static final String BULB = "bulb";
         /** Used as a constraint for the unit label */
-        public static final String UNIT = "unit"; //$NON-NLS-1$
+        public static final String UNIT = "unit";
         private LinearScale scale;
         private LinearScaledMarker marker;
         private Pipe pipe;

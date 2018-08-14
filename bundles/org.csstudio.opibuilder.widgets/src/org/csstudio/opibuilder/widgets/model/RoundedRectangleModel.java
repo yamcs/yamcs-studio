@@ -26,9 +26,9 @@ public class RoundedRectangleModel extends AbstractShapeModel {
 
     public final String ID = "org.csstudio.opibuilder.widgets.RoundedRectangle";
 
-    public static final String PROP_CORNER_WIDTH = "corner_width"; //$NON-NLS-1$
+    public static final String PROP_CORNER_WIDTH = "corner_width";
 
-    public static final String PROP_CORNER_HEIGHT = "corner_height"; //$NON-NLS-1$
+    public static final String PROP_CORNER_HEIGHT = "corner_height";
 
     private static final int DEFAULT_CORNER_WIDTH = 16;
 
@@ -37,17 +37,17 @@ public class RoundedRectangleModel extends AbstractShapeModel {
     /**
      * True if the ellipse should be filled with gradient effect.
      */
-    public static final String PROP_GRADIENT = "gradient"; //$NON-NLS-1$
+    public static final String PROP_GRADIENT = "gradient";
 
     /**
      * The color on gradient start.
      */
-    public static final String PROP_BACKGROUND_GRADIENT_START_COLOR = "bg_gradient_color"; //$NON-NLS-1$
+    public static final String PROP_BACKGROUND_GRADIENT_START_COLOR = "bg_gradient_color";
 
     /**
      * The color on foreground gradient start.
      */
-    public static final String PROP_FOREGROUND_GRADIENT_START_COLOR = "fg_gradient_color"; //$NON-NLS-1$
+    public static final String PROP_FOREGROUND_GRADIENT_START_COLOR = "fg_gradient_color";
 
 
     @Override

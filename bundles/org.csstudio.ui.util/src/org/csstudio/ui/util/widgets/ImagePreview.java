@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Composite;
  *
  *  @author Kay Kasemir
  */
-@SuppressWarnings("nls")
 public class ImagePreview extends Canvas implements DisposeListener,
         PaintListener
 {

@@ -16,7 +16,6 @@ import org.csstudio.java.string.StringSplitter;
  *  keeping the macro names and values in a hash
  *  @author Kay Kasemir
  */
-@SuppressWarnings("nls")
 public class MacroTable implements IMacroTableProvider
 {
     /** Map of macro names to values */

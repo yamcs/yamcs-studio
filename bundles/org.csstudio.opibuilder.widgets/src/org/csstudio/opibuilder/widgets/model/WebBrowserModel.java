@@ -34,7 +34,7 @@ public class WebBrowserModel extends AbstractWidgetModel {
     @Override
     protected void configureProperties() {
         addProperty(new StringProperty(
-                PROP_URL, "URL", WidgetPropertyCategory.Basic, "")); //$NON-NLS-2$
+                PROP_URL, "URL", WidgetPropertyCategory.Basic, ""));
         addProperty(new BooleanProperty(PROP_SHOW_TOOLBAR, "Show Toolbar",
                 WidgetPropertyCategory.Display, true));
         setPropertyVisible(PROP_FONT, false);

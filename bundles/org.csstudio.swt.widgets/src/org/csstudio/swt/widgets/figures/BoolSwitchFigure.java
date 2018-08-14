@@ -223,14 +223,14 @@ public class BoolSwitchFigure extends AbstractBoolControlFigure {
     class BoolSwitchLayout extends AbstractLayout {
 
             /** Used as a constraint for the bulb. */
-            public static final String PEDESTAL = "pedestal";   //$NON-NLS-1$
+            public static final String PEDESTAL = "pedestal";  
             /** Used as a constraint for the bar. */
-            public static final String BAR = "bar"; //$NON-NLS-1$
+            public static final String BAR = "bar";
             /** Used as a constraint for the shadow */
-            public static final String SHADOW = "shadow";      //$NON-NLS-1$
+            public static final String SHADOW = "shadow";     
 
             /** Used as a constraint for the boolean label */
-            public static final String BOOL_LABEL = "boolLabel";      //$NON-NLS-1$
+            public static final String BOOL_LABEL = "boolLabel";     
 
             private Pedestal pedestal;
             private Bar bar;

@@ -23,22 +23,22 @@ import org.csstudio.opibuilder.visualparts.BorderStyle;
 @Deprecated
 public final class NativeTextModel extends TextInputModel {
 
-    public static final String PROP_SHOW_NATIVE_BORDER = "show_native_border"; //$NON-NLS-1$
+    public static final String PROP_SHOW_NATIVE_BORDER = "show_native_border";
 
-    public static final String PROP_PASSWORD_INPUT = "password_input"; //$NON-NLS-1$
+    public static final String PROP_PASSWORD_INPUT = "password_input";
 
-    public static final String PROP_READ_ONLY = "read_only"; //$NON-NLS-1$
+    public static final String PROP_READ_ONLY = "read_only";
 
-    public static final String PROP_SHOW_H_SCROLL = "show_h_scroll"; //$NON-NLS-1$
+    public static final String PROP_SHOW_H_SCROLL = "show_h_scroll";
 
-    public static final String PROP_SHOW_V_SCROLL = "show_v_scroll"; //$NON-NLS-1$
+    public static final String PROP_SHOW_V_SCROLL = "show_v_scroll";
 
-    public static final String PROP_NEXT_FOCUS = "next_focus"; //$NON-NLS-1$
+    public static final String PROP_NEXT_FOCUS = "next_focus";
 
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.NativeText"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.NativeText";
 
     public NativeTextModel() {
         setSize(100, 25);

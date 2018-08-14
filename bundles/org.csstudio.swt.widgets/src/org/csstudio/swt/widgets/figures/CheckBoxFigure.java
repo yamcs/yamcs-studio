@@ -243,7 +243,6 @@ public class CheckBoxFigure extends Toggle implements Introspectable, ITextFigur
     /**
      * update the value from boolValue
      */
-    @SuppressWarnings("nls")
     private void updateValue() {
         // get boolValue
         if (bit < 0)

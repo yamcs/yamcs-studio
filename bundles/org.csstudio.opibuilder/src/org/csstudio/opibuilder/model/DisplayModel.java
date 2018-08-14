@@ -40,53 +40,53 @@ public class DisplayModel extends AbstractContainerModel {
     /**
      * The type ID of this model.
      */
-    public static final String ID = "org.csstudio.opibuilder.Display"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.Display";
 
     /**
      * Space of grid in pixels.
      */
-    public static final String PROP_GRID_SPACE = "grid_space"; //$NON-NLS-1$
+    public static final String PROP_GRID_SPACE = "grid_space";
     /**
      * If the grid should be visible.
      */
-    public static final String PROP_SHOW_GRID = "show_grid"; //$NON-NLS-1$
+    public static final String PROP_SHOW_GRID = "show_grid";
     /**
      * If the ruler should be visible.
      */
-    public static final String PROP_SHOW_RULER = "show_ruler"; //$NON-NLS-1$
+    public static final String PROP_SHOW_RULER = "show_ruler";
     /**
      * If the moving widgets will be snapped to the geometry of other widgets.
      */
-    public static final String PROP_SNAP_GEOMETRY = "snap_to_geometry"; //$NON-NLS-1$
+    public static final String PROP_SNAP_GEOMETRY = "snap_to_geometry";
     /**
      * If the dash boundary line of the display should be visible.
      */
-    public static final String PROP_SHOW_EDIT_RANGE = "show_edit_range"; //$NON-NLS-1$
+    public static final String PROP_SHOW_EDIT_RANGE = "show_edit_range";
 
     /**
      * If the tab close button should be hidden.
      */
-    public static final String PROP_SHOW_CLOSE_BUTTON = "show_close_button"; //$NON-NLS-1$
+    public static final String PROP_SHOW_CLOSE_BUTTON = "show_close_button";
 
-    public static final String PROP_BOY_VERSION = "boy_version"; //$NON-NLS-1$
+    public static final String PROP_BOY_VERSION = "boy_version";
 
     /**
      * Auto scale all the widgets as the window resizes. If this is set to true,
      * zoom operation will not work.
      */
-    public static final String PROP_AUTO_ZOOM_TO_FIT_ALL = "auto_zoom_to_fit_all"; //$NON-NLS-1$
+    public static final String PROP_AUTO_ZOOM_TO_FIT_ALL = "auto_zoom_to_fit_all";
 
     /**
      * Automatically scale all widgets when window resizes.
      */
-    public static final String PROP_AUTO_SCALE_WIDGETS = "auto_scale_widgets"; //$NON-NLS-1$
+    public static final String PROP_AUTO_SCALE_WIDGETS = "auto_scale_widgets";
 
     /**
      * Frame rate in Hz.
      * This is the hidden property which can be referred only from scripts.
      * The value is valid only when running mode. In edit mode, it is always -1.
      */
-    public static final String PROP_FRAME_RATE = "frame_rate"; //$NON-NLS-1$
+    public static final String PROP_FRAME_RATE = "frame_rate";
 
     public static final Point NULL_LOCATION = new Point(-1, -1);
 
@@ -165,7 +165,7 @@ public class DisplayModel extends AbstractContainerModel {
         addProperty(new ActionsProperty(PROP_ACTIONS, "Actions",
                 WidgetPropertyCategory.Behavior, false));
         setPropertyDescription(PROP_COLOR_FOREGROUND, "Grid Color");
-        setPropertyValue(PROP_NAME, ""); //$NON-NLS-1$
+        setPropertyValue(PROP_NAME, "");
         removeProperty(PROP_SCALE_OPTIONS);
 
     }

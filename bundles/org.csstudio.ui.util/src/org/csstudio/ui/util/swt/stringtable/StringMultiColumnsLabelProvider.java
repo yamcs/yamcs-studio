@@ -42,7 +42,7 @@ class StringMultiColumnsLabelProvider extends CellLabelProvider {
             if(editable)
                 cell.setText(Messages.StringTableEditor_AddRowText);
             else
-                cell.setText(""); //$NON-NLS-1$
+                cell.setText("");
         //if not
         else
         {
@@ -56,7 +56,7 @@ class StringMultiColumnsLabelProvider extends CellLabelProvider {
             if (nl < 0)
                 nl = text.indexOf('\n');
             if (nl > 0)
-                text = text.substring(0, nl) + "..."; //$NON-NLS-1$
+                text = text.substring(0, nl) + "...";
             cell.setText(text);
         }
     }

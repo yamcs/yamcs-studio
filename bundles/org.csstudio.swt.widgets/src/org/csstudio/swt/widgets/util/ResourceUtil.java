@@ -121,7 +121,6 @@ public class ResourceUtil {
      * @return The corresponding {@link InputStream}. Never <code>null</code>
      * @throws Exception
      */
-    @SuppressWarnings("nls")
     public static InputStream pathToInputStream(final String path) throws Exception {
         // Not a workspace file. Try local file system
         File local_file = new File(path);
@@ -138,8 +137,8 @@ public class ResourceUtil {
             // Eclipse Path collapses "//" into "/", revert that: Is this true?
             // Need test on Mac.
             urlString = path.toString();
-            // if(!urlString.startsWith("platform") && !urlString.contains("://")) //$NON-NLS-1$ //$NON-NLS-2$
-            // urlString = urlString.replaceFirst(":/", "://"); //$NON-NLS-1$ //$NON-NLS-2$
+            // if(!urlString.startsWith("platform") && !urlString.contains("://"))
+            // urlString = urlString.replaceFirst(":/", "://");
             // Does it now look like a URL? If not, report the original local
             // file problem
             if (!isURL(urlString))
@@ -157,7 +156,7 @@ public class ResourceUtil {
     private static InputStream openURLStream(final URL url) throws IOException {
         URLConnection connection = url.openConnection();
         int timeout = 0;
-        String value = System.getProperty(Preferences.URL_FILE_LOAD_TIMEOUT); // $NON-NLS-1$
+        String value = System.getProperty(Preferences.URL_FILE_LOAD_TIMEOUT);
         if (value != null) {
             try {
                 timeout = Integer.parseInt(value);
@@ -178,9 +177,8 @@ public class ResourceUtil {
      *            Possible URL
      * @return <code>true</code> if considered a URL
      */
-    @SuppressWarnings("nls")
     public static boolean isURL(final String url) {
-        return url.contains(":/"); //$NON-NLS-1$
+        return url.contains(":/");
     }
 
     // /**
@@ -218,8 +216,8 @@ public class ResourceUtil {
     // try {
     // //try from URL
     // String urlString = path.toString();
-    // if(!urlString.contains("://")) //$NON-NLS-1$
-    // urlString = urlString.replaceFirst(":/", "://"); //$NON-NLS-1$ //$NON-NLS-2$
+    // if(!urlString.contains("://"))
+    // urlString = urlString.replaceFirst(":/", "://");
     // URL url = new URL(urlString);
     // result = url.openStream();
     // return result;

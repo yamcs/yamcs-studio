@@ -183,7 +183,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                         pvListenerMap.put(sp.getPropertyID(), pvListener);
                     } catch (Exception e) {
                         OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                                "Unable to connect to PV:" + (String)sp.getPropertyValue(), e); //$NON-NLS-1$
+                                "Unable to connect to PV:" + (String)sp.getPropertyValue(), e);
                     }
                 }
             }
@@ -201,7 +201,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                 pv.start();
             } catch (Exception e) {
                 OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                        "Unable to connect to PV:" + pv.getName(), e); //$NON-NLS-1$
+                        "Unable to connect to PV:" + pv.getName(), e);
             }
         }
     }
@@ -444,7 +444,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                     newPV.start();
                 }
                 catch (Exception e) {
-                    OPIBuilderPlugin.getLogger().log(Level.WARNING, "Unable to connect to PV:" + //$NON-NLS-1$
+                    OPIBuilderPlugin.getLogger().log(Level.WARNING, "Unable to connect to PV:" +
                             newPVName, e);
                 }
 
@@ -696,7 +696,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
     @Override
     public String[] getAllPVNames() {
         if(editpart.getWidgetModel().getPVMap().isEmpty())
-             return new String[]{""}; //$NON-NLS-1$
+             return new String[]{""};
         Set<String> result = new HashSet<String>();
 
         for(StringProperty sp : editpart.getWidgetModel().getPVMap().keySet()){

@@ -112,7 +112,7 @@ public final class ResourceAndContainerGroup implements Listener {
     /**
      * Resource type (file, folder, project).
      */
-    private String _resourceType = "resource"; //$NON-NLS-1$
+    private String _resourceType = "resource";
 
     /**
      * Show closed projects in the tree, by default.
@@ -127,7 +127,7 @@ public final class ResourceAndContainerGroup implements Listener {
     /**
      * The default file extension.
      */
-    private String _fileExtension = ""; //$NON-NLS-1$
+    private String _fileExtension = "";
 
     /**
      * Problem type.
@@ -527,7 +527,7 @@ public final class ResourceAndContainerGroup implements Listener {
             return false;
         }
 
-        if (!(new Path("")).isValidPath(resourceName)) { //$NON-NLS-1$
+        if (!(new Path("")).isValidPath(resourceName)) {
             _problemType = PROBLEM_NAME_INVALID;
             _problemMessage = NLS
                     .bind(
@@ -569,7 +569,7 @@ public final class ResourceAndContainerGroup implements Listener {
         String result = _resourceNameField.getText();
 
         if ((_fileExtension != null) && (_fileExtension.length() > 0)) {
-            result = result + "." + _fileExtension; //$NON-NLS-1$
+            result = result + "." + _fileExtension;
         }
 
         return result;

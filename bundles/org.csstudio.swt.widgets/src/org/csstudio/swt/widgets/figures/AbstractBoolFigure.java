@@ -387,7 +387,6 @@ public class AbstractBoolFigure extends Figure implements Introspectable {
     /**
      * update the value from boolValue
      */
-    @SuppressWarnings("nls")
     protected void updateValue() {
         // get boolValue
         if (bit < 0) {

@@ -117,7 +117,7 @@ public final class ImageUtil {
      */
     public ImageDescriptor getImageDescriptor(final String pluginId,
             final String path) {
-        String id = pluginId + "/" + path; //$NON-NLS-1$
+        String id = pluginId + "/" + path;
         ImageDescriptor descriptor = _imageRegistry.getDescriptor(id);
 
         if (descriptor == null) {
@@ -143,7 +143,7 @@ public final class ImageUtil {
      */
     public Image getImage(final String pluginId,
             final String path) {
-        String id = pluginId + "/" + path; //$NON-NLS-1$
+        String id = pluginId + "/" + path;
         ImageDescriptor descriptor = _imageRegistry.getDescriptor(id);
 
         if (descriptor == null) {

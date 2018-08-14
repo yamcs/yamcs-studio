@@ -98,35 +98,35 @@ public class XYGraphModel extends AbstractPVWidgetModel {
             "yyyy-MM-dd", "MMMMM d", "Auto" };
 
     /** The ID of the title property. */
-    public static final String PROP_TITLE = "title"; //$NON-NLS-1$
+    public static final String PROP_TITLE = "title";
 
     /** The ID of the title font property. */
-    public static final String PROP_TITLE_FONT = "title_font"; //$NON-NLS-1$
+    public static final String PROP_TITLE_FONT = "title_font";
 
     /** The ID of the show legend property. */
-    public static final String PROP_SHOW_LEGEND = "show_legend"; //$NON-NLS-1$
+    public static final String PROP_SHOW_LEGEND = "show_legend";
 
     /** The ID of the show plot area border property. */
-    public static final String PROP_SHOW_PLOTAREA_BORDER = "show_plot_area_border"; //$NON-NLS-1$
+    public static final String PROP_SHOW_PLOTAREA_BORDER = "show_plot_area_border";
 
     /** The ID of the plot area background color property. */
-    public static final String PROP_PLOTAREA_BACKCOLOR = "plot_area_background_color"; //$NON-NLS-1$
+    public static final String PROP_PLOTAREA_BACKCOLOR = "plot_area_background_color";
 
     /** The ID of the transparent property. */
-    public static final String PROP_TRANSPARENT = "transparent"; //$NON-NLS-1$
+    public static final String PROP_TRANSPARENT = "transparent";
 
     /** The ID of the number of axes property. */
-    public static final String PROP_AXIS_COUNT = "axis_count"; //$NON-NLS-1$
+    public static final String PROP_AXIS_COUNT = "axis_count";
 
     /** The ID of the number of axes property. */
-    public static final String PROP_TRACE_COUNT = "trace_count"; //$NON-NLS-1$
+    public static final String PROP_TRACE_COUNT = "trace_count";
 
     /** The ID of the show toolbar property. */
-    public static final String PROP_SHOW_TOOLBAR = "show_toolbar"; //$NON-NLS-1$
+    public static final String PROP_SHOW_TOOLBAR = "show_toolbar";
 
-    public static final String PROP_TRIGGER_PV = "trigger_pv"; //$NON-NLS-1$
+    public static final String PROP_TRIGGER_PV = "trigger_pv";
 
-    public static final String PROP_TRIGGER_PV_VALUE = "trigger_pv_value"; //$NON-NLS-1$
+    public static final String PROP_TRIGGER_PV_VALUE = "trigger_pv_value";
 
     /** The default color of the plot area background color property. */
     private static final RGB DEFAULT_PLOTAREA_BACKCOLOR = new RGB(255, 255, 255);
@@ -163,7 +163,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.xyGraph"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.xyGraph";
 
     /** The default value of the height property. */
     private static final int DEFAULT_HEIGHT = 250;
@@ -186,7 +186,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
         addProperty(new StringProperty(PROP_TITLE, "Title",
                 WidgetPropertyCategory.Display, ""));
         addProperty(new FontProperty(PROP_TITLE_FONT, "Title Font",
-                WidgetPropertyCategory.Display, MediaService.DEFAULT_BOLD_FONT)); // $NON-NLS-1$
+                WidgetPropertyCategory.Display, MediaService.DEFAULT_BOLD_FONT));
         addProperty(new BooleanProperty(PROP_SHOW_LEGEND, "Show Legend",
                 WidgetPropertyCategory.Display, true));
         addProperty(new BooleanProperty(PROP_SHOW_PLOTAREA_BORDER, "Show Plot Area Border",
@@ -261,7 +261,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
             break;
         case TITLE_FONT:
             addProperty(new FontProperty(
-                    propID, axisProperty.toString(), category, MediaService.DEFAULT_BOLD_FONT)); // $NON-NLS-1$
+                    propID, axisProperty.toString(), category, MediaService.DEFAULT_BOLD_FONT));
             break;
         case SCALE_FONT:
             addProperty(new FontProperty(propID, axisProperty.toString(), category,
@@ -298,7 +298,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
             addProperty(new BooleanProperty(propID, axisProperty.toString(), category, true));
             break;
         case SCALE_FORMAT:
-            addProperty(new StringProperty(propID, axisProperty.toString(), category, "")); //$NON-NLS-1$
+            addProperty(new StringProperty(propID, axisProperty.toString(), category, ""));
             break;
         default:
             break;
@@ -306,7 +306,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
     }
 
     public static String makeAxisPropID(String propIDPre, int index) {
-        return "axis_" + index + "_" + propIDPre; //$NON-NLS-1$ //$NON-NLS-2$
+        return "axis_" + index + "_" + propIDPre;
     }
 
     private void addTraceProperties() {
@@ -379,7 +379,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
             break;
         case YPV:
             addPVProperty(new PVNameProperty(propID, traceProperty.toString(), category,
-                    traceIndex == 0 ? "$(" + PROP_PVNAME + ")" : ""), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    traceIndex == 0 ? "$(" + PROP_PVNAME + ")" : ""),
                     new PVValueProperty(makeTracePropID(TraceProperty.YPV_VALUE.propIDPre, traceIndex), null));
             break;
         case YAXIS_INDEX:
@@ -395,7 +395,7 @@ public class XYGraphModel extends AbstractPVWidgetModel {
     }
 
     public static String makeTracePropID(String propIDPre, int index) {
-        return "trace_" + index + "_" + propIDPre; //$NON-NLS-1$ //$NON-NLS-2$
+        return "trace_" + index + "_" + propIDPre;
     }
 
     /**

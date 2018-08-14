@@ -28,25 +28,25 @@ public class SashContainerModel extends AbstractContainerModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.sashContainer"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.sashContainer";
 
     /** True if the background color is transparent. */
-    public static final String PROP_TRANSPARENT = "transparent"; //$NON-NLS-1$
+    public static final String PROP_TRANSPARENT = "transparent";
 
-    public static final String PROP_SASH_POSITION = "sash_position"; //$NON-NLS-1$
+    public static final String PROP_SASH_POSITION = "sash_position";
 
-    public static final String PROP_SASH_STYLE = "sash_style"; //$NON-NLS-1$
+    public static final String PROP_SASH_STYLE = "sash_style";
 
-    public static final String PROP_SASH_WIDTH = "sash_width"; //$NON-NLS-1$
+    public static final String PROP_SASH_WIDTH = "sash_width";
 
-    public static final String PROP_HORIZONTAL = "horizontal"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL = "horizontal";
 
 //    /** True if children widgets are not selectable.*/
 //    public static final String PROP_LOCK_CHILDREN = "lock_children";
 //
-    public static final String PROP_PANEL1_AUTO_SCALE_CHILDREN = "panel1_auto_scale_children"; //$NON-NLS-1$
+    public static final String PROP_PANEL1_AUTO_SCALE_CHILDREN = "panel1_auto_scale_children";
 
-    public static final String PROP_PANEL2_AUTO_SCALE_CHILDREN = "panel2_auto_scale_children"; //$NON-NLS-1$
+    public static final String PROP_PANEL2_AUTO_SCALE_CHILDREN = "panel2_auto_scale_children";
 
 
 

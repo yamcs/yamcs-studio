@@ -69,7 +69,7 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         menu.add(new Separator(GEFActionConstants.GROUP_ADD));
         menu.add(new Separator(GEFActionConstants.GROUP_REST));
         menu.add(new Separator(GEFActionConstants.GROUP_SAVE));
-        menu.add(new Separator(GROUP_GROUP)); //$NON-NLS-1$
+        menu.add(new Separator(GROUP_GROUP));
         menu.add(new Separator(GEFActionConstants.MB_ADDITIONS));
 
 
@@ -109,7 +109,7 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         String orderGroup = "Order";
         MenuManager orderMenu = new MenuManager(orderGroup,
                 CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                        OPIBuilderPlugin.PLUGIN_ID, "icons/shape_move_front.png"), null);     //$NON-NLS-1$
+                        OPIBuilderPlugin.PLUGIN_ID, "icons/shape_move_front.png"), null);    
         orderMenu.add(new Separator(orderGroup));
         for(OrderType orderType : OrderType.values()){
             orderMenu.appendToGroup(orderGroup, getAction(orderType.getActionID()));
@@ -119,7 +119,7 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         String orientationGroup = "Orientation";
         MenuManager orientationMenu = new MenuManager(orientationGroup,
                 CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                        OPIBuilderPlugin.PLUGIN_ID, "icons/flip_horizontal.png"), null);     //$NON-NLS-1$
+                        OPIBuilderPlugin.PLUGIN_ID, "icons/flip_horizontal.png"), null);    
         orientationMenu.add(new Separator(orientationGroup));
         for(OrientationType orientationType : OrientationType.values()){
             orientationMenu.appendToGroup(orientationGroup, getAction(orientationType.getActionID()));
@@ -127,7 +127,7 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         }
         menu.appendToGroup(GEFActionConstants.GROUP_COPY, orientationMenu);
 
-//        MenuManager cssMenu = new MenuManager("CSS", "css");//$NON-NLS-1$ //$NON-NLS-2$
+//        MenuManager cssMenu = new MenuManager("CSS", "css");//$NON-NLS-1$
 //        cssMenu.add(new Separator("additions"));//$NON-NLS-1$
 //        menu.add(cssMenu);
     }

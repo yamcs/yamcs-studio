@@ -71,7 +71,7 @@ public class AlarmRepresentationScheme {
 
     public static Border getMajorBorder(BorderStyle borderStyle) {
         BorderStyle newBorderStyle = getNewBorderStyle(borderStyle);
-        return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getMajorColor(), ""); //$NON-NLS-1$
+        return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getMajorColor(), "");
     }
 
     private static BorderStyle getNewBorderStyle(BorderStyle borderStyle) {
@@ -92,13 +92,13 @@ public class AlarmRepresentationScheme {
     public static Border getMinorBorder(BorderStyle borderStyle) {
         BorderStyle newBorderStyle = getNewBorderStyle(borderStyle);
 
-        return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getMinorColor(), ""); //$NON-NLS-1$
+        return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getMinorColor(), "");
     }
 
     public static Border getInvalidBorder(BorderStyle borderStyle) {
         BorderStyle newBorderStyle = getNewBorderStyle(borderStyle);
 
-        return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getInValidColor(), ""); //$NON-NLS-1$
+        return BorderFactory.createBorder(newBorderStyle, ALARM_BORDER_WIDTH, getInValidColor(), "");
     }
 
     public static Border getDisonnectedBorder() {

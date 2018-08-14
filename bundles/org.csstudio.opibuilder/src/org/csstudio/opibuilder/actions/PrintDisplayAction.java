@@ -62,7 +62,7 @@ public class PrintDisplayAction extends WorkbenchPartAction {
         setText("Print...");
         setToolTipText("Print Display");
         setId(ActionFactory.PRINT.getId());
-        setActionDefinitionId("org.eclipse.ui.file.print"); //$NON-NLS-1$
+        setActionDefinitionId("org.eclipse.ui.file.print");
         ISharedImages sharedImages = getWorkbenchPart().getSite()
                 .getWorkbenchWindow().getWorkbench().getSharedImages();
         setImageDescriptor(sharedImages

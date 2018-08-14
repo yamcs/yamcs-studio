@@ -62,8 +62,8 @@ import org.eclipse.swt.widgets.Text;
  * @author Kay Kasemir, Kunal Shroff
  */
 public class MultipleSelectionCombo<T> extends Composite {
-    final private static String SEPARATOR = ", "; //$NON-NLS-1$
-    final private static String SEPERATOR_PATTERN = "\\s*,\\s*"; //$NON-NLS-1$
+    final private static String SEPARATOR = ", ";
+    final private static String SEPERATOR_PATTERN = "\\s*,\\s*";
 
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(
         this);

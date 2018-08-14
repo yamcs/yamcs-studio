@@ -36,7 +36,6 @@ import java.io.Serializable;
  *  @author Gabriele Carcassi
  *  @author Kay Kasemir
  */
-@SuppressWarnings("nls")
 public class ProcessVariable implements Serializable
 {
     /** @see Serializable */

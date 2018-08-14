@@ -67,7 +67,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     /**
      * The nesting indent.
      */
-    private static final String NESTING_INDENT = " "; //$NON-NLS-1$
+    private static final String NESTING_INDENT = " ";
 
     /**
      * The Details button.
@@ -136,11 +136,11 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
             String message, IStatus status, int displayMask) {
         super(parentShell);
         this.title = dialogTitle == null ? JFaceResources
-                .getString("Problem_Occurred") : //$NON-NLS-1$
+                .getString("Problem_Occurred") :
                 dialogTitle;
         this.message = message == null ? status.getMessage()
                 : JFaceResources
-                        .format("Reason", new Object[] { message, status.getMessage() }); //$NON-NLS-1$
+                        .format("Reason", new Object[] { message, status.getMessage() });
         this.status = status;
         this.displayMask = displayMask;
     }
@@ -293,7 +293,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
                 copyToClipboard();
             }
         });
-        copyItem.setText(JFaceResources.getString("copy")); //$NON-NLS-1$
+        copyItem.setText(JFaceResources.getString("copy"));
         text.setMenu(copyMenu);
         text.setSelection(0);
         listCreated = true;
@@ -536,7 +536,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
             buffer.append(NESTING_INDENT);
         }
         buffer.append(buildingStatus.getMessage());
-        buffer.append("\n"); //$NON-NLS-1$
+        buffer.append("\n");
 
         // Look for a nested core exception
         Throwable t = buildingStatus.getException();

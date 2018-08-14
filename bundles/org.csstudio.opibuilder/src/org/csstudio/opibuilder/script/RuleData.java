@@ -26,7 +26,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  */
 public class RuleData implements IAdaptable{
 
-    public static final String QUOTE = "\""; //$NON-NLS-1$
+    public static final String QUOTE = "\"";
 
     /**
      * The name of the rule.
@@ -60,7 +60,7 @@ public class RuleData implements IAdaptable{
         expressionList = new ArrayList<Expression>();
         pvList = new ArrayList<PVTuple>();
         name = "Rule";
-        propId = "name"; //$NON-NLS-1$
+        propId = "name";
     }
 
     /**
@@ -135,60 +135,60 @@ public class RuleData implements IAdaptable{
      */
     public String generateScript(){
         if(expressionList.size() <=0)
-            return ""; //$NON-NLS-1$
+            return "";
         StringBuilder sb = new StringBuilder(
-                "importPackage(Packages.org.csstudio.opibuilder.scriptUtil); \n"); //$NON-NLS-1$
+                "importPackage(Packages.org.csstudio.opibuilder.scriptUtil); \n");
 
         AbstractWidgetProperty property = widgetModel.getProperty(propId);
         boolean needDbl = false, needInt = false, needStr = false, needSev=false;
         for(Expression exp : expressionList){
             if(!needDbl)
-                needDbl = containRegex(exp.getBooleanExpression(), "pv\\d") || //$NON-NLS-1$
-                        (outputExpValue && containRegex(exp.getValue().toString(), "pv\\d")); //$NON-NLS-1$
+                needDbl = containRegex(exp.getBooleanExpression(), "pv\\d") ||
+                        (outputExpValue && containRegex(exp.getValue().toString(), "pv\\d"));
             if(!needInt){
-                if(exp.getBooleanExpression().contains("pvInt")) //$NON-NLS-1$
+                if(exp.getBooleanExpression().contains("pvInt"))
                     needInt = true;
-                if(outputExpValue && exp.getValue().toString().contains("pvInt")) //$NON-NLS-1$
+                if(outputExpValue && exp.getValue().toString().contains("pvInt"))
                     needInt = true;
             }
             if(!needStr){
-                if(exp.getBooleanExpression().contains("pvStr")) //$NON-NLS-1$
+                if(exp.getBooleanExpression().contains("pvStr"))
                     needStr = true;
-                if(outputExpValue && exp.getValue().toString().contains("pvStr")) //$NON-NLS-1$
+                if(outputExpValue && exp.getValue().toString().contains("pvStr"))
                     needStr = true;
             }
             if(!needSev){
-                if(exp.getBooleanExpression().contains("pvSev")) //$NON-NLS-1$
+                if(exp.getBooleanExpression().contains("pvSev"))
                     needSev = true;
-                if(outputExpValue && exp.getValue().toString().contains("pvSev")) //$NON-NLS-1$
+                if(outputExpValue && exp.getValue().toString().contains("pvSev"))
                     needSev = true;
             }
 
         }
         for(int i=0; i<pvList.size(); i++){
             if(needDbl)
-                sb.append("var pv" + i + " = PVUtil."+ "getDouble(pvs[" + i + "]);\n");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                sb.append("var pv" + i + " = PVUtil."+ "getDouble(pvs[" + i + "]);\n"); 
             if(needInt)
-                sb.append("var pvInt" + i + " = PVUtil."+ "getLong(pvs[" + i + "]);\n");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                sb.append("var pvInt" + i + " = PVUtil."+ "getLong(pvs[" + i + "]);\n"); 
             if(needStr)
-                sb.append("var pvStr" + i + " = PVUtil."+ "getString(pvs[" + i + "]);\n");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                sb.append("var pvStr" + i + " = PVUtil."+ "getString(pvs[" + i + "]);\n"); 
             if(needSev)
-                sb.append("var pvSev" + i + " = PVUtil.getSeverity(pvs[" + i + "]);\n");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                sb.append("var pvSev" + i + " = PVUtil.getSeverity(pvs[" + i + "]);\n");//$NON-NLS-1$
         }
         int i=0;
         for(Expression exp : expressionList){
-            sb.append(i == 0 ? "if(" : "else if(");    //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(i == 0 ? "if(" : "else if(");   
             sb.append(expressionList.get(i++).getBooleanExpression());
             sb.append(")\n");//$NON-NLS-1$
 
-            sb.append("\twidget.setPropertyValue(\"" + propId + "\","); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("\twidget.setPropertyValue(\"" + propId + "\",");
 
             String propValue = generatePropValueString(property, exp);
-            sb.append(propValue + ");\n"); //$NON-NLS-1$
+            sb.append(propValue + ");\n");
         }
-        sb.append("else\n"); //$NON-NLS-1$
-        sb.append("\twidget.setPropertyValue(\"" + propId + "\"," + //$NON-NLS-1$ //$NON-NLS-2$
-                generatePropValueString(property, null)+");\n"); //$NON-NLS-1$
+        sb.append("else\n");
+        sb.append("\twidget.setPropertyValue(\"" + propId + "\"," +
+                generatePropValueString(property, null)+");\n");
 
         return sb.toString();
     }
@@ -228,7 +228,7 @@ public class RuleData implements IAdaptable{
                 value = property.getPropertyValue();
 
             if(value == null)
-                return "null"; //$NON-NLS-1$
+                return "null";
 
             propValue = property.toStringInRuleScript(value);
         }

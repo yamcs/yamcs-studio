@@ -84,7 +84,6 @@ public class ValueUtil
      *            the value.
      * @return a string representation of the value.
      */
-    @SuppressWarnings("nls")
     public static String getString(final VType value)
     {
         return VTypeHelper.getString(value);

@@ -26,7 +26,7 @@ public class StringListProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name <code>INCLUDE_PARENT_MACROS</code>.
      */
-    public static final String XML_ELEMENT_ITEM = "s"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_ITEM = "s";
 
     /**StringList Property Constructor. The property value type is {@link List} of Strings.
      * @param prop_id the property id which should be unique in a widget model.

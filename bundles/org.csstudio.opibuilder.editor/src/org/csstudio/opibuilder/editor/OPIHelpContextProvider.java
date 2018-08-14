@@ -39,10 +39,10 @@ public class OPIHelpContextProvider implements IContextProvider{
             Object obj = ((IStructuredSelection)selection).getFirstElement();
             if(obj instanceof AbstractBaseEditPart && !(obj instanceof DisplayEditpart)){
                 return new WidgetSelectionContext(
-                        ((AbstractBaseEditPart)obj).getWidgetModel()); //$NON-NLS-1$
+                        ((AbstractBaseEditPart)obj).getWidgetModel());
             }
         }
-        return HelpSystem.getContext(OPIBuilderPlugin.PLUGIN_ID +  ".opi_editor"); //$NON-NLS-1$
+        return HelpSystem.getContext(OPIBuilderPlugin.PLUGIN_ID +  ".opi_editor");
     }
 
     @Override
@@ -106,18 +106,18 @@ public class OPIHelpContextProvider implements IContextProvider{
                     WidgetsService.getInstance().getWidgetDescriptor(widgetModel.getTypeID());
             String onlineHelpHtml = widgetDescriptor.getOnlineHelpHtml();
             if( onlineHelpHtml != null && !onlineHelpHtml.trim().isEmpty()){
-                return widgetDescriptor.getPluginId() + "/" + widgetDescriptor.getOnlineHelpHtml(); //$NON-NLS-1$
+                return widgetDescriptor.getPluginId() + "/" + widgetDescriptor.getOnlineHelpHtml();
             }
-            if(widgetDescriptor.getPluginId().trim().equals("org.csstudio.opibuilder.widgets")){ //$NON-NLS-1$
+            if(widgetDescriptor.getPluginId().trim().equals("org.csstudio.opibuilder.widgets")){
                 String modelClassName = widgetModel.getClass().getSimpleName();
-                StringBuilder sb = new StringBuilder("/"); //$NON-NLS-1$
+                StringBuilder sb = new StringBuilder("/");
                 sb.append(OPIBuilderPlugin.PLUGIN_ID);
-                sb.append("/html/widgets/"); //$NON-NLS-1$
+                sb.append("/html/widgets/");
                 sb.append(modelClassName.substring(0, modelClassName.length()-5));
                 sb.append(".html");
                 return  sb.toString();
             }
-            return OPIBuilderPlugin.PLUGIN_ID + "/html/widgets/WidgetHelpNotFound.html"; //$NON-NLS-1$
+            return OPIBuilderPlugin.PLUGIN_ID + "/html/widgets/WidgetHelpNotFound.html";
         }
 
         @Override

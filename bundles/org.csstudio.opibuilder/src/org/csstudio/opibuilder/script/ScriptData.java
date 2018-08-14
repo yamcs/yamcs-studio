@@ -164,9 +164,9 @@ public class ScriptData implements IAdaptable {
                             icon = "icons/jsEmbedded.gif";
                     } else if (path != null && !path.isEmpty()
                             && path.getFileExtension().equals(ScriptService.PY)) {
-                        icon = "icons/python_file.gif"; //$NON-NLS-1$
+                        icon = "icons/python_file.gif";
                     } else
-                        icon = "icons/js.gif"; //$NON-NLS-1$
+                        icon = "icons/js.gif";
                     return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
                             OPIBuilderPlugin.PLUGIN_ID, icon);
                 }

@@ -140,7 +140,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     /**
      * The type ID of this model.
      */
-    public static final String ID = "org.csstudio.opibuilder.connection"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.connection";
 
     /**
      * Width of the line.
@@ -161,14 +161,14 @@ public class ConnectionModel extends AbstractWidgetModel {
 
     public static final String PROP_ARROW_TYPE = "arrows";//$NON-NLS-1$
 
-    public static final String PROP_FILL_ARROW = "fill_arrow"; //$NON-NLS-1$
+    public static final String PROP_FILL_ARROW = "fill_arrow";
 
-    public static final String PROP_ARROW_LENGTH = "arrow_length"; //$NON-NLS-1$
+    public static final String PROP_ARROW_LENGTH = "arrow_length";
 
     /**
      * True if anti alias is enabled for the figure.
      */
-    public static final String PROP_ANTIALIAS = "anti_alias"; //$NON-NLS-1$
+    public static final String PROP_ANTIALIAS = "anti_alias";
 
     /**
      * Source Terminal
@@ -183,7 +183,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     /**
      * The source widget UID
      */
-    public static final String PROP_SRC_WUID = "src_wuid"; //$NON-NLS-1$
+    public static final String PROP_SRC_WUID = "src_wuid";
 
     /**
      * The source widget Path
@@ -193,7 +193,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     /**
      * The target widget UID
      */
-    public static final String PROP_TGT_WUID = "tgt_wuid"; //$NON-NLS-1$
+    public static final String PROP_TGT_WUID = "tgt_wuid";
 
     /**
      * The target widget Path
@@ -206,15 +206,15 @@ public class ConnectionModel extends AbstractWidgetModel {
      * All points of this connection except start and end anchor.
      * null if it should be routed by router.
      */
-    public static final String PROP_POINTS = "points"; //$NON-NLS-1$
+    public static final String PROP_POINTS = "points";
 
-    public static final String PROP_LINE_JUMP_ADD = "line_jump_add"; //$NON-NLS-1$
+    public static final String PROP_LINE_JUMP_ADD = "line_jump_add";
 
-    public static final String PROP_LINE_JUMP_STYLE = "line_jump_style"; //$NON-NLS-1$
+    public static final String PROP_LINE_JUMP_STYLE = "line_jump_style";
 
-    public static final String PROP_LINE_JUMP_SIZE = "line_jump_size"; //$NON-NLS-1$
+    public static final String PROP_LINE_JUMP_SIZE = "line_jump_size";
 
-    public static final String PROP_IS_LOADED_FROM_LINKING_CONTAINER = "is_loaded_from_linking_container"; //$NON-NLS-1$
+    public static final String PROP_IS_LOADED_FROM_LINKING_CONTAINER = "is_loaded_from_linking_container";
 
     /** True, if the connection is attached to its endpoints. */
     private boolean isConnected;

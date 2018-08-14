@@ -344,18 +344,18 @@ public class SWTResourceManager {
             FontData fontData = new FontData(name, size, style);
             if (strikeout || underline) {
                 try {
-                    Class<?> logFontClass = Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
-                    Object logFont = FontData.class.getField("data").get(fontData); //$NON-NLS-1$
+                    Class<?> logFontClass = Class.forName("org.eclipse.swt.internal.win32.LOGFONT");
+                    Object logFont = FontData.class.getField("data").get(fontData);
                     if (logFont != null && logFontClass != null) {
                         if (strikeout) {
-                            logFontClass.getField("lfStrikeOut").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
+                            logFontClass.getField("lfStrikeOut").set(logFont, Byte.valueOf((byte) 1));
                         }
                         if (underline) {
-                            logFontClass.getField("lfUnderline").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
+                            logFontClass.getField("lfUnderline").set(logFont, Byte.valueOf((byte) 1));
                         }
                     }
                 } catch (Throwable e) {
-                    System.err.println("Unable to set underline or strikeout" + " (probably on a non-Windows platform). " + e); //$NON-NLS-1$ //$NON-NLS-2$
+                    System.err.println("Unable to set underline or strikeout" + " (probably on a non-Windows platform). " + e);
                 }
             }
             font = new Font(Display.getCurrent(), fontData);

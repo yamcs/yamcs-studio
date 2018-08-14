@@ -743,15 +743,15 @@ public class ScaledSliderFigure extends AbstractLinearMarkedFigure {
         private static final int LABEL_MARGIN = 3;
 
         /** Used as a constraint for the scale. */
-        public static final String SCALE = "scale"; //$NON-NLS-1$
+        public static final String SCALE = "scale";
         /** Used as a constraint for the pipe indicator. */
-        public static final String TRACK = "track"; //$NON-NLS-1$
+        public static final String TRACK = "track";
         /** Used as a constraint for the alarm ticks */
-        public static final String MARKERS = "markers"; //$NON-NLS-1$
+        public static final String MARKERS = "markers";
         /** Used as a constraint for the thumb */
-        public static final String THUMB = "thumb"; //$NON-NLS-1$
+        public static final String THUMB = "thumb";
         /** Used as a constraint for the label */
-        public static final String LABEL = "label"; //$NON-NLS-1$
+        public static final String LABEL = "label";
 
         private LinearScale scale;
         private LinearScaledMarker marker;

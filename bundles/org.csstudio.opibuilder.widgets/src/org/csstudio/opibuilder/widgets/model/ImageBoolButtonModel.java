@@ -90,7 +90,7 @@ public class ImageBoolButtonModel extends AbstractBoolControlModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.ImageBoolButton"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.ImageBoolButton";
 
     @Override
     public String getTypeID() {

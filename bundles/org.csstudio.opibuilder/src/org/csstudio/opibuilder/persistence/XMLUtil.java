@@ -57,23 +57,23 @@ import org.osgi.framework.Version;
  */
 public class XMLUtil {
 
-    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; //$NON-NLS-1$
+    public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
-    public static String XMLTAG_DISPLAY = "display"; //$NON-NLS-1$
+    public static String XMLTAG_DISPLAY = "display";
 
-    public static String XMLTAG_WIDGET = "widget"; //$NON-NLS-1$
+    public static String XMLTAG_WIDGET = "widget";
 
-    public static String XMLTAG_CONNECTION = "connection"; //$NON-NLS-1$
+    public static String XMLTAG_CONNECTION = "connection";
 
     public static Set<String> WIDGET_TAGS = new HashSet<>(
             Arrays.asList(XMLTAG_DISPLAY, XMLTAG_WIDGET, XMLTAG_CONNECTION));
 
-    public static String XMLATTR_TYPEID = "typeId"; //$NON-NLS-1$
+    public static String XMLATTR_TYPEID = "typeId";
 
-    public static String XMLATTR_PROPID = "id"; //$NON-NLS-1$
-    public static String XMLATTR_VERSION = "version"; //$NON-NLS-1$
+    public static String XMLATTR_PROPID = "id";
+    public static String XMLATTR_VERSION = "version";
 
-    public static String XMLTAG_WIDGET_UID = AbstractWidgetModel.PROP_WIDGET_UID; // $NON-NLS-1$
+    public static String XMLTAG_WIDGET_UID = AbstractWidgetModel.PROP_WIDGET_UID;
     public static String XMLTAG_OPI_FILE = AbstractLinkingContainerModel.PROP_OPI_FILE;
 
     /**
@@ -129,7 +129,7 @@ public class XMLUtil {
     private static XMLOutputter getXMLOutputter(boolean prettyFormat) {
         Format format = Format.getRawFormat();
         if (prettyFormat) {
-            format.setIndent("  "); //$NON-NLS-1$
+            format.setIndent("  ");
         }
         // Always use Unix-style line endings.
         format.setLineSeparator("\n");
@@ -166,7 +166,7 @@ public class XMLUtil {
     public static void widgetToOutputStream(AbstractWidgetModel widgetModel, OutputStream out, boolean prettyFormat)
             throws IOException {
         XMLOutputter xmlOutputter = getXMLOutputter(prettyFormat);
-        out.write(XML_HEADER.getBytes("UTF-8")); //$NON-NLS-1$
+        out.write(XML_HEADER.getBytes("UTF-8"));
         xmlOutputter.output(widgetToXMLElement(widgetModel), out);
     }
 
@@ -547,7 +547,7 @@ public class XMLUtil {
 
                 AbstractContainerModel loadTarget = inside;
 
-                if (!container.getGroupName().trim().equals("")) { //$NON-NLS-1$
+                if (!container.getGroupName().trim().equals("")) {
                     AbstractWidgetModel group = inside.getChildByName(container.getGroupName());
                     if (group != null && group instanceof AbstractContainerModel) {
                         loadTarget = (AbstractContainerModel) group;
@@ -694,7 +694,7 @@ public class XMLUtil {
     }
 
     private static Element stringToXML(String xmlString) throws JDOMException, IOException {
-        InputStream stream = new ByteArrayInputStream(xmlString.getBytes("UTF-8")); //$NON-NLS-1$
+        InputStream stream = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
         return inputStreamToXML(stream);
     }
 }

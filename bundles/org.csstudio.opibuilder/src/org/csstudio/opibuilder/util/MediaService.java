@@ -287,7 +287,7 @@ public final class MediaService {
                         // while Display Builder allows additional spaces as in
                         // "Liberation Sans - regular - 12".
                         // Patch line to be upwards-compatible
-                        trimmedLine = trimmedLine.replaceAll(" +- +", "-"); //$NON-NLS-2$
+                        trimmedLine = trimmedLine.replaceAll(" +- +", "-");
                         FontData fontdata = StringConverter.asFontData(trimmedLine);
                         if (fontdata.getName().equals("SystemDefault")) {
                             fontdata.setName(systemFontName);
@@ -310,7 +310,7 @@ public final class MediaService {
 
         String osname = getOSName();
         for (String trimmedName : trimmedNameSet) {
-            String equippedName = trimmedName + "(" + osname + ")"; //$NON-NLS-2$
+            String equippedName = trimmedName + "(" + osname + ")";
             if (rawFontMap.containsKey(equippedName)) {
                 fontMap.put(trimmedName, rawFontMap.get(equippedName));
             } else if (rawFontMap.containsKey(trimmedName)) {

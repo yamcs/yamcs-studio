@@ -27,7 +27,7 @@ import org.jdom.Element;
  */
 public class ComplexDataProperty extends AbstractWidgetProperty {
 
-    public static final String XML_ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_TYPE = "type";
 
     private String dialogTitle;
 

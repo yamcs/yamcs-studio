@@ -22,27 +22,27 @@ import org.eclipse.swt.graphics.RGB;
 public class KnobModel extends AbstractMarkedWidgetModel{
 
     /** Color of the knob. */
-    public static final String PROP_KNOB_COLOR = "knob_color"; //$NON-NLS-1$
+    public static final String PROP_KNOB_COLOR = "knob_color";
 
     /** True if the widget is drawn with advanced graphics. In some platforms,
      * advance graphics may not be available, in which case the widget will not be drawn
      * with advanced graphics even this is set to true.*/
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
 
     /**Show value label. */
-    public static final String PROP_SHOW_VALUE_LABEL = "show_value_label"; //$NON-NLS-1$
+    public static final String PROP_SHOW_VALUE_LABEL = "show_value_label";
 
     /** Color of the thumb. */
-    public static final String PROP_THUMB_COLOR = "thumb_color"; //$NON-NLS-1$
+    public static final String PROP_THUMB_COLOR = "thumb_color";
 
     /** True if ramp is gradient. */
-    public static final String PROP_RAMP_GRADIENT = "ramp_gradient"; //$NON-NLS-1$
+    public static final String PROP_RAMP_GRADIENT = "ramp_gradient";
 
     /**
      *The minimum increment step when dragging the thumb.
      */
-    public static final String PROP_INCREMENT = "increment"; //$NON-NLS-1$
+    public static final String PROP_INCREMENT = "increment";
 
 
 
@@ -64,7 +64,7 @@ public class KnobModel extends AbstractMarkedWidgetModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.knob"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.knob";
 
     public KnobModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);

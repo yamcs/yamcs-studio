@@ -52,12 +52,12 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
     /**
      * Extended data key "pointIndex".
      */
-    private static final String EXT_DATA_POINT_INDEX = "pointIndex"; //$NON-NLS-1$
+    private static final String EXT_DATA_POINT_INDEX = "pointIndex";
 
     /**
      * Extended data key "points".
      */
-    private static final String EXT_DATA_POINTS = "points"; //$NON-NLS-1$
+    private static final String EXT_DATA_POINTS = "points";
 
     /**
      * The source edit part.
@@ -99,9 +99,9 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
         super();
         setDisabledCursor(Cursors.NO);
         assert owner != null;
-        assert owner.getFigure() instanceof Polyline : "owner.getFigure() instanceof Polyline"; //$NON-NLS-1$
-        assert ((Polyline) owner.getFigure()).getPoints().size() > pointIndex : "((Polyline) owner.getFigure()).getPoints().size()>pointIndex"; //$NON-NLS-1$
-        assert pointIndex >= 0 : "pointIndex>=0"; //$NON-NLS-1$
+        assert owner.getFigure() instanceof Polyline : "owner.getFigure() instanceof Polyline";
+        assert ((Polyline) owner.getFigure()).getPoints().size() > pointIndex : "((Polyline) owner.getFigure()).getPoints().size()>pointIndex";
+        assert pointIndex >= 0 : "pointIndex>=0";
         _owner = owner;
         _pointIndex = pointIndex;
         _oldPoints = ((Polyline) _owner.getFigure()).getPoints().getCopy();

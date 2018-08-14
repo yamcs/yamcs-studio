@@ -53,15 +53,15 @@ public class KnobFigure extends AbstractRoundRampedFigure {
         private static final int GAP_BTW_BULB_SCALE = 4;
 
         /** Used as a constraint for the scale. */
-        public static final String SCALE = "scale";   //$NON-NLS-1$
+        public static final String SCALE = "scale";  
         /** Used as a constraint for the bulb. */
-        public static final String BULB = "bulb"; //$NON-NLS-1$
+        public static final String BULB = "bulb";
         /** Used as a constraint for the Ramp */
-        public static final String RAMP = "ramp";      //$NON-NLS-1$
+        public static final String RAMP = "ramp";     
         /** Used as a constraint for the thumb */
-        public static final String THUMB = "thumb";      //$NON-NLS-1$
+        public static final String THUMB = "thumb";     
         /** Used as a constraint for the value label*/
-        public static final String VALUE_LABEL = "valueLabel";      //$NON-NLS-1$
+        public static final String VALUE_LABEL = "valueLabel";     
 
         private RoundScale scale;
         private RoundScaledRamp ramp;

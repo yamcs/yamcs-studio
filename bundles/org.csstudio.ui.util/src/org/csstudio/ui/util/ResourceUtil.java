@@ -103,7 +103,7 @@ public final class ResourceUtil {
                 try {
                     folder.create(true, true, null);
                 } catch (CoreException e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e); //$NON-NLS-1$
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e);
                     return ERROROCCURED;
                 }
             }
@@ -129,7 +129,7 @@ public final class ResourceUtil {
                     project.create(null);
                     project.open(null);
                 } catch (CoreException e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e); //$NON-NLS-1$
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e);
                     return ERROROCCURED;
                 }
             }

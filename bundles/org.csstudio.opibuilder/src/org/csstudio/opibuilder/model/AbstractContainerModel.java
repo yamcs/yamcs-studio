@@ -29,14 +29,14 @@ import org.eclipse.gef.GraphicalViewer;
  */
 public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
-    public static final String PROP_CHILDREN = "children"; //$NON-NLS-1$
+    public static final String PROP_CHILDREN = "children";
 
-    public static final String PROP_SELECTION = "selection"; //$NON-NLS-1$
+    public static final String PROP_SELECTION = "selection";
 
     /**
      * Macros of the container, which will be available to its children.
      */
-    public static final String PROP_MACROS = "macros"; //$NON-NLS-1$
+    public static final String PROP_MACROS = "macros";
 
 
     final private AbstractWidgetProperty childrenProperty;

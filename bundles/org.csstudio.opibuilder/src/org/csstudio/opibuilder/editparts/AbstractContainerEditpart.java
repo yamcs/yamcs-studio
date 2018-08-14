@@ -61,7 +61,7 @@ public abstract class AbstractContainerEditpart extends AbstractBaseEditPart {
                 getExecutionMode() == ExecutionMode.EDIT_MODE ? new WidgetXYLayoutEditPolicy() : null);
 
         //the snap feedback effect
-        installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
+        installEditPolicy("Snap Feedback", new SnapFeedbackPolicy());
         if(getExecutionMode() == ExecutionMode.EDIT_MODE)
             installEditPolicy(DropPVtoPVWidgetEditPolicy.DROP_PV_ROLE, new DropPVtoContainerEditPolicy());
     }

@@ -25,13 +25,13 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
 
 
     /** Bit of the PV to be read and writtend.*/
-    public static final String PROP_BIT = "bit"; //$NON-NLS-1$
+    public static final String PROP_BIT = "bit";
 
     /** Text of the label. */
-    public static final String PROP_LABEL = "label"; //$NON-NLS-1$
+    public static final String PROP_LABEL = "label";
 
     /** True if the widget size can be automatically adjusted along with the text size. */
-    public static final String PROP_AUTOSIZE = "auto_size";    //$NON-NLS-1$
+    public static final String PROP_AUTOSIZE = "auto_size";   
 
     /**
      * The color of the selected item.
@@ -41,7 +41,7 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
     /**
      * Unique identifier.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.checkbox"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.checkbox";
 
     public CheckBoxModel() {
         setSize(100, 20);
@@ -54,7 +54,7 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
         addProperty(new IntegerProperty(PROP_BIT, "Bit",
                 WidgetPropertyCategory.Behavior, 0, -1, 63));
         addProperty(new StringProperty(PROP_LABEL, "Label",
-                WidgetPropertyCategory.Display, ""));    //$NON-NLS-1$
+                WidgetPropertyCategory.Display, ""));   
         addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size",
                 WidgetPropertyCategory.Display, false));
         addProperty(new ColorProperty(PROP_SELECTED_COLOR, "Selected Color",

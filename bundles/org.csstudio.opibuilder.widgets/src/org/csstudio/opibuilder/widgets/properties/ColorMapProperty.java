@@ -27,34 +27,34 @@ public class ColorMapProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name <code>PREDEFINEDCOLOR</code>.
      */
-    public static final String XML_ELEMENT_MAP = "map"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_MAP = "map";
     /**
      * XML ELEMENT name <code>MAP</code>.
      */
-    public static final String XML_ELEMENT_E = "e"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_E = "e";
     /**
      * XML Element name <code>INTERPOLATE</code>.
      */
-    public static final String XML_ELEMENT_INTERPOLATE = "interpolate"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_INTERPOLATE = "interpolate";
     /**
      * XML Element name <code>AUTOSCALE</code>.
      */
-    public static final String XML_ELEMENT_AUTOSCALE = "autoscale"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_AUTOSCALE = "autoscale";
 
     /**
      * XML attribute name <code>red</code>.
      */
-    public static final String XML_ATTRIBUTE_RED = "red"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_RED = "red";
 
     /**
      * XML attribute name <code>green</code>.
      */
-    public static final String XML_ATTRIBUTE_GREEN = "green"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_GREEN = "green";
 
     /**
      * XML attribute name <code>blue</code>.
      */
-    public static final String XML_ATTRIBUTE_BLUE = "blue"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_BLUE = "blue";
 
 
 
@@ -133,14 +133,14 @@ public class ColorMapProperty extends AbstractWidgetProperty {
                 Element colorElement = new Element(XML_ELEMENT_E);
                 colorElement.setText(k.toString());
                 RGB color = colorMap.getMap().get(k);
-                colorElement.setAttribute(XML_ATTRIBUTE_RED, "" + color.red); //$NON-NLS-1$
-                colorElement.setAttribute(XML_ATTRIBUTE_GREEN, "" + color.green); //$NON-NLS-1$
-                colorElement.setAttribute(XML_ATTRIBUTE_BLUE, "" + color.blue); //$NON-NLS-1$
+                colorElement.setAttribute(XML_ATTRIBUTE_RED, "" + color.red);
+                colorElement.setAttribute(XML_ATTRIBUTE_GREEN, "" + color.green);
+                colorElement.setAttribute(XML_ATTRIBUTE_BLUE, "" + color.blue);
                 preDefinedElement.addContent(colorElement);
             }
         }else{
             preDefinedElement.setText(Integer.toString(
-                PredefinedColorMap.toIndex(colorMap.getPredefinedColorMap()))); //$NON-NLS-1$
+                PredefinedColorMap.toIndex(colorMap.getPredefinedColorMap())));
         }
         propElement.addContent(interpolateElement);
         propElement.addContent(autoScaleElement);

@@ -29,25 +29,25 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
     public static final String PROP_TRANSPARENT = "transparent_background";
 
     /** Lower limit of the widget. */
-    public static final String PROP_MIN = "minimum"; //$NON-NLS-1$
+    public static final String PROP_MIN = "minimum";
 
     /** Higher limit of the widget. */
-    public static final String PROP_MAX = "maximum"; //$NON-NLS-1$
+    public static final String PROP_MAX = "maximum";
 
     /** The minimum distance (in pixels) between major ticks.*/
-    public static final String PROP_MAJOR_TICK_STEP_HINT = "major_tick_step_hint"; //$NON-NLS-1$
+    public static final String PROP_MAJOR_TICK_STEP_HINT = "major_tick_step_hint";
 
     /**Show minor ticks. */
-    public static final String PROP_SHOW_MINOR_TICKS = "show_minor_ticks"; //$NON-NLS-1$
+    public static final String PROP_SHOW_MINOR_TICKS = "show_minor_ticks";
 
     /** Show scale. */
-    public static final String PROP_SHOW_SCALE = "show_scale"; //$NON-NLS-1$
+    public static final String PROP_SHOW_SCALE = "show_scale";
 
     /** True if the scale is log scale. */
-    public static final String PROP_LOG_SCALE = "log_scale"; //$NON-NLS-1$
+    public static final String PROP_LOG_SCALE = "log_scale";
 
     /** True if the scale is log scale. */
-    public static final String PROP_SCALE_FONT = "scale_font"; //$NON-NLS-1$
+    public static final String PROP_SCALE_FONT = "scale_font";
 
     /**
      * The numeric format pattern for the scale.
@@ -97,10 +97,10 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
                 WidgetPropertyCategory.Display,    MediaService.DEFAULT_FONT));
 
         addProperty(new StringProperty(PROP_SCALE_FORMAT, "Scale Format",
-                WidgetPropertyCategory.Display, "")); //$NON-NLS-1$
+                WidgetPropertyCategory.Display, ""));
 
         addProperty(new StringProperty(PROP_VALUE_LABEL_FORMAT, "Value Label Format",
-                WidgetPropertyCategory.Display, "")); //$NON-NLS-1$
+                WidgetPropertyCategory.Display, ""));
     }
 
 

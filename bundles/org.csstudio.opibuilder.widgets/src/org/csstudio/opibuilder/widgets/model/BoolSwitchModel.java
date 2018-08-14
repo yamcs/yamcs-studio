@@ -26,7 +26,7 @@ public class BoolSwitchModel extends AbstractBoolControlModel {
     /** True if the widget is drawn with advanced graphics. In some platforms,
      * advance graphics may not be available, in which case the widget will not be drawn
      * with advanced graphics even this is set to true.*/
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
 
     /** The default value of the height property. */
@@ -58,7 +58,7 @@ public class BoolSwitchModel extends AbstractBoolControlModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.BoolSwitch"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.BoolSwitch";
 
     @Override
     public String getTypeID() {

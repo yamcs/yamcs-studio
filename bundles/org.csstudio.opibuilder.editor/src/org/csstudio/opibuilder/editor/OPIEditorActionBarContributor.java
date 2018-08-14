@@ -67,7 +67,7 @@ public class OPIEditorActionBarContributor extends ActionBarContributor {
                 GEFActionConstants.TOGGLE_GRID_VISIBILITY,
                 "Toggle Grid Visibility", IAction.AS_CHECK_BOX);
         a.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-                OPIBuilderPlugin.PLUGIN_ID, "icons/grid.png")); //$NON-NLS-1$
+                OPIBuilderPlugin.PLUGIN_ID, "icons/grid.png"));
         addRetargetAction(a);
 
         a = new RetargetAction(GEFActionConstants.TOGGLE_SNAP_TO_GEOMETRY,

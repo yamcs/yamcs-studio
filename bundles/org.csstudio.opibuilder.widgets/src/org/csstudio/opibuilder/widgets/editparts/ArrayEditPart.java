@@ -296,7 +296,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
             }
             try {
                 childModel.setScaleOptions(false, false, false);
-                childModel.setPropertyValue(IPVWidgetModel.PROP_PVNAME, ""); //$NON-NLS-1$
+                childModel.setPropertyValue(IPVWidgetModel.PROP_PVNAME, "");
                 childModel.setPropertyValue(IPVWidgetModel.PROP_BORDER_ALARMSENSITIVE, false);
             } catch (NonExistPropertyException e) {
             }

@@ -40,7 +40,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
         propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();
         configureProperties();
         addProperty(new StringProperty(PROP_DESCRIPTION, "Description",
-                WidgetPropertyCategory.Basic, ""));        //$NON-NLS-1$
+                WidgetPropertyCategory.Basic, ""));       
     }
 
     /**Add a property to the widget.

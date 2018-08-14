@@ -9,9 +9,9 @@ import org.csstudio.opibuilder.properties.BooleanProperty;
  */
 public class WidgetScaleData extends AbstractComplexData {
 
-    public final static String PROP_WIDTH_SCALABLE = "width_scalable"; //$NON-NLS-1$
-    public final static String PROP_HEIGHT_SCALABLE = "height_scalable"; //$NON-NLS-1$
-    public final static String PROP_KEEP_WH_RATIO = "keep_wh_ratio"; //$NON-NLS-1$
+    public final static String PROP_WIDTH_SCALABLE = "width_scalable";
+    public final static String PROP_HEIGHT_SCALABLE = "height_scalable";
+    public final static String PROP_KEEP_WH_RATIO = "keep_wh_ratio";
 
     private WidgetScaleData(AbstractWidgetModel widgetModel){
         super(widgetModel);
@@ -53,7 +53,7 @@ public class WidgetScaleData extends AbstractComplexData {
 
     @Override
     public String toString() {
-        return ""+isWidthScalable() + " " + isHeightScalable() + //$NON-NLS-1$ //$NON-NLS-2$
-                " " + isKeepWHRatio(); //$NON-NLS-1$
+        return ""+isWidthScalable() + " " + isHeightScalable() +
+                " " + isKeepWHRatio();
     }
 }

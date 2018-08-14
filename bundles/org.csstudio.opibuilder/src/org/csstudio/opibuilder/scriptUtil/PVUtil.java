@@ -270,7 +270,7 @@ public class PVUtil {
         Instant time = VTypeHelper.getTimestamp(checkPVValue(pv));
         if (time != null)
             return timeFormat.format(time);
-        return ""; //$NON-NLS-1$
+        return "";
     }
 
     /***
@@ -291,7 +291,7 @@ public class PVUtil {
             }
             return timeFormat.format(time);
         }
-        return ""; //$NON-NLS-1$
+        return "";
     }
 
     /**

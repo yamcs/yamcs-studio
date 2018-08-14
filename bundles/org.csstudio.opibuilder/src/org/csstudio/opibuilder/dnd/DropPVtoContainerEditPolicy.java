@@ -45,7 +45,7 @@ public class DropPVtoContainerEditPolicy extends DropPVtoPVWidgetEditPolicy {
                     if(dialog.open() == Window.OK){
                         String typeID = dialog.getOutput();
                         CompoundCommand command = new CompoundCommand("Create Widget");
-                        String[] pvNames = dropPVRequest.getPvNames(); //$NON-NLS-1$
+                        String[] pvNames = dropPVRequest.getPvNames();
                         Point location = dropPVRequest.getLocation().getCopy();
                         AbstractContainerModel container =
                             ((AbstractContainerEditpart)dropPVRequest.getTargetWidget()).getWidgetModel();

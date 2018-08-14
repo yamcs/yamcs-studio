@@ -19,7 +19,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 public class EditEmbeddedOPIHandler extends AbstractHandler implements IHandler {
 
-    private static final String OPI_EDITOR_ID = "org.csstudio.opibuilder.OPIEditor"; //$NON-NLS-1$
+    private static final String OPI_EDITOR_ID = "org.csstudio.opibuilder.OPIEditor";
 
     /**
      * Determine the widget that was the object of the mouse click.

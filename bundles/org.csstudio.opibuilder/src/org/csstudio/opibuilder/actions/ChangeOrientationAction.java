@@ -29,10 +29,10 @@ import org.eclipse.ui.IWorkbenchPart;
 public class ChangeOrientationAction extends SelectionAction {
 
     public enum OrientationType{
-        FLIP_HORIZONTAL("Flip Horizontal", "icons/flip_horizontal.png"), //$NON-NLS-2$
-        FLIP_VERTICAL("Flip Vertical", "icons/flip_vertical.png"), //$NON-NLS-2$
-        ROTATE_CLOCKWISE("Rotate Right " + "90\u00b0", "icons/rotate_clockwise.png"), //$NON-NLS-2$ //$NON-NLS-3$
-        ROTATE_COUNTERCLOCKWISE("Rotate Left " + "90\u00b0", "icons/rotate_anticlockwise.png");    //$NON-NLS-2$ //$NON-NLS-3$
+        FLIP_HORIZONTAL("Flip Horizontal", "icons/flip_horizontal.png"),
+        FLIP_VERTICAL("Flip Vertical", "icons/flip_vertical.png"),
+        ROTATE_CLOCKWISE("Rotate Right " + "90\u00b0", "icons/rotate_clockwise.png"),
+        ROTATE_COUNTERCLOCKWISE("Rotate Left " + "90\u00b0", "icons/rotate_anticlockwise.png");   
         private String label;
         private String iconPath;
         private OrientationType(String label, String iconPath) {
@@ -45,7 +45,7 @@ public class ChangeOrientationAction extends SelectionAction {
         }
 
         public String getActionID(){
-            return "org.csstudio.opibuilder.actions." + toString(); //$NON-NLS-1$
+            return "org.csstudio.opibuilder.actions." + toString();
         }
 
         public ImageDescriptor getImageDescriptor(){

@@ -90,16 +90,16 @@ public class WidgetTreeEditpart extends AbstractTreeEditPart {
         Object obj = getViewer().getProperty(ShowIndexInTreeViewAction.SHOW_INDEX_PROPERTY);
         if(obj != null && obj instanceof Boolean && (Boolean)obj){
             sb.append(Integer.toString(getWidgetModel().getIndex()));
-            sb.append("_"); //$NON-NLS-1$
+            sb.append("_");
         }
         sb.append(getWidgetModel().getName());
         if(getWidgetModel() instanceof AbstractPVWidgetModel){
              AbstractPVWidgetModel pvWidgetModel = (AbstractPVWidgetModel)getWidgetModel();
              String pvName = pvWidgetModel.getPVName();
              if(pvName != null && !pvName.trim().equals("")){
-                 sb.append("("); //$NON-NLS-1$
+                 sb.append("(");
                  sb.append(pvName);
-                 sb.append(")"); //$NON-NLS-1$
+                 sb.append(")");
              }
         }
         return sb.toString();

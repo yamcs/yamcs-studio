@@ -106,7 +106,7 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
      */
     private static final boolean DEFAULT_TOGGLE_BUTTON = false;
 
-    private static final String[] FILE_EXTENSIONS = new String[] { "jpg", "jpeg", "gif", "bmp", "png" }; //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    private static final String[] FILE_EXTENSIONS = new String[] { "jpg", "jpeg", "gif", "bmp", "png" };
 
     /**
      * Standard constructor.

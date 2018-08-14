@@ -164,8 +164,8 @@ public class OPIColor implements IAdaptable {
     }
 
     private String getID() {
-        return "OPIBUILDER.COLORPROPERTY.ICON_" //$NON-NLS-1$
-                + colorValue.red + "_" + colorValue.green + "_" + colorValue.blue; //$NON-NLS-1$ //$NON-NLS-2$
+        return "OPIBUILDER.COLORPROPERTY.ICON_"
+                + colorValue.red + "_" + colorValue.green + "_" + colorValue.blue;
     }
 
     /**

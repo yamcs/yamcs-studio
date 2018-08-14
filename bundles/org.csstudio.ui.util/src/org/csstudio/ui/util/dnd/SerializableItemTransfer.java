@@ -31,7 +31,6 @@ import org.eclipse.swt.dnd.TransferData;
  * @author Gabriele Carcassi
  * @author Kay Kasemir
  */
-@SuppressWarnings("nls")
 public class SerializableItemTransfer extends ByteArrayTransfer
 {
     /** Type handled by this Transfer */

@@ -10,12 +10,6 @@ package org.csstudio.swt.widgets;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 
-/** Access to preference settings.
- *
- *  See preferences.ini for details on the available settings
- *  @author Kay Kasemir
- */
-@SuppressWarnings("nls")
 public class Preferences
 {
 
@@ -48,6 +42,6 @@ public class Preferences
              return 5000;
          else
              return prefs.getInt(
-                     Activator.PLUGIN_ID, "url_file_load_timeout", 5000, null); //$NON-NLS-1$
+                     Activator.PLUGIN_ID, "url_file_load_timeout", 5000, null);
     }
 }

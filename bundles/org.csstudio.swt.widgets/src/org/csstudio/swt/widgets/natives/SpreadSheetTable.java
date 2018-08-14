@@ -62,9 +62,9 @@ public class SpreadSheetTable extends Composite {
         CUSTOMIZED
     }
 
-    private static final String TEXT_EDITING_SUPPORT_KEY = "text_editing_support"; //$NON-NLS-1$
+    private static final String TEXT_EDITING_SUPPORT_KEY = "text_editing_support";
 
-    private static final String[] DEFAULT_BOOLEA_TEXTS = new String[]{"No", "Yes"}; //$NON-NLS-1$ //$NON-NLS-2$
+    private static final String[] DEFAULT_BOOLEA_TEXTS = new String[]{"No", "Yes"};
 
 
     /**
@@ -142,7 +142,7 @@ public class SpreadSheetTable extends Composite {
                 switch (cellEditorType) {
                 case CHECKBOX:
                     if(cellEditorData==null)
-                        cellEditorData = DEFAULT_BOOLEA_TEXTS; //$NON-NLS-1$ //$NON-NLS-2$
+                        cellEditorData = DEFAULT_BOOLEA_TEXTS;
                     cellEditor = new CheckboxCellEditor(tableViewer.getTable()){
                         protected Object doGetValue() {
                             return ((Boolean) super.doGetValue())?((String[])cellEditorData)[1]:((String[])cellEditorData)[0];
@@ -259,9 +259,9 @@ public class SpreadSheetTable extends Composite {
                 String[] booleanTexts = (String[]) ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
                         getData(TEXT_EDITING_SUPPORT_KEY))).cellEditorData;
                 if(booleanTexts==null)
-                    booleanTexts = DEFAULT_BOOLEA_TEXTS; //$NON-NLS-1$ //$NON-NLS-2$
+                    booleanTexts = DEFAULT_BOOLEA_TEXTS;
                 if(getColumnText(element, columnIndex).trim().toLowerCase().equals(
-                        booleanTexts[1].toLowerCase())) //$NON-NLS-1$
+                        booleanTexts[1].toLowerCase()))
                     return getOnImage();
                 else
                     return getOffImage();
@@ -552,7 +552,7 @@ public class SpreadSheetTable extends Composite {
      */
     public void insertColumn(int index) {
         for (List<String> row : input) {
-            row.add(index, ""); //$NON-NLS-1$
+            row.add(index, "");
         }
         final TableViewerColumn viewerColumn = new TableViewerColumn(
                 tableViewer, SWT.NONE, index);
@@ -574,7 +574,7 @@ public class SpreadSheetTable extends Composite {
      */
     public void insertRow(int index) {
         String[] array = new String[getColumnCount()];
-        Arrays.fill(array, ""); //$NON-NLS-1$
+        Arrays.fill(array, "");
         input.add(index, new ArrayList<String>(Arrays.asList(array)));
         tableViewer.refresh(false);
         fireTableModified();
@@ -659,7 +659,7 @@ public class SpreadSheetTable extends Composite {
         if(row >= input.size()){
             for(int i=input.size(); i<=row; i++){
                 String[] array = new String[getColumnCount()];
-                Arrays.fill(array, ""); //$NON-NLS-1$
+                Arrays.fill(array, "");
                 input.add(new ArrayList<String>(Arrays.asList(array)));
             }
             tableViewer.refresh();
@@ -913,7 +913,7 @@ public class SpreadSheetTable extends Composite {
 
     private synchronized static Image getOnImage() {
         if (onImage == null) {
-            String path = "images/checked.gif"; //$NON-NLS-1$
+            String path = "images/checked.gif";
 
             InputStream stream = SpreadSheetTable.class.getResourceAsStream(path);
             onImage = new Image(Display.getCurrent(), stream);
@@ -927,7 +927,7 @@ public class SpreadSheetTable extends Composite {
 
     private synchronized static Image getOffImage() {
         if (offImage == null) {
-            String path = "images/unchecked.gif"; //$NON-NLS-1$
+            String path = "images/unchecked.gif";
 
             InputStream stream = SpreadSheetTable.class.getResourceAsStream(path);
             offImage = new Image(Display.getCurrent(), stream);

@@ -36,7 +36,7 @@ public class NewPythonScriptWizard extends Wizard implements INewWizard {
 
     @Override
     public void addPages() {
-        pyFilePage = new NewPythonScriptWizardPage("PythonScriptFilePage", selection); //$NON-NLS-1$
+        pyFilePage = new NewPythonScriptWizardPage("PythonScriptFilePage", selection);
         addPage(pyFilePage);
     }
 
@@ -59,7 +59,7 @@ public class NewPythonScriptWizard extends Wizard implements INewWizard {
         } catch (PartInitException e) {
             MessageDialog.openError(null, "Open Python Script File error",
                     "Failed to open the newly created Python Script File. \n" + e.getMessage());
-            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Python Editor error", e); //$NON-NLS-1$
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Python Editor error", e);
         }
 
         return true;

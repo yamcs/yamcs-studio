@@ -46,7 +46,7 @@ public class MultiLineTextCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void doSetValue(Object value) {
         if(value == null)
-            stringValue =  "";  //$NON-NLS-1$
+            stringValue =  ""; 
         else
             stringValue = value.toString();
 

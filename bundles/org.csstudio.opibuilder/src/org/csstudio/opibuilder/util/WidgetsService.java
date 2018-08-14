@@ -82,9 +82,9 @@ public final class WidgetsService {
         }
         boyElements.addAll(otherElements);
         for(IConfigurationElement element : boyElements){
-            String typeId = element.getAttribute("typeId"); //$NON-NLS-1$
-            String name = element.getAttribute("name"); //$NON-NLS-1$
-            String icon = element.getAttribute("icon"); //$NON-NLS-1$
+            String typeId = element.getAttribute("typeId");
+            String name = element.getAttribute("name");
+            String icon = element.getAttribute("icon");
             String onlineHelpHtml = element.getAttribute("onlineHelpHtml"); ////$NON-NLS-1$
             String pluginId = element.getDeclaringExtension()
                     .getNamespaceIdentifier();
@@ -115,7 +115,6 @@ public final class WidgetsService {
         //    Collections.sort(list);
     }
 
-    @SuppressWarnings("nls")
     private void loadAllFeedbackFactories(){
         IExtensionRegistry extReg = Platform.getExtensionRegistry();
         IConfigurationElement[] confElements =

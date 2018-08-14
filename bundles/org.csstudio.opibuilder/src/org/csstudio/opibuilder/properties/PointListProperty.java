@@ -24,17 +24,17 @@ public class PointListProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name <code>POINT</code>.
      */
-    public static final String XML_ELEMENT_POINT= "point"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_POINT= "point";
 
     /**
      * XML ATTRIBUTE name <code>X</code>.
      */
-    public static final String XML_ATTRIBUTE_X = "x"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_X = "x";
 
     /**
      * XML ATTRIBUTE name <code>Y</code>.
      */
-    public static final String XML_ATTRIBUTE_Y = "y"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_Y = "y";
 
 
     /**PointList Property Constructor. The property value type is {@link PointList}.

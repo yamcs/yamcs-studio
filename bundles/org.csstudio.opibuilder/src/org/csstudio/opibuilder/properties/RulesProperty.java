@@ -26,44 +26,44 @@ public class RulesProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name <code>RULE</code>.
      */
-    public static final String XML_ELEMENT_RULE = "rule"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_RULE = "rule";
 
     /**
      * XML ATTRIBUTE name <code>NAME</code>.
      */
-    public static final String XML_ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_NAME = "name";
 
     /**
      * XML ATTRIBUTE name <code>PROPID</code>.
      */
-    public static final String XML_ATTRIBUTE_PROPID= "prop_id"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_PROPID= "prop_id";
 
     /**
      * XML ATTRIBUTE name <code>OUTPUTEXPRESSION</code>.
      */
-    public static final String XML_ATTRIBUTE_OUTPUTEXPRESSION = "out_exp"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_OUTPUTEXPRESSION = "out_exp";
 
     /**
      * XML ELEMENT name <code>EXPRESSION</code>.
      */
-    public static final String XML_ELEMENT_EXPRESSION = "exp"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_EXPRESSION = "exp";
 
     /**
      * XML ATTRIBUTE name <code>BOOLEXP</code>.
      */
-    public static final String XML_ATTRIBUTE_BOOLEXP= "bool_exp"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_BOOLEXP= "bool_exp";
 
     /**
      * XML ELEMENT name <code>VALUE</code>.
      */
-    public static final String XML_ELEMENT_VALUE = "value"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_VALUE = "value";
 
     /**
      * XML Element name <code>PV</code>.
      */
-    public static final String XML_ELEMENT_PV = "pv"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_PV = "pv";
 
-    public static final String XML_ATTRIBUTE_TRIGGER = "trig"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_TRIGGER = "trig";
 
     /**Rules Property Constructor. The property value type is {@link RulesInput}.
      * @param prop_id the property id which should be unique in a widget model.

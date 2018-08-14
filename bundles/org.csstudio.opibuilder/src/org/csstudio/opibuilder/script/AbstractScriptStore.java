@@ -253,7 +253,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
                     final String message = NLS
                             .bind("Error in {0}.{1}\n{2}",
                                     new String[] { errorSource,
-                                            !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning, //$NON-NLS-1$
+                                            !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning,
                                             e.toString() });
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }

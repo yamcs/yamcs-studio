@@ -93,7 +93,7 @@ public class OPIColorDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html"; //$NON-NLS-1$; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html";;
     }
 
     @Override

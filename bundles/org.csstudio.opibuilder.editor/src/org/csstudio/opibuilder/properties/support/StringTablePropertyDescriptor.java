@@ -49,14 +49,14 @@ public final class StringTablePropertyDescriptor extends TextPropertyDescriptor 
             @Override
             public String getText(Object element) {
                 if(element == null)
-                    return ""; //$NON-NLS-1$
+                    return "";
                 else if(!(element instanceof String[][]))
                     return element.toString();
                 String[][] stringTable = (String[][])element;
                 if(stringTable.length >0)
                     return Arrays.toString(stringTable[0]) +
-                            (stringTable.length > 1? "..." : ""); //$NON-NLS-1$ //$NON-NLS-2$
-                return ""; //$NON-NLS-1$
+                            (stringTable.length > 1? "..." : "");
+                return "";
             }
         });
     }

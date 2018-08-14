@@ -73,8 +73,8 @@ public class MacroEditDialog extends RowEditDialog {
 
     @Override
     protected void okPressed() {
-        rowData[0] = titleText == null ? "" : titleText.getText().trim(); //$NON-NLS-1$
-        rowData[1] = detailsText == null ? "" : detailsText.getText().trim(); //$NON-NLS-1$
+        rowData[0] = titleText == null ? "" : titleText.getText().trim();
+        rowData[1] = detailsText == null ? "" : detailsText.getText().trim();
         super.okPressed();
     }
 

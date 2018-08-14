@@ -118,10 +118,10 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         }
     }
 
-    private static final String DEFAULT_ENGINEERING_FORMAT = "0.##E0"; //$NON-NLS-1$
+    private static final String DEFAULT_ENGINEERING_FORMAT = "0.##E0";
 
     /** the default label format */
-    private static final String DEFAULT_DECIMAL_FORMAT = "############.##"; //$NON-NLS-1$
+    private static final String DEFAULT_DECIMAL_FORMAT = "############.##";
 
     /**
      * the digits limit to be displayed in engineering format
@@ -400,7 +400,7 @@ public class ScrollbarFigure extends Figure implements Orientable, Introspectabl
         label.setBackgroundColor(LABEL_COLOR);
         label.setBorder(new LineBorder(GRAY_COLOR));
         label.setVisible(false);
-        add(label, "Label"); //$NON-NLS-1$
+        add(label, "Label");
     }
 
     private void initLabelTimer() {

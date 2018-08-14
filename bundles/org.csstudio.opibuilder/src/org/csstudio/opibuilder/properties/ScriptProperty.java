@@ -30,17 +30,17 @@ public class ScriptProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name <code>PATH</code>.
      */
-    public static final String XML_ELEMENT_PATH = "path"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_PATH = "path";
 
     /**
      * XML ATTRIBUTE name <code>PATHSTRING</code>.
      */
-    public static final String XML_ATTRIBUTE_PATHSTRING = "pathString"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_PATHSTRING = "pathString";
 
-    public static final String XML_ATTRIBUTE_CHECKCONNECT = "checkConnect"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_CHECKCONNECT = "checkConnect";
 
-    public static final String XML_ATTRIBUTE_SKIP_FIRST_EXECUTION = "sfe"; //$NON-NLS-1$
-    public static final String XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR = "seoe"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_SKIP_FIRST_EXECUTION = "sfe";
+    public static final String XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR = "seoe";
 
     public static final String EMBEDDEDJS = "EmbeddedJs";
     public static final String EMBEDDEDPY = "EmbeddedPy";
@@ -48,13 +48,13 @@ public class ScriptProperty extends AbstractWidgetProperty {
     /**
      * XML Element name <code>PV</code>.
      */
-    public static final String XML_ELEMENT_PV = "pv"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_PV = "pv";
 
-    public static final String XML_ATTRIBUTE_TRIGGER = "trig"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_TRIGGER = "trig";
 
-    public static final String XML_ELEMENT_SCRIPT_TEXT = "scriptText"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_SCRIPT_TEXT = "scriptText";
 
-    private static final String XML_ELEMENT_SCRIPT_NAME = "scriptName"; //$NON-NLS-1$
+    private static final String XML_ELEMENT_SCRIPT_NAME = "scriptName";
 
     /**
      * Script Property Constructor. The property value type is {@link ScriptsInput}.

@@ -34,7 +34,7 @@ public class WidgetTreeEditPolicy extends AbstractEditPolicy {
             //request.setEditParts(getHost());
             request.setEditParts(req.getEditParts());
             request.setLocation(req.getLocation());
-            req.setType(""); //$NON-NLS-1$
+            req.setType("");
             return parent.getCommand(request);
         }
         return UnexecutableCommand.INSTANCE;

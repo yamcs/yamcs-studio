@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Combo;
  */
 public class ComboHistoryHelper {
 
-    private static final String TAG = "values"; //$NON-NLS-1$
+    private static final String TAG = "values";
     private static final int DEFAULT_HISTORY_SIZE = 10;
     private final IDialogSettings settings;
     private final String tag;

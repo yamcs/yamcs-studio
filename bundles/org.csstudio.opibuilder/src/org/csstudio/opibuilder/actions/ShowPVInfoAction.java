@@ -42,7 +42,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
         public PVsInfoDialog(Shell parentShell, String dialogTitle, Map<String, IPV> pvMap) {
             super(parentShell, dialogTitle, null, "PVs' details on this widget:",
-                    MessageDialog.INFORMATION, new String[] { JFaceResources.getString("ok")}, 0); //$NON-NLS-1$
+                    MessageDialog.INFORMATION, new String[] { JFaceResources.getString("ok")}, 0);
             this.pvMap = pvMap;
         }
 
@@ -108,10 +108,10 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Name: " + pv.getName() + "\n"); //$NON-NLS-2$
-        sb.append("State: " + stateInfo + "\n"); //$NON-NLS-2$
+        sb.append("Name: " + pv.getName() + "\n");
+        sb.append("State: " + stateInfo + "\n");
         if(pv.getValue() != null){
-            sb.append((pv.isConnected()? "Value: " : "Last received value: ") + pv.getValue()+ "\n"); //$NON-NLS-2$
+            sb.append((pv.isConnected()? "Value: " : "Last received value: ") + pv.getValue()+ "\n");
             sb.append("Display Info: ");
             Display displayInfo = VTypeHelper.getDisplayInfo(pv.getValue());
             if(displayInfo != null){
@@ -136,7 +136,7 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                 sb.append("\nAlarm_High: ");
                 sb.append(displayInfo.getUpperAlarmLimit());
             }else
-                sb.append("null"); //$NON-NLS-1$
+                sb.append("null");
         }else{
             sb.append("Value: null");
         }

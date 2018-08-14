@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.Plugin;
  */
 public class Activator extends Plugin
 {
-    final public static String ID = "org.csstudio.platform.workspace";  //$NON-NLS-1$
+    final public static String ID = "org.csstudio.platform.workspace"; 
     private static Activator plugin = null;
 
     public Activator()

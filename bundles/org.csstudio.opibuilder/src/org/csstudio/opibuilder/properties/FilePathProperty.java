@@ -89,7 +89,7 @@ public class FilePathProperty extends AbstractWidgetProperty {
             WidgetPropertyCategory category, IPath defaultValue,
             String[] fileExtensions, boolean buildAbsolutePath) {
         super(prop_id, description, category,
-                defaultValue == null ? new Path("") : defaultValue); //$NON-NLS-1$
+                defaultValue == null ? new Path("") : defaultValue);
         this.fileExtensions = fileExtensions;
         this.buildAbsolutePath = buildAbsolutePath;
     }

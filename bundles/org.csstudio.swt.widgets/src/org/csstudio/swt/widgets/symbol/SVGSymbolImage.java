@@ -316,8 +316,8 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
         try {
-            IPath workSpacePath = ResourceUtil.workspacePathToSysPath(new Path("/")); //$NON-NLS-1$
-            String uri = "file://" + (workSpacePath == null ? "" : workSpacePath.toOSString()) //$NON-NLS-1$
+            IPath workSpacePath = ResourceUtil.workspacePathToSysPath(new Path("/"));
+            String uri = "file://" + (workSpacePath == null ? "" : workSpacePath.toOSString())
                     + imagePath.toString();
             svgDocument = factory.createDocument(uri, inputStream);
             svgHandler = new SVGHandler((SVGDocument) svgDocument, Display.getCurrent());

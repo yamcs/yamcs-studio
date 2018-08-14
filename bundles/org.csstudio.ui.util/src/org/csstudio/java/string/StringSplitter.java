@@ -57,7 +57,6 @@ public class StringSplitter
      *  @return Array of individual elements
      *  @throws Exception on parse error (missing end of quoted string)
      */
-    @SuppressWarnings("nls")
     public static String[] splitIgnoreInQuotes(final String source,
                                                final char splitChar,
                                                final boolean deleteHeadTailQuotes) throws Exception

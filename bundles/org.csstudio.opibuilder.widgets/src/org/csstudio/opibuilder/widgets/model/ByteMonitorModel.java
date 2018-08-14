@@ -30,7 +30,7 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.bytemonitor"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.bytemonitor";
 
     /** The number of bits to display */
     public static final String PROP_NUM_BITS = "numBits";
@@ -39,7 +39,7 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     public static final String PROP_START_BIT = "startBit";
 
     /** True if the LEDs are horizontal arranged. */
-    public static final String PROP_HORIZONTAL = "horizontal"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL = "horizontal";
 
     /** Reverse the direction that bytes are displayed normal display is start bit on right or bottom*/
     public static final String PROP_BIT_REVERSE = "bitReverse";
@@ -51,7 +51,7 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     public static final String PROP_OFF_COLOR = "off_color";
 
     /** True if the LEDs are square LED. */
-    public static final String PROP_SQUARE_LED = "square_led"; //$NON-NLS-1$
+    public static final String PROP_SQUARE_LED = "square_led";
 
     /** The default color of the on color property. */
     private static final RGB DEFAULT_ON_COLOR = new RGB(0,255,0);
@@ -59,17 +59,17 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     private static final RGB DEFAULT_OFF_COLOR = new RGB(0, 100 ,0);
 
     /** The ID of the effect 3D property. */
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
     /** Label of each bit */
-    public static final String PROP_LABELS = "label"; //$NON-NLS-1$
+    public static final String PROP_LABELS = "label";
 
     /** Spacing between LEDs */
-    public static final String PROP_LED_BORDER = "led_border"; //$NON-NLS-1$
+    public static final String PROP_LED_BORDER = "led_border";
     /** Color of space between LEDs */
-    public static final String PROP_LED_BORDER_COLOR = "led_border_color"; //$NON-NLS-1$
+    public static final String PROP_LED_BORDER_COLOR = "led_border_color";
 
-    public static final String PROP_PACK_LEDS = "led_packed"; //$NON-NLS-1$
+    public static final String PROP_PACK_LEDS = "led_packed";
 
     public static final Integer DEFAULT_LED_BORDER = 3;
     public static final Color DEFAULT_LED_BORDER_COLOR = CustomMediaFactory.getInstance().getColor(

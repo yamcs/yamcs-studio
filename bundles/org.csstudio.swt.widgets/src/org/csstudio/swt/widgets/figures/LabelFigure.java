@@ -34,7 +34,7 @@ public class LabelFigure extends Figure implements Introspectable{
     protected boolean runMode;
 
     protected boolean selectable = true;
-    private String text = ""; //$NON-NLS-1$
+    private String text = "";
     private Point textLocation;
     private Dimension textSize;
 

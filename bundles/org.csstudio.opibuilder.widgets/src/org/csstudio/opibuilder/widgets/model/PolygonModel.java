@@ -19,7 +19,7 @@ public class PolygonModel extends AbstractPolyModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.polygon"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.polygon";
 
 
     @Override

@@ -57,7 +57,7 @@ public final class PointListHelper {
         if (width <= 0 || height <= 0) {
             return points;
             //    throw new IllegalArgumentException(
-        //            "Illegal dimensions. Width and height must be > 0."); //$NON-NLS-1$
+        //            "Illegal dimensions. Width and height must be > 0.");
         }
 
         double oldW = points.getBounds().width;

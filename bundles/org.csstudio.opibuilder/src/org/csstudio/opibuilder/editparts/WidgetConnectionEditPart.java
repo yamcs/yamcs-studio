@@ -692,12 +692,12 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                 @Override
                 public boolean testAttribute(Object target, String name,
                         String value) {
-                    if (name.equals("executionMode") && //$NON-NLS-1$
-                            value.equals("EDIT_MODE") && //$NON-NLS-1$
+                    if (name.equals("executionMode") &&
+                            value.equals("EDIT_MODE") &&
                             getExecutionMode() == ExecutionMode.EDIT_MODE)
                         return true;
-                    if (name.equals("executionMode") && //$NON-NLS-1$
-                            value.equals("RUN_MODE") && //$NON-NLS-1$
+                    if (name.equals("executionMode") &&
+                            value.equals("RUN_MODE") &&
                             getExecutionMode() == ExecutionMode.RUN_MODE)
                         return true;
                     return false;

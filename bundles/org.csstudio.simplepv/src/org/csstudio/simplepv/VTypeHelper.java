@@ -95,7 +95,7 @@ public class VTypeHelper {
         }
         if (vValue != null)
             return vValue.toString();
-        return "no value"; //$NON-NLS-1$
+        return "no value";
     }
 
     /**
@@ -109,7 +109,7 @@ public class VTypeHelper {
         Alarm alarmOf = ValueUtil.alarmOf(obj);
         if (alarmOf != null)
             return alarmOf.getAlarmName();
-        return ""; //$NON-NLS-1$
+        return "";
     }
 
     /**
@@ -417,7 +417,7 @@ public class VTypeHelper {
             return new String(bytes, 0, len);
         } else {
             if (data.size() <= 0)
-                return "[]"; //$NON-NLS-1$
+                return "[]";
 
             int displayPrecision = calculatePrecision(pmArray, precision);
 
@@ -428,12 +428,12 @@ public class VTypeHelper {
                 sb.append(formatScalarNumber(formatEnum, data.getDouble(i), displayPrecision));
                 if (i >= MAX_FORMAT_VALUE_COUNT) {
                     sb.append(ARRAY_ELEMENT_SEPARATOR);
-                    sb.append("..."); //$NON-NLS-1$
+                    sb.append("...");
                     sb.append(formatScalarNumber(formatEnum, data.getDouble(data.size() - 1), displayPrecision));
-                    sb.append(" "); //$NON-NLS-1$
-                    sb.append("["); //$NON-NLS-1$
+                    sb.append(" ");
+                    sb.append("[");
                     sb.append(data.size());
-                    sb.append("]"); //$NON-NLS-1$
+                    sb.append("]");
                     break;
                 }
             }
@@ -450,12 +450,12 @@ public class VTypeHelper {
             sb.append(array[i]);
             if (i >= MAX_FORMAT_VALUE_COUNT) {
                 sb.append(ARRAY_ELEMENT_SEPARATOR);
-                sb.append("..."); //$NON-NLS-1$
+                sb.append("...");
                 sb.append(array[array.length - 1]);
-                sb.append(" "); //$NON-NLS-1$
-                sb.append("["); //$NON-NLS-1$
+                sb.append(" ");
+                sb.append("[");
                 sb.append(array.length);
-                sb.append("]"); //$NON-NLS-1$
+                sb.append("]");
                 break;
             }
         }
@@ -604,7 +604,7 @@ public class VTypeHelper {
         int absPrecision = Math.abs(precision);
         NumberFormat numberFormat = decimalFormatCacheMap.get(absPrecision);
         if (numberFormat == null) {
-            numberFormat = new DecimalFormat("0"); //$NON-NLS-1$
+            numberFormat = new DecimalFormat("0");
             numberFormat.setMinimumFractionDigits(absPrecision);
             numberFormat.setMaximumFractionDigits(absPrecision);
             decimalFormatCacheMap.put(absPrecision, numberFormat);
@@ -625,14 +625,14 @@ public class VTypeHelper {
         NumberFormat numberFormat = expFormatCacheMap.get(absPrecision);
         if (numberFormat == null) {
             final StringBuffer pattern = new StringBuffer(10);
-            pattern.append("0"); //$NON-NLS-1$
+            pattern.append("0");
             if (precision > 0) {
                 pattern.append(".");
             }
             for (int i = 0; i < precision; ++i) {
                 pattern.append('0');
             }
-            pattern.append("E0"); //$NON-NLS-1$
+            pattern.append("E0");
             numberFormat = new DecimalFormat(pattern.toString());
             expFormatCacheMap.put(absPrecision, numberFormat);
         }

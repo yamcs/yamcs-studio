@@ -24,24 +24,24 @@ public class TextUpdateModel extends LabelModel {
 
 
 
-    public static final String PROP_FORMAT_TYPE = "format_type";    //$NON-NLS-1$
-    public static final String PROP_PRECISION = "precision";    //$NON-NLS-1$
-    public static final String PROP_PRECISION_FROM_DB = "precision_from_pv";    //$NON-NLS-1$
-    public static final String PROP_SHOW_UNITS = "show_units"; //$NON-NLS-1$
-    public static final String PROP_ROTATION = "rotation_angle"; //$NON-NLS-1$
+    public static final String PROP_FORMAT_TYPE = "format_type";   
+    public static final String PROP_PRECISION = "precision";   
+    public static final String PROP_PRECISION_FROM_DB = "precision_from_pv";   
+    public static final String PROP_SHOW_UNITS = "show_units";
+    public static final String PROP_ROTATION = "rotation_angle";
 
 
     public TextUpdateModel() {
         setSize(100, 20);
         setForegroundColor(CustomMediaFactory.COLOR_BLACK);
-        setTooltip("$(" + PROP_PVNAME + ")\n" + "$(" + PROP_PVVALUE + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        setTooltip("$(" + PROP_PVNAME + ")\n" + "$(" + PROP_PVVALUE + ")");
         setPropertyValue(PROP_WRAP_WORDS, false);
     }
 
 
     @Override
     public String getTypeID() {
-        return "org.csstudio.opibuilder.widgets.TextUpdate"; //$NON-NLS-1$;
+        return "org.csstudio.opibuilder.widgets.TextUpdate";;
     }
 
 

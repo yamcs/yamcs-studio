@@ -6,7 +6,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-@SuppressWarnings("nls")
 public class Activator extends Plugin implements BundleActivator {
 
     /** Plugin ID defined in MANIFEST.MF */

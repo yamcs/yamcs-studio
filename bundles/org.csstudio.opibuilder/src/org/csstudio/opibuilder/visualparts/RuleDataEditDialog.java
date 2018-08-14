@@ -112,7 +112,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html"; //$NON-NLS-1$; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html";;
     }
 
     @Override
@@ -200,7 +200,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         int i=0;
         for(String id : propIDList){
             comboItems[i++] = ruleData.getWidgetModel().getProperty(id).getDescription() +
-                " (" + id + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+                " (" + id + ")";
         }
         propCombo.setItems(comboItems);
         propCombo.select(propIDList.indexOf(ruleData.getPropId()));
@@ -222,14 +222,14 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                     outPutExpButton.setSelection(true);
                     outPutExpButton.setEnabled(false);
                     for(Expression exp : expressionList)
-                        exp.setValue(""); //$NON-NLS-1$
+                        exp.setValue("");
                     valueColumn.getColumn().setText("Output Expression");
                 }else
                     outPutExpButton.setEnabled(true);
                 if(!ruleData.isOutputExpValue()){
                     for(Expression exp : expressionList)
                         exp.setValue(ruleData.isOutputExpValue() ?
-                                "" : ruleData.getProperty().getDefaultValue()); //$NON-NLS-1$
+                                "" : ruleData.getProperty().getDefaultValue());
                 }
                 expressionViewer.refresh();
             }
@@ -253,7 +253,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                 ruleData.setOutputExpValue(outPutExpButton.getSelection());
                 for(Expression exp : expressionList)
                     exp.setValue(ruleData.isOutputExpValue() ?
-                            "" : ruleData.getProperty().getDefaultValue()); //$NON-NLS-1$
+                            "" : ruleData.getProperty().getDefaultValue());
                 valueColumn.getColumn().setText(
                         ruleData.isOutputExpValue()? "Output Expression" : "Output Value");
                 expressionViewer.refresh();
@@ -434,7 +434,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
             protected Object getValue(Object element) {
                 if(element instanceof Expression){
                     if(((Expression)element).getValue() == null)
-                            return ""; //$NON-NLS-1$
+                            return "";
                     return ((Expression)element).getValue();
                 }
                 return null;
@@ -487,7 +487,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         addAction.setToolTipText("Add an Expression");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif")); //$NON-NLS-1$
+                        "icons/add.gif"));
 
         copyAction = new Action() {
             @Override
@@ -507,7 +507,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         copyAction.setToolTipText("Copy selected expression");
         copyAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/copy.gif")); //$NON-NLS-1$
+                        "icons/copy.gif"));
         copyAction.setEnabled(false);
 
 
@@ -530,7 +530,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
                 .setToolTipText("Remove the selected expression from the list");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif")); //$NON-NLS-1$
+                        "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
@@ -555,7 +555,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         moveUpAction.setToolTipText("Move selected expression up");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif")); //$NON-NLS-1$
+                        "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
@@ -580,7 +580,7 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         moveDownAction.setToolTipText("Move selected expression down");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif")); //$NON-NLS-1$
+                        "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
     }
 

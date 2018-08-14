@@ -34,7 +34,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
 
     private static PropertiesCopyDataTransfer instance;
 
-    private static final String TYPE_NAME = "PropertiesCopyDataTransfer:"  //$NON-NLS-1$
+    private static final String TYPE_NAME = "PropertiesCopyDataTransfer:" 
             + System.currentTimeMillis();
 
     private static final int TYPEID = registerType(TYPE_NAME);
@@ -63,7 +63,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
         }
 
         try {
-            super.javaToNative(((String)object).getBytes("UTF-8"), transferData); //$NON-NLS-1$
+            super.javaToNative(((String)object).getBytes("UTF-8"), transferData);
         } catch (UnsupportedEncodingException e) {
             ErrorHandlerUtil.handleError("Convert to UTF-8 bytes failed", e);
         }
@@ -78,7 +78,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
             return null;
         try {
             SAXBuilder saxBuilder = new SAXBuilder();
-            Document doc = saxBuilder.build(new ByteArrayInputStream(bytes)); //$NON-NLS-1$
+            Document doc = saxBuilder.build(new ByteArrayInputStream(bytes));
             Element root = doc.getRootElement();
 
             List<String> propIDList = new ArrayList<String>();
@@ -97,7 +97,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
             }
             return new PropertiesCopyData(widgetModel, propIDList);
         } catch (Exception e) {
-             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to transfer XML to widget", e); //$NON-NLS-1$
+             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to transfer XML to widget", e);
         }
         return null;
 

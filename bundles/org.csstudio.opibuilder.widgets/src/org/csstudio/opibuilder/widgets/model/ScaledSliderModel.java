@@ -25,28 +25,28 @@ import org.eclipse.swt.graphics.RGB;
 public class ScaledSliderModel extends AbstractMarkedWidgetModel{
 
     /** The ID of the fill color property. */
-    public static final String PROP_FILL_COLOR = "fill_color"; //$NON-NLS-1$
+    public static final String PROP_FILL_COLOR = "fill_color";
 
     /** The ID of the effect 3D property. */
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
     /** The ID of the horizontal property. */
-    public static final String PROP_HORIZONTAL = "horizontal"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL = "horizontal";
 
     /** The ID of the fillbackground-Color property. */
-    public static final String PROP_FILLBACKGROUND_COLOR = "color_fillbackground"; //$NON-NLS-1$
+    public static final String PROP_FILLBACKGROUND_COLOR = "color_fillbackground";
 
     /** The ID of the thumb Color property. */
-    public static final String PROP_THUMB_COLOR = "thumb_color"; //$NON-NLS-1$
+    public static final String PROP_THUMB_COLOR = "thumb_color";
 
     /**
      * The ID of the increment property.
      */
-    public static final String PROP_STEP_INCREMENT = "step_increment"; //$NON-NLS-1$
+    public static final String PROP_STEP_INCREMENT = "step_increment";
 
     /** The amount the slider will move when page up or page down areas are
     pressed.*/
-    public static final String PROP_PAGE_INCREMENT = "page_increment"; //$NON-NLS-1$
+    public static final String PROP_PAGE_INCREMENT = "page_increment";
 
     /** The default value of the default fill color property. */
     private static final RGB DEFAULT_FILL_COLOR = new RGB(0,0,255);
@@ -68,7 +68,7 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.scaledslider"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.scaledslider";
 
     public ScaledSliderModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);

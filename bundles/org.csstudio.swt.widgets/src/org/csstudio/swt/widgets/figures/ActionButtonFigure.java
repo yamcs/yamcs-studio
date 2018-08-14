@@ -325,7 +325,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         label.revalidate();
     }
 
-    @SuppressWarnings("nls")
     public void setImagePath(final IPath path) {
         dispose();
         AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {

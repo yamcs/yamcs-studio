@@ -89,7 +89,7 @@ public class DumpPVListAction implements IObjectActionDelegate {
             for (Object pv : allPVNames) {
                 sb.append(pv);
                 if (i < allPVNames.length - 1)
-                    sb.append("\n"); //$NON-NLS-1$
+                    sb.append("\n");
                 i++;
             }
 

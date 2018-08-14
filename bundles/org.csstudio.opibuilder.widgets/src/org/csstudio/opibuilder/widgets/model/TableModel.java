@@ -31,36 +31,36 @@ public class TableModel extends AbstractWidgetModel {
      * True if the table cell is editable. If false, it is still selectable,
      * which is different with disabled.
      */
-    public static final String PROP_EDITABLE = "editable"; //$NON-NLS-1$
+    public static final String PROP_EDITABLE = "editable";
 
     /**
      *Column headers.
      */
-    public static final String PROP_COLUMN_HEADERS = "column_headers"; //$NON-NLS-1$
+    public static final String PROP_COLUMN_HEADERS = "column_headers";
 
     /**
      *Number of columns.
      */
-    public static final String PROP_COLUMNS_COUNT = "columns_count"; //$NON-NLS-1$
+    public static final String PROP_COLUMNS_COUNT = "columns_count";
 
 
     /**
      *Default Content of the table.
      */
-    public static final String PROP_DEFAULT_CONTENT = "default_content"; //$NON-NLS-1$
+    public static final String PROP_DEFAULT_CONTENT = "default_content";
 
 
 
     /**
      *Column header visible.
      */
-    public static final String PROP_COLUMN_HEADER_VISIBLE= "column_header_visible"; //$NON-NLS-1$
+    public static final String PROP_COLUMN_HEADER_VISIBLE= "column_header_visible";
 
 
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.table"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.table";
 
     @Override
     protected void configureProperties() {
@@ -128,7 +128,7 @@ public class TableModel extends AbstractWidgetModel {
             if (i < headers.length) {
                 titles[i] = headers[i];
             } else
-                titles[i] = ""; //$NON-NLS-1$
+                titles[i] = "";
         }
         ((StringTableProperty) getProperty(PROP_DEFAULT_CONTENT)).setTitles(titles);
     }
@@ -146,7 +146,7 @@ public class TableModel extends AbstractWidgetModel {
             return r;
         }
         for(int i=0; i<headers.length; i++){
-            r[i] = headers[i][2].toLowerCase().equals("no")?false:true; //$NON-NLS-1$
+            r[i] = headers[i][2].toLowerCase().equals("no")?false:true;
         }
         return r;
     }

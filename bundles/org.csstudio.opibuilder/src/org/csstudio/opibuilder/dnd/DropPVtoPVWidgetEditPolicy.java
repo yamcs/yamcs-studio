@@ -20,7 +20,7 @@ import org.eclipse.gef.editpolicies.AbstractEditPolicy;
  */
 public class DropPVtoPVWidgetEditPolicy extends AbstractEditPolicy {
 
-    public final static String DROP_PV_ROLE = "DropPVEditPolicy"; //$NON-NLS-1$
+    public final static String DROP_PV_ROLE = "DropPVEditPolicy";
 
     @Override
     public Command getCommand(Request request) {

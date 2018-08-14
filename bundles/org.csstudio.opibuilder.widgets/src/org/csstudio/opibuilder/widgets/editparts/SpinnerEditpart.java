@@ -147,7 +147,7 @@ public class SpinnerEditpart extends AbstractPVWidgetEditPart {
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
                 String text = (String)newValue;
                 try {
-                    text = text.replace("e", "E"); //$NON-NLS-1$ //$NON-NLS-2$
+                    text = text.replace("e", "E");
                     double value = new DecimalFormat().parse(text).doubleValue();
                     //coerce value in range
                     value = Math.max(((SpinnerFigure)figure).getMin(),

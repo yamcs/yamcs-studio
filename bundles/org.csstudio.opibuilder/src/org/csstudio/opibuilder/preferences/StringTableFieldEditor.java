@@ -134,7 +134,7 @@ public class StringTableFieldEditor extends FieldEditor {
      * @return
      */
     public static String flattenStringTable(List<String[]> stringTable){
-        StringBuilder result = new StringBuilder(""); //$NON-NLS-1$
+        StringBuilder result = new StringBuilder("");
         for(String[] row : stringTable){
             for(String item : row){
                 result.append(QUOTE + item + QUOTE + ITEM_SEPARATOR);

@@ -37,19 +37,19 @@ public class WritePVAction extends AbstractWidgetAction {
     public static final String PROP_PVNAME = "pv_name";//$NON-NLS-1$
     public static final String PROP_VALUE = "value";//$NON-NLS-1$
     public static final String PROP_TIMEOUT = "timeout";//$NON-NLS-1$
-    public static final String PROP_CONFIRM_MESSAGE = "confirm_message"; //$NON-NLS-1$
+    public static final String PROP_CONFIRM_MESSAGE = "confirm_message";
     private Display display;
 
     @Override
     protected void configureProperties() {
         addProperty(new PVNameProperty(PROP_PVNAME, "PV Name",
-                WidgetPropertyCategory.Basic, "$(pv_name)")); //$NON-NLS-1$
+                WidgetPropertyCategory.Basic, "$(pv_name)"));
         addProperty(new StringProperty(PROP_VALUE, "Value",
-                WidgetPropertyCategory.Basic, "")); //$NON-NLS-1$
+                WidgetPropertyCategory.Basic, ""));
         addProperty(new IntegerProperty(PROP_TIMEOUT, "Timeout (second)",
                 WidgetPropertyCategory.Basic, 10, 1, 3600));
         addProperty(new StringProperty(PROP_CONFIRM_MESSAGE, "Confirm Message",
-                WidgetPropertyCategory.Basic, "")); //$NON-NLS-1$
+                WidgetPropertyCategory.Basic, ""));
     }
 
     @Override

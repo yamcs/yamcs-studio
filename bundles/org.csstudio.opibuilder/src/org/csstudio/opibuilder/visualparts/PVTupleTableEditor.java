@@ -462,7 +462,7 @@ public class PVTupleTableEditor extends Composite {
         @Override
         protected void setValue(Object element, Object value) {
             if (element instanceof PVTuple) {
-                String s = value == null ? "" : value.toString(); //$NON-NLS-1$
+                String s = value == null ? "" : value.toString();
                 ((PVTuple) element).pvName = s;
                 getViewer().refresh();
             }

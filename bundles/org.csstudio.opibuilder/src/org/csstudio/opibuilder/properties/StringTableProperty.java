@@ -33,12 +33,12 @@ public class StringTableProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name for a row.
      */
-    public static final String XML_ELEMENT_ROW= "row"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_ROW= "row";
 
     /**
      * XML ELEMENT name for a column.
      */
-    public static final String XML_ELEMENT_COLUMN= "col"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_COLUMN= "col";
 
 
     private String[] titles;

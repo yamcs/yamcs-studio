@@ -38,7 +38,7 @@ public class LabelCellEditorLocator
         rect.translate(trim.x, trim.y);
         rect.width += trim.width;
         rect.height += trim.height;
-        int fontHeight = FigureUtilities.getTextExtents("H", labelFigure.getFont()).height; //$NON-NLS-1$
+        int fontHeight = FigureUtilities.getTextExtents("H", labelFigure.getFont()).height;
         if (fontHeight > rect.height)
             rect.height = fontHeight;
         text.setBounds(rect.x, rect.y, rect.width, rect.height);

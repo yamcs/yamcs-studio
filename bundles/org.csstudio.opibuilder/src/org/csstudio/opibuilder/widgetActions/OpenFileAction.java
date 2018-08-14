@@ -105,7 +105,7 @@ public class OpenFileAction extends AbstractWidgetAction {
 
     @Override
     public String getDefaultDescription() {
-        return super.getDefaultDescription() + " " + getPath(); //$NON-NLS-1$
+        return super.getDefaultDescription() + " " + getPath();
     }
 
 }

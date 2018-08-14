@@ -58,7 +58,6 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
     private IntensityGraphFigure graph;
 
     /** VTable columns used to publish values for the pixel info PV */
-    @SuppressWarnings("nls")
     final private static List<String> pixel_info_table_columns = Arrays.asList("X", "Y", "Value", "Selected");
 
     /** VTable column types used to publish values for the pixel info PV */
@@ -510,7 +509,7 @@ public class IntensityGraphEditPart extends AbstractPVWidgetEditPart {
     }
 
     private static String getROIName(int index) {
-        return "ROI_" + index; //$NON-NLS-1$
+        return "ROI_" + index;
     }
 
     private void registerROIPropertyChangeHandlers() {

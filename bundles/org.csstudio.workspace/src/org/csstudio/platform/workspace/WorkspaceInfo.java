@@ -26,19 +26,19 @@ public class WorkspaceInfo
     private static final String PREF_QUALIFIER = WorkspaceInfo.class.getName();
 
     /** Preference ID */
-    private static final String SHOW_DIALOG = "show_dialog"; //$NON-NLS-1$
+    private static final String SHOW_DIALOG = "show_dialog";
 
     /** Preference ID */
-    private static final String RECENT_WORKSPACES = "recent_workspaces"; //$NON-NLS-1$
+    private static final String RECENT_WORKSPACES = "recent_workspaces";
 
     /** Separator used to store list of workspace entries in one string */
-    private static final String WORKSPACE_SEPARATOR = ","; //$NON-NLS-1$
+    private static final String WORKSPACE_SEPARATOR = ",";
 
     /** Number of recent workspaces that we remember */
     private static final int RECENT_WORKSPACE_MAX = 10;
 
     /** Path separator '/' */
-    private static final String SLASH = "/";  //$NON-NLS-1$
+    private static final String SLASH = "/"; 
 
     /** Current workspace */
     private Location current_workspace;
@@ -70,12 +70,11 @@ public class WorkspaceInfo
             setSelectedWorkspace(initial_default.getFile());
         else
             //if no default workspace provided, use "@usr.home/CSS-Workspaces/Default"
-            setSelectedWorkspace(System.getProperty("user.home") //$NON-NLS-1$
+            setSelectedWorkspace(System.getProperty("user.home")
                     + File.separator + "CSS-Workspaces" + File.separator + "Default");
     }
 
     /** Read previous settings from preference store */
-    @SuppressWarnings("nls")
     private void readPersistedData()
     {
         final Preferences node = ConfigurationScope.INSTANCE.getNode(PREF_QUALIFIER);
@@ -110,7 +109,7 @@ public class WorkspaceInfo
     public String getSelectedWorkspace()
     {
         if (recent_workspaces.size() < 1)
-            return ""; //$NON-NLS-1$
+            return "";
         return recent_workspaces.get(0);
     }
 
@@ -174,7 +173,6 @@ public class WorkspaceInfo
     }
 
     /** Write settings to preference store */
-    @SuppressWarnings("nls")
     public void writePersistedData()
     {
         final Preferences node =
@@ -208,7 +206,6 @@ public class WorkspaceInfo
     }
 
     /** @return Debug info */
-    @SuppressWarnings("nls")
     @Override
     public String toString()
     {

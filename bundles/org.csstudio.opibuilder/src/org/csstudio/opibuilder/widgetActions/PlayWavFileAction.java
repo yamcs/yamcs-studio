@@ -96,18 +96,18 @@ public class PlayWavFileAction extends AbstractWidgetAction {
                     // OPIBuilderPlugin
                     // .getLogger()
                     // .log(Level.WARNING,
-                    // "audio close error", e); //$NON-NLS-1$
+                    // "audio close error", e);
                     // }
                     // }
                     // }
                     // });
                     // clip.start();
                     // } catch (Exception e) {
-                    // final String message = "Failed to play wave file " + getPath(); //$NON-NLS-1$
+                    // final String message = "Failed to play wave file " + getPath();
                     // OPIBuilderPlugin.getLogger().log(Level.WARNING,
                     // message, e);
                     // ConsoleService.getInstance().writeError(
-                    // message + "\n" + e.getMessage()); //$NON-NLS-1$
+                    // message + "\n" + e.getMessage());
                     // }
                     // return Status.OK_STATUS;
                     // }

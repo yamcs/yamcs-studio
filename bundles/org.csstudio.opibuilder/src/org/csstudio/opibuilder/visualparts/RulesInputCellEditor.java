@@ -36,9 +36,9 @@ public class RulesInputCellEditor extends AbstractDialogCellEditor {
             new RulesInputDialog(parentShell, rulesInput, widgetModel, dialogTitle);
 
         if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
-                "org.eclipse.help.ui.HelpView") !=null) //$NON-NLS-1$
+                "org.eclipse.help.ui.HelpView") !=null)
             PlatformUI.getWorkbench().getHelpSystem().displayHelp(
-                    OPIBuilderPlugin.PLUGIN_ID + ".rule"); //$NON-NLS-1$
+                    OPIBuilderPlugin.PLUGIN_ID + ".rule");
 
         if(dialog.open() == Window.OK){
             rulesInput = new RulesInput(dialog.getRuleDataList());

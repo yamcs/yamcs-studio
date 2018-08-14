@@ -82,7 +82,7 @@ public class SingleSourceHelper {
         case WORKSPACE:
             ResourceSelectionDialog dialog = new ResourceSelectionDialog(Display.getCurrent().getActiveShell(),
                     "Select workspace file",
-                    textInput.getFileReturnPart() == FileReturnPart.DIRECTORY ? null : new String[] { "*.*" }); // $NON-NLS-2$
+                    textInput.getFileReturnPart() == FileReturnPart.DIRECTORY ? null : new String[] { "*.*" });
             if (currentPath != null)
                 dialog.setSelectedResource(new Path(currentPath));
             if (dialog.open() == Window.OK) {

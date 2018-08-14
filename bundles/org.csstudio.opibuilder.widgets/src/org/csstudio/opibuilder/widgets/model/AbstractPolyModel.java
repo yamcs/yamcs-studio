@@ -45,12 +45,12 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
     /**
      * Rotation angle of the widget.
      */
-    public static final String PROP_ROTATION = "rotation_angle"; //$NON-NLS-1$
+    public static final String PROP_ROTATION = "rotation_angle";
 
     /**
      * Points of the widget.
      */
-    public static final String PROP_POINTS = "points"; //$NON-NLS-1$
+    public static final String PROP_POINTS = "points";
 
 
     /**

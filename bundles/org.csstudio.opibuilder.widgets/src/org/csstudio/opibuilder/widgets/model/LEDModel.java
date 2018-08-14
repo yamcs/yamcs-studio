@@ -27,13 +27,13 @@ public class LEDModel extends AbstractBoolWidgetModel {
 
 
     /** The ID of the effect 3D property. */
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
     /** The ID of the square LED property. */
-    public static final String PROP_SQUARE_LED = "square_led"; //$NON-NLS-1$
+    public static final String PROP_SQUARE_LED = "square_led";
 
     /** Number of states for this multi state widget */
-    public static final String PROP_NSTATES = "state_count"; //$NON-NLS-1$
+    public static final String PROP_NSTATES = "state_count";
 
     /** Label text for multi state X */
     public static final String PROP_STATE_LABEL = "state_label_%s";
@@ -69,9 +69,9 @@ public class LEDModel extends AbstractBoolWidgetModel {
      * set by the widget border style/color/width properties. For round LEDs this is a
      * round border,
      */
-    public static final String PROP_BULB_BORDER = "bulb_border"; //$NON-NLS-1$
+    public static final String PROP_BULB_BORDER = "bulb_border";
     /** Color of bulb border LEDs */
-    public static final String PROP_BULB_BORDER_COLOR = "bulb_border_color"; //$NON-NLS-1$
+    public static final String PROP_BULB_BORDER_COLOR = "bulb_border_color";
 
     public LEDModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -128,7 +128,7 @@ public class LEDModel extends AbstractBoolWidgetModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.LED"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.LED";
 
     @Override
     public String getTypeID() {

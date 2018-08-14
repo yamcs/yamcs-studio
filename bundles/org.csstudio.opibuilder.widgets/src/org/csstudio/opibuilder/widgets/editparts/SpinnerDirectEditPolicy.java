@@ -56,7 +56,7 @@ static class SpinnerEditCommand extends Command    {
     if (s != null)
         newText = s;
     else
-        newText = "";  //$NON-NLS-1$
+        newText = ""; 
     }
 
     @Override

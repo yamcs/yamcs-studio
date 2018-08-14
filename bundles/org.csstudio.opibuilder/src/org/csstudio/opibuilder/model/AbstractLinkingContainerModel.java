@@ -18,14 +18,14 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
     /**
      * The ID of the resource property.
      */
-    public static final String PROP_OPI_FILE = "opi_file"; //$NON-NLS-1$
+    public static final String PROP_OPI_FILE = "opi_file";
 
     /**
      * The name of the group container widget in the OPI file, which
      * will be loaded if it is specified. If it is not specified, the whole
      * OPI file will be loaded.
      */
-    public static final String PROP_GROUP_NAME = "group_name"; //$NON-NLS-1$
+    public static final String PROP_GROUP_NAME = "group_name";
 
 
 
@@ -39,11 +39,11 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
         super.configureBaseProperties();
 
         addProperty(new FilePathProperty(PROP_OPI_FILE, "OPI File",
-                WidgetPropertyCategory.Behavior, new Path(""), //$NON-NLS-1$
+                WidgetPropertyCategory.Behavior, new Path(""),
                 new String[] { OPIBuilderPlugin.OPI_FILE_EXTENSION}));
 
         addProperty(new StringProperty(PROP_GROUP_NAME, "Group Name",
-                WidgetPropertyCategory.Behavior, "")); //$NON-NLS-1$
+                WidgetPropertyCategory.Behavior, ""));
     }
 
     public String getGroupName(){

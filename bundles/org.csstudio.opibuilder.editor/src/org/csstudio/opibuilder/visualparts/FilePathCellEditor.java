@@ -46,7 +46,7 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
     /**
      * The filter path for the dialog.
      */
-    private String _filterPath = System.getProperty("user.home"); //$NON-NLS-1$
+    private String _filterPath = System.getProperty("user.home");
 
     /**
      * The accepted file extensions.

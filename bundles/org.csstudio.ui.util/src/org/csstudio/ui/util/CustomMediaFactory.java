@@ -135,7 +135,7 @@ public final class CustomMediaFactory {
      * @return The <code>Color</code> for the given <code>RGB</code>.
      */
     public Color getColor(final RGB rgb) {
-        assert rgb != null : "rgb!=null"; //$NON-NLS-1$
+        assert rgb != null : "rgb!=null";
         Color result = null;
 
         String key = String.valueOf(rgb.hashCode());
@@ -161,7 +161,7 @@ public final class CustomMediaFactory {
      * @return The <code>Font</code> for the given information.
      */
     public Font getFont(final String name, final int height, final int style) {
-        assert name != null : "name!=null"; //$NON-NLS-1$
+        assert name != null : "name!=null";
 
         FontData fd = new FontData(name, height, style);
 
@@ -224,9 +224,9 @@ public final class CustomMediaFactory {
      * @return The system's default font.
      */
     public Font getDefaultFont(final int style) {
-        // FIXME Die default Schriftart bzw. Schriftgrš§e hŠngt vom
+        // FIXME Die default Schriftart bzw. Schriftgrï¿½ï¿½e hï¿½ngt vom
         // Betriebssystem ab
-        return getFont("Arial", 10, style); //$NON-NLS-1$
+        return getFont("Arial", 10, style);
     }
 
     /**
@@ -239,7 +239,7 @@ public final class CustomMediaFactory {
      * @return The <code>Image</code> from the given path in the given plugin.
      */
     public Image getImageFromPlugin(final String pluginId, final String relativePath) {
-        String key = pluginId + "." + relativePath; //$NON-NLS-1$
+        String key = pluginId + "." + relativePath;
 
         // does image exist
         if (_imageRegistry.get(key) == null) {
@@ -266,7 +266,7 @@ public final class CustomMediaFactory {
      * @return The <code>Image</code> from the given path in the given plugin.
      */
     public Image getImageFromPlugin(final Plugin plugin, final String pluginId, final String relativePath) {
-        String key = pluginId + "." + relativePath; //$NON-NLS-1$
+        String key = pluginId + "." + relativePath;
         // does image exist
         if (_imageRegistry.get(key) == null) {
             if (plugin != null) {
@@ -294,7 +294,7 @@ public final class CustomMediaFactory {
      *         plugin.
      */
     public ImageDescriptor getImageDescriptorFromPlugin(final String pluginId, final String relativePath) {
-        String key = pluginId + "." + relativePath; //$NON-NLS-1$
+        String key = pluginId + "." + relativePath;
 
         // does image exist
         if (_imageRegistry.get(key) == null) {

@@ -44,7 +44,7 @@ public abstract class AbstractChoiceModel extends AbstractPVWidgetModel {
     public static final RGB DEFAULT_SELECTED_COLOR = CustomMediaFactory.COLOR_WHITE;
 
     /** True if items should be horizontal arranged.*/
-    public static final String PROP_HORIZONTAL = "horizontal"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL = "horizontal";
 
     public static final String[] DEFAULT_ITEMS = new String[]{"Choice 1", "Choice 2", "Choice 3"};
 

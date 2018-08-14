@@ -39,17 +39,17 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
     /**
      * The ID of the label property.
      */
-    public static final String PROP_LABEL = "label"; //$NON-NLS-1$
+    public static final String PROP_LABEL = "label";
 
-    public static final String PROP_ACTIONS_FROM_PV = "actions_from_pv"; //$NON-NLS-1$
+    public static final String PROP_ACTIONS_FROM_PV = "actions_from_pv";
 
 
-    public static final String PROP_TRANSPARENT = "transparent";    //$NON-NLS-1$
+    public static final String PROP_TRANSPARENT = "transparent";   
 
     /**
      * The ID of the show down arrow property.
      */
-    public static final String PROP_SHOW_DOWN_ARROW = "show_down_arrow"; //$NON-NLS-1$
+    public static final String PROP_SHOW_DOWN_ARROW = "show_down_arrow";
 
     /**
      * The default value of the height property.
@@ -81,7 +81,7 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
     @Override
     protected void configureProperties() {
         addProperty(new StringProperty(PROP_LABEL, "Label",
-                WidgetPropertyCategory.Display, "")); //$NON-NLS-1$
+                WidgetPropertyCategory.Display, ""));
         addProperty(new BooleanProperty(PROP_ACTIONS_FROM_PV, "Actions From PV",
                 WidgetPropertyCategory.Behavior, DEFAULT_ACTIONS_FROM_PV));
         addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent",

@@ -79,7 +79,7 @@ public class LocalContentProvider implements IAutoCompleteProvider {
         TooltipData td = null;
         if (locDesc.isCompletingInitialValue()) {
             td = new TooltipData();
-            td.value = "pvname"; //$NON-NLS-1$
+            td.value = "pvname";
             String vType = locDesc.getvType();
             if (vType != null) {
                 td.value += LocalContentParser.VTYPE_START + locDesc.getvType()
@@ -98,13 +98,13 @@ public class LocalContentProvider implements IAutoCompleteProvider {
 
         } else if (locDesc.isCompletingVType()) {
             td = new TooltipData();
-            td.value = "pvname<type>"; //$NON-NLS-1$
+            td.value = "pvname<type>";
             td.styles = new ProposalStyle[1];
             td.styles[0] = ProposalStyle.getDefault(6, 12);
             result.addTooltipData(td);
 
             td = new TooltipData();
-            td.value = "pvname<type>(initialValue)"; //$NON-NLS-1$
+            td.value = "pvname<type>(initialValue)";
             td.styles = new ProposalStyle[1];
             td.styles[0] = ProposalStyle.getDefault(6, 12);
             result.addTooltipData(td);
@@ -115,20 +115,20 @@ public class LocalContentProvider implements IAutoCompleteProvider {
                 from = 0;
                 to = 6;
                 td = new TooltipData();
-                td.value = "pvname"; //$NON-NLS-1$
+                td.value = "pvname";
                 td.styles = new ProposalStyle[1];
                 td.styles[0] = ProposalStyle.getDefault(from, to);
                 result.addTooltipData(td);
             }
 
             td = new TooltipData();
-            td.value = "pvname<type>"; //$NON-NLS-1$
+            td.value = "pvname<type>";
             td.styles = new ProposalStyle[1];
             td.styles[0] = ProposalStyle.getDefault(from, to);
             result.addTooltipData(td);
 
             td = new TooltipData();
-            td.value = "pvname<type>(initialValue)"; //$NON-NLS-1$
+            td.value = "pvname<type>(initialValue)";
             td.styles = new ProposalStyle[1];
             td.styles[0] = ProposalStyle.getDefault(from, to);
             result.addTooltipData(td);

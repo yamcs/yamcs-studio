@@ -23,13 +23,13 @@ import org.eclipse.swt.graphics.RGB;
 public class MeterModel extends AbstractMarkedWidgetModel{
 
     /** The ID of the fill color property. */
-    public static final String PROP_NEEDLE_COLOR = "needle_color"; //$NON-NLS-1$
+    public static final String PROP_NEEDLE_COLOR = "needle_color";
 
     /** The ID of the Ramp Gradient. */
-    public static final String PROP_RAMP_GRADIENT = "ramp_gradient"; //$NON-NLS-1$
+    public static final String PROP_RAMP_GRADIENT = "ramp_gradient";
 
     /**Show value label. */
-    public static final String PROP_SHOW_VALUE_LABEL = "show_value_label"; //$NON-NLS-1$
+    public static final String PROP_SHOW_VALUE_LABEL = "show_value_label";
 
 
     /** The default value of the default fill color property. */
@@ -48,7 +48,7 @@ public class MeterModel extends AbstractMarkedWidgetModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.meter"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.meter";
 
     public MeterModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);

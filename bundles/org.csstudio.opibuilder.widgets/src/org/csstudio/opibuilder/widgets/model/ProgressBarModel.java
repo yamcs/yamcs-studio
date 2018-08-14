@@ -25,27 +25,27 @@ import org.eclipse.swt.graphics.RGB;
 public class ProgressBarModel extends AbstractMarkedWidgetModel{
 
     /** The ID of the fill color property. */
-    public static final String PROP_FILL_COLOR = "fill_color"; //$NON-NLS-1$
+    public static final String PROP_FILL_COLOR = "fill_color";
 
     /** The ID of the fillcolor alarm sensitive property. */
-    public static final String PROP_FILLCOLOR_ALARM_SENSITIVE = "fillcolor_alarm_sensitive"; //$NON-NLS-1$
+    public static final String PROP_FILLCOLOR_ALARM_SENSITIVE = "fillcolor_alarm_sensitive";
 
     /** The ID of the effect 3D property. */
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
     /** The ID of the horizontal property. */
-    public static final String PROP_HORIZONTAL = "horizontal"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL = "horizontal";
 
     /** The ID of the fillbackground-Color property. */
-    public static final String PROP_FILLBACKGROUND_COLOR = "color_fillbackground"; //$NON-NLS-1$
+    public static final String PROP_FILLBACKGROUND_COLOR = "color_fillbackground";
 
-    public static final String PROP_SHOW_LABEL = "show_label"; //$NON-NLS-1$
+    public static final String PROP_SHOW_LABEL = "show_label";
 
-    public static final String PROP_ORIGIN = "origin"; //$NON-NLS-1$
+    public static final String PROP_ORIGIN = "origin";
 
-    public static final String PROP_ORIGIN_IGNORED= "origin_ignored"; //$NON-NLS-1$
+    public static final String PROP_ORIGIN_IGNORED= "origin_ignored";
 
-    public static final String PROP_INDICATOR_MODE= "indicator_mode"; //$NON-NLS-1$
+    public static final String PROP_INDICATOR_MODE= "indicator_mode";
 
     /** The default value of the default fill color property. */
     private static final RGB DEFAULT_FILL_COLOR = new RGB(0,0,255);
@@ -62,7 +62,7 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.progressbar"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.progressbar";
 
     public ProgressBarModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);

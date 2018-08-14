@@ -70,7 +70,7 @@ public class EmbeddedScriptEditDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Script.html"; //$NON-NLS-1$ ; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Script.html"; ;
     }
 
     public ScriptData getResult() {

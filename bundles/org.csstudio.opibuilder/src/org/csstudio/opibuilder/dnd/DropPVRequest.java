@@ -18,7 +18,7 @@ import org.eclipse.gef.requests.DropRequest;
  */
 public class DropPVRequest extends Request implements DropRequest {
 
-    public final static String REQ_DROP_PV = "drop pv";  //$NON-NLS-1$
+    public final static String REQ_DROP_PV = "drop pv"; 
 
     private String[] pvNames;
 

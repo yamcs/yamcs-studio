@@ -24,28 +24,28 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
 
 
     /** The ID of the minimum property. */
-    public static final String PROP_MIN = "minimum"; //$NON-NLS-1$
+    public static final String PROP_MIN = "minimum";
 
     /** The ID of the maximum property. */
-    public static final String PROP_MAX = "maximum"; //$NON-NLS-1$
+    public static final String PROP_MAX = "maximum";
 
     /** The amount the scrollbar will move when the page up or page down areas are
     pressed.*/
-    public static final String PROP_PAGE_INCREMENT = "page_increment"; //$NON-NLS-1$
+    public static final String PROP_PAGE_INCREMENT = "page_increment";
 
     /**the amount the scrollbar will move when the up or down arrow buttons are
     pressed.*/
-    public static final String PROP_STEP_INCREMENT = "step_increment"; //$NON-NLS-1$
+    public static final String PROP_STEP_INCREMENT = "step_increment";
 
     /**The length of the dragging bar.*/
-    public static final String PROP_BAR_LENGTH = "bar_length"; //$NON-NLS-1$
+    public static final String PROP_BAR_LENGTH = "bar_length";
 
     /** The ID of the horizontal property. */
-    public static final String PROP_HORIZONTAL = "horizontal"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL = "horizontal";
 
-    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv"; //$NON-NLS-1$
+    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv";
 
-    public static final String PROP_SHOW_VALUE_TIP = "show_value_tip"; //$NON-NLS-1$
+    public static final String PROP_SHOW_VALUE_TIP = "show_value_tip";
 
     /** The default value of the minimum property. */
     private static final double DEFAULT_MIN = 0;

@@ -117,7 +117,7 @@ final class WorkspaceResourceContentProvider implements
                     }
                     return children.toArray();
                 } catch (CoreException e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e); //$NON-NLS-1$
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e);
                 }
             }
         }

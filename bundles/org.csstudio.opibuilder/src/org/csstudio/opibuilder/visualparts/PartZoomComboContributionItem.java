@@ -84,7 +84,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
         try {
             if (zoomManager == null) {
                 combo.setEnabled(false);
-                combo.setText(""); //$NON-NLS-1$
+                combo.setText("");
             } else {
                 if (repopulateCombo)
                     combo.setItems(getZoomManager().getZoomLevelsAsText());
@@ -97,7 +97,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
                 combo.setEnabled(true);
             }
         } catch (SWTException exception) {
-            if (!SWT.getPlatform().equals("gtk")) //$NON-NLS-1$
+            if (!SWT.getPlatform().equals("gtk"))
                 throw exception;
         }
     }

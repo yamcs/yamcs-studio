@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
  */
 public class PreferenceHelper {
 
-    final public static String DEFAULT_PVFACTORY="default_pvfactory"; //$NON-NLS-1$
+    final public static String DEFAULT_PVFACTORY="default_pvfactory";
 
 
      /** @param preferenceName Preference identifier

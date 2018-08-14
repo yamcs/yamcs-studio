@@ -311,12 +311,12 @@ public abstract class AbstractWidgetProperty {
         if(propValue!=null)
             return propValue.toString();
         else
-            return ""; //$NON-NLS-1$
+            return "";
     }
 
     @Override
     public String toString() {
-        return widgetModel.getName() + "." + prop_id + ": " + getPropertyValue().toString();//$NON-NLS-1$ //$NON-NLS-2$
+        return widgetModel.getName() + "." + prop_id + ": " + getPropertyValue().toString();//$NON-NLS-1$
     }
 
 

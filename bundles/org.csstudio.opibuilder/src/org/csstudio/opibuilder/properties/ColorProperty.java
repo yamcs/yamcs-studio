@@ -23,30 +23,30 @@ public class ColorProperty extends AbstractWidgetProperty {
     /**
      * XML attribute name <code>color</code>.
      */
-    public static final String XML_ELEMENT_COLOR = "color"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_COLOR = "color";
 
     /**
      * XML attribute name <code>color</code>.
      */
-    public static final String XML_ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_NAME = "name";
 
 
     /**
      * XML attribute name <code>red</code>.
      */
-    public static final String XML_ATTRIBUTE_RED = "red"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_RED = "red";
 
     /**
      * XML attribute name <code>green</code>.
      */
-    public static final String XML_ATTRIBUTE_GREEN = "green"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_GREEN = "green";
 
     /**
      * XML attribute name <code>blue</code>.
      */
-    public static final String XML_ATTRIBUTE_BLUE = "blue"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_BLUE = "blue";
 
-    private static final String QUOTE = "\""; //$NON-NLS-1$
+    private static final String QUOTE = "\"";
 
     /**Color Property Constructor. The property value type is {@link OPIColor}.
      * @param prop_id the property id which should be unique in a widget model.
@@ -119,9 +119,9 @@ public class ColorProperty extends AbstractWidgetProperty {
             colorElement.setAttribute(XML_ATTRIBUTE_NAME, opiColor.getColorName());
         }
         RGB color = opiColor.getRGBValue();
-        colorElement.setAttribute(XML_ATTRIBUTE_RED, "" + color.red); //$NON-NLS-1$
-        colorElement.setAttribute(XML_ATTRIBUTE_GREEN, "" + color.green); //$NON-NLS-1$
-        colorElement.setAttribute(XML_ATTRIBUTE_BLUE, "" + color.blue); //$NON-NLS-1$
+        colorElement.setAttribute(XML_ATTRIBUTE_RED, "" + color.red);
+        colorElement.setAttribute(XML_ATTRIBUTE_GREEN, "" + color.green);
+        colorElement.setAttribute(XML_ATTRIBUTE_BLUE, "" + color.blue);
         propElement.addContent(colorElement);
     }
 
@@ -164,8 +164,8 @@ public class ColorProperty extends AbstractWidgetProperty {
         }
 
         RGB rgb = opiColor.getRGBValue();
-        return "ColorFontUtil.getColorFromRGB(" + //$NON-NLS-1$
-                rgb.red + "," + rgb.green + "," + rgb.blue + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "ColorFontUtil.getColorFromRGB(" +
+                rgb.red + "," + rgb.green + "," + rgb.blue + ")";
 
     }
 }

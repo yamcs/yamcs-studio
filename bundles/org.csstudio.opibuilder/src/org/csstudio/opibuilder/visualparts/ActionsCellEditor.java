@@ -31,9 +31,9 @@ public class ActionsCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
         if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
-        "org.eclipse.help.ui.HelpView") !=null) //$NON-NLS-1$
+        "org.eclipse.help.ui.HelpView") !=null)
             PlatformUI.getWorkbench().getHelpSystem().displayHelp(
-            OPIBuilderPlugin.PLUGIN_ID + ".action"); //$NON-NLS-1$
+            OPIBuilderPlugin.PLUGIN_ID + ".action");
         ActionsInputDialog dialog =
             new ActionsInputDialog(parentShell, actionsInput, dialogTitle, showHookOption);
 

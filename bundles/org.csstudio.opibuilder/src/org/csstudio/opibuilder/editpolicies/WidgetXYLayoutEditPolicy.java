@@ -318,12 +318,12 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
     private String determineTypeIdFromRequest(final CreateRequest request) {
         Class newObject = (Class) request.getNewObjectType();
         AbstractWidgetModel instance;
-        String typeId = ""; //$NON-NLS-1$
+        String typeId = "";
         try {
             instance = (AbstractWidgetModel) newObject.newInstance();
             typeId = instance.getTypeID();
         } catch (Exception e) {
-            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Unknown type", e); //$NON-NLS-1$
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Unknown type", e);
         }
 
         return typeId;

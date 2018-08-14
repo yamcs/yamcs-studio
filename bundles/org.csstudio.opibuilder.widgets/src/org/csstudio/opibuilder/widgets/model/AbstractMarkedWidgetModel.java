@@ -24,47 +24,47 @@ import org.eclipse.swt.graphics.RGB;
 public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetModel {
 
     /** Show alarm markers(or ramp for round scale widgets).*/
-    public static final String PROP_SHOW_MARKERS = "show_markers"; //$NON-NLS-1$
+    public static final String PROP_SHOW_MARKERS = "show_markers";
 
     /** Low low level.*/
-    public static final String PROP_LOLO_LEVEL = "level_lolo"; //$NON-NLS-1$
+    public static final String PROP_LOLO_LEVEL = "level_lolo";
 
     /** Low level. */
-    public static final String PROP_LO_LEVEL = "level_lo"; //$NON-NLS-1$
+    public static final String PROP_LO_LEVEL = "level_lo";
 
     /** High Level. */
-    public static final String PROP_HI_LEVEL = "level_hi"; //$NON-NLS-1$
+    public static final String PROP_HI_LEVEL = "level_hi";
 
     /** High High Level */
-    public static final String PROP_HIHI_LEVEL = "level_hihi"; //$NON-NLS-1$
+    public static final String PROP_HIHI_LEVEL = "level_hihi";
 
 
     /** Show low low marker.*/
-    public static final String PROP_SHOW_LOLO = "show_lolo"; //$NON-NLS-1$
+    public static final String PROP_SHOW_LOLO = "show_lolo";
 
     /** Show low marker. */
-    public static final String PROP_SHOW_LO = "show_lo"; //$NON-NLS-1$
+    public static final String PROP_SHOW_LO = "show_lo";
 
     /** Show high marker. */
-    public static final String PROP_SHOW_HI = "show_hi"; //$NON-NLS-1$
+    public static final String PROP_SHOW_HI = "show_hi";
 
     /** Show high high marker. */
-    public static final String PROP_SHOW_HIHI = "show_hihi"; //$NON-NLS-1$
+    public static final String PROP_SHOW_HIHI = "show_hihi";
 
     /** Color of low low marker. */
-    public static final String PROP_LOLO_COLOR = "color_lolo"; //$NON-NLS-1$
+    public static final String PROP_LOLO_COLOR = "color_lolo";
 
     /** Color of low marker. */
-    public static final String PROP_LO_COLOR = "color_lo"; //$NON-NLS-1$
+    public static final String PROP_LO_COLOR = "color_lo";
 
     /** Color of high marker. */
-    public static final String PROP_HI_COLOR = "color_hi"; //$NON-NLS-1$
+    public static final String PROP_HI_COLOR = "color_hi";
 
     /** Color of high high marker. */
-    public static final String PROP_HIHI_COLOR = "color_hihi"; //$NON-NLS-1$
+    public static final String PROP_HIHI_COLOR = "color_hihi";
 
     /** Load the Maximum, Minimum, HIHI, HI, LOLO, LO limits from PV. */
-    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv"; //$NON-NLS-1$
+    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv";
 
     /** The default value of the levels property. */
     private static final double[] DEFAULT_LEVELS = new double[]{10, 20, 80, 90};

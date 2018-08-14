@@ -11,12 +11,12 @@ public class MatrixProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name for a row.
      */
-    public static final String XML_ELEMENT_ROW= "row"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_ROW= "row";
 
     /**
      * XML ELEMENT name for a column.
      */
-    public static final String XML_ELEMENT_COLUMN= "col"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_COLUMN= "col";
 
     public MatrixProperty(String prop_id, String description,
             WidgetPropertyCategory category, double[][] defaultValue) {

@@ -20,15 +20,15 @@ import org.eclipse.swt.graphics.RGB;
 public class GaugeModel extends AbstractMarkedWidgetModel{
 
     /** Needle color. */
-    public static final String PROP_NEEDLE_COLOR = "needle_color"; //$NON-NLS-1$
+    public static final String PROP_NEEDLE_COLOR = "needle_color";
 
     /** True if the widget is drawn with advanced graphics. In some platforms,
      * advance graphics may not be available, in which case the widget will not be drawn
      * with advanced graphics even this is set to true.*/
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
     /** True if the ramp is gradient. */
-    public static final String PROP_RAMP_GRADIENT = "ramp_gradient"; //$NON-NLS-1$
+    public static final String PROP_RAMP_GRADIENT = "ramp_gradient";
 
     /** The default value of the default fill color property. */
     private static final RGB DEFAULT_NEEDLE_COLOR = new RGB(255,0,0);
@@ -44,7 +44,7 @@ public class GaugeModel extends AbstractMarkedWidgetModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.gauge"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.gauge";
 
     public GaugeModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);

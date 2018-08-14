@@ -34,7 +34,7 @@ public class OpenOPIProbeHandler extends AbstractHandler {
 
         int i = 0;
         for (ProcessVariable pv : pvs) {
-            macros.put(MACRO_NAME + "_" + Integer.toString(i), pv.getName()); //$NON-NLS-1$
+            macros.put(MACRO_NAME + "_" + Integer.toString(i), pv.getName());
             i++;
         }
 

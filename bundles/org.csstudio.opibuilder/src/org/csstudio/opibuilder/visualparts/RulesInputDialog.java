@@ -87,7 +87,7 @@ public class RulesInputDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html"; //$NON-NLS-1$; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html";;
     }
 
 
@@ -253,7 +253,7 @@ public class RulesInputDialog extends HelpTrayDialog {
         addAction.setToolTipText("Add a Rule");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif")); //$NON-NLS-1$
+                        "icons/add.gif"));
 
         editAction = new Action("Edit") {
             @Override
@@ -264,7 +264,7 @@ public class RulesInputDialog extends HelpTrayDialog {
         editAction.setToolTipText("Edit Selected Rule");
         editAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/edit.gif")); //$NON-NLS-1$
+                        "icons/edit.gif"));
         editAction.setEnabled(false);
 
         copyAction = new Action("Copy") {
@@ -284,7 +284,7 @@ public class RulesInputDialog extends HelpTrayDialog {
         copyAction.setToolTipText("Copy Selected Rule");
         copyAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/copy.gif")); //$NON-NLS-1$
+                        "icons/copy.gif"));
         copyAction.setEnabled(false);
 
         removeAction = new Action() {
@@ -304,7 +304,7 @@ public class RulesInputDialog extends HelpTrayDialog {
                 .setToolTipText("Remove Selected Rule");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif")); //$NON-NLS-1$
+                        "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
@@ -329,7 +329,7 @@ public class RulesInputDialog extends HelpTrayDialog {
         moveUpAction.setToolTipText("Move Selected Rule up");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif")); //$NON-NLS-1$
+                        "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
@@ -354,7 +354,7 @@ public class RulesInputDialog extends HelpTrayDialog {
         moveDownAction.setToolTipText("Move Selected Rule Down");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif")); //$NON-NLS-1$
+                        "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
     }
 

@@ -22,13 +22,13 @@ import org.eclipse.swt.graphics.RGB;
 public class TankModel extends AbstractMarkedWidgetModel{
 
     /** The ID of the fill color property. */
-    public static final String PROP_FILL_COLOR = "fill_color"; //$NON-NLS-1$
+    public static final String PROP_FILL_COLOR = "fill_color";
 
     /** The ID of the fillcolor alarm sensitive property. */
-    public static final String PROP_FILLCOLOR_ALARM_SENSITIVE = "fillcolor_alarm_sensitive"; //$NON-NLS-1$
+    public static final String PROP_FILLCOLOR_ALARM_SENSITIVE = "fillcolor_alarm_sensitive";
 
     /** The ID of the show minor ticks property. */
-    public static final String PROP_EFFECT3D = "effect_3d"; //$NON-NLS-1$
+    public static final String PROP_EFFECT3D = "effect_3d";
 
     /**
      * The ID of the fillbackground-Color property.
@@ -53,7 +53,7 @@ public class TankModel extends AbstractMarkedWidgetModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.tank"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.tank";
 
     public TankModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);

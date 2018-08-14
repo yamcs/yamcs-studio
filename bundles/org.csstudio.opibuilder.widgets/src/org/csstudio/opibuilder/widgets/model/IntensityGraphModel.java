@@ -43,7 +43,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     public static final int MAX_ROIS_AMOUNT = 5;
 
     public enum AxisProperty{
-        TITLE("axis_title", "Axis Title"), //$NON-NLS-1$
+        TITLE("axis_title", "Axis Title"),
         TITLE_FONT("title_font", "Title Font"),//$NON-NLS-1$
         SCALE_FONT("scale_font", "Scale Font"),
         AXIS_COLOR("axis_color", "Axis Color"),//$NON-NLS-1$
@@ -51,7 +51,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
         MAJOR_TICK_STEP_HINT("major_tick_step_hint", "Major Tick Step Hint"),//$NON-NLS-1$
         MAX("maximum", "Maximum"),//$NON-NLS-1$
         MIN("minimum", "Minimum"),//$NON-NLS-1$
-        VISIBLE("visible", "Visible");        //$NON-NLS-1$
+        VISIBLE("visible", "Visible");       
 
         public String propIDPre;
         public String description;
@@ -77,7 +77,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
         WPV("width_pv", "Width PV"),//$NON-NLS-1$
         HPV("height_pv", "Height PV"),//$NON-NLS-1$
         WPV_VALUE("w_pv_value", "W PV Value"),//$NON-NLS-1$
-        HPV_VALUE("h_pv_value", "H PV Value");        //$NON-NLS-1$
+        HPV_VALUE("h_pv_value", "H PV Value");       
 
         public String propIDPre;
         public String description;
@@ -96,59 +96,59 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     /**
      * The lower limit of the value in the input data array.
      */
-    public static final String PROP_MIN = "minimum"; //$NON-NLS-1$
+    public static final String PROP_MIN = "minimum";
 
     /**
      * The upper limit of the value in the input data array.
      */
-    public static final String PROP_MAX = "maximum"; //$NON-NLS-1$
+    public static final String PROP_MAX = "maximum";
 
     /**
      * Number of columns of the input data.
      */
-    public static final String PROP_DATA_WIDTH = "data_width"; //$NON-NLS-1$
+    public static final String PROP_DATA_WIDTH = "data_width";
 
     /**
      * Number of rows of the input data.
      */
-    public static final String PROP_DATA_HEIGHT = "data_height"; //$NON-NLS-1$
+    public static final String PROP_DATA_HEIGHT = "data_height";
 
     /**
      *  Width of the intensity graph area.
      */
-    public static final String PROP_GRAPH_AREA_WIDTH = "graph_area_width"; //$NON-NLS-1$
+    public static final String PROP_GRAPH_AREA_WIDTH = "graph_area_width";
 
     /**
      *  Height of the intensity graph area.
      */
-    public static final String PROP_GRAPH_AREA_HEIGHT = "graph_area_height"; //$NON-NLS-1$
+    public static final String PROP_GRAPH_AREA_HEIGHT = "graph_area_height";
 
     /**
      * Color map of the graph.
      */
-    public static final String PROP_COLOR_MAP = "color_map"; //$NON-NLS-1$
+    public static final String PROP_COLOR_MAP = "color_map";
 
     /**
      * Show Ramp.
      */
-    public static final String PROP_SHOW_RAMP = "show_ramp"; //$NON-NLS-1$
+    public static final String PROP_SHOW_RAMP = "show_ramp";
 
     /**
      * Left cropped part of the source data.
      */
-    public static final String PROP_CROP_LEFT = "crop_left"; //$NON-NLS-1$
+    public static final String PROP_CROP_LEFT = "crop_left";
     /**
      * Right cropped part of the source data.
      */
-    public static final String PROP_CROP_RIGHT = "crop_right"; //$NON-NLS-1$
+    public static final String PROP_CROP_RIGHT = "crop_right";
     /**
      * Top cropped part of the source data.
      */
-    public static final String PROP_CROP_TOP = "crop_top"; //$NON-NLS-1$
+    public static final String PROP_CROP_TOP = "crop_top";
     /**
      * Bottom cropped part of the source data.
      */
-    public static final String PROP_CROP_BOTTOM = "crop_bottom"; //$NON-NLS-1$
+    public static final String PROP_CROP_BOTTOM = "crop_bottom";
 
     /**
      * The output PV to which the horizontal profile data on X axis will be written.
@@ -169,21 +169,21 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
      * The output PV to which the vertical profile data on Y axis will be written.
      */
     public static final String PROP_VERTICAL_PROFILE_Y_PV_NAME = "vertical_profile_y_pv_name";//$NON-NLS-1$
-    public static final String PROP_VERTICAL_PROFILE_Y_PV_VALUE = "vertial_profile_y_pv_value"; //$NON-NLS-1$
+    public static final String PROP_VERTICAL_PROFILE_Y_PV_VALUE = "vertial_profile_y_pv_value";
 
     /** PV to which information about the pixel at the cursor location is written */
-    public static final String PROP_PIXEL_INFO_PV_NAME = "pixel_info_pv_name"; //$NON-NLS-1$
-    public static final String PROP_PIXEL_INFO_PV_VALUE = "pixel_info_pv_value"; //$NON-NLS-1$
+    public static final String PROP_PIXEL_INFO_PV_NAME = "pixel_info_pv_name";
+    public static final String PROP_PIXEL_INFO_PV_VALUE = "pixel_info_pv_value";
 
-    public static final String PROP_RGB_MODE = "rgb_mode"; //$NON-NLS-1$
+    public static final String PROP_RGB_MODE = "rgb_mode";
 
-    public static final String PROP_COLOR_DEPTH = "color_depth"; //$NON-NLS-1$
+    public static final String PROP_COLOR_DEPTH = "color_depth";
 
-    public static final String PROP_SINGLE_LINE_PROFILING = "single_line_profiling"; //$NON-NLS-1$
+    public static final String PROP_SINGLE_LINE_PROFILING = "single_line_profiling";
 
-    public static final String PROP_ROI_COLOR= "roi_color"; //$NON-NLS-1$
+    public static final String PROP_ROI_COLOR= "roi_color";
 
-    public static final String PROP_ROI_COUNT= "roi_count"; //$NON-NLS-1$
+    public static final String PROP_ROI_COUNT= "roi_count";
 
     /** The default value of the minimum property. */
     private static final double DEFAULT_MIN = 0;
@@ -196,12 +196,12 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.intensityGraph"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.intensityGraph";
 
     public IntensityGraphModel() {
         setForegroundColor(new RGB(0,0,0));
         setSize(400, 240);
-        setTooltip("$(pv_name)"); //$NON-NLS-1$
+        setTooltip("$(pv_name)");
         setPropertyValue(PROP_BORDER_ALARMSENSITIVE, false);
         setScaleOptions(true, true, true);
     }
@@ -295,7 +295,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     }
 
     public static String makeROIPropID(String propIDPre, int index){
-        return "roi_" +index + "_" + propIDPre; //$NON-NLS-1$ //$NON-NLS-2$
+        return "roi_" +index + "_" + propIDPre;
     }
 
     private void addROIProperties(){
@@ -339,7 +339,7 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
 
 
     public static String makeAxisPropID(String axisID, String propIDPre){
-        return axisID+ "_" + propIDPre; //$NON-NLS-1$
+        return axisID+ "_" + propIDPre;
     }
 
     private void addAxisProperties(){

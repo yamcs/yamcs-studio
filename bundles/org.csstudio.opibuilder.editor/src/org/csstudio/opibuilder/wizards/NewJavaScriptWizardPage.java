@@ -42,7 +42,7 @@ public class NewJavaScriptWizardPage extends WizardNewFileCreationPage {
 
     @Override
     public String getFileExtension() {
-        return "js"; //$NON-NLS-1$
+        return "js";
     }
 
 }

@@ -28,7 +28,7 @@ public class ImplementationLoader {
                 OPIBuilderPlugin.getLogger().log(Level.SEVERE,
                         NLS.bind("Failed to load class {0} from plugin {1}.",
                                 fullClassName, bundleID),
-                        e); // $NON-NLS-2$
+                        e);
             return null;
         }
     }

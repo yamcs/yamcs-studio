@@ -25,32 +25,32 @@ public class SpinnerModel extends LabelModel {
 
 
     /** The ID of the minimum property. */
-    public static final String PROP_MIN = "minimum"; //$NON-NLS-1$
+    public static final String PROP_MIN = "minimum";
 
     /** The ID of the maximum property. */
-    public static final String PROP_MAX = "maximum"; //$NON-NLS-1$
+    public static final String PROP_MAX = "maximum";
 
     /**the amount the scrollbar will move when the up or down arrow buttons are
     pressed.*/
-    public static final String PROP_STEP_INCREMENT = "step_increment"; //$NON-NLS-1$
+    public static final String PROP_STEP_INCREMENT = "step_increment";
 
     /** The amount the scrollbar will move when the page up or page down areas are
     pressed.*/
-    public static final String PROP_PAGE_INCREMENT = "page_increment"; //$NON-NLS-1$
+    public static final String PROP_PAGE_INCREMENT = "page_increment";
 
-    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv"; //$NON-NLS-1$
-    public static final String PROP_PRECISION = "precision";    //$NON-NLS-1$
-    public static final String PROP_PRECISION_FROM_PV = "precision_from_pv";    //$NON-NLS-1$
-    public static final String PROP_BUTTONS_ON_LEFT= "buttons_on_left";    //$NON-NLS-1$
+    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv";
+    public static final String PROP_PRECISION = "precision";   
+    public static final String PROP_PRECISION_FROM_PV = "precision_from_pv";   
+    public static final String PROP_BUTTONS_ON_LEFT= "buttons_on_left";   
 
-    public static final String PROP_HORIZONTAL_BUTTONS_LAYOUT= "horizontal_buttons_layout";    //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL_BUTTONS_LAYOUT= "horizontal_buttons_layout";   
 
-    public static final String PROP_SHOW_TEXT = "show_text";    //$NON-NLS-1$
+    public static final String PROP_SHOW_TEXT = "show_text";   
 
     /**
      * The Format of the value.
      */
-    public static final String PROP_FORMAT = "format"; //$NON-NLS-1$
+    public static final String PROP_FORMAT = "format";
 
     /** The default value of the minimum property. */
     private static final double DEFAULT_MIN = Double.NEGATIVE_INFINITY;

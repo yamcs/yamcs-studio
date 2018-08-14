@@ -33,19 +33,19 @@ public class ActionsProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name <code>ACTION</code>.
      */
-    public static final String XML_ELEMENT_ACTION = "action"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_ACTION = "action";
 
     /**
      * XML ATTRIBUTE name <code>PATHSTRING</code>.
      */
-    public static final String XML_ATTRIBUTE_ACTION_TYPE = "type"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_ACTION_TYPE = "type";
 
     /**
      * XML ATTRIBUTE name <code>HOOK</code>.
      */
-    public static final String XML_ATTRIBUTE_HOOK_FIRST = "hook"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_HOOK_FIRST = "hook";
 
-    public static final String XML_ATTRIBUTE_HOOK_ALL = "hook_all"; //$NON-NLS-1$
+    public static final String XML_ATTRIBUTE_HOOK_ALL = "hook_all";
 
     private boolean showHookOption;
 

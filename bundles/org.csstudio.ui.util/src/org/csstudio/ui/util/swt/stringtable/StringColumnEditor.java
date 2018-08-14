@@ -46,7 +46,7 @@ class StringColumnEditor extends EditingSupport
     protected Object getValue(Object element)
     {
         if (element == StringTableContentProvider.ADD_ELEMENT)
-            return ""; //$NON-NLS-1$
+            return "";
         final int index = ((Integer)element).intValue();
 
         @SuppressWarnings("unchecked") final List<String> items =

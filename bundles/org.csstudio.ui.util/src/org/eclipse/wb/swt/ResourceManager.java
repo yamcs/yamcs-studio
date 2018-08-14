@@ -364,19 +364,19 @@ public class ResourceManager extends SWTResourceManager {
     private static URL getPluginImageURL(Object plugin, String name) throws Exception {
         // try to work with 'plugin' as with OSGI BundleContext
         try {
-            Class<?> BundleClass = Class.forName("org.osgi.framework.Bundle"); //$NON-NLS-1$
-            Class<?> BundleContextClass = Class.forName("org.osgi.framework.BundleContext"); //$NON-NLS-1$
+            Class<?> BundleClass = Class.forName("org.osgi.framework.Bundle");
+            Class<?> BundleContextClass = Class.forName("org.osgi.framework.BundleContext");
             if (BundleContextClass.isAssignableFrom(plugin.getClass())) {
-                Method getBundleMethod = BundleContextClass.getMethod("getBundle", new Class[0]); //$NON-NLS-1$
+                Method getBundleMethod = BundleContextClass.getMethod("getBundle", new Class[0]);
                 Object bundle = getBundleMethod.invoke(plugin, new Object[0]);
                 //
-                Class<?> PathClass = Class.forName("org.eclipse.core.runtime.Path"); //$NON-NLS-1$
+                Class<?> PathClass = Class.forName("org.eclipse.core.runtime.Path");
                 Constructor<?> pathConstructor = PathClass.getConstructor(new Class[]{String.class});
                 Object path = pathConstructor.newInstance(new Object[]{name});
                 //
-                Class<?> IPathClass = Class.forName("org.eclipse.core.runtime.IPath"); //$NON-NLS-1$
-                Class<?> PlatformClass = Class.forName("org.eclipse.core.runtime.Platform"); //$NON-NLS-1$
-                Method findMethod = PlatformClass.getMethod("find", new Class[]{BundleClass, IPathClass}); //$NON-NLS-1$
+                Class<?> IPathClass = Class.forName("org.eclipse.core.runtime.IPath");
+                Class<?> PlatformClass = Class.forName("org.eclipse.core.runtime.Platform");
+                Method findMethod = PlatformClass.getMethod("find", new Class[]{BundleClass, IPathClass});
                 return (URL) findMethod.invoke(null, new Object[]{bundle, path});
             }
         } catch (Throwable e) {
@@ -384,15 +384,15 @@ public class ResourceManager extends SWTResourceManager {
         }
         // else work with 'plugin' as with usual Eclipse plugin
         {
-            Class<?> PluginClass = Class.forName("org.eclipse.core.runtime.Plugin"); //$NON-NLS-1$
+            Class<?> PluginClass = Class.forName("org.eclipse.core.runtime.Plugin");
             if (PluginClass.isAssignableFrom(plugin.getClass())) {
                 //
-                Class<?> PathClass = Class.forName("org.eclipse.core.runtime.Path"); //$NON-NLS-1$
+                Class<?> PathClass = Class.forName("org.eclipse.core.runtime.Path");
                 Constructor<?> pathConstructor = PathClass.getConstructor(new Class[]{String.class});
                 Object path = pathConstructor.newInstance(new Object[]{name});
                 //
-                Class<?> IPathClass = Class.forName("org.eclipse.core.runtime.IPath"); //$NON-NLS-1$
-                Method findMethod = PluginClass.getMethod("find", new Class[]{IPathClass}); //$NON-NLS-1$
+                Class<?> IPathClass = Class.forName("org.eclipse.core.runtime.IPath");
+                Method findMethod = PluginClass.getMethod("find", new Class[]{IPathClass});
                 return (URL) findMethod.invoke(plugin, new Object[]{path});
             }
         }

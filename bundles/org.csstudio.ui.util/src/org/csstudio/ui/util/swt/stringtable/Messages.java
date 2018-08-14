@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages
 {
-    private static final String BUNDLE_NAME = "org.csstudio.ui.util.swt.stringtable.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.csstudio.ui.util.swt.stringtable.messages";
 
     public static String RowEditDialog_ShellTitle;
     public static String StringTableEditor_AddRowText;

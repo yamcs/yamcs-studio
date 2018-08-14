@@ -163,27 +163,27 @@ public abstract class AbstractWidgetModel implements IAdaptable,
      * The property macro $(pv_value) could be used to show the PV value which
      * has timestamp, value, severity and status.
      */
-    public static final String PROP_TOOLTIP = "tooltip"; //$NON-NLS-1$
+    public static final String PROP_TOOLTIP = "tooltip";
 
     /**
      * Color of border.
      */
-    public static final String PROP_BORDER_COLOR = "border_color"; //$NON-NLS-1$
+    public static final String PROP_BORDER_COLOR = "border_color";
 
     /**
      * Width of border.
      */
-    public static final String PROP_BORDER_WIDTH = "border_width"; //$NON-NLS-1$
+    public static final String PROP_BORDER_WIDTH = "border_width";
     /**
      * Style of border.
      */
-    public static final String PROP_BORDER_STYLE = "border_style"; //$NON-NLS-1$
+    public static final String PROP_BORDER_STYLE = "border_style";
 
     /**
      *The type of the widget. This is the only property that cannot be edited.
      *The name and type of the selected widget will also be displayed on the status bar.
      */
-    public static final String PROP_WIDGET_TYPE= "widget_type"; //$NON-NLS-1$
+    public static final String PROP_WIDGET_TYPE= "widget_type";
 
     /**
      * Unique ID of the widget, it should not be changed after generated.
@@ -193,18 +193,18 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     /**
      * Source Connections.
      */
-    public static final String PROP_SRC_CONNECTIONS = "src_connections"; //$NON-NLS-1$
+    public static final String PROP_SRC_CONNECTIONS = "src_connections";
 
     /**
      * Target Connections.
      */
-    public static final String PROP_TGT_CONNECTIONS = "tgt_connections"; //$NON-NLS-1$
+    public static final String PROP_TGT_CONNECTIONS = "tgt_connections";
 
 
     /**
      *The options for its scale behavior.
      */
-    public static final String PROP_SCALE_OPTIONS = "scale_options"; //$NON-NLS-1$
+    public static final String PROP_SCALE_OPTIONS = "scale_options";
 
 
 

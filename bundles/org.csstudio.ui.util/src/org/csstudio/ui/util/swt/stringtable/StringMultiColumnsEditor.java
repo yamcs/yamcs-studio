@@ -92,7 +92,7 @@ class StringMultiColumnsEditor extends EditingSupport {
     protected Object getValue(Object element) {
 
         if (element == StringTableContentProvider.ADD_ELEMENT)
-            return ""; //$NON-NLS-1$
+            return "";
         final int index = ((Integer)element).intValue();
         final List<String[]> items = (List<String[]>) table_viewer.getInput();
         if (columnNo < items.get(index).length)
@@ -109,7 +109,7 @@ class StringMultiColumnsEditor extends EditingSupport {
         if (element == StringTableContentProvider.ADD_ELEMENT)
         {
             rowData = new String[numOfColumns];
-            Arrays.fill(rowData, ""); //$NON-NLS-1$
+            Arrays.fill(rowData, "");
             rowData[columnNo] = value.toString();
             items.add(rowData);
             getViewer().refresh();

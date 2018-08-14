@@ -71,7 +71,7 @@ public final class PasteWidgetsAction extends WorkbenchPartAction {
     public PasteWidgetsAction(OPIEditor workbenchPart) {
         super(workbenchPart);
         setText("Paste");
-        setActionDefinitionId("org.eclipse.ui.edit.paste"); //$NON-NLS-1$
+        setActionDefinitionId("org.eclipse.ui.edit.paste");
         setId(ActionFactory.PASTE.getId());
         ISharedImages sharedImages =
             workbenchPart.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();

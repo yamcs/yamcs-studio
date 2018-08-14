@@ -43,27 +43,27 @@ import org.eclipse.swt.graphics.RGB;
  */
 public class ThumbWheelModel extends AbstractPVWidgetModel {
 
-    public static final String PROP_MIN = "minimum"; //$NON-NLS-1$
+    public static final String PROP_MIN = "minimum";
 
-    public static final String PROP_MAX = "maximum"; //$NON-NLS-1$
+    public static final String PROP_MAX = "maximum";
 
-    public static final String PROP_INTERNAL_FRAME_THICKNESS = "internalFrameSize"; //$NON-NLS-1$
+    public static final String PROP_INTERNAL_FRAME_THICKNESS = "internalFrameSize";
 
-    public static final String PROP_INTERNAL_FRAME_COLOR = "internalFrameColor"; //$NON-NLS-1$
+    public static final String PROP_INTERNAL_FRAME_COLOR = "internalFrameColor";
 
-    public static final String PROP_INTERNAL_FOCUSED_FRAME_COLOR = "focusedFrameColor"; //$NON-NLS-1$
+    public static final String PROP_INTERNAL_FOCUSED_FRAME_COLOR = "focusedFrameColor";
 
-    public static final String PROP_INTEGER_DIGITS_PART = "integerDigits"; //$NON-NLS-1$
+    public static final String PROP_INTEGER_DIGITS_PART = "integerDigits";
 
-    public static final String PROP_DECIMAL_DIGITS_PART = "decimalDigits"; //$NON-NLS-1$
+    public static final String PROP_DECIMAL_DIGITS_PART = "decimalDigits";
     /** Load limit from PV. */
-    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv"; //$NON-NLS-1$
+    public static final String PROP_LIMITS_FROM_PV = "limits_from_pv";
 
-    public static final String PROP_SHOW_BUTTONS = "show_buttons"; //$NON-NLS-1$
+    public static final String PROP_SHOW_BUTTONS = "show_buttons";
 
-    public static final String ID = "org.csstudio.opibuilder.widgets.ThumbWheel"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.ThumbWheel";
 
-    // public static final String PROP_VALUE = "value"; //$NON-NLS-1$
+    // public static final String PROP_VALUE = "value";
 
     private static final int DEFAULT_HEIGHT = 60;
 

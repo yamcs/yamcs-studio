@@ -20,7 +20,7 @@ import org.eclipse.ui.part.ViewPart;
 public class PlaceHolderView extends ViewPart
 {
     /** View ID registered in plugin.xml */
-    public static final String ID = "org.csstudio.opibuilder.placeHolder"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.placeHolder";
 
     @Override
     public void createPartControl(final Composite parent)

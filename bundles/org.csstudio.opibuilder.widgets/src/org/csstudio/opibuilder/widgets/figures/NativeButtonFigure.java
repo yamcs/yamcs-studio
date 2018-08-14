@@ -48,7 +48,6 @@ public class NativeButtonFigure extends AbstractSWTWidgetFigure<Button> implemen
     public void setBackgroundColor(Color bg) {
     }
 
-    @SuppressWarnings("nls")
     public void setImagePath(final IPath path){
         if(image != null){
             image.dispose();

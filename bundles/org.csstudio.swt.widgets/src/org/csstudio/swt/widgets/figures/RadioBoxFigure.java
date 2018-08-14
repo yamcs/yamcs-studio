@@ -55,7 +55,7 @@ public class RadioBoxFigure extends AbstractChoiceFigure {
          * @since 2.0
          */
         public RadioBox() {
-            this(""); //$NON-NLS-1$
+            this("");
         }
 
         /**

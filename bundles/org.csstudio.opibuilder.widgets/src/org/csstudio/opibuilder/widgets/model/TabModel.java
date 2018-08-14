@@ -58,20 +58,20 @@ public class TabModel extends AbstractContainerModel {
         public void removeTab(int index);
     }
 
-    public static final String PROP_TAB_COUNT = "tab_count"; //$NON-NLS-1$
+    public static final String PROP_TAB_COUNT = "tab_count";
 
-    public static final String PROP_HORIZONTAL_TABS = "horizontal_tabs"; //$NON-NLS-1$
+    public static final String PROP_HORIZONTAL_TABS = "horizontal_tabs";
 
-    public static final String PROP_ACTIVE_TAB = "active_tab"; //$NON-NLS-1$
+    public static final String PROP_ACTIVE_TAB = "active_tab";
 
-    public static final String PROP_MINIMUM_TAB_HEIGHT = "minimum_tab_height"; //$NON-NLS-1$
+    public static final String PROP_MINIMUM_TAB_HEIGHT = "minimum_tab_height";
 
 
     private static final RGB DEFAULT_TAB_FORECOLOR = new RGB(0,0,0);
 
     private static final RGB DEFAULT_TAB_BACKCOLOR = new RGB(255,255,255);
 
-    private static final String DEFAULT_TAB_FONT = MediaService.DEFAULT_FONT; //$NON-NLS-1$
+    private static final String DEFAULT_TAB_FONT = MediaService.DEFAULT_FONT;
 
     public static final int MAX_TABS_AMOUNT = 20;
 
@@ -80,7 +80,7 @@ public class TabModel extends AbstractContainerModel {
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.tab"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.tab";
 
     private ITabItemHandler tabItemHandler;
 
@@ -148,7 +148,7 @@ public class TabModel extends AbstractContainerModel {
     }
 
     public static String makeTabPropID(String propIDPre, int index){
-        return "tab_" + index + "_" + propIDPre; //$NON-NLS-1$ //$NON-NLS-2$
+        return "tab_" + index + "_" + propIDPre;
     }
 
 

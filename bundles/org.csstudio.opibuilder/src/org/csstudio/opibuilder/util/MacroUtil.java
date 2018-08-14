@@ -18,7 +18,6 @@ import java.util.Stack;
  * @author Xihui Chen
  *
  */
-@SuppressWarnings("nls")
 public class MacroUtil {
 
 

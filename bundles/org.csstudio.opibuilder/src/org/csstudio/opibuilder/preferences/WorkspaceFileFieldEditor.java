@@ -42,7 +42,7 @@ public class WorkspaceFileFieldEditor extends StringButtonFieldEditor {
      *            the parent of the field editor's control
      */
     public WorkspaceFileFieldEditor(String name, String labelText, Composite parent) {
-        this(name, labelText, new String[] { "*" }, parent); //$NON-NLS-1$
+        this(name, labelText, new String[] { "*" }, parent);
     }
 
     /**

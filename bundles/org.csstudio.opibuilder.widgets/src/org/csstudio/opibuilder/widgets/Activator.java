@@ -20,7 +20,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
     /** Plug-in ID registered in MANIFEST.MF */
-    public static final String PLUGIN_ID = "org.csstudio.opibuilder.widgets"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "org.csstudio.opibuilder.widgets";
 
     // The shared instance
     private static Activator plugin;

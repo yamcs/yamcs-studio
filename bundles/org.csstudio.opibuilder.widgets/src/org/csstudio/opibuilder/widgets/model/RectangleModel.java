@@ -30,18 +30,18 @@ public class RectangleModel extends AbstractShapeModel {
     /**
      * True if the ellipse should be filled with gradient effect.
      */
-    public static final String PROP_GRADIENT = "gradient"; //$NON-NLS-1$
+    public static final String PROP_GRADIENT = "gradient";
 
 
     /**
      * The color on gradient start.
      */
-    public static final String PROP_BACKGROUND_GRADIENT_START_COLOR = "bg_gradient_color"; //$NON-NLS-1$
+    public static final String PROP_BACKGROUND_GRADIENT_START_COLOR = "bg_gradient_color";
 
     /**
      * The color on foreground gradient start.
      */
-    public static final String PROP_FOREGROUND_GRADIENT_START_COLOR = "fg_gradient_color"; //$NON-NLS-1$
+    public static final String PROP_FOREGROUND_GRADIENT_START_COLOR = "fg_gradient_color";
 
 
 

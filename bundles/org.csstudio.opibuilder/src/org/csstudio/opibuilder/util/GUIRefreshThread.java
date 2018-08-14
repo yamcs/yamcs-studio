@@ -70,7 +70,7 @@ public final class GUIRefreshThread implements Runnable {
             }
         };
         reLoadGUIRefreshCycle();
-        thread = new Thread(this, "OPI GUI Refresh Thread"); //$NON-NLS-1$
+        thread = new Thread(this, "OPI GUI Refresh Thread");
         thread.start();
     }
 
@@ -166,7 +166,7 @@ public final class GUIRefreshThread implements Runnable {
                         .getRunnableTask());
             } catch (Exception e) {
                 OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                        "Display has been disposed.", e); //$NON-NLS-1$
+                        "Display has been disposed.", e);
             }
         }
         rcpDisplay.asyncExec(resetAsyncEmpty);

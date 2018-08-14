@@ -46,9 +46,9 @@ import org.jdom.output.XMLOutputter;
  */
 public class CopyPropertiesAction extends SelectionAction {
 
-    private static final String ROOT_ELEMENT = "PropCopyData";  //$NON-NLS-1$
+    private static final String ROOT_ELEMENT = "PropCopyData"; 
 
-    public static final String PROPID_ELEMENT = "Properties";  //$NON-NLS-1$
+    public static final String PROPID_ELEMENT = "Properties"; 
 
     public static final String ID = "org.csstudio.opibuilder.actions.copyproperties";
 

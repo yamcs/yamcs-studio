@@ -20,21 +20,21 @@ public class GridLayoutModel extends AbstractLayoutModel {
 
 
     /** Number of columns*/
-    public static final String PROP_NUMBER_OF_COLUMNS = "number_of_columns"; //$NON-NLS-1$
+    public static final String PROP_NUMBER_OF_COLUMNS = "number_of_columns";
 
     /** Fill extra spaces in a grid*/
-    public static final String PROP_FILL_GRIDS = "fill_grids"; //$NON-NLS-1$
+    public static final String PROP_FILL_GRIDS = "fill_grids";
 
 
     /** The gap between grids*/
-    public static final String PROP_GRID_GAP = "grid_gap"; //$NON-NLS-1$
+    public static final String PROP_GRID_GAP = "grid_gap";
 
 
 
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.gridLayout"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.gridLayout";
 
 
     @Override

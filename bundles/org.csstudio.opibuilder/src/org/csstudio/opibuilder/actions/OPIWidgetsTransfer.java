@@ -70,7 +70,7 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
             DND.error(DND.ERROR_INVALID_DATA);
         }
         try {
-            super.javaToNative((((String)object).getBytes("UTF-8")), transferData); //$NON-NLS-1$
+            super.javaToNative((((String)object).getBytes("UTF-8")), transferData);
         } catch (Exception e) {
             ErrorHandlerUtil.handleError("Convert to UTF-8 bytes failed", e);
 
@@ -88,7 +88,7 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
             return null;
         try {
             DisplayModel displayModel =
-                    (DisplayModel) XMLUtil.fillWidgetsFromXMLString(new String(bytes, "UTF-8"), null); //$NON-NLS-1$
+                    (DisplayModel) XMLUtil.fillWidgetsFromXMLString(new String(bytes, "UTF-8"), null);
             List<AbstractWidgetModel> widgets = displayModel.getChildren();
             return widgets;
         } catch (Exception e) {

@@ -104,6 +104,6 @@ public class ExecuteCommandAction extends AbstractWidgetAction {
 
     @Override
     public String getDefaultDescription() {
-        return super.getDefaultDescription() + " " + getCommand(); //$NON-NLS-1$
+        return super.getDefaultDescription() + " " + getCommand();
     }
 }

@@ -30,12 +30,12 @@ import org.eclipse.ui.IWorkbenchPart;
 public class DistributeWidgetsAction extends SelectionAction {
 
     public enum DistributeType{
-        HORIZONTAL_GAP("Distribute by Horizontal GAP", "icons/distribute_hg.png"), //$NON-NLS-2$
-        HORIZONTAL_CENTERS("Distribute by Horizontal Centers", "icons/distribute_hc.png"), //$NON-NLS-2$
-        HORIZONTAL_COMPRESS("Distribute by Horizontal Compress", "icons/distribute_hcompress.png"), //$NON-NLS-2$
-        VERTICAL_GAP("Distribute by Vertical GAP", "icons/distribute_vg.png"), //$NON-NLS-2$
-        VERTICAL_CENTERS("Distribute by Vertical Centers", "icons/distribute_vc.png"), //$NON-NLS-2$
-        VERTICAL_COMPRESS("Distribute by Vertical Compress", "icons/distribute_vcompress.png"); //$NON-NLS-2$
+        HORIZONTAL_GAP("Distribute by Horizontal GAP", "icons/distribute_hg.png"),
+        HORIZONTAL_CENTERS("Distribute by Horizontal Centers", "icons/distribute_hc.png"),
+        HORIZONTAL_COMPRESS("Distribute by Horizontal Compress", "icons/distribute_hcompress.png"),
+        VERTICAL_GAP("Distribute by Vertical GAP", "icons/distribute_vg.png"),
+        VERTICAL_CENTERS("Distribute by Vertical Centers", "icons/distribute_vc.png"),
+        VERTICAL_COMPRESS("Distribute by Vertical Compress", "icons/distribute_vcompress.png");
 
         private String label;
         private String iconPath;
@@ -49,7 +49,7 @@ public class DistributeWidgetsAction extends SelectionAction {
         }
 
         public String getActionID(){
-            return "org.csstudio.opibuilder.actions." + toString(); //$NON-NLS-1$
+            return "org.csstudio.opibuilder.actions." + toString();
         }
 
         public ImageDescriptor getImageDescriptor(){
@@ -71,7 +71,7 @@ public class DistributeWidgetsAction extends SelectionAction {
         super(part);
         this.distributeType = distributeType;
         setText(distributeType.getLabel());
-        setId(distributeType.getActionID()); //$NON-NLS-1$
+        setId(distributeType.getActionID());
         setImageDescriptor(distributeType.getImageDescriptor());
     }
 

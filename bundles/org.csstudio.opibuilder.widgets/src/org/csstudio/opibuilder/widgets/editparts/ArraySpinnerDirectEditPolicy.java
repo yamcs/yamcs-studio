@@ -27,7 +27,7 @@ public class ArraySpinnerDirectEditPolicy
      */
     protected Command getDirectEditCommand(DirectEditRequest edit) {
         String text = (String)edit.getCellEditor().getValue();
-        text = text.replace("e", "E"); //$NON-NLS-1$ //$NON-NLS-2$
+        text = text.replace("e", "E");
         try {
             int value = new DecimalFormat().parse(text).intValue();
             ArrayEditPart array = (ArrayEditPart) getHost();

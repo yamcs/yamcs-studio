@@ -68,7 +68,7 @@ public class SpinnerFigure extends Figure implements Introspectable {
         }
     }
 
-    private static final String HEX_PREFIX = "0x"; //$NON-NLS-1$
+    private static final String HEX_PREFIX = "0x";
 
     private double min = -100;
     private double max = 100;
@@ -209,17 +209,17 @@ public class SpinnerFigure extends Figure implements Introspectable {
 
         case EXP:
             StringBuffer pattern = new StringBuffer(10);
-            pattern.append("0."); //$NON-NLS-1$
+            pattern.append("0.");
             for (int i = 0; i < precision; ++i)
-                pattern.append('#'); // $NON-NLS-1$
-            pattern.append("E0"); //$NON-NLS-1$
-            format = new DecimalFormat(pattern.toString()); // $NON-NLS-1$
+                pattern.append('#');
+            pattern.append("E0");
+            format = new DecimalFormat(pattern.toString());
             return format.format(value);
         case HEX:
             return HEX_PREFIX + Long.toHexString((long) value);
         case DECIMAL:
         default:
-            format = new DecimalFormat("0"); //$NON-NLS-1$
+            format = new DecimalFormat("0");
             format.setMaximumFractionDigits(precision);
             format.setMinimumFractionDigits(0);
             return format.format(value);

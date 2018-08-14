@@ -38,7 +38,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     protected boolean runMode;
 
     protected boolean selectable = true;
-    private String text = ""; //$NON-NLS-1$
+    private String text = "";
     private Point textLocation;
     private Dimension textSize;
 

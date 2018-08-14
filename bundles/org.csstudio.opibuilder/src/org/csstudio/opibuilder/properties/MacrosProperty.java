@@ -25,7 +25,7 @@ public class MacrosProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name <code>INCLUDE_PARENT_MACROS</code>.
      */
-    public static final String XML_ELEMENT_INCLUDE_PARENT_MACROS = "include_parent_macros"; //$NON-NLS-1$
+    public static final String XML_ELEMENT_INCLUDE_PARENT_MACROS = "include_parent_macros";
 
     /**Macros Property Constructor. The property value type is {@link MacrosInput}.
      * @param prop_id the property id which should be unique in a widget model.
@@ -95,7 +95,7 @@ public class MacrosProperty extends AbstractWidgetProperty {
     public void writeToXML(Element propElement) {
         MacrosInput macros = (MacrosInput)propertyValue;
         Element be = new Element(XML_ELEMENT_INCLUDE_PARENT_MACROS);
-        be.setText("" + macros.isInclude_parent_macros()); //$NON-NLS-1$
+        be.setText("" + macros.isInclude_parent_macros());
         propElement.addContent(be);
         for(String key : macros.getMacrosMap().keySet()){
             Element newElement = new Element(key);

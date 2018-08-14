@@ -22,7 +22,7 @@ public final class NativeButtonModel extends ActionButtonModel{
     /**
      * The ID of this widget model.
      */
-    public static final String ID = "org.csstudio.opibuilder.widgets.NativeButton"; //$NON-NLS-1$
+    public static final String ID = "org.csstudio.opibuilder.widgets.NativeButton";
 
 
     @Override

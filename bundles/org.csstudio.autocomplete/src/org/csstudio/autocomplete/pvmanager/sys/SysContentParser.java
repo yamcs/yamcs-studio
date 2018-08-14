@@ -18,7 +18,7 @@ import org.csstudio.autocomplete.parser.IContentParser;
  */
 public class SysContentParser implements IContentParser {
 
-    public static final String SYS_SOURCE = "sys://"; //$NON-NLS-1$
+    public static final String SYS_SOURCE = "sys://";
 
     @Override
     public boolean accept(final ContentDescriptor desc) {

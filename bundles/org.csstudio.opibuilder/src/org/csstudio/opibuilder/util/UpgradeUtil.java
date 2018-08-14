@@ -14,7 +14,6 @@ import org.osgi.framework.Version;
 * Utility Class help to process the differences between version upgrade.
 * @author Xihui Chen
 */
-@SuppressWarnings("nls")
 public final class UpgradeUtil {
 
     /**

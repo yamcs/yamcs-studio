@@ -41,7 +41,7 @@ public class PVWidgetModelDelegate implements IPVWidgetModel{
         model.addProperty(new BooleanProperty(PROP_ALARM_PULSING,
                 "Alarm Pulsing", WidgetPropertyCategory.Display, false));
 
-        model.setTooltip("$(" + PROP_PVNAME + ")\n" + "$(" + PROP_PVVALUE + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        model.setTooltip("$(" + PROP_PVNAME + ")\n" + "$(" + PROP_PVVALUE + ")");
     }
 
     @Override

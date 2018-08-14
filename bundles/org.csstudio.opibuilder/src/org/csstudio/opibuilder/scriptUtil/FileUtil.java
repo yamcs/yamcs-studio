@@ -153,14 +153,14 @@ public class FileUtil {
      */
     public static String readTextFile(String filePath, AbstractBaseEditPart widget) throws Exception {
         InputStream inputStream = getInputStreamFromFile(filePath, widget);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8")); //$NON-NLS-1$
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
         StringBuilder sb = new StringBuilder();
 
         try {
             String s;
             while ((s = reader.readLine()) != null) {
                 sb.append(s);
-                sb.append("\n"); //$NON-NLS-1$
+                sb.append("\n");
             }
         } finally {
             reader.close();
@@ -249,18 +249,18 @@ public class FileUtil {
                 }
                 sb.append(text);
                 file.setContents(
-                        new ByteArrayInputStream(sb.toString().getBytes("UTF-8")), true, false, null); //$NON-NLS-1$
+                        new ByteArrayInputStream(sb.toString().getBytes("UTF-8")), true, false, null);
             } else {
                 File sysFile = file.getLocation().toFile();
                 BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(new FileOutputStream(sysFile, append), "UTF-8")); //$NON-NLS-1$
+                        new OutputStreamWriter(new FileOutputStream(sysFile, append), "UTF-8"));
                 writer.write(text);
                 writer.flush();
                 writer.close();
             }
         } else {
             BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(path.toString(), append), "UTF-8")); //$NON-NLS-1$
+                    new OutputStreamWriter(new FileOutputStream(path.toString(), append), "UTF-8"));
             writer.write(text);
             writer.flush();
             writer.close();
@@ -329,7 +329,7 @@ public class FileUtil {
     public static String openFileDialog(boolean inWorkspace) {
         if (inWorkspace) {
             ResourceSelectionDialog rsd = new ResourceSelectionDialog(
-                    Display.getCurrent().getActiveShell(), "Select File", new String[] { "*" }); //$NON-NLS-2$
+                    Display.getCurrent().getActiveShell(), "Select File", new String[] { "*" });
             if (rsd.open() == Window.OK) {
                 if (rsd.getSelectedResource() != null) {
                     return rsd.getSelectedResource().toString();

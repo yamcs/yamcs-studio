@@ -91,7 +91,7 @@ public final class ResourceSelectionGroup extends Composite {
             this.setText("Create new folder");
             this.setToolTipText("Creates a new folder");
             this.setImageDescriptor(
-                    ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_folder.png")); //$NON-NLS-1$
+                    ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_folder.png"));
         }
 
         /**
@@ -154,7 +154,7 @@ public final class ResourceSelectionGroup extends Composite {
         @Override
         public void run() {
             InputDialog inputDialog = new InputDialog(_shell, Messages.CreateProjectAction_DIALOG_TITLE,
-                    Messages.CreateProjectAction_DIALOG_MESSAGE, "", null); //$NON-NLS-1$ //$NON-NLS-2$
+                    Messages.CreateProjectAction_DIALOG_MESSAGE, "", null);
             int ret = inputDialog.open();
 
             if (ret == Window.OK) {

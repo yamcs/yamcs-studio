@@ -85,10 +85,9 @@ public class WidgetDescriptor {
     /**
      * @return the model of the widget.
      */
-    @SuppressWarnings("nls")
     public final AbstractWidgetModel getWidgetModel(){
         try {
-            return (AbstractWidgetModel) element.createExecutableExtension("model_class"); //$NON-NLS-1$
+            return (AbstractWidgetModel) element.createExecutableExtension("model_class");
         } catch (CoreException e) {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Cannot create widget model", e);
         }
@@ -98,10 +97,9 @@ public class WidgetDescriptor {
     /**
      * @return the editpart of the widget.
      */
-    @SuppressWarnings("nls")
     public final AbstractBaseEditPart getWidgetEditpart(){
         try {
-            return (AbstractBaseEditPart) element.createExecutableExtension("editpart_class"); //$NON-NLS-1$
+            return (AbstractBaseEditPart) element.createExecutableExtension("editpart_class");
         } catch (CoreException e) {
             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Cannot create edit part", e);
         }
