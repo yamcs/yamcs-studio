@@ -7,9 +7,9 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.palette;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.feedback.IGraphicalFeedbackFactory;
@@ -27,20 +27,22 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-/**The factory help to create the palette.
+/**
+ * The factory help to create the palette.
+ * 
  * @author Xihui Chen
  *
  */
 public class OPIEditorPaletteFactory {
 
-    public static PaletteRoot createPalette(){
+    public static PaletteRoot createPalette() {
         PaletteRoot palette = new PaletteRoot();
         createToolsGroup(palette);
         createPaletteContents(palette);
         return palette;
     }
 
-    private static void createToolsGroup(PaletteRoot palette){
+    private static void createToolsGroup(PaletteRoot palette) {
         PaletteToolbar toolbar = new PaletteToolbar("Tools");
         // Add a selection tool to the group
         ToolEntry tool = new PanningSelectionToolEntry();
@@ -70,33 +72,27 @@ public class OPIEditorPaletteFactory {
 
     }
 
+    private static void createPaletteContents(PaletteRoot palette) {
+        Map<String, List<String>> categoriesMap = WidgetsService.getInstance().getAllCategoriesMap();
+        List<String> hiddenWidgets = PreferencesHelper.getHiddenWidgets();
 
-    private static void createPaletteContents(PaletteRoot palette){
-        Map<String, List<String>> categoriesMap =
-            WidgetsService.getInstance().getAllCategoriesMap();
-        String[] hiddenWidgets = PreferencesHelper.getHiddenWidgets();
-        List<String> hiddenWidgetsList = null;
-        if(hiddenWidgets != null)
-            hiddenWidgetsList = Arrays.asList(hiddenWidgets);
-        for(final Map.Entry<String, List<String>> entry: categoriesMap.entrySet()){
+        for (Entry<String, List<String>> entry : categoriesMap.entrySet()) {
             PaletteDrawer categoryDrawer = new PaletteDrawer(entry.getKey());
-            for(String typeId : entry.getValue()){
-                if(hiddenWidgetsList != null && hiddenWidgetsList.indexOf(typeId) >=0)
+            for (String typeId : entry.getValue()) {
+                if (hiddenWidgets.contains(typeId)) {
                     continue;
-                WidgetDescriptor widgetDescriptor =
-                    WidgetsService.getInstance().getWidgetDescriptor(typeId);
-                ImageDescriptor icon = CustomMediaFactory.getInstance().
-                    getImageDescriptorFromPlugin(
-                            widgetDescriptor.getPluginId(), widgetDescriptor.getIconPath());
+                }
+                WidgetDescriptor widgetDescriptor = WidgetsService.getInstance().getWidgetDescriptor(typeId);
+                ImageDescriptor icon = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
+                        widgetDescriptor.getPluginId(), widgetDescriptor.getIconPath());
                 CombinedTemplateCreationEntry widgetEntry = new CombinedTemplateCreationEntry(
-                    widgetDescriptor.getName(),
-                    widgetDescriptor.getDescription(),
-                    new WidgetCreationFactory(widgetDescriptor), icon, icon);
+                        widgetDescriptor.getName(),
+                        widgetDescriptor.getDescription(),
+                        new WidgetCreationFactory(widgetDescriptor), icon, icon);
 
-                IGraphicalFeedbackFactory feedbackFactory =
-                    WidgetsService.getInstance().getWidgetFeedbackFactory(
-                            widgetDescriptor.getTypeID());
-                if( feedbackFactory != null && feedbackFactory.getCreationTool() != null){
+                IGraphicalFeedbackFactory feedbackFactory = WidgetsService.getInstance().getWidgetFeedbackFactory(
+                        widgetDescriptor.getTypeID());
+                if (feedbackFactory != null && feedbackFactory.getCreationTool() != null) {
                     widgetEntry.setToolClass(feedbackFactory.getCreationTool());
                 }
                 categoryDrawer.add(widgetEntry);

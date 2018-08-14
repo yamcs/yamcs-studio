@@ -147,7 +147,6 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.csstudio.opibuilder.preferences"
             class="org.csstudio.opibuilder.preferences.OPIEditorPreferencePage"
             id="org.csstudio.opibuilder.preferences.opieditor"
             name="OPI Builder">

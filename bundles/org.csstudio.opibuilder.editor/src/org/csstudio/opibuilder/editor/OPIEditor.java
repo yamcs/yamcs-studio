@@ -250,9 +250,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         ScrollingGraphicalViewer viewer = (ScrollingGraphicalViewer) getGraphicalViewer();
         viewer.setEditPartFactory(new WidgetEditPartFactory(ExecutionMode.EDIT_MODE));
         ScalableFreeformRootEditPart root = new ScalableFreeformRootEditPart() {
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public Object getAdapter(@SuppressWarnings("rawtypes") final Class key) {
                 if (key == AutoexposeHelper.class) {
@@ -561,8 +558,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
     /**
      * Create a double array that contains the pre-defined zoom levels.
-     *
-     * @return A double array that contains the pre-defined zoom levels.
      */
     private double[] createZoomLevels() {
         List<Double> zoomLevelList = new ArrayList<>();
@@ -604,9 +599,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void doSaveAs() {
         SaveAsDialog saveAsDialog = new SaveAsDialog(getEditorSite().getShell());
@@ -798,8 +790,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
     /**
      * Returns the overview for the outline view.
-     *
-     * @return the overview
      */
     protected OverviewOutlinePage getOverviewOutlinePage() {
         if (null == overviewOutlinePage && null != getGraphicalViewer()) {
@@ -822,8 +812,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
     /**
      * Returns the main composite of the editor.
-     *
-     * @return the main composite of the editor
      */
     public Composite getParentComposite() {
         return rulerComposite;
@@ -831,8 +819,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
     /**
      * Returns the undoable <code>PropertySheetPage</code> for this editor.
-     *
-     * @return the undoable <code>PropertySheetPage</code>
      */
     protected PropertySheetPage getPropertySheetPage() {
         if (undoablePropertySheetPage == null) {
@@ -866,9 +852,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         return synchronizer;
     }
 
-    /**
-     *
-     */
     private void initDisplayModel() {
 
         displayModel = new DisplayModel();
@@ -964,9 +947,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
 
     }
 
-    /**
-     * @param e
-     */
     private void processSaveFailedError(Exception e) {
         MessageDialog.openError(getSite().getShell(),
                 "Save Failed!", e.getMessage() +

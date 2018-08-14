@@ -60,10 +60,9 @@
       <page
             class="org.csstudio.opibuilder.preferences.CommonPreferencePage"
             id="org.csstudio.opibuilder.preferences"
-            name="Displays">
+            name="OPI Styles">
       </page>
       <page
-            category="org.csstudio.opibuilder.preferences"
             class="org.csstudio.opibuilder.preferences.OPIRuntimePreferencePage"
             id="org.csstudio.opibuilder.preferences.opiruntime"
             name="OPI Runtime">

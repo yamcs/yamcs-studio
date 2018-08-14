@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.preferences;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -167,7 +169,7 @@ public class PreferencesHelper {
      * @return typeId of widgets that should be hidden from palette.
      * @throws Exception
      */
-    public static String[] getHiddenWidgets() {
+    public static List<String> getHiddenWidgets() {
         String rawString = getString(HIDDEN_WIDGETS);
 
         if (rawString == null || rawString.trim().isEmpty()) {
@@ -177,10 +179,11 @@ public class PreferencesHelper {
         }
 
         try {
-            return StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
+            String[] parts = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
+            return Arrays.asList(parts);
         } catch (Exception e) {
             ErrorHandlerUtil.handleError("Failed to parse hidden_widgets preference", e);
-            return null;
+            return Collections.emptyList();
         }
     }
 
