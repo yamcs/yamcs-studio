@@ -45,7 +45,7 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
     private static OPIBuilderPlugin plugin;
 
-    private IPropertyChangeListener preferenceLisener;
+    private IPropertyChangeListener preferenceListener;
 
     public OPIBuilderPlugin() {
         plugin = this;
@@ -65,7 +65,7 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         ScriptService.getInstance();
 
-        preferenceLisener = event -> {
+        preferenceListener = event -> {
             if (event.getProperty().equals(PreferencesHelper.COLOR_FILE)) {
                 MediaService.getInstance().reloadColorFile();
             } else if (event.getProperty().equals(PreferencesHelper.FONT_FILE)) {
@@ -77,13 +77,13 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
             }
         };
 
-        getPluginPreferences().addPropertyChangeListener(preferenceLisener);
+        getPluginPreferences().addPropertyChangeListener(preferenceListener);
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
-        getPluginPreferences().removePropertyChangeListener(preferenceLisener);
+        getPluginPreferences().removePropertyChangeListener(preferenceListener);
     }
 
     public static Logger getLogger() {

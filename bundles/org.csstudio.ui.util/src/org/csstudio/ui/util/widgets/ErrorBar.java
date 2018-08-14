@@ -1,18 +1,25 @@
 package org.csstudio.ui.util.widgets;
 
-
 import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.ResourceManager;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * An error bar to display an exception message and the details in a pop-up.
@@ -30,11 +37,15 @@ public class ErrorBar extends Composite {
     private int marginLeft = 0;
     private int marginRight = 0;
 
+    private Image errorImageResource;
+
     /**
      * Create a new error bar.
      *
-     * @param parent widget parent
-     * @param style style of the widget
+     * @param parent
+     *            widget parent
+     * @param style
+     *            style of the widget
      */
     public ErrorBar(Composite parent, int style) {
         super(parent, style);
@@ -54,10 +65,17 @@ public class ErrorBar extends Composite {
             }
         };
 
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        Bundle bundle = FrameworkUtil.getBundle(ErrorBar.class);
+
+        ImageDescriptor errorImageDescriptor = ImageDescriptor
+                .createFromURL(FileLocator.find(bundle, new Path("icons/error-16.png"), null));
+        errorImageResource = resourceManager.createImage(errorImageDescriptor);
+
         errorImage = new Label(this, SWT.NONE);
         GridData gd_errorImage = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         errorImage.setLayoutData(gd_errorImage);
-        errorImage.setImage(ResourceManager.getPluginImage("org.csstudio.ui.util", "icons/error-16.png"));
+        errorImage.setImage(errorImageResource);
         errorImage.setCursor(handCursor);
         errorImage.addMouseListener(listener);
 
@@ -117,7 +135,8 @@ public class ErrorBar extends Composite {
     /**
      * Changes the margin on the top of the error bar, if displayed.
      *
-     * @param marginTop the new margin
+     * @param marginTop
+     *            the new margin
      */
     public void setMarginTop(int marginTop) {
         this.marginTop = marginTop;
@@ -136,7 +155,8 @@ public class ErrorBar extends Composite {
     /**
      * Changes the margin on the bottom of the error bar, if displayed.
      *
-     * @param marginBottom the new margin
+     * @param marginBottom
+     *            the new margin
      */
     public void setMarginBottom(int marginBottom) {
         this.marginBottom = marginBottom;
@@ -155,7 +175,8 @@ public class ErrorBar extends Composite {
     /**
      * Changes the margin on the left of the error bar, if displayed.
      *
-     * @param marginLeft the new margin
+     * @param marginLeft
+     *            the new margin
      */
     public void setMarginLeft(int marginLeft) {
         this.marginLeft = marginLeft;
@@ -174,12 +195,12 @@ public class ErrorBar extends Composite {
     /**
      * Changes the margin on the right of the error bar, if displayed.
      *
-     * @param marginRight the new margin
+     * @param marginRight
+     *            the new margin
      */
     public void setMarginRight(int marginRight) {
         this.marginRight = marginRight;
         getParent().layout();
     }
-
 
 }
