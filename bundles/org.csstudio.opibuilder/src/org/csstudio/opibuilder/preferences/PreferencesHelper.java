@@ -47,7 +47,6 @@ public class PreferencesHelper {
     public static final String PULSING_ALARM_MINOR_PERIOD = "pulsing_alarm_minor_period";
     public static final String PULSING_ALARM_MAJOR_PERIOD = "pulsing_alarm_major_period";
     public static final String DEFAULT_TO_CLASSIC_STYLE = "default_to_classic_style";
-    public static final String SHOW_OPI_RUNTIME_STACKS = "show_opi_runtime_stacks";
     public static final String FONT_DEFAULT_PIXELS_OR_POINTS = "font_default_pixels_or_points";
 
     // The widgets that are hidden from palette.
@@ -132,11 +131,6 @@ public class PreferencesHelper {
     public static boolean isDefaultStyleClassic() {
         final IPreferencesService service = Platform.getPreferencesService();
         return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, DEFAULT_TO_CLASSIC_STYLE, true, null);
-    }
-
-    public static boolean showOpiRuntimeStacks() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, SHOW_OPI_RUNTIME_STACKS, false, null);
     }
 
     public static boolean isAdvancedGraphicsDisabled() {

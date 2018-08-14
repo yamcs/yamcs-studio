@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
-import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -57,8 +56,9 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
         public static String[] stringValues() {
             final String[] sv = new String[values().length];
             int i = 0;
-            for (Position p : values())
+            for (Position p : values()) {
                 sv[i++] = p.toString();
+            }
             return sv;
         }
 
@@ -107,15 +107,6 @@ public class OPIRunnerPerspective implements IPerspectiveFactory {
         center.addPlaceholder(OPIView.ID + SECOND_ID);
 
         layout.setEditorAreaVisible(false);
-
-        // Placeholder views show location of folders
-        if (PreferencesHelper.showOpiRuntimeStacks()) {
-            center.addView(PlaceHolderView.ID + ":CENTER");
-            left.addView(PlaceHolderView.ID + ":LEFT");
-            right.addView(PlaceHolderView.ID + ":RIGHT");
-            top.addView(PlaceHolderView.ID + ":TOP");
-            bottom.addView(PlaceHolderView.ID + ":BOTTOM");
-        }
 
         bottom.addView(ID_CONSOLE_VIEW);
         layout.addShowViewShortcut(ID_CONSOLE_VIEW);
