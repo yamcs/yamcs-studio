@@ -14,8 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -26,16 +24,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.DataFormatException;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.util.Util;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * A service help to maintain the color macros.
@@ -53,9 +48,7 @@ public final class MediaService {
     public static final String HEADER2 = "Header 2";
     public static final String HEADER3 = "Header 3";
     public static final String FINE_PRINT = "Fine Print";
-    /**
-     * The shared instance of this class.
-     */
+
     private static MediaService instance = null;
 
     private Map<String, OPIColor> colorMap;
@@ -68,9 +61,6 @@ public final class MediaService {
 
     public final static FontData DEFAULT_UNKNOWN_FONT = CustomMediaFactory.FONT_ARIAL;
 
-    /**
-     * @return the instance
-     */
     public synchronized static final MediaService getInstance() {
         if (instance == null) {
             instance = new MediaService();
@@ -126,31 +116,18 @@ public final class MediaService {
      */
     public synchronized void reloadColorFile() {
         colorFilePath = PreferencesHelper.getColorFilePath();
-        final CountDownLatch latch = new CountDownLatch(1);
 
-        final Job job = new Job("Load Color File") {
+        Job job = new Job("Load Color File") {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 monitor.beginTask("Connecting to " + colorFilePath, IProgressMonitor.UNKNOWN);
                 colorMap.clear();
                 loadColorFile();
-                latch.countDown();
                 monitor.done();
                 return Status.OK_STATUS;
             }
         };
         job.schedule();
-        try {
-            if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
-                PlatformUI.getWorkbench().getDisplay()
-                        .asyncExec(() -> MessageDialog.openWarning(null, "Warning", NLS.bind(
-                                "Failed to load OPI color file {0} in 2 seconds. "
-                                        + "It will continue to load it in a background job.",
-                                colorFilePath)));
-
-            }
-        } catch (InterruptedException e) {
-        }
 
     }
 
@@ -170,29 +147,16 @@ public final class MediaService {
         }
         fontFilePath = PreferencesHelper.getFontFilePath();
 
-        final CountDownLatch latch = new CountDownLatch(1);
         Job job = new Job("Load Font File") {
             @Override
             public IStatus run(IProgressMonitor monitor) {
                 monitor.beginTask("Connecting to " + fontFilePath, IProgressMonitor.UNKNOWN);
                 loadFontFile(systemFontName.toString());
-                latch.countDown();
                 monitor.done();
                 return Status.OK_STATUS;
             }
         };
         job.schedule();
-
-        try {
-            if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
-                PlatformUI.getWorkbench().getDisplay()
-                        .asyncExec(() -> MessageDialog.openWarning(null, "Warning", NLS.bind(
-                                "Failed to load OPI font file {0} in 2 seconds. "
-                                        + "It will continue to load it in a background job.",
-                                fontFilePath)));
-            }
-        } catch (InterruptedException e) {
-        }
     }
 
     /**
