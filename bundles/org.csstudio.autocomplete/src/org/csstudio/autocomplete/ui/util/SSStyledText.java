@@ -7,6 +7,8 @@
  ******************************************************************************/
 package org.csstudio.autocomplete.ui.util;
 
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -17,29 +19,45 @@ import org.eclipse.swt.widgets.Control;
  */
 public class SSStyledText {
 
+    private StyledText text;
+
     public Control init(Composite parent, int style, Object layoutData) {
-        return null;
+        text = new StyledText(parent, style);
+        text.setLayoutData(layoutData);
+        return text;
     }
 
     public void setText(String content) {
+        text.setText(content);
+        text.pack();
+        // need right margin to avoid bold text to overflow
+        text.setSize(text.getSize().x + 20, text.getSize().y);
     }
 
     public void setStyle(Color color, int fontStyle, int start, int length) {
+        StyleRange styleRange = new StyleRange();
+        styleRange.fontStyle = fontStyle;
+        styleRange.foreground = color;
+        styleRange.start = start;
+        styleRange.length = length;
+        text.setStyleRange(styleRange);
     }
 
     public Point getSize() {
-        return new Point(0, 0);
+        return text.getSize();
     }
 
     public void dispose() {
     }
 
     public boolean isValid() {
-        return false;
+        return text != null && !text.isDisposed();
     }
 
     public boolean hasFocus() {
-        return false;
+        if (text == null || text.isDisposed()) {
+            return false;
+        }
+        return text.getShell().isFocusControl() || text.isFocusControl();
     }
-
 }

@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.csstudio.autocomplete.AutoCompleteHelper;
+import org.csstudio.autocomplete.AutoCompletePlugin;
 import org.csstudio.autocomplete.AutoCompleteResult;
 import org.csstudio.autocomplete.IAutoCompleteProvider;
 import org.csstudio.autocomplete.parser.ContentDescriptor;
@@ -21,12 +22,10 @@ import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.csstudio.autocomplete.proposals.TopProposalFinder;
 import org.csstudio.autocomplete.ui.AutoCompleteTypes;
-import org.csstudio.autocomplete.ui.AutoCompleteUIPlugin;
 
 /**
- * History proposal provider. Retrieves matching proposals from history. Always
- * handles the full auto-completed content by using {@link ContentDescriptor}
- * originalValue and ignore wildcards.
+ * History proposal provider. Retrieves matching proposals from history. Always handles the full auto-completed content
+ * by using {@link ContentDescriptor} originalValue and ignore wildcards.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -51,17 +50,20 @@ public class AutoCompleteHistoryProvider implements IAutoCompleteProvider {
         AutoCompleteResult result = new AutoCompleteResult();
         String cleanedName = AutoCompleteHelper.trimWildcards(content);
         Pattern namePattern = AutoCompleteHelper.convertToPattern(cleanedName);
-        if (namePattern == null)
+        if (namePattern == null) {
             return result;
+        }
 
         String entryType = AutoCompleteTypes.PV;
-        if (content.startsWith("="))
+        if (content.startsWith("=")) {
             entryType = AutoCompleteTypes.Formula;
+        }
 
-        LinkedList<String> fifo = new LinkedList<String>();
-        fifo.addAll(AutoCompleteUIPlugin.getDefault().getHistory(entryType));
-        if (fifo.isEmpty())
+        LinkedList<String> fifo = new LinkedList<>();
+        fifo.addAll(AutoCompletePlugin.getDefault().getHistory(entryType));
+        if (fifo.isEmpty()) {
             return result; // Empty result
+        }
 
         int count = 0;
         for (String entry : fifo) {
@@ -79,8 +81,9 @@ public class AutoCompleteHistoryProvider implements IAutoCompleteProvider {
         result.setCount(count);
 
         TopProposalFinder trf = new TopProposalFinder(Preferences.getSeparators());
-        for (Proposal p : trf.getTopProposals(Pattern.quote(cleanedName), fifo))
+        for (Proposal p : trf.getTopProposals(Pattern.quote(cleanedName), fifo)) {
             result.addTopProposal(p);
+        }
 
         return result;
     }

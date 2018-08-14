@@ -7,9 +7,12 @@
  ******************************************************************************/
 package org.csstudio.autocomplete.ui.util;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.TextLayout;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
@@ -18,24 +21,33 @@ import org.eclipse.swt.widgets.Event;
  */
 public class SSTextLayout {
 
+    private TextLayout textLayout;
+
     public void init(Display display, String text) {
-        return;
+        textLayout = new TextLayout(display);
+        textLayout.setAlignment(SWT.CENTER);
+        textLayout.setText(text);
     }
 
     public void addStyle(Font font, Color color, int x, int y) {
-        return;
+        TextStyle textStyle = new TextStyle(font, color, null);
+        textLayout.setStyle(textStyle, x, y);
     }
 
     public void handlePaintItemEvent(Event event, int offsetX, int offsetY) {
-        return;
+        textLayout.draw(event.gc, event.x + offsetX, event.y + offsetY);
     }
 
     public void handleMeasureItemEvent(Event event) {
-        return;
+        Rectangle textLayoutBounds = textLayout.getBounds();
+        event.width = textLayoutBounds.width;
+        event.height = textLayoutBounds.height;
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(0, 0, 0, 0);
+        if (textLayout != null) {
+            return textLayout.getBounds();
+        }
+        return null;
     }
-
 }

@@ -15,10 +15,10 @@ package org.csstudio.autocomplete.ui.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.csstudio.autocomplete.AutoCompletePlugin;
 import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.csstudio.autocomplete.tooltips.TooltipData;
-import org.csstudio.autocomplete.ui.AutoCompleteUIPlugin;
 import org.csstudio.autocomplete.ui.util.SSTextLayout;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.PopupDialog;
@@ -28,8 +28,6 @@ import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -110,30 +108,27 @@ public class ContentProposalPopup extends PopupDialog {
                  * controls, or a scrollbar. Do this in an async since the focus is not actually switched when this
                  * event is received.
                  */
-                e.display.asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isValid()) {
-                            if (scrollbarClicked || hasFocus()) {
-                                return;
-                            }
-                            // Workaround a problem on X and Mac, whereby at
-                            // this point, the focus control is not known.
-                            // This can happen, for example, when resizing
-                            // the popup shell on the Mac.
-                            // Check the active shell.
-                            Shell activeShell = e.display.getActiveShell();
-                            if (activeShell == getShell()
-                                    || (infoPopup != null && infoPopup
-                                            .getShell() == activeShell)) {
-                                return;
-                            }
-                            /*
-                             * System.out.println(e); System.out.println(e.display.getFocusControl());
-                             * System.out.println(e.display.getActiveShell());
-                             */
-                            close();
+                e.display.asyncExec(() -> {
+                    if (isValid()) {
+                        if (scrollbarClicked || hasFocus()) {
+                            return;
                         }
+                        // Workaround a problem on X and Mac, whereby at
+                        // this point, the focus control is not known.
+                        // This can happen, for example, when resizing
+                        // the popup shell on the Mac.
+                        // Check the active shell.
+                        Shell activeShell = e.display.getActiveShell();
+                        if (activeShell == getShell()
+                                || (infoPopup != null && infoPopup
+                                        .getShell() == activeShell)) {
+                            return;
+                        }
+                        /*
+                         * System.out.println(e); System.out.println(e.display.getFocusControl());
+                         * System.out.println(e.display.getActiveShell());
+                         */
+                        close();
                     }
                 });
                 return;
@@ -244,8 +239,9 @@ public class ContentProposalPopup extends PopupDialog {
                 e.doit = adapter.getPropagateKeys();
                 String delete = new String(new char[] { 8 });
                 String currentKey = new String(new char[] { e.character });
-                if (!delete.equals(currentKey))
+                if (!delete.equals(currentKey)) {
                     handleTopProposals = true;
+                }
             }
 
             // No character. Check for navigation keys.
@@ -256,11 +252,14 @@ public class ContentProposalPopup extends PopupDialog {
                 switch (e.keyCode) {
                 case SWT.ARROW_UP:
                     newSelection -= 1;
-                    if (newSelection < 0)
+                    if (newSelection < 0) {
                         newSelection = proposalTable.getItemCount() - 1;
-                    while (nonSelectableItems.contains(newSelection))
-                        if (--newSelection < 0)
+                    }
+                    while (nonSelectableItems.contains(newSelection)) {
+                        if (--newSelection < 0) {
                             newSelection = proposalTable.getItemCount() - 1;
+                        }
+                    }
                     // Not typical - usually we get this as a Traverse and
                     // therefore it never propagates. Added for consistency.
                     if (e.type == SWT.KeyDown) {
@@ -271,11 +270,14 @@ public class ContentProposalPopup extends PopupDialog {
 
                 case SWT.ARROW_DOWN:
                     newSelection += 1;
-                    if (newSelection > proposalTable.getItemCount() - 1)
+                    if (newSelection > proposalTable.getItemCount() - 1) {
                         newSelection = 0;
-                    while (nonSelectableItems.contains(newSelection))
-                        if (++newSelection > proposalTable.getItemCount() - 1)
+                    }
+                    while (nonSelectableItems.contains(newSelection)) {
+                        if (++newSelection > proposalTable.getItemCount() - 1) {
                             newSelection = 0;
+                        }
+                    }
                     // Not typical - usually we get this as a Traverse and
                     // therefore it never propagates. Added for consistency.
                     if (e.type == SWT.KeyDown) {
@@ -286,11 +288,14 @@ public class ContentProposalPopup extends PopupDialog {
 
                 case SWT.PAGE_DOWN:
                     newSelection += visibleRows;
-                    if (newSelection >= proposalTable.getItemCount())
+                    if (newSelection >= proposalTable.getItemCount()) {
                         newSelection = proposalTable.getItemCount() - 1;
-                    while (nonSelectableItems.contains(newSelection))
-                        if (--newSelection < 0)
+                    }
+                    while (nonSelectableItems.contains(newSelection)) {
+                        if (--newSelection < 0) {
                             newSelection = proposalTable.getItemCount() - 1;
+                        }
+                    }
                     if (e.type == SWT.KeyDown) {
                         // don't propagate to control
                         e.doit = false;
@@ -299,11 +304,14 @@ public class ContentProposalPopup extends PopupDialog {
 
                 case SWT.PAGE_UP:
                     newSelection -= visibleRows;
-                    if (newSelection < 0)
+                    if (newSelection < 0) {
                         newSelection = 0;
-                    while (nonSelectableItems.contains(newSelection))
-                        if (++newSelection > proposalTable.getItemCount() - 1)
+                    }
+                    while (nonSelectableItems.contains(newSelection)) {
+                        if (++newSelection > proposalTable.getItemCount() - 1) {
                             newSelection = 0;
+                        }
+                    }
                     if (e.type == SWT.KeyDown) {
                         // don't propagate to control
                         e.doit = false;
@@ -373,8 +381,9 @@ public class ContentProposalPopup extends PopupDialog {
                 if (newSelection >= 0) {
                     selectProposal(newSelection);
                     Proposal proposal = getSelectedProposal();
-                    if (proposal != null)
+                    if (proposal != null) {
                         adapter.proposalSelected(proposal);
+                    }
                 }
                 return;
             }
@@ -552,12 +561,14 @@ public class ContentProposalPopup extends PopupDialog {
             if (newContents == null) {
                 newContents = EMPTY;
             }
-            if (newContents.length() > CONTENT_MAX_LENGTH)
+            if (newContents.length() > CONTENT_MAX_LENGTH) {
                 newContents = newContents.substring(0, CONTENT_MAX_LENGTH)
                         + "...";
+            }
             int crIndex = newContents.indexOf("\n");
-            if (crIndex > 0)
+            if (crIndex > 0) {
                 newContents = newContents.substring(0, crIndex);
+            }
             this.contents = newContents;
             if (text != null && !text.isDisposed()) {
                 text.setText(contents);
@@ -669,25 +680,26 @@ public class ContentProposalPopup extends PopupDialog {
         this.control = adapter.getControl();
 
         // this.labelProvider = adapter.getLabelProvider();
-        this.partialContentImage = AutoCompleteUIPlugin.getDefault()
-                .getImageFromPlugin(AutoCompleteUIPlugin.PLUGIN_ID,
+        this.partialContentImage = AutoCompletePlugin.getDefault()
+                .getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
                         "icons/mglass-16.png");
-        this.partialContentImageSelected = AutoCompleteUIPlugin.getDefault()
-                .getImageFromPlugin(AutoCompleteUIPlugin.PLUGIN_ID,
+        this.partialContentImageSelected = AutoCompletePlugin.getDefault()
+                .getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
                         "icons/mglass-16-white.png");
-        this.functionContentImage = AutoCompleteUIPlugin.getDefault()
-                .getImageFromPlugin(AutoCompleteUIPlugin.PLUGIN_ID,
+        this.functionContentImage = AutoCompletePlugin.getDefault()
+                .getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
                         "icons/function-16.png");
-        this.functionContentImageSelected = AutoCompleteUIPlugin.getDefault()
-                .getImageFromPlugin(AutoCompleteUIPlugin.PLUGIN_ID,
+        this.functionContentImageSelected = AutoCompletePlugin.getDefault()
+                .getImageFromPlugin(AutoCompletePlugin.PLUGIN_ID,
                         "icons/function-16-white.png");
         this.nonSelectableItems = new ArrayList<>();
 
         this.proposalList = proposalList;
         // When the popup is opened & the content is not already completed, we
         // want to handle this behaviour
-        if (!adapter.isPreventTopProposalSelection())
+        if (!adapter.isPreventTopProposalSelection()) {
             handleTopProposals = true;
+        }
     }
 
     /*
@@ -728,39 +740,29 @@ public class ContentProposalPopup extends PopupDialog {
         if (USE_VIRTUAL) {
             proposalTable = new Table(wrapper, SWT.H_SCROLL | SWT.V_SCROLL
                     | SWT.VIRTUAL | SWT.NO_FOCUS);
-            Listener listener = new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    handleSetData(event);
-                }
-            };
+            Listener listener = event -> handleSetData(event);
             proposalTable.addListener(SWT.SetData, listener);
 
-            proposalTable.addListener(SWTPaintItem, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    TableItem item = (TableItem) event.item;
-                    int index = proposalTable.indexOf(item);
-                    if (textLayouts != null && index < textLayouts.length
-                            && textLayouts[index] != null) {
-                        textLayouts[index].handlePaintItemEvent(event, 20, 2);
-                    }
-                    Proposal p = (Proposal) item.getData();
-                    Image image = getImage(p,
-                            index == proposalTable.getSelectionIndex());
-                    if (image != null)
-                        event.gc.drawImage(image, event.x, event.y + 2);
+            proposalTable.addListener(SWTPaintItem, event -> {
+                TableItem item = (TableItem) event.item;
+                int index = proposalTable.indexOf(item);
+                if (textLayouts != null && index < textLayouts.length
+                        && textLayouts[index] != null) {
+                    textLayouts[index].handlePaintItemEvent(event, 20, 2);
+                }
+                Proposal p = (Proposal) item.getData();
+                Image image = getImage(p,
+                        index == proposalTable.getSelectionIndex());
+                if (image != null) {
+                    event.gc.drawImage(image, event.x, event.y + 2);
                 }
             });
-            proposalTable.addListener(SWTMeasureItem, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    TableItem item = (TableItem) event.item;
-                    int index = proposalTable.indexOf(item);
-                    if (textLayouts != null && index < textLayouts.length
-                            && textLayouts[index] != null) {
-                        textLayouts[index].handleMeasureItemEvent(event);
-                    }
+            proposalTable.addListener(SWTMeasureItem, event -> {
+                TableItem item = (TableItem) event.item;
+                int index = proposalTable.indexOf(item);
+                if (textLayouts != null && index < textLayouts.length
+                        && textLayouts[index] != null) {
+                    textLayouts[index].handleMeasureItemEvent(event);
                 }
             });
         } else {
@@ -778,28 +780,25 @@ public class ContentProposalPopup extends PopupDialog {
         setProposals(proposalList);
 
         proposalTable.setHeaderVisible(false);
-        proposalTable.addListener(SWT.KeyDown, new Listener() {
-            @Override
-            public void handleEvent(Event e) {
-                getTargetControlListener().handleEvent(e);
-            }
-        });
+        proposalTable.addListener(SWT.KeyDown, e -> getTargetControlListener().handleEvent(e));
         proposalTable.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 // If a proposal has been selected, show it in the secondary
                 // popup. Otherwise close the popup.
                 if (e.item == null) {
-                    if (infoPopup != null)
+                    if (infoPopup != null) {
                         infoPopup.close();
+                    }
                 } else {
                     Proposal proposal = (Proposal) e.item.getData();
                     if (proposal != null) {
                         showProposalDescription();
                         adapter.proposalSelected(proposal);
                     } else {
-                        if (infoPopup != null)
+                        if (infoPopup != null) {
                             infoPopup.close();
+                        }
                         proposalTable.deselectAll();
                     }
                 }
@@ -845,16 +844,13 @@ public class ContentProposalPopup extends PopupDialog {
     protected void adjustBounds() {
         adjustTableBounds();
         // Now set up a listener to monitor any changes in size.
-        getShell().addListener(SWT.Resize, new Listener() {
-            @Override
-            public void handleEvent(Event e) {
-                popupSize = getShell().getSize();
-                if (infoPopup != null) {
-                    infoPopup.close();
-                    Proposal p = getSelectedProposal();
-                    if (p != null) {
-                        showProposalDescription();
-                    }
+        getShell().addListener(SWT.Resize, e -> {
+            popupSize = getShell().getSize();
+            if (infoPopup != null) {
+                infoPopup.close();
+                Proposal p = getSelectedProposal();
+                if (p != null) {
+                    showProposalDescription();
                 }
             }
         });
@@ -904,8 +900,7 @@ public class ContentProposalPopup extends PopupDialog {
         int index = 0;
         textLayouts = new SSTextLayout[getTableLength()];
         for (Proposal proposal : proposalList.getTopProposalList()) {
-            textLayouts[index] = AutoCompleteUIPlugin.getUIHelper()
-                    .newTextLayout();
+            textLayouts[index] = new SSTextLayout();
 
             String text = getString(proposal);
             textLayouts[index].init(display, text);
@@ -923,8 +918,7 @@ public class ContentProposalPopup extends PopupDialog {
             index++;
         }
         for (String provider : proposalList.getProviderList()) {
-            textLayouts[index] = AutoCompleteUIPlugin.getUIHelper()
-                    .newTextLayout();
+            textLayouts[index] = new SSTextLayout();
 
             int count = proposalList.getCount(provider);
             String headerText = provider + " (" + count + " matching items)";
@@ -934,8 +928,7 @@ public class ContentProposalPopup extends PopupDialog {
             index++;
 
             for (Proposal proposal : proposalList.getProposals(provider)) {
-                textLayouts[index] = AutoCompleteUIPlugin.getUIHelper()
-                        .newTextLayout();
+                textLayouts[index] = new SSTextLayout();
 
                 String text = getString(proposal);
                 textLayouts[index].init(display, text);
@@ -954,10 +947,12 @@ public class ContentProposalPopup extends PopupDialog {
                 index++;
             }
         }
-        for (SSTextLayout sstl : textLayouts)
+        for (SSTextLayout sstl : textLayouts) {
             if (sstl != null && sstl.getBounds() != null
-                    && sstl.getBounds().width > maxItemWidth)
+                    && sstl.getBounds().width > maxItemWidth) {
                 maxItemWidth = sstl.getBounds().width;
+            }
+        }
         adjustTableBounds();
     }
 
@@ -1004,8 +999,9 @@ public class ContentProposalPopup extends PopupDialog {
             newProposalList = getEmptyProposalArray();
         }
         this.proposalList = newProposalList;
-        if (!isValid())
+        if (!isValid()) {
             return;
+        }
 
         // Reset item width
         maxItemWidth = 0;
@@ -1086,8 +1082,9 @@ public class ContentProposalPopup extends PopupDialog {
         if (adapter.hasSelectedTopProposal()) {
             int index = proposalList.getTopProposalList().indexOf(
                     adapter.getSelectedTopProposal());
-            if (index >= 0)
+            if (index >= 0) {
                 selectProposal(index);
+            }
         }
     }
 
@@ -1095,8 +1092,9 @@ public class ContentProposalPopup extends PopupDialog {
      * Return the proposal table length including header & top proposals.
      */
     private int getTableLength() {
-        if (proposalList == null)
+        if (proposalList == null) {
             return 0;
+        }
         return proposalList.length() + proposalList.getProviderList().size()
                 + proposalList.getTopProposalList().size();
     }
@@ -1120,13 +1118,16 @@ public class ContentProposalPopup extends PopupDialog {
      * Get the image for the specified proposal. If there is no image available, return null.
      */
     private Image getImage(Proposal proposal, boolean selected) {
-        if (proposal == null)
+        if (proposal == null) {
             return null;
+        }
         // return labelProvider.getImage(proposal);
-        if (proposal.isPartial() && partialContentImage != null)
+        if (proposal.isPartial() && partialContentImage != null) {
             return selected ? partialContentImageSelected : partialContentImage;
-        if (proposal.isFunction() && functionContentImage != null)
+        }
+        if (proposal.isFunction() && functionContentImage != null) {
             return selected ? functionContentImageSelected : functionContentImage;
+        }
         return null;
     }
 
@@ -1256,48 +1257,36 @@ public class ContentProposalPopup extends PopupDialog {
             // before creating the popup. We do not use Jobs since this
             // code must be able to run independently of the Eclipse
             // runtime.
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    pendingDescriptionUpdate = true;
-                    try {
-                        Thread.sleep(POPUP_DELAY);
-                    } catch (InterruptedException e) {
-                    }
-                    if (!isValid()) {
-                        return;
-                    }
-                    getShell().getDisplay().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Query the current selection since we have
-                            // been delayed
-                            Proposal p = getSelectedProposal();
-                            if (p != null) {
-                                String description = p.getDescription();
-                                if (description != null) {
-                                    if (infoPopup == null) {
-                                        infoPopup = new InfoPopupDialog(getShell());
-                                        infoPopup.open();
-                                        infoPopup.getShell()
-                                                .addDisposeListener(
-                                                        new DisposeListener() {
-                                                            @Override
-                                                            public void widgetDisposed(
-                                                                    DisposeEvent event) {
-                                                                infoPopup = null;
-                                                            }
-                                                        });
-                                    }
-                                    infoPopup.setContents(p.getDescription());
-                                } else if (infoPopup != null) {
-                                    infoPopup.close();
-                                }
-                                pendingDescriptionUpdate = false;
-                            }
-                        }
-                    });
+            Runnable runnable = () -> {
+                pendingDescriptionUpdate = true;
+                try {
+                    Thread.sleep(POPUP_DELAY);
+                } catch (InterruptedException e) {
                 }
+                if (!isValid()) {
+                    return;
+                }
+                getShell().getDisplay().syncExec(() -> {
+                    // Query the current selection since we have
+                    // been delayed
+                    Proposal p = getSelectedProposal();
+                    if (p != null) {
+                        String description = p.getDescription();
+                        if (description != null) {
+                            if (infoPopup == null) {
+                                infoPopup = new InfoPopupDialog(getShell());
+                                infoPopup.open();
+                                infoPopup.getShell()
+                                        .addDisposeListener(
+                                                event -> infoPopup = null);
+                            }
+                            infoPopup.setContents(p.getDescription());
+                        } else if (infoPopup != null) {
+                            infoPopup.close();
+                        }
+                        pendingDescriptionUpdate = false;
+                    }
+                });
             };
             Thread t = new Thread(runnable);
             t.start();
@@ -1323,8 +1312,9 @@ public class ContentProposalPopup extends PopupDialog {
      * Get the proposals from the proposal provider, and recompute any caches. Repopulate the popup if it is open.
      */
     private void recomputeProposals(ContentProposalList newProposalList) {
-        if (newProposalList == null)
+        if (newProposalList == null) {
             newProposalList = getEmptyProposalArray();
+        }
         if (newProposalList.fullLength() == 0 && newProposalList.allResponded()) {
             this.proposalList = newProposalList;
             close();
@@ -1341,37 +1331,31 @@ public class ContentProposalPopup extends PopupDialog {
         footer.setText("Searching...");
         if (isValid()) {
             synchronized (uniqueId) {
-                if (uniqueId == Long.MAX_VALUE)
+                if (uniqueId == Long.MAX_VALUE) {
                     uniqueId = Long.MIN_VALUE;
+                }
                 uniqueId++;
             }
             final Long currentId = new Long(uniqueId);
-            control.getDisplay().asyncExec(new Runnable() {
+            control.getDisplay().asyncExec(() -> adapter.getProposals(new IContentProposalSearchHandler() {
+
                 @Override
-                public void run() {
-                    adapter.getProposals(new IContentProposalSearchHandler() {
-
-                        @Override
-                        public void handleResult(
-                                final ContentProposalList proposalList) {
-                            if (control != null && !control.isDisposed()) {
-                                control.getDisplay().asyncExec(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (currentId.equals(uniqueId))
-                                            recomputeProposals(proposalList);
-                                    }
-                                });
+                public void handleResult(
+                        final ContentProposalList proposalList) {
+                    if (control != null && !control.isDisposed()) {
+                        control.getDisplay().asyncExec(() -> {
+                            if (currentId.equals(uniqueId)) {
+                                recomputeProposals(proposalList);
                             }
-                        }
-
-                        @Override
-                        public void handleTooltips(List<TooltipData> tooltips) {
-                            adapter.handleTooltipData(tooltips);
-                        }
-                    });
+                        });
+                    }
                 }
-            });
+
+                @Override
+                public void handleTooltips(List<TooltipData> tooltips) {
+                    adapter.handleTooltipData(tooltips);
+                }
+            }));
         }
     }
 
@@ -1391,8 +1375,9 @@ public class ContentProposalPopup extends PopupDialog {
     }
 
     public void refreshProposals(ContentProposalList newProposalList) {
-        if (!adapter.isPreventTopProposalSelection())
+        if (!adapter.isPreventTopProposalSelection()) {
             handleTopProposals = true;
+        }
         recomputeProposals(newProposalList);
     }
 }

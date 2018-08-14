@@ -7,8 +7,7 @@
  ******************************************************************************/
 package org.csstudio.autocomplete.ui.preferences;
 
-import org.csstudio.autocomplete.ui.AutoCompleteUIPlugin;
-import org.csstudio.autocomplete.ui.Messages;
+import org.csstudio.autocomplete.AutoCompletePlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -35,35 +34,32 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 public class PreferencePage extends FieldEditorPreferencePage implements
         IWorkbenchPreferencePage {
 
-    /** Initialize */
     public PreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE,
-                AutoCompleteUIPlugin.PLUGIN_ID));
-        setMessage(Messages.PrefPage_Title);
+                AutoCompletePlugin.PLUGIN_ID));
+        setMessage("Auto-complete Settings");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void init(IWorkbench workbench) {
         // NOP
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void createFieldEditors() {
         final Composite parent = getFieldEditorParent();
 
         addField(new StringFieldEditor(Preferences.HISTORY_SIZE,
-                Messages.PrefPage_HistorySize, parent));
+                "History size", parent));
 
         final Button clearHistory = new Button(parent, SWT.PUSH);
-        clearHistory.setText(Messages.PrefPage_ClearHistory);
+        clearHistory.setText("Clear history");
         clearHistory.setLayoutData(new GridData());
         clearHistory.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
-                AutoCompleteUIPlugin.getDefault().clearSettings();
+                AutoCompletePlugin.getDefault().clearSettings();
             }
         });
 
@@ -79,7 +75,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
         final Text note = new Text(noteWrapper, SWT.MULTI | SWT.READ_ONLY);
         note.setBackground(parent.getBackground());
-        note.setText("The 'History size' value is the maximum number of entries in the History.\nEach entry is stored only once and the entries of the History are sorted \naccording to their occurrence.");
+        note.setText(
+                "The 'History size' value is the maximum number of entries in the History.\nEach entry is stored only once and the entries of the History are sorted \naccording to their occurrence.");
     }
 
 }

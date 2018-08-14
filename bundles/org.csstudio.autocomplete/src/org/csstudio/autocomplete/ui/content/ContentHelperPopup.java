@@ -14,7 +14,6 @@ import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.csstudio.autocomplete.tooltips.TooltipContent;
 import org.csstudio.autocomplete.tooltips.TooltipData;
 import org.csstudio.autocomplete.tooltips.TooltipDataHandler;
-import org.csstudio.autocomplete.ui.AutoCompleteUIPlugin;
 import org.csstudio.autocomplete.ui.util.SSStyledText;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.window.Window;
@@ -42,6 +41,7 @@ public class ContentHelperPopup extends PopupDialog {
 
     private final class PopupCloserListener extends SelectionAdapter implements Listener {
 
+        @Override
         public void handleEvent(final Event e) {
             // If focus is leaving an important widget or the field's
             // shell is deactivating
@@ -52,23 +52,21 @@ public class ContentHelperPopup extends PopupDialog {
                  * in an asynchronous way since the focus is not actually
                  * switched when this event is received.
                  */
-                e.display.asyncExec(new Runnable() {
-                    public void run() {
-                        if (isValid()) {
-                            if (hasFocus()) {
-                                return;
-                            }
-                            // Workaround a problem on X and Mac, whereby at
-                            // this point, the focus control is not known.
-                            // This can happen, for example, when resizing
-                            // the helper shell on the Mac.
-                            // Check the active shell.
-                            Shell activeShell = e.display.getActiveShell();
-                            if (activeShell == getShell()) {
-                                return;
-                            }
-                            close();
+                e.display.asyncExec(() -> {
+                    if (isValid()) {
+                        if (hasFocus()) {
+                            return;
                         }
+                        // Workaround a problem on X and Mac, whereby at
+                        // this point, the focus control is not known.
+                        // This can happen, for example, when resizing
+                        // the helper shell on the Mac.
+                        // Check the active shell.
+                        Shell activeShell = e.display.getActiveShell();
+                        if (activeShell == getShell()) {
+                            return;
+                        }
+                        close();
                     }
                 });
                 return;
@@ -105,10 +103,12 @@ public class ContentHelperPopup extends PopupDialog {
             controlShell.addListener(SWT.Resize, this);
 
             control.addListener(SWT.DefaultSelection, this);
-            if (control instanceof Text)
+            if (control instanceof Text) {
                 ((Text) control).addSelectionListener(this);
-            if (control instanceof Combo)
+            }
+            if (control instanceof Combo) {
                 ((Combo) control).addSelectionListener(this);
+            }
         }
 
         // Remove installed listeners
@@ -128,10 +128,12 @@ public class ContentHelperPopup extends PopupDialog {
                 controlShell.removeListener(SWT.Resize, this);
 
                 control.removeListener(SWT.DefaultSelection, this);
-                if (control instanceof Text)
+                if (control instanceof Text) {
                     ((Text) control).removeSelectionListener(this);
-                if (control instanceof Combo)
+                }
+                if (control instanceof Combo) {
                     ((Combo) control).removeSelectionListener(this);
+                }
             }
         }
     }
@@ -181,20 +183,22 @@ public class ContentHelperPopup extends PopupDialog {
     /*
      * Create a text control for showing the helper.
      */
+    @Override
     protected Control createDialogArea(Composite parent) {
         // Use the compact margins employed by PopupDialog.
         GridData gd = new GridData(GridData.BEGINNING);
         gd.horizontalIndent = margins.width;
         gd.verticalIndent = margins.height;
-        text = AutoCompleteUIPlugin.getUIHelper().newStyledText();
+        text = new SSStyledText();
         Control c = text.init(parent, SWT.MULTI | SWT.READ_ONLY | SWT.NO_FOCUS, gd);
         updateDisplay();
         return c;
     }
 
     private void updateDisplay() {
-        if (content == null || !isValid())
+        if (content == null || !isValid()) {
             return;
+        }
         text.setText(content.value);
         for (ProposalStyle ps : content.styles) {
             Color color = control.getDisplay().getSystemColor(ps.fontColor);
@@ -205,6 +209,7 @@ public class ContentHelperPopup extends PopupDialog {
     /*
      * Adjust the bounds so that we appear on the top of the control.
      */
+    @Override
     protected void adjustBounds() {
         // Get our control's location in display coordinates.
         Point location = control.getDisplay().map(control.getParent(), null,
@@ -225,8 +230,9 @@ public class ContentHelperPopup extends PopupDialog {
 
         // Try placing the helper on the top
         final Rectangle proposedBounds = new Rectangle(parentBounds.x
-                + PopupDialog.POPUP_HORIZONTALSPACING, parentBounds.y
-                - parentBounds.height - PopupDialog.POPUP_VERTICALSPACING,
+                + PopupDialog.POPUP_HORIZONTALSPACING,
+                parentBounds.y
+                        - parentBounds.height - PopupDialog.POPUP_VERTICALSPACING,
                 parentBounds.width, parentBounds.height);
 
         // Constrain to the display
@@ -247,6 +253,7 @@ public class ContentHelperPopup extends PopupDialog {
      *
      * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
      */
+    @Override
     protected Color getForeground() {
         return control.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND);
     }
@@ -256,6 +263,7 @@ public class ContentHelperPopup extends PopupDialog {
      *
      * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
      */
+    @Override
     protected Color getBackground() {
         return control.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND);
     }
@@ -267,9 +275,11 @@ public class ContentHelperPopup extends PopupDialog {
      *
      * @see org.eclipse.jface.window.Window#open()
      */
+    @Override
     public int open() {
-        if (!canOpen)
+        if (!canOpen) {
             return 0;
+        }
         if (control.isDisposed()) {
             isOpened = false;
             return Window.CANCEL;
@@ -293,12 +303,13 @@ public class ContentHelperPopup extends PopupDialog {
     /**
      * Closes this ContentHelperPopup.
      *
-     * @return <code>true</code> if the window is (or was already) closed, and
-     *         <code>false</code> if it is still open
+     * @return <code>true</code> if the window is (or was already) closed, and <code>false</code> if it is still open
      */
+    @Override
     public boolean close() {
-        if (!isOpened)
+        if (!isOpened) {
             return false;
+        }
         text.dispose();
         popupCloser.removeListeners();
         isOpened = false;
@@ -313,12 +324,12 @@ public class ContentHelperPopup extends PopupDialog {
     /**
      * Refresh this ContentHelperPopup if already opened.
      *
-     * @return <code>true</code> if the window was refreshed, and
-     *         <code>false</code> if not
+     * @return <code>true</code> if the window was refreshed, and <code>false</code> if not
      */
     public boolean refresh() {
-        if (!isOpened)
+        if (!isOpened) {
             return false;
+        }
         String fieldContent = adapter.getControlContentAdapter()
                 .getControlContents(control);
         content = dataHandler.generateTooltipContent(fieldContent);
@@ -347,17 +358,19 @@ public class ContentHelperPopup extends PopupDialog {
     }
 
     public void updateData(List<TooltipData> dataList) {
-        if (dataList == null)
+        if (dataList == null) {
             return;
-        for (TooltipData data : dataList)
+        }
+        for (TooltipData data : dataList) {
             dataHandler.addData(data);
-        if (control != null && !control.isDisposed())
-            control.getDisplay().asyncExec(new Runnable() {
-                public void run() {
-                    if (!refresh())
-                        open();
+        }
+        if (control != null && !control.isDisposed()) {
+            control.getDisplay().asyncExec(() -> {
+                if (!refresh()) {
+                    open();
                 }
             });
+        }
     }
 
     public void clearData() {
