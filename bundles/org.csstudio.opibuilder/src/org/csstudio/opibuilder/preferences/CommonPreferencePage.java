@@ -10,8 +10,6 @@ package org.csstudio.opibuilder.preferences;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -45,12 +43,6 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
                 "Font File: ", new String[] { "def" }, parent);//$NON-NLS-2$
         addField(fontEditor);
 
-        StringFieldEditor opiSearchPathEditor = new StringFieldEditor(PreferencesHelper.OPI_SEARCH_PATH,
-                "OPI Search Path", parent);
-        opiSearchPathEditor.getTextControl(parent).setToolTipText(
-                "The path to search OPI files.");
-        addField(opiSearchPathEditor);
-
         BooleanFieldEditor noEditModeEditor = new BooleanFieldEditor(PreferencesHelper.NO_EDIT,
                 "No-Editing mode", parent);
         addField(noEditModeEditor);
@@ -74,13 +66,6 @@ public class CommonPreferencePage extends FieldEditorPreferencePage
         default_type_editor.getDescriptionControl(parent).setToolTipText(
                 "Should widgets with 'classic' as well as 'native' style default to 'classic'?");
         addField(default_type_editor);
-
-        IntegerFieldEditor urlLoadFieldEditor = new IntegerFieldEditor(PreferencesHelper.URL_FILE_LOADING_TIMEOUT,
-                "URL file loading timeout (ms)", parent);
-        urlLoadFieldEditor.getTextControl(parent).setToolTipText(
-                "The timeout in millisecond for loading file from a URL path.");
-        addField(urlLoadFieldEditor);
-
     }
 
     @Override

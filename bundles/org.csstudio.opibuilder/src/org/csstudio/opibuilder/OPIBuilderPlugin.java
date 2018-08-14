@@ -99,19 +99,12 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
                 GUIRefreshThread.getInstance(true).reLoadGUIRefreshCycle();
             } else if (event.getProperty().equals(
                     PreferencesHelper.DISABLE_ADVANCED_GRAPHICS)) {
-                String disabled = PreferencesHelper.isAdvancedGraphicsDisabled() ? "true" : "false";//$NON-NLS-1$ //$NON-NLS-2$
+                String disabled = PreferencesHelper.isAdvancedGraphicsDisabled() ? "true" : "false";
                 // for swt.widgets
                 System.setProperty(
-                        "org.csstudio.swt.widget.prohibit_advanced_graphics", disabled);//$NON-NLS-1$
+                        "org.csstudio.swt.widget.prohibit_advanced_graphics", disabled);
                 // for XYGraph
-                System.setProperty("prohibit_advanced_graphics", disabled); //$NON-NLS-1$
-
-            } else if (event.getProperty().equals(
-                    PreferencesHelper.URL_FILE_LOADING_TIMEOUT)) {
-                System.setProperty(
-                        "org.csstudio.swt.widget.url_file_load_timeout", //$NON-NLS-1$
-                        Integer.toString(PreferencesHelper
-                                .getURLFileLoadingTimeout()));
+                System.setProperty("prohibit_advanced_graphics", disabled);
             } else if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
                 SchemaService.getInstance().reLoad();
             }
@@ -130,9 +123,6 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
         preferenceLisener.propertyChange(
                 new HackPropertyChangeEvent(
                         this, PreferencesHelper.DISABLE_ADVANCED_GRAPHICS, null, null));
-        preferenceLisener.propertyChange(
-                new HackPropertyChangeEvent(
-                        this, PreferencesHelper.URL_FILE_LOADING_TIMEOUT, null, null));
     }
 
     @Override

@@ -7,8 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgetActions;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +20,9 @@ import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
-/**The abstract action for executing script.
+/**
+ * The abstract action for executing script.
+ * 
  * @author Xihui Chen
  *
  */
@@ -39,94 +39,87 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     protected void configureProperties() {
         addProperty(new FilePathProperty(
                 PROP_PATH, "File Path", WidgetPropertyCategory.Basic, new Path(""),
-                new String[]{getFileExtension()}, false));
+                new String[] { getFileExtension() }, false));
         addProperty(new StringProperty(
                 PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic,
                 getScriptHeader(), true, true));
         BooleanProperty embeddedProperty = new BooleanProperty(
                 PROP_EMBEDDED, "Embedded", WidgetPropertyCategory.Basic, false);
-        embeddedProperty.addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                getProperty(PROP_PATH).setVisibleInPropSheet(
-                        !((Boolean) evt.getNewValue()));
-                getProperty(PROP_SCRIPT_TEXT).setVisibleInPropSheet(
-                        ((Boolean) evt.getNewValue()));
-            }
+        embeddedProperty.addPropertyChangeListener(evt -> {
+            getProperty(PROP_PATH).setVisibleInPropSheet(
+                    !((Boolean) evt.getNewValue()));
+            getProperty(PROP_SCRIPT_TEXT).setVisibleInPropSheet(
+                    ((Boolean) evt.getNewValue()));
         });
         addProperty(embeddedProperty);
         getProperty(PROP_SCRIPT_TEXT).setVisibleInPropSheet(false);
 
     }
 
-
-    protected IPath getPath(){
-        return (IPath)getPropertyValue(PROP_PATH);
+    protected IPath getPath() {
+        return (IPath) getPropertyValue(PROP_PATH);
     }
 
-    protected IPath getAbsolutePath(){
-        //read file
+    protected IPath getAbsolutePath() {
+        // read file
         IPath absolutePath = getPath();
-        if(!absolutePath.isAbsolute()){
-            absolutePath =
-                ResourceUtil.buildAbsolutePath(getWidgetModel(), getPath());
-            if(!ResourceUtil.isExsitingFile(absolutePath, true)){
-                //search from OPI search path
-                absolutePath = ResourceUtil.getFileOnSearchPath(getPath(), true);
-            }
+        if (!absolutePath.isAbsolute()) {
+            absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), getPath());
         }
         return absolutePath;
     }
 
-    protected boolean isEmbedded(){
-        return (Boolean)getPropertyValue(PROP_EMBEDDED);
+    protected boolean isEmbedded() {
+        return (Boolean) getPropertyValue(PROP_EMBEDDED);
     }
 
-    protected String getScriptText(){
-        return (String)getPropertyValue(PROP_SCRIPT_TEXT);
+    protected String getScriptText() {
+        return (String) getPropertyValue(PROP_SCRIPT_TEXT);
     }
-
 
     @Override
     public String getDefaultDescription() {
         String desc = super.getDefaultDescription();
-        if(isEmbedded())
+        if (isEmbedded()) {
             return desc;
-        return  desc + " " + getPath(); //$NON-NLS-1$
+        }
+        return desc + " " + getPath(); //$NON-NLS-1$
     }
 
-    /**Get reader of the script file.An instance will be created for later to use.
-     * Muse call {@link #closeReader()} to close this reader.
+    /**
+     * Get reader of the script file.An instance will be created for later to use. Muse call {@link #closeReader()} to
+     * close this reader.
+     * 
      * @return the reader
      * @throws Exception
      */
-    protected BufferedReader getReader() throws Exception{
-        if(reader == null){
-            inputStream  = ResourceUtil.pathToInputStream(getAbsolutePath(), false);
+    protected BufferedReader getReader() throws Exception {
+        if (reader == null) {
+            inputStream = ResourceUtil.pathToInputStream(getAbsolutePath(), false);
             reader = new BufferedReader(new InputStreamReader(inputStream));
         }
         return reader;
     }
 
-    protected void closeReader(){
-        if(reader !=null){
+    protected void closeReader() {
+        if (reader != null) {
             try {
                 inputStream.close();
                 reader.close();
             } catch (IOException e) {
             }
-            inputStream =null;
+            inputStream = null;
             reader = null;
         }
     }
 
     /**
      * Get raw InputStream of the script file. Make sure to call close() of the returned instance.
+     * 
      * @return InputStream of the script file.
      * @throws Exception
      */
-    protected InputStream getInputStream() throws Exception{
+    protected InputStream getInputStream() throws Exception {
         return ResourceUtil.pathToInputStream(getAbsolutePath(), false);
     }
 

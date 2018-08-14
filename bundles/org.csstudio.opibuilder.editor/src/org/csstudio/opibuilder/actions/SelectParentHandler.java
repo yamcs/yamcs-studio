@@ -7,9 +7,10 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.actions;
 
+import java.util.logging.Logger;
+
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.DisplayEditpart;
-import org.csstudio.opibuilder.scriptUtil.ConsoleUtil;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -19,21 +20,23 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
- * Handler to handle the select parent command which has a key binding of
- * Ctrl+R.
+ * Handler to handle the select parent command which has a key binding of Ctrl+R.
  *
  * @author Xihui Chen
  *
  */
 public class SelectParentHandler extends AbstractHandler {
 
+    private static final Logger log = Logger.getLogger(SelectParentHandler.class.getName());
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
         GraphicalViewer viewer = HandlerUtil.getActivePart(event).getAdapter(
                 GraphicalViewer.class);
-        if (viewer == null)
+        if (viewer == null) {
             return null;
+        }
 
         ISelection currentSelection = viewer.getSelection();
 
@@ -42,13 +45,12 @@ public class SelectParentHandler extends AbstractHandler {
                     .getFirstElement();
             if (element instanceof AbstractBaseEditPart
                     && !(element instanceof DisplayEditpart)) {
-                if (((AbstractBaseEditPart) element).getParent().isSelectable())
+                if (((AbstractBaseEditPart) element).getParent().isSelectable()) {
                     ((AbstractBaseEditPart) element).getViewer().select(
                             ((AbstractBaseEditPart) element).getParent());
-                else
-                    ConsoleUtil
-                            .writeWarning("Parent of the selected widget is unselectable. Its grandparent may be locked.");
-
+                } else {
+                    log.warning("Parent of the selected widget is unselectable. Its grandparent may be locked.");
+                }
             }
         }
 

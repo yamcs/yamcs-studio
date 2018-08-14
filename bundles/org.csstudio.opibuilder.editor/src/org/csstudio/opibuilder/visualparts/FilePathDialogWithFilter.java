@@ -3,11 +3,10 @@ package org.csstudio.opibuilder.visualparts;
 import java.io.InputStream;
 import java.util.logging.Level;
 
-import org.csstudio.utility.batik.SVGUtils;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.opibuilder.persistence.URLPath;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.platform.ui.composites.resourcefilter.ResourceSelectionGroup;
+import org.csstudio.utility.batik.SVGUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
@@ -31,8 +30,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * This class represents a Dialog to choose a file (applying or not filters) in
- * the workspace. There is an option to return or not relative path.
+ * This class represents a Dialog to choose a file (applying or not filters) in the workspace. There is an option to
+ * return or not relative path.
  *
  * @author SOPRA Group
  */
@@ -42,7 +41,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
      * The default value for the file extensions.
      */
     private static final String[] IMAGE_EXTENSIONS = new String[] { "gif",
-        "GIF", "png", "PNG", "svg", "SVG" };
+            "GIF", "png", "PNG", "svg", "SVG" };
 
     /**
      * The message to display, or <code>null</code> if none.
@@ -81,15 +80,14 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
     private static final String SVG_EXT = "svg";
 
     /**
-     * Creates an input dialog with OK and Cancel buttons. Note that the dialog
-     * will have no visual representation (no widgets) until it is told to open.
+     * Creates an input dialog with OK and Cancel buttons. Note that the dialog will have no visual representation (no
+     * widgets) until it is told to open.
      * <p>
      * Note that the <code>open</code> method blocks for input dialogs.
      * </p>
      *
      * @param parentShell
-     *            the parent shell, or <code>null</code> to create a top-level
-     *            shell
+     *            the parent shell, or <code>null</code> to create a top-level shell
      * @param refPath
      *            the reference path which doesn't include the file name.
      * @param dialogMessage
@@ -110,8 +108,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
     }
 
     /**
-     * Sets the initially selected resource. Must be called before the dialog is
-     * displayed.
+     * Sets the initially selected resource. Must be called before the dialog is displayed.
      *
      * @param path
      *            the path to the initially selected resource.
@@ -177,12 +174,10 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
         resourcePathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         if (path != null && !path.isEmpty()) {
             resourcePathText.setText(path.toString());
-            if (!(path instanceof URLPath)) {
-                if (relative) {
-                    resourceSelectionGroup.setSelectedResource(refPath.append(path));
-                } else {
-                    resourceSelectionGroup.setSelectedResource(path);
-                }
+            if (relative) {
+                resourceSelectionGroup.setSelectedResource(refPath.append(path));
+            } else {
+                resourceSelectionGroup.setSelectedResource(path);
             }
         }
 
@@ -224,24 +219,16 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
         return composite;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void okPressed() {
-        if (ResourceUtil.isURL(resourcePathText.getText())) {
-            path = new URLPath(resourcePathText.getText());
-        } else {
-            path = new Path(resourcePathText.getText());
-        }
+        path = new Path(resourcePathText.getText());
         super.okPressed();
     }
 
     /**
      * Returns the path to the selected resource.
      *
-     * @return the path to the selected resource, or <code>null</code> if no
-     *         resource was selected.
+     * @return the path to the selected resource, or <code>null</code> if no resource was selected.
      */
     public IPath getSelectedResource() {
         return path;
@@ -264,13 +251,13 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
     }
 
     private void displayOverview(IPath imgPath) {
-        if (imgPath == null || imgPath.isEmpty())
+        if (imgPath == null || imgPath.isEmpty()) {
             return;
+        }
         try {
             ImageData data = null;
             if (GIF_EXT.equalsIgnoreCase(imgPath.getFileExtension())
-                    || PNG_EXT.equalsIgnoreCase(imgPath.getFileExtension()))
-            {
+                    || PNG_EXT.equalsIgnoreCase(imgPath.getFileExtension())) {
                 final InputStream inputStream = ResourceUtil
                         .pathToInputStream(imgPath);
                 ImageData tmpData = new ImageData(inputStream);

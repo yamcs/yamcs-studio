@@ -123,11 +123,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
                 absoluteScriptPath = root.getOpiFilePath().removeLastSegments(1).append(absoluteScriptPath);
                 // ---
                 if (!ResourceUtil.isExsitingFile(absoluteScriptPath, true)) {
-                    // search from OPI search path
-                    absoluteScriptPath = ResourceUtil.getFileOnSearchPath(scriptData.getPath(), true);
-                    if (absoluteScriptPath == null) {
-                        throw new FileNotFoundException(scriptData.getPath().toString());
-                    }
+                    throw new FileNotFoundException(scriptData.getPath().toString());
                 }
             }
         }

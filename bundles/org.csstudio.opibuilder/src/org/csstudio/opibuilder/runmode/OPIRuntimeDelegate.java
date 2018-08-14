@@ -21,10 +21,6 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.UpdateListener;
 import org.eclipse.draw2d.UpdateManager;
@@ -43,7 +39,6 @@ import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -79,26 +74,10 @@ public class OPIRuntimeDelegate implements IAdaptable {
      */
     private IOPIRuntime opiRuntime;
 
-    private PaintListener errorMessagePaintListener = new PaintListener() {
-
-        @Override
-        public void paintControl(PaintEvent e) {
-            e.gc.setForeground(CustomMediaFactory.getInstance().getColor(255,
-                    0, 0));
-            e.gc.drawString("Failed to load opi " + getEditorInput(), 0, 0);
-        }
-
-    };
-
-    private PaintListener loadingMessagePaintListener = new PaintListener() {
-
-        @Override
-        public void paintControl(PaintEvent e) {
-            e.gc.setForeground(CustomMediaFactory.getInstance().getColor(255,
-                    0, 0));
-            e.gc.drawString("Loading...", 0, 0);
-        }
-
+    private PaintListener errorMessagePaintListener = e -> {
+        e.gc.setForeground(CustomMediaFactory.getInstance().getColor(255,
+                0, 0));
+        e.gc.drawString("Failed to load opi " + getEditorInput(), 0, 0);
     };
 
     private ZoomManager zoomManager;
@@ -120,15 +99,8 @@ public class OPIRuntimeDelegate implements IAdaptable {
         InputStream inputStream = null;
         try {
             if (input instanceof IRunnerInput) {
-                final IRunnerInput run_input = (IRunnerInput) input;
-                if (ResourceUtil.isURL(run_input.getPath().toString())) { // TODO Part of
-                                                                          // https://github.com/ControlSystemStudio/cs-studio/issues/735:
-                                                                          // One *.opi was loaded in a job, other *.opi
-                                                                          // in UI thread, merging both..
-                    final Display display = site.getShell().getDisplay();
-                    fillDisplayModelInJob(input, display, site);
-                } else
-                    inputStream = run_input.getInputStream();
+                IRunnerInput run_input = (IRunnerInput) input;
+                inputStream = run_input.getInputStream();
                 displayOpenManager = run_input.getDisplayOpenManager();
             } else {
                 inputStream = ResourceUtil.getInputStreamFromEditorInput(input);
@@ -141,8 +113,9 @@ public class OPIRuntimeDelegate implements IAdaptable {
                 XMLUtil.fillDisplayModelFromInputStream(inputStream,
                         displayModel, null, macrosInput);
                 displayModelFilled = true;
-                if (input instanceof IRunnerInput)
+                if (input instanceof IRunnerInput) {
                     addRunnerInputMacros(input);
+                }
             }
         } catch (Exception e) {
             ErrorHandlerUtil.handleError("Failed to open opi file: " + input, e, true, true);
@@ -296,10 +269,11 @@ public class OPIRuntimeDelegate implements IAdaptable {
 
     private void updateEditorTitle() {
         if (displayModel.getName() != null
-                && displayModel.getName().trim().length() > 0)
+                && displayModel.getName().trim().length() > 0) {
             opiRuntime.setWorkbenchPartName(displayModel.getName());
-        else
+        } else {
             opiRuntime.setWorkbenchPartName(getEditorInput().getName());
+        }
     }
 
     public IPath getOPIFilePath() {
@@ -309,12 +283,7 @@ public class OPIRuntimeDelegate implements IAdaptable {
 
     private void hideCloseButton(final IWorkbenchPartSite site) {
         if (!displayModel.isShowCloseButton()) {
-            Display.getCurrent().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    OPIBuilderPlugin.getUIHelper().enableClose(site, false);
-                }
-            });
+            Display.getCurrent().asyncExec(() -> OPIBuilderPlugin.getUIHelper().enableClose(site, false));
         }
     }
 
@@ -336,8 +305,9 @@ public class OPIRuntimeDelegate implements IAdaptable {
      * @return the action registry
      */
     protected ActionRegistry getActionRegistry() {
-        if (actionRegistry == null)
+        if (actionRegistry == null) {
             actionRegistry = new ActionRegistry();
+        }
         return actionRegistry;
     }
 
@@ -387,93 +357,27 @@ public class OPIRuntimeDelegate implements IAdaptable {
         }
     }
 
-    private void fillDisplayModelInJob(final IEditorInput input,
-            final Display display, final IWorkbenchPartSite site) {
-        Job job = new Job("Loading OPI...") {
-            @Override
-            protected IStatus run(IProgressMonitor monitor) {
-                monitor.beginTask("Connecting to " + input,
-                        IProgressMonitor.UNKNOWN);
-                try {
-                    display.asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (viewer != null) {
-                                viewer.getControl().addPaintListener(loadingMessagePaintListener);
-                                viewer.getControl().redraw();
-                            }
-                        }
-                    });
-
-                    final InputStream stream = ((IRunnerInput) input)
-                            .getInputStream();
-                    display.asyncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            try {
-                                if (viewer != null) {
-                                    viewer.getControl().removePaintListener(loadingMessagePaintListener);
-                                }
-                                MacrosInput macrosInput = ((IRunnerInput) input).getMacrosInput();
-                                XMLUtil.fillDisplayModelFromInputStream(
-                                        stream, displayModel, null, macrosInput);
-                                displayModel.setOpiRuntime(opiRuntime);
-                                displayModelFilled = true;
-                                addRunnerInputMacros(input);
-                                if (viewer != null) {
-                                    viewer.setContents(displayModel);
-                                    displayModel.setViewer(viewer);
-                                }
-                                updateEditorTitle();
-                                hideCloseButton(site);
-                            } catch (Exception e) {
-                                ErrorHandlerUtil.handleError(
-                                        "Failed to load widget from " + input, e,
-                                        true, true);
-                            }
-                        }
-                    });
-
-                } catch (final Exception e) {
-                    display.asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (viewer != null && viewer.getControl() != null) {
-                                viewer.getControl().removePaintListener(loadingMessagePaintListener);
-                                viewer.getControl().addPaintListener(errorMessagePaintListener);
-                                viewer.getControl().redraw();
-                            }
-                            ErrorHandlerUtil.handleError("Failed to open opi file: " + input, e, true, true);
-
-                        }
-                    });
-
-                }
-                monitor.done();
-                return Status.OK_STATUS;
-            }
-        };
-        job.setPriority(Job.INTERACTIVE);
-        job.schedule();
-    }
-
     @Override
     public <T> T getAdapter(Class<T> adapter) {
         if (adapter == DisplayOpenManager.class) {
-            if (displayOpenManager == null)
+            if (displayOpenManager == null) {
                 displayOpenManager = new DisplayOpenManager(opiRuntime);
+            }
             return adapter.cast(displayOpenManager);
         }
-        if (adapter == GraphicalViewer.class)
+        if (adapter == GraphicalViewer.class) {
             return adapter.cast(viewer);
-        if (adapter == ActionRegistry.class)
+        }
+        if (adapter == ActionRegistry.class) {
             return adapter.cast(getActionRegistry());
-        if (adapter == CommandStack.class)
+        }
+        if (adapter == CommandStack.class) {
             return adapter.cast(viewer.getEditDomain().getCommandStack());
-        if (adapter == ZoomManager.class)
+        }
+        if (adapter == ZoomManager.class) {
             return adapter.cast(((ScalableFreeformRootEditPart) viewer.getRootEditPart())
                     .getZoomManager());
+        }
         return null;
     }
 

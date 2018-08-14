@@ -44,10 +44,8 @@ public class PreferencesHelper {
     public static final String SHOW_COMPACT_MODE_DIALOG = "show_compact_mode_dialog";
     public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";
     public static final String START_WINDOW_IN_COMPACT_MODE = "start_window_in_compact_mode";
-    public static final String URL_FILE_LOADING_TIMEOUT = "url_file_loading_timeout";
     public static final String PULSING_ALARM_MINOR_PERIOD = "pulsing_alarm_minor_period";
     public static final String PULSING_ALARM_MAJOR_PERIOD = "pulsing_alarm_major_period";
-    public static final String OPI_SEARCH_PATH = "opi_search_path";
     public static final String DEFAULT_TO_CLASSIC_STYLE = "default_to_classic_style";
     public static final String SHOW_OPI_RUNTIME_STACKS = "show_opi_runtime_stacks";
     public static final String FONT_DEFAULT_PIXELS_OR_POINTS = "font_default_pixels_or_points";
@@ -118,7 +116,7 @@ public class PreferencesHelper {
         if (schemaOPIPath == null || schemaOPIPath.trim().isEmpty()) {
             return null;
         }
-        return getExistFileInRepoAndSearchPath(schemaOPIPath);
+        return ResourceUtil.getPathFromString(schemaOPIPath);
     }
 
     public static boolean isAutoSaveBeforeRunning() {
@@ -189,24 +187,6 @@ public class PreferencesHelper {
         }
         return new LinkedHashMap<>();
 
-    }
-
-    /**
-     * @return the OPI search paths preference. null if no such preference was set.
-     * @throws Exception
-     */
-    public static IPath[] getOPISearchPaths() throws Exception {
-        String rawString = getString(OPI_SEARCH_PATH);
-        if (rawString == null || rawString.trim().isEmpty()) {
-            return null;
-        }
-        String[] rows = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
-        IPath[] result = new IPath[rows.length];
-        int i = 0;
-        for (String row : rows) {
-            result[i++] = ResourceUtil.getPathFromString(row);
-        }
-        return result;
     }
 
     /**
@@ -289,11 +269,6 @@ public class PreferencesHelper {
         }
     }
 
-    public static int getURLFileLoadingTimeout() {
-        final IPreferencesService service = Platform.getPreferencesService();
-        return service.getInt(OPIBuilderPlugin.PLUGIN_ID, URL_FILE_LOADING_TIMEOUT, 8000, null);
-    }
-
     /**
      * Return the absolute path based on OPI Repository.
      * 
@@ -309,21 +284,5 @@ public class PreferencesHelper {
             return opiPath;
         }
         return opiPath;
-    }
-
-    protected static IPath getExistFileInRepoAndSearchPath(String pathString) {
-        IPath originPath = ResourceUtil.getPathFromString(pathString);
-        IPath opiPath = originPath;
-        if (opiPath == null) {
-            return null;
-        }
-        if (opiPath.isAbsolute()) {
-            return opiPath;
-        }
-        IPath sPath = ResourceUtil.getFileOnSearchPath(originPath, true);
-        if (sPath == null) {
-            return opiPath;
-        }
-        return sPath;
     }
 }

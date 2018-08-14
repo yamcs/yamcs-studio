@@ -183,12 +183,7 @@ public class OpenDisplayAction extends AbstractWidgetAction {
         // TODO Do this in RuntimeDelegate, after settling View-or-Editor
         IPath absolutePath = getPath();
         if (!absolutePath.isAbsolute()) {
-            absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(),
-                    getPath());
-            if (!ResourceUtil.isExsitingFile(absolutePath, true)) {
-                // search from OPI search path
-                absolutePath = ResourceUtil.getFileOnSearchPath(getPath(), true);
-            }
+            absolutePath = ResourceUtil.buildAbsolutePath(getWidgetModel(), getPath());
         }
         if (absolutePath != null && ResourceUtil.isExsitingFile(absolutePath, true)) {
             openOPI(absolutePath, ctrlPressed, shiftPressed);

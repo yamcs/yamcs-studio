@@ -10,32 +10,14 @@ package org.csstudio.opibuilder.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.csstudio.java.thread.ExecutionService;
-import org.csstudio.java.thread.TimedCache;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.persistence.URLPath;
-import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.URIUtil;
@@ -47,12 +29,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.swt.SWT;
@@ -75,17 +53,10 @@ import org.osgi.framework.Bundle;
  */
 public class ResourceUtil {
 
-    private static final int CACHE_TIMEOUT_SECONDS = 120;
-
     private static final Logger LOGGER = Logger.getLogger(ResourceUtil.class.getName());
 
     private static final String CURSOR_PATH = "icons/copy.gif";
     private static Cursor copyPvCursor;
-
-    /**
-     * Cache the file from URL.
-     */
-    private static final TimedCache<URL, File> URL_CACHE = new TimedCache<>(CACHE_TIMEOUT_SECONDS);
 
     /**
      * Returns the cursor used during pv copy action.
@@ -120,14 +91,16 @@ public class ResourceUtil {
     public static File getFile(IPath path) throws Exception {
         IFile workspace_file = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
-        if (workspace_file != null && workspace_file.exists())
+        if (workspace_file != null && workspace_file.exists()) {
             return workspace_file.getLocation().toFile().getAbsoluteFile();
+        }
 
         // Not a workspace file. Try local file system
         File local_file = path.toFile();
         // Path URL for "file:..." so that it opens as FileInputStream
-        if (local_file.getPath().startsWith("file:"))
+        if (local_file.getPath().startsWith("file:")) {
             local_file = new File(local_file.getPath().substring(5));
+        }
 
         return local_file.exists() ? local_file.getAbsoluteFile() : null;
     }
@@ -158,34 +131,22 @@ public class ResourceUtil {
         // Try workspace location
         IFile workspace_file = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
-        if (workspace_file != null && workspace_file.exists())
+        if (workspace_file != null && workspace_file.exists()) {
             return workspace_file.getContents();
+        }
 
         // Not a workspace file. Try local file system
         File local_file = path.toFile();
         // Path URL for "file:..." so that it opens as FileInputStream
-        if (local_file.getPath().startsWith("file:"))
+        if (local_file.getPath().startsWith("file:")) {
             local_file = new File(local_file.getPath().substring(5));
-        String urlString;
+        }
+
         try {
             return new FileInputStream(local_file);
         } catch (Exception ex) {
-            // Could not open as local file.
-            // Does it look like a URL?
-            // TODO:
-            // Eclipse Path collapses "//" into "/", revert that: Is this true? Need test on Mac.
-            urlString = path.toString();
-            // if(!urlString.startsWith("platform") && !urlString.contains("://")) //$NON-NLS-1$ //$NON-NLS-2$
-            // urlString = urlString.replaceFirst(":/", "://"); //$NON-NLS-1$ //$NON-NLS-2$
-            // Does it now look like a URL? If not, report the original local file problem
-            if (!ResourceUtil.isURL(urlString))
-                throw new Exception("Cannot open " + ex.getMessage(), ex);
+            throw new Exception("Cannot open " + ex.getMessage(), ex);
         }
-
-        // Must be an URL
-        final URL url = new URL(urlString);
-
-        return ResourceUtil.openURLStream(url, runInUIJob);
     }
 
     /**
@@ -232,8 +193,9 @@ public class ResourceUtil {
         File local_file = path.toFile();
 
         // // Path URL for "file:..." so that it opens as FileInputStream
-        if (local_file.getPath().startsWith("file:"))
+        if (local_file.getPath().startsWith("file:")) {
             local_file = new File(local_file.getPath().substring(5));
+        }
         return local_file.exists();
         // try
         // {
@@ -264,8 +226,9 @@ public class ResourceUtil {
      * @return the absolute path.
      */
     public static IPath buildAbsolutePath(AbstractWidgetModel model, IPath relativePath) {
-        if (relativePath == null || relativePath.isEmpty() || relativePath.isAbsolute())
+        if (relativePath == null || relativePath.isEmpty() || relativePath.isAbsolute()) {
             return relativePath;
+        }
         return model.getRootDisplayModel().getOpiFilePath().removeLastSegments(1).append(relativePath);
     }
 
@@ -279,8 +242,9 @@ public class ResourceUtil {
      * @return the relative to path to refPath.
      */
     public static IPath buildRelativePath(IPath refPath, IPath fullPath) {
-        if (refPath == null || fullPath == null)
+        if (refPath == null || fullPath == null) {
             throw new NullPointerException();
+        }
         return fullPath.makeRelativeTo(refPath);
     }
 
@@ -289,11 +253,11 @@ public class ResourceUtil {
      * @throws FileNotFoundException
      */
     public static IPath getPathInEditor(IEditorInput input) {
-        if (input instanceof FileEditorInput)
+        if (input instanceof FileEditorInput) {
             return ((FileEditorInput) input).getFile().getFullPath();
-        else if (input instanceof IPathEditorInput)
+        } else if (input instanceof IPathEditorInput) {
             return ((IPathEditorInput) input).getPath();
-        else if (input instanceof FileStoreEditorInput) {
+        } else if (input instanceof FileStoreEditorInput) {
             IPath path = URIUtil.toPath(((FileStoreEditorInput) input)
                     .getURI());
             return path;
@@ -303,18 +267,12 @@ public class ResourceUtil {
 
     /**
      * Returns IPath from String.
-     * 
-     * @param input
-     *            the path string.
-     * @return {@link URLPath} if input is an URL; returns {@link Path} otherwise.
      */
     public static IPath getPathFromString(String input) {
-        if (input == null)
+        if (input == null) {
             return null;
-        if (isURL(input))
-            return new URLPath(input);
-        else
-            return new Path(input);
+        }
+        return new Path(input);
     }
 
     /**
@@ -328,195 +286,10 @@ public class ResourceUtil {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IWorkspaceRoot root = workspace.getRoot();
         IResource resource = root.findMember(path);
-        if (resource != null)
+        if (resource != null) {
             return resource.getLocation(); // existing resource
-        else
-            return root.getFile(path).getLocation(); // for not existing resource
-    }
-
-    /**
-     * Check if a URL is actually a URL
-     * 
-     * @param url
-     *            Possible URL
-     * @return <code>true</code> if considered a URL
-     */
-    public static boolean isURL(final String urlString) {
-        try {
-            new URL(urlString);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-        // return urlString.contains(":/"); //$NON-NLS-1$
-    }
-
-    /**
-     * Open URL stream in UI Job if runInUIJob is true.
-     * 
-     * @param url
-     * @param runInUIJob
-     *            true if this method should run as an UI Job. If it is true, this method must be called in UI thread.
-     *
-     *            TODO Unclear why the runInUIJob is actually used, because it will in fact NOT run in the UI, but in a
-     *            background job. It will wait for the result in either case, so why a background job??
-     * @return Stream for the URL
-     * @throws Exception
-     *             on error
-     */
-    public static InputStream openURLStream(final URL url, boolean runInUIJob) throws Exception {
-        final AtomicReference<InputStream> stream = new AtomicReference<>();
-        if (runInUIJob) {
-            final Job job = new Job("OPI URL Opener") {
-                @Override
-                protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Connecting to " + url, IProgressMonitor.UNKNOWN);
-                    try {
-                        stream.set(openURLStream(url));
-                    } catch (IOException ex) {
-                        OPIBuilderPlugin.getLogger().log(Level.WARNING, "URL '" + url + "' failed to open", ex);
-                        monitor.setCanceled(true);
-                        return Status.CANCEL_STATUS;
-                    }
-                    monitor.done();
-                    return Status.OK_STATUS;
-                }
-            };
-            job.schedule();
-            job.join();
-        } else // Open stream w/o UI job
-            stream.set(openURLStream(url));
-        return stream.get();
-    }
-
-    private static InputStream openURLStream(final URL url) throws IOException {
-        File tempFilePath = URL_CACHE.getValue(url);
-        if (tempFilePath != null) {
-            OPIBuilderPlugin.getLogger().log(Level.FINE, "Found cached file for URL '" + url + "'");
-            return new FileInputStream(tempFilePath);
         } else {
-            InputStream inputStream = openRawURLStream(url);
-            if (inputStream != null) {
-                try {
-                    IPath urlPath = new URLPath(url.toString());
-
-                    // createTempFile(), at least with jdk1.7.0_45,
-                    // requires at least 3 chars for the 'prefix', so add "opicache"
-                    // to assert a minimum length
-                    final String cache_file_prefix = "opicache" + urlPath.removeFileExtension().lastSegment();
-                    final String cache_file_suffix = "." + urlPath.getFileExtension();
-                    final File file = File.createTempFile(cache_file_prefix, cache_file_suffix);
-                    file.deleteOnExit();
-                    if (!file.canWrite())
-                        throw new Exception("Unable to write temporary file.");
-                    FileOutputStream outputStream = new FileOutputStream(file);
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
-                    }
-                    outputStream.close();
-                    URL_CACHE.remember(url, file);
-                    inputStream.close();
-                    ExecutionService.getInstance().getScheduledExecutorService().schedule(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            file.delete();
-                        }
-                    }, CACHE_TIMEOUT_SECONDS * 2, TimeUnit.SECONDS);
-                    return new FileInputStream(file);
-                } catch (Exception e) {
-                    OPIBuilderPlugin.getLogger().log(Level.WARNING,
-                            "Error to cache file from URL '" + url + "'", e);
-                }
-            }
-            return inputStream;
-        }
-
-    }
-
-    /**
-     * Open URL Stream from remote.
-     * 
-     * @param url
-     * @return
-     * @throws IOException
-     */
-    private static InputStream openRawURLStream(final URL url) throws IOException {
-        if (url.getProtocol().equals("https")) { //$NON-NLS-1$
-            // The code to support https protocol is provided by Eric Berryman (eric.berryman@gmail.com) from Frib
-            // Create a trust manager that does not validate certificate chains
-            TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }
-            };
-
-            // Install the all-trusting trust manager
-            SSLContext sc = null;
-            try {
-                sc = SSLContext.getInstance("SSL");
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                return null;
-            }
-            try {
-                sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            } catch (KeyManagementException e) {
-                e.printStackTrace();
-            }
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-            // Create all-trusting host name verifier
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
-
-            // Install the all-trusting host verifier
-            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        }
-
-        URLConnection connection = url.openConnection();
-        connection.setReadTimeout(PreferencesHelper.getURLFileLoadingTimeout());
-        return connection.getInputStream();
-    }
-
-    /**
-     * If the path is an connectable URL. .
-     * 
-     * @param path
-     * @param runInUIJob
-     *            true if this method should run as an UI Job. If it is true, this method must be called in UI thread.
-     * @return
-     */
-    public static boolean isExistingURL(final IPath path, boolean runInUIJob) {
-        try {
-
-            URL url = new URL(path.toString());
-            if (URL_CACHE.getValue(url) != null)
-                return true;
-            InputStream s = openURLStream(url, runInUIJob);
-            if (s != null) {
-                s.close();
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
+            return root.getFile(path).getLocation(); // for not existing resource
         }
     }
 
@@ -530,17 +303,12 @@ public class ResourceUtil {
      * @return
      */
     public static boolean isExsitingFile(final IPath absolutePath, boolean runInUIJob) {
-        if (absolutePath instanceof URLPath)
-            if (isExistingURL(absolutePath, runInUIJob))
-                return true;
-
-        if (isExistingWorkspaceFile(absolutePath))
+        if (isExistingWorkspaceFile(absolutePath)) {
             return true;
-        if (isExistingLocalFile(absolutePath))
+        }
+        if (isExistingLocalFile(absolutePath)) {
             return true;
-        if (!(absolutePath instanceof URLPath)
-                && isExistingURL(absolutePath, runInUIJob))
-            return true;
+        }
         return false;
     }
 
@@ -558,33 +326,6 @@ public class ResourceUtil {
             editorInput = new FileEditorInput(file);
         }
         return editorInput;
-    }
-
-    /**
-     * Get the first existing file on search path. Search path is a BOY preference.
-     * 
-     * @param relativePath
-     * @param runInUIJob
-     *            true if this method should run as an UI Job, in which cases this method must be called in UI thread.
-     * @return the first existing file on search path. null if search path doesn't exist or no such file exist on search
-     *         path.
-     */
-    public static IPath getFileOnSearchPath(final IPath relativePath, boolean runInUIJob) {
-        IPath[] searchPaths;
-        try {
-            searchPaths = PreferencesHelper.getOPISearchPaths();
-            if (searchPaths == null)
-                return null;
-            for (IPath searchPath : searchPaths) {
-                IPath absolutePath = searchPath.append(relativePath);
-                if (isExsitingFile(absolutePath, runInUIJob))
-                    return absolutePath;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-
-        return null;
     }
 
     /**
@@ -617,9 +358,9 @@ public class ResourceUtil {
         file.deleteOnExit();
 
         // Create snapshot file
-        final ImageLoader loader = new ImageLoader();
+        ImageLoader loader = new ImageLoader();
 
-        final Image image = ResourceUtil.getScreenshotImage(viewer);
+        Image image = ResourceUtil.getScreenshotImage(viewer);
         loader.data = new ImageData[] { image.getImageData() };
         image.dispose();
         loader.save(file.getAbsolutePath(), SWT.IMAGE_PNG);
@@ -639,8 +380,9 @@ public class ResourceUtil {
                     path, false);
             if (r != null && r instanceof IFile) {
                 final IFile file = (IFile) r;
-                if (file.exists())
+                if (file.exists()) {
                     return file;
+                }
             }
         } catch (Exception ex) {
             // Ignored

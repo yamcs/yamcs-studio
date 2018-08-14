@@ -22,7 +22,6 @@
 
 package org.csstudio.opibuilder.visualparts;
 
-import org.csstudio.opibuilder.persistence.URLPath;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.ui.util.composites.ResourceSelectionGroup;
 import org.eclipse.core.runtime.IPath;
@@ -44,8 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * This class represents a Dialog to choose a file in the workspace.
- * There is an option to return relative path.
+ * This class represents a Dialog to choose a file in the workspace. There is an option to return relative path.
  *
  * @author Kai Meyer, Joerg Rathlev, Xihui Chen
  */
@@ -77,29 +75,26 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
     private boolean relative;
 
     /**
-     * Creates an input dialog with OK and Cancel buttons. Note that the dialog
-     * will have no visual representation (no widgets) until it is told to open.
+     * Creates an input dialog with OK and Cancel buttons. Note that the dialog will have no visual representation (no
+     * widgets) until it is told to open.
      * <p>
      * Note that the <code>open</code> method blocks for input dialogs.
      * </p>
      *
      * @param parentShell
-     *            the parent shell, or <code>null</code> to create a top-level
-     *            shell
+     *            the parent shell, or <code>null</code> to create a top-level shell
      * @param refPath
-     *               the reference path which doesn't include the file name.
+     *            the reference path which doesn't include the file name.
      * @param dialogMessage
      *            the dialog message, or <code>null</code> if none
      * @param fileExtensions
-     *            the file extensions of files to show in the dialog. Use an
-     *            empty array or <code>null</code> to show only containers
-     *            (folders).
+     *            the file extensions of files to show in the dialog. Use an empty array or <code>null</code> to show
+     *            only containers (folders).
      */
-    public RelativePathSelectionDialog(final Shell parentShell, final IPath refPath,
-            final String dialogMessage, final String[] fileExtensions) {
+    public RelativePathSelectionDialog(Shell parentShell, IPath refPath, String dialogMessage,
+            String[] fileExtensions) {
         super(parentShell);
-        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE
-                | SWT.BORDER | SWT.RESIZE);
+        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
         _message = dialogMessage;
         this.refPath = refPath;
         relative = true;
@@ -107,8 +102,7 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
     }
 
     /**
-     * Sets the initially selected resource. Must be called before the dialog is
-     * displayed.
+     * Sets the initially selected resource. Must be called before the dialog is displayed.
      *
      * @param path
      *            the path to the initially selected resource.
@@ -118,18 +112,12 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
         relative = !path.isAbsolute();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("Resources");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Control createDialogArea(final Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -156,15 +144,14 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
         _resourcePathText = new Text(composite, SWT.SINGLE | SWT.LEAD | SWT.BORDER);
         _resourcePathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         if (_path != null && !_path.isEmpty()) {
-                _resourcePathText.setText(_path.toString());
-            if(!(_path instanceof URLPath)){
-                if(relative)
-                    _resourceSelectionGroup.setSelectedResource(refPath.append(_path));
-                else
-                    _resourceSelectionGroup.setSelectedResource(_path);
+            _resourcePathText.setText(_path.toString());
+            if (relative) {
+                _resourceSelectionGroup.setSelectedResource(refPath.append(_path));
+            } else {
+                _resourceSelectionGroup.setSelectedResource(_path);
             }
         }
-        //the check box for relative path
+        // the check box for relative path
         final Button checkBox = new Button(composite, SWT.CHECK);
         checkBox.setSelection(relative);
         checkBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -173,34 +160,28 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
             @Override
             public void widgetSelected(SelectionEvent e) {
                 relative = checkBox.getSelection();
-                if(relative)
+                if (relative) {
                     _resourcePathText.setText(
-                            ResourceUtil.buildRelativePath(refPath,_path).toString());
-                else
+                            ResourceUtil.buildRelativePath(refPath, _path).toString());
+                } else {
                     _resourcePathText.setText(_path.toString());
+                }
             }
         });
 
         return composite;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void okPressed() {
-        if(ResourceUtil.isURL(_resourcePathText.getText()))
-            _path = new URLPath(_resourcePathText.getText());
-        else
-            _path = new Path(_resourcePathText.getText());
+        _path = new Path(_resourcePathText.getText());
         super.okPressed();
     }
 
     /**
      * Returns the path to the selected resource.
      *
-     * @return the path to the selected resource, or <code>null</code> if no
-     *         resource was selected.
+     * @return the path to the selected resource, or <code>null</code> if no resource was selected.
      */
     public IPath getSelectedResource() {
         return _path;
@@ -211,13 +192,15 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
         ResourceSelectionGroup widget = (ResourceSelectionGroup) event.widget;
 
         _path = widget.getFullPath();
-        if (_path == null)
+        if (_path == null) {
             return;
-        if (relative)
+        }
+        if (relative) {
             _resourcePathText.setText(ResourceUtil.buildRelativePath(refPath,
                     _path).toString());
-        else
+        } else {
             _resourcePathText.setText(_path.toString());
+        }
 
         if (event.type == SWT.MouseDoubleClick) {
             okPressed();

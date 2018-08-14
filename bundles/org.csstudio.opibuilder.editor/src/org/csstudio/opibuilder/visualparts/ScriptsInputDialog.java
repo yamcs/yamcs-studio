@@ -25,9 +25,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
@@ -108,19 +106,13 @@ public class ScriptsInputDialog extends HelpTrayDialog {
 
     @Override
     protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Script.html"; //$NON-NLS-1$ ; //$NON-NLS-2$
+        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Script.html";
     }
 
-    /**
-     * @return the scriptDataList
-     */
     public final List<ScriptData> getScriptDataList() {
         return scriptDataList;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
@@ -356,9 +348,9 @@ public class ScriptsInputDialog extends HelpTrayDialog {
 
     private void setScriptsViewerSelection(ScriptData scriptData) {
         scriptsViewer.refresh();
-        if (scriptData == null)
+        if (scriptData == null) {
             scriptsViewer.setSelection(StructuredSelection.EMPTY);
-        else {
+        } else {
             scriptsViewer.setSelection(new StructuredSelection(scriptData));
         }
     }
@@ -381,12 +373,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
             }
         });
         viewer.setLabelProvider(new WorkbenchLabelProvider());
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(final SelectionChangedEvent event) {
-                refreshGUIOnSelection();
-            }
-        });
+        viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
         viewer.getTable().setLayoutData(
                 new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
@@ -401,13 +388,15 @@ public class ScriptsInputDialog extends HelpTrayDialog {
             public void run() {
                 ScriptChoiceDialog scriptChoiceDialog = new ScriptChoiceDialog(
                         getShell());
-                if (scriptChoiceDialog.open() == Window.CANCEL)
+                if (scriptChoiceDialog.open() == Window.CANCEL) {
                     return;
+                }
                 ScriptData scriptData = null;
                 if (scriptChoiceDialog.isEmbedded()) {
                     EmbeddedScriptEditDialog scriptEditDialog = new EmbeddedScriptEditDialog(getShell(), null);
-                    if (scriptEditDialog.open() == Window.OK)
+                    if (scriptEditDialog.open() == Window.OK) {
                         scriptData = scriptEditDialog.getResult();
+                    }
                 } else {
                     IPath path;
                     RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
@@ -553,22 +542,17 @@ public class ScriptsInputDialog extends HelpTrayDialog {
                     if (!sd.isEmbedded()) {
                         IPath absoluteScriptPath = sd.getPath();
                         if (!absoluteScriptPath.isAbsolute()) {
-                            absoluteScriptPath = ResourceUtil.buildAbsolutePath(
-                                    widgetModel, absoluteScriptPath);
-                            if (!ResourceUtil.isExsitingFile(absoluteScriptPath, true)) {
-                                // search from OPI search path
-                                absoluteScriptPath = ResourceUtil.getFileOnSearchPath(sd.getPath(), true);
-                            }
+                            absoluteScriptPath = ResourceUtil.buildAbsolutePath(widgetModel, absoluteScriptPath);
                         }
 
                         try {
                             String text = FileUtil.readTextFile(absoluteScriptPath.toString());
                             String ext = absoluteScriptPath.getFileExtension().trim().toLowerCase();
-                            if (ext.equals(ScriptService.JS))
+                            if (ext.equals(ScriptService.JS)) {
                                 sd.setScriptType(ScriptType.JAVASCRIPT);
-                            else if (ext.equals(ScriptService.PY))
+                            } else if (ext.equals(ScriptService.PY)) {
                                 sd.setScriptType(ScriptType.PYTHON);
-                            else {
+                            } else {
                                 MessageDialog.openError(getShell(),
                                         "Failed", "The script type is not recognized.");
                                 return;
@@ -592,7 +576,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
         convertToEmbedAction.setToolTipText("Convert to Embedded Script");
         convertToEmbedAction.setImageDescriptor(CustomMediaFactory.getInstance()
                 .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/convertToEmbedded.png")); //$NON-NLS-1$
+                        "icons/convertToEmbedded.png"));
         convertToEmbedAction.setEnabled(false);
     }
 
