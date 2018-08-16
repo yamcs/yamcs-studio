@@ -9,7 +9,7 @@ Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.utility.batik,
- org.eclipse.gef;resolution:=optional,
+ org.eclipse.gef,
  org.eclipse.nebula.visualization.xygraph,
  org.csstudio.ui.util,
  org.apache.batik.dom.svg,

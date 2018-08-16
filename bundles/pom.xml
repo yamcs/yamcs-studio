@@ -12,7 +12,6 @@
 
   <modules>
     <module>org.csstudio.autocomplete</module>
-    <module>org.csstudio.autocomplete.ui</module>
     <module>org.csstudio.examples</module>
     <module>org.csstudio.opibuilder</module>
     <module>org.csstudio.opibuilder.editor</module>
