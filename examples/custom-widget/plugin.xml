@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.csstudio.opibuilder.widget">
+      <widget
+            typeId="org.yamcs.studio.customwidget.MyWidget"
+            category="Monitors"
+            name="My Widget"
+            description="A custom bar graph example."
+            icon="icons/MyWidget.png"
+            editpart_class="org.yamcs.studio.customwidget.MyWidgetEditpart"
+            model_class="org.yamcs.studio.customwidget.MyWidgetModel">
+      </widget>
+   </extension>
+</plugin>
