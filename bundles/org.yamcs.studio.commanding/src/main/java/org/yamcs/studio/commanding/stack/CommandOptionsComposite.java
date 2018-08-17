@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -28,12 +26,10 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentTypeInfo;
 import org.yamcs.protobuf.Mdb.EnumValue;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
 public class CommandOptionsComposite extends ScrolledComposite {
 
     private Group argumentsGroup;
-    private Combo namespaceCombo;
     private List<String> aliases;
     private List<Control> controls = new ArrayList<>();
 
@@ -105,38 +101,6 @@ public class CommandOptionsComposite extends ScrolledComposite {
         gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
         gridData.heightHint = 3 * comment.getLineHeight();
         comment.setLayoutData(gridData);
-
-        // command namespace selection
-        Label chooseNamespace = new Label(optionsGroup, SWT.NONE);
-        chooseNamespace.setText("Alias");
-        namespaceCombo = new Combo(optionsGroup, SWT.READ_ONLY);
-        namespaceCombo.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                command.setSelectedAliase(aliases.get(namespaceCombo.getSelectionIndex()));
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-        });
-
-        // populate namespace combo
-        // (switching ops name and qualified name)
-        aliases = new ArrayList<>();
-        aliases.add(command.getMetaCommand().getQualifiedName());
-        for (NamedObjectId noi : command.getMetaCommand().getAliasList()) {
-            String alias = noi.getNamespace() + "/" + noi.getName();
-            if (alias.equals(command.getMetaCommand().getQualifiedName())) {
-                continue;
-            }
-            aliases.add(alias);
-        }
-        namespaceCombo.setItems(aliases.toArray(new String[aliases.size()]));
-        namespaceCombo.select(0);
-        command.setSelectedAliase(aliases.get(0));
 
         comment.addModifyListener(evt -> {
             if (comment.getText().trim().isEmpty()) {
