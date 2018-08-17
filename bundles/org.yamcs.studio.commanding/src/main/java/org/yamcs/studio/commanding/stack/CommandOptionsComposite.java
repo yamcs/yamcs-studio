@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -30,7 +31,6 @@ import org.yamcs.protobuf.Mdb.EnumValue;
 public class CommandOptionsComposite extends ScrolledComposite {
 
     private Group argumentsGroup;
-    private List<String> aliases;
     private List<Control> controls = new ArrayList<>();
 
     public CommandOptionsComposite(Composite parent, int style, StackedCommand command) {
@@ -157,6 +157,26 @@ public class CommandOptionsComposite extends ScrolledComposite {
                     argumentCombo.setText(argument.getValue());
                 }
                 controls.add(argumentCombo);
+            } else if ("boolean".equals(argument.getType())) {
+                Composite radios = new Composite(composite, SWT.NONE);
+                radios.setData(argument);
+                gl = new GridLayout(2, false);
+                gl.marginHeight = 0;
+                gl.marginWidth = 0;
+                Button trueButton = new Button(radios, SWT.RADIO);
+                trueButton.setText("true");
+                Button falseButton = new Button(radios, SWT.RADIO);
+                falseButton.setText("false");
+                radios.setLayout(gl);
+                if (command.isAssigned(argument.getArgumentInfo())) {
+                    String stringValue = command.getAssignedStringValue(argument.getArgumentInfo());
+                    trueButton.setSelection("true".equalsIgnoreCase(stringValue));
+                    falseButton.setSelection("false".equalsIgnoreCase(stringValue));
+                } else if (argument.getValue() != null) {
+                    trueButton.setSelection("true".equalsIgnoreCase(argument.getValue()));
+                    falseButton.setSelection("false".equalsIgnoreCase(argument.getValue()));
+                }
+                controls.add(radios);
             } else {
                 Text argumentText = new Text(composite, SWT.BORDER);
                 argumentText.setLayoutData(new GridData(150, SWT.DEFAULT));
@@ -203,6 +223,14 @@ public class CommandOptionsComposite extends ScrolledComposite {
             } else if (control instanceof Spinner) {
                 int number = ((Spinner) control).getSelection();
                 assignments.put(argument.getArgumentInfo(), Integer.toString(number));
+            } else if (control instanceof Composite) { // boolean
+                Button trueButton = (Button) ((Composite) control).getChildren()[0];
+                Button falseButton = (Button) ((Composite) control).getChildren()[1];
+                if (trueButton.getSelection()) {
+                    assignments.put(argument.getArgumentInfo(), "true");
+                } else if (falseButton.getSelection()) {
+                    assignments.put(argument.getArgumentInfo(), "false");
+                }
             } else {
                 throw new UnsupportedOperationException("Unexpected control of type " + control.getClass());
             }
