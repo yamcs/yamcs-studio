@@ -25,12 +25,12 @@ import org.yamcs.utils.TimeEncoding;
 
 public class AddManualEventDialog extends TitleAreaDialog {
 
-    Calendar generationTimeValue = null;
+    private Calendar generationTimeValue = null;
 
     private Text messageText;
     private DateTime generationDatePicker;
     private DateTime generationTimePicker;
-    Combo severityCombo;
+    private Combo severityCombo;
 
     protected AddManualEventDialog(Shell shell) {
         super(shell);
@@ -39,7 +39,6 @@ public class AddManualEventDialog extends TitleAreaDialog {
     protected AddManualEventDialog(Shell shell, long generationTime) {
         super(shell);
         generationTimeValue = TimeEncoding.toCalendar(generationTime);
-        // defaultGenerationTime = generationTime;
     }
 
     @Override
@@ -47,17 +46,6 @@ public class AddManualEventDialog extends TitleAreaDialog {
         super.create();
         setTitle("Add a Manual Event");
     }
-
-    // private void validate() {
-    // String errorMessage = null;
-    // Calendar start = RCPUtils.toCalendar(startDate, startTime);
-    // Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
-    // if (start.after(stop))
-    // errorMessage = "Stop has to be greater than start";
-    //
-    // setErrorMessage(errorMessage);
-    // getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
-    // }
 
     @Override
     protected Control createDialogArea(Composite parent) {
@@ -73,7 +61,7 @@ public class AddManualEventDialog extends TitleAreaDialog {
         container.setLayout(layout);
 
         Label lbl = new Label(container, SWT.NONE);
-        lbl.setText("Generation Time:");
+        lbl.setText("Generation Time");
         Composite startComposite = new Composite(container, SWT.NONE);
         RowLayout rl = new RowLayout();
         rl.marginLeft = 0;
@@ -82,11 +70,7 @@ public class AddManualEventDialog extends TitleAreaDialog {
         rl.center = true;
         startComposite.setLayout(rl);
         generationDatePicker = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
-        // generationDatePicker.addListener(SWT.Selection, e -> validate());
-        // generationDatePicker.addListener(SWT.FocusOut, e -> validate());
         generationTimePicker = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
-        // generationTimePicker.addListener(SWT.Selection, e -> validate());
-        // generationTimePicker.addListener(SWT.FocusOut, e -> validate());
         if (generationTimeValue != null) {
             generationDatePicker.setDate(generationTimeValue.get(Calendar.YEAR),
                     generationTimeValue.get(Calendar.MONTH), generationTimeValue.get(Calendar.DAY_OF_MONTH));
@@ -95,34 +79,37 @@ public class AddManualEventDialog extends TitleAreaDialog {
         }
 
         lbl = new Label(container, SWT.NONE);
-        lbl.setText("Message:");
+        lbl.setText("Message");
+        GridData gd = new GridData(GridData.FILL_VERTICAL);
+        lbl.setLayoutData(gd);
+        gd.verticalAlignment = SWT.TOP;
         messageText = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-        GridData data = new GridData(GridData.FILL_BOTH);
-        data.verticalAlignment = SWT.CENTER;
-        data.grabExcessHorizontalSpace = true;
-        data.grabExcessVerticalSpace = true;
-        messageText.setLayoutData(data);
+        gd = new GridData(GridData.FILL_BOTH);
+        gd.verticalAlignment = SWT.TOP;
+        gd.grabExcessHorizontalSpace = true;
+        gd.grabExcessVerticalSpace = true;
+        messageText.setLayoutData(gd);
         GC gc = new GC(messageText);
         try {
             gc.setFont(messageText.getFont());
             FontMetrics fm = gc.getFontMetrics();
-            data.heightHint = 5 * fm.getHeight();
+            gd.heightHint = 5 * fm.getHeight();
         } finally {
             gc.dispose();
         }
         messageText.setText("");
+        messageText.setFocus();
 
         lbl = new Label(container, SWT.NONE);
-        lbl.setText("Severity:");
-        severityCombo = new Combo(container, SWT.DROP_DOWN);
-        severityCombo.add(EventSeverity.INFO.name(), EventSeverity.INFO_VALUE);
-        severityCombo.add(EventSeverity.WARNING.name(), EventSeverity.WARNING_VALUE);
-        severityCombo.add(EventSeverity.ERROR.name(), EventSeverity.ERROR_VALUE);
-        severityCombo.add(EventSeverity.WATCH.name(), EventSeverity.WATCH_VALUE);
-        severityCombo.add(EventSeverity.DISTRESS.name(), EventSeverity.DISTRESS_VALUE - 1); // TODO use index,
-        severityCombo.add(EventSeverity.CRITICAL.name(), EventSeverity.CRITICAL_VALUE - 1); // the value skips 4
-        severityCombo.add(EventSeverity.SEVERE.name(), EventSeverity.SEVERE_VALUE - 1);
-        severityCombo.select(EventSeverity.INFO_VALUE);
+        lbl.setText("Severity");
+        severityCombo = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
+        severityCombo.add(EventSeverity.INFO.name());
+        severityCombo.add(EventSeverity.WATCH.name());
+        severityCombo.add(EventSeverity.WARNING.name());
+        severityCombo.add(EventSeverity.DISTRESS.name());
+        severityCombo.add(EventSeverity.CRITICAL.name());
+        severityCombo.add(EventSeverity.SEVERE.name());
+        severityCombo.select(0);
 
         return container;
     }
@@ -131,9 +118,8 @@ public class AddManualEventDialog extends TitleAreaDialog {
     protected void okPressed() {
         String message = messageText.getText();
         Calendar cal = RCPUtils.toCalendar(generationDatePicker, generationTimePicker);
-        EventSeverity severity = EventSeverity.internalGetValueMap()
-                .findValueByNumber(severityCombo.getSelectionIndex() > 3 ? severityCombo.getSelectionIndex() + 1
-                        : severityCombo.getSelectionIndex());
+        String severityString = severityCombo.getItem(severityCombo.getSelectionIndex());
+        EventSeverity severity = EventSeverity.valueOf(severityString);
 
         EventCatalogue catalogue = EventCatalogue.getInstance();
         catalogue.createEvent(message, cal.getTime(), severity)

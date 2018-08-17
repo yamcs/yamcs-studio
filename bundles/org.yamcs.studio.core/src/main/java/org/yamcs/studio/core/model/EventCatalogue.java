@@ -96,7 +96,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> createEvent(String message, Date time, EventSeverity severity) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        String resource = "/archive/" + instance + "/events2/";
+        String resource = "/archive/" + instance + "/events/";
 
         CreateEventRequest.Builder requestb = CreateEventRequest.newBuilder();
         requestb.setMessage(message);
