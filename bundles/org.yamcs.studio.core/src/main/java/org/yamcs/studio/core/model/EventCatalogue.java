@@ -66,6 +66,7 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> fetchLatestEvents(String instance) {
         String resource = "/archive/" + instance + "/events";
+
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get(resource, null);
     }
