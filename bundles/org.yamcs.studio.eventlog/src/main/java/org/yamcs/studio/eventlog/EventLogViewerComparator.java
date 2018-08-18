@@ -72,6 +72,18 @@ public class EventLogViewerComparator extends ViewerComparator {
                 rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             }
             break;
+        case EventLogTableViewer.COL_TYPE:
+            rc = STRING_COMPARATOR.compare(r1.getType(), r2.getType());
+            if (rc == 0) {
+                rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
+            }
+            if (rc == 0) {
+                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+            }
+            if (rc == 0) {
+                rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
+            }
+            break;
         default:
             throw new IllegalStateException("Cannot order unsupported column " + currentColumn);
         }
