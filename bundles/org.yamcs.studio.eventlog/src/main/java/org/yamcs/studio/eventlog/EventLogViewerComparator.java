@@ -52,6 +52,7 @@ public class EventLogViewerComparator extends ViewerComparator {
             if (o1 == EventSeverity.SEVERE || o1 == EventSeverity.ERROR) {
                 return 1;
             }
+            // fall
         default:
             return -1;
         }

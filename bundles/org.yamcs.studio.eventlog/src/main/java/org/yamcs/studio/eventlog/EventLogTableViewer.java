@@ -63,8 +63,8 @@ public class EventLogTableViewer extends TableViewer {
         criticalIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level4s.png"));
         severeIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level5s.png"));
 
-        errorColor = resourceManager.createColor(new RGB(255, 221, 221));
-        warningColor = resourceManager.createColor(new RGB(248, 238, 199));
+        errorColor = resourceManager.createColor(new RGB(255, 0, 0));
+        warningColor = resourceManager.createColor(new RGB(255, 127, 0));
 
         messageLineCount = EventLogPreferences.getMessageLineCount();
 
@@ -163,7 +163,19 @@ public class EventLogTableViewer extends TableViewer {
                 return JFaceResources.getFont(JFaceResources.TEXT_FONT);
             }
         });
-        tableLayout.addColumnData(new ColumnPixelData(300));
+        tableLayout.addColumnData(new ColumnPixelData(400));
+
+        TableViewerColumn typeColumn = new TableViewerColumn(this, SWT.NONE);
+        typeColumn.getColumn().setText(COL_TYPE);
+        typeColumn.getColumn().addSelectionListener(getSelectionAdapter(typeColumn.getColumn()));
+        typeColumn.setLabelProvider(new EventLogColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                Event event = (Event) element;
+                return event.hasType() ? event.getType() : "";
+            }
+        });
+        tableLayout.addColumnData(new ColumnPixelData(150));
 
         TableViewerColumn sourceColumn = new TableViewerColumn(this, SWT.NONE);
         sourceColumn.getColumn().setText(COL_SOURCE);
@@ -173,18 +185,6 @@ public class EventLogTableViewer extends TableViewer {
             public String getText(Object element) {
                 Event event = (Event) element;
                 return event.hasSource() ? event.getSource() : "";
-            }
-        });
-        tableLayout.addColumnData(new ColumnPixelData(150));
-
-        TableViewerColumn typeColumn = new TableViewerColumn(this, SWT.NONE);
-        typeColumn.getColumn().setText(COL_TYPE);
-        typeColumn.getColumn().addSelectionListener(getSelectionAdapter(sourceColumn.getColumn()));
-        typeColumn.setLabelProvider(new EventLogColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                Event event = (Event) element;
-                return event.hasType() ? event.getType() : "";
             }
         });
         tableLayout.addColumnData(new ColumnPixelData(150));
@@ -273,19 +273,19 @@ public class EventLogTableViewer extends TableViewer {
     private class EventLogColumnLabelProvider extends ColumnLabelProvider {
 
         @Override
-        public Color getBackground(Object element) {
+        public Color getForeground(Object element) {
             Event event = (Event) element;
             if (event.hasSeverity()) {
                 switch (event.getSeverity()) {
                 case INFO:
                     return null;
-                case WARNING:
                 case WATCH:
+                case WARNING:
                     return warningColor;
-                case ERROR:
+                case DISTRESS:
                 case CRITICAL:
                 case SEVERE:
-                case DISTRESS:
+                case ERROR:
                     return errorColor;
                 }
             }
