@@ -61,24 +61,6 @@ public class AddManualEventDialog extends TitleAreaDialog {
         container.setLayout(layout);
 
         Label lbl = new Label(container, SWT.NONE);
-        lbl.setText("Generation Time");
-        Composite startComposite = new Composite(container, SWT.NONE);
-        RowLayout rl = new RowLayout();
-        rl.marginLeft = 0;
-        rl.marginTop = 0;
-        rl.marginBottom = 0;
-        rl.center = true;
-        startComposite.setLayout(rl);
-        generationDatePicker = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
-        generationTimePicker = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
-        if (generationTimeValue != null) {
-            generationDatePicker.setDate(generationTimeValue.get(Calendar.YEAR),
-                    generationTimeValue.get(Calendar.MONTH), generationTimeValue.get(Calendar.DAY_OF_MONTH));
-            generationTimePicker.setTime(generationTimeValue.get(Calendar.HOUR_OF_DAY),
-                    generationTimeValue.get(Calendar.MINUTE), generationTimeValue.get(Calendar.SECOND));
-        }
-
-        lbl = new Label(container, SWT.NONE);
         lbl.setText("Message");
         GridData gd = new GridData(GridData.FILL_VERTICAL);
         lbl.setLayoutData(gd);
@@ -98,7 +80,24 @@ public class AddManualEventDialog extends TitleAreaDialog {
             gc.dispose();
         }
         messageText.setText("");
-        messageText.setFocus();
+
+        lbl = new Label(container, SWT.NONE);
+        lbl.setText("Event Time");
+        Composite startComposite = new Composite(container, SWT.NONE);
+        RowLayout rl = new RowLayout();
+        rl.marginLeft = 0;
+        rl.marginTop = 0;
+        rl.marginBottom = 0;
+        rl.center = true;
+        startComposite.setLayout(rl);
+        generationDatePicker = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
+        generationTimePicker = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
+        if (generationTimeValue != null) {
+            generationDatePicker.setDate(generationTimeValue.get(Calendar.YEAR),
+                    generationTimeValue.get(Calendar.MONTH), generationTimeValue.get(Calendar.DAY_OF_MONTH));
+            generationTimePicker.setTime(generationTimeValue.get(Calendar.HOUR_OF_DAY),
+                    generationTimeValue.get(Calendar.MINUTE), generationTimeValue.get(Calendar.SECOND));
+        }
 
         lbl = new Label(container, SWT.NONE);
         lbl.setText("Severity");

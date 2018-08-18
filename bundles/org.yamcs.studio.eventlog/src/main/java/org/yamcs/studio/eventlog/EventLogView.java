@@ -3,14 +3,9 @@ package org.yamcs.studio.eventlog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.studio.core.YamcsConnectionListener;
-import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ManagementCatalogue;
 
-public class EventLogView extends ViewPart implements YamcsConnectionListener, InstanceListener {
+public class EventLogView extends ViewPart {
 
     private EventLog eventlog;
 
@@ -21,37 +16,11 @@ public class EventLogView extends ViewPart implements YamcsConnectionListener, I
 
         eventlog.attachToSite(getViewSite());
         eventlog.connect();
-
-        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
-        ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
     @Override
     public void setFocus() {
         eventlog.setFocus();
-    }
-
-    @Override
-    public void onYamcsConnected() {
-        Display.getDefault().asyncExec(() -> updateYamcsInstance());
-    }
-
-    @Override
-    public void instanceChanged(String oldInstance, String newInstance) {
-        Display.getDefault().asyncExec(() -> updateYamcsInstance());
-    }
-
-    private void updateYamcsInstance() {
-        String yamcsInstance = ManagementCatalogue.getCurrentYamcsInstance();
-        if (yamcsInstance != null) {
-            setContentDescription("Showing events for Yamcs instance " + yamcsInstance + " (no filter)");
-        } else {
-            setContentDescription(null);
-        }
-    }
-
-    @Override
-    public void onYamcsDisconnected() {
     }
 
     public EventLog getEventLog() {
@@ -60,8 +29,6 @@ public class EventLogView extends ViewPart implements YamcsConnectionListener, I
 
     @Override
     public void dispose() {
-        ManagementCatalogue.getInstance().removeInstanceListener(this);
-        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
         eventlog.dispose();
         super.dispose();
     }

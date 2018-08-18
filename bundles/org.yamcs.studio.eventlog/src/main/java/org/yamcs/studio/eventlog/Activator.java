@@ -1,9 +1,12 @@
 package org.yamcs.studio.eventlog;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 public class Activator extends AbstractUIPlugin {
+
+    public static final String PLUGIN_ID = "org.yamcs.studio.eventlog";
 
     private static Activator plugin;
 
@@ -21,5 +24,9 @@ public class Activator extends AbstractUIPlugin {
 
     public static Activator getDefault() {
         return plugin;
+    }
+
+    public ImageDescriptor getImageDescriptor(String path) {
+        return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 }

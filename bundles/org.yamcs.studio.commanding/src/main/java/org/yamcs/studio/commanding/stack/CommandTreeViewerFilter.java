@@ -12,11 +12,11 @@ import org.yamcs.studio.core.ui.XtceSubSystemNode;
 public class CommandTreeViewerFilter extends ViewerFilter {
 
     private String regex = ".*";
-    private CommandTreeContentProvider commandTreeContentProvider;
+    private CommandTreeContentProvider contentProvider;
 
-    public CommandTreeViewerFilter(CommandTreeContentProvider commandTreeContentProvider) {
+    public CommandTreeViewerFilter(CommandTreeContentProvider contentProvider) {
         super();
-        this.commandTreeContentProvider = commandTreeContentProvider;
+        this.contentProvider = contentProvider;
     }
 
     public void setSearchTerm(String searchTerm) {
@@ -38,7 +38,7 @@ public class CommandTreeViewerFilter extends ViewerFilter {
             }
             return cmd.getQualifiedName().matches(regex);
         } else if (element instanceof XtceSubSystemNode) {
-            Object[] children = commandTreeContentProvider.getChildren(element);
+            Object[] children = contentProvider.getChildren(element);
             for (Object child : children) {
                 if (elementMatches(child)) {
                     return true;

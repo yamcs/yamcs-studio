@@ -1,6 +1,7 @@
 package org.yamcs.studio.eventlog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,10 +13,16 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -28,6 +35,7 @@ import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.EventListener;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.ui.utils.Debouncer;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -52,10 +60,23 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
 
     public EventLog(Composite parent, int style) {
         super(parent, style);
-        setLayout(new FillLayout());
+        GridLayout gl = new GridLayout();
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;
+        gl.horizontalSpacing = 0;
+        gl.verticalSpacing = 0;
+        setLayout(gl);
 
-        tableViewer = new EventLogTableViewer(this);
-        tableContentProvider = new EventLogContentProvider(tableViewer.getTable());
+        Text searchbox = new Text(this, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
+        searchbox.setMessage("type filter text");
+        searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        Composite tableViewerWrapper = new Composite(this, SWT.NONE);
+        tableViewerWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        tableViewerWrapper.setLayout(new FillLayout());
+
+        tableViewer = new EventLogTableViewer(tableViewerWrapper);
+        tableContentProvider = new EventLogContentProvider(tableViewer);
         tableViewer.setContentProvider(tableContentProvider);
 
         // Register context menu. Commands are added in plugin.xml
@@ -93,6 +114,28 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
             }
         });
 
+        EventLogViewerFilter filter = new EventLogViewerFilter();
+        tableViewer.addFilter(filter);
+        Debouncer debouncer = new Debouncer(tableUpdater);
+        searchbox.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                if (ke.keyCode == SWT.ARROW_DOWN) {
+                    TableItem[] items = tableViewer.getTable().getItems();
+                    if (items.length > 0) {
+                        tableViewer.getTable().setSelection(items[0]); /// TODO works when sorting?
+                        tableViewer.getTable().setFocus();
+                    }
+                } else {
+                    String searchString = searchbox.getText();
+                    debouncer.debounce(() -> {
+                        filter.setSearchTerm(searchString);
+                        getDisplay().syncExec(() -> tableViewer.refresh());
+                    }, 400, TimeUnit.MILLISECONDS);
+                }
+            }
+        });
+
         updateState();
 
         tableUpdater.scheduleWithFixedDelay(() -> {
@@ -102,7 +145,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
                 }
                 List<Event> eventBatch = new ArrayList<>(realtimeEvents);
                 realtimeEvents.clear();
-                Display.getDefault().asyncExec(() -> addEvents(eventBatch, false));
+                Display.getDefault().syncExec(() -> addEvents(eventBatch));
             }
         }, TABLE_UPDATE_RATE, TABLE_UPDATE_RATE, TimeUnit.MILLISECONDS);
     }
@@ -159,7 +202,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
             try {
                 ListEventsResponse response = ListEventsResponse.parseFrom(data);
                 Display.getDefault().asyncExec(() -> {
-                    addEvents(response.getEventList(), true);
+                    addEvents(response.getEventList());
                 });
             } catch (InvalidProtocolBufferException e) {
                 log.log(Level.SEVERE, "Failed to decode server message", e);
@@ -178,23 +221,11 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         tableContentProvider.enableScrollLock(enabled);
     }
 
-    public void addEvent(Event event) {
+    public void addEvents(List<Event> events) {
         if (isDisposed()) {
             return;
         }
-        tableContentProvider.addEvent(event);
-    }
-
-    public void addEvents(List<Event> events, boolean forceNoReveal) {
-        if (isDisposed()) {
-            return;
-        }
-        tableContentProvider.addEvents(events, forceNoReveal);
-    }
-
-    // This method should be called when the stream of events to be imported is ended
-    public void addedAllEvents() {
-        tableContentProvider.addedAllEvents();
+        tableContentProvider.addEvents(events, false);
     }
 
     public void clear() {
@@ -204,7 +235,8 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     }
 
     public List<Event> getEvents() {
-        return tableContentProvider.getSortedEvents();
+        return Collections.emptyList();
+        // TODO return tableContentProvider.getSortedEvents();
     }
 
     @Override

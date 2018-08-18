@@ -12,18 +12,14 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.model.EventCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
-
-    private EventLog eventLog;
 
     private DateTime startDate;
     private DateTime startTime;
@@ -33,9 +29,11 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
     private DateTime stopTime;
     private Calendar stopTimeValue;
 
-    public ImportPastEventsDialog(Shell parentShell, EventLogView eventLogView) {
+    private long start;
+    private long stop;
+
+    public ImportPastEventsDialog(Shell parentShell) {
         super(parentShell);
-        eventLog = eventLogView.getEventLog();
     }
 
     @Override
@@ -118,26 +116,17 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        getButton(IDialogConstants.OK_ID).setEnabled(false);
+        start = TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime));
+        stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
+        super.okPressed();
+    }
 
-        long start = TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime));
-        long stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
+    public long getStart() {
+        return start;
+    }
 
-        EventCatalogue catalogue = EventCatalogue.getInstance();
-        catalogue.downloadEvents(start, stop, batch -> {
-            Display.getDefault().asyncExec(() -> eventLog.addEvents(batch, true));
-        }).whenComplete((data, exc) -> {
-            if (exc == null) {
-                Display.getDefault().asyncExec(() -> {
-                    eventLog.addedAllEvents();
-                    ImportPastEventsDialog.super.okPressed();
-                });
-            } else {
-                Display.getDefault().asyncExec(() -> {
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-                });
-            }
-        });
+    public long getStop() {
+        return stop;
     }
 
     public void initialize(TimeInterval interval, List<String> packets, List<String> ppGroups) {
