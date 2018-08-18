@@ -1,7 +1,7 @@
 package org.yamcs.studio.eventlog;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -123,7 +123,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
                 if (ke.keyCode == SWT.ARROW_DOWN) {
                     TableItem[] items = tableViewer.getTable().getItems();
                     if (items.length > 0) {
-                        tableViewer.getTable().setSelection(items[0]); /// TODO works when sorting?
+                        tableViewer.getTable().setSelection(items[0]);
                         tableViewer.getTable().setFocus();
                     }
                 } else {
@@ -234,9 +234,18 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         tableViewer.setSelection(null);
     }
 
-    public List<Event> getEvents() {
-        return Collections.emptyList();
-        // TODO return tableContentProvider.getSortedEvents();
+    /**
+     * Returns the collection of currently visible events (sorted as is visible)
+     */
+    public List<Event> getSortedEvents() {
+        EventLogViewerComparator comparator = tableViewer.getComparator();
+
+        Event[] allEvents = tableContentProvider.getElements(null);
+        Arrays.sort(allEvents, (o1, o2) -> {
+            return comparator.compare(tableViewer, o1, o2);
+        });
+
+        return Arrays.asList(allEvents);
     }
 
     @Override

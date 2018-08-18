@@ -11,12 +11,13 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TableColumn;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
@@ -43,6 +44,8 @@ public class EventLogTableViewer extends TableViewer {
 
     private TableLayout tableLayout;
 
+    private EventLogViewerComparator comparator;
+
     public EventLogTableViewer(Composite parent) {
         super(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
 
@@ -68,18 +71,9 @@ public class EventLogTableViewer extends TableViewer {
         tableLayout = new TableLayout();
         getTable().setLayout(tableLayout);
 
-        // sort listener common for all columns
-        Listener sortListener = event -> {
-            TableColumn column = (TableColumn) event.widget;
-
-            // TODO should this sort logic not move up into this class? Why are columns passed?
-            EventLogContentProvider contentProvider = (EventLogContentProvider) getContentProvider();
-            /// contentProvider.sort(column);
-        };
-
         TableViewerColumn messageColumn = new TableViewerColumn(this, SWT.NONE);
         messageColumn.getColumn().setText(COL_MESSAGE);
-        messageColumn.getColumn().addListener(SWT.Selection, sortListener);
+        messageColumn.getColumn().addSelectionListener(getSelectionAdapter(messageColumn.getColumn()));
         messageColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -156,7 +150,7 @@ public class EventLogTableViewer extends TableViewer {
 
         TableViewerColumn sourceColumn = new TableViewerColumn(this, SWT.NONE);
         sourceColumn.getColumn().setText(COL_SOURCE);
-        sourceColumn.getColumn().addListener(SWT.Selection, sortListener);
+        sourceColumn.getColumn().addSelectionListener(getSelectionAdapter(sourceColumn.getColumn()));
         sourceColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -172,7 +166,7 @@ public class EventLogTableViewer extends TableViewer {
 
         TableViewerColumn generationColumn = new TableViewerColumn(this, SWT.NONE);
         generationColumn.getColumn().setText(COL_GENERATION);
-        generationColumn.getColumn().addListener(SWT.Selection, sortListener);
+        generationColumn.getColumn().addSelectionListener(getSelectionAdapter(generationColumn.getColumn()));
         generationColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -184,7 +178,7 @@ public class EventLogTableViewer extends TableViewer {
 
         TableViewerColumn receptionColumn = new TableViewerColumn(this, SWT.NONE);
         receptionColumn.getColumn().setText(COL_RECEPTION);
-        receptionColumn.getColumn().addListener(SWT.Selection, sortListener);
+        receptionColumn.getColumn().addSelectionListener(getSelectionAdapter(receptionColumn.getColumn()));
         receptionColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -196,7 +190,7 @@ public class EventLogTableViewer extends TableViewer {
 
         TableViewerColumn seqNumColumn = new TableViewerColumn(this, SWT.RIGHT);
         seqNumColumn.getColumn().setText(COL_SEQNUM);
-        seqNumColumn.getColumn().addListener(SWT.Selection, sortListener);
+        seqNumColumn.getColumn().addSelectionListener(getSelectionAdapter(seqNumColumn.getColumn()));
         seqNumColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
@@ -236,9 +230,30 @@ public class EventLogTableViewer extends TableViewer {
             });
         }
 
-        // TODO use IMemento or something
+        comparator = new EventLogViewerComparator();
+        setComparator(comparator);
+
         // !! Keep these values in sync with EventLogViewerComparator constructor
-        getTable().setSortColumn(receptionColumn.getColumn());
+        getTable().setSortColumn(generationColumn.getColumn());
         getTable().setSortDirection(SWT.UP);
+    }
+
+    @Override
+    public EventLogViewerComparator getComparator() {
+        return comparator;
+    }
+
+    private SelectionAdapter getSelectionAdapter(TableColumn column) {
+        SelectionAdapter selectionAdapter = new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                comparator.setColumn(column);
+                int dir = comparator.getDirection();
+                getTable().setSortDirection(dir);
+                getTable().setSortColumn(column);
+                refresh();
+            }
+        };
+        return selectionAdapter;
     }
 }

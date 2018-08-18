@@ -31,8 +31,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     @Override
-    public Object[] getElements(Object inputElement) {
-        return eventsById.values().toArray();
+    public Event[] getElements(Object inputElement) {
+        return eventsById.values().toArray(new Event[0]);
     }
 
     public void addEvent(Event event) {
