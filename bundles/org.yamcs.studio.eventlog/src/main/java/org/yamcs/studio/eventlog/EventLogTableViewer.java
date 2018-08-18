@@ -24,6 +24,7 @@ import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 public class EventLogTableViewer extends TableViewer {
 
+    public static final String COL_SEVERITY = "Sev.";
     public static final String COL_SOURCE = "Source";
     public static final String COL_TYPE = "Type";
     public static final String COL_GENERATION = "Generation";
@@ -72,6 +73,64 @@ public class EventLogTableViewer extends TableViewer {
         tableLayout = new TableLayout();
         getTable().setLayout(tableLayout);
 
+        TableViewerColumn severityColumn = new TableViewerColumn(this, SWT.CENTER);
+        severityColumn.getColumn().setText(COL_SEVERITY);
+        severityColumn.getColumn().addSelectionListener(getSelectionAdapter(severityColumn.getColumn()));
+        severityColumn.getColumn().setToolTipText("Severity Level");
+        severityColumn.setLabelProvider(new EventLogColumnLabelProvider() {
+
+            @Override
+            public Image getImage(Object element) {
+                Event event = (Event) element;
+                if (event.hasSeverity()) {
+                    switch (event.getSeverity()) {
+                    case INFO:
+                        return infoIcon;
+                    case WATCH:
+                        return watchIcon;
+                    case WARNING:
+                        return warningIcon;
+                    case DISTRESS:
+                        return distressIcon;
+                    case CRITICAL:
+                        return criticalIcon;
+                    case SEVERE:
+                    case ERROR:
+                        return severeIcon;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public String getText(Object element) {
+                return null;
+            }
+
+            @Override
+            public String getToolTipText(Object element) {
+                Event event = (Event) element;
+                if (event.hasSeverity()) {
+                    return "" + event.getSeverity();
+                } else {
+                    return super.getToolTipText(element);
+                }
+            }
+        });
+        tableLayout.addColumnData(new ColumnPixelData(40));
+
+        TableViewerColumn generationColumn = new TableViewerColumn(this, SWT.NONE);
+        generationColumn.getColumn().setText(COL_GENERATION);
+        generationColumn.getColumn().addSelectionListener(getSelectionAdapter(generationColumn.getColumn()));
+        generationColumn.setLabelProvider(new EventLogColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                Event event = (Event) element;
+                return YamcsUIPlugin.getDefault().formatInstant(event.getGenerationTime());
+            }
+        });
+        tableLayout.addColumnData(new ColumnPixelData(160));
+
         TableViewerColumn messageColumn = new TableViewerColumn(this, SWT.NONE);
         messageColumn.getColumn().setText(COL_MESSAGE);
         messageColumn.getColumn().addSelectionListener(getSelectionAdapter(messageColumn.getColumn()));
@@ -103,29 +162,6 @@ public class EventLogTableViewer extends TableViewer {
                 // Install a monospaced font, for alignment reasons
                 return JFaceResources.getFont(JFaceResources.TEXT_FONT);
             }
-
-            @Override
-            public Image getImage(Object element) {
-                Event event = (Event) element;
-                if (event.hasSeverity()) {
-                    switch (event.getSeverity()) {
-                    case INFO:
-                        return infoIcon;
-                    case WATCH:
-                        return watchIcon;
-                    case WARNING:
-                        return warningIcon;
-                    case DISTRESS:
-                        return distressIcon;
-                    case CRITICAL:
-                        return criticalIcon;
-                    case SEVERE:
-                    case ERROR:
-                        return severeIcon;
-                    }
-                }
-                return null;
-            }
         });
         tableLayout.addColumnData(new ColumnPixelData(300));
 
@@ -152,18 +188,6 @@ public class EventLogTableViewer extends TableViewer {
             }
         });
         tableLayout.addColumnData(new ColumnPixelData(150));
-
-        TableViewerColumn generationColumn = new TableViewerColumn(this, SWT.NONE);
-        generationColumn.getColumn().setText(COL_GENERATION);
-        generationColumn.getColumn().addSelectionListener(getSelectionAdapter(generationColumn.getColumn()));
-        generationColumn.setLabelProvider(new EventLogColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                Event event = (Event) element;
-                return YamcsUIPlugin.getDefault().formatInstant(event.getGenerationTime());
-            }
-        });
-        tableLayout.addColumnData(new ColumnPixelData(160));
 
         TableViewerColumn receptionColumn = new TableViewerColumn(this, SWT.NONE);
         receptionColumn.getColumn().setText(COL_RECEPTION);

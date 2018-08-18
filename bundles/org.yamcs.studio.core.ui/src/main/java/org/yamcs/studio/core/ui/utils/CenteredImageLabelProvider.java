@@ -8,8 +8,12 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
 /**
- * A table column with SWT.CENTER and just an image, will not be centered on at least Windows
- * platforms. Work around this issue by custom drawing.
+ * A table column with SWT.CENTER and just an image, will not be centered on at least Windows platforms. Work around
+ * this issue by custom drawing.
+ * 
+ * <p>
+ * FDI's note: reconsider implementation. It causes the default selection color to be limited to the width of the actual
+ * columns, rather than the full table width.
  *
  * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=26045
  */
@@ -25,10 +29,11 @@ public abstract class CenteredImageLabelProvider extends OwnerDrawLabelProvider 
         if (img != null) {
 
             Rectangle bounds;
-            if (event.item instanceof TreeItem)
+            if (event.item instanceof TreeItem) {
                 bounds = ((TreeItem) event.item).getBounds(event.index);
-            else
+            } else {
                 bounds = ((TableItem) event.item).getBounds(event.index);
+            }
             Rectangle imgBounds = img.getBounds();
 
             bounds.width /= 2;
