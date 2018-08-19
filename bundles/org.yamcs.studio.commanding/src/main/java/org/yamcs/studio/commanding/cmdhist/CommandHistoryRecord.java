@@ -51,6 +51,7 @@ public class CommandHistoryRecord {
     private String username = "anonymous";
     private String finalSequenceCount;
     private PTVInfo ptvInfo;
+    private String comment;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
     private Map<String, VerificationStep> verificationStepsByName = new LinkedHashMap<>();
@@ -70,6 +71,10 @@ public class CommandHistoryRecord {
 
     public void setCommandString(Value commandString) {
         this.commandString = valueToString(commandString);
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public void setUsername(Value username) {
@@ -176,6 +181,10 @@ public class CommandHistoryRecord {
 
     public String getOrigin() {
         return id.getOrigin();
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     public ByteString getBinary() {

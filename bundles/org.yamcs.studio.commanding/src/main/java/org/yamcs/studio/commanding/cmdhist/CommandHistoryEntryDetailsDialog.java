@@ -28,6 +28,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     private Label completedLabel;
     private Label sourceIdLabel;
     private Label binaryLabel;
+    private Label commentLabel;
     private Text commandStringText;
 
     private Button prevButton;
@@ -214,6 +215,13 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         binaryLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
+        label.setText("Comment");
+        commentLabel = new Label(textContainer, SWT.NONE);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        commentLabel.setLayoutData(gd);
+
+        label = new Label(textContainer, SWT.NONE);
         label.setText("Command String");
         gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         label.setLayoutData(gd);
@@ -259,8 +267,18 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     private void updateProperties() {
         dateLabel.setText(rec.getGenerationTime());
         commandStringText.setText(rec.getCommandString());
-        sourceLabel.setText(rec.getUsername() + "@" + rec.getOrigin());
+        if (rec.getOrigin() != null && !"".equals(rec.getOrigin())) {
+            sourceLabel.setText(rec.getUsername() + "@" + rec.getOrigin());
+        } else {
+            sourceLabel.setText(rec.getUsername());
+        }
         sourceIdLabel.setText(String.valueOf(rec.getSequenceNumber()));
+
+        if (rec.getComment() != null) {
+            commentLabel.setText(rec.getComment());
+        } else {
+            commentLabel.setText("-");
+        }
 
         switch (rec.getCommandState()) {
         case COMPLETED:

@@ -34,6 +34,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
     public static final String ATTR_SOURCE = "source";
     public static final String ATTR_BINARY = "binary";
     public static final String ATTR_USERNAME = "username";
+    public static final String ATTR_COMMENT = "Comment";
 
     private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
     private TableViewer tableViewer;
@@ -123,6 +124,8 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
                 rec.getPTVInfo().setFailureMessage(attr.getValue().getStringValue());
             } else if (attr.getName().equals(ATTR_BINARY)) {
                 rec.setBinary(attr.getValue().getBinaryValue());
+            } else if (attr.getName().equals(ATTR_COMMENT)) {
+                rec.setComment(attr.getValue().getStringValue());
             } else {
                 rec.addCellValue(shortName, attr.getValue());
             }
