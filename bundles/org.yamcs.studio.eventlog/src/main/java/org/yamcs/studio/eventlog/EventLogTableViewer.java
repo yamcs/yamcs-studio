@@ -9,8 +9,6 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -189,58 +187,32 @@ public class EventLogTableViewer extends TableViewer {
         });
         tableLayout.addColumnData(new ColumnPixelData(150));
 
-        TableViewerColumn receptionColumn = new TableViewerColumn(this, SWT.NONE);
-        receptionColumn.getColumn().setText(COL_RECEPTION);
-        receptionColumn.getColumn().addSelectionListener(getSelectionAdapter(receptionColumn.getColumn()));
-        receptionColumn.setLabelProvider(new EventLogColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                Event event = (Event) element;
-                return YamcsUIPlugin.getDefault().formatInstant(event.getReceptionTime());
-            }
-        });
-        tableLayout.addColumnData(new ColumnPixelData(160));
-
-        TableViewerColumn seqNumColumn = new TableViewerColumn(this, SWT.RIGHT);
-        seqNumColumn.getColumn().setText(COL_SEQNUM);
-        seqNumColumn.getColumn().addSelectionListener(getSelectionAdapter(seqNumColumn.getColumn()));
-        seqNumColumn.setLabelProvider(new EventLogColumnLabelProvider() {
-            @Override
-            public String getText(Object element) {
-                Event event = (Event) element;
-                return "" + event.getSeqNumber();
-            }
-        });
-        tableLayout.addColumnData(new ColumnPixelData(80));
-
-        if (!EventLogPreferences.isShowSequenceNumberColumn()) {
-            tableLayout.addColumnData(new ColumnPixelData(0));
-            seqNumColumn.getColumn().setResizable(false);
-        }
-        if (!EventLogPreferences.isShowGenerationColumn()) {
-            tableLayout.addColumnData(new ColumnPixelData(0));
-            generationColumn.getColumn().setResizable(false);
-        }
-        if (!EventLogPreferences.isShowReceptionColumn()) {
-            tableLayout.addColumnData(new ColumnPixelData(0));
-            receptionColumn.getColumn().setResizable(false);
-        }
-
-        for (TableColumn tableColumn : getTable().getColumns()) {
-            tableColumn.setMoveable(true);
-            // prevent resize to 0
-            tableColumn.addControlListener(new ControlListener() {
+        if (EventLogPreferences.isShowReceptionColumn()) {
+            TableViewerColumn receptionColumn = new TableViewerColumn(this, SWT.NONE);
+            receptionColumn.getColumn().setText(COL_RECEPTION);
+            receptionColumn.getColumn().addSelectionListener(getSelectionAdapter(receptionColumn.getColumn()));
+            receptionColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                 @Override
-                public void controlMoved(ControlEvent e) {
-                }
-
-                @Override
-                public void controlResized(ControlEvent e) {
-                    if (tableColumn.getWidth() < 5) {
-                        tableColumn.setWidth(5);
-                    }
+                public String getText(Object element) {
+                    Event event = (Event) element;
+                    return YamcsUIPlugin.getDefault().formatInstant(event.getReceptionTime());
                 }
             });
+            tableLayout.addColumnData(new ColumnPixelData(160));
+        }
+
+        if (EventLogPreferences.isShowSequenceNumberColumn()) {
+            TableViewerColumn seqNumColumn = new TableViewerColumn(this, SWT.RIGHT);
+            seqNumColumn.getColumn().setText(COL_SEQNUM);
+            seqNumColumn.getColumn().addSelectionListener(getSelectionAdapter(seqNumColumn.getColumn()));
+            seqNumColumn.setLabelProvider(new EventLogColumnLabelProvider() {
+                @Override
+                public String getText(Object element) {
+                    Event event = (Event) element;
+                    return "" + event.getSeqNumber();
+                }
+            });
+            tableLayout.addColumnData(new ColumnPixelData(80));
         }
 
         comparator = new EventLogViewerComparator();

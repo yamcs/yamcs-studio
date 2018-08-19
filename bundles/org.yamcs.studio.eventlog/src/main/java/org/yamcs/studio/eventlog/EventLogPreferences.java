@@ -8,10 +8,6 @@ public class EventLogPreferences {
         return getStore().getBoolean(PreferencePage.PREF_SHOW_SEQNUM_COL);
     }
 
-    public static boolean isShowGenerationColumn() {
-        return getStore().getBoolean(PreferencePage.PREF_SHOW_GENTIME_COL);
-    }
-
     public static boolean isShowReceptionColumn() {
         return getStore().getBoolean(PreferencePage.PREF_SHOW_RECTIME_COL);
     }

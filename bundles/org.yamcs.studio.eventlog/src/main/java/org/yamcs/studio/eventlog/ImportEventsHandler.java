@@ -76,7 +76,6 @@ public class ImportEventsHandler extends AbstractHandler {
             });
 
             try {
-
                 while (!monitor.isCanceled() && !future.isDone()) {
                     try {
                         future.get(200, TimeUnit.MILLISECONDS);
@@ -89,8 +88,8 @@ public class ImportEventsHandler extends AbstractHandler {
                     future.cancel(true);
                     throw new InterruptedException();
                 } else {
+                    monitor.subTask("Updating table");
                     Display.getDefault().syncExec(() -> {
-                        monitor.subTask("Updating table");
                         eventLog.addEvents(newEvents);
                         monitor.done();
                     });

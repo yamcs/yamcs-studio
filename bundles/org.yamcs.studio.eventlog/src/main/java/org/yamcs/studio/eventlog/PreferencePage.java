@@ -15,18 +15,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
     public static final String PREF_LINECOUNT = "events.nbMessageLineToDisplay";
     public static final String PREF_SHOW_SEQNUM_COL = "events.showColumnSeqNum";
-    public static final String PREF_SHOW_GENTIME_COL = "events.showColumnGeneration";
     public static final String PREF_SHOW_RECTIME_COL = "events.showColumnReception";
 
     private BooleanFieldEditor showColumSeqNum;
     private BooleanFieldEditor showColumReception;
-    private BooleanFieldEditor showColumnGeneration;
     private IntegerFieldEditor nbMessageLineToDisplay;
 
     public PreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        // setDescription("Set properties for Event Log");
     }
 
     @Override
@@ -45,10 +42,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
         showColumSeqNum = new BooleanFieldEditor(PREF_SHOW_SEQNUM_COL, "Sequence Number", parent);
         showColumReception = new BooleanFieldEditor(PREF_SHOW_RECTIME_COL, "Reception Time", parent);
-        showColumnGeneration = new BooleanFieldEditor(PREF_SHOW_GENTIME_COL, "Generation Time", parent);
         addField(showColumSeqNum);
         addField(showColumReception);
-        addField(showColumnGeneration);
 
     }
 
@@ -58,7 +53,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 
         boolean propertiesChanged = showColumSeqNum.getBooleanValue() != store.getBoolean(PREF_SHOW_SEQNUM_COL);
         propertiesChanged |= showColumReception.getBooleanValue() != store.getBoolean(PREF_SHOW_RECTIME_COL);
-        propertiesChanged |= showColumnGeneration.getBooleanValue() != store.getBoolean(PREF_SHOW_GENTIME_COL);
         propertiesChanged |= nbMessageLineToDisplay.getIntValue() != store.getInt(PREF_LINECOUNT);
 
         // Save to store
