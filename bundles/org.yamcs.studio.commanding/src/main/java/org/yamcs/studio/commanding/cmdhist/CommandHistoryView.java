@@ -2,9 +2,7 @@ package org.yamcs.studio.commanding.cmdhist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.action.Action;
@@ -12,6 +10,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -20,12 +20,15 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
@@ -37,18 +40,25 @@ import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord.CommandState;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
+import org.yamcs.studio.core.ui.utils.ColumnData;
+import org.yamcs.studio.core.ui.utils.ColumnDef;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
 
 public class CommandHistoryView extends ViewPart {
 
     private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
 
+    public static final String COL_COMPLETION = "";
     public static final String COL_COMMAND = "Command";
-    public static final String COL_SRC_ID = "Src.ID";
-    public static final String COL_SRC = "Src";
+    public static final String COL_ORIGIN_ID = "Ori.ID";
+    public static final String COL_USER = "User";
+    public static final String COL_ORIGIN = "Origin";
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
+
+    private static final int DYNAMIC_COLUMN_WIDTH = 90;
 
     // Ignored for dynamic columns, most of these are actually considered fixed
     // columns.
@@ -61,9 +71,6 @@ public class CommandHistoryView extends ViewPart {
             CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE,
             CommandHistoryRecordContentProvider.ATTR_COMMAND_FAILED,
             CommandHistoryRecordContentProvider.ATTR_COMMENT);
-
-    private List<String> visibleColumns = new ArrayList<>();
-    private List<String> hiddenColumns = new ArrayList<>();
 
     private LocalResourceManager resourceManager;
 
@@ -78,10 +85,19 @@ public class CommandHistoryView extends ViewPart {
     Image nextImage;
 
     private TableViewer tableViewer;
-    private CommandHistoryViewerComparator tableViewerComparator;
+    private CommandHistorySorter tableViewerComparator;
+    private ControlAdapter columnResizeListener = new ControlAdapter() {
+        @Override
+        public void controlResized(ControlEvent e) {
+            syncCurrentWidthsToModel();
+            saveColumnState();
+        }
+    };
 
     private CommandHistoryRecordContentProvider tableContentProvider;
-    private Set<String> dynamicColumns = new HashSet<>();
+
+    private ColumnData columnData;
+    private List<String> dynamicColumns = new ArrayList<>();
 
     private boolean showRelativeTime = true;
 
@@ -99,23 +115,19 @@ public class CommandHistoryView extends ViewPart {
         prevImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/event_prev.png"));
         nextImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/event_next.png"));
 
-        createActions();
+        createActions(parent.getShell());
 
         tableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.MULTI);
 
-        visibleColumns.add(COL_T);
-        visibleColumns.add(COL_COMMAND);
-        visibleColumns.add(COL_SRC);
-        visibleColumns.add(COL_SRC_ID);
-        visibleColumns.add(COL_PTV);
-        visibleColumns.add(COL_SEQ_ID);
-        createColumns(new TableColumn[0], new int[0]);
+        columnData = createDefaultColumnData();
+        restoreColumnState();
+        createColumns();
 
         tableContentProvider = new CommandHistoryRecordContentProvider(tableViewer);
         tableViewer.setContentProvider(tableContentProvider);
         tableViewer.setInput(tableContentProvider); // ! otherwise refresh() deletes everything...
 
-        tableViewerComparator = new CommandHistoryViewerComparator();
+        tableViewerComparator = new CommandHistorySorter();
         tableViewer.setComparator(tableViewerComparator);
 
         getViewSite().setSelectionProvider(tableViewer);
@@ -138,6 +150,24 @@ public class CommandHistoryView extends ViewPart {
         CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
         });
+    }
+
+    public ColumnData createDefaultColumnData() {
+        ColumnData data = new ColumnData();
+        data.addColumn(COL_COMPLETION, 90);
+        data.addColumn(COL_T, 160);
+        data.addColumn(COL_COMMAND, 500);
+        data.addColumn(COL_USER, 100);
+        data.addColumn(COL_ORIGIN, 200, false, true, true);
+        data.addColumn(COL_ORIGIN_ID, 50, false, true, true);
+        data.addColumn(COL_PTV, 50);
+        data.addColumn(COL_SEQ_ID, 50, false, true, true);
+
+        for (String dynamicColumn : dynamicColumns) {
+            ColumnDef def = columnData.getColumn(dynamicColumn);
+            data.addColumn(def.name, DYNAMIC_COLUMN_WIDTH);
+        }
+        return data;
     }
 
     private void updateSummaryLine() {
@@ -187,7 +217,7 @@ public class CommandHistoryView extends ViewPart {
         return null;
     }
 
-    private void createActions() {
+    private void createActions(Shell shell) {
         IActionBars bars = getViewSite().getActionBars();
         IMenuManager mgr = bars.getMenuManager();
 
@@ -206,56 +236,79 @@ public class CommandHistoryView extends ViewPart {
         Action configureColumnsAction = new Action("Configure Columns...", IAction.AS_PUSH_BUTTON) {
             @Override
             public void run() {
+                syncCurrentWidthsToModel();
+                ViewerColumnsDialog dialog = new CommandHistoryViewerColumnsDialog(shell, CommandHistoryView.this,
+                        columnData);
+                if (dialog.open() == Dialog.OK) {
+                    columnData.clear();
+                    dialog.getVisible().forEach(c -> {
+                        columnData.addColumn(c.name, c.width, c.visible, c.resizable, c.moveable);
+                    });
+                    dialog.getNonVisible().forEach(c -> {
+                        columnData.addColumn(c.name, c.width, c.visible, c.resizable, c.moveable);
+                    });
+                    createColumns();
+                }
             }
         };
         mgr.add(configureColumnsAction);
     }
 
-    private void createColumns(TableColumn[] currentColumns, int[] widths) {
+    private void syncCurrentWidthsToModel() {
+        for (TableColumn column : tableViewer.getTable().getColumns()) {
+            ColumnDef def = columnData.getColumn(column.getText());
+            if (def != null) {
+                def.width = column.getWidth();
+            }
+        }
+    }
+
+    private void createColumns() {
         Table table = tableViewer.getTable();
         TableLayout layout = new TableLayout();
 
-        if (currentColumns.length == 0) {
-            TableViewerColumn stateColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-            stateColumn.getColumn().addSelectionListener(getSelectionAdapter(stateColumn.getColumn()));
-            stateColumn.getColumn().setImage(headerCompleteImage);
-            stateColumn.getColumn().setToolTipText("Completion");
-            stateColumn.setLabelProvider(new ColumnLabelProvider() {
-                @Override
-                public Image getImage(Object element) {
-                    switch (((CommandHistoryRecord) element).getCommandState()) {
-                    case COMPLETED:
-                        return checkmarkImage;
-                    case FAILED:
-                        return errorImage;
-                    default:
-                        return null;
-                    }
-                }
-
-                @Override
-                public String getText(Object element) {
-                    CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                    switch (((CommandHistoryRecord) element).getCommandState()) {
-                    case COMPLETED:
-                        return "Completed";
-                    case FAILED:
-                        return rec.getPTVInfo().getFailureMessage();
-                    default:
-                        return null;
-                    }
-                }
-            });
-        }
-        layout.addColumnData(new ColumnPixelData(90));
-
-        for (int i = 1; i < currentColumns.length; i++) {
-            currentColumns[i].dispose();
+        TableColumn[] currentColumns = tableViewer.getTable().getColumns();
+        for (TableColumn currentColumn : currentColumns) {
+            currentColumn.dispose();
         }
 
-        for (String name : visibleColumns) {
-            if (name.equals(COL_T)) {
+        for (ColumnDef def : columnData.getVisibleColumns()) {
+            if (def.name.equals(COL_COMPLETION)) {
+                TableViewerColumn completionColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                completionColumn.getColumn().addControlListener(columnResizeListener);
+                completionColumn.getColumn().addSelectionListener(getSelectionAdapter(completionColumn.getColumn()));
+                completionColumn.getColumn().setImage(headerCompleteImage);
+                completionColumn.getColumn().setToolTipText("Completion");
+                completionColumn.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public Image getImage(Object element) {
+                        switch (((CommandHistoryRecord) element).getCommandState()) {
+                        case COMPLETED:
+                            return checkmarkImage;
+                        case FAILED:
+                            return errorImage;
+                        default:
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    public String getText(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        switch (((CommandHistoryRecord) element).getCommandState()) {
+                        case COMPLETED:
+                            return "Completed";
+                        case FAILED:
+                            return rec.getPTVInfo().getFailureMessage();
+                        default:
+                            return null;
+                        }
+                    }
+                });
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_T)) {
                 TableViewerColumn gentimeColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                gentimeColumn.getColumn().addControlListener(columnResizeListener);
                 gentimeColumn.getColumn().addSelectionListener(getSelectionAdapter(gentimeColumn.getColumn()));
                 gentimeColumn.getColumn().setText(COL_T);
                 gentimeColumn.getColumn().setToolTipText("Generation Time");
@@ -265,16 +318,17 @@ public class CommandHistoryView extends ViewPart {
                         return ((CommandHistoryRecord) element).getGenerationTime();
                     }
                 });
-                layout.addColumnData(new ColumnPixelData(150));
+                layout.addColumnData(new ColumnPixelData(def.width));
 
                 // Add chevron
                 table.setSortColumn(gentimeColumn.getColumn());
-                table.setSortDirection(SWT.DOWN);
-            } else if (name.equals(COL_COMMAND)) {
+                table.setSortDirection(SWT.UP);
+            } else if (def.name.equals(COL_COMMAND)) {
                 TableViewerColumn nameColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
                 nameColumn.getColumn().setText(COL_COMMAND);
                 nameColumn.getColumn().setToolTipText("Command String");
+                nameColumn.getColumn().addControlListener(columnResizeListener);
                 nameColumn.getColumn().addSelectionListener(getSelectionAdapter(nameColumn.getColumn()));
                 nameColumn.setLabelProvider(new ColumnLabelProvider() {
 
@@ -284,41 +338,55 @@ public class CommandHistoryView extends ViewPart {
                         return rec.getCommandString();
                     }
                 });
-                layout.addColumnData(new ColumnPixelData(500));
-            } else if (name.equals(COL_SRC)) {
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_USER)) {
+                TableViewerColumn userColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                userColumn.getColumn().addSelectionListener(getSelectionAdapter(userColumn.getColumn()));
+                userColumn.getColumn().setText(COL_USER);
+                userColumn.getColumn().setToolTipText("User that issued the command");
+                userColumn.getColumn().addControlListener(columnResizeListener);
+                userColumn.getColumn().addSelectionListener(getSelectionAdapter(userColumn.getColumn()));
+                userColumn.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        return rec.getUsername();
+                    }
+                });
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_ORIGIN)) {
                 TableViewerColumn originColumn = new TableViewerColumn(tableViewer, SWT.NONE);
                 originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
-                originColumn.getColumn().setText(COL_SRC);
-                originColumn.getColumn().setToolTipText("Source (user@origin)");
+                originColumn.getColumn().setText(COL_ORIGIN);
+                originColumn.getColumn().setToolTipText("Origin");
+                originColumn.getColumn().addControlListener(columnResizeListener);
                 originColumn.getColumn().addSelectionListener(getSelectionAdapter(originColumn.getColumn()));
                 originColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        if (rec.getOrigin() != null && !"".equals(rec.getOrigin())) {
-                            return rec.getUsername() + "@" + rec.getOrigin();
-                        } else {
-                            return rec.getUsername();
-                        }
+                        return rec.getOrigin();
                     }
                 });
-                layout.addColumnData(new ColumnPixelData(200));
-            } else if (name.equals(COL_SRC_ID)) {
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_ORIGIN_ID)) {
                 TableViewerColumn seqIdColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 seqIdColumn.getColumn().addSelectionListener(getSelectionAdapter(seqIdColumn.getColumn()));
-                seqIdColumn.getColumn().setText(COL_SRC_ID);
+                seqIdColumn.getColumn().setText(COL_ORIGIN_ID);
+                seqIdColumn.getColumn().addControlListener(columnResizeListener);
                 seqIdColumn.getColumn().addSelectionListener(getSelectionAdapter(seqIdColumn.getColumn()));
-                seqIdColumn.getColumn().setToolTipText("Client ID");
+                seqIdColumn.getColumn().setToolTipText("Client ID at origin");
                 seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
                         return String.valueOf(((CommandHistoryRecord) element).getSequenceNumber());
                     }
                 });
-                layout.addColumnData(new ColumnPixelData(50));
-            } else if (name.equals(COL_PTV)) {
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_PTV)) {
                 TableViewerColumn ptvColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 ptvColumn.getColumn().setText(COL_PTV);
+                ptvColumn.getColumn().addControlListener(columnResizeListener);
                 ptvColumn.getColumn().addSelectionListener(getSelectionAdapter(ptvColumn.getColumn()));
                 ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
                 ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
@@ -352,10 +420,11 @@ public class CommandHistoryView extends ViewPart {
                         }
                     }
                 });
-                layout.addColumnData(new ColumnPixelData(50));
-            } else if (name.equals(COL_SEQ_ID)) {
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_SEQ_ID)) {
                 TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 finalSeqColumn.getColumn().setText(COL_SEQ_ID);
+                finalSeqColumn.getColumn().addControlListener(columnResizeListener);
                 finalSeqColumn.getColumn().addSelectionListener(getSelectionAdapter(finalSeqColumn.getColumn()));
                 finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
                 finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -366,25 +435,26 @@ public class CommandHistoryView extends ViewPart {
                                 : "-";
                     }
                 });
-                layout.addColumnData(new ColumnPixelData(50));
-            } else if (dynamicColumns.contains(name)) {
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (dynamicColumns.contains(def.name)) {
                 TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
-                column.getColumn().setText(name);
+                column.getColumn().setText(def.name);
+                column.getColumn().addControlListener(columnResizeListener);
                 column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
                 column.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        return ((CommandHistoryRecord) element).getTextForColumn(name, showRelativeTime);
+                        return ((CommandHistoryRecord) element).getTextForColumn(def.name, showRelativeTime);
                     }
 
                     @Override
                     public String getToolTipText(Object element) {
-                        return ((CommandHistoryRecord) element).getTooltipForColumn(name);
+                        return ((CommandHistoryRecord) element).getTooltipForColumn(def.name);
                     }
 
                     @Override
                     public Image getImage(Object element) {
-                        String imgLoc = ((CommandHistoryRecord) element).getImageForColumn(name);
+                        String imgLoc = ((CommandHistoryRecord) element).getImageForColumn(def.name);
                         if (CommandHistoryRecordContentProvider.GREEN.equals(imgLoc)) {
                             return greenBubble;
                         } else if (CommandHistoryRecordContentProvider.RED.equals(imgLoc)) {
@@ -394,7 +464,7 @@ public class CommandHistoryView extends ViewPart {
                         }
                     }
                 });
-                layout.addColumnData(new ColumnPixelData(90));
+                layout.addColumnData(new ColumnPixelData(def.width));
             }
         }
 
@@ -403,6 +473,79 @@ public class CommandHistoryView extends ViewPart {
         table.setLinesVisible(true);
         table.layout(true); // !! Ensures column widths are applied when recreating columns
         tableViewer.refresh(); // !! Ensures table renders correctly for old data when adding a new column
+
+        saveColumnState();
+    }
+
+    private void saveColumnState() {
+        IDialogSettings settings = CommandingPlugin.getDefault().getCommandHistoryTableSettings();
+
+        List<ColumnDef> visibleColumns = columnData.getVisibleColumns();
+        String[] visibleNames = visibleColumns.stream().map(c -> c.name).toArray(String[]::new);
+        Integer[] visibleWidths = visibleColumns.stream().map(c -> c.width).toArray(Integer[]::new);
+
+        settings.put("visible-cols", visibleNames);
+        for (int i = 0; i < visibleNames.length; i++) {
+            settings.put("visible-width-" + i, visibleWidths[i]);
+        }
+
+        List<ColumnDef> hiddenColumns = columnData.getHiddenColumns();
+        String[] hiddenNames = hiddenColumns.stream().map(c -> c.name).toArray(String[]::new);
+        settings.put("hidden-cols", hiddenNames);
+
+        String[] dynamicColumns = this.dynamicColumns.toArray(new String[0]);
+        settings.put("dynamic-cols", dynamicColumns);
+    }
+
+    private void restoreColumnState() {
+        IDialogSettings settings = CommandingPlugin.getDefault().getCommandHistoryTableSettings();
+
+        String[] oldVisibleNames = settings.getArray("visible-cols");
+        if (oldVisibleNames != null) {
+            int[] oldVisibleWidths = new int[oldVisibleNames.length];
+            for (int i = 0; i < oldVisibleNames.length; i++) {
+                oldVisibleWidths[i] = settings.getInt("visible-width-" + i);
+            }
+            String[] oldHiddenNames = settings.getArray("hidden-cols");
+            List<String> oldDynamicColumns = Arrays.asList(settings.getArray("dynamic-cols"));
+
+            ColumnData restoredData = new ColumnData();
+
+            // Add visible columns we still remember from a previous session
+            for (int i = 0; i < oldVisibleNames.length; i++) {
+                ColumnDef def = columnData.getColumn(oldVisibleNames[i]);
+                if (def != null) {
+                    restoredData.addColumn(def.name, oldVisibleWidths[i], true, def.resizable, def.moveable);
+                } else if (oldDynamicColumns.contains(oldVisibleNames[i])) {
+                    restoredData.addColumn(oldVisibleNames[i], oldVisibleWidths[i], true, true, true);
+                    dynamicColumns.add(oldVisibleNames[i]);
+                } else {
+                    // Ignore. Maybe a static column was renamed.
+                }
+            }
+
+            // Add hidden columns we still remember from a previous session
+            for (int i = 0; i < oldHiddenNames.length; i++) {
+                ColumnDef def = columnData.getColumn(oldHiddenNames[i]);
+                if (def != null) {
+                    restoredData.addColumn(def.name, def.width, false, def.resizable, def.moveable);
+                } else if (oldDynamicColumns.contains(oldHiddenNames[i])) {
+                    restoredData.addColumn(oldHiddenNames[i], DYNAMIC_COLUMN_WIDTH, false, true, true);
+                    dynamicColumns.add(oldHiddenNames[i]);
+                } else {
+                    // Ignore. Maybe a static column was renamed.
+                }
+            }
+
+            // Ensure that any newly introduced columns remain known (to the right for now)
+            for (ColumnDef def : columnData.getColumns()) {
+                if (restoredData.getColumn(def.name) == null) {
+                    restoredData.addColumn(def.name, def.width, def.visible, def.resizable, def.moveable);
+                }
+            }
+
+            columnData = restoredData;
+        }
     }
 
     public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
@@ -413,8 +556,9 @@ public class CommandHistoryView extends ViewPart {
 
                 if (!dynamicColumns.contains(shortName)) {
                     dynamicColumns.add(shortName);
-                    visibleColumns.add(shortName);
-                    createColumns(tableViewer.getTable().getColumns(), new int[0]);
+                    columnData.addColumn(shortName, 90);
+                    syncCurrentWidthsToModel();
+                    createColumns();
                 }
             }
         }
@@ -425,7 +569,7 @@ public class CommandHistoryView extends ViewPart {
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {
-        SelectionAdapter selectionAdapter = new SelectionAdapter() {
+        return new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 tableViewerComparator.setColumn(column);
@@ -435,7 +579,6 @@ public class CommandHistoryView extends ViewPart {
                 tableViewer.refresh();
             }
         };
-        return selectionAdapter;
     }
 
     @Override

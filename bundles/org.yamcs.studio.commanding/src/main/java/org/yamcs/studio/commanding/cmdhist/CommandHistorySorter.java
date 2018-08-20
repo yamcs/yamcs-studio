@@ -10,14 +10,14 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableColumn;
 
-public class CommandHistoryViewerComparator extends ViewerComparator {
+public class CommandHistorySorter extends ViewerComparator {
 
     private String currentColumn;
     private boolean ascending;
 
-    public CommandHistoryViewerComparator() {
+    public CommandHistorySorter() {
         currentColumn = CommandHistoryView.COL_T;
-        ascending = false;
+        ascending = true;
     }
 
     public int getDirection() {
@@ -42,13 +42,20 @@ public class CommandHistoryViewerComparator extends ViewerComparator {
         case CommandHistoryView.COL_COMMAND:
             rc = STRING_COMPARATOR.compare(r1.getCommandString(), r2.getCommandString());
             break;
-        case CommandHistoryView.COL_SRC_ID:
+        case CommandHistoryView.COL_ORIGIN_ID:
             rc = INTEGER_COMPARATOR.compare(r1.getSequenceNumber(), r2.getSequenceNumber());
             break;
-        case CommandHistoryView.COL_SRC:
+        case CommandHistoryView.COL_USER:
+            rc = STRING_COMPARATOR.compare(r1.getUsername(), r2.getUsername());
+            if (rc == 0) {
+                rc = LONG_COMPARATOR.compare(r1.getRawGenerationTime(), r2.getRawGenerationTime());
+            }
+            break;
+        case CommandHistoryView.COL_ORIGIN:
             rc = STRING_COMPARATOR.compare(r1.getOrigin(), r2.getOrigin());
-            if (rc == 0)
+            if (rc == 0) {
                 rc = STRING_COMPARATOR.compare(r1.getUsername(), r2.getUsername());
+            }
             break;
         case CommandHistoryView.COL_SEQ_ID:
             rc = STRING_COMPARATOR.compare(r1.getFinalSequenceCount(), r2.getFinalSequenceCount());
@@ -67,4 +74,37 @@ public class CommandHistoryViewerComparator extends ViewerComparator {
 
         return ascending ? rc : -rc;
     }
+
+    /*public void saveState(IDialogSettings settings) {
+        if (settings == null) {
+            return;
+        }
+    
+        for (int i = 0; i < priorities.length; i++) {
+            settings.put("priority" + i, priorities[i]);
+            settings.put("direction" + i, directions[i]);
+        }
+    }
+    
+    public void restoreState(IDialogSettings settings) {
+        if (settings == null) {
+            return;
+        }
+    
+        try {
+            for (int i = 0; i < priorities.length; i++) {
+                priorities[i] = settings.getInt("priority" + i);
+                directions[i] = settings.getInt("direction" + i);
+            }
+        } catch (NumberFormatException e) {
+            resetState();
+        }
+    }
+    
+    public void resetState() {
+        priorities = new int[DEFAULT_PRIORITIES.length];
+        System.arraycopy(DEFAULT_PRIORITIES, 0, priorities, 0, priorities.length);
+        directions = new int[DEFAULT_DIRECTIONS.length];
+        System.arraycopy(DEFAULT_DIRECTIONS, 0, directions, 0, directions.length);
+    }*/
 }
