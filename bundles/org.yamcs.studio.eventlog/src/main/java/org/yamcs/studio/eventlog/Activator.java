@@ -1,5 +1,6 @@
 package org.yamcs.studio.eventlog;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -28,5 +29,14 @@ public class Activator extends AbstractUIPlugin {
 
     public ImageDescriptor getImageDescriptor(String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
+
+    public IDialogSettings getCommandHistoryTableSettings() {
+        IDialogSettings settings = getDialogSettings();
+        IDialogSettings section = settings.getSection("eventlog-table");
+        if (section == null) {
+            section = settings.addNewSection("eventlog-table");
+        }
+        return section;
     }
 }

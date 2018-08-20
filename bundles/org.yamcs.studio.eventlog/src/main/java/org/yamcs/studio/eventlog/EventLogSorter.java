@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 
-public class EventLogViewerComparator extends ViewerComparator {
+public class EventLogSorter extends ViewerComparator {
 
     private String currentColumn;
     private boolean ascending;
@@ -58,7 +58,7 @@ public class EventLogViewerComparator extends ViewerComparator {
         }
     };
 
-    public EventLogViewerComparator() {
+    public EventLogSorter() {
         currentColumn = EventLogTableViewer.COL_GENERATION;
         ascending = true;
     }

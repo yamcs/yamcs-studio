@@ -22,6 +22,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
@@ -243,7 +244,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
      * Returns the collection of currently visible events (sorted as is visible)
      */
     public List<Event> getSortedEvents() {
-        EventLogViewerComparator comparator = tableViewer.getComparator();
+        EventLogSorter comparator = tableViewer.getComparator();
 
         Event[] allEvents = tableContentProvider.getElements(null);
         Arrays.sort(allEvents, (o1, o2) -> {
@@ -260,5 +261,9 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().removeInstanceListener(this);
         super.dispose();
+    }
+
+    public void openConfigureColumnsDialog(Shell shell) {
+        tableViewer.openConfigureColumnsDialog(shell);
     }
 }
