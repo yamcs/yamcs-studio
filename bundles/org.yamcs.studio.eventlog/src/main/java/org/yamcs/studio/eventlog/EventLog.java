@@ -114,6 +114,14 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
 
         // Listen to v_scroll to autotoggle scroll lock
         tableViewer.getTable().getVerticalBar().addListener(SWT.Selection, evt -> {
+
+            String sortColumn = tableViewer.getTable().getSortColumn().getText();
+            boolean up = (tableViewer.getTable().getSortDirection() == SWT.UP);
+
+            if (!EventLogTableViewer.COL_GENERATION.equals(sortColumn)) {
+                return;
+            }
+
             // User controls sort direction, so events may be inserted anywhere really.
             // Probably the most intuitive, is to autolock if the user is either at the very top or the very bottom of
             // the scrollbar.
@@ -126,7 +134,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
             Command command = service.getCommand(EventLog.CMD_SCROLL_LOCK);
             State lockState = command.getState(RegistryToggleState.STATE_ID);
             boolean locked = ((Boolean) lockState.getValue()).booleanValue();
-            boolean onEdge = sel <= min || sel + thumb >= max;
+            boolean onEdge = (sel <= min && !up) || (sel + thumb >= max && up);
 
             if (locked && onEdge) {
                 lockState.setValue(false);
