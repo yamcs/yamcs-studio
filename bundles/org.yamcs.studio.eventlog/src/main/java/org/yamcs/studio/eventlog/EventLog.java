@@ -9,6 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
@@ -19,8 +20,10 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
@@ -69,9 +72,26 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         gl.verticalSpacing = 0;
         setLayout(gl);
 
-        Text searchbox = new Text(this, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
+        Composite filterBar = new Composite(this, SWT.NONE);
+        filterBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        gl = new GridLayout(4, false);
+        gl.marginHeight = 0;
+        gl.verticalSpacing = 0;
+        filterBar.setLayout(gl);
+
+        Label filterLabel = new Label(filterBar, SWT.NONE);
+        filterLabel.setText("Filter:");
+
+        Text searchbox = new Text(filterBar, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
         searchbox.setMessage("type filter text");
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        Label severityLabel = new Label(filterBar, SWT.NONE);
+        severityLabel.setText("Severity:");
+
+        Combo severityCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
+        severityCombo.setItems("INFO", "WATCH", "WARNING", "DISTRESS", "CRITICAL", "SEVERE");
+        severityCombo.select(0);
 
         Composite tableViewerWrapper = new Composite(this, SWT.NONE);
         tableViewerWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -150,6 +170,18 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
                 Display.getDefault().syncExec(() -> addEvents(eventBatch));
             }
         }, TABLE_UPDATE_RATE, TABLE_UPDATE_RATE, TimeUnit.MILLISECONDS);
+
+        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        plugin.getPreferenceStore().addPropertyChangeListener(evt -> {
+            if (evt.getProperty().equals(PreferencePage.PREF_RULES)) {
+                System.out.println("Got a pref change " + evt.getNewValue());
+                List<ColoringRule> rules = plugin.composeColoringRules((String) evt.getNewValue());
+                for (EventLogItem item : tableContentProvider.getElements(null)) {
+                    item.colorize(rules);
+                }
+                tableViewer.refresh();
+            }
+        });
     }
 
     private void updateState() {
@@ -246,12 +278,12 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     public List<Event> getSortedEvents() {
         EventLogSorter comparator = tableViewer.getComparator();
 
-        Event[] allEvents = tableContentProvider.getElements(null);
-        Arrays.sort(allEvents, (o1, o2) -> {
+        EventLogItem[] allItems = tableContentProvider.getElements(null);
+        Arrays.sort(allItems, (o1, o2) -> {
             return comparator.compare(tableViewer, o1, o2);
         });
 
-        return Arrays.asList(allEvents);
+        return Arrays.asList(allItems).stream().map(item -> item.event).collect(Collectors.toList());
     }
 
     @Override

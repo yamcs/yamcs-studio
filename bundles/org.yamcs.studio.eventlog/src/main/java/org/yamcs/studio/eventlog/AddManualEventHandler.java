@@ -32,7 +32,7 @@ public class AddManualEventHandler extends AbstractHandler {
             if (sel != null && sel instanceof IStructuredSelection) {
                 IStructuredSelection selection = (IStructuredSelection) sel;
                 Iterator<?> it = selection.iterator();
-                Event rec = (Event) it.next();
+                Event rec = ((EventLogItem) it.next()).event;
                 long generationTime = rec.getGenerationTime();
 
                 AddManualEventDialog addManualEventDialog = new AddManualEventDialog(part.getSite().getShell(),

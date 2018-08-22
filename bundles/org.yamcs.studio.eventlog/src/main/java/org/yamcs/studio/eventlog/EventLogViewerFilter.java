@@ -18,8 +18,8 @@ public class EventLogViewerFilter extends ViewerFilter {
     }
 
     private boolean elementMatches(Object element) {
-        if (element instanceof Event) {
-            Event event = (Event) element;
+        if (element instanceof EventLogItem) {
+            Event event = ((EventLogItem) element).event;
             if (event.getMessage().matches(regex)) {
                 return true;
             }

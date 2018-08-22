@@ -79,8 +79,8 @@ public class EventLogSorter extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
-        Event r1 = (Event) o1;
-        Event r2 = (Event) o2;
+        Event r1 = ((EventLogItem) o1).event;
+        Event r2 = ((EventLogItem) o2).event;
         int rc;
         switch (currentColumn) {
         case EventLogTableViewer.COL_SEVERITY:

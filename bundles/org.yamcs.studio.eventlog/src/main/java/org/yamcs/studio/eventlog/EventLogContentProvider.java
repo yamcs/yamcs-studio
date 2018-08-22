@@ -1,10 +1,10 @@
 package org.yamcs.studio.eventlog;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -16,11 +16,11 @@ import org.yamcs.protobuf.Yamcs.Event;
 
 public class EventLogContentProvider implements IStructuredContentProvider {
 
-    private Map<EventId, Event> eventsById = new LinkedHashMap<>();
+    private Set<EventLogItem> items = new HashSet<>();
     private TableViewer tableViewer;
     private boolean scrollLock;
 
-    private Event lastAddedEvent;
+    private EventLogItem lastAddedEvent;
 
     public EventLogContentProvider(TableViewer tableViewer) {
         this.tableViewer = tableViewer;
@@ -31,22 +31,25 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     @Override
-    public Event[] getElements(Object inputElement) {
-        return eventsById.values().toArray(new Event[0]);
+    public EventLogItem[] getElements(Object inputElement) {
+        return items.toArray(new EventLogItem[0]);
     }
 
     public void addEvent(Event event) {
-        EventId eventId = new EventId(event);
+        EventLogItem item = new EventLogItem(event);
 
-        boolean update = eventsById.containsKey(eventId);
-        eventsById.put(eventId, event);
+        EventLogPlugin plugin = EventLogPlugin.getDefault();
+        item.colorize(plugin.loadColoringRules());
+
+        boolean update = items.contains(item);
+        items.add(item);
 
         if (update) {
             tableViewer.update(event, null); // Null, means all properties
-            maybeSelectAndReveal(event);
+            maybeSelectAndReveal(item);
         } else {
             tableViewer.add(event);
-            maybeSelectAndReveal(event);
+            maybeSelectAndReveal(item);
         }
     }
 
@@ -58,17 +61,22 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             return;
         }
 
-        List<Event> updated = new ArrayList<>();
-        List<Event> added = new ArrayList<>();
+        EventLogPlugin plugin = EventLogPlugin.getDefault();
 
-        events.forEach(event -> {
-            EventId eventId = new EventId(event);
-            Event prevEvent = eventsById.put(eventId, event);
-            if (prevEvent == null) {
-                added.add(event);
+        List<EventLogItem> updated = new ArrayList<>();
+        List<EventLogItem> added = new ArrayList<>();
+
+        List<EventLogItem> newItems = events.stream()
+                .map(EventLogItem::new).collect(Collectors.toList());
+
+        newItems.forEach(newItem -> {
+            newItem.colorize(plugin.loadColoringRules());
+            if (items.contains(newItem)) {
+                updated.add(newItem);
             } else {
-                updated.add(event);
+                added.add(newItem);
             }
+            items.add(newItem);
         });
 
         if (increment) {
@@ -79,12 +87,12 @@ public class EventLogContentProvider implements IStructuredContentProvider {
             tableViewer.refresh();
         }
 
-        lastAddedEvent = events.get(events.size() - 1);
+        lastAddedEvent = newItems.get(newItems.size() - 1);
 
         maybeSelectAndReveal(lastAddedEvent);
     }
 
-    private void maybeSelectAndReveal(Event event) {
+    private void maybeSelectAndReveal(EventLogItem event) {
         if (!scrollLock) {
             IStructuredSelection sel = new StructuredSelection(event);
             tableViewer.setSelection(sel, true);
@@ -99,9 +107,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         // TODO not sure if this is the recommended way to delete all. Need to verify
         BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
             tableViewer.getTable().setRedraw(false);
-            Collection<Event> events = eventsById.values();
-            tableViewer.remove(events);
-            eventsById.clear();
+            tableViewer.remove(items);
+            items.clear();
             tableViewer.getTable().setRedraw(true);
         });
     }

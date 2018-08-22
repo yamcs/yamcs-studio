@@ -20,7 +20,7 @@ public class ShowEventDetailsHandler extends AbstractHandler {
             IStructuredSelection selection = (IStructuredSelection) sel;
             Iterator<?> it = selection.iterator();
             if (it.hasNext()) {
-                Event rec = (Event) it.next();
+                Event rec = ((EventLogItem) it.next()).event;
                 Shell shell = HandlerUtil.getActiveShellChecked(event);
                 EventDetailsDialog dialog = new EventDetailsDialog(shell, rec);
                 dialog.create();

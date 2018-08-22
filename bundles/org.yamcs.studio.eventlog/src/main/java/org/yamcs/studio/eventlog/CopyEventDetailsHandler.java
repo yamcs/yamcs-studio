@@ -35,7 +35,7 @@ public class CopyEventDetailsHandler extends AbstractHandler {
             StringBuilder text = new StringBuilder();
             Iterator<?> it = selection.iterator();
             while (it.hasNext()) {
-                Event rec = (Event) it.next();
+                Event rec = ((EventLogItem) it.next()).event;
                 switch (property) {
                 case PARAM_MESSAGE:
                     text.append(rec.getMessage());

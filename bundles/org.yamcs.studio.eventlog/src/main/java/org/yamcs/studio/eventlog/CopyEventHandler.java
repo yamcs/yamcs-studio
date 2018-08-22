@@ -26,7 +26,7 @@ public class CopyEventHandler extends AbstractHandler {
                     "Severity\tMessage\tType\tSource\tGeneration\tReception\tSequence Number\n");
             Iterator<?> it = selection.iterator();
             while (it.hasNext()) {
-                Event rec = (Event) it.next();
+                Event rec = ((EventLogItem) it.next()).event;
 
                 text.append(rec.getSeverity())
                         .append("\t").append(rec.getMessage())

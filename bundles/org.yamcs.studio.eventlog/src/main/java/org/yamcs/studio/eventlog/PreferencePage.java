@@ -11,12 +11,13 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     public static final String PREF_LINECOUNT = "events.nbMessageLineToDisplay";
+    public static final String PREF_RULES = "rules.list";
 
-    private IntegerFieldEditor nbMessageLineToDisplay;
+    private IntegerFieldEditor messageLineCount;
 
     public PreferencePage() {
-        super(FieldEditorPreferencePage.GRID);
-        setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        super(GRID);
+        setPreferenceStore(EventLogPlugin.getDefault().getPreferenceStore());
     }
 
     @Override
@@ -26,34 +27,32 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
     @Override
     protected void createFieldEditors() {
         Composite parent = getFieldEditorParent();
-        nbMessageLineToDisplay = new IntegerFieldEditor(PREF_LINECOUNT,
+
+        ColoringRulesFieldEditor ruleEditor = new ColoringRulesFieldEditor(PREF_RULES,
+                parent);
+        addField(ruleEditor);
+
+        messageLineCount = new IntegerFieldEditor(PREF_LINECOUNT,
                 "Number of lines per event message (0: unlimited)", parent);
-        addField(nbMessageLineToDisplay);
+        addField(messageLineCount);
     }
 
     @Override
     public boolean performOk() {
-        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        IPreferenceStore store = EventLogPlugin.getDefault().getPreferenceStore();
 
-        boolean propertiesChanged = nbMessageLineToDisplay.getIntValue() != store.getInt(PREF_LINECOUNT);
+        boolean propertiesChanged = messageLineCount.getIntValue() != store.getInt(PREF_LINECOUNT);
 
         // Save to store
         boolean ret = super.performOk();
 
         if (propertiesChanged) {
-            warningApply();
+            MessageDialog dialog = new MessageDialog(getShell(), "Apply changes", null,
+                    "For Event Log preferences to take effect, close the Event Log view an re-open it (menu Window->Show View->Event Log)",
+                    MessageDialog.INFORMATION, new String[] { "OK" }, 0);
+            dialog.open();
         }
 
         return ret;
-    }
-
-    private static void warningApply() {
-        MessageDialog dialog = new MessageDialog(
-                null,
-                "Apply changes",
-                null,
-                "For Event Log preferences to take effect, close the Event Log view an re-open it (menu Window->Show View->Event Log)",
-                MessageDialog.INFORMATION, new String[] { "OK" }, 0);
-        dialog.open();
     }
 }

@@ -1,6 +1,8 @@
 package org.yamcs.studio.eventlog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -48,12 +50,13 @@ public class EventLogTableViewer extends TableViewer {
     private Image criticalIcon;
     private Image severeIcon;
 
-    private Color errorColor;
-    private Color warningColor;
-
     private int messageLineCount;
 
     private ColumnData columnData;
+
+    private Map<RGB, Color> colorCache = new HashMap<>();
+
+    private ResourceManager resourceManager;
 
     private EventLogSorter comparator;
     private ControlAdapter columnResizeListener = new ControlAdapter() {
@@ -69,9 +72,9 @@ public class EventLogTableViewer extends TableViewer {
 
         setUseHashlookup(true);
 
-        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
-        Activator plugin = Activator.getDefault();
+        EventLogPlugin plugin = EventLogPlugin.getDefault();
         infoIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level0s.png"));
         watchIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level1s.png"));
         warningIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level2s.png"));
@@ -79,10 +82,7 @@ public class EventLogTableViewer extends TableViewer {
         criticalIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level4s.png"));
         severeIcon = resourceManager.createImage(plugin.getImageDescriptor("icons/eview16/level5s.png"));
 
-        errorColor = resourceManager.createColor(new RGB(255, 0, 0));
-        warningColor = resourceManager.createColor(new RGB(255, 127, 0));
-
-        messageLineCount = EventLogPreferences.getMessageLineCount();
+        messageLineCount = plugin.getMessageLineCount();
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -132,23 +132,21 @@ public class EventLogTableViewer extends TableViewer {
     private class EventLogColumnLabelProvider extends ColumnLabelProvider {
 
         @Override
-        public Color getForeground(Object element) {
-            Event event = (Event) element;
-            if (event.hasSeverity()) {
-                switch (event.getSeverity()) {
-                case INFO:
-                    return null;
-                case WATCH:
-                case WARNING:
-                    return warningColor;
-                case DISTRESS:
-                case CRITICAL:
-                case SEVERE:
-                case ERROR:
-                    return errorColor;
-                }
+        public Color getBackground(Object element) {
+            EventLogItem item = (EventLogItem) element;
+            if (item.bg != null) {
+                return colorCache.computeIfAbsent(item.bg, rgb -> resourceManager.createColor(rgb));
             }
-            return null;
+            return super.getBackground(element);
+        }
+
+        @Override
+        public Color getForeground(Object element) {
+            EventLogItem item = (EventLogItem) element;
+            if (item.fg != null) {
+                return colorCache.computeIfAbsent(item.fg, rgb -> resourceManager.createColor(rgb));
+            }
+            return super.getForeground(element);
         }
     }
 
@@ -197,7 +195,7 @@ public class EventLogTableViewer extends TableViewer {
 
                     @Override
                     public Image getImage(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         if (event.hasSeverity()) {
                             switch (event.getSeverity()) {
                             case INFO:
@@ -225,7 +223,7 @@ public class EventLogTableViewer extends TableViewer {
 
                     @Override
                     public String getToolTipText(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         if (event.hasSeverity()) {
                             return "" + event.getSeverity();
                         } else {
@@ -242,7 +240,7 @@ public class EventLogTableViewer extends TableViewer {
                 generationColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         return YamcsUIPlugin.getDefault().formatInstant(event.getGenerationTime());
                     }
                 });
@@ -260,7 +258,7 @@ public class EventLogTableViewer extends TableViewer {
                 typeColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         return event.hasType() ? event.getType() : "";
                     }
                 });
@@ -273,7 +271,7 @@ public class EventLogTableViewer extends TableViewer {
                 sourceColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         return event.hasSource() ? event.getSource() : "";
                     }
                 });
@@ -286,7 +284,7 @@ public class EventLogTableViewer extends TableViewer {
                 messageColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         String message = event.getMessage();
                         if (messageLineCount > 0) {
                             String lineSeparator = "\n";
@@ -321,7 +319,7 @@ public class EventLogTableViewer extends TableViewer {
                 receptionColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         return YamcsUIPlugin.getDefault().formatInstant(event.getReceptionTime());
                     }
                 });
@@ -334,7 +332,7 @@ public class EventLogTableViewer extends TableViewer {
                 seqNumColumn.setLabelProvider(new EventLogColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Event event = (Event) element;
+                        Event event = ((EventLogItem) element).event;
                         return "" + event.getSeqNumber();
                     }
                 });
@@ -344,7 +342,7 @@ public class EventLogTableViewer extends TableViewer {
 
         table.setLayout(layout);
         table.setHeaderVisible(true);
-        table.setLinesVisible(true);
+        table.setLinesVisible(false);
         table.layout(true); // !! Ensures column widths are applied when recreating columns
         refresh(); // !! Ensures table renders correctly for old data when adding a new column
 
@@ -352,7 +350,7 @@ public class EventLogTableViewer extends TableViewer {
     }
 
     private void saveColumnState() {
-        IDialogSettings settings = Activator.getDefault().getCommandHistoryTableSettings();
+        IDialogSettings settings = EventLogPlugin.getDefault().getCommandHistoryTableSettings();
 
         List<ColumnDef> visibleColumns = columnData.getVisibleColumns();
         String[] visibleNames = visibleColumns.stream().map(c -> c.name).toArray(String[]::new);
@@ -369,7 +367,7 @@ public class EventLogTableViewer extends TableViewer {
     }
 
     private void restoreColumnState() {
-        IDialogSettings settings = Activator.getDefault().getCommandHistoryTableSettings();
+        IDialogSettings settings = EventLogPlugin.getDefault().getCommandHistoryTableSettings();
 
         String[] oldVisibleNames = settings.getArray("visible-cols");
         if (oldVisibleNames != null) {
