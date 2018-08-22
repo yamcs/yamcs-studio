@@ -22,11 +22,12 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
     private SashForm sashForm;
 
-    private Label sourceLabel;
+    private Label originLabel;
     private Label dateLabel;
+    private Label userLabel;
     private Label completedImageLabel;
     private Label completedLabel;
-    private Label sourceIdLabel;
+    private Label originIdLabel;
     private Label binaryLabel;
     private Label commentLabel;
     private Text commandStringText;
@@ -194,18 +195,25 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         completedLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
-        label.setText("Source");
-        sourceLabel = new Label(textContainer, SWT.NONE);
+        label.setText("User");
+        userLabel = new Label(textContainer, SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
-        sourceLabel.setLayoutData(gd);
+        userLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
-        label.setText("Source ID");
-        sourceIdLabel = new Label(textContainer, SWT.NONE);
+        label.setText("Origin");
+        originLabel = new Label(textContainer, SWT.NONE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
-        sourceIdLabel.setLayoutData(gd);
+        originLabel.setLayoutData(gd);
+
+        label = new Label(textContainer, SWT.NONE);
+        label.setText("Origin ID");
+        originIdLabel = new Label(textContainer, SWT.NONE);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        originIdLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Binary");
@@ -267,12 +275,15 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     private void updateProperties() {
         dateLabel.setText(rec.getGenerationTime());
         commandStringText.setText(rec.getCommandString());
+
+        userLabel.setText(rec.getUsername());
+
         if (rec.getOrigin() != null && !"".equals(rec.getOrigin())) {
-            sourceLabel.setText(rec.getUsername() + "@" + rec.getOrigin());
+            originLabel.setText(rec.getOrigin());
         } else {
-            sourceLabel.setText(rec.getUsername());
+            originLabel.setText("-");
         }
-        sourceIdLabel.setText(String.valueOf(rec.getSequenceNumber()));
+        originIdLabel.setText(String.valueOf(rec.getSequenceNumber()));
 
         if (rec.getComment() != null) {
             commentLabel.setText(rec.getComment());

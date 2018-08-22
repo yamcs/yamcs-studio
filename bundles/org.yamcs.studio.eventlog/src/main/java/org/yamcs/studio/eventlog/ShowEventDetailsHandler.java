@@ -8,21 +8,24 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Yamcs.Event;
 
 public class ShowEventDetailsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
+        IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
+        EventLogView view = (EventLogView) part;
+
         ISelection sel = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
         if (sel != null && sel instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) sel;
             Iterator<?> it = selection.iterator();
             if (it.hasNext()) {
-                Event rec = ((EventLogItem) it.next()).event;
+                EventLogItem rec = (EventLogItem) it.next();
                 Shell shell = HandlerUtil.getActiveShellChecked(event);
-                EventDetailsDialog dialog = new EventDetailsDialog(shell, rec);
+                EventDetailsDialog dialog = new EventDetailsDialog(shell, view.getEventLog(), rec);
                 dialog.create();
                 dialog.open();
             }

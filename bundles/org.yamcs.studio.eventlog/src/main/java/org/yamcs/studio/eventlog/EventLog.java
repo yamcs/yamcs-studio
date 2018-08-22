@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -246,6 +247,28 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         Display.getDefault().asyncExec(() -> clear());
     }
 
+    public EventLogItem getPreviousRecord(EventLogItem rec) {
+        if (tableViewer.getTable().getSelectionCount() > 0) {
+            int[] indices = tableViewer.getTable().getSelectionIndices();
+            if (indices[0] > 0) {
+                int prevIndex = indices[0] - 1;
+                return (EventLogItem) tableViewer.getElementAt(prevIndex);
+            }
+        }
+        return null;
+    }
+
+    public EventLogItem getNextRecord(EventLogItem rec) {
+        if (tableViewer.getTable().getSelectionCount() > 0) {
+            int[] indices = tableViewer.getTable().getSelectionIndices();
+            if (indices[0] < tableViewer.getTable().getItemCount() - 1) {
+                int nextIndex = indices[0] + 1;
+                return (EventLogItem) tableViewer.getElementAt(nextIndex);
+            }
+        }
+        return null;
+    }
+
     private void fetchLatestEvents() {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         EventCatalogue.getInstance().fetchLatestEvents(instance).whenComplete((data, exc) -> {
@@ -300,6 +323,10 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         });
 
         return Arrays.asList(allItems).stream().map(item -> item.event).collect(Collectors.toList());
+    }
+
+    public TableViewer getTableViewer() {
+        return tableViewer;
     }
 
     @Override
