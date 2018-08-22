@@ -3,6 +3,7 @@ package org.yamcs.studio.editor.base;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,20 +40,31 @@ public class Application implements IApplication {
     @Override
     public Object start(IApplicationContext context) throws Exception {
 
+        // Workspace resolution:
+        // 1. Start with ~/yamcs-studio
+        // 2. Override with -Dworkspace.default vm arg (if specified)
+        // 3. Override with last used workspace (via ~/.config/yamcs-studio/active_workspace (if present)
+        // 4. Override with -workspace command option (if specified)
+
         Path userHome = Paths.get(System.getProperty("user.home"));
-
-        String workspace = System.getProperty("workspace.default");
-        if (workspace == null) {
-            workspace = userHome.resolve("yamcs-studio").toString();
-        }
-
-        boolean workspacePrompt = false;
 
         // The location ~/.config conforms to XDG.
         // For windows it'd be more standard if we could write to '~\Local Settings\Application Data' but I'm
         // not aware of cross-platform API for this.
         Path userDataDir = userHome.resolve(".config").resolve("yamcs-studio");
         Files.createDirectories(userDataDir);
+
+        String workspace = System.getProperty("workspace.default");
+        if (workspace == null) {
+            workspace = userHome.resolve("yamcs-studio").toString();
+        }
+
+        Path activeWorkspaceFile = userDataDir.resolve("active_workspace");
+        if (Files.exists(activeWorkspaceFile)) {
+            workspace = new String(Files.readAllBytes(activeWorkspaceFile), StandardCharsets.UTF_8).trim();
+        }
+
+        boolean workspacePrompt = false;
 
         configureLogging(userDataDir);
 
@@ -83,6 +95,7 @@ public class Application implements IApplication {
                 return EXIT_OK;
             }
 
+            Files.write(activeWorkspaceFile, workspace.getBytes(StandardCharsets.UTF_8));
             openProjects();
 
             return runWorkbench(display, context);
