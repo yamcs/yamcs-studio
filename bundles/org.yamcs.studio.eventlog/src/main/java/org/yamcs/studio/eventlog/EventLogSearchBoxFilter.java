@@ -1,26 +1,26 @@
 package org.yamcs.studio.eventlog;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.yamcs.protobuf.Yamcs.Event;
 
-public class EventLogViewerFilter extends ViewerFilter {
+public class EventLogSearchBoxFilter extends ViewerFilter {
 
-    private String regex = ".*";
+    private Pattern pattern = Pattern.compile(".*");
 
     public void setSearchTerm(String searchTerm) {
-        regex = "(?i:.*" + searchTerm + ".*)";
+        pattern = Pattern.compile("(?i:.*" + searchTerm + ".*)");
     }
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        return elementMatches(element);
-    }
-
-    private boolean elementMatches(Object element) {
         if (element instanceof EventLogItem) {
             Event event = ((EventLogItem) element).event;
-            if (event.getMessage().matches(regex)) {
+            if (pattern.matcher(event.getMessage()).matches()
+                    || (event.hasType() && pattern.matcher(event.getType()).matches())
+                    || (event.hasSource() && pattern.matcher(event.getSource()).matches())) {
                 return true;
             }
         }

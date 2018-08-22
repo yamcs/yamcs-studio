@@ -34,6 +34,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.yamcs.protobuf.Rest.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.EventCatalogue;
@@ -136,8 +137,8 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
             }
         });
 
-        EventLogViewerFilter filter = new EventLogViewerFilter();
-        tableViewer.addFilter(filter);
+        EventLogSearchBoxFilter searchBoxFilter = new EventLogSearchBoxFilter();
+        tableViewer.addFilter(searchBoxFilter);
         Debouncer debouncer = new Debouncer(tableUpdater);
         searchbox.addKeyListener(new KeyAdapter() {
             @Override
@@ -151,11 +152,19 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
                 } else {
                     String searchString = searchbox.getText();
                     debouncer.debounce(() -> {
-                        filter.setSearchTerm(searchString);
+                        searchBoxFilter.setSearchTerm(searchString);
                         getDisplay().syncExec(() -> tableViewer.refresh());
                     }, 400, TimeUnit.MILLISECONDS);
                 }
             }
+        });
+
+        EventLogSeverityFilter severityFilter = new EventLogSeverityFilter();
+        tableViewer.addFilter(severityFilter);
+        severityCombo.addListener(SWT.Selection, evt -> {
+            EventSeverity severity = EventSeverity.valueOf(severityCombo.getText());
+            severityFilter.setMinimumSeverity(severity);
+            tableViewer.refresh();
         });
 
         updateState();
@@ -174,7 +183,6 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         EventLogPlugin plugin = EventLogPlugin.getDefault();
         plugin.getPreferenceStore().addPropertyChangeListener(evt -> {
             if (evt.getProperty().equals(PreferencePage.PREF_RULES)) {
-                System.out.println("Got a pref change " + evt.getNewValue());
                 List<ColoringRule> rules = plugin.composeColoringRules((String) evt.getNewValue());
                 for (EventLogItem item : tableContentProvider.getElements(null)) {
                     item.colorize(rules);
