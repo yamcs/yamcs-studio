@@ -41,7 +41,11 @@ public class Application implements IApplication {
 
         Path userHome = Paths.get(System.getProperty("user.home"));
 
-        String workspace = userHome.resolve("yamcs-studio").toString();
+        String workspace = System.getProperty("workspace.default");
+        if (workspace == null) {
+            workspace = userHome.resolve("yamcs-studio").toString();
+        }
+
         boolean workspacePrompt = false;
 
         // The location ~/.config conforms to XDG.
