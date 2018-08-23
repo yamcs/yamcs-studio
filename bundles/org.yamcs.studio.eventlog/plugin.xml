@@ -168,7 +168,6 @@
                icon="icons/obj16/fetch.png"
                label="Fetch Events"
                style="push"/>
-         <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
       </menuContribution>
       
       <menuContribution locationURI="popup:org.yamcs.studio.eventlog.EventLogView">

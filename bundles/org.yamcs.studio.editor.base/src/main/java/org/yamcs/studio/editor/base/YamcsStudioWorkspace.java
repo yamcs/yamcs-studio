@@ -3,7 +3,6 @@ package org.yamcs.studio.editor.base;
 import java.io.IOException;
 import java.net.URL;
 
-import org.csstudio.platform.workspace.WorkspaceInfo;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -46,27 +45,26 @@ public class YamcsStudioWorkspace {
         return selectAndLockWorkspace(workspaceUrl, forcePrompt);
     }
 
-    private static boolean selectAndLockWorkspace(URL workspaceSuggestion, boolean promptUser) throws IOException {
-        WorkspaceInfo workspaceInfo = new WorkspaceInfo(workspaceSuggestion, false);
+    private static boolean selectAndLockWorkspace(URL workspaceSuggestion, boolean promptUser)
+            throws IOException {
+
         URL workspaceUrl = workspaceSuggestion;
         while (true) {
             if (promptUser) {
-                String[] recentWorkspaces = getRecentWorkspaces(workspaceInfo);
-                SelectWorkspaceDialog dialog = new SelectWorkspaceDialog(recentWorkspaces);
+                SelectWorkspaceDialog dialog = new SelectWorkspaceDialog();
                 if (dialog.open() == SelectWorkspaceDialog.CANCEL) {
                     return false;
                 } else {
                     String selectedWorkspace = dialog.getSelectedWorkspace();
 
-                    // Update 'recent workspaces' list
-                    workspaceInfo.setSelectedWorkspace(selectedWorkspace);
+                    UserPreferences.updateWorkspaceHistory(selectedWorkspace);
                     workspaceUrl = new URL("file:" + selectedWorkspace);
                 }
             }
 
             // Lock workspace
             if (Platform.getInstanceLocation().set(workspaceUrl, true)) {
-                workspaceInfo.writePersistedData();
+                UserPreferences.updateWorkspaceHistory(workspaceUrl.getFile());
                 return true;
             } else {
                 MessageDialog.openError(null, "Workspace Error", String.format(
@@ -75,13 +73,5 @@ public class YamcsStudioWorkspace {
                 promptUser = true;
             }
         }
-    }
-
-    public static String[] getRecentWorkspaces(WorkspaceInfo workspaceInfo) {
-        String[] recentWorkspaces = new String[workspaceInfo.getWorkspaceCount()];
-        for (int i = 0; i < recentWorkspaces.length; i++) {
-            recentWorkspaces[i] = workspaceInfo.getWorkspace(i);
-        }
-        return recentWorkspaces;
     }
 }

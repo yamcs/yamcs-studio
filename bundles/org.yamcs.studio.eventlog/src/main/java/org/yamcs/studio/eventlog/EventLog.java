@@ -89,7 +89,8 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Label severityLabel = new Label(filterBar, SWT.NONE);
-        severityLabel.setText("Severity:");
+        severityLabel.setText("Level:");
+        severityLabel.setToolTipText("Severity Level");
 
         Combo severityCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
         severityCombo.setItems("INFO", "WATCH", "WARNING", "DISTRESS", "CRITICAL", "SEVERE");

@@ -1,7 +1,5 @@
 package org.yamcs.studio.editor.base;
 
-import org.csstudio.platform.workspace.WorkspaceInfo;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,6 +24,7 @@ public class SwitchWorkspaceAction extends Action implements IWorkbenchAction {
             return;
         }
 
+        UserPreferences.updateWorkspaceHistory(path);
         restart(path);
     }
 
@@ -37,14 +36,9 @@ public class SwitchWorkspaceAction extends Action implements IWorkbenchAction {
     }
 
     private String promptForWorkspace() {
-        WorkspaceInfo workspaceInfo = new WorkspaceInfo(Platform.getInstanceLocation().getURL(), false);
-        String[] recentWorkspaces = YamcsStudioWorkspace.getRecentWorkspaces(workspaceInfo);
-        SelectWorkspaceDialog dialog = new SelectWorkspaceDialog(recentWorkspaces);
+        SelectWorkspaceDialog dialog = new SelectWorkspaceDialog();
         if (dialog.open() == SelectWorkspaceDialog.OK) {
-            String selectedWorkspace = dialog.getSelectedWorkspace();
-            workspaceInfo.setSelectedWorkspace(selectedWorkspace);
-            workspaceInfo.writePersistedData();
-            return workspaceInfo.getSelectedWorkspace();
+            return dialog.getSelectedWorkspace();
         } else {
             return null;
         }
@@ -74,8 +68,9 @@ public class SwitchWorkspaceAction extends Action implements IWorkbenchAction {
 
         // append the vmargs and commands. Assume that these already end in \n
         final String vmargs = System.getProperty("eclipse.vmargs");
-        if (vmargs != null)
+        if (vmargs != null) {
             buf.append(vmargs);
+        }
 
         // append the rest of the args, replacing or adding -data as required
         property = System.getProperty("eclipse.commands");

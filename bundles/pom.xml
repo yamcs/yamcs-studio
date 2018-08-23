@@ -20,7 +20,6 @@
     <module>org.csstudio.swt.widgets</module>
     <module>org.csstudio.ui.util</module>
     <module>org.csstudio.utility.batik</module>
-    <module>org.csstudio.workspace</module>
     <module>org.diirt</module>
 
     <module>org.yamcs.studio.alarms</module>

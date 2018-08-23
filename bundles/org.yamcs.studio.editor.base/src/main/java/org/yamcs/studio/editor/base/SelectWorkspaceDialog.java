@@ -2,6 +2,7 @@ package org.yamcs.studio.editor.base;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -20,14 +21,14 @@ import org.eclipse.swt.widgets.Shell;
 
 public class SelectWorkspaceDialog extends TitleAreaDialog {
 
-    private String[] recentWorkspaces;
+    private List<String> recentWorkspaces;
     private Combo workspaces;
 
     private String selectedWorkspace;
 
-    public SelectWorkspaceDialog(String... recentWorkspaces) {
+    public SelectWorkspaceDialog() {
         super(null);
-        this.recentWorkspaces = recentWorkspaces;
+        this.recentWorkspaces = UserPreferences.readWorkspaceHistory();
 
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }
@@ -75,7 +76,7 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
         gd.horizontalAlignment = SWT.FILL;
         workspaces.setLayoutData(gd);
         // Fill w/ current workspace history, select the first one
-        workspaces.setItems(recentWorkspaces);
+        workspaces.setItems(recentWorkspaces.toArray(new String[0]));
         workspaces.select(0);
 
         Button browse = new Button(parent, SWT.PUSH);
@@ -183,15 +184,18 @@ public class SelectWorkspaceDialog extends TitleAreaDialog {
      */
     private String checkForWorkspacesInSubdirs(File dir) {
         File subdirs[] = dir.listFiles();
-        if (subdirs == null)
+        if (subdirs == null) {
             return null;
+        }
         for (File subdir : subdirs) {
-            if (!subdir.isDirectory())
+            if (!subdir.isDirectory()) {
                 continue;
+            }
             try { // Is there a .metadata file?
                 File meta = new File(subdir.getCanonicalPath() + File.separator + ".metadata");
-                if (meta.exists())
+                if (meta.exists()) {
                     return subdir.getName();
+                }
             } catch (Exception ex) {
                 // Ignore errors. If there's a workspace we can't read, don't worry.
             }

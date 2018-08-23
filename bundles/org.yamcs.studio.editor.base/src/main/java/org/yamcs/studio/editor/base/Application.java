@@ -3,10 +3,10 @@ package org.yamcs.studio.editor.base;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -43,15 +43,12 @@ public class Application implements IApplication {
         // Workspace resolution:
         // 1. Start with ~/yamcs-studio
         // 2. Override with -Dworkspace.default vm arg (if specified)
-        // 3. Override with last used workspace (via ~/.config/yamcs-studio/active_workspace (if present)
+        // 3. Override with last used workspace (via ~/.config/yamcs-studio/workspace_history (if present)
         // 4. Override with -workspace command option (if specified)
 
         Path userHome = Paths.get(System.getProperty("user.home"));
 
-        // The location ~/.config conforms to XDG.
-        // For windows it'd be more standard if we could write to '~\Local Settings\Application Data' but I'm
-        // not aware of cross-platform API for this.
-        Path userDataDir = userHome.resolve(".config").resolve("yamcs-studio");
+        Path userDataDir = UserPreferences.getDataDir();
         Files.createDirectories(userDataDir);
 
         String workspace = System.getProperty("workspace.default");
@@ -59,9 +56,9 @@ public class Application implements IApplication {
             workspace = userHome.resolve("yamcs-studio").toString();
         }
 
-        Path activeWorkspaceFile = userDataDir.resolve("active_workspace");
-        if (Files.exists(activeWorkspaceFile)) {
-            workspace = new String(Files.readAllBytes(activeWorkspaceFile), StandardCharsets.UTF_8).trim();
+        List<String> workspaceHistory = UserPreferences.readWorkspaceHistory();
+        if (!workspaceHistory.isEmpty()) {
+            workspace = workspaceHistory.get(0);
         }
 
         boolean workspacePrompt = false;
@@ -95,7 +92,6 @@ public class Application implements IApplication {
                 return EXIT_OK;
             }
 
-            Files.write(activeWorkspaceFile, workspace.getBytes(StandardCharsets.UTF_8));
             openProjects();
 
             return runWorkbench(display, context);
