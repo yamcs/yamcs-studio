@@ -23,48 +23,37 @@ public abstract class PropertySSHelper {
         return IMPL;
     }
 
-    public abstract PropertyDescriptor getActionsPropertyDescriptor(final String prop_id,
-            final String description, final boolean showHookOption);
+    public abstract PropertyDescriptor getActionsPropertyDescriptor(String prop_id, String description,
+            boolean showHookOption);
 
-    public abstract PropertyDescriptor getBooleanPropertyDescriptor(
-            String prop_id, String description);
+    public abstract PropertyDescriptor getBooleanPropertyDescriptor(String prop_id, String description);
 
-    public abstract PropertyDescriptor getOPIColorPropertyDescriptor(
-            String prop_id, String description);
+    public abstract PropertyDescriptor getOPIColorPropertyDescriptor(String prop_id, String description);
 
-    public abstract PropertyDescriptor getDoublePropertyDescriptor(String prop_id,
-            String description);
+    public abstract PropertyDescriptor getDoublePropertyDescriptor(String prop_id, String description);
 
     public abstract PropertyDescriptor getFilePathPropertyDescriptor(String prop_id,
-            String description, AbstractWidgetModel widgetModel,
-            String[] fileExtensions);
+            String description, AbstractWidgetModel widgetModel, String[] fileExtensions);
 
-    public abstract PropertyDescriptor getOPIFontPropertyDescriptor(String prop_id,
+    public abstract PropertyDescriptor getOPIFontPropertyDescriptor(String prop_id, String description);
+
+    public abstract PropertyDescriptor getIntegerPropertyDescriptor(String prop_id, String description);
+
+    public abstract PropertyDescriptor getMacrosPropertyDescriptor(String prop_id, String description);
+
+    public abstract PropertyDescriptor getPointlistPropertyDescriptor(String prop_id, String description);
+
+    public abstract PropertyDescriptor getRulesPropertyDescriptor(String prop_id, AbstractWidgetModel widgetModel,
             String description);
 
-    public abstract PropertyDescriptor getIntegerPropertyDescriptor(String prop_id,
+    public abstract PropertyDescriptor getScriptPropertyDescriptor(String prop_id, AbstractWidgetModel widgetModel,
             String description);
 
-    public abstract PropertyDescriptor getMacrosPropertyDescriptor(String prop_id,
-            String description);
+    public abstract PropertyDescriptor getStringListPropertyDescriptor(String prop_id, String description);
 
-    public abstract PropertyDescriptor getPointlistPropertyDescriptor(String prop_id,
-            String description);
+    public abstract PropertyDescriptor getMultiLineTextPropertyDescriptor(String prop_id, String description);
 
-    public abstract PropertyDescriptor getRulesPropertyDescriptor(String prop_id,
-            AbstractWidgetModel widgetModel, String description);
-
-    public abstract PropertyDescriptor getScriptPropertyDescriptor(String prop_id,
-            AbstractWidgetModel widgetModel, String description);
-
-    public abstract PropertyDescriptor getStringListPropertyDescriptor(String prop_id,
-            String description);
-
-    public abstract PropertyDescriptor getMultiLineTextPropertyDescriptor(
-            String prop_id, String description);
-
-    public abstract PropertyDescriptor getTextPropertyDescriptor(String prop_id,
-            String description);
+    public abstract PropertyDescriptor getTextPropertyDescriptor(String prop_id, String description);
 
     public abstract PropertyDescriptor getStringTablePropertyDescriptor(String prop_id,
             String description, TitlesProvider titlesProvider,

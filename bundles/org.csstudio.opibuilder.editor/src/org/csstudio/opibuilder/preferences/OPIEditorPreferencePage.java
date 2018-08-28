@@ -10,7 +10,6 @@ package org.csstudio.opibuilder.preferences;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -45,15 +44,6 @@ public class OPIEditorPreferencePage extends FieldEditorPreferencePage implement
         BooleanFieldEditor autoSaveEditor = new BooleanFieldEditor(PreferencesHelper.AUTOSAVE,
                 "Automatically save file before running.", parent);
         addField(autoSaveEditor);
-
-        RadioGroupFieldEditor fontInPixelsEditor = new RadioGroupFieldEditor(
-                PreferencesHelper.FONT_DEFAULT_PIXELS_OR_POINTS,
-                "Default sizing for fonts", 2,
-                new String[][] { { "Points", PreferencesHelper.POINTS },
-                        { "Pixels", PreferencesHelper.PIXELS } },
-                parent, true);
-        addField(fontInPixelsEditor);
-
     }
 
     @Override

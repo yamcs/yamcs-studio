@@ -34,8 +34,8 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class PreferencesHelper {
 
-    public static final String COLOR_FILE = "color_file";
-    public static final String FONT_FILE = "font_file";
+    public static final String COLORS = "colors.list";
+    public static final String FONTS = "fonts.list";
     public static final String RUN_MACROS = "macros";
     public static final String AUTOSAVE = "auto_save";
     public static final String OPI_GUI_REFRESH_CYCLE = "opi_gui_refresh_cycle";
@@ -44,69 +44,21 @@ public class PreferencesHelper {
     public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";
     public static final String PULSING_ALARM_MINOR_PERIOD = "pulsing_alarm_minor_period";
     public static final String PULSING_ALARM_MAJOR_PERIOD = "pulsing_alarm_major_period";
-    public static final String FONT_DEFAULT_PIXELS_OR_POINTS = "font_default_pixels_or_points";
 
     // The widgets that are hidden from palette.
     public static final String HIDDEN_WIDGETS = "hidden_widgets";
 
     private static final char ROW_SEPARATOR = '|';
 
-    public static final String ABOUT_SHOW_LINKS = "about_show_links";
-    public static final String PIXELS = "pixels";
-    public static final String POINTS = "points";
-
-    /**
-     * @param preferenceName
-     *            Preference identifier
-     * @return String from preference system, or <code>null</code>
-     */
-    protected static String getString(final String preferenceName) {
+    protected static String getString(String preferenceName) {
         return getString(preferenceName, null);
     }
 
-    /**
-     * @param preferenceName
-     *            Preference identifier
-     * @param defaultValue
-     *            default value
-     * @return String from preference system, or <code>defaultValue</code> if null
-     */
-    protected static String getString(final String preferenceName, final String defaultValue) {
-        final IPreferencesService service = Platform.getPreferencesService();
+    protected static String getString(String preferenceName, String defaultValue) {
+        IPreferencesService service = Platform.getPreferencesService();
         return service.getString(OPIBuilderPlugin.PLUGIN_ID, preferenceName, defaultValue, null);
     }
 
-    /**
-     * Get the color file path from preference store.
-     * 
-     * @return the color file path. null if not specified.
-     */
-    public static IPath getColorFilePath() {
-        String colorFilePath = getString(COLOR_FILE);
-        if (colorFilePath == null || colorFilePath.trim().isEmpty()) {
-            return null;
-        }
-        return getAbsolutePathOnRepo(colorFilePath);
-    }
-
-    /**
-     * Get the font file path from preference store.
-     * 
-     * @return the color file path. null if not specified.
-     */
-    public static IPath getFontFilePath() {
-        String fontFilePath = getString(FONT_FILE);
-        if (fontFilePath == null || fontFilePath.trim().isEmpty()) {
-            return null;
-        }
-        return getAbsolutePathOnRepo(fontFilePath);
-    }
-
-    /**
-     * Get the schema OPI path from preference store.
-     * 
-     * @return the schema OPI path. null if not specified.
-     */
     public static IPath getSchemaOPIPath() {
         String schemaOPIPath = getString(SCHEMA_OPI);
         if (schemaOPIPath == null || schemaOPIPath.trim().isEmpty()) {
@@ -116,27 +68,23 @@ public class PreferencesHelper {
     }
 
     public static boolean isAutoSaveBeforeRunning() {
-        final IPreferencesService service = Platform.getPreferencesService();
+        IPreferencesService service = Platform.getPreferencesService();
         return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, AUTOSAVE, false, null);
     }
 
     public static Integer getGUIRefreshCycle() {
-        final IPreferencesService service = Platform.getPreferencesService();
+        IPreferencesService service = Platform.getPreferencesService();
         return service.getInt(OPIBuilderPlugin.PLUGIN_ID, OPI_GUI_REFRESH_CYCLE, 100, null);
     }
 
     public static Integer getPulsingAlarmMinorPeriod() {
-        final IPreferencesService service = Platform.getPreferencesService();
+        IPreferencesService service = Platform.getPreferencesService();
         return service.getInt(OPIBuilderPlugin.PLUGIN_ID, PULSING_ALARM_MINOR_PERIOD, 3000, null);
     }
 
     public static Integer getPulsingAlarmMajorPeriod() {
-        final IPreferencesService service = Platform.getPreferencesService();
+        IPreferencesService service = Platform.getPreferencesService();
         return service.getInt(OPIBuilderPlugin.PLUGIN_ID, PULSING_ALARM_MAJOR_PERIOD, 1500, null);
-    }
-
-    public static boolean isDefaultFontSizeInPixels() {
-        return getString(FONT_DEFAULT_PIXELS_OR_POINTS, POINTS).equals(PIXELS);
     }
 
     /**
@@ -162,12 +110,10 @@ public class PreferencesHelper {
             }
         }
         return new LinkedHashMap<>();
-
     }
 
     /**
-     * @return typeId of widgets that should be hidden from palette.
-     * @throws Exception
+     * @return typeId of widgets that should be hidden from the palette.
      */
     public static List<String> getHiddenWidgets() {
         String rawString = getString(HIDDEN_WIDGETS);
@@ -178,6 +124,11 @@ public class PreferencesHelper {
             rawString = "|" + rawString;
         }
 
+        // a hack to hide deprecated native widgets
+        // FDI: Only remove if the example projects no longer make use of it either.
+        rawString = "org.csstudio.opibuilder.widgets.NativeButton|org.csstudio.opibuilder.widgets.NativeText"
+                + rawString;
+
         try {
             String[] parts = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
             return Arrays.asList(parts);
@@ -187,23 +138,19 @@ public class PreferencesHelper {
         }
     }
 
-    /**
-     * @return the python path, null if this preference is not setted.
-     * @throws Exception
-     */
     public static Optional<String> getPythonPath() throws Exception {
-        final String rawString = getString(PYTHON_PATH);
+        String rawString = getString(PYTHON_PATH);
         if (rawString == null || rawString.isEmpty()) {
             return Optional.empty();
         }
-        final String[] rawPaths = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
-        final StringBuilder sb = new StringBuilder();
+        String[] rawPaths = StringSplitter.splitIgnoreInQuotes(rawString, ROW_SEPARATOR, true);
+        StringBuilder sb = new StringBuilder();
         for (String rawPath : rawPaths) {
             if (sb.length() > 0) {
                 sb.append(System.getProperty("path.separator"));
             }
-            final IPath path = new Path(rawPath);
-            final IPath location = ResourceUtil.workspacePathToSysPath(path);
+            IPath path = new Path(rawPath);
+            IPath location = ResourceUtil.workspacePathToSysPath(path);
             if (location != null) {
                 sb.append(location.toOSString());
             } else {
@@ -214,7 +161,7 @@ public class PreferencesHelper {
     }
 
     public static boolean isShowFullScreenDialog() {
-        final IPreferencesService service = Platform.getPreferencesService();
+        IPreferencesService service = Platform.getPreferencesService();
         return service.getBoolean(OPIBuilderPlugin.PLUGIN_ID, SHOW_FULLSCREEN_DIALOG, true, null);
     }
 
@@ -234,9 +181,6 @@ public class PreferencesHelper {
 
     /**
      * Return the absolute path based on OPI Repository.
-     * 
-     * @param pathString
-     * @return
      */
     protected static IPath getAbsolutePathOnRepo(String pathString) {
         IPath opiPath = ResourceUtil.getPathFromString(pathString);

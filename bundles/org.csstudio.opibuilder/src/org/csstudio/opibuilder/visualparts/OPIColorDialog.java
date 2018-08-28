@@ -11,12 +11,6 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -71,17 +65,8 @@ public class OPIColorDialog extends HelpTrayDialog {
         setShellStyle(getShellStyle() | SWT.RESIZE);
         this.title = dialogTitle;
         this.opiColor = color.getCopy();
-        // if(color.isPreDefined())
-        // this.opiColor = new OPIColor(color.getColorName(),
-        // new RGB(color.getRGBValue().red, color.getRGBValue().green, color.getRGBValue().blue));
-        // else
-        // this.opiColor = new OPIColor(new RGB(color.getRGBValue().red, color.getRGBValue().green,
-        // color.getRGBValue().blue));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
@@ -260,9 +245,6 @@ public class OPIColorDialog extends HelpTrayDialog {
         viewer.getTable().setLayoutData(
                 new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        MenuManager menuManager = new MenuManager();
-        menuManager.add(new ReloadColorFileAction());
-        viewer.getTable().setMenu(menuManager.createContextMenu(viewer.getTable()));
         viewer.addDoubleClickListener(event -> okPressed());
         return viewer;
     }
@@ -359,36 +341,4 @@ public class OPIColorDialog extends HelpTrayDialog {
             outputTextLabel.setText(opiColor.getColorName());
         }
     }
-
-    class ReloadColorFileAction extends Action {
-        public ReloadColorFileAction() {
-            setText("Reload List From Color File");
-            setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                    OPIBuilderPlugin.PLUGIN_ID, "icons/refresh.gif"));
-        }
-
-        @Override
-        public void run() {
-            MediaService.getInstance().reloadColorFile();
-            Job job = new Job("Update Colors Viewer") {
-
-                @Override
-                protected IStatus run(IProgressMonitor monitor) {
-                    Display.getDefault().asyncExec(() -> {
-                        if (!preDefinedColorsViewer.getControl().isDisposed()) {
-                            preDefinedColorsViewer.setInput(MediaService.getInstance()
-                                    .getAllPredefinedColors());
-                        }
-                    });
-
-                    monitor.done();
-                    return Status.OK_STATUS;
-                }
-            };
-            job.schedule();
-
-        }
-
-    }
-
 }

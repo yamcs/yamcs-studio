@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
-<plugin>
-
-   <extension
-         point="org.eclipse.ui.commands">
-      <category
-            id="org.yamcs.studio"
-            name="Yamcs">
-      </category>
-      <command
-            categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.css.core.reload"
-            name="Reload Theme">
-      </command>
-   </extension>
-   
-   <extension point="org.eclipse.ui.handlers">
-      <handler
-            commandId="org.yamcs.studio.css.core.reload"
-            class="org.yamcs.studio.css.core.ReloadThemeHandler"/>
-   </extension>
-   
+<plugin>   
    <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"

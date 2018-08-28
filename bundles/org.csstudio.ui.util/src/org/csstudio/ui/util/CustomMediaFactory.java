@@ -35,185 +35,138 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * A factory, which provides convinience methods for the creation of Images and
- * Fonts.
+ * A factory, which provides convinience methods for the creation of Images and Fonts.
  *
- * All resources created via this factory get automatically disposed, when the
- * application is stopped.
+ * All resources created via this factory get automatically disposed, when the application is stopped.
  *
  * @author Sven Wende
- * @version $Revision$
- *
  */
-public final class CustomMediaFactory {
-    /**
-     * The shared instance.
-     */
-    private static CustomMediaFactory _instance;
+public class CustomMediaFactory {
 
-    /**
-     * The color registry.
-     */
-    private ColorRegistry _colorRegistry;
+    final static public RGB COLOR_LIGHT_BLUE = new RGB(153, 186, 243);
+    final static public RGB COLOR_BLUE = new RGB(0, 0, 255);
+    final static public RGB COLOR_WHITE = new RGB(255, 255, 255);
+    final static public RGB COLOR_GRAY = new RGB(200, 200, 200);
+    final static public RGB COLOR_DARK_GRAY = new RGB(150, 150, 150);
+    final static public RGB COLOR_BLACK = new RGB(0, 0, 0);
+    final static public RGB COLOR_RED = new RGB(255, 0, 0);
+    final static public RGB COLOR_GREEN = new RGB(0, 255, 0);
+    final static public RGB COLOR_YELLOW = new RGB(255, 255, 0);
+    final static public RGB COLOR_PINK = new RGB(255, 0, 255);
+    final static public RGB COLOR_CYAN = new RGB(0, 255, 255);
+    final static public RGB COLOR_ORANGE = new RGB(255, 128, 0);
+    final static public RGB COLOR_PURPLE = new RGB(128, 0, 255);
 
-    /**
-     * The image registry.
-     */
-    private ImageRegistry _imageRegistry;
+    final static public RGB COLOR_X11_PURPLE = new RGB(160, 32, 240);
 
-    /**
-     * The font registry.
-     */
-    private FontRegistry _fontRegistry;
+    /** the font Arial in height of 9 */
+    final static public FontData FONT_ARIAL = new FontData("Arial", 9, SWT.NONE);
+
+    private static CustomMediaFactory INSTANCE;
+
+    private ColorRegistry colorRegistry;
+    private ImageRegistry imageRegistry;
+    private FontRegistry fontRegistry;
 
     /**
      * Map that holds the provided image descriptors.
      */
-    private HashMap<String, Image> _imageCache;
+    private HashMap<String, Image> imageCache;
 
     /**
      * Private constructor to avoid instantiation.
      */
     private CustomMediaFactory() {
         Display display = Display.getDefault();
-        _colorRegistry = new ColorRegistry(display);
-        _imageRegistry = new ImageRegistry(display);
-        _fontRegistry = new FontRegistry(display);
+        colorRegistry = new ColorRegistry(display);
+        imageRegistry = new ImageRegistry(display);
+        fontRegistry = new FontRegistry(display);
 
-        _imageCache = new HashMap<String, Image>();
+        imageCache = new HashMap<>();
 
         // dispose all images from the image cache, when the display is disposed
-        display.addListener(SWT.Dispose, new Listener() {
-            public void handleEvent(final Event event) {
-                for (Image img : _imageCache.values()) {
-                    img.dispose();
-                }
+        display.addListener(SWT.Dispose, event -> {
+            for (Image img : imageCache.values()) {
+                img.dispose();
             }
         });
 
     }
 
-    /**
-     * Return the shared instance of this class.
-     *
-     * @return The shared instance of this class.
-     */
     public static synchronized CustomMediaFactory getInstance() {
-        if (_instance == null) {
-            _instance = new CustomMediaFactory();
+        if (INSTANCE == null) {
+            INSTANCE = new CustomMediaFactory();
         }
 
-        return _instance;
+        return INSTANCE;
     }
 
     /**
      * Create the <code>Color</code> for the given color information.
-     *
-     * @param r
-     *            red
-     * @param g
-     *            green
-     * @param b
-     *            blue
-     *
-     * @return The <code>Color</code> for the given color information.
      */
-    public Color getColor(final int r, final int g, final int b) {
+    public Color getColor(int r, int g, int b) {
         return getColor(new RGB(r, g, b));
     }
 
     /**
      * Create the <code>Color</code> for the given <code>RGB</code>.
-     *
-     * @param rgb
-     *            A <code>RGB</code> object.
-     * @return The <code>Color</code> for the given <code>RGB</code>.
      */
-    public Color getColor(final RGB rgb) {
+    public Color getColor(RGB rgb) {
         assert rgb != null : "rgb!=null";
         Color result = null;
 
         String key = String.valueOf(rgb.hashCode());
 
-        if (!_colorRegistry.hasValueFor(key)) {
-            _colorRegistry.put(key, rgb);
+        if (!colorRegistry.hasValueFor(key)) {
+            colorRegistry.put(key, rgb);
         }
 
-        result = _colorRegistry.get(key);
+        result = colorRegistry.get(key);
 
         return result;
     }
 
     /**
      * Create the <code>Font</code> for the given information.
-     *
-     * @param name
-     *            The font name.
-     * @param height
-     *            The font height.
-     * @param style
-     *            The font style.
-     * @return The <code>Font</code> for the given information.
      */
-    public Font getFont(final String name, final int height, final int style) {
+    public Font getFont(String name, int height, int style) {
         assert name != null : "name!=null";
 
         FontData fd = new FontData(name, height, style);
 
         String key = String.valueOf(fd.hashCode());
-        if (!_fontRegistry.hasValueFor(key)) {
-            _fontRegistry.put(key, new FontData[] { fd });
+        if (!fontRegistry.hasValueFor(key)) {
+            fontRegistry.put(key, new FontData[] { fd });
         }
 
-        return _fontRegistry.get(key);
+        return fontRegistry.get(key);
     }
 
     /**
      * Create the <code>Font</code> for the given <code>FontData</code>.
-     *
-     * @param fontData
-     *            The <code>FontData</code>
-     * @return The <code>Font</code> for the given <code>FontData</code>
      */
-    public Font getFont(final FontData[] fontData) {
+    public Font getFont(FontData[] fontData) {
         FontData f = fontData[0];
         return getFont(f.getName(), f.getHeight(), f.getStyle());
     }
 
     /**
-     * Create the <code>Font</code> for the given <code>FontData</code> and the
-     * given style code.
-     *
-     * @param fontData
-     *            The <code>FontData</code>
-     * @param style
-     *            The style code.
-     * @return The <code>Font</code> for the given <code>FontData</code> and the
-     *         given style code.
+     * Create the <code>Font</code> for the given <code>FontData</code> and the given style code.
      */
-    public Font getFont(final FontData[] fontData, final int style) {
+    public Font getFont(FontData[] fontData, int style) {
         FontData f = fontData[0];
         Font font = getFont(f.getName(), f.getHeight(), style);
         return font;
     }
 
     /**
-     * Create the <code>Font</code> for the given <code>FontData</code> and the
-     * given style code.
-     *
-     * @param fontData
-     *            The <code>FontData</code>
-     * @return The <code>Font</code> for the given <code>FontData</code> and the
-     *         given style code.
+     * Create the <code>Font</code> for the given <code>FontData</code> and the given style code.
      */
-    public Font getFont(final FontData fontData) {
-        Font font = getFont(fontData.getName(), fontData.getHeight(), fontData.getStyle());
-        return font;
+    public Font getFont(FontData fontData) {
+        return getFont(fontData.getName(), fontData.getHeight(), fontData.getStyle());
     }
 
     /**
@@ -223,7 +176,7 @@ public final class CustomMediaFactory {
      *            additional styles, e.g. SWT.Bold
      * @return The system's default font.
      */
-    public Font getDefaultFont(final int style) {
+    public Font getDefaultFont(int style) {
         // FIXME Die default Schriftart bzw. Schriftgr��e h�ngt vom
         // Betriebssystem ab
         return getFont("Arial", 10, style);
@@ -238,24 +191,22 @@ public final class CustomMediaFactory {
      *            The resource path of the requested image.
      * @return The <code>Image</code> from the given path in the given plugin.
      */
-    public Image getImageFromPlugin(final String pluginId, final String relativePath) {
+    public Image getImageFromPlugin(String pluginId, String relativePath) {
         String key = pluginId + "." + relativePath;
 
         // does image exist
-        if (_imageRegistry.get(key) == null) {
+        if (imageRegistry.get(key) == null) {
             ImageDescriptor descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
-            _imageRegistry.put(key, descr);
+            imageRegistry.put(key, descr);
         }
 
-        return _imageRegistry.get(key);
+        return imageRegistry.get(key);
     }
 
     /**
-     * Load the <code>Image</code> from the given path in the given plugin.
-     * Usually, this is the image found via the the given plug-in relative path.
-     * But this implementation also supports a hack for testing: If no plugin is
-     * running, because for example this is an SWT-only test, the path is used
-     * as is, i.e. relative to the current directory.
+     * Load the <code>Image</code> from the given path in the given plugin. Usually, this is the image found via the the
+     * given plug-in relative path. But this implementation also supports a hack for testing: If no plugin is running,
+     * because for example this is an SWT-only test, the path is used as is, i.e. relative to the current directory.
      *
      * @param plugin
      *            The plugin that contains the requested image.
@@ -265,88 +216,41 @@ public final class CustomMediaFactory {
      *            The image's relative path to the root of the plugin.
      * @return The <code>Image</code> from the given path in the given plugin.
      */
-    public Image getImageFromPlugin(final Plugin plugin, final String pluginId, final String relativePath) {
+    public Image getImageFromPlugin(Plugin plugin, String pluginId, String relativePath) {
         String key = pluginId + "." + relativePath;
         // does image exist
-        if (_imageRegistry.get(key) == null) {
+        if (imageRegistry.get(key) == null) {
             if (plugin != null) {
                 ImageDescriptor descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
-                _imageRegistry.put(key, descr);
+                imageRegistry.put(key, descr);
             } else {
                 final Display display = Display.getCurrent();
                 final Image img = new Image(display, relativePath);
-                _imageRegistry.put(key, ImageDescriptor.createFromImage(img));
+                imageRegistry.put(key, ImageDescriptor.createFromImage(img));
             }
         }
 
-        return _imageRegistry.get(key);
+        return imageRegistry.get(key);
     }
 
     /**
-     * Load the <code>ImageDescriptor</code> from the given path in the given
-     * plugin.
+     * Load the <code>ImageDescriptor</code> from the given path in the given plugin.
      *
      * @param pluginId
      *            The id of the plugin that contains the requested image.
      * @param relativePath
      *            The resource path of the requested image.
-     * @return The <code>ImageDescriptor</code> from the given path in the given
-     *         plugin.
+     * @return The <code>ImageDescriptor</code> from the given path in the given plugin.
      */
-    public ImageDescriptor getImageDescriptorFromPlugin(final String pluginId, final String relativePath) {
+    public ImageDescriptor getImageDescriptorFromPlugin(String pluginId, String relativePath) {
         String key = pluginId + "." + relativePath;
 
         // does image exist
-        if (_imageRegistry.get(key) == null) {
+        if (imageRegistry.get(key) == null) {
             ImageDescriptor descr = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, relativePath);
-            _imageRegistry.put(key, descr);
+            imageRegistry.put(key, descr);
         }
 
-        return _imageRegistry.getDescriptor(key);
+        return imageRegistry.getDescriptor(key);
     }
-
-    /** the color for light blue */
-    final static public RGB COLOR_LIGHT_BLUE = new RGB(153, 186, 243);
-
-    /** the color for blue */
-    final static public RGB COLOR_BLUE = new RGB(0, 0, 255);
-
-    /** the color for white */
-    final static public RGB COLOR_WHITE = new RGB(255, 255, 255);
-
-    /** the color for gray */
-    final static public RGB COLOR_GRAY = new RGB(200, 200, 200);
-
-    /** the color for dark gray */
-    final static public RGB COLOR_DARK_GRAY = new RGB(150, 150, 150);
-
-    /** the color for black */
-    final static public RGB COLOR_BLACK = new RGB(0, 0, 0);
-
-    /** the color for red */
-    final static public RGB COLOR_RED = new RGB(255, 0, 0);
-
-    /** the color for green */
-    final static public RGB COLOR_GREEN = new RGB(0, 255, 0);
-
-    /** the color for yellow */
-    final static public RGB COLOR_YELLOW = new RGB(255, 255, 0);
-
-    /** the color for pink */
-    final static public RGB COLOR_PINK = new RGB(255, 0, 255);
-
-    /** the color for cyan */
-    final static public RGB COLOR_CYAN = new RGB(0, 255, 255);
-
-    /** the color for orange */
-    final static public RGB COLOR_ORANGE = new RGB(255, 128, 0);
-
-    /** the color for orange */
-    final static public RGB COLOR_PURPLE = new RGB(128, 0, 255);
-
-    /** the font for Arial in height of 9 */
-    final static public FontData FONT_ARIAL = new FontData("Arial", 9, SWT.NONE);
-
-    /** the font for Tahoma in height of 9 */
-    final static public FontData FONT_TAHOMA = new FontData("Tahoma", 9, SWT.NONE);
 }

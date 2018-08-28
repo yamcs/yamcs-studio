@@ -11,8 +11,6 @@ import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -209,41 +207,25 @@ public class OPIFontDialog extends HelpTrayDialog {
         getButton(IDialogConstants.OK_ID).setFocus();
     }
 
-    /**
-     * Creates and configures a {@link TableViewer}.
-     *
-     * @param parent
-     *            The parent for the table
-     * @return The {@link TableViewer}
-     */
-    private TableViewer createPredefinedFontsTableViewer(final Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
+    private TableViewer createPredefinedFontsTableViewer(Composite parent) {
+        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @Override
-            public Object[] getElements(final Object element) {
+            public Object[] getElements(Object element) {
                 return (Object[]) element;
             }
         });
         viewer.setLabelProvider(new LabelProvider());
         viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
-        MenuManager menuManager = new MenuManager();
-        menuManager.add(new ReloadFontFileAction());
-        viewer.getTable().setMenu(menuManager.createContextMenu(viewer.getTable()));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         viewer.addDoubleClickListener(event -> okPressed());
         return viewer;
     }
 
-    /**
-     * Refreshes the enabled-state of the actions.
-     */
     private void refreshGUIOnSelection() {
         IStructuredSelection selection = (IStructuredSelection) preDefinedFontsViewer
                 .getSelection();
-        if (!selection.isEmpty()
-                && selection.getFirstElement() instanceof OPIFont) {
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof OPIFont) {
             opiFont = new OPIFont((OPIFont) selection.getFirstElement());
             outputTextLabel.setText(opiFont.getFontMacroName());
             outputTextLabel.setFont(CustomMediaFactory.getInstance().getFont(opiFont.getFontData()));
@@ -253,38 +235,13 @@ public class OPIFontDialog extends HelpTrayDialog {
         }
     }
 
-    /**
-     * Creates a label with the given text.
-     *
-     * @param parent
-     *            The parent for the label
-     * @param text
-     *            The text for the label
-     */
-    private void createLabel(final Composite parent, final String text) {
+    private void createLabel(Composite parent, String text) {
         Label label = new Label(parent, SWT.WRAP);
         label.setText(text);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false,
-                false, 1, 1));
+        label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
     }
 
     public OPIFont getOutput() {
         return opiFont;
     }
-
-    class ReloadFontFileAction extends Action {
-        public ReloadFontFileAction() {
-            setText("Reload List From Font File");
-            setImageDescriptor(CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                    OPIBuilderPlugin.PLUGIN_ID, "icons/refresh.gif"));
-        }
-
-        @Override
-        public void run() {
-            MediaService.getInstance().reloadFontFile();
-            preDefinedFontsViewer.setInput(
-                    MediaService.getInstance().getAllPredefinedFonts());
-        }
-    }
-
 }

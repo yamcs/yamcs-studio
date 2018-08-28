@@ -7,28 +7,27 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.util;
 
-import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
-/**The dedicated font type which supports predefined font name in OPI builder font file.
- * If the font name doesn't exist in the font file, the system font will be adopted.
+/**
+ * The dedicated font type which supports predefined font name in OPI builder font file. If the font name doesn't exist
+ * in the font file, the system font will be adopted.
+ * 
  * @author Xihui Chen
  *
  */
-public class OPIFont{
+public class OPIFont {
 
     public static final int POINTS_PER_INCH = 72;
 
     private String fontName;
 
     /**
-     * FontData object.  If sizeInPixels, the height represents
-     * height in pixels rather than the standard SWT representation
-     * in points.
+     * FontData object. If sizeInPixels, the height represents height in pixels rather than the standard SWT
+     * representation in points.
      */
     private FontData rawFontData;
 
@@ -38,9 +37,8 @@ public class OPIFont{
     private boolean preDefined;
 
     /**
-     * Whether to override the standard font size interpretation
-     * and use the font size to determine the number of vertical
-     * pixels used in rendering the text.
+     * Whether to override the standard font size interpretation and use the font size to determine the number of
+     * vertical pixels used in rendering the text.
      */
     private boolean sizeInPixels = false;
 
@@ -48,14 +46,12 @@ public class OPIFont{
         this.fontName = name;
         this.rawFontData = fontData;
         preDefined = true;
-        this.sizeInPixels = getDefaultIsInPixels();
     }
 
     public OPIFont(FontData fontData) {
         this.fontName = fontData.toString();
         this.rawFontData = fontData;
         preDefined = false;
-        this.sizeInPixels = getDefaultIsInPixels();
     }
 
     public OPIFont(OPIFont opiFont) {
@@ -65,57 +61,55 @@ public class OPIFont{
     }
 
     private int pixelsToPoints(int pixels) {
-        float result = (float) pixels * POINTS_PER_INCH / getDPI().y;
+        float result = (float) pixels * POINTS_PER_INCH / Display.getDefault().getDPI().y;
         return Math.round(result);
     }
 
-    /**Returns the Macro Name of the OPIFont.
-     * @return the predefined font macro name or
-     * flattened font data string if it is not predefined.
+    /**
+     * Returns the Macro Name of the OPIFont.
+     * 
+     * @return the predefined font macro name or flattened font data string if it is not predefined.
      */
     public String getFontMacroName() {
         return fontName;
     }
 
     /**
-     * Returns the name of the Font.
-     * On platforms that support font foundries, the return value will
-     * be the foundry followed by a dash ("-") followed by the face name.
+     * Returns the name of the Font. On platforms that support font foundries, the return value will be the foundry
+     * followed by a dash ("-") followed by the face name.
      *
      * @return the name of the font
      *
      */
-    public String getFontName(){
+    public String getFontName() {
         return getFontData().getName();
     }
 
     /**
-     * Returns the height of the font in either fonts or pixels depending
-     * on the value of sizeInPixels.
+     * Returns the height of the font in either fonts or pixels depending on the value of sizeInPixels.
      *
      * @return the height of the font.
      *
      */
-    public int getHeight(){
+    public int getHeight() {
         return getFontData().getHeight();
     }
 
     /**
-     * Returns the style of the receiver which is a bitwise OR of
-     * one or more of the <code>SWT</code> constants NORMAL(0), BOLD(2)
-     * and ITALIC(1).
+     * Returns the style of the receiver which is a bitwise OR of one or more of the <code>SWT</code> constants
+     * NORMAL(0), BOLD(2) and ITALIC(1).
      *
      * @return the style of the font.
      *
      */
-    public int getStyle(){
+    public int getStyle() {
         return getFontData().getStyle();
     }
 
     /**
-     * Return the FontData, scaled according to whether its size represents
-     * pixels or points.  This may be called only on the UI thread, since
-     * it uses the SWT Display to do the scaling.
+     * Return the FontData, scaled according to whether its size represents pixels or points. This may be called only on
+     * the UI thread, since it uses the SWT Display to do the scaling.
+     * 
      * @return the scaled FontData
      */
     public FontData getFontData() {
@@ -128,6 +122,7 @@ public class OPIFont{
 
     /**
      * Return the raw FontData, not scaled.
+     * 
      * @return the raw FontData.
      */
     public FontData getRawFontData() {
@@ -136,9 +131,10 @@ public class OPIFont{
 
     /**
      * Return the appropriately-scaled SWT font.
+     * 
      * @return scaled SWT font
      */
-    public Font getSWTFont(){
+    public Font getSWTFont() {
         return CustomMediaFactory.getInstance().getFont(getFontData());
     }
 
@@ -166,26 +162,33 @@ public class OPIFont{
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         OPIFont other = (OPIFont) obj;
         if (other.sizeInPixels != sizeInPixels) {
             return false;
         }
         if (rawFontData == null) {
-            if (other.rawFontData != null)
+            if (other.rawFontData != null) {
                 return false;
-        } else if (!rawFontData.equals(other.rawFontData))
+            }
+        } else if (!rawFontData.equals(other.rawFontData)) {
             return false;
+        }
         if (fontName == null) {
-            if (other.fontName != null)
+            if (other.fontName != null) {
                 return false;
-        } else if (!fontName.equals(other.fontName))
+            }
+        } else if (!fontName.equals(other.fontName)) {
             return false;
+        }
         return true;
     }
 
@@ -196,13 +199,4 @@ public class OPIFont{
     public boolean isSizeInPixels() {
         return sizeInPixels;
     }
-
-    protected boolean getDefaultIsInPixels() {
-        return PreferencesHelper.isDefaultFontSizeInPixels();
-    }
-
-    protected Point getDPI() {
-        return Display.getDefault().getDPI();
-    }
-
 }
