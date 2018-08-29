@@ -69,7 +69,7 @@
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Ubuntu" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.BoolButton" version="1.0.0">
@@ -144,7 +144,7 @@ $(pv_value)</tooltip>
     </actions>
     <show_boolean_label>true</show_boolean_label>
     <font>
-      <opifont.name fontName="Ubuntu" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
     <off_label>No</off_label>
   </widget>
@@ -185,7 +185,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Ubuntu" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -225,7 +225,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Ubuntu" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -339,7 +339,7 @@ $(pv_value)</tooltip>
     <stretch_to_fit>true</stretch_to_fit>
     <flip_vertical>false</flip_vertical>
     <font>
-      <opifont.name fontName="Ubuntu" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.BoolButton" version="1.0.0">
@@ -414,7 +414,7 @@ $(pv_value)</tooltip>
     </actions>
     <show_boolean_label>true</show_boolean_label>
     <font>
-      <opifont.name fontName="Ubuntu" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
     <off_label>No</off_label>
   </widget>
@@ -455,7 +455,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName="Ubuntu" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
 </display>

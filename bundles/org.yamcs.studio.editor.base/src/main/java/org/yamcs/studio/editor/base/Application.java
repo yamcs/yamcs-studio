@@ -153,7 +153,6 @@ public class Application implements IApplication {
             Bundle bundle = Activator.getDefault().getBundle();
             URL location = FileLocator.toFileURL(bundle.getEntry("/sample-projects/"));
 
-            createProject(location, "Styles");
             createProject(location, "YSS Landing");
         } catch (IOException | CoreException e) {
             log.log(Level.SEVERE, "Could not create default projects", e);

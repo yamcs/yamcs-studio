@@ -398,7 +398,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
     <off_label>OFF</off_label>
   </widget>
@@ -452,7 +452,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
     <off_label>OFF</off_label>
   </widget>
@@ -604,7 +604,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Rectangle" version="1.0.0">
@@ -659,7 +659,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
     <line_color>
       <color red="128" green="0" blue="255" />
@@ -717,7 +717,7 @@ $(pv_value)</tooltip>
     </foreground_color>
     <actions hook="false" hook_all="false" />
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
     <line_color>
       <color red="128" green="0" blue="255" />
@@ -854,7 +854,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
     <off_label>OFF</off_label>
   </widget>
@@ -1177,7 +1177,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
@@ -1248,7 +1248,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <font>
-      <opifont.name fontName=".Helvetica Neue DeskInterface" height="11" style="0">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0">Default</opifont.name>
     </font>
   </widget>
 </display>
