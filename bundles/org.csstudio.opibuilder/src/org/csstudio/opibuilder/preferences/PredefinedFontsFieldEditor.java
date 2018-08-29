@@ -16,6 +16,8 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -40,8 +42,6 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     private Button addButton;
     private Button editButton;
     private Button removeButton;
-    private Button upButton;
-    private Button downButton;
 
     private Label preview;
 
@@ -91,6 +91,15 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
         tableViewer = new TableViewer(tableWrapper, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         tableViewer.setContentProvider(ArrayContentProvider.getInstance());
         tableViewer.getTable().setHeaderVisible(true);
+
+        tableViewer.setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                OPIFont f1 = (OPIFont) e1;
+                OPIFont f2 = (OPIFont) e2;
+                return f1.getFontMacroName().compareToIgnoreCase(f2.getFontMacroName());
+            }
+        });
 
         TableViewerColumn textColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         textColumn.getColumn().setText("Name");
@@ -175,23 +184,6 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
             }
         });
 
-        upButton = createButton(box, "Up");
-        upButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                moveFontUp(getSelectedFont());
-                updateButtonStatus();
-            }
-        });
-        downButton = createButton(box, "Down");
-        downButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                moveFontDown(getSelectedFont());
-                updateButtonStatus();
-            }
-        });
-
         return box;
     }
 
@@ -214,19 +206,14 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
     }
 
     private void updateButtonStatus() {
-        int selectionIndex = tableViewer.getTable().getSelectionIndex();
         OPIFont selectedFont = getSelectedFont();
         if (selectedFont == null) {
             editButton.setEnabled(false);
             removeButton.setEnabled(false);
-            upButton.setEnabled(false);
-            downButton.setEnabled(false);
             return;
         }
         editButton.setEnabled(true);
         removeButton.setEnabled(true);
-        upButton.setEnabled(selectionIndex > 0);
-        downButton.setEnabled(selectionIndex < tableViewer.getTable().getItemCount() - 1);
     }
 
     private void removeFont(OPIFont selectedFont) {
@@ -275,22 +262,6 @@ public class PredefinedFontsFieldEditor extends FieldEditor {
             preview.setFont(selectedFont.getSWTFont());
             preview.getParent().layout();
         }
-    }
-
-    private void moveFontUp(OPIFont selectedFont) {
-        List<OPIFont> list = getTableViewerInput();
-        int index = list.indexOf(selectedFont);
-        list.remove(index);
-        list.add(index - 1, selectedFont);
-        tableViewer.refresh();
-    }
-
-    private void moveFontDown(OPIFont selectedFont) {
-        List<OPIFont> list = getTableViewerInput();
-        int index = list.indexOf(selectedFont);
-        list.remove(index);
-        list.add(index + 1, selectedFont);
-        tableViewer.refresh();
     }
 
     private Button createButton(Composite box, String text) {

@@ -19,6 +19,8 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -42,8 +44,6 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     private Button addButton;
     private Button editButton;
     private Button removeButton;
-    private Button upButton;
-    private Button downButton;
 
     private ResourceManager resourceManager;
 
@@ -80,6 +80,15 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
 
         tableViewer = new TableViewer(tableWrapper, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         tableViewer.setContentProvider(ArrayContentProvider.getInstance());
+
+        tableViewer.setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                NamedColor c1 = (NamedColor) e1;
+                NamedColor c2 = (NamedColor) e2;
+                return c1.name.compareToIgnoreCase(c2.name);
+            }
+        });
 
         TableViewerColumn colorColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         colorColumn.setLabelProvider(new ColorLabelProvider() {
@@ -161,23 +170,6 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
             }
         });
 
-        upButton = createButton(box, "Up");
-        upButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                moveColorUp(getSelectedColor());
-                updateButtonStatus();
-            }
-        });
-        downButton = createButton(box, "Down");
-        downButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                moveColorDown(getSelectedColor());
-                updateButtonStatus();
-            }
-        });
-
         return box;
     }
 
@@ -200,19 +192,14 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
     }
 
     private void updateButtonStatus() {
-        int selectionIndex = tableViewer.getTable().getSelectionIndex();
         NamedColor selectedRule = getSelectedColor();
         if (selectedRule == null) {
             editButton.setEnabled(false);
             removeButton.setEnabled(false);
-            upButton.setEnabled(false);
-            downButton.setEnabled(false);
             return;
         }
         editButton.setEnabled(true);
         removeButton.setEnabled(true);
-        upButton.setEnabled(selectionIndex > 0);
-        downButton.setEnabled(selectionIndex < tableViewer.getTable().getItemCount() - 1);
     }
 
     private void removeRule(NamedColor selectedRule) {
@@ -251,22 +238,6 @@ public class PredefinedColorsFieldEditor extends FieldEditor {
             list.add(indexOfOriginalColor, updatedColor);
             tableViewer.refresh();
         }
-    }
-
-    private void moveColorUp(NamedColor selectedColor) {
-        List<NamedColor> list = getTableViewerInput();
-        int index = list.indexOf(selectedColor);
-        list.remove(index);
-        list.add(index - 1, selectedColor);
-        tableViewer.refresh();
-    }
-
-    private void moveColorDown(NamedColor selectedColor) {
-        List<NamedColor> list = getTableViewerInput();
-        int index = list.indexOf(selectedColor);
-        list.remove(index);
-        list.add(index + 1, selectedColor);
-        tableViewer.refresh();
     }
 
     private Button createButton(Composite box, String text) {
