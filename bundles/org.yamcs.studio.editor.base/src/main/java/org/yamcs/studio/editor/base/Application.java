@@ -12,11 +12,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -29,13 +27,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 import org.yamcs.CompactFormatter;
 
 public class Application implements IApplication {
-
-    private static final Logger log = Logger.getLogger(Application.class.getName());
 
     @Override
     public Object start(IApplicationContext context) throws Exception {
@@ -144,19 +139,7 @@ public class Application implements IApplication {
     }
 
     protected void openProjects() {
-        IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects(IContainer.INCLUDE_HIDDEN);
-        if (allProjects != null && allProjects.length > 0) {
-            return;
-        }
-
-        try {
-            Bundle bundle = Activator.getDefault().getBundle();
-            URL location = FileLocator.toFileURL(bundle.getEntry("/sample-projects/"));
-
-            createProject(location, "YSS Landing");
-        } catch (IOException | CoreException e) {
-            log.log(Level.SEVERE, "Could not create default projects", e);
-        }
+        // Default implementation does nothing
     }
 
     protected WorkbenchAdvisor createWorkbenchAdvisor() {

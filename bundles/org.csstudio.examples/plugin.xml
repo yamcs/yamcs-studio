@@ -6,14 +6,21 @@
       <wizard
             category="org.eclipse.ui.Examples"
             class="org.csstudio.opibuilder.examples.ImportOPIExamplesWizard"
-            icon="icons/OPIBuilder.png"
+            icon="icons/activity_category.png"
             id="org.csstudio.opibuilder.examples.examplesWizard"
             name="OPI Examples">
       </wizard>
       <wizard
             category="org.eclipse.ui.Examples"
+            class="org.csstudio.opibuilder.examples.ImportYSSLandingWizard"
+            icon="icons/activity_category.png"
+            id="org.csstudio.opibuilder.examples.yssLandingWizard"
+            name="YSS Landing">
+      </wizard>
+      <wizard
+            category="org.eclipse.ui.Examples"
             class="org.csstudio.opibuilder.examples.NewOPIImageLibExampleWizard"
-            icon="icons/symbol-image.png"
+            icon="icons/activity_category.png"
             id="org.csstudio.opibuilder.examples.imageLibWizard"
             name="OPI Image Library">
       </wizard>

@@ -1,0 +1,32 @@
+Header Background = 94, 151, 230
+Header MainColor = 255,255,255
+Header SubColor = 255,255,0
+
+Gray Background = 240,240,240
+Dark Gray Border = 169,169,169
+spring green = 0,255,127
+light sky blue= 135,206,250
+deep sky blue = 0,191,255
+light green = 144,238,144
+
+
+Black = 0,0,0
+MCS Dark Gray = 10,10,10
+
+Label Background = 0,0,0
+
+Red = 255, 0, 0
+Green = 114,201,144
+Blue = 56,117,237
+Yellow = 226,192,141
+Purple = 198,121,194
+Orange = 210,155,103
+
+MCS_Text = 255,255,0
+Background_main1 = 39,43,51
+Background_main = 32,36,42
+Background_TMlist= 192,192,192
+Background_text box=39,43,51
+TM_Text=255,255,255
+TM_label_text=197,211,236
+TM_header_background=32,36,42
