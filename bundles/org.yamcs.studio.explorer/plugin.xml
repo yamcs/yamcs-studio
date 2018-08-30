@@ -23,7 +23,16 @@
          <enablement>
             <or>
                <adapt type="org.eclipse.core.resources.IFile" />
-            </or> 
+            </or>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.yamcs.studio.explorer.OPIBuilderActionProvider"
+            id="org.yamcs.studio.explorer.actions.OPIBuilderActions">
+         <enablement>
+            <or>
+               <adapt type="org.eclipse.core.resources.IFile" />
+            </or>
          </enablement>
       </actionProvider>
    </extension>
@@ -48,6 +57,8 @@
          <includes>
             <actionExtension
                   pattern="org.yamcs.studio.explorer.actions.OpenActions"/>
+            <actionExtension
+                  pattern="org.yamcs.studio.explorer.actions.OPIBuilderActions"/>
             <actionExtension
                   pattern="org.eclipse.ui.navigator.resources.*"/>
          </includes>

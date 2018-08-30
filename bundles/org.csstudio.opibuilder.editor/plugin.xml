@@ -8,7 +8,7 @@
             class="org.csstudio.opibuilder.editor.OPIEditor"
             contributorClass="org.csstudio.opibuilder.editor.OPIEditorActionBarContributor"
             extensions="opi"
-            icon="icons/OPIBuilder.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.OPIEditor"
             name="OPI Builder">
       </editor>
@@ -287,14 +287,15 @@
    </extension>
    <extension
          point="org.eclipse.ui.decorators">
+      <!-- (FDI) Deactivated. Perhaps should remove. Image size for an icon is really low -->
       <decorator
             adaptable="true"
             class="org.csstudio.opibuilder.tools.thumbnails.ImageIconDecorator"
             id="ImageIcons.decorator"
-            label="Image Icon Decorator"
+            label="File icons based on image preview"
             lightweight="false"
             location="BOTTOM_RIGHT"
-            state="true">
+            state="false">
          <enablement>
             <or>
                <objectClass
@@ -305,6 +306,26 @@
                </objectClass>
             </or>
          </enablement>
+         <description>
+            Displays an image of an image file as its icon.
+         </description>
+      </decorator>
+   </extension>
+   <extension point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            id="org.csstudio.opibuilder.SchemaDecorator"
+            label="Active OPI Schema"
+            state="true"
+            lightweight="true"
+            class="org.csstudio.opibuilder.editor.SchemaDecorator"
+            location="TOP_RIGHT">
+         <enablement>
+            <objectClass name="org.eclipse.core.resources.IFile"/>
+         </enablement>
+         <description>
+            Adds an icon decoration to an OPI display if that display is the active schema.
+         </description>
       </decorator>
    </extension>
 </plugin>

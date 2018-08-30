@@ -18,7 +18,9 @@ import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.util.SchemaService;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.graphics.FontData;
@@ -26,34 +28,15 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- *
- * @author Xihui Chen
- *
- */
-@SuppressWarnings("deprecation")
 public class OPIBuilderPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "org.csstudio.opibuilder";
-
-    /**
-     * The ID of the widget extension point.
-     */
     public static final String EXTPOINT_WIDGET = PLUGIN_ID + ".widget";
-
-    /**
-     * The ID of the widget extension point.
-     */
     public static final String EXTPOINT_FEEDBACK_FACTORY = PLUGIN_ID + ".graphicalFeedbackFactory";
 
-    public static final String OPI_FILE_EXTENSION = "opi";
-
-    private static final Logger logger = Logger.getLogger(PLUGIN_ID);
+    private static final Logger log = Logger.getLogger(PLUGIN_ID);
 
     private static OPIBuilderPlugin plugin;
-
-    private IPropertyChangeListener preferenceListener;
 
     public OPIBuilderPlugin() {
         plugin = this;
@@ -73,7 +56,7 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
 
         ScriptService.getInstance();
 
-        preferenceListener = event -> {
+        getPreferenceStore().addPropertyChangeListener(event -> {
             if (event.getProperty().equals(PreferencesHelper.COLORS)) {
                 MediaService.getInstance().reloadColors();
             } else if (event.getProperty().equals(PreferencesHelper.FONTS)) {
@@ -81,11 +64,32 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
             } else if (event.getProperty().equals(PreferencesHelper.OPI_GUI_REFRESH_CYCLE)) {
                 GUIRefreshThread.getInstance(true).reLoadGUIRefreshCycle();
             } else if (event.getProperty().equals(PreferencesHelper.SCHEMA_OPI)) {
-                SchemaService.getInstance().reLoad();
+                SchemaService.getInstance().reload();
             }
-        };
+        });
 
-        getPluginPreferences().addPropertyChangeListener(preferenceListener);
+        // Reload the schema if the change file is somehow related to the active schema
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(event -> {
+            IPath schemaPath = PreferencesHelper.getSchemaOPIPath();
+            if (schemaPath != null) {
+                IResourceDelta delta = event.getDelta();
+                if (delta != null) {
+                    List<IPath> allPaths = findAllDeltaPaths(delta);
+                    if (allPaths.contains(schemaPath)) {
+                        SchemaService.getInstance().reload();
+                    }
+                }
+            }
+        });
+    }
+
+    private List<IPath> findAllDeltaPaths(IResourceDelta delta) {
+        List<IPath> combined = new ArrayList<>();
+        combined.add(delta.getFullPath());
+        for (IResourceDelta child : delta.getAffectedChildren()) {
+            combined.addAll(findAllDeltaPaths(child));
+        }
+        return combined;
     }
 
     public List<NamedColor> loadColors() {
@@ -179,10 +183,9 @@ public class OPIBuilderPlugin extends AbstractUIPlugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
-        getPluginPreferences().removePropertyChangeListener(preferenceListener);
     }
 
     public static Logger getLogger() {
-        return logger;
+        return log;
     }
 }

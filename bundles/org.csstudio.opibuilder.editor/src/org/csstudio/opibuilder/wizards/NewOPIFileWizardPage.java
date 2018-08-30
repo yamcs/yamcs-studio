@@ -10,14 +10,15 @@ package org.csstudio.opibuilder.wizards;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.util.SchemaService;
 import org.csstudio.ui.util.wizards.WizardNewFileCreationPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-/**Wizard page for the creation of new OPI files.
+/**
+ * Wizard page for the creation of new OPI files.
+ * 
  * @author Xihui Chen
  *
  */
@@ -38,7 +39,6 @@ public class NewOPIFileWizardPage extends WizardNewFileCreationPage {
         return result;
     }
 
-
     @Override
     protected String getNewFileLabel() {
         return "OPI File Name:";
@@ -46,7 +46,6 @@ public class NewOPIFileWizardPage extends WizardNewFileCreationPage {
 
     @Override
     public String getFileExtension() {
-        return OPIBuilderPlugin.OPI_FILE_EXTENSION;
+        return "opi";
     }
-
 }

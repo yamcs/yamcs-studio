@@ -859,7 +859,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         try {
             XMLUtil.fillDisplayModelFromInputStream(getInputStream(), displayModel);
         } catch (Exception e) {
-            String message = "Error happened when loading the OPI file!\n";
+            String message = "Error happened when loading the OPI file!";
             ErrorHandlerUtil.handleError(message, e, true, true);
             getEditorSite().getPage().closeEditor(this, false);
         }

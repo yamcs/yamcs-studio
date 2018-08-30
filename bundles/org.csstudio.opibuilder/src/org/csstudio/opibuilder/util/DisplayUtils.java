@@ -12,21 +12,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
-/**
- * Utility methods to work with Display object
- *
- * @author Xihui Chen
- */
 public class DisplayUtils {
 
     /**
-     * Returns a non-null instance of Display object. Tries to find the Display
-     * object for the current thread first and if it fails tries to get:
-     * <li> Workbench display if the workbench running
-     * <li> Default display object
+     * Returns a non-null instance of Display object. Tries to find the Display object for the current thread first and
+     * if it fails tries to get:
+     * <li>Workbench display if the workbench running
+     * <li>Default display object
      *
      * @return non-null Display object
-     * @since 1.2
      */
     public static Display getDisplay() {
         Display display = Display.getCurrent();
@@ -37,11 +31,8 @@ public class DisplayUtils {
     }
 
     /**
-     * Attempts to return the default shell. If it cannot return the default
-     * shell, it returns the shell of the first workbench window that has shell.
-     *
-     * @return The shell
-     * @since 1.2
+     * Attempts to return the default shell. If it cannot return the default shell, it returns the shell of the first
+     * workbench window that has shell.
      */
     public static Shell getDefaultShell() {
         Shell shell = null;
@@ -55,9 +46,10 @@ public class DisplayUtils {
         try {
             if (shell == null) {
                 IWorkbenchWindow activeWindow = PlatformUI.getWorkbench()
-                    .getActiveWorkbenchWindow();
-                if (activeWindow != null)
+                        .getActiveWorkbenchWindow();
+                if (activeWindow != null) {
                     shell = activeWindow.getShell();
+                }
 
             }
         } catch (Exception e) {
@@ -66,7 +58,7 @@ public class DisplayUtils {
 
         if (shell == null) {
             IWorkbenchWindow[] windows = PlatformUI.getWorkbench()
-                .getWorkbenchWindows();
+                    .getWorkbenchWindows();
             for (int i = 0; shell == null && i < windows.length; i++) {
                 shell = windows[i].getShell();
             }

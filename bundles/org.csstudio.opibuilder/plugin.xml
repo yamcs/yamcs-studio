@@ -191,7 +191,7 @@
             category="org.csstudio.opibuilder.views"
             class="org.csstudio.opibuilder.runmode.OPIView"
             fastViewWidthRatio="0.3"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.opiView"
             name="OPI View">
       </view>
@@ -200,7 +200,7 @@
             category="org.csstudio.opibuilder.views"
             class="org.csstudio.opibuilder.runmode.OPIView"
             fastViewWidthRatio="0.3"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.opiViewLEFT"
             name="OPI View (Left)">
       </view>
@@ -209,7 +209,7 @@
             category="org.csstudio.opibuilder.views"
             class="org.csstudio.opibuilder.runmode.OPIView"
             fastViewWidthRatio="0.3"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.opiViewRIGHT"
             name="OPI View (Right)">
       </view>
@@ -218,7 +218,7 @@
             category="org.csstudio.opibuilder.views"
             class="org.csstudio.opibuilder.runmode.OPIView"
             fastViewWidthRatio="0.3"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.opiViewTOP"
             name="OPI View (Top)">
       </view>
@@ -227,7 +227,7 @@
             category="org.csstudio.opibuilder.views"
             class="org.csstudio.opibuilder.runmode.OPIView"
             fastViewWidthRatio="0.3"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.opiViewBOTTOM"
             name="OPI View (Bottom)">
       </view>
@@ -236,7 +236,7 @@
             category="org.csstudio.opibuilder.views"
             class="org.csstudio.opibuilder.runmode.PlaceHolderView"
             fastViewWidthRatio="0.3"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.placeHolder"
             name="OPI Placeholder">
       </view>
@@ -269,7 +269,7 @@
       <editor
             default="false"
             extensions="opi"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.DisplayLauncher"
             launcher="org.csstudio.opibuilder.runmode.DisplayLauncher"
             name="OPI Runner">
@@ -277,7 +277,7 @@
       <!--editor
             default="false"
             extensions="opi"
-            icon="icons/OPIRunner.png"
+            icon="icons/file_opi.png"
             id="org.csstudio.opibuilder.ShellLauncher"
             launcher="org.csstudio.opibuilder.runmode.ShellLauncher"
             name="OPI Runner (New Window)">

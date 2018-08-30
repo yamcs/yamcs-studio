@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -65,6 +66,20 @@ public class PreferencesHelper {
             return null;
         }
         return ResourceUtil.getPathFromString(schemaOPIPath);
+    }
+
+    public static void setSchemaOPIPath(IPath path) {
+        IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(OPIBuilderPlugin.PLUGIN_ID);
+        if (path == null) {
+            prefs.put(SCHEMA_OPI, IPreferenceStore.STRING_DEFAULT_DEFAULT);
+        } else {
+            prefs.put(SCHEMA_OPI, path.toString());
+        }
+        try {
+            prefs.flush();
+        } catch (BackingStoreException e) {
+            OPIBuilderPlugin.getLogger().log(Level.SEVERE, "Failed to store preferences.", e);
+        }
     }
 
     public static boolean isAutoSaveBeforeRunning() {

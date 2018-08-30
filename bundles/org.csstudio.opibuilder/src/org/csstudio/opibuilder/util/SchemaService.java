@@ -1,6 +1,6 @@
 package org.csstudio.opibuilder.util;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +14,6 @@ import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.persistence.XMLUtil;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 
 public final class SchemaService {
@@ -33,76 +30,29 @@ public final class SchemaService {
      * Instance of SchemaService without dialog is created from first instance of WidgetNodeEditPolicy
     */
 
-    private SchemaService(boolean dialog) {
+    private SchemaService() {
         schemaWidgetsMap = new HashMap<>();
-        if (dialog) {
-            reLoad();
-        } else {
-            reLoadNoProgressMonitor();
-        }
+        reload();
     }
 
     public static final synchronized SchemaService getInstance() {
         if (instance == null) {
-            instance = new SchemaService(true);
+            instance = new SchemaService();
         }
         return instance;
     }
 
-    public static final synchronized SchemaService getInstance(boolean dialog) {
-        if (instance == null) {
-            instance = new SchemaService(dialog);
-        }
-        return instance;
-    }
-
-    /**
-     * Reloading schema OPI without the progress monitor
-     */
-
-    public void reLoadNoProgressMonitor() {
+    public void reload() {
         schemaWidgetsMap.clear();
-        final IPath schemaOPI = PreferencesHelper.getSchemaOPIPath();
+        IPath schemaOPI = PreferencesHelper.getSchemaOPIPath();
         if (schemaOPI == null || schemaOPI.isEmpty()) {
             return;
         }
-        OPIBuilderPlugin.getLogger().log(Level.INFO, () -> "Schema service: connecting to " + schemaOPI);
         loadSchema(schemaOPI);
     }
 
-    /**
-     * Reload schema opi.
-     */
-    public void reLoad() {
-        schemaWidgetsMap.clear();
-        final IPath schemaOPI = PreferencesHelper.getSchemaOPIPath();
-        if (schemaOPI == null || schemaOPI.isEmpty()) {
-            return;
-        }
-        if (Display.getCurrent() != null) { // in UI thread, show progress dialog
-            IRunnableWithProgress job = monitor -> {
-                monitor.beginTask("Connecting to " + schemaOPI, IProgressMonitor.UNKNOWN);
-                loadSchema(schemaOPI);
-                monitor.done();
-            };
-            try {
-                new ProgressMonitorDialog(
-                        Display.getCurrent().getActiveShell()).run(true, false, job);
-            } catch (Exception e) {
-                ErrorHandlerUtil.handleError("Failed to load schema", e);
-            }
-        } else {
-            loadSchema(schemaOPI);
-        }
-    }
-
-    /**
-     * @param schemaOPI
-     */
-    public void loadSchema(final IPath schemaOPI) {
-        InputStream inputStream = null;
-        try {
-            inputStream = ResourceUtil.pathToInputStream(schemaOPI, false);
+    public void loadSchema(IPath schemaOPI) {
+        try (InputStream inputStream = ResourceUtil.pathToInputStream(schemaOPI, false)) {
             DisplayModel displayModel = new DisplayModel(schemaOPI);
             XMLUtil.fillDisplayModelFromInputStream(inputStream,
                     displayModel, Display.getDefault());
@@ -112,17 +62,10 @@ public final class SchemaService {
                 schemaWidgetsMap.put(
                         ConnectionModel.ID, displayModel.getConnectionList().get(0));
             }
+        } catch (FileNotFoundException e) {
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Cannot locate OPI Schema: " + schemaOPI, e);
         } catch (Exception e) {
-            String message = "Failed to load schema file: " + schemaOPI;
-            OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    ErrorHandlerUtil.handleError("Failed to close stream", e);
-                }
-            }
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to load OPI Schema: " + schemaOPI, e);
         }
     }
 

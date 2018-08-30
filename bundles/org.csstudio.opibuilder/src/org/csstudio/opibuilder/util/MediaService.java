@@ -51,13 +51,22 @@ public final class MediaService {
     public static final FontData DEFAULT_UNKNOWN_FONT = new FontData("Liberation Sans", 11, SWT.NONE);
 
     private MediaService() {
-        loadBundledFonts();
-        reloadColors();
-        reloadFonts();
+        Display display = Display.getCurrent();
+        if (display != null) {
+            loadBundledFonts(display);
+            reloadColors();
+            reloadFonts();
+        } else {
+            Display finalDisplay = DisplayUtils.getDisplay();
+            finalDisplay.syncExec(() -> {
+                loadBundledFonts(finalDisplay);
+                reloadColors();
+                reloadFonts();
+            });
+        }
     }
 
-    private void loadBundledFonts() {
-        Display display = Display.getCurrent();
+    private void loadBundledFonts(Display display) {
         if (!isFontAvailable(display, "Liberation Sans")) {
             // Load the font from within the bundle. It's much better though to have it
             // pre-installed on the system, because then it is also available in the

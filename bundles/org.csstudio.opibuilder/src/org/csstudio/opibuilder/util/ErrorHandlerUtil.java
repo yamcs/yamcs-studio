@@ -7,12 +7,6 @@ import org.csstudio.ui.util.dialogs.ExceptionDetailsErrorDialog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-/**
- * The utility class help to handle exceptions.
- * 
- * @author Xihui Chen
- *
- */
 public class ErrorHandlerUtil {
 
     /**
@@ -48,11 +42,6 @@ public class ErrorHandlerUtil {
     /**
      * This method will call {@link #handleError(String, Throwable, boolean, boolean)} with writeToConsole as true and
      * popErrorDialog as false.
-     * 
-     * @param message
-     *            message of the error.
-     * @param exception
-     *            the exception.
      */
     public static void handleError(String message, Throwable exception) {
         handleError(message, exception, true, false);

@@ -1,6 +1,5 @@
 package org.csstudio.opibuilder.model;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.properties.FilePathProperty;
 import org.csstudio.opibuilder.properties.StringProperty;
@@ -11,7 +10,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.gef.GraphicalViewer;
 
-/**The abstract base model for LinkingContainer widgets.
+/**
+ * The abstract base model for LinkingContainer widgets.
  */
 public abstract class AbstractLinkingContainerModel extends AbstractContainerModel {
 
@@ -21,13 +21,10 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
     public static final String PROP_OPI_FILE = "opi_file";
 
     /**
-     * The name of the group container widget in the OPI file, which
-     * will be loaded if it is specified. If it is not specified, the whole
-     * OPI file will be loaded.
+     * The name of the group container widget in the OPI file, which will be loaded if it is specified. If it is not
+     * specified, the whole OPI file will be loaded.
      */
     public static final String PROP_GROUP_NAME = "group_name";
-
-
 
     /**
      * The display Scale options of the embedded OPI.
@@ -40,14 +37,14 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
 
         addProperty(new FilePathProperty(PROP_OPI_FILE, "OPI File",
                 WidgetPropertyCategory.Behavior, new Path(""),
-                new String[] { OPIBuilderPlugin.OPI_FILE_EXTENSION}));
+                new String[] { "opi" }));
 
         addProperty(new StringProperty(PROP_GROUP_NAME, "Group Name",
                 WidgetPropertyCategory.Behavior, ""));
     }
 
-    public String getGroupName(){
-        return (String)getPropertyValue(PROP_GROUP_NAME);
+    public String getGroupName() {
+        return (String) getPropertyValue(PROP_GROUP_NAME);
     }
 
     /**
@@ -57,16 +54,19 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
      */
     public IPath getOPIFilePath() {
         IPath absolutePath = (IPath) getProperty(PROP_OPI_FILE).getPropertyValue();
-        if(absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute())
+        if (absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute()) {
             absolutePath = ResourceUtil.buildAbsolutePath(this, absolutePath);
+        }
         return absolutePath;
     }
 
-    public void setOPIFilePath(String path){
+    public void setOPIFilePath(String path) {
         setPropertyValue(PROP_OPI_FILE, new Path(path));
     }
 
-    /**Set the display model of the loaded opi.
+    /**
+     * Set the display model of the loaded opi.
+     * 
      * @param displayModel
      */
     public synchronized void setDisplayModel(DisplayModel displayModel) {
@@ -84,7 +84,7 @@ public abstract class AbstractLinkingContainerModel extends AbstractContainerMod
         this.displayModel.setViewer(viewer);
     }
 
-    public synchronized void setDisplayModelDisplayID(int displayID){
+    public synchronized void setDisplayModelDisplayID(int displayID) {
         this.displayModel.setDisplayID(displayID);
     }
 

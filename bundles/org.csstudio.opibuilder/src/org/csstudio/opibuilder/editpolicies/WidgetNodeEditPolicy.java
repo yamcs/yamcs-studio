@@ -30,8 +30,9 @@ import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
-/**    The editpolicy that allows the creation of connections and
-    the reconnection of connections between widgets.
+/**
+ * The editpolicy that allows the creation of connections and the reconnection of connections between widgets.
+ * 
  * @author Xihui Chen
  *
  */
@@ -47,7 +48,7 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         // To avoid this situation, we make sure that the schema service is already loaded
         // when we add the first connector. The schema service is a singleton and will
         // just be returned whenever requested from now on.
-        SchemaService.getInstance(false);
+        SchemaService.getInstance();
     }
 
     /**
@@ -58,7 +59,7 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
     @Override
     protected ConnectionRouter getDummyConnectionRouter(
             CreateConnectionRequest request) {
-        int i = (Integer)SchemaService.getInstance().getDefaultPropertyValue(
+        int i = (Integer) SchemaService.getInstance().getDefaultPropertyValue(
                 ConnectionModel.ID, ConnectionModel.PROP_ROUTER);
         RouterType routerType = RouterType.values()[i];
         switch (routerType) {
@@ -77,12 +78,12 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         ConnectionCreateCommand cmd = (ConnectionCreateCommand) request.getStartCommand();
         cmd.setTarget(getWidgetEditPart().getWidgetModel());
         ConnectionAnchor anchor = getWidgetEditPart().getTargetConnectionAnchor(request);
-        if(anchor == null)
+        if (anchor == null) {
             return null;
+        }
         cmd.setTargetTerminal(getWidgetEditPart().getTerminalNameFromAnchor(anchor));
         return cmd;
     }
-
 
     @Override
     protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
@@ -94,7 +95,6 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         return cmd;
     }
 
-
     @Override
     protected Command getReconnectTargetCommand(ReconnectRequest request) {
         ConnectionModel connection = (ConnectionModel) request.getConnectionEditPart().getModel();
@@ -104,11 +104,10 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         ConnectionReconnectCommand cmd = new ConnectionReconnectCommand(connection);
         cmd.setNewTarget(newTarget);
         cmd.setNewTargetTerminal(newTerminal);
-        //clear point list
+        // clear point list
         return cmd.chain(new SetWidgetPropertyCommand(
                 connection, ConnectionModel.PROP_POINTS, new PointList()));
     }
-
 
     @Override
     protected Command getReconnectSourceCommand(ReconnectRequest request) {
@@ -119,21 +118,19 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         ConnectionReconnectCommand cmd = new ConnectionReconnectCommand(connection);
         cmd.setNewSource(newSource);
         cmd.setNewSourceTerminal(newTerminal);
-        //clear point list
+        // clear point list
         return cmd.chain(new SetWidgetPropertyCommand(
                 connection, ConnectionModel.PROP_POINTS, new PointList()));
     }
 
-    protected AbstractBaseEditPart getWidgetEditPart(){
-        return (AbstractBaseEditPart)getHost();
+    protected AbstractBaseEditPart getWidgetEditPart() {
+        return (AbstractBaseEditPart) getHost();
     }
-
 
     @Override
     protected void showTargetConnectionFeedback(DropRequest request) {
         addAnchorHandles();
     }
-
 
     @Override
     protected void eraseTargetConnectionFeedback(DropRequest request) {
@@ -147,8 +144,9 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
         removeAnchorHandles();
         IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
         handles = createAnchorHandles();
-        for (int i = 0; i < handles.size(); i++)
+        for (int i = 0; i < handles.size(); i++) {
             layer.add(handles.get(i));
+        }
     }
 
     /**
@@ -156,24 +154,25 @@ public class WidgetNodeEditPolicy extends GraphicalNodeEditPolicy {
      *
      * @return List of handles; cannot be <code>null</code>
      */
-    protected List<AnchorHandle> createAnchorHandles(){
-        List<AnchorHandle> result = new ArrayList<AnchorHandle>();
-        for(ConnectionAnchor anchor: getWidgetEditPart().getAnchorMap().values()){
+    protected List<AnchorHandle> createAnchorHandles() {
+        List<AnchorHandle> result = new ArrayList<>();
+        for (ConnectionAnchor anchor : getWidgetEditPart().getAnchorMap().values()) {
             result.add(new AnchorHandle(getWidgetEditPart(), anchor));
         }
         return result;
     }
 
-
     /**
      * removes the anchor handles
      */
     protected void removeAnchorHandles() {
-        if (handles == null)
+        if (handles == null) {
             return;
+        }
         IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
-        for (int i = 0; i < handles.size(); i++)
+        for (int i = 0; i < handles.size(); i++) {
             layer.remove(handles.get(i));
+        }
         handles = null;
     }
 }
