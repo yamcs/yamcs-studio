@@ -21,7 +21,6 @@
  */
 package org.csstudio.ui.util.composites;
 
-import org.csstudio.ui.util.internal.localization.Messages;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -31,7 +30,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.fieldassist.FieldAssistColors;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -42,21 +40,19 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Workbench-level composite for resource and container specification by the
- * user. Services such as field validation are performed by the group. The group
- * can be configured to accept existing resources, or only new resources.
+ * Workbench-level composite for resource and container specification by the user. Services such as field validation are
+ * performed by the group. The group can be configured to accept existing resources, or only new resources.
  *
  * <p>
- * <b>Code is based upon
- * <code>org.eclipse.ui.internal.ide.misc.ResourceAndContainerGroup</code> in
- * plugin <code>org.eclipse.ui.ide</code>.</b>
+ * <b>Code is based upon <code>org.eclipse.ui.internal.ide.misc.ResourceAndContainerGroup</code> in plugin
+ * <code>org.eclipse.ui.ide</code>.</b>
  * </p>
  *
  * @author Alexander Will
  * @version $Revision$
  */
 
-//TODO: Copied from org.csstudio.platform.ui. Review is needed.
+// TODO: Copied from org.csstudio.platform.ui. Review is needed.
 
 public final class ResourceAndContainerGroup implements Listener {
     /**
@@ -155,8 +151,7 @@ public final class ResourceAndContainerGroup implements Listener {
     private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
     /**
-     * Create an instance of the group to allow the user to enter/select a
-     * container and specify a resource name.
+     * Create an instance of the group to allow the user to enter/select a container and specify a resource name.
      *
      * @param parent
      *            composite widget to parent the group
@@ -165,9 +160,8 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param resourceFieldLabel
      *            label to use in front of the resource name field
      * @param resourceType
-     *            one word, in lowercase, to describe the resource to the user
-     *            (file, folder, project) height hint for the container
-     *            selection widget group
+     *            one word, in lowercase, to describe the resource to the user (file, folder, project) height hint for
+     *            the container selection widget group
      */
     public ResourceAndContainerGroup(final Composite parent,
             final Listener client, final String resourceFieldLabel,
@@ -176,8 +170,7 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Create an instance of the group to allow the user to enter/select a
-     * container and specify a resource name.
+     * Create an instance of the group to allow the user to enter/select a container and specify a resource name.
      *
      * @param parent
      *            composite widget to parent the group
@@ -186,11 +179,9 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param resourceFieldLabel
      *            label to use in front of the resource name field
      * @param resourceType
-     *            one word, in lowercase, to describe the resource to the user
-     *            (file, folder, project)
+     *            one word, in lowercase, to describe the resource to the user (file, folder, project)
      * @param showClosedProjects
-     *            whether or not to show closed projects height hint for the
-     *            container selection widget group
+     *            whether or not to show closed projects height hint for the container selection widget group
      */
     public ResourceAndContainerGroup(final Composite parent,
             final Listener client, final String resourceFieldLabel,
@@ -200,8 +191,7 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Create an instance of the group to allow the user to enter/select a
-     * container and specify a resource name.
+     * Create an instance of the group to allow the user to enter/select a container and specify a resource name.
      *
      * @param parent
      *            composite widget to parent the group
@@ -210,8 +200,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param resourceFieldLabel
      *            label to use in front of the resource name field
      * @param resourceType
-     *            one word, in lowercase, to describe the resource to the user
-     *            (file, folder, project)
+     *            one word, in lowercase, to describe the resource to the user (file, folder, project)
      * @param showClosedProjects
      *            whether or not to show closed projects
      * @param heightHint
@@ -229,8 +218,7 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Returns a boolean indicating whether all controls in this group contain
-     * valid values.
+     * Returns a boolean indicating whether all controls in this group contain valid values.
      *
      * @return boolean
      */
@@ -251,7 +239,7 @@ public final class ResourceAndContainerGroup implements Listener {
     private void createContents(final Composite parent,
             final String resourceLabelString, final int heightHint) {
 
-//        Font font = parent.getFont();
+        // Font font = parent.getFont();
         // server name group
         Composite composite = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
@@ -259,7 +247,7 @@ public final class ResourceAndContainerGroup implements Listener {
         layout.marginHeight = 0;
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//        composite.setFont(font);
+        // composite.setFont(font);
 
         // container group
         if (heightHint == SWT.DEFAULT) {
@@ -279,11 +267,11 @@ public final class ResourceAndContainerGroup implements Listener {
         nameGroup.setLayout(layout);
         nameGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
                 | GridData.GRAB_HORIZONTAL));
-//        nameGroup.setFont(font);
+        // nameGroup.setFont(font);
 
         Label label = new Label(nameGroup, SWT.NONE);
         label.setText(resourceLabelString);
-//        label.setFont(font);
+        // label.setFont(font);
 
         // resource name entry field
         _resourceNameField = new Text(nameGroup, SWT.BORDER);
@@ -292,7 +280,7 @@ public final class ResourceAndContainerGroup implements Listener {
                 | GridData.GRAB_HORIZONTAL);
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         _resourceNameField.setLayoutData(data);
-//        _resourceNameField.setFont(font);
+        // _resourceNameField.setFont(font);
         _resourceNameField.setBackground(FieldAssistColors
                 .getRequiredFieldBackgroundColor(_resourceNameField));
 
@@ -309,9 +297,8 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Returns the path of the currently selected container or null if no
-     * container has been selected. Note that the container may not exist yet if
-     * the user entered a new container name in the field.
+     * Returns the path of the currently selected container or null if no container has been selected. Note that the
+     * container may not exist yet if the user entered a new container name in the field.
      *
      * @return The full path of the selected container.
      */
@@ -320,9 +307,8 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Returns an error message indicating the current problem with the value of
-     * a control in the group, or an empty message if all controls in the group
-     * contain valid values.
+     * Returns an error message indicating the current problem with the value of a control in the group, or an empty
+     * message if all controls in the group contain valid values.
      *
      * @return java.lang.String
      */
@@ -340,8 +326,8 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Returns a string that is the path of the currently selected container.
-     * Returns an empty string if no container has been selected.
+     * Returns a string that is the path of the currently selected container. Returns an empty string if no container
+     * has been selected.
      *
      * @return The entered resource name.
      */
@@ -355,6 +341,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * @param e
      *            org.eclipse.swt.widgets.Event
      */
+    @Override
     public void handleEvent(final Event e) {
         validateControls();
         this.refreshFullPath();
@@ -367,8 +354,7 @@ public final class ResourceAndContainerGroup implements Listener {
      * Sets the flag indicating whether existing resources are permitted.
      *
      * @param value
-     *            Flag that signals of it is allows to enter the names of
-     *            already existing resources.
+     *            Flag that signals of it is allows to enter the names of already existing resources.
      */
     public void setAllowExistingResources(final boolean value) {
         _allowExistingResources = value;
@@ -414,10 +400,8 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Returns a <code>boolean</code> indicating whether a container name
-     * represents a valid container resource in the workbench. An error message
-     * is stored for future reference if the name does not represent a valid
-     * container.
+     * Returns a <code>boolean</code> indicating whether a container name represents a valid container resource in the
+     * workbench. An error message is stored for future reference if the name does not represent a valid container.
      *
      * @return <code>boolean</code> indicating validity of the container name
      */
@@ -425,7 +409,7 @@ public final class ResourceAndContainerGroup implements Listener {
         IPath path = _containerGroup.getFullPath();
         if (path == null) {
             _problemType = PROBLEM_CONTAINER_EMPTY;
-            _problemMessage = Messages.ResourceAndContainerGroup_PROBLEM_EMPTY;
+            _problemMessage = "The folder is empty.";
             return false;
         }
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -433,7 +417,7 @@ public final class ResourceAndContainerGroup implements Listener {
         if (projectName == null
                 || !workspace.getRoot().getProject(projectName).exists()) {
             _problemType = PROBLEM_PROJECT_DOES_NOT_EXIST;
-            _problemMessage = Messages.ResourceAndContainerGroup_PROBLEM_DOES_NOT_EXIST;
+            _problemMessage = "The specified project does not exist.";
             return false;
         }
         // path is invalid if any prefix is occupied by a file
@@ -441,10 +425,7 @@ public final class ResourceAndContainerGroup implements Listener {
         while (path.segmentCount() > 1) {
             if (root.getFile(path).exists()) {
                 _problemType = PROBLEM_PATH_OCCUPIED;
-                _problemMessage = NLS
-                        .bind(
-                                Messages.ResourceAndContainerGroup_PROBLEM_FILE_ALREADY_EXISTS_AT_LOCATION,
-                                path.makeRelative());
+                _problemMessage = "A file already exists at that location: " + path.makeRelative() + ".";
                 return false;
             }
             path = path.removeLastSegments(1);
@@ -453,10 +434,9 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Validates the values for each of the group's controls. If an invalid
-     * value is found then a descriptive error message is stored for later
-     * reference. Returns a boolean indicating the validity of all of the
-     * controls in the group.
+     * Validates the values for each of the group's controls. If an invalid value is found then a descriptive error
+     * message is stored for later reference. Returns a boolean indicating the validity of all of the controls in the
+     * group.
      *
      * @return True, if all values are valid.
      */
@@ -478,10 +458,9 @@ public final class ResourceAndContainerGroup implements Listener {
     }
 
     /**
-     * Returns a <code>boolean</code> indicating whether the specified
-     * resource path represents a valid new resource in the workbench. An error
-     * message is stored for future reference if the path does not represent a
-     * valid new resource path.
+     * Returns a <code>boolean</code> indicating whether the specified resource path represents a valid new resource in
+     * the workbench. An error message is stored for future reference if the path does not represent a valid new
+     * resource path.
      *
      * @param resourcePath
      *            the path to validate
@@ -502,17 +481,15 @@ public final class ResourceAndContainerGroup implements Listener {
                 && (workspace.getRoot().getFolder(resourcePath).exists() || workspace
                         .getRoot().getFile(resourcePath).exists())) {
             _problemType = PROBLEM_RESOURCE_EXIST;
-            _problemMessage = Messages.ResourceAndContainerGroup_PROBLEM_FILE_ALREADY_EXISTS;
+            _problemMessage = "The same name already exists.";
             return false;
         }
         return true;
     }
 
     /**
-     * Returns a <code>boolean</code> indicating whether the resource name
-     * rep- resents a valid resource name in the workbench. An error message is
-     * stored for future reference if the name does not represent a valid
-     * resource name.
+     * Returns a <code>boolean</code> indicating whether the resource name rep- resents a valid resource name in the
+     * workbench. An error message is stored for future reference if the name does not represent a valid resource name.
      *
      * @return <code>boolean</code> indicating validity of the resource name
      */
@@ -521,18 +498,13 @@ public final class ResourceAndContainerGroup implements Listener {
 
         if (resourceName.equals("")) {
             _problemType = PROBLEM_RESOURCE_EMPTY;
-            _problemMessage = NLS.bind(
-                    Messages.ResourceAndContainerGroup_PROBLEM_EMPTY_NAME,
-                    _resourceType);
+            _problemMessage = "The '" + _resourceType + "' name is empty.";
             return false;
         }
 
         if (!(new Path("")).isValidPath(resourceName)) {
             _problemType = PROBLEM_NAME_INVALID;
-            _problemMessage = NLS
-                    .bind(
-                            Messages.ResourceAndContainerGroup_PROBLEM_INVALID_FILE_NAME,
-                            resourceName);
+            _problemMessage = "'" + resourceName + "' is not a valid file name.";
             return false;
         }
         return true;

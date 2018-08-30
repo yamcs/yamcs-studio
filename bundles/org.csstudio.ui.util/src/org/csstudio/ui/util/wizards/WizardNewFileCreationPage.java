@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 import org.csstudio.ui.util.composites.ResourceAndContainerGroup;
-import org.csstudio.ui.util.internal.localization.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -65,8 +64,7 @@ import org.eclipse.swt.widgets.Listener;
  * </ul>
  * </p>
  * <p>
- * <b>Code is based upon
- * <code>org.eclipse.ui.dialogs.WizardNewFileCreationPage</code> in plugin
+ * <b>Code is based upon <code>org.eclipse.ui.dialogs.WizardNewFileCreationPage</code> in plugin
  * <code>org.eclipse.ui.ide</code>.</b>
  * </p>
  *
@@ -75,7 +73,7 @@ import org.eclipse.swt.widgets.Listener;
  *
  */
 
-//TODO: Copied from org.csstudio.platform.ui. Review is needed.
+// TODO: Copied from org.csstudio.platform.ui. Review is needed.
 
 public class WizardNewFileCreationPage extends WizardPage implements Listener {
     /**
@@ -109,9 +107,8 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     private boolean _canChooseProject;
 
     /**
-     * Creates a new file creation wizard page. If the initial resource
-     * selection contains exactly one container resource then it will be used as
-     * the default container resource.
+     * Creates a new file creation wizard page. If the initial resource selection contains exactly one container
+     * resource then it will be used as the default container resource.
      *
      * @param pageName
      *            the name of the page
@@ -124,9 +121,8 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Creates a new file creation wizard page. If the initial resource
-     * selection contains exactly one container resource then it will be used as
-     * the default container resource.
+     * Creates a new file creation wizard page. If the initial resource selection contains exactly one container
+     * resource then it will be used as the default container resource.
      *
      * @param pageName
      *            the name of the page
@@ -160,8 +156,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
 
         // resource and container group
         _resourceGroup = new ResourceAndContainerGroup(topLevel, this,
-                getNewFileLabel(),
-                Messages.WizardNewFileCreationPage_LABEL_FILE, false, 250);
+                getNewFileLabel(), "file", false, 250);
 
         if (getFileExtension() != null) {
             _resourceGroup.setFileExtension(getFileExtension());
@@ -188,8 +183,8 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
      * @param fileHandle
      *            the file handle to create a file resource with
      * @param contents
-     *            the initial contents of the new file resource, or
-     *            <code>null</code> if none (equivalent to an empty stream)
+     *            the initial contents of the new file resource, or <code>null</code> if none (equivalent to an empty
+     *            stream)
      * @exception CoreException
      *                if the operation fails
      */
@@ -229,9 +224,8 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Creates a file resource handle for the file with the given workspace
-     * path. This method does not create the file resource; this is the
-     * responsibility of <code>createFile</code>.
+     * Creates a file resource handle for the file with the given workspace path. This method does not create the file
+     * resource; this is the responsibility of <code>createFile</code>.
      *
      * @param filePath
      *            the path of the file resource to create a handle for
@@ -243,26 +237,21 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Creates a new file resource in the selected container and with the
-     * selected name. Creates any missing resource containers along the path;
-     * does nothing if the container resources already exist.
+     * Creates a new file resource in the selected container and with the selected name. Creates any missing resource
+     * containers along the path; does nothing if the container resources already exist.
      * <p>
-     * In normal usage, this method is invoked after the user has pressed Finish
-     * on the wizard; the enablement of the Finish button implies that all
-     * controls on on this page currently contain valid values.
+     * In normal usage, this method is invoked after the user has pressed Finish on the wizard; the enablement of the
+     * Finish button implies that all controls on on this page currently contain valid values.
      * </p>
      * <p>
-     * Note that this page caches the new file once it has been successfully
-     * created; subsequent invocations of this method will answer the same file
-     * resource without attempting to create it again.
+     * Note that this page caches the new file once it has been successfully created; subsequent invocations of this
+     * method will answer the same file resource without attempting to create it again.
      * </p>
      * <p>
-     * This method should be called within a workspace modify operation since it
-     * creates resources.
+     * This method should be called within a workspace modify operation since it creates resources.
      * </p>
      *
-     * @return the created file resource, or <code>null</code> if the file was
-     *         not created
+     * @return the created file resource, or <code>null</code> if the file was not created
      */
     public final IFile createNewFile() {
         if (_newFile != null) {
@@ -280,8 +269,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
             createFile(newFileHandle, initialContents);
         } catch (CoreException e) {
             ErrorDialog.openError(getContainer().getShell(),
-                    Messages.WizardNewFileCreationPage_ERROR_TITLE, null, e
-                            .getStatus());
+                    "Creation Problems", null, e.getStatus());
 
             newFileHandle = null;
         }
@@ -292,22 +280,19 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Returns the current full path of the containing resource as entered or
-     * selected by the user, or its anticipated initial value.
+     * Returns the current full path of the containing resource as entered or selected by the user, or its anticipated
+     * initial value.
      *
-     * @return the container's full path, anticipated initial value, or
-     *         <code>null</code> if no path is known
+     * @return the container's full path, anticipated initial value, or <code>null</code> if no path is known
      */
     public final IPath getContainerFullPath() {
         return _resourceGroup.getContainerFullPath();
     }
 
     /**
-     * Returns the current file name as entered by the user, or its anticipated
-     * initial value.
+     * Returns the current file name as entered by the user, or its anticipated initial value.
      *
-     * @return the file name, its anticipated initial value, or
-     *         <code>null</code> if no file name is known
+     * @return the file name, its anticipated initial value, or <code>null</code> if no file name is known
      */
     public String getFileName() {
         if (_resourceGroup == null) {
@@ -318,9 +303,8 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Returns a stream containing the initial contents to be given to new file
-     * resource instances. <b>Subclasses</b> may wish to override. This default
-     * implementation provides no initial contents.
+     * Returns a stream containing the initial contents to be given to new file resource instances. <b>Subclasses</b>
+     * may wish to override. This default implementation provides no initial contents.
      *
      * @return initial contents to be given to new file resource instances
      */
@@ -329,36 +313,29 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Returns the label to display in the file name specification visual
-     * component group.
+     * Returns the label to display in the file name specification visual component group.
      * <p>
      * Subclasses may reimplement.
      * </p>
      *
-     * @return the label to display in the file name specification visual
-     *         component group
+     * @return the label to display in the file name specification visual component group
      */
     protected String getNewFileLabel() {
-        return Messages.WizardNewFileCreationPage_LABEL_FILE_NAME;
+        return "File na&me:";
     }
 
     /**
-     * The <code>WizardNewFileCreationPage</code> implementation of this
-     * <code>Listener</code> method handles all events and enablements for
-     * controls on this page. Subclasses may extend.
-     *
-     * @param event
-     *            The event to handle.
+     * The <code>WizardNewFileCreationPage</code> implementation of this <code>Listener</code> method handles all events
+     * and enablements for controls on this page. Subclasses may extend.
      */
     @Override
-    public void handleEvent(final Event event) {
+    public void handleEvent(Event event) {
         setPageComplete(validatePage());
     }
 
     /**
-     * Sets the initial contents of the container name entry field, based upon
-     * either a previously-specified initial value or the ability to determine
-     * such a value.
+     * Sets the initial contents of the container name entry field, based upon either a previously-specified initial
+     * value or the ability to determine such a value.
      */
     protected final void initialPopulateContainerNameField() {
         if (_initialContainerFullPath != null) {
@@ -388,8 +365,8 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Sets the value of this page's container name field, or stores it for
-     * future use if this page's controls do not exist yet.
+     * Sets the value of this page's container name field, or stores it for future use if this page's controls do not
+     * exist yet.
      *
      * @param path
      *            the full path to the container
@@ -403,8 +380,8 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     }
 
     /**
-     * Sets the value of this page's file name field, or stores it for future
-     * use if this page's controls do not exist yet.
+     * Sets the value of this page's file name field, or stores it for future use if this page's controls do not exist
+     * yet.
      *
      * @param value
      *            new file name
@@ -420,8 +397,7 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
     /**
      * Returns whether this page's controls currently all contain valid values.
      *
-     * @return <code>true</code> if all controls are valid, and
-     *         <code>false</code> if at least one is invalid
+     * @return <code>true</code> if all controls are valid, and <code>false</code> if at least one is invalid
      */
     protected final boolean validatePage() {
         boolean valid = true;

@@ -27,7 +27,6 @@ import java.util.List;
 import org.csstudio.ui.util.Activator;
 import org.csstudio.ui.util.ImageUtil;
 import org.csstudio.ui.util.ResourceUtil;
-import org.csstudio.ui.util.internal.localization.Messages;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -38,12 +37,8 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -65,27 +60,13 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  *
  * @author Kai Meyer
  */
-//TODO: Copied from org.csstudio.platform.ui.
+// TODO: Copied from org.csstudio.platform.ui.
 public final class ResourceSelectionGroup extends Composite {
 
-    /**
-     * This action is for creating a new folder.
-     *
-     * @author Kai Meyer
-     *
-     */
     private final class NewFolderAction extends Action {
 
-        /**
-         * The Shell.
-         */
         private final Shell _shell;
 
-        /**
-         * Constructor.
-         * @param shell
-         *             The Shell for this Action
-         */
         public NewFolderAction(final Shell shell) {
             _shell = shell;
             this.setText("Create new folder");
@@ -94,17 +75,14 @@ public final class ResourceSelectionGroup extends Composite {
                     ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_folder.png"));
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
             final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(getFullPath());
-            final StringBuffer buffer = new StringBuffer(Messages.CreateFolderAction_DIALOG_MESSAGE);
+            final StringBuffer buffer = new StringBuffer("Please enter the name of the folder.");
             buffer.append(" (");
             buffer.append(resource.getFullPath());
             buffer.append("/..)");
-            final InputDialog inputDialog = new InputDialog(_shell, Messages.CreateFolderAction_DIALOG_TITLE,
+            final InputDialog inputDialog = new InputDialog(_shell, "Create a new Folder",
                     buffer.toString(), "", null);
             final int ret = inputDialog.open();
 
@@ -112,9 +90,10 @@ public final class ResourceSelectionGroup extends Composite {
                 final String folderName = inputDialog.getValue();
                 if (folderName != null) {
                     if (resource instanceof IContainer) {
-                        if (ResourceUtil.getInstance().createFolder((IContainer) resource, folderName)==ResourceUtil.FOLDEREXISTS) {
-                            MessageDialog.openInformation(_shell, Messages.CreateFolderAction_ERROR_TITLE,
-                                    Messages.CreateFolderAction_ERROR_MESSAGE);
+                        if (ResourceUtil.getInstance().createFolder((IContainer) resource,
+                                folderName) == ResourceUtil.FOLDEREXISTS) {
+                            MessageDialog.openInformation(_shell, "Folder already exists.",
+                                    "The folder already exists in your workspace.");
                         }
                         refreshTree();
                     }
@@ -123,24 +102,10 @@ public final class ResourceSelectionGroup extends Composite {
         }
     }
 
-    /**
-     * This action is for creating a new project.
-     *
-     * @author Kai Meyer
-     *
-     */
     private final class NewProjectAction extends Action {
 
-        /**
-         * The Shell.
-         */
         private final Shell _shell;
 
-        /**
-         * Constructor.
-         * @param shell
-         *             The Shell for this Action
-         */
         public NewProjectAction(final Shell shell) {
             _shell = shell;
             this.setText("Create new project");
@@ -148,28 +113,24 @@ public final class ResourceSelectionGroup extends Composite {
             this.setImageDescriptor(ImageUtil.getInstance().getImageDescriptor(Activator.ID, "icons/new_project.png"));
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
-            InputDialog inputDialog = new InputDialog(_shell, Messages.CreateProjectAction_DIALOG_TITLE,
-                    Messages.CreateProjectAction_DIALOG_MESSAGE, "", null);
+            InputDialog inputDialog = new InputDialog(_shell, "Create a new Project",
+                    "Please enter the name of the project.", "", null);
             int ret = inputDialog.open();
 
             if (ret == Window.OK) {
                 String projectName = inputDialog.getValue();
                 if (projectName != null) {
-                    if (ResourceUtil.getInstance().createProject(projectName)==ResourceUtil.PROJECTEXISTS) {
-                        MessageDialog.openInformation(_shell, Messages.CreateProjectAction_ERROR_TITLE,
-                                Messages.CreateProjectAction_ERROR_MESSAGE);
+                    if (ResourceUtil.getInstance().createProject(projectName) == ResourceUtil.PROJECTEXISTS) {
+                        MessageDialog.openInformation(_shell, "Project already exists.",
+                                "The project already exists in your workspace.");
                     }
                     refreshTree();
                 }
             }
         }
     }
-
 
     /**
      * The listener to notify of events.
@@ -222,8 +183,7 @@ public final class ResourceSelectionGroup extends Composite {
      * @param parent
      *            The parent widget of the group.
      * @param listener
-     *            A listener to forward events to. Can be null if no listener is
-     *            required.
+     *            A listener to forward events to. Can be null if no listener is required.
      * @param filters
      * @param showNewContainerActions
      *            Whether to show the New Folder and New Project actions.
@@ -240,8 +200,7 @@ public final class ResourceSelectionGroup extends Composite {
      * @param parent
      *            The parent widget of the group.
      * @param listener
-     *            A listener to forward events to. Can be null if no listener is
-     *            required.
+     *            A listener to forward events to. Can be null if no listener is required.
      * @param filters
      * @param message
      *            The text to present to the user.
@@ -260,8 +219,7 @@ public final class ResourceSelectionGroup extends Composite {
      * @param parent
      *            The parent widget of the group.
      * @param listener
-     *            A listener to forward events to. Can be null if no listener is
-     *            required.
+     *            A listener to forward events to. Can be null if no listener is required.
      * @param filters
      * @param message
      *            The text to present to the user.
@@ -286,8 +244,7 @@ public final class ResourceSelectionGroup extends Composite {
      * @param parent
      *            The parent widget of the group.
      * @param listener
-     *            A listener to forward events to. Can be null if no listener is
-     *            required.
+     *            A listener to forward events to. Can be null if no listener is required.
      * @param filters
      * @param message
      *            The text to present to the user.
@@ -312,14 +269,14 @@ public final class ResourceSelectionGroup extends Composite {
         if (message != null) {
             createContents(message, filters, heightHint, widthHint);
         } else {
-            createContents(Messages.ContainerSelectionGroup_TITLE,
+            createContents("Select the folder:",
                     filters, heightHint, widthHint);
         }
     }
 
     /**
-     * The container selection has changed in the tree view. Update the
-     * container name field value and notify all listeners.
+     * The container selection has changed in the tree view. Update the container name field value and notify all
+     * listeners.
      *
      * @param resource
      *            The container that changed
@@ -357,10 +314,10 @@ public final class ResourceSelectionGroup extends Composite {
 
         Label label = new Label(this, SWT.WRAP);
         label.setText(message);
-//        label.setFont(getFont());
+        // label.setFont(getFont());
 
         createTreeViewer(filters, heightHint);
-//        Dialog.applyDialogFont(this);
+        // Dialog.applyDialogFont(this);
     }
 
     /**
@@ -390,38 +347,31 @@ public final class ResourceSelectionGroup extends Composite {
         _treeViewer.setSorter(new ViewerSorter());
         _treeViewer.setUseHashlookup(true);
         _treeViewer
-                .addSelectionChangedListener(new ISelectionChangedListener() {
-                    @Override
-                    public void selectionChanged(
-                            final SelectionChangedEvent event) {
-                        IStructuredSelection selection = (IStructuredSelection) event
-                                .getSelection();
-                        if (selection == null) {
-                            containerSelectionChanged(null);
-                        } else {
-                            containerSelectionChanged((IResource) selection
-                                    .getFirstElement()); // allow null
-                        }
-                        if (_newFolderAction != null) {
-                            _newFolderAction.setEnabled(selection != null);
-                        }
+                .addSelectionChangedListener(event -> {
+                    IStructuredSelection selection = (IStructuredSelection) event
+                            .getSelection();
+                    if (selection == null) {
+                        containerSelectionChanged(null);
+                    } else {
+                        containerSelectionChanged((IResource) selection
+                                .getFirstElement()); // allow null
+                    }
+                    if (_newFolderAction != null) {
+                        _newFolderAction.setEnabled(selection != null);
                     }
                 });
-        _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(final DoubleClickEvent event) {
-                ISelection selection = event.getSelection();
-                if (selection instanceof IStructuredSelection) {
-                    Object item = ((IStructuredSelection) selection)
-                            .getFirstElement();
-                    if (item == null) {
-                        return;
-                    }
-                    if (_treeViewer.getExpandedState(item)) {
-                        _treeViewer.collapseToLevel(item, 1);
-                    } else {
-                        _treeViewer.expandToLevel(item, 1);
-                    }
+        _treeViewer.addDoubleClickListener(event -> {
+            ISelection selection = event.getSelection();
+            if (selection instanceof IStructuredSelection) {
+                Object item = ((IStructuredSelection) selection)
+                        .getFirstElement();
+                if (item == null) {
+                    return;
+                }
+                if (_treeViewer.getExpandedState(item)) {
+                    _treeViewer.collapseToLevel(item, 1);
+                } else {
+                    _treeViewer.expandToLevel(item, 1);
                 }
             }
         });
@@ -436,22 +386,22 @@ public final class ResourceSelectionGroup extends Composite {
 
     /**
      * Sets the first Element of the TreeViewer as selected Item.
+     * 
      * @param viewer
-     *                     The TreeViewer, which selection should be set
+     *            The TreeViewer, which selection should be set
      */
     private void setDefaultSelection(final TreeViewer viewer) {
         final TreeItem item = viewer.getTree().getItemCount() > 0 ? viewer.getTree().getItem(0) : null;
-        if (item!=null) {
+        if (item != null) {
             viewer.getTree().setSelection(item);
         }
     }
 
     /**
-     * Creates the New Folder and New Project actions and adds them to
-     * the given toolbar manager.
+     * Creates the New Folder and New Project actions and adds them to the given toolbar manager.
      *
      * @param manager
-     *             The ToolBarManager, where the Actions are added
+     *            The ToolBarManager, where the Actions are added
      */
     private void addNewContainerActions(final ToolBarManager manager) {
         if (_showNewContainerActions) {
@@ -467,8 +417,9 @@ public final class ResourceSelectionGroup extends Composite {
 
     /**
      * Adds a PopupMenu to the given TreeViewer.
+     * 
      * @param viewer
-     *             The TreeViewer, where the PopupMenu is added
+     *            The TreeViewer, where the PopupMenu is added
      */
     private void addPopupMenu(final TreeViewer viewer) {
         MenuManager popupMenu = new MenuManager();
@@ -484,18 +435,12 @@ public final class ResourceSelectionGroup extends Composite {
      * Refreshes the Tree in an async-thread.
      */
     private void refreshTree() {
-        _treeViewer.getTree().getDisplay().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                _treeViewer.refresh();
-            }
-        });
+        _treeViewer.getTree().getDisplay().asyncExec(() -> _treeViewer.refresh());
     }
 
     /**
-     * Returns the currently entered container name. Null if the field is empty.
-     * Note that the container may not exist yet if the user entered a new
-     * container name in the field.
+     * Returns the currently entered container name. Null if the field is empty. Note that the container may not exist
+     * yet if the user entered a new container name in the field.
      *
      * @return IPath
      */
@@ -507,8 +452,7 @@ public final class ResourceSelectionGroup extends Composite {
     }
 
     /**
-     * Gives focus to one of the widgets in the group, as determined by the
-     * group.
+     * Gives focus to one of the widgets in the group, as determined by the group.
      */
     public void setInitialFocus() {
         _treeViewer.getTree().setFocus();
@@ -517,12 +461,13 @@ public final class ResourceSelectionGroup extends Composite {
     /**
      * Selects the given resource.
      *
-     * @param resource the resource to select.
+     * @param resource
+     *            the resource to select.
      */
     public void setSelectedResource(final IResource resource) {
         _selectedResource = resource;
 
-        List<IResource> itemsToExpand = new ArrayList<IResource>();
+        List<IResource> itemsToExpand = new ArrayList<>();
         IContainer parent = resource.getParent();
         while (parent != null) {
             itemsToExpand.add(0, parent);
@@ -553,8 +498,9 @@ public final class ResourceSelectionGroup extends Composite {
      * @author SOPRA
      */
     public void refreshTreeWithFilter(final String[] filters) {
-        if (_treeViewer == null)
+        if (_treeViewer == null) {
             return;
+        }
         WorkspaceResourceContentProvider contentProvider = new WorkspaceResourceContentProvider(
                 filters);
         contentProvider.showClosedProjects(_showClosedProjects);

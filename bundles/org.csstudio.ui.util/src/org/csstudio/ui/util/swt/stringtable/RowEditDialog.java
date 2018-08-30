@@ -10,8 +10,9 @@ package org.csstudio.ui.util.swt.stringtable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Shell;
 
-/**The RowEditDialog is the abstract superclass of dialogs
- * that are used to edit a row of items in a table
+/**
+ * The RowEditDialog is the abstract superclass of dialogs that are used to edit a row of items in a table
+ * 
  * @author Xihui Chen
  */
 public abstract class RowEditDialog extends Dialog {
@@ -26,7 +27,7 @@ public abstract class RowEditDialog extends Dialog {
     @Override
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Messages.RowEditDialog_ShellTitle);
+        newShell.setText("Edit Row Data");
     }
 
     @Override
@@ -34,9 +35,11 @@ public abstract class RowEditDialog extends Dialog {
         return true;
     }
 
-    /**Set the rowData which will be initially displayed in the Edit Dialog.
-     * It must be called prior to open().
-     * @param rowData the rowData to set
+    /**
+     * Set the rowData which will be initially displayed in the Edit Dialog. It must be called prior to open().
+     * 
+     * @param rowData
+     *            the rowData to set
      */
     public void setRowData(final String[] rowData) {
         this.rowData = rowData;

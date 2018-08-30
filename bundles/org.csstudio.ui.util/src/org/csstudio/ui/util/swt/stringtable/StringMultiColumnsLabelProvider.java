@@ -13,20 +13,16 @@ import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 
-/** Label provider that transforms Integer index into corresponding
- * string in table data to display.
- *  @author Xihui Chen
+/**
+ * Label provider that transforms Integer index into corresponding string in table data to display.
+ * 
+ * @author Xihui Chen
  */
 class StringMultiColumnsLabelProvider extends CellLabelProvider {
     final private TableViewer tableViewer;
     final private boolean editable;
 
-    /**
-     * @param tableViewer
-     * @param editable whether this column is editable
-     */
-    public StringMultiColumnsLabelProvider(final TableViewer tableViewer,
-            final boolean editable) {
+    public StringMultiColumnsLabelProvider(TableViewer tableViewer, boolean editable) {
         super();
         this.tableViewer = tableViewer;
         this.editable = editable;
@@ -35,28 +31,31 @@ class StringMultiColumnsLabelProvider extends CellLabelProvider {
     @SuppressWarnings("unchecked")
     @Override
     public void update(ViewerCell cell) {
-        final List<String[]> items = (List<String[]>)tableViewer.getInput();
+        final List<String[]> items = (List<String[]>) tableViewer.getInput();
         final int index = ((Integer) cell.getElement()).intValue();
-        //if this is the extra row
-        if (index < 0)
-            if(editable)
-                cell.setText(Messages.StringTableEditor_AddRowText);
-            else
+        // if this is the extra row
+        if (index < 0) {
+            if (editable) {
+                cell.setText("<Add>");
+            } else {
                 cell.setText("");
-        //if not
-        else
-        {
+                // if not
+            }
+        } else {
             // For multi-line text, only show the first line
             final int column = cell.getColumnIndex();
             String text = "";
-            if (column < items.get(index).length)
+            if (column < items.get(index).length) {
                 text = items.get(index)[column];
+            }
             // Not sure whether to look for '\r' or '\n'. Try both
             int nl = text.indexOf('\r');
-            if (nl < 0)
+            if (nl < 0) {
                 nl = text.indexOf('\n');
-            if (nl > 0)
+            }
+            if (nl > 0) {
                 text = text.substring(0, nl) + "...";
+            }
             cell.setText(text);
         }
     }
