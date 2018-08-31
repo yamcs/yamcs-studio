@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -175,5 +176,9 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         ProcessorStateProvider state = (ProcessorStateProvider) service
                 .getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
         state.updateState(processorInfo);
+    }
+
+    public ImageDescriptor getImageDescriptor(String path) {
+        return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 }

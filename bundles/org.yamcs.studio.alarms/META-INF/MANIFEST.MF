@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.yamcs.studio.alarms.AlarmsPlugin
 Bundle-Description: Yamcs Studio Alarms
 Bundle-ManifestVersion: 2
 Bundle-Name: Yamcs Studio Alarms
