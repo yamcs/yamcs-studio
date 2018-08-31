@@ -8,7 +8,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
@@ -121,53 +127,94 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
 
             createHeader(composite, "Yamcs Instance");
             createKeyValueTextPair(composite, "Name", processor.getInstance());
-            if (instance.hasMissionDatabase()) {
-                MissionDatabase mdb = instance.getMissionDatabase();
-                if (mdb.hasName() && !"".equals(mdb.getName())) {
-                    createKeyValueTextPair(composite, "MDB", mdb.getName());
-                } else {
-                    createKeyValueTextPair(composite, "MDB", "Unnamed, instance-specific");
-                }
-                // TODO would like to show this
-                createKeyValueTextPair(composite, "MDB Last Scanned", "(information not available)");
-
-                createHeader(composite, "Top-level Space Systems", true);
-                for (int i = 0; i < mdb.getSpaceSystemCount(); i++) {
-                    SpaceSystemInfo ssInfo = mdb.getSpaceSystem(i);
-                    if (i > 0) {
-                        createSeparator(composite);
-                    }
-                    createKeyValueTextPair(composite, "Name", "" + ssInfo.getQualifiedName());
-                    if (ssInfo.hasShortDescription()) {
-                        createKeyValueTextPair(composite, "Description", "" + ssInfo.getShortDescription());
-                    }
-                    createKeyValueTextPair(composite, "Parameters", "" + ssInfo.getParameterCount());
-                    createKeyValueTextPair(composite, "Containers", "" + ssInfo.getContainerCount());
-                    createKeyValueTextPair(composite, "Commands", "" + ssInfo.getCommandCount());
-                    createKeyValueTextPair(composite, "Algorithms", "" + ssInfo.getAlgorithmCount());
-                }
-            } else {
-                createKeyValueTextPair(composite, "MDB", "none");
-            }
 
             createHeader(composite, "Subscribed Processor", true);
             createKeyValueTextPair(composite, "Name", processor.getName());
             createKeyValueTextPair(composite, "Type", processor.getType());
             createKeyValueTextPair(composite, "Created by", processor.getCreator());
-            if (processor.hasHasCommanding()) {
-                String supportsCommands = (processor.getHasCommanding() ? "on" : "off");
-                createKeyValueTextPair(composite, "Commanding", supportsCommands);
-            }
-            if (processor.hasHasAlarms()) {
-                String supportsAlarms = (processor.getHasAlarms() ? "on" : "off");
-                createKeyValueTextPair(composite, "Alarms", supportsAlarms);
-            }
 
-            createHeader(composite, "Runtime Information", true);
             long missionTime = TimeCatalogue.getInstance().getMissionTime();
             missionTimeTxt = createKeyValueTextPair(composite, "Mission Time",
                     YamcsUIPlugin.getDefault().formatInstant(missionTime));
             processorStateTxt = createKeyValueTextPair(composite, "Processor State", "" + processor.getState());
+
+            if (instance.hasMissionDatabase()) {
+                MissionDatabase mdb = instance.getMissionDatabase();
+                createHeader(composite, "Top-level Space Systems", true);
+
+                Composite tableWrapper = new Composite(composite, SWT.BORDER);
+                TableColumnLayout tcl = new TableColumnLayout();
+                tableWrapper.setLayout(tcl);
+                gd = new GridData(GridData.FILL_HORIZONTAL);
+                gd.heightHint = 100;
+                gd.horizontalSpan = 2;
+                tableWrapper.setLayoutData(gd);
+
+                TableViewer tableViewer = new TableViewer(tableWrapper, SWT.FULL_SELECTION);
+                tableViewer.setContentProvider(ArrayContentProvider.getInstance());
+                tableViewer.getTable().setHeaderVisible(true);
+                tableViewer.getTable().setLinesVisible(true);
+
+                TableViewerColumn ssColumn = new TableViewerColumn(tableViewer, SWT.NONE);
+                ssColumn.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
+                        return ss.getQualifiedName();
+                    }
+                });
+                tcl.setColumnData(ssColumn.getColumn(), new ColumnPixelData(150));
+
+                TableViewerColumn parameterCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                parameterCountColumn.getColumn().setText("PAR");
+                parameterCountColumn.getColumn().setToolTipText("Parameter Count");
+                parameterCountColumn.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
+                        return Integer.toString(ss.getParameterCount());
+                    }
+                });
+                tcl.setColumnData(parameterCountColumn.getColumn(), new ColumnPixelData(50));
+
+                TableViewerColumn containerCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                containerCountColumn.getColumn().setText("CON");
+                containerCountColumn.getColumn().setToolTipText("Container Count");
+                containerCountColumn.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
+                        return Integer.toString(ss.getContainerCount());
+                    }
+                });
+                tcl.setColumnData(containerCountColumn.getColumn(), new ColumnPixelData(50));
+
+                TableViewerColumn commandCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                commandCountColumn.getColumn().setText("CMD");
+                commandCountColumn.getColumn().setToolTipText("Command Count");
+                commandCountColumn.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
+                        return Integer.toString(ss.getCommandCount());
+                    }
+                });
+                tcl.setColumnData(commandCountColumn.getColumn(), new ColumnPixelData(50));
+
+                TableViewerColumn algorithmCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                algorithmCountColumn.getColumn().setText("ALG");
+                algorithmCountColumn.getColumn().setToolTipText("Algorithm Count");
+                algorithmCountColumn.setLabelProvider(new ColumnLabelProvider() {
+                    @Override
+                    public String getText(Object element) {
+                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
+                        return Integer.toString(ss.getAlgorithmCount());
+                    }
+                });
+                tcl.setColumnData(algorithmCountColumn.getColumn(), new ColumnPixelData(50));
+
+                tableViewer.setInput(mdb.getSpaceSystemList());
+            }
 
             return composite;
         }
@@ -254,13 +301,6 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             txt.setText(value);
             txt.setWordWrap(true);
             return txt;
-        }
-
-        private void createSeparator(Composite parent) {
-            Label divider = new Label(parent, SWT.HORIZONTAL | SWT.SEPARATOR);
-            GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-            gd.horizontalSpan = 2;
-            divider.setLayoutData(gd);
         }
 
         private void createHeader(Composite parent, String title) {
