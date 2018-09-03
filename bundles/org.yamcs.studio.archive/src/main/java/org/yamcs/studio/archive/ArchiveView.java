@@ -6,28 +6,26 @@ import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IActionBars;
@@ -35,8 +33,10 @@ import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
+import org.yamcs.protobuf.Rest.EditProcessorRequest;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
+import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -44,7 +44,6 @@ import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
@@ -53,31 +52,23 @@ import org.yamcs.utils.TimeEncoding;
 public class ArchiveView extends ViewPart
         implements YamcsConnectionListener, InstanceListener, TimeListener, ISourceProviderListener {
 
-    private static final Logger log = Logger.getLogger(ArchiveView.class.getName());
-
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
 
-    private Label replayTimeLabel;
     private Composite replayComposite;
     private GridData replayCompositeGridData;
 
-    private Image seekImage;
     private Image playImage;
     private Image pauseImage;
     private Image forwardImage;
-    private Image forward2xImage;
-    private Image forward4xImage;
-    private Image forward8xImage;
-    private Image forward16xImage;
     private Image leaveReplayImage;
 
-    private DateTime seekDate;
-    private DateTime seekTime;
     private Button seekButton;
     private Button playButton;
     private Button forwardButton;
     private Button leaveReplayButton;
+
+    private Combo speedCombo;
 
     private ProcessorStateProvider processorState;
     private ConnectionStateProvider connectionState;
@@ -86,18 +77,9 @@ public class ArchiveView extends ViewPart
     public void createPartControl(Composite parent) {
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
 
-        seekImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/seek.png"));
         playImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/play.png"));
         pauseImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/pause.png"));
         forwardImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward.png"));
-        forward2xImage = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward2x.png"));
-        forward4xImage = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward4x.png"));
-        forward8xImage = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward8x.png"));
-        forward16xImage = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward16x.png"));
         leaveReplayImage = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/redo.png"));
 
@@ -154,20 +136,15 @@ public class ArchiveView extends ViewPart
         gl.horizontalSpacing = 0;
         timeComposite.setLayout(gl);
 
-        replayTimeLabel = new Label(timeComposite, SWT.NONE);
-        FontData[] fd = replayTimeLabel.getFont().getFontData();
-        fd[0].setHeight(fd[0].getHeight() - 2);
-        replayTimeLabel.setFont(new Font(parent.getDisplay(), fd)); // TODO dispose this font!
-        replayTimeLabel.setText("                             "); // ugh...
-
-        seekDate = new DateTime(timeComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
-        seekTime = new DateTime(timeComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         seekButton = new Button(timeComposite, SWT.PUSH);
-        seekButton.setImage(seekImage);
-        seekButton.setToolTipText("Seek Specified Time");
+        seekButton.setText("Jump to...");
+        seekButton.setToolTipText("Jump to Specific Time");
         seekButton.addListener(SWT.Selection, evt -> {
-            long seekInstant = TimeEncoding.fromCalendar(RCPUtils.toCalendar(seekDate, seekTime));
-            archivePanel.seekReplay(seekInstant);
+            JumpToDialog dialog = new JumpToDialog(parent.getShell());
+            if (dialog.open() == Dialog.OK) {
+                long seekInstant = TimeEncoding.fromCalendar(dialog.getTime());
+                archivePanel.seekReplay(seekInstant);
+            }
         });
 
         // play / pause / forward
@@ -176,7 +153,7 @@ public class ArchiveView extends ViewPart
         gd.horizontalAlignment = SWT.CENTER;
         gd.grabExcessHorizontalSpace = true;
         controlsComposite.setLayoutData(gd);
-        gl = new GridLayout(3, false);
+        gl = new GridLayout(4, false);
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         gl.verticalSpacing = 0;
@@ -201,6 +178,20 @@ public class ArchiveView extends ViewPart
             RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.forwardCommand");
         });
 
+        Label label = new Label(controlsComposite, SWT.PUSH);
+        label.setText("Speed:");
+        speedCombo = new Combo(controlsComposite, SWT.DROP_DOWN);
+        speedCombo.setItems("0.5x", "0.75x", "1x (original)", "2x", "5x", "10x", "20x", "Fixed Delay...");
+        speedCombo.setText("1x (original)");
+
+        speedCombo.addListener(SWT.Selection, evt -> updateSpeed());
+        speedCombo.addListener(SWT.KeyUp, evt -> {
+            if (evt.keyCode == SWT.CR || evt.keyCode == SWT.KEYPAD_CR) { // Enter
+                updateSpeed();
+            }
+        });
+        speedCombo.addListener(SWT.FocusOut, evt -> updateSpeed());
+
         Composite buttonWrapper = new Composite(replayComposite, SWT.NONE);
         gd = new GridData();
         gd.horizontalAlignment = SWT.RIGHT;
@@ -216,7 +207,7 @@ public class ArchiveView extends ViewPart
 
         leaveReplayButton = new Button(buttonWrapper, SWT.PUSH);
         leaveReplayButton.setImage(leaveReplayImage);
-        leaveReplayButton.setToolTipText("Back to Realtime");
+        leaveReplayButton.setToolTipText("Leave Replay");
         leaveReplayButton.addListener(SWT.Selection, evt -> {
             RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.leaveReplay");
         });
@@ -238,6 +229,26 @@ public class ArchiveView extends ViewPart
         ManagementCatalogue.getInstance().addInstanceListener(this);
 
         updateState();
+    }
+
+    private void updateSpeed() {
+        String text = speedCombo.getText().trim();
+        float speedFactor = -1;
+        if ("Fixed Delay".equals(text)) {
+            // TODO
+        } else if ("1x (original)".equals(text)) {
+            speedFactor = 1;
+        } else {
+            speedFactor = Float.parseFloat(text.replace("x", ""));
+        }
+        if (speedFactor > 0) {
+            speedCombo.setText(speedFactor + "x");
+
+            ProcessorInfo processor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
+            EditProcessorRequest req = EditProcessorRequest.newBuilder().setSpeed(speedFactor + "x").build();
+            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req);
+        }
     }
 
     @Override
@@ -286,18 +297,6 @@ public class ArchiveView extends ViewPart
     public void processTime(long missionTime) {
         SwingUtilities.invokeLater(() -> {
             archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime);
-        });
-        replayTimeLabel.getDisplay().asyncExec(() -> {
-            if (replayTimeLabel.isDisposed()) {
-                return;
-            }
-
-            if (missionTime == TimeEncoding.INVALID_INSTANT || missionTime == 0) {
-                replayTimeLabel.setText("");
-            } else {
-                String prettyTime = YamcsUIPlugin.getDefault().formatInstant(missionTime);
-                replayTimeLabel.setText(prettyTime);
-            }
         });
     }
 
@@ -626,25 +625,5 @@ public class ArchiveView extends ViewPart
             playButton.setImage(pauseImage);
             playButton.setToolTipText("Pause Processing");
         }
-
-        if (floatEquals(replaySpeed, 1)) {
-            forwardButton.setImage(forwardImage);
-        } else if (floatEquals(replaySpeed, 2)) {
-            forwardButton.setImage(forward2xImage);
-        } else if (floatEquals(replaySpeed, 4)) {
-            forwardButton.setImage(forward4xImage);
-        } else if (floatEquals(replaySpeed, 8)) {
-            forwardButton.setImage(forward8xImage);
-        } else if (floatEquals(replaySpeed, 16)) {
-            forwardButton.setImage(forward16xImage);
-        } else {
-            // TODO should draw the speed on top of the button
-            log.warning("Unsupported speed " + replaySpeed);
-            forwardButton.setImage(forwardImage);
-        }
-    }
-
-    private static boolean floatEquals(float f1, float f2) {
-        return (f1 == f2) ? true : Math.abs(f1 - f2) < 0.00001;
     }
 }

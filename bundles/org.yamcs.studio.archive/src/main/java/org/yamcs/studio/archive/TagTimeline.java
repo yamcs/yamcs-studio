@@ -119,39 +119,44 @@ public class TagTimeline extends JPanel implements MouseInputListener {
             big.fillRect(0, 0, getWidth(), getHeight());
 
             big.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-            for (ArchiveTag at : tags) {
-                // TODO store these values in a map, rather than calculating all the time
-                RGB rgb = toRGB(at);
-                Color bgcolor = new Color(rgb.red, rgb.green, rgb.blue);
+            if (zoom != null) {
+                for (ArchiveTag at : tags) {
+                    // TODO store these values in a map, rather than calculating all the time
+                    RGB rgb = toRGB(at);
+                    Color bgcolor = new Color(rgb.red, rgb.green, rgb.blue);
 
-                int brightness = (int) Math.sqrt(.241 * rgb.red * rgb.red + .691 * rgb.green * rgb.green + .068 * rgb.blue * rgb.blue);
-                Color fgcolor = (brightness < 130) ? Color.WHITE : Color.BLACK;
+                    int brightness = (int) Math
+                            .sqrt(.241 * rgb.red * rgb.red + .691 * rgb.green * rgb.green + .068 * rgb.blue * rgb.blue);
+                    Color fgcolor = (brightness < 130) ? Color.WHITE : Color.BLACK;
 
-                big.setColor(bgcolor);
-                long start = (at.hasStart()) ? at.getStart() : zoom.startInstant;
-                int x1 = zoom.convertInstantToPixel(start);
+                    big.setColor(bgcolor);
+                    long start = (at.hasStart()) ? at.getStart() : zoom.startInstant;
+                    int x1 = zoom.convertInstantToPixel(start);
 
-                long stop = (at.hasStop()) ? at.getStop() : zoom.stopInstant;
-                int x2 = zoom.convertInstantToPixel(stop);
-                if (x1 <= 0 && x2 < 0)
-                    continue;
+                    long stop = (at.hasStop()) ? at.getStop() : zoom.stopInstant;
+                    int x2 = zoom.convertInstantToPixel(stop);
+                    if (x1 <= 0 && x2 < 0) {
+                        continue;
+                    }
 
-                if (x1 < 0)
-                    x1 = 0;
+                    if (x1 < 0) {
+                        x1 = 0;
+                    }
 
-                int width = (x2 - x1 <= 1) ? 1 : x2 - x1 - 1;
-                big.fillRect(x1 - leftDelta, 0, width, getHeight());
-                big.setColor(fgcolor);
-                big.setFont(f);
-                Rectangle2D bounds = f.getStringBounds(at.getName(), big.getFontRenderContext());
-                if (width > bounds.getWidth()) {
-                    LineMetrics lm = f.getLineMetrics(at.getName(), big.getFontRenderContext());
-                    big.drawString(at.getName(), x1 - leftDelta + 1, (int) lm.getAscent() + 1);
+                    int width = (x2 - x1 <= 1) ? 1 : x2 - x1 - 1;
+                    big.fillRect(x1 - leftDelta, 0, width, getHeight());
+                    big.setColor(fgcolor);
+                    big.setFont(f);
+                    Rectangle2D bounds = f.getStringBounds(at.getName(), big.getFontRenderContext());
+                    if (width > bounds.getWidth()) {
+                        LineMetrics lm = f.getLineMetrics(at.getName(), big.getFontRenderContext());
+                        big.drawString(at.getName(), x1 - leftDelta + 1, (int) lm.getAscent() + 1);
+                    }
+                    big.setColor(Color.DARK_GRAY);
+                    big.drawRect(x1 - leftDelta, 0, width - 1, getHeight() - 1);
                 }
-                big.setColor(Color.DARK_GRAY);
-                big.drawRect(x1 - leftDelta, 0, width - 1, getHeight() - 1);
+                // border.paintBorder(this, big, 0, 0, getWidth(),getHeight() );
             }
-            //  border.paintBorder(this, big, 0, 0, getWidth(),getHeight() );
         }
 
         g.drawImage(image, 0, 0, this);
@@ -159,11 +164,10 @@ public class TagTimeline extends JPanel implements MouseInputListener {
     }
 
     /**
-     * These are the only colors encoded by old versions of the swing clients. They are encoded as
-     * textual color names rather than hex values.
+     * These are the only colors encoded by old versions of the swing clients. They are encoded as textual color names
+     * rather than hex values.
      * <p>
-     * We keep this in place for a good while, because there are still archives around that use
-     * these color values.
+     * We keep this in place for a good while, because there are still archives around that use these color values.
      */
     private static enum SwingTagColor {
         BLACK(Color.BLACK),
@@ -185,14 +189,15 @@ public class TagTimeline extends JPanel implements MouseInputListener {
     }
 
     /**
-     * Returns the RGB value for a specific tag. Compatible with the Swing archive-browser which
-     * does not support the full RGB spectrum.
+     * Returns the RGB value for a specific tag. Compatible with the Swing archive-browser which does not support the
+     * full RGB spectrum.
      * <p>
      * Defaults to white if no color is specified, or the color could not be interpreted
      */
     public static RGB toRGB(ArchiveTag tag) {
-        if (!tag.hasColor())
+        if (!tag.hasColor()) {
             return new RGB(0xff, 0xff, 0xff);
+        }
         if (tag.getColor().startsWith("#")) {
             int r = Integer.valueOf(tag.getColor().substring(1, 3), 16);
             int g = Integer.valueOf(tag.getColor().substring(3, 5), 16);

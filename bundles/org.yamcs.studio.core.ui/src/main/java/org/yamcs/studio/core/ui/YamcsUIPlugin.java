@@ -173,9 +173,11 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
 
     private void doUpdateGlobalProcessingState(IWorkbench workbench, ProcessorInfo processorInfo) {
         ISourceProviderService service = (ISourceProviderService) workbench.getService(ISourceProviderService.class);
-        ProcessorStateProvider state = (ProcessorStateProvider) service
-                .getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
-        state.updateState(processorInfo);
+        if (service != null) {
+            ProcessorStateProvider state = (ProcessorStateProvider) service
+                    .getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
+            state.updateState(processorInfo);
+        }
     }
 
     public ImageDescriptor getImageDescriptor(String path) {

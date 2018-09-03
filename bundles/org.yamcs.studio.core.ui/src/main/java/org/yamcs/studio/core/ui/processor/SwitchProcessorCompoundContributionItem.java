@@ -36,13 +36,15 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
         List<IContributionItem> items = new ArrayList<>();
 
         ProcessorInfo currentProcessor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
-        items.add(createProcessorItem(currentProcessor));
-        items.add(new Separator());
+        if (currentProcessor != null) {
+            items.add(createProcessorItem(currentProcessor));
+            items.add(new Separator());
+        }
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         List<ProcessorInfo> processors = ManagementCatalogue.getInstance().getProcessors(instance);
         Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
         processors.forEach(processor -> {
-            if (!processor.getName().equals(currentProcessor.getName())) {
+            if (currentProcessor != null && !processor.getName().equals(currentProcessor.getName())) {
                 CommandContributionItem item = createProcessorItem(processor);
                 items.add(item);
             }
