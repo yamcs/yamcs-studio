@@ -3,8 +3,6 @@ package org.yamcs.studio.core.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,17 +77,7 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
             YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             try {
                 Future<YamcsConnectionProperties> future = yamcsClient.connect(yprops);
-                while (!monitor.isCanceled() && !future.isDone()) {
-                    try {
-                        future.get(200, TimeUnit.MILLISECONDS);
-                    } catch (TimeoutException e) {
-                        // Keep trying until cancelled or connected
-                    }
-                }
-
-                if (monitor.isCanceled()) {
-                    future.cancel(true);
-                }
+                RCPUtils.monitorCancellableFuture(monitor, future);
             } catch (ExecutionException e) {
                 MessageDialog.openError(shell, "Failed to connect", e.getMessage());
             }

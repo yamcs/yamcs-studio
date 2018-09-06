@@ -2,12 +2,17 @@ package org.yamcs.studio.core.ui.utils;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -32,8 +37,7 @@ public class RCPUtils {
     private static final Logger log = Logger.getLogger(RCPUtils.class.getName());
 
     /**
-     * Finds a source provider within the active workbench for the execution
-     * event
+     * Finds a source provider within the active workbench for the execution event
      */
     public static <T> T findSourceProvider(ExecutionEvent evt, String sourceName, Class<T> expectedClass) {
         IWorkbenchWindow workbenchWindow = HandlerUtil.getActiveWorkbenchWindow(evt);
@@ -41,8 +45,7 @@ public class RCPUtils {
     }
 
     /**
-     * Finds a source provider using the specified locator (for example, a
-     * workbench window)
+     * Finds a source provider using the specified locator (for example, a workbench window)
      */
     @SuppressWarnings("unchecked")
     public static <T> T findSourceProvider(IServiceLocator locator, String sourceName, Class<T> expectedClass) {
@@ -64,8 +67,7 @@ public class RCPUtils {
     }
 
     /**
-     * Sets a message in the lower left status line. These messages are by
-     * rcp-design associated with a view.
+     * Sets a message in the lower left status line. These messages are by rcp-design associated with a view.
      *
      * @param viewId
      *            the view from which the message originates
@@ -78,8 +80,7 @@ public class RCPUtils {
     }
 
     /**
-     * Sets an error message in the lower left status line. These messages are
-     * by rcp-design associated with a view.
+     * Sets an error message in the lower left status line. These messages are by rcp-design associated with a view.
      *
      * @param viewId
      *            the view from which the message originates
@@ -104,5 +105,20 @@ public class RCPUtils {
         cal.set(Calendar.SECOND, timeWidget.getSeconds());
         cal.set(Calendar.MILLISECOND, 0);
         return cal;
+    }
+
+    public static void monitorCancellableFuture(IProgressMonitor monitor, Future<?> future)
+            throws InterruptedException, ExecutionException {
+        while (!monitor.isCanceled() && !future.isDone()) {
+            try {
+                future.get(200, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e) {
+                // Keep trying until cancelled or done
+            }
+        }
+
+        if (monitor.isCanceled()) {
+            future.cancel(true);
+        }
     }
 }
