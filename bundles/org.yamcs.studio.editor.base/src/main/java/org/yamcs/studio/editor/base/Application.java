@@ -50,6 +50,7 @@ public class Application implements IApplication {
         if (workspace == null) {
             workspace = userHome.resolve("yamcs-studio").toString();
         }
+        workspace = workspace.replace("@user.home", userHome.toString());
 
         List<String> workspaceHistory = UserPreferences.readWorkspaceHistory();
         if (!workspaceHistory.isEmpty()) {

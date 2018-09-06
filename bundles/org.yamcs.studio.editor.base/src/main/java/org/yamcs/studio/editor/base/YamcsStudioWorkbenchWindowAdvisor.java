@@ -40,12 +40,15 @@ public class YamcsStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         // Now that we know that the user will see it:
         if (logProductInfo) {
             Logger log = Logger.getLogger(getClass().getName());
-            log.info(Platform.getProduct().getName() + " v" + Platform.getProduct().getDefiningBundle().getVersion());
-            log.info("Workspace: " + Platform.getInstanceLocation().getURL().getPath());
-
+            logProductInfo(log);
             // Prevent this message from appearing when runtime window is opened from builder
             logProductInfo = false;
         }
+    }
+
+    protected void logProductInfo(Logger log) {
+        log.info(Platform.getProduct().getName() + " v" + Platform.getProduct().getDefiningBundle().getVersion());
+        log.info("Workspace: " + Platform.getInstanceLocation().getURL().getPath());
     }
 
     @Override
