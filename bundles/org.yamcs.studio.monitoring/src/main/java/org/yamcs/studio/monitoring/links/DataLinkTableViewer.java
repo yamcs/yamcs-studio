@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 import org.yamcs.studio.core.model.LinkCatalogue;
 
 public class DataLinkTableViewer extends TableViewer {
@@ -94,8 +93,9 @@ public class DataLinkTableViewer extends TableViewer {
 
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (column.getColumn().getWidth() < 5)
+                    if (column.getColumn().getWidth() < 5) {
                         column.getColumn().setWidth(5);
+                    }
                 }
             });
         }
@@ -115,17 +115,19 @@ public class DataLinkTableViewer extends TableViewer {
             @Override
             public void widgetSelected(SelectionEvent arg0) {
                 DataLinkRecord rec = (DataLinkRecord) (getTable().getSelection()[0].getData());
-                if (rec == null)
+                if (rec == null) {
                     return;
+                }
 
                 LinkCatalogue catalogue = LinkCatalogue.getInstance();
-                catalogue.enableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName()).whenComplete((data, exc) -> {
-                    if (exc != null) {
-                        getTable().getDisplay().asyncExec(() -> {
-                            showMessage(getTable().getShell(), exc.getMessage());
+                catalogue.enableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName())
+                        .whenComplete((data, exc) -> {
+                            if (exc != null) {
+                                getTable().getDisplay().asyncExec(() -> {
+                                    showMessage(getTable().getShell(), exc.getMessage());
+                                });
+                            }
                         });
-                    }
-                });
             }
         });
 
@@ -140,17 +142,19 @@ public class DataLinkTableViewer extends TableViewer {
             @Override
             public void widgetSelected(SelectionEvent arg0) {
                 DataLinkRecord rec = (DataLinkRecord) (getTable().getSelection()[0].getData());
-                if (rec == null)
+                if (rec == null) {
                     return;
+                }
 
                 LinkCatalogue catalogue = LinkCatalogue.getInstance();
-                catalogue.disableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName()).whenComplete((data, exc) -> {
-                    if (exc != null) {
-                        getTable().getDisplay().asyncExec(() -> {
-                            showMessage(getTable().getShell(), exc.getMessage());
+                catalogue.disableLink(rec.getLinkInfo().getInstance(), rec.getLinkInfo().getName())
+                        .whenComplete((data, exc) -> {
+                            if (exc != null) {
+                                getTable().getDisplay().asyncExec(() -> {
+                                    showMessage(getTable().getShell(), exc.getMessage());
+                                });
+                            }
                         });
-                    }
-                });
             }
         });
     }

@@ -1,8 +1,6 @@
 package org.yamcs.studio.displays;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -13,8 +11,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -26,6 +22,7 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.utils.StringConverter;
 
 public class ScrollViewer extends TableViewer implements ParameterListener {
@@ -41,10 +38,10 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
 
     private ScrollParameterContentProvider contentProvider;
     private TableColumnLayout tcl;
-    private List<String> parameters;
-    private List<String> qualifiedNames;
+    private List<String> parameters = new ArrayList<>();
+    private List<String> qualifiedNames = new ArrayList<>();
 
-    private List<Listener> listeners;
+    private List<Listener> listeners = new ArrayList<>();
 
     public ScrollViewer(Composite parent) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL));
@@ -53,6 +50,7 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
+
         contentProvider = new ScrollParameterContentProvider();
         setContentProvider(contentProvider);
         setInput(contentProvider);
@@ -64,28 +62,11 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
 
             @Override
             public String getText(Object element) {
-                ParameterData data = (ParameterData) element;
-                Date date = new Date(data.getParameter(0).getGenerationTime());
-                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-                return sdfDate.format(date);
+                ParameterData pdata = (ParameterData) element;
+                ParameterValue pval = pdata.getParameter(0);
+                return YamcsUIPlugin.getDefault().formatInstant(pval.getGenerationTime());
             }
         });
-
-        timeColumn.getColumn().addControlListener(new ControlListener() {
-            @Override
-            public void controlMoved(ControlEvent e) {
-            }
-
-            @Override
-            public void controlResized(ControlEvent e) {
-                if (timeColumn.getColumn().getWidth() < 5) {
-                    timeColumn.getColumn().setWidth(5);
-                }
-            }
-        });
-        parameters = new ArrayList<>();
-        qualifiedNames = new ArrayList<>();
-        listeners = new ArrayList<>();
 
         ParameterCatalogue.getInstance().addParameterListener(this);
 
@@ -116,20 +97,6 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
                 return "-";
             }
         });
-        column.getColumn().addControlListener(new ControlListener() {
-            @Override
-            public void controlMoved(ControlEvent e) {
-
-            }
-
-            @Override
-            public void controlResized(ControlEvent e) {
-                if (column.getColumn().getWidth() < 40) {
-                    column.getColumn().setWidth(40);
-                }
-            }
-        });
-
     }
 
     public void addParameter(ParameterInfo element) {
@@ -199,15 +166,10 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
 
     public class ScrollParameterContentProvider implements IStructuredContentProvider {
 
-        private List<ParameterData> values;
-
-        public ScrollParameterContentProvider() {
-            values = new ArrayList<>();
-        }
+        private List<ParameterData> values = new ArrayList<>();
 
         public void clearAll() {
             values.clear();
-
         }
 
         @Override

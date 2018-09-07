@@ -110,7 +110,7 @@ public class ParameterTableEditor extends EditorPart {
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        final IEditorInput input = getEditorInput();
+        IEditorInput input = getEditorInput();
         try {
             if (input.exists()) {
                 IFile file = (IFile) input.getAdapter(IFile.class);

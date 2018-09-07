@@ -9,6 +9,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
@@ -39,17 +42,26 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
     private Map<String, ParameterValue> values = new HashMap<>();
     private TableColumnLayout tcl;
 
-    private Image normalIcon = getImage("icons/eview16/level0s.png");
-    private Image watchIcon = getImage("icons/eview16/level1s.png");
-    private Image warningIcon = getImage("icons/eview16/level2s.png");
-    private Image distressIcon = getImage("icons/eview16/level3s.png");
-    private Image criticalIcon = getImage("icons/eview16/level4s.png");
-    private Image severeIcon = getImage("icons/eview16/level5s.png");
+    private Image normalIcon;
+    private Image watchIcon;
+    private Image warningIcon;
+    private Image distressIcon;
+    private Image criticalIcon;
+    private Image severeIcon;
 
     public ParameterTableViewer(Composite parent) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL));
         tcl = new TableColumnLayout();
         parent.setLayout(tcl);
+
+        ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        normalIcon = resourceManager.createImage(getImageDescriptor("icons/eview/level0s.png"));
+        watchIcon = resourceManager.createImage(getImageDescriptor("icons/eview/level1s.png"));
+        warningIcon = resourceManager.createImage(getImageDescriptor("icons/eview/level2s.png"));
+        distressIcon = resourceManager.createImage(getImageDescriptor("icons/eview/level3s.png"));
+        criticalIcon = resourceManager.createImage(getImageDescriptor("icons/eview/level4s.png"));
+        severeIcon = resourceManager.createImage(getImageDescriptor("icons/eview/level5s.png"));
+
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
 
@@ -151,10 +163,9 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         ParameterCatalogue.getInstance().addParameterListener(this);
     }
 
-    private Image getImage(String path) {
+    private ImageDescriptor getImageDescriptor(String path) {
         return ImageDescriptor.createFromURL(FileLocator
-                .find(Platform.getBundle("org.yamcs.studio.displays"), new Path(path), null))
-                .createImage();
+                .find(Platform.getBundle("org.yamcs.studio.displays"), new Path(path), null));
     }
 
     public void attachParameterInfo(ParameterInfo info) {
