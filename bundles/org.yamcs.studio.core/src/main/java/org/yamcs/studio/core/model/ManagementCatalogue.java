@@ -1,7 +1,6 @@
 package org.yamcs.studio.core.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +20,6 @@ import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.ServiceState;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -41,12 +39,12 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     private Set<ManagementListener> managementListeners = new CopyOnWriteArraySet<>();
     private Set<InstanceListener> instanceListeners = new CopyOnWriteArraySet<>();
 
-    // instance -> processorName -> info
-    private Map<String, Map<String, ProcessorInfo>> processorInfoByInstance = new ConcurrentHashMap<>();
     private Map<Integer, ClientInfo> clientInfoById = new ConcurrentHashMap<>();
 
     // Redundant, but quickly accessible
     private int currentClientId = -1;
+
+    private ProcessorInfo currentProcessor;
 
     public static ManagementCatalogue getInstance() {
         return YamcsPlugin.getDefault().getCatalogue(ManagementCatalogue.class);
@@ -56,12 +54,14 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     public void onYamcsConnected() {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("management", "subscribe"), this);
+        yamcsClient.subscribe(new WebSocketRequest("processor", "subscribe"), this);
     }
 
     @Override
     public void onMessage(WebSocketSubscriptionData msg) {
         if (msg.hasConnectionInfo()) {
             ConnectionInfo connectionInfo = msg.getConnectionInfo();
+            currentClientId = connectionInfo.getClientId();
             YamcsInstance instance = connectionInfo.getInstance();
             log.fine("Instance " + instance.getName() + ": " + instance.getState());
             managementListeners.forEach(l -> l.instanceUpdated(connectionInfo));
@@ -70,33 +70,17 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         if (msg.hasClientInfo()) {
             ClientInfo clientInfo = msg.getClientInfo();
             if (clientInfo.getState() == ClientState.DISCONNECTED) {
-                ClientInfo previousClientInfo = clientInfoById.remove(clientInfo.getId());
-                checkOwnClientState(previousClientInfo, clientInfo);
-
+                clientInfoById.remove(clientInfo.getId());
                 managementListeners.forEach(l -> l.clientDisconnected(clientInfo));
             } else {
-                ClientInfo previousClientInfo = clientInfoById.put(clientInfo.getId(), clientInfo);
-                checkOwnClientState(previousClientInfo, clientInfo);
-
+                clientInfoById.put(clientInfo.getId(), clientInfo);
                 managementListeners.forEach(l -> l.clientUpdated(clientInfo));
             }
         }
 
         if (msg.hasProcessorInfo()) {
-            ProcessorInfo processorInfo = msg.getProcessorInfo();
-            String instance = processorInfo.getInstance();
-            Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(instance);
-            if (instanceProcessors == null) {
-                instanceProcessors = new ConcurrentHashMap<>();
-                processorInfoByInstance.put(instance, instanceProcessors);
-            }
-            if (processorInfo.getState() == ServiceState.TERMINATED) {
-                instanceProcessors.remove(processorInfo.getName());
-            } else {
-                instanceProcessors.put(processorInfo.getName(), processorInfo);
-            }
-
-            managementListeners.forEach(l -> l.processorUpdated(processorInfo));
+            currentProcessor = msg.getProcessorInfo();
+            managementListeners.forEach(l -> l.processorUpdated(currentProcessor));
         }
 
         if (msg.hasStatistics()) {
@@ -115,8 +99,8 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     public void onYamcsDisconnected() {
         // Clear everything, we'll get a fresh set upon connect
         clientInfoById.clear();
-        processorInfoByInstance.clear();
         currentClientId = -1;
+        currentProcessor = null;
 
         managementListeners.forEach(ManagementListener::clearAllManagementData);
     }
@@ -125,9 +109,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         managementListeners.add(listener);
 
         // Inform listeners of the current model
-        processorInfoByInstance.forEach((k, m) -> {
-            m.forEach((sk, v) -> listener.processorUpdated(v));
-        });
+        listener.processorUpdated(currentProcessor);
         clientInfoById.forEach((k, v) -> listener.clientUpdated(v));
     }
 
@@ -141,41 +123,6 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
     public void removeInstanceListener(InstanceListener listener) {
         instanceListeners.remove(listener);
-    }
-
-    private void checkOwnClientState(ClientInfo old, ClientInfo incoming) {
-        if (incoming.getCurrentClient()) {
-            if (incoming.getState() == ClientState.DISCONNECTED) {
-                currentClientId = -1;
-            } else {
-                currentClientId = incoming.getId();
-                if (old != null) {
-                    String oldInstance = old.getInstance();
-                    String newInstance = incoming.getInstance();
-                    if (!oldInstance.equals(newInstance)) {
-                        log.info(String.format("Client instance changed from '%s' "
-                                + "to '%s'. Notifying listeners.", oldInstance, newInstance));
-                        instanceListeners.forEach(l -> l.instanceChanged(oldInstance, newInstance));
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns processor with matching name for the currently connected instance
-     */
-    public ProcessorInfo getProcessorInfo(String processorName) {
-        String instance = getCurrentYamcsInstance();
-        return getProcessorInfo(instance, processorName);
-    }
-
-    public ProcessorInfo getProcessorInfo(String yamcsInstance, String processorName) {
-        Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(yamcsInstance);
-        if (instanceProcessors != null) {
-            return instanceProcessors.get(processorName);
-        }
-        return null;
     }
 
     public ClientInfo getClientInfo(int clientId) {
@@ -205,31 +152,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public ProcessorInfo getCurrentProcessorInfo() {
-        ClientInfo ci = clientInfoById.get(currentClientId);
-        return (ci != null) ? getProcessorInfo(ci.getInstance(), ci.getProcessorName()) : null;
-    }
-
-    /**
-     * Returns processors for any instance
-     */
-    public List<ProcessorInfo> getProcessors() {
-        List<ProcessorInfo> result = new ArrayList<>();
-        processorInfoByInstance.forEach((k, m) -> {
-            result.addAll(m.values());
-        });
-        return result;
-    }
-
-    /**
-     * Returns processors for the specified instance
-     */
-    public List<ProcessorInfo> getProcessors(String yamcsInstance) {
-        Map<String, ProcessorInfo> instanceProcessors = processorInfoByInstance.get(yamcsInstance);
-        if (instanceProcessors != null) {
-            return new ArrayList<>(instanceProcessors.values());
-        } else {
-            return Collections.emptyList();
-        }
+        return currentProcessor;
     }
 
     public List<ClientInfo> getClients() {
@@ -260,5 +183,10 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.patch("/instances/" + yamcsInstance + "?state=restarted", null);
+    }
+
+    public CompletableFuture<byte[]> fetchProcessors() {
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.get("/processors", null);
     }
 }

@@ -23,10 +23,10 @@ import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueEvent;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Mdb.ListCommandsResponse;
 import org.yamcs.protobuf.Rest.EditCommandQueueEntryRequest;
 import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.protobuf.Rest.ListCommandInfoResponse;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
@@ -131,7 +131,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         restClient.get("/mdb/" + instance + "/commands?details", null).whenComplete((data, exc) -> {
             try {
-                ListCommandInfoResponse response = ListCommandInfoResponse.parseFrom(data);
+                ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
                 processMetaCommands(response.getCommandList());
             } catch (InvalidProtocolBufferException e) {
                 log.log(Level.SEVERE, "Failed to decode server response", e);

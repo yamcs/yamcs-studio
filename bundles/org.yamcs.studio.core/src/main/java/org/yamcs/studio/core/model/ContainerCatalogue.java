@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.yamcs.protobuf.Mdb.ContainerInfo;
-import org.yamcs.protobuf.Rest.ListContainerInfoResponse;
+import org.yamcs.protobuf.Mdb.ListContainersResponse;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 
@@ -82,7 +82,7 @@ public class ContainerCatalogue implements Catalogue {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         yamcsClient.get("/mdb/" + instance + "/containers", null).whenComplete((data, exc) -> {
             try {
-                ListContainerInfoResponse response = ListContainerInfoResponse.parseFrom(data);
+                ListContainersResponse response = ListContainersResponse.parseFrom(data);
                 processContainers(response.getContainerList());
             } catch (InvalidProtocolBufferException e) {
                 log.log(Level.SEVERE, "Failed to decode server response", e);

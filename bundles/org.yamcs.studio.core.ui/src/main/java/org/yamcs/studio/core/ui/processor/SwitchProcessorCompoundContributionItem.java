@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,8 +21,11 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
+import org.yamcs.protobuf.Rest.ListProcessorsResponse;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * A dynamic menu for showing the processors and joining them when selected
@@ -36,20 +41,36 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
         List<IContributionItem> items = new ArrayList<>();
 
         ProcessorInfo currentProcessor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         if (currentProcessor != null) {
             items.add(createProcessorItem(currentProcessor));
             items.add(new Separator());
         }
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        List<ProcessorInfo> processors = ManagementCatalogue.getInstance().getProcessors(instance);
-        Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
-        processors.forEach(processor -> {
-            if (currentProcessor != null && !processor.getName().equals(currentProcessor.getName())) {
-                CommandContributionItem item = createProcessorItem(processor);
-                items.add(item);
-            }
-        });
+
+        try {
+            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+            byte[] data = catalogue.fetchProcessors().get(3000, TimeUnit.MILLISECONDS);
+            ListProcessorsResponse response = ListProcessorsResponse.parseFrom(data);
+            List<ProcessorInfo> processors = new ArrayList<>(response.getProcessorList());
+            Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+
+            processors.stream().filter(p -> instance.equals(p.getInstance())).forEach(processor -> {
+                if (currentProcessor != null && !processor.getName().equals(currentProcessor.getName())) {
+                    CommandContributionItem item = createProcessorItem(processor);
+                    items.add(item);
+                }
+            });
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (TimeoutException e) {
+            // Ignore
+        } catch (java.util.concurrent.ExecutionException e) {
+
+        } catch (InvalidProtocolBufferException e) {
+            log.log(Level.SEVERE, "Failed to decode server message", e);
+        }
         updateSelection();
+
         return items.toArray(new IContributionItem[0]);
     }
 

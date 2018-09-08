@@ -25,11 +25,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Mdb.MissionDatabase;
+import org.yamcs.protobuf.Mdb.SpaceSystemInfo;
 import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.MissionDatabase;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.SpaceSystemInfo;
 import org.yamcs.protobuf.YamcsManagement.Statistics;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -239,11 +239,6 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         }
 
         @Override
-        public void processorClosed(ProcessorInfo processorInfo) {
-            Display.getDefault().asyncExec(() -> refreshProcessorState());
-        }
-
-        @Override
         public void clearAllManagementData() {
             Display.getDefault().asyncExec(() -> processorStateTxt.setText("---"));
         }
@@ -264,17 +259,12 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         public void instanceUpdated(ConnectionInfo connectionInfo) {
         }
 
-        /**
-         * With this dialog currently only being reindered on load, it does not have capability to follow the client's
-         * processor after load. Therefore, update runtime information using the shown processor, rather than the
-         * current.
-         */
         private void refreshProcessorState() {
             if (processorStateTxt.isDisposed()) {
                 return;
             }
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            ProcessorInfo latestInfo = catalogue.getProcessorInfo(instance.getName(), processor.getName());
+            ProcessorInfo latestInfo = catalogue.getCurrentProcessorInfo();
             if (latestInfo != null) {
                 processorStateTxt.setText("" + latestInfo.getState());
             } else {

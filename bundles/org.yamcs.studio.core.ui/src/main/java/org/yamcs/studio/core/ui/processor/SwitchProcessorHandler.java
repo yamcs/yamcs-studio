@@ -1,7 +1,6 @@
 package org.yamcs.studio.core.ui.processor;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
@@ -15,30 +14,23 @@ import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
 import org.yamcs.protobuf.Rest.EditClientRequest;
 import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 public class SwitchProcessorHandler extends AbstractHandler implements IElementUpdater {
 
-    private static final Logger log = Logger.getLogger(SwitchProcessorHandler.class.getName());
-
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        if (HandlerUtil.matchesRadioState(event))
+        if (HandlerUtil.matchesRadioState(event)) {
             return null;
+        }
 
         String radioParameter = event.getParameter(RadioState.PARAMETER_ID);
         HandlerUtil.updateRadioState(event.getCommand(), radioParameter);
 
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        ProcessorInfo processorInfo = catalogue.getProcessorInfo(radioParameter);
-        if (processorInfo != null) {
-            ClientInfo clientInfo = catalogue.getCurrentClientInfo();
-            EditClientRequest req = EditClientRequest.newBuilder().setProcessor(processorInfo.getName()).build();
-            catalogue.editClientRequest(clientInfo.getId(), req);
-        } else {
-            log.warning("Processor '" + radioParameter + "' not found in catalogue");
-        }
+        ClientInfo clientInfo = catalogue.getCurrentClientInfo();
+        EditClientRequest req = EditClientRequest.newBuilder().setProcessor(radioParameter).build();
+        catalogue.editClientRequest(clientInfo.getId(), req);
 
         return null;
     }

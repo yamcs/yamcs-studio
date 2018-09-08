@@ -49,10 +49,6 @@ public class ClientsView extends ViewPart implements ManagementListener {
     }
 
     @Override
-    public void processorClosed(ProcessorInfo processorInfo) {
-    }
-
-    @Override
     public void statisticsUpdated(Statistics stats) {
     }
 

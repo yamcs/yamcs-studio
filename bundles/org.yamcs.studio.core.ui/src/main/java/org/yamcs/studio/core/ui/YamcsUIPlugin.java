@@ -112,26 +112,27 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
             }
 
             @Override
-            public void processorClosed(ProcessorInfo processorInfo) {
-                updateGlobalProcessingState(processorInfo);
-            }
-
-            @Override
             public void statisticsUpdated(Statistics stats) {
             }
 
             @Override
             public void clientUpdated(ClientInfo clientInfo) {
-                updateGlobalProcessingState(clientInfo);
             }
 
             @Override
             public void clientDisconnected(ClientInfo clientInfo) {
-                updateGlobalProcessingState(clientInfo);
             }
 
             @Override
             public void instanceUpdated(ConnectionInfo connectionInfo) {
+                IWorkbench workbench = PlatformUI.getWorkbench();
+                workbench.getDisplay().asyncExec(() -> {
+                    if (connectionInfo.hasProcessor()) {
+                        doUpdateGlobalProcessingState(workbench, connectionInfo.getProcessor());
+                    } else {
+                        doUpdateGlobalProcessingState(workbench, null);
+                    }
+                });
             }
 
             @Override
@@ -146,27 +147,13 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         }
     }
 
-    private void updateGlobalProcessingState(ProcessorInfo processorInfo) {
+    private void updateGlobalProcessingState(ProcessorInfo processor) {
         // First update state of various buttons (at the level of the workbench)
-        // (TODO sometimes clientInfo has not been updated yet, that's whey we have the next method too)
         IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(() -> {
             ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
-            if (clientInfo != null && clientInfo.getProcessorName().equals(processorInfo.getName())) {
-                doUpdateGlobalProcessingState(workbench, processorInfo);
-            }
-        });
-    }
-
-    private void updateGlobalProcessingState(ClientInfo clientInfo) {
-        // TODO Not sure which one of this method or the previous would trigger first, and whether that's deterministic
-        // therefore, just have similar logic here.
-        IWorkbench workbench = PlatformUI.getWorkbench();
-        workbench.getDisplay().asyncExec(() -> {
-            if (clientInfo.getCurrentClient()) {
-                ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-                ProcessorInfo processorInfo = catalogue.getProcessorInfo(clientInfo.getProcessorName());
-                doUpdateGlobalProcessingState(workbench, processorInfo);
+            if (clientInfo != null && clientInfo.getProcessorName().equals(processor.getName())) {
+                doUpdateGlobalProcessingState(workbench, processor);
             }
         });
     }

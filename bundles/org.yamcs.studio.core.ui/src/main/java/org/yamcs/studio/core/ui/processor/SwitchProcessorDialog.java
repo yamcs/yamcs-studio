@@ -1,5 +1,8 @@
 package org.yamcs.studio.core.ui.processor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -18,10 +21,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.protobuf.Rest.ListProcessorsResponse;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 public class SwitchProcessorDialog extends TitleAreaDialog {
+
+    private static final Logger log = Logger.getLogger(SwitchProcessorDialog.class.getName());
 
     private TableViewer processorsTable;
     private ProcessorInfo processorInfo;
@@ -92,8 +100,9 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         processorsTable.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
-                if (e1 == null || e2 == null)
+                if (e1 == null || e2 == null) {
                     return 0;
+                }
                 ProcessorInfo p1 = (ProcessorInfo) e1;
                 ProcessorInfo p2 = (ProcessorInfo) e2;
                 int c = p1.getInstance().compareTo(p2.getInstance());
@@ -102,7 +111,18 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
         });
 
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        processorsTable.setInput(catalogue.getProcessors());
+        catalogue.fetchProcessors().whenComplete((data, exc) -> {
+            parent.getDisplay().asyncExec(() -> {
+                if (exc == null) {
+                    try {
+                        ListProcessorsResponse response = ListProcessorsResponse.parseFrom(data);
+                        processorsTable.setInput(response.getProcessorList());
+                    } catch (InvalidProtocolBufferException e) {
+                        log.log(Level.SEVERE, "Failed to decode server message", e);
+                    }
+                }
+            });
+        });
 
         return composite;
     }
@@ -110,8 +130,9 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         IStructuredSelection sel = (IStructuredSelection) processorsTable.getSelection();
-        if (!sel.isEmpty())
+        if (!sel.isEmpty()) {
             processorInfo = (ProcessorInfo) sel.getFirstElement();
+        }
         super.okPressed();
     }
 
