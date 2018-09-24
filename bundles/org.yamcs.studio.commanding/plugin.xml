@@ -433,6 +433,12 @@
                <parameter
                      name="org.yamcs.studio.commanding.cmdhist.copyDetails.property" value="SEQNO" />
             </command>
+            <command
+                  commandId="org.yamcs.studio.commanding.cmdhist.copyDetailsCommand"
+                  label="Binary">
+               <parameter
+                     name="org.yamcs.studio.commanding.cmdhist.copyDetails.property" value="BIN" />
+            </command>
          </menu>
       </menuContribution>
    </extension>

@@ -12,6 +12,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.utils.StringConverter;
 
 public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
 
@@ -19,6 +20,7 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
     private static final String PARAM_COMMAND = "COMMAND";
     private static final String PARAM_SOURCE = "SOURCE";
     private static final String PARAM_SEQNO = "SEQNO";
+    private static final String PARAM_BIN = "BIN";
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -44,6 +46,10 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
                     break;
                 case PARAM_SEQNO:
                     text.append(rec.getSequenceNumber());
+                    break;
+                case PARAM_BIN:
+                	String hexString = StringConverter.arrayToHexString(rec.getBinary().toByteArray());
+                    text.append(hexString);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected property: " + property);
