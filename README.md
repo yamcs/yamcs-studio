@@ -1,3 +1,7 @@
+# Yamcs Studio
+[![Website](https://img.shields.io/website/http/shields.io.svg?label=docs)](https://www.yamcs.org/docs/studio/)
+[![Build Status](https://travis-ci.org/yamcs/yamcs-studio.svg?branch=master)](https://travis-ci.org/yamcs/yamcs-studio)
+
 Below instructions are targeted at Yamcs Studio core contributors.
 
 * **End-User documentation** is available at: [https://www.yamcs.org/docs/studio/](https://www.yamcs.org/docs/studio/)
@@ -40,8 +44,3 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 - Open one of the `*.product` files found under `org.yamcs.studio.releng`.
 
 - Click `Synchronize` followed by `Launch an Eclipse Application`.
-
-
-### CI Status
-
-[![Build Status](https://travis-ci.org/yamcs/yamcs-studio.svg?branch=master)](https://travis-ci.org/yamcs/yamcs-studio)
