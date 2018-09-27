@@ -62,6 +62,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         if (msg.hasConnectionInfo()) {
             ConnectionInfo connectionInfo = msg.getConnectionInfo();
             currentClientId = connectionInfo.getClientId();
+            currentProcessor = connectionInfo.getProcessor();
             YamcsInstance instance = connectionInfo.getInstance();
             log.fine("Instance " + instance.getName() + ": " + instance.getState());
             managementListeners.forEach(l -> l.instanceUpdated(connectionInfo));
@@ -109,7 +110,9 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         managementListeners.add(listener);
 
         // Inform listeners of the current model
-        listener.processorUpdated(currentProcessor);
+        if (currentProcessor != null) {
+            listener.processorUpdated(currentProcessor);
+        }
         clientInfoById.forEach((k, v) -> listener.clientUpdated(v));
     }
 
