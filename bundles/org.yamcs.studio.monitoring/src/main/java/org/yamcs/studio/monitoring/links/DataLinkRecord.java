@@ -8,7 +8,8 @@ import org.yamcs.protobuf.YamcsManagement.LinkInfo;
 public class DataLinkRecord {
 
     private LinkInfo linkInfo;
-    private long lastDataCountIncrease;
+    private long lastDataInCountIncrease;
+    private long lastDataOutCountIncrease;
 
     public DataLinkRecord(LinkInfo linkInfo) {
         this.linkInfo = linkInfo;
@@ -18,18 +19,20 @@ public class DataLinkRecord {
         return linkInfo;
     }
 
-    public boolean isDataCountIncreasing() {
-        return (System.currentTimeMillis() - lastDataCountIncrease) < 1500;
+    public boolean isDataInCountIncreasing() {
+        return (System.currentTimeMillis() - lastDataInCountIncrease) < 1500;
+    }
+
+    public boolean isDataOutCountIncreasing() {
+        return (System.currentTimeMillis() - lastDataOutCountIncrease) < 1500;
     }
 
     public void processIncomingLinkInfo(LinkInfo incoming) {
-        // In git history you'll find we had a 2s timeout future here
-        // that registered a refresh of the row, such that the bg color
-        // would fade. It was commented out, so I removed it.
-        // Maybe because there's enough refreshes of a table to not need it.
-        // But to be verified.
-        if (incoming.getDataCount() > linkInfo.getDataCount()) {
-            lastDataCountIncrease = System.currentTimeMillis();
+        if (incoming.getDataInCount() > linkInfo.getDataInCount()) {
+            lastDataInCountIncrease = System.currentTimeMillis();
+        }
+        if (incoming.getDataOutCount() > linkInfo.getDataOutCount()) {
+            lastDataOutCountIncrease = System.currentTimeMillis();
         }
         linkInfo = incoming;
     }

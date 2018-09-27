@@ -25,9 +25,9 @@ public class DataLinkTableViewer extends TableViewer {
     public static final String COL_NAME = "Name";
     public static final String COL_TYPE = "Type";
     public static final String COL_SPEC = "Spec";
-    public static final String COL_STREAM = "Stream";
     public static final String COL_STATUS = "Status";
-    public static final String COL_DATACOUNT = "Data Count";
+    public static final String COL_IN = "In";
+    public static final String COL_OUT = "Out";
 
     public DataLinkTableViewer(Composite parent, TableColumnLayout tcl) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
@@ -64,26 +64,26 @@ public class DataLinkTableViewer extends TableViewer {
         specColumn.getColumn().setText(COL_SPEC);
         tcl.setColumnData(specColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn streamColumn = new TableViewerColumn(this, SWT.LEFT);
-        streamColumn.getColumn().setText(COL_STREAM);
-        tcl.setColumnData(streamColumn.getColumn(), new ColumnWeightData(18));
-
         TableViewerColumn statusColumn = new TableViewerColumn(this, SWT.CENTER);
         statusColumn.getColumn().setText(COL_STATUS);
         tcl.setColumnData(statusColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn datacount = new TableViewerColumn(this, SWT.RIGHT);
-        datacount.getColumn().setText(COL_DATACOUNT);
-        tcl.setColumnData(datacount.getColumn(), new ColumnWeightData(10));
+        TableViewerColumn inColumn = new TableViewerColumn(this, SWT.RIGHT);
+        inColumn.getColumn().setText(COL_IN);
+        tcl.setColumnData(inColumn.getColumn(), new ColumnWeightData(10));
+
+        TableViewerColumn outColumn = new TableViewerColumn(this, SWT.RIGHT);
+        outColumn.getColumn().setText(COL_OUT);
+        tcl.setColumnData(outColumn.getColumn(), new ColumnWeightData(10));
 
         // Common properties to all columns
         List<TableViewerColumn> columns = new ArrayList<>();
         columns.add(nameColumn);
         columns.add(typeColumn);
         columns.add(specColumn);
-        columns.add(streamColumn);
         columns.add(statusColumn);
-        columns.add(datacount);
+        columns.add(inColumn);
+        columns.add(outColumn);
         for (TableViewerColumn column : columns) {
             // prevent resize to 0
             column.getColumn().addControlListener(new ControlListener() {

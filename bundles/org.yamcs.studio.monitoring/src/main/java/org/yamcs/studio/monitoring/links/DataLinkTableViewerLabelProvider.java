@@ -32,11 +32,11 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
         case 2:
             return rec.getLinkInfo().getSpec();
         case 3:
-            return rec.getLinkInfo().getStream();
-        case 4:
             return rec.getLinkInfo().getStatus();
+        case 4:
+            return numberFormatter.format(rec.getLinkInfo().getDataInCount());
         case 5:
-            return numberFormatter.format(rec.getLinkInfo().getDataCount());
+            return numberFormatter.format(rec.getLinkInfo().getDataOutCount());
         default:
             return "";
         }
@@ -44,13 +44,25 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
 
     @Override
     public Color getForeground(Object element) {
-        if (index == 5) // cell status
-        {
+        if (index == 5) {
             DataLinkRecord rec = (DataLinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_FG;
             } else if ("OK".equals(rec.getLinkInfo().getStatus())) {
-                if (rec.isDataCountIncreasing()) {
+                if (rec.isDataInCountIncreasing()) {
+                    return UiColors.GOOD_BRIGHT_FG;
+                } else {
+                    return UiColors.GOOD_FAINT_FG;
+                }
+            } else {
+                return UiColors.ERROR_FAINT_FG;
+            }
+        } else if (index == 6) {
+            DataLinkRecord rec = (DataLinkRecord) element;
+            if (rec.getLinkInfo().getDisabled()) {
+                return UiColors.DISABLED_FAINT_FG;
+            } else if ("OK".equals(rec.getLinkInfo().getStatus())) {
+                if (rec.isDataOutCountIncreasing()) {
                     return UiColors.GOOD_BRIGHT_FG;
                 } else {
                     return UiColors.GOOD_FAINT_FG;
@@ -69,17 +81,30 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
     // This one is called for each column, with the same LinkInfo element
     @Override
     public Color getBackground(Object element) {
-        if (index == nbColumn)
+        if (index == nbColumn) {
             index = 0;
+        }
         index++;
 
-        if (index == 5) // cell status
-        {
+        if (index == 5) { // cell status
             DataLinkRecord rec = (DataLinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_BG;
             } else if ("OK".equals(rec.getLinkInfo().getStatus())) {
-                if (rec.isDataCountIncreasing()) {
+                if (rec.isDataInCountIncreasing()) {
+                    return UiColors.GOOD_BRIGHT_BG;
+                } else {
+                    return UiColors.GOOD_FAINT_BG;
+                }
+            } else {
+                return UiColors.ERROR_FAINT_BG;
+            }
+        } else if (index == 6) {
+            DataLinkRecord rec = (DataLinkRecord) element;
+            if (rec.getLinkInfo().getDisabled()) {
+                return UiColors.DISABLED_FAINT_BG;
+            } else if ("OK".equals(rec.getLinkInfo().getStatus())) {
+                if (rec.isDataInCountIncreasing()) {
                     return UiColors.GOOD_BRIGHT_BG;
                 } else {
                     return UiColors.GOOD_FAINT_BG;
