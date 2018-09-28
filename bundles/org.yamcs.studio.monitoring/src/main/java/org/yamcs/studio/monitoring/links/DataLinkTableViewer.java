@@ -24,7 +24,6 @@ public class DataLinkTableViewer extends TableViewer {
 
     public static final String COL_NAME = "Name";
     public static final String COL_TYPE = "Type";
-    public static final String COL_SPEC = "Spec";
     public static final String COL_STATUS = "Status";
     public static final String COL_IN = "In";
     public static final String COL_OUT = "Out";
@@ -60,10 +59,6 @@ public class DataLinkTableViewer extends TableViewer {
         typeColumn.getColumn().setText(COL_TYPE);
         tcl.setColumnData(typeColumn.getColumn(), new ColumnWeightData(18));
 
-        TableViewerColumn specColumn = new TableViewerColumn(this, SWT.LEFT);
-        specColumn.getColumn().setText(COL_SPEC);
-        tcl.setColumnData(specColumn.getColumn(), new ColumnWeightData(18));
-
         TableViewerColumn statusColumn = new TableViewerColumn(this, SWT.CENTER);
         statusColumn.getColumn().setText(COL_STATUS);
         tcl.setColumnData(statusColumn.getColumn(), new ColumnWeightData(18));
@@ -80,7 +75,6 @@ public class DataLinkTableViewer extends TableViewer {
         List<TableViewerColumn> columns = new ArrayList<>();
         columns.add(nameColumn);
         columns.add(typeColumn);
-        columns.add(specColumn);
         columns.add(statusColumn);
         columns.add(inColumn);
         columns.add(outColumn);

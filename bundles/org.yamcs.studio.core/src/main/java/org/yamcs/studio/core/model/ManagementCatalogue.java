@@ -142,8 +142,6 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         ConnectionInfo connectionInfo = yamcsClient.getConnectionInfo();
         if (connectionInfo != null) {
             int currentClientId = connectionInfo.getClientId();
-            System.out.println("Search clientId " + currentClientId);
-            System.out.println("in... " + clientInfoById.keySet());
             return clientInfoById.get(currentClientId);
         }
         return null;

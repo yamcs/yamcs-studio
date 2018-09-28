@@ -30,12 +30,10 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
         case 1:
             return rec.getLinkInfo().getType();
         case 2:
-            return rec.getLinkInfo().getSpec();
-        case 3:
             return rec.getLinkInfo().getStatus();
-        case 4:
+        case 3:
             return numberFormatter.format(rec.getLinkInfo().getDataInCount());
-        case 5:
+        case 4:
             return numberFormatter.format(rec.getLinkInfo().getDataOutCount());
         default:
             return "";
@@ -44,7 +42,7 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
 
     @Override
     public Color getForeground(Object element) {
-        if (index == 5) {
+        if (index == 4) {
             DataLinkRecord rec = (DataLinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_FG;
@@ -57,7 +55,7 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
             } else {
                 return UiColors.ERROR_FAINT_FG;
             }
-        } else if (index == 6) {
+        } else if (index == 5) {
             DataLinkRecord rec = (DataLinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_FG;
@@ -76,7 +74,7 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
     }
 
     int index = 0;
-    final int nbColumn = 6;
+    final int nbColumn = 5;
 
     // This one is called for each column, with the same LinkInfo element
     @Override
@@ -86,7 +84,7 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
         }
         index++;
 
-        if (index == 5) { // cell status
+        if (index == 4) { // cell status
             DataLinkRecord rec = (DataLinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_BG;
@@ -99,7 +97,7 @@ public class DataLinkTableViewerLabelProvider extends LabelProvider implements I
             } else {
                 return UiColors.ERROR_FAINT_BG;
             }
-        } else if (index == 6) {
+        } else if (index == 5) {
             DataLinkRecord rec = (DataLinkRecord) element;
             if (rec.getLinkInfo().getDisabled()) {
                 return UiColors.DISABLED_FAINT_BG;
