@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
 import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 
 /**
@@ -33,7 +34,15 @@ public class ProcessorStateProvider extends AbstractSourceProvider {
         } else {
             replay = processorInfo.hasReplayRequest();
             processing = replay ? processorInfo.getReplayState().toString() : "";
-            speed = replay ? processorInfo.getReplayRequest().getSpeed().getParam() : 1;
+            if (replay) {
+                if (processorInfo.getReplayRequest().getSpeed().getType() == ReplaySpeedType.STEP_BY_STEP) {
+                    speed = -1;
+                } else {
+                    speed = processorInfo.getReplayRequest().getSpeed().getParam();
+                }
+            } else {
+                speed = 1;
+            }
         }
 
         Map newState = getCurrentState();

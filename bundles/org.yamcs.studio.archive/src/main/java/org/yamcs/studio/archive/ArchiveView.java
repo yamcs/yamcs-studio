@@ -181,7 +181,7 @@ public class ArchiveView extends ViewPart
         Label label = new Label(controlsComposite, SWT.PUSH);
         label.setText("Speed:");
         speedCombo = new Combo(controlsComposite, SWT.DROP_DOWN);
-        speedCombo.setItems("0.5x", "0.75x", "1x (original)", "2x", "5x", "10x", "20x", "Fixed Delay...");
+        speedCombo.setItems("0.5x", "0.75x", "1x (original)", "2x", "5x", "10x", "20x");
         speedCombo.setText("1x (original)");
 
         speedCombo.addListener(SWT.Selection, evt -> updateSpeed());
@@ -234,9 +234,7 @@ public class ArchiveView extends ViewPart
     private void updateSpeed() {
         String text = speedCombo.getText().trim();
         float speedFactor = -1;
-        if ("Fixed Delay".equals(text)) {
-            // TODO
-        } else if ("1x (original)".equals(text)) {
+        if ("1x (original)".equals(text)) {
             speedFactor = 1;
         } else {
             speedFactor = Float.parseFloat(text.replace("x", ""));
@@ -607,11 +605,15 @@ public class ArchiveView extends ViewPart
         forwardEnabled &= ("RUNNING".equals(processing));
         forwardEnabled &= (Boolean.TRUE.equals(replay));
 
+        boolean speedEnabled = (Boolean.TRUE.equals(connected));
+        speedEnabled &= replaySpeed != null && replaySpeed > 0;
+
         boolean leaveReplayEnabled = (Boolean.TRUE.equals(connected));
 
         playButton.setEnabled(playEnabled || pauseEnabled);
         forwardButton.setEnabled(forwardEnabled);
         leaveReplayButton.setEnabled(leaveReplayEnabled);
+        speedCombo.setEnabled(speedEnabled);
 
         boolean playVisible = ("STOPPED".equals(processing));
         playVisible |= ("ERROR".equals(processing));
