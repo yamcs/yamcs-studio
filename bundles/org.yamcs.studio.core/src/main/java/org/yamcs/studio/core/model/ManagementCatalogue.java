@@ -54,6 +54,9 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         yamcsClient.subscribe(new WebSocketRequest("management", "subscribe"), this);
         yamcsClient.subscribe(new WebSocketRequest("processor", "subscribe"), this);
         connectionInfo = yamcsClient.getConnectionInfo();
+        if (connectionInfo != null) {
+            currentProcessor = connectionInfo.getProcessor();
+        }
     }
 
     @Override
@@ -62,6 +65,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
             ConnectionInfo prevConnectionInfo = connectionInfo;
             connectionInfo = msg.getConnectionInfo();
+            currentProcessor = connectionInfo.getProcessor();
 
             if (prevConnectionInfo != null
                     && !prevConnectionInfo.getInstance().getName().equals(connectionInfo.getInstance().getName())) {
