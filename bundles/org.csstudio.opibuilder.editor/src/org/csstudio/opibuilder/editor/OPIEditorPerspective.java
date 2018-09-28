@@ -35,7 +35,7 @@ public class OPIEditorPerspective implements IPerspectiveFactory {
 
         bottom.addView(ID_CONSOLE_VIEW);
         bottom.addView(ID_FUNCTIONS_VIEW);
-        bottom.addView(ID_PARAMETERS_VIEW);
+        // bottom.addView(ID_PARAMETERS_VIEW);
         bottom.addPlaceholder(IPageLayout.ID_PROGRESS_VIEW);
 
         layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);

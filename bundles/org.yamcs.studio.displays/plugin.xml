@@ -3,13 +3,13 @@
 <plugin>
     <extension
          point="org.eclipse.ui.editors">
-      <editor
+      <!--editor
             class="org.yamcs.studio.displays.ParameterTableEditor"
             default="true"
             extensions="par"
             id="org.yamcs.studio.displays.ParameterTableEditor"
             name="Parameter Table">
-      </editor>
+      </editor-->
       <!--editor
             class="org.yamcs.studio.displays.ScrollEditor"
             default="false"
