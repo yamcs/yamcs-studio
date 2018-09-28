@@ -41,9 +41,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
     private Map<Integer, ClientInfo> clientInfoById = new ConcurrentHashMap<>();
 
-    // Redundant, but quickly accessible
-    private int currentClientId = -1;
-
+    private ConnectionInfo connectionInfo;
     private ProcessorInfo currentProcessor;
 
     public static ManagementCatalogue getInstance() {
@@ -55,16 +53,24 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("management", "subscribe"), this);
         yamcsClient.subscribe(new WebSocketRequest("processor", "subscribe"), this);
+        connectionInfo = yamcsClient.getConnectionInfo();
     }
 
     @Override
     public void onMessage(WebSocketSubscriptionData msg) {
         if (msg.hasConnectionInfo()) {
-            ConnectionInfo connectionInfo = msg.getConnectionInfo();
-            currentClientId = connectionInfo.getClientId();
-            currentProcessor = connectionInfo.getProcessor();
-            YamcsInstance instance = connectionInfo.getInstance();
-            log.fine("Instance " + instance.getName() + ": " + instance.getState());
+
+            ConnectionInfo prevConnectionInfo = connectionInfo;
+            connectionInfo = msg.getConnectionInfo();
+
+            if (prevConnectionInfo != null
+                    && !prevConnectionInfo.getInstance().getName().equals(connectionInfo.getInstance().getName())) {
+                YamcsInstance instance = connectionInfo.getInstance();
+                log.fine("Instance " + instance.getName() + ": " + instance.getState());
+                instanceListeners.forEach(l -> l.instanceChanged(
+                        prevConnectionInfo.getInstance().getName(), instance.getName()));
+            }
+
             managementListeners.forEach(l -> l.instanceUpdated(connectionInfo));
         }
 
@@ -100,7 +106,6 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     public void onYamcsDisconnected() {
         // Clear everything, we'll get a fresh set upon connect
         clientInfoById.clear();
-        currentClientId = -1;
         currentProcessor = null;
 
         managementListeners.forEach(ManagementListener::clearAllManagementData);
@@ -133,7 +138,15 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public ClientInfo getCurrentClientInfo() {
-        return clientInfoById.get(currentClientId);
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+        ConnectionInfo connectionInfo = yamcsClient.getConnectionInfo();
+        if (connectionInfo != null) {
+            int currentClientId = connectionInfo.getClientId();
+            System.out.println("Search clientId " + currentClientId);
+            System.out.println("in... " + clientInfoById.keySet());
+            return clientInfoById.get(currentClientId);
+        }
+        return null;
     }
 
     // Careful we must support the case where Yamcs itself changes the instance of our client

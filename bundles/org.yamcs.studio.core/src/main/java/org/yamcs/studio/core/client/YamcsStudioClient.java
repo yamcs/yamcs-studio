@@ -27,6 +27,7 @@ import org.yamcs.api.ws.ConnectionListener;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
@@ -69,6 +70,8 @@ public class YamcsStudioClient implements WebSocketClientCallback {
     private List<WebSocketClientCallback> subscribers = new CopyOnWriteArrayList<>();
 
     private ParameterSubscriptionBundler parameterSubscriptionBundler;
+
+    private ConnectionInfo connectionInfo;
 
     // Keep track of ongoing jobs, to respond to user cancellation requests.
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
@@ -205,6 +208,7 @@ public class YamcsStudioClient implements WebSocketClientCallback {
             log.warning("Connection to " + yprops + " lost");
         }
         connected = false;
+        connectionInfo = null;
         for (ConnectionListener listener : connectionListeners) {
             listener.disconnected();
         }
@@ -234,6 +238,10 @@ public class YamcsStudioClient implements WebSocketClientCallback {
 
     public YamcsConnectionProperties getYamcsConnectionProperties() {
         return yprops;
+    }
+
+    public ConnectionInfo getConnectionInfo() {
+        return connectionInfo;
     }
 
     public List<String> getYamcsInstances() {
@@ -272,6 +280,10 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         YamcsPlugin plugin = YamcsPlugin.getDefault();
         if (plugin == null) {
             return;
+        }
+
+        if (data.hasConnectionInfo()) {
+            connectionInfo = data.getConnectionInfo();
         }
 
         subscribers.forEach(s -> s.onMessage(data));
