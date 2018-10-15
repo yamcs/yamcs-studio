@@ -77,7 +77,7 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
         unitsById.clear();
     }
 
-    public synchronized void processMetaParameters(List<ParameterInfo> metaParameters) {
+    private synchronized void processMetaParameters(List<ParameterInfo> metaParameters) {
         log.info(String.format("Loaded %d parameters", metaParameters.size()));
         this.metaParameters = new ArrayList<>(metaParameters);
         this.metaParameters.sort((p1, p2) -> {

@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
-import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Rest.CreateProcessorRequest;
@@ -111,6 +110,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         // Clear everything, we'll get a fresh set upon connect
         clientInfoById.clear();
         currentProcessor = null;
+        connectionInfo = null;
 
         managementListeners.forEach(ManagementListener::clearAllManagementData);
     }
@@ -151,22 +151,13 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         return null;
     }
 
-    // Careful we must support the case where Yamcs itself changes the instance of our client
-    // TODO maybe remove this and instead just store an instance field in YamcsClient ?
     public static String getCurrentYamcsInstance() {
-        ManagementCatalogue catalogue = getInstance();
-        if (catalogue == null) {
-            return null;
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+        ConnectionInfo connectionInfo = yamcsClient.getConnectionInfo();
+        if (connectionInfo != null && connectionInfo.hasInstance()) {
+            return connectionInfo.getInstance().getName();
         }
-        ClientInfo ci = catalogue.getCurrentClientInfo();
-        if (ci != null) {
-            return ci.getInstance();
-        } else {
-            // Fallback (initial connection properties
-            YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-            YamcsConnectionProperties props = yamcsClient.getYamcsConnectionProperties();
-            return (props != null) ? props.getInstance() : null;
-        }
+        return null;
     }
 
     public ProcessorInfo getCurrentProcessorInfo() {

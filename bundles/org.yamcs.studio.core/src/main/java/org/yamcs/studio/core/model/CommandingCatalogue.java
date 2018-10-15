@@ -176,6 +176,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     public synchronized void processMetaCommands(List<CommandInfo> metaCommands) {
+        log.info(String.format("Loaded %d commands", metaCommands.size()));
         this.metaCommands = new ArrayList<>(metaCommands);
         this.metaCommands.sort((p1, p2) -> {
             return p1.getQualifiedName().compareTo(p2.getQualifiedName());
