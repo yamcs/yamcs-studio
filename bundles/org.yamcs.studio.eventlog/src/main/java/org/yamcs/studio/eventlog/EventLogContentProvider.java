@@ -107,7 +107,7 @@ public class EventLogContentProvider implements IStructuredContentProvider {
         // TODO not sure if this is the recommended way to delete all. Need to verify
         BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
             tableViewer.getTable().setRedraw(false);
-            tableViewer.remove(items);
+            tableViewer.remove(items.toArray());
             items.clear();
             tableViewer.getTable().setRedraw(true);
         });
