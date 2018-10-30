@@ -36,8 +36,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.commanding.CommandingPlugin;
-import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord.CommandState;
+import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.ColumnData;
@@ -45,7 +47,7 @@ import org.yamcs.studio.core.ui.utils.ColumnDef;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
 
-public class CommandHistoryView extends ViewPart {
+public class CommandHistoryView extends ViewPart implements YamcsConnectionListener, InstanceListener {
 
     private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
 
@@ -143,13 +145,27 @@ public class CommandHistoryView extends ViewPart {
             RCPUtils.runCommand(CommandHistory.CMD_COMMAND_PROPERTIES);
         });
 
-        updateSummaryLine();
-
         getViewSite().setSelectionProvider(tableViewer);
 
+        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
+        ManagementCatalogue.getInstance().addInstanceListener(this);
         CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
         });
+    }
+
+    @Override
+    public void onYamcsConnected() {
+    }
+
+    @Override
+    public void instanceChanged(String oldInstance, String newInstance) {
+        Display.getDefault().asyncExec(() -> clear());
+    }
+
+    @Override
+    public void onYamcsDisconnected() {
+        Display.getDefault().asyncExec(() -> clear());
     }
 
     public ColumnData createDefaultColumnData() {
@@ -170,21 +186,8 @@ public class CommandHistoryView extends ViewPart {
         return data;
     }
 
-    private void updateSummaryLine() {
-        String yamcsInstance = ManagementCatalogue.getCurrentYamcsInstance();
-        String summaryLine = "";
-        if (yamcsInstance != null) {
-            summaryLine = "Showing commands for Yamcs instance " + yamcsInstance + ". ";
-        }
-        setContentDescription(summaryLine + String.format("%d completed, %d failed, %d others (no filter)",
-                tableContentProvider.getCommandCount(CommandState.COMPLETED),
-                tableContentProvider.getCommandCount(CommandState.FAILED),
-                tableContentProvider.getCommandCount(CommandState.UNKNOWN)));
-    }
-
     public void clear() {
         tableContentProvider.clearAll();
-        updateSummaryLine();
     }
 
     public void enableScrollLock(boolean enabled) {
@@ -252,6 +255,13 @@ public class CommandHistoryView extends ViewPart {
             }
         };
         mgr.add(configureColumnsAction);
+    }
+
+    @Override
+    public void dispose() {
+        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
+        ManagementCatalogue.getInstance().removeInstanceListener(this);
+        super.dispose();
     }
 
     private void syncCurrentWidthsToModel() {
@@ -565,7 +575,6 @@ public class CommandHistoryView extends ViewPart {
 
         // Now add content
         tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
-        updateSummaryLine();
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {
