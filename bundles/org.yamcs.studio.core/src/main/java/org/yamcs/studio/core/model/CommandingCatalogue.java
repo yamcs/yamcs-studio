@@ -11,10 +11,13 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
@@ -126,17 +129,47 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
     }
 
     private void initialiseState() {
-        log.fine("Fetching available commands");
-        YamcsStudioClient restClient = YamcsPlugin.getYamcsClient();
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        restClient.get("/mdb/" + instance + "/commands?details", null).whenComplete((data, exc) -> {
-            try {
-                ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
-                processMetaCommands(response.getCommandList());
-            } catch (InvalidProtocolBufferException e) {
-                log.log(Level.SEVERE, "Failed to decode server response", e);
+        Job job = Job.create("Loading commands", monitor -> {
+            log.fine("Fetching available commands");
+            YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
+            int pageSize = 200;
+            List<CommandInfo> commands = new ArrayList<>();
+
+            String next = null;
+            while (true) {
+                try {
+                    String url = "/mdb/" + instance + "/commands?details&limit=" + pageSize;
+                    if (next != null) {
+                        url += "&next=" + next;
+                    }
+                    byte[] data = yamcsClient.get(url, null).get();
+                    try {
+                        ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
+                        commands.addAll(response.getCommandList());
+                        if (response.hasContinuationToken()) {
+                            next = response.getContinuationToken();
+                        } else {
+                            break;
+                        }
+                    } catch (InvalidProtocolBufferException e) {
+                        log.log(Level.SEVERE, "Failed to decode server response", e);
+                        break;
+                    }
+                } catch (InterruptedException e) {
+                    return Status.CANCEL_STATUS;
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    log.log(Level.SEVERE, "Exception while loading commands: " + cause.getMessage(), cause);
+                    return Status.OK_STATUS;
+                }
             }
+
+            processMetaCommands(commands);
+            return Status.OK_STATUS;
         });
+        job.setPriority(Job.LONG);
+        job.schedule(1000L);
     }
 
     private void clearState() {

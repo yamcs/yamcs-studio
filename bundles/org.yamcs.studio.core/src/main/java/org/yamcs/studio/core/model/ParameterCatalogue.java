@@ -107,20 +107,22 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
             YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
             int pageSize = 500;
-            int page = 1;
             List<ParameterInfo> parameters = new ArrayList<>();
+
+            String next = null;
             while (true) {
-                int limit = pageSize + 1;
-                int pos = (page - 1) * pageSize;
-                String url = "/mdb/" + instance + "/parameters?details&limit=" + limit + "&pos=" + pos;
+                String url = "/mdb/" + instance + "/parameters?details&limit=" + pageSize;
+                if (next != null) {
+                    url += "&next=" + next;
+                }
                 try {
                     byte[] data = yamcsClient.get(url, null).get();
                     try {
                         ListParametersResponse response = ListParametersResponse.parseFrom(data);
-                        if (response.getParameterCount() == limit) {
-                            parameters.addAll(response.getParameterList().subList(0, limit - 1));
+                        parameters.addAll(response.getParameterList());
+                        if (response.hasContinuationToken()) {
+                            next = response.getContinuationToken();
                         } else {
-                            parameters.addAll(response.getParameterList());
                             break;
                         }
                     } catch (InvalidProtocolBufferException e) {
@@ -134,7 +136,6 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
                     log.log(Level.SEVERE, "Exception while loading parameters: " + cause.getMessage(), cause);
                     return Status.OK_STATUS;
                 }
-                page++;
             }
             processMetaParameters(parameters);
             return Status.OK_STATUS;
