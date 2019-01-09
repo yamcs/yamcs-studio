@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.css.runtime.feature"
       label="Yamcs CS-Studio Runtime Components"
-      version="1.2.1"
+      version="1.2.2.qualifier"
       provider-name="Space Applications Services">
 
    <plugin

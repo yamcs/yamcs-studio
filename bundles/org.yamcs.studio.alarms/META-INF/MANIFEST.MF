@@ -7,7 +7,7 @@ Bundle-Name: Yamcs Studio Alarms
 Bundle-SymbolicName: org.yamcs.studio.alarms;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.2.1
+Bundle-Version: 1.2.2.qualifier
 Require-Bundle: org.yamcs.studio.core,
  org.yamcs.studio.core.ui,
  org.yamcs.client,
