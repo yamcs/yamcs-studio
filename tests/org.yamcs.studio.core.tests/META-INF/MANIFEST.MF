@@ -4,7 +4,7 @@ Bundle-Name: Yamcs Studio Core Tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-SymbolicName: org.yamcs.studio.core.tests
 Bundle-Vendor: Space Applications Services
-Bundle-Version: 1.0.5
+Bundle-Version: 1.0.6.qualifier
 Fragment-Host: org.yamcs.studio.core
 Require-Bundle: org.junit
 Automatic-Module-Name: org.yamcs.studio.core.tests
