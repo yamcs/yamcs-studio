@@ -1,12 +1,14 @@
 package org.csstudio.opibuilder.widgetActions;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.logging.Level;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
@@ -52,6 +54,13 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
                 return;
             }
             scriptScope = scriptEngine.createBindings();
+            try {
+                JavaScriptStore.bootstrapScriptEngine(scriptEngine, scriptScope);
+            } catch (ScriptException | IOException e) {
+                ErrorHandlerUtil.handleError("Failed to bootstrap script engine", e);
+                return;
+            }
+
             GraphicalViewer viewer = getWidgetModel().getRootDisplayModel().getViewer();
             if (viewer != null) {
                 Object obj = viewer.getEditPartRegistry().get(getWidgetModel());
@@ -84,11 +93,10 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
                 UIBundlingThread.getInstance().addRunnable(display, () -> {
                     try {
                         if (isEmbedded()) {
-                            String scriptText = JavaScriptStore.COMPAT_PREFIX + getScriptText();
-                            script = ((Compilable) scriptEngine).compile(scriptText);
+                            script = ((Compilable) scriptEngine).compile(getScriptText());
                         } else {
                             BufferedReader reader = getReader();
-                            StringBuilder buf = new StringBuilder(JavaScriptStore.COMPAT_PREFIX);
+                            StringBuilder buf = new StringBuilder();
                             try {
                                 String line;
                                 while ((line = reader.readLine()) != null) {

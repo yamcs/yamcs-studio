@@ -1,13 +1,17 @@
 package org.csstudio.opibuilder.script;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.simplepv.IPV;
@@ -17,10 +21,6 @@ import org.csstudio.simplepv.IPV;
  * (Nashorn since Java 8).
  */
 public class JavaScriptStore extends AbstractScriptStore {
-
-    // Adds support for importPackage() to Nashorn scripts.
-    // This is an old function that existed back in the Rhino days
-    public static final String COMPAT_PREFIX = "load(\"nashorn:mozilla_compat.js\");\n";
 
     private ScriptEngine engine;
     private Bindings bindings;
@@ -39,11 +39,22 @@ public class JavaScriptStore extends AbstractScriptStore {
         bindings.put(ScriptService.DISPLAY, getDisplayEditPart());
         bindings.put(ScriptService.WIDGET_CONTROLLER_DEPRECIATED, getEditPart());
         bindings.put(ScriptService.PV_ARRAY_DEPRECIATED, getPvArray());
+        bootstrapScriptEngine(engine, bindings);
+    }
+
+    public static void bootstrapScriptEngine(ScriptEngine engine, Bindings bindings)
+            throws IOException, ScriptException {
+        String nashornBootstrap = "/org/csstudio/opibuilder/script/nashorn_bootstrap.js";
+        try (Reader in = new InputStreamReader(JavaScriptStore.class.getResourceAsStream(nashornBootstrap))) {
+            engine.eval(in, bindings);
+        }
+        engine.eval("importPackage(Packages.org.csstudio.opibuilder.scriptUtil);", bindings);
+        engine.eval("importPackage(Packages.org.yamcs.studio.script);", bindings);
     }
 
     @Override
     protected void compileString(String string) throws Exception {
-        script = ((Compilable) engine).compile(COMPAT_PREFIX + string);
+        script = ((Compilable) engine).compile(string);
     }
 
     @Override
@@ -60,7 +71,7 @@ public class JavaScriptStore extends AbstractScriptStore {
         }
 
         String content = bout.toString(StandardCharsets.UTF_8.name());
-        script = ((Compilable) engine).compile(COMPAT_PREFIX + content);
+        script = ((Compilable) engine).compile(content);
     }
 
     @Override
