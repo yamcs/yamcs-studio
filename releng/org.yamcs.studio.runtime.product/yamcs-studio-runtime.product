@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Yamcs Studio Runtime" uid="yamcs-studio-runtime" id="org.yamcs.studio.runtime.product" application="org.yamcs.studio.runtime.application" version="1.0.5.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Yamcs Studio Runtime" uid="yamcs-studio-runtime" id="org.yamcs.studio.runtime.product" application="org.yamcs.studio.runtime.application" version="1.0.5" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.yamcs.studio.runtime/icons/aboutSide.png"/>

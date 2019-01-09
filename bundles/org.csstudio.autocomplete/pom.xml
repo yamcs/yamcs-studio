@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>org.yamcs.studio.bundles</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
   </parent>
   <artifactId>org.csstudio.autocomplete</artifactId>
   <packaging>eclipse-plugin</packaging>
