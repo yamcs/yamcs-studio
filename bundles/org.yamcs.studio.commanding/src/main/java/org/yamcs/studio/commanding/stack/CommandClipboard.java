@@ -2,11 +2,13 @@ package org.yamcs.studio.commanding.stack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord;
 
 /**
@@ -53,7 +55,19 @@ public class CommandClipboard {
 
         // copy stacked commands
         for (StackedCommand sc : copiedStackedCommands) {
-            result.add(sc.copy());
+            StackedCommand copy = new StackedCommand();
+            copy.setMetaCommand(sc.getMetaCommand());
+            if (sc.getComment() != null) {
+                copy.setComment(sc.getComment());
+            }
+            if (sc.getSelectedAlias() != null) {
+                copy.setSelectedAliase(sc.getSelectedAlias());
+            }
+            for (Entry<ArgumentInfo, String> entry : sc.getAssignments().entrySet()) {
+                copy.addAssignment(entry.getKey(), entry.getValue());
+            }
+
+            result.add(copy);
         }
 
         return result;

@@ -360,20 +360,4 @@ public class StackedCommand {
     public String getSource() {
         return toStyledString(null).getString();
     }
-
-    public StackedCommand copy() {
-        StackedCommand copy = new StackedCommand();
-
-        copy.meta = this.meta;
-        copy.assignments = this.assignments;
-        copy.clientId = this.clientId;
-        copy.comment = this.comment;
-        copy.selectedAlias = this.selectedAlias;
-
-        // reset state and ptv info
-        copy.state = StackedState.DISARMED;
-        copy.ptvInfo = new PTVInfo();
-
-        return copy;
-    }
 }
