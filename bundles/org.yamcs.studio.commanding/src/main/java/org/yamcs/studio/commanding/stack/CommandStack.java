@@ -2,20 +2,64 @@ package org.yamcs.studio.commanding.stack;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 
 /**
- * Client-side structure for keeping track of an ordered set of commands with various options and
- * checks.
+ * Client-side structure for keeping track of an ordered set of commands with
+ * various options and checks.
  * <p>
- * Currently a stack is considered to be something at a workbench level, but this would ideally be
- * refactored later on.
+ * Currently a stack is considered to be something at a workbench level, but
+ * this would ideally be refactored later on.
  */
 public class CommandStack {
 
     private static final CommandStack INSTANCE = new CommandStack();
     private List<StackedCommand> commands = new ArrayList<>();
+    public StackStatus stackStatus = StackStatus.IDLE;
+    public StackMode stackMode = StackMode.MANUAL;
+    public AutoMode autoMode = AutoMode.AFAP;
+    public int fixDelayMs = 100;
+
+    public AutoMode getAutoMode() {
+        return this.autoMode;
+    }
+
+    public int getAutoFixDelayMs() {
+        return fixDelayMs;
+    }
+
+    public enum StackStatus {
+        IDLE, EXECUTING;
+    }
+
+    
+    public enum StackMode {
+        MANUAL(0), AUTOMATIC(1);
+
+        private final int index;
+
+        StackMode(int index) {
+            this.index = index;
+        }
+
+        public int index() {
+            return this.index;
+        }
+    }
+
+    public enum AutoMode {
+        AFAP(0), FIX_DELAY(1);
+
+        private final int index;
+
+        AutoMode(int index) {
+            this.index = index;
+        }
+
+        public int index() {
+            return this.index;
+        }
+    } 
 
     private CommandStack() {
     }
@@ -81,5 +125,20 @@ public class CommandStack {
 
     public boolean isEmpty() {
         return commands.isEmpty();
+    }
+
+    public boolean areAllCommandsArmed() {
+        // Check all commands are armed, starting from the active command
+        StackedCommand activeCommand = getActiveCommand();
+        boolean foundActive = false;
+        boolean allArmed = true;
+        for (int i = 0; i < commands.size(); i++) {
+            if (!foundActive && commands.get(i) == activeCommand)
+                foundActive = true;
+            if (foundActive) {
+                allArmed &= commands.get(i).isArmed();
+            }
+        }
+        return allArmed;
     }
 }
