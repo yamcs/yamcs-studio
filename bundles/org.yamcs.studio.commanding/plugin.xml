@@ -48,8 +48,18 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.commanding.stack.armAll"
+            name="Arm All Commands">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.commanding.stack.issue"
             name="Issue Command">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.commanding.stack.issueAll"
+            name="Issue All Commands">
       </command>
       <command
             categoryId="org.yamcs.studio"
@@ -188,8 +198,16 @@
             commandId="org.yamcs.studio.commanding.stack.arm">
       </handler>
       <handler
+            class="org.yamcs.studio.commanding.stack.ArmAllCommandHandler"
+            commandId="org.yamcs.studio.commanding.stack.armAll">
+      </handler>
+      <handler
             class="org.yamcs.studio.commanding.stack.IssueCommandHandler"
             commandId="org.yamcs.studio.commanding.stack.issue">
+      </handler>
+      <handler
+            class="org.yamcs.studio.commanding.stack.IssueAllCommandsHandler"
+            commandId="org.yamcs.studio.commanding.stack.issueAll">
       </handler>
       <handler
             class="org.yamcs.studio.commanding.stack.ExportCommandStackHandler"

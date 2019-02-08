@@ -4,10 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
@@ -339,7 +342,8 @@ public class StackedCommand {
             String argument = components[0].trim();
             String value = components[1].trim();
             boolean foundArgument = false;
-            for (ArgumentInfo ai : commandInfo.getArgumentList()) {
+            List<ArgumentInfo> metaCommandArgumentsList = getAllArgumentList(commandInfo);
+            for (ArgumentInfo ai : metaCommandArgumentsList) {
                 foundArgument = ai.getName().toUpperCase().equals(argument.toUpperCase());
                 if (foundArgument) {
                     if (value.startsWith("\"") && value.endsWith("\"")) {
@@ -355,6 +359,16 @@ public class StackedCommand {
         }
 
         return result;
+    }
+
+    private static List<ArgumentInfo> getAllArgumentList(CommandInfo commandInfo) {
+        List<ArgumentInfo> result = commandInfo.getArgumentList();
+        if (commandInfo.getBaseCommand() != commandInfo) {
+            return Stream.concat(result.stream(), getAllArgumentList(commandInfo.getBaseCommand()).stream())
+                    .collect(Collectors.toList());
+        } else {
+            return result;
+        }
     }
 
     public String getSource() {

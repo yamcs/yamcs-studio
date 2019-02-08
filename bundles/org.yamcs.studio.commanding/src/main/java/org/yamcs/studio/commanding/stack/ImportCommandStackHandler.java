@@ -101,10 +101,19 @@ public class ImportCommandStackHandler extends AbstractHandler {
     }
 
     private ArgumentInfo getArgumentFromYamcs(CommandInfo mc, String argumentName) {
+        // look for argument in the command
         for (ArgumentInfo a : mc.getArgumentList()) {
             if (a.getName().equals(argumentName))
                 return a;
         }
+        
+        // else look in the parent command
+        if(mc.getBaseCommand() != mc)
+        {
+            return getArgumentFromYamcs(mc.getBaseCommand(), argumentName);
+        }
+        
+        // else, argument is not found...
         return null;
     }
 }

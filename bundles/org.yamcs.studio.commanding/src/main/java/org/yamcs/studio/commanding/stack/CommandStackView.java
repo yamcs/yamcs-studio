@@ -25,17 +25,22 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -43,6 +48,8 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
+import org.yamcs.studio.commanding.stack.CommandStack.StackMode;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
@@ -68,6 +75,10 @@ public class CommandStackView extends ViewPart {
     private Label messageLabel;
     private Button armButton;
     private Button issueButton;
+    
+    Spinner fixDelaySpinner;
+    
+    
 
     @Override
     public void createPartControl(Composite parent) {
@@ -173,31 +184,136 @@ public class CommandStackView extends ViewPart {
         gd.verticalAlignment = SWT.CENTER;
         gd.horizontalAlignment = SWT.RIGHT;
         bottomRight.setLayoutData(gd);
-        gl = new GridLayout(2, false);
+        gl = new GridLayout(4, false);
         gl.marginHeight = 0;
         gl.marginWidth = 0;
         gl.horizontalSpacing = 0;
         gl.verticalSpacing = 0;
         bottomRight.setLayout(gl);
 
+        // Stack parameters (manual/auto stack)
+        Composite stackParameters = new Composite(bottomRight, SWT.NONE);
+        gl = new GridLayout(5, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 50;
+        gl.horizontalSpacing = 0;
+        gl.verticalSpacing = 0;
+        stackParameters.setLayout(gl);
+        // Group stackTypeGroup = new Group(stackParameters, SWT.NONE);
+        // stackTypeGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+        Label label = new Label(stackParameters, SWT.NONE);
+        label.setText("Stack mode: ");
+
+        final Combo comboStackType = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
+        String[] items = new String[] { "Manual", "Automatic" };
+        comboStackType.setItems(items);
+        comboStackType.select(0);
+
+        Combo comboAutoParameters = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
+        String[] items2 = new String[] { "AFAP (no delays)", "Fix delays" };
+        comboAutoParameters.setItems(items2);
+        comboAutoParameters.select(0);
+        comboAutoParameters.setVisible(false);
+
+        fixDelaySpinner = new Spinner(stackParameters, SWT.BORDER);        
+        fixDelaySpinner.setMinimum(0);
+        fixDelaySpinner.setMaximum(Integer.MAX_VALUE);
+        fixDelaySpinner.setSelection(200);
+        fixDelaySpinner.setIncrement(1);
+        fixDelaySpinner.setPageIncrement(100);
+        fixDelaySpinner.setVisible(false);
+        fixDelaySpinner.addListener(SWT.Selection, evt -> {
+            CommandStack stack = CommandStack.getInstance();
+            stack.fixDelayMs = fixDelaySpinner.getSelection(); 
+        });
+        
+
+        Label labelUnit = new Label(stackParameters, SWT.NONE);
+        labelUnit.setText("ms");
+        labelUnit.setVisible(false);
+        comboStackType.addListener(SWT.Selection, evt -> {
+            CommandStack stack = CommandStack.getInstance();
+            int index = comboStackType.getSelectionIndex();
+            if (index == StackMode.MANUAL.index()) {
+                // Manual
+                stack.stackMode = StackMode.MANUAL;
+                comboAutoParameters.setVisible(false);
+                fixDelaySpinner.setVisible(false);
+                labelUnit.setVisible(false);
+            } else {
+                // Automatic
+                stack.stackMode = StackMode.AUTOMATIC;
+                comboAutoParameters.setVisible(true);
+                if (comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
+                    // fix delay
+                    fixDelaySpinner.setVisible(true);
+                    labelUnit.setVisible(true);
+                } else {
+                    fixDelaySpinner.setVisible(false);
+                    labelUnit.setVisible(false);
+                }
+            }            
+            // disarm the stack
+            setButtonEnable(issueButton, false);
+            armButton.setSelection(false);
+            stack.disarmArmed();
+            refreshState();
+
+        });
+        comboAutoParameters.addListener(SWT.Selection, evt -> {  
+            CommandStack stack = CommandStack.getInstance();
+            if (stack.stackMode  == StackMode.AUTOMATIC) {
+                // fix delay
+                fixDelaySpinner.setVisible(true);
+                labelUnit.setVisible(true);
+            } else {
+                fixDelaySpinner.setVisible(false);
+                labelUnit.setVisible(false);
+            }
+            if(comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index())
+            {
+                stack.autoMode = AutoMode.FIX_DELAY;
+            }
+            else
+            {
+                stack.autoMode = AutoMode.AFAP;
+            }
+        });
+
         armButton = new Button(bottomRight, SWT.TOGGLE);
         armButton.setText("1. Arm");
         armButton.setToolTipText("Arm the selected command");
         armButton.setEnabled(false);
         armButton.addListener(SWT.Selection, evt -> {
+            CommandStack stack = CommandStack.getInstance();
             if (armButton.getSelection()) {
                 ICommandService commandService = (ICommandService) getViewSite().getService(ICommandService.class);
                 IEvaluationService evaluationService = (IEvaluationService) getViewSite()
                         .getService(IEvaluationService.class);
-                Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
-                try {
-                    cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
-                            evaluationService.getCurrentState()));
-                } catch (Exception e) {
-                    log.log(Level.SEVERE, "Could not execute command", e);
-                }
+                
+               if(stack.stackMode == StackMode.AUTOMATIC)
+               {
+                   // automatic stack, arm all commands
+                   Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.armAll");
+                   try {
+                       cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
+                               evaluationService.getCurrentState()));
+                   } catch (Exception e) {
+                       log.log(Level.SEVERE, "Could not execute command", e);
+                   }
+               }
+               else {
+                   // manual stack, individual arm
+                   Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
+                   try {
+                       cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
+                               evaluationService.getCurrentState()));
+                   } catch (Exception e) {
+                       log.log(Level.SEVERE, "Could not execute command", e);
+                   }
+               }       
+                
             } else {
-                CommandStack stack = CommandStack.getInstance();
                 if (stack.getActiveCommand() != null && stack.getActiveCommand().isArmed()) {
                     stack.getActiveCommand().setStackedState(StackedState.DISARMED);
                 }
@@ -209,18 +325,32 @@ public class CommandStackView extends ViewPart {
         issueButton.setToolTipText("Issue the selected command");
         issueButton.setEnabled(false);
         issueButton.addListener(SWT.Selection, evt -> {
+            CommandStack stack = CommandStack.getInstance();
             ICommandService commandService = (ICommandService) getViewSite().getService(ICommandService.class);
             IEvaluationService evaluationService = (IEvaluationService) getViewSite()
                     .getService(IEvaluationService.class);
-            Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issue");
+           
+            Command cmd = null;
+            if(stack.stackMode == StackMode.AUTOMATIC)
+            {
+                // automatic stack - issue all commands
+                cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issueAll");                
+            }
+            else {
+                // manual stack - issue one command
+                cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issue");               
+            }
             try {
                 cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
                         evaluationService.getCurrentState()));
             } catch (Exception e) {
                 log.log(Level.SEVERE, "Could not execute command", e);
-            }
+            }     
+           
         });
 
+        
+        
         commandTableViewer.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             updateMessagePanel(sel);
@@ -266,7 +396,8 @@ public class CommandStackView extends ViewPart {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
         });
     }
-
+    
+  
     public void selectFirst() {
         CommandStack stack = CommandStack.getInstance();
         if (!stack.isEmpty()) {
@@ -370,7 +501,8 @@ public class CommandStackView extends ViewPart {
         if (connectionStateProvider.isConnected() && !sel.isEmpty()) {
             StackedCommand selectedCommand = (StackedCommand) sel.getFirstElement();
             if (selectedCommand == stack.getActiveCommand()) {
-                if (selectedCommand.isArmed()) {
+                if (stack.stackMode == StackMode.MANUAL && selectedCommand.isArmed()
+                          || stack.stackMode == StackMode.AUTOMATIC && stack.areAllCommandsArmed()) {
                     setButtonEnable(armButton, true);
                     setButtonEnable(issueButton, armButton.getSelection());
                 } else if (stack.isValid()) {
@@ -398,6 +530,7 @@ public class CommandStackView extends ViewPart {
                 getSite(), CommandStackStateProvider.STATE_KEY_ARMED, CommandStackStateProvider.class);
         executionStateProvider.refreshState(CommandStack.getInstance());
     }
+
 
     // Enable the buttons if user is authorized to command payload
     private void setButtonEnable(Button button, boolean isEnabled) {
