@@ -52,7 +52,7 @@ public final class SchemaService {
     }
 
     public void loadSchema(IPath schemaOPI) {
-        try (InputStream inputStream = ResourceUtil.pathToInputStream(schemaOPI, false)) {
+        try (InputStream inputStream = ResourceUtil.pathToInputStream(schemaOPI)) {
             DisplayModel displayModel = new DisplayModel(schemaOPI);
             XMLUtil.fillDisplayModelFromInputStream(inputStream,
                     displayModel, Display.getDefault());

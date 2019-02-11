@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
-
 import java.io.InputStream;
 
 import org.csstudio.opibuilder.util.MacrosInput;
@@ -17,27 +16,28 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 
-/**The editor input for OPI Runner.
+/**
+ * The editor input for OPI Runner.
+ * 
  * @author Xihui Chen
  *
  */
-public class RunnerInput implements IRunnerInput{
+public class RunnerInput implements IRunnerInput {
 
     private DisplayOpenManager displayOpenManager;
     private MacrosInput macrosInput;
     private IPath path;
 
     public RunnerInput(IPath path, DisplayOpenManager displayOpenManager,
-            MacrosInput macrosInput){
+            MacrosInput macrosInput) {
         this.path = path;
         this.setDisplayOpenManager(displayOpenManager);
         this.macrosInput = macrosInput;
     }
 
-    public RunnerInput(IPath path, DisplayOpenManager displayOpenManager){
+    public RunnerInput(IPath path, DisplayOpenManager displayOpenManager) {
         this(path, displayOpenManager, null);
     }
-
 
     /* (non-Javadoc)
      * @see org.csstudio.opibuilder.runmode.IRunnerInput#setDisplayOpenManager(org.csstudio.opibuilder.runmode.DisplayOpenManager)
@@ -67,45 +67,51 @@ public class RunnerInput implements IRunnerInput{
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         RunnerInput other = (RunnerInput) obj;
         if (macrosInput == null) {
-            if (other.macrosInput != null)
+            if (other.macrosInput != null) {
                 return false;
-        } else if (!macrosInput.equals(other.macrosInput))
+            }
+        } else if (!macrosInput.equals(other.macrosInput)) {
             return false;
+        }
         if (path == null) {
-            if (other.path != null)
+            if (other.path != null) {
                 return false;
-        } else if (!path.equals(other.path))
+            }
+        } else if (!path.equals(other.path)) {
             return false;
+        }
         return true;
     }
 
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        if (!(obj instanceof RunnerInput)) {
-//            return false;
-//        }
-//        RunnerInput other = (RunnerInput) obj;
-//        boolean macroSame = false;
-//        if(macrosInput != null && other.getMacrosInput() !=null){
-//            macroSame = macrosInput.equals(other.getMacrosInput());
-//        }else if(macrosInput == null && other.getMacrosInput() == null)
-//            macroSame = true;
-//        return getPath().equals(other.getPath()) && macroSame;
-//    //        displayOpenManager == other.getDisplayOpenManager()  &&
-//
-//    }
-
+    // @Override
+    // public boolean equals(Object obj) {
+    // if (this == obj) {
+    // return true;
+    // }
+    // if (!(obj instanceof RunnerInput)) {
+    // return false;
+    // }
+    // RunnerInput other = (RunnerInput) obj;
+    // boolean macroSame = false;
+    // if(macrosInput != null && other.getMacrosInput() !=null){
+    // macroSame = macrosInput.equals(other.getMacrosInput());
+    // }else if(macrosInput == null && other.getMacrosInput() == null)
+    // macroSame = true;
+    // return getPath().equals(other.getPath()) && macroSame;
+    // // displayOpenManager == other.getDisplayOpenManager() &&
+    //
+    // }
 
     /* (non-Javadoc)
      * @see org.csstudio.opibuilder.runmode.IRunnerInput#getMacrosInput()
@@ -134,7 +140,7 @@ public class RunnerInput implements IRunnerInput{
     public boolean exists() {
         InputStream in = null;
         try {
-             in = getInputStream();
+            in = getInputStream();
         } catch (Exception e) {
             return false;
         }
@@ -161,10 +167,9 @@ public class RunnerInput implements IRunnerInput{
         return path.toString();
     }
 
-
     @Override
     public InputStream getInputStream() throws Exception {
-        return ResourceUtil.pathToInputStream(getPath(), false);
+        return ResourceUtil.pathToInputStream(getPath());
     }
 
     @Override

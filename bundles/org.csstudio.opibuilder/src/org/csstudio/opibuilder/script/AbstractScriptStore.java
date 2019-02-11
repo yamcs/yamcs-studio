@@ -142,7 +142,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
             compileString(scriptData.getScriptText());
         } else {
             // read file
-            InputStream inputStream = ResourceUtil.pathToInputStream(absoluteScriptPath, false);
+            InputStream inputStream = ResourceUtil.pathToInputStream(absoluteScriptPath);
 
             // compile
             compileInputStream(inputStream);

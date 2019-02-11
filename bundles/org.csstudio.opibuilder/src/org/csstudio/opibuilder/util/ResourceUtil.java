@@ -106,44 +106,37 @@ public class ResourceUtil {
     }
 
     /**
-     * Return the {@link InputStream} of the file that is available on the specified path. The task will run in UIJob.
-     * Caller must be in UI thread too.
-     * 
-     * @see #pathToInputStream(IPath, boolean)
-     */
-    public static InputStream pathToInputStream(final IPath path) throws Exception {
-        return pathToInputStream(path, true);
-    }
-
-    /**
      * Return the {@link InputStream} of the file that is available on the specified path.
      *
      * @param path
-     *            The {@link IPath} to the file in the workspace, the local file system, or a URL (http:, https:, ftp:,
-     *            file:, platform:)
+     *            The {@link IPath} to the file in the workspace, the local file system, or a platform URL
      * @param runInUIJob
      *            true if the task should run in UIJob, which will block UI responsiveness with a progress bar on status
      *            line. Caller must be in UI thread if this is true.
      * @return The corresponding {@link InputStream}. Never <code>null</code>
      * @throws Exception
      */
-    public static InputStream pathToInputStream(IPath path, boolean runInUIJob) throws Exception {
+    public static InputStream pathToInputStream(IPath path) throws Exception {
         // Try workspace location
-        IFile workspace_file = getIFileFromIPath(path);
+        IFile workspaceFile = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
-        if (workspace_file != null && workspace_file.exists()) {
-            return workspace_file.getContents();
-        }
-
-        // Not a workspace file. Try local file system
-        File local_file = path.toFile();
-        // Path URL for "file:..." so that it opens as FileInputStream
-        if (local_file.getPath().startsWith("file:")) {
-            local_file = new File(local_file.getPath().substring(5));
+        if (workspaceFile != null && workspaceFile.exists()) {
+            return workspaceFile.getContents();
         }
 
         try {
-            return new FileInputStream(local_file);
+            // Not a workspace file. Try local file system
+            File localFile = path.toFile();
+            // Path URL for "file:..." so that it opens as FileInputStream
+            if (localFile.getPath().startsWith("file:")) {
+                localFile = new File(localFile.getPath().substring(5));
+                return new FileInputStream(localFile);
+            } else if (localFile.getPath().startsWith("platform:")) {
+                URL bundleEntry = FileLocator.find(new URL(localFile.getPath()));
+                return bundleEntry.openStream();
+            } else {
+                return new FileInputStream(localFile);
+            }
         } catch (Exception ex) {
             throw new Exception("Cannot open " + ex.getMessage(), ex);
         }

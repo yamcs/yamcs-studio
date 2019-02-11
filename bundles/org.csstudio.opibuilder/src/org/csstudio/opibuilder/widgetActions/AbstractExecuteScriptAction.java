@@ -95,7 +95,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
      */
     protected BufferedReader getReader() throws Exception {
         if (reader == null) {
-            inputStream = ResourceUtil.pathToInputStream(getAbsolutePath(), false);
+            inputStream = ResourceUtil.pathToInputStream(getAbsolutePath());
             reader = new BufferedReader(new InputStreamReader(inputStream));
         }
         return reader;
@@ -120,7 +120,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
      * @throws Exception
      */
     protected InputStream getInputStream() throws Exception {
-        return ResourceUtil.pathToInputStream(getAbsolutePath(), false);
+        return ResourceUtil.pathToInputStream(getAbsolutePath());
     }
 
     protected abstract String getFileExtension();
