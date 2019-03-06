@@ -288,6 +288,8 @@ public class ArchiveView extends ViewPart
             setRefreshEnabled(false);
             archivePanel.getDataViewer().getDataView()
                     .setCurrentLocator(archivePanel.getDataViewer().getDataView().DO_NOT_DRAW);
+            archivePanel.getDataViewer().clearView();
+            refreshData();
         });
     }
 

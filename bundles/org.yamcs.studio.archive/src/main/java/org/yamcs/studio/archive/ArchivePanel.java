@@ -13,9 +13,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.ProgressMonitor;
@@ -46,6 +47,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     ArchiveView archiveView;
 
     Prefs prefs;
+    private static final Logger log = Logger.getLogger(ArchivePanel.class.getName());
 
     private DataViewer dataViewer;
 
@@ -208,8 +210,11 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     public void receiveArchiveRecordsError(final String errorMessage) {
         SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(ArchivePanel.this, "Error when receiving archive records: " + errorMessage,
-                    "error receiving archive records", JOptionPane.ERROR_MESSAGE);
+
+            // it might be that the archive index service of this Yamcs instance is disabled
+            log.log(Level.WARNING, "Error when receiving archive records, it might be that the archive index service of this Yamcs instance is disabled: " + errorMessage);
+            
+            
             archiveView.setRefreshEnabled(true);
             setNormalPointer();
         });

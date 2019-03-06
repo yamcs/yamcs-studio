@@ -121,6 +121,13 @@ public class DataView extends JScrollPane {
 
         setOpaque(false);
     }
+    
+    public void clearArchiveRecords() {
+        for(IndexBox ib : indexBoxes.values()) {
+            ib.allPackets.clear();
+            ib.removeIndexLines();
+        }
+    }
 
     public void addIndex(String tableName, String name, long mergeTime) {
         IndexBox indexBox = new IndexBox(this, name);
