@@ -53,7 +53,11 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
     @Override
     public void instanceChanged(String oldInstance, String newInstance) {
         // Don't assume anything. Let listeners choose whether they want
-        // to register as an instance listeners.
+        // to register as an instance listeners.  
+
+        // but make sure to subscribe to the events of the new instance
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient(); 
+        yamcsClient.subscribe(new WebSocketRequest("events", "subscribe"), this);
     }
 
     @Override
