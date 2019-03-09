@@ -22,7 +22,7 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public String getPVType() {
-        if (displayName.startsWith("para://")) {
+        if (displayName.startsWith("para://") || displayName.startsWith("ops://")) {
             return "Yamcs Parameter";
         } else if (displayName.startsWith("loc://")) {
             return "Local PV";

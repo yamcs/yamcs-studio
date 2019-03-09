@@ -4,15 +4,19 @@
  */
 package org.diirt.datasource.sim;
 
+import static org.diirt.vtype.ValueFactory.alarmNone;
+import static org.diirt.vtype.ValueFactory.newDisplay;
+import static org.diirt.vtype.ValueFactory.newVDouble;
+import static org.diirt.vtype.ValueFactory.timeNow;
+
 import java.util.Random;
+
 import org.diirt.vtype.VDouble;
-import static org.diirt.vtype.ValueFactory.*;
 
 /**
- * Function to simulate a signal that has a uniform distribution. The warning
- * limits are set at 80% of the range and the alarm at 90% the range.
- * All values are going to have no alarm status, with the timestamp set at the
- * moment the sample was generated.
+ * Function to simulate a signal that has a uniform distribution. The warning limits are set at 80% of the range and the
+ * alarm at 90% the range. All values are going to have no alarm status, with the timestamp set at the moment the sample
+ * was generated.
  *
  * @author carcassi
  */
@@ -25,34 +29,21 @@ public class Noise extends SimFunction<VDouble> {
     private VDouble lastValue;
 
     /**
-     * Creates a signal uniformly distributed between -5.0 and 5.0, updating
-     * every 100ms (10Hz).
+     * Creates a signal uniformly distributed between -5.0 and 5.0, updating every 100ms (10Hz).
      */
     public Noise() {
         this(-5.0, 5.0, 1.0);
     }
 
     /**
-     * Do not use: only provided to provide some sort of error message
-     * for people migrating from utility.pv.
+     * Creates a signal uniformly distributed between min and max, updating every interval seconds.
      *
-     * @param min minimum value
-     * @param max maximum value
-     * @param step ignored
-     * @param interval interval between samples in seconds
-     */
-    public Noise(Double min, Double max, Double step, Double interval) {
-        super(interval, VDouble.class);
-        throw new IllegalArgumentException("Please rename to noise(" + min + ", " + max + ", " + interval + ")");
-    }
-
-    /**
-     * Creates a signal uniformly distributed between min and max, updating
-     * every interval seconds.
-     *
-     * @param min minimum value
-     * @param max maximum value
-     * @param interval interval between samples in seconds
+     * @param min
+     *            minimum value
+     * @param max
+     *            maximum value
+     * @param interval
+     *            interval between samples in seconds
      */
     public Noise(Double min, Double max, Double interval) {
         super(interval, VDouble.class);
@@ -64,7 +55,7 @@ public class Noise extends SimFunction<VDouble> {
         range = this.max - this.min;
         lastValue = newVDouble(min, alarmNone(), timeNow(),
                 newDisplay(min, min + range * 0.1, min + range * 0.2, "x", Constants.DOUBLE_FORMAT,
-                min + range * 0.8, min + range * 0.9, max, min, max));
+                        min + range * 0.8, min + range * 0.9, max, min, max));
     }
 
     @Override

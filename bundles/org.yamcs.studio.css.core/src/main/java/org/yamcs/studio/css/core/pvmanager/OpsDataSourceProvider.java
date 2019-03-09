@@ -3,15 +3,15 @@ package org.yamcs.studio.css.core.pvmanager;
 import org.diirt.datasource.DataSource;
 import org.diirt.datasource.DataSourceProvider;
 
-public class ParameterDataSourceProvider extends DataSourceProvider {
+public class OpsDataSourceProvider extends DataSourceProvider {
 
     @Override
     public String getName() {
-        return "para";
+        return "ops";
     }
 
     @Override
     public DataSource createInstance() {
-        return new ParameterDataSource();
+        return new OpsDataSource();
     }
 }

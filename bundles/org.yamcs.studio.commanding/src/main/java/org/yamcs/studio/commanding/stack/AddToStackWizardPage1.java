@@ -113,7 +113,8 @@ public class AddToStackWizardPage1 extends WizardPage {
         Composite treeWrapper = new Composite(composite, SWT.NONE);
         tcl = new TreeColumnLayout();
         GridData gd = new GridData(GridData.FILL_BOTH);
-        gd.heightHint = 400;
+        gd.widthHint = 800;
+        gd.heightHint = 500;
         treeWrapper.setLayoutData(gd);
         treeWrapper.setLayout(tcl);
 

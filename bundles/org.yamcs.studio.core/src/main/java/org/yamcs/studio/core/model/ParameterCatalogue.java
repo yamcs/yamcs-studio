@@ -87,6 +87,9 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
         for (ParameterInfo p : this.metaParameters) {
             NamedObjectId id = NamedObjectId.newBuilder().setName(p.getQualifiedName()).build();
             parametersById.put(id, p);
+            for (NamedObjectId alias : p.getAliasList()) {
+                parametersById.put(alias, p);
+            }
 
             // Update unit index
             if (p != null && p.hasType() && p.getType().getUnitSetCount() > 0) {

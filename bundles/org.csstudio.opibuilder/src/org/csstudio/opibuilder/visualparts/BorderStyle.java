@@ -7,8 +7,9 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-
-/**The style of border.
+/**
+ * The style of border.
+ * 
  * @author Xihui Chen
  *
  */
@@ -67,14 +68,13 @@ public enum BorderStyle {
 
     GROUP_BOX("Group Box Style"),
 
-    ROUND_RECTANGLE_BACKGROUND ("Round Rectangle Background"),
+    ROUND_RECTANGLE_BACKGROUND("Round Rectangle Background"),
 
     EMPTY("Empty");
 
-
     private String description;
 
-    private BorderStyle(String description){
+    private BorderStyle(String description) {
         this.description = description;
     }
 
@@ -83,13 +83,13 @@ public enum BorderStyle {
         return description;
     }
 
-    public static String[] stringValues(){
+    public static String[] stringValues() {
         String[] sv = new String[values().length];
-        int i=0;
-        for(BorderStyle p : values())
+        int i = 0;
+        for (BorderStyle p : values()) {
             sv[i++] = p.toString();
+        }
         return sv;
     }
-
 
 }

@@ -6,7 +6,6 @@ package org.diirt.datasource.loc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.diirt.datasource.ChannelHandler;
 import org.diirt.datasource.ChannelReadRecipe;
@@ -18,14 +17,12 @@ import org.diirt.datasource.util.FunctionParser;
 import org.diirt.datasource.vtype.DataTypeSupport;
 
 /**
- * Data source for locally written data. Each instance of this
- * data source will have its own separate channels and values.
+ * Data source for locally written data. Each instance of this data source will have its own separate channels and
+ * values.
  *
  * @author carcassi
  */
 public class LocalDataSource extends DataSource {
-
-    private final boolean zeroInitialization;
 
     static {
         // Install type support for the types it generates.
@@ -36,19 +33,7 @@ public class LocalDataSource extends DataSource {
      * Creates a new data source.
      */
     public LocalDataSource() {
-        this(false);
-    }
-
-    /**
-     * Zero initialization is deprecated. Will be removed in a future release.
-     *
-     * @param zeroInitialization whether to initialize variable to 0
-     * @deprecated do not use zero initialization of local variable: does not work for non numeric variables
-     */
-    @Deprecated
-    public LocalDataSource(boolean zeroInitialization) {
         super(true);
-        this.zeroInitialization = zeroInitialization;
     }
 
     @Override
@@ -107,9 +92,6 @@ public class LocalDataSource extends DataSource {
             if (channel != null) {
                 channel.setInitialValue(parsedTokens.get(2));
             }
-        } else if (zeroInitialization) {
-            Logger.getLogger(this.getClass().getName()).warning("Using zero initialization for channel " + channelName);
-            channel.setInitialValue(0);
         }
     }
 

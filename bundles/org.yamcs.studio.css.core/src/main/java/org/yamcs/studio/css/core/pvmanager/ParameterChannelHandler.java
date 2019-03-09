@@ -25,10 +25,6 @@ import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.css.core.PVCatalogue;
 import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
 
-/**
- * Supports read-only PVs. Would be good if one day CSS added support for this at the PV-level, rather than at the
- * Datasource level. Then we wouldn't have to split out the software parameters under a different scheme.
- */
 public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
         implements YamcsConnectionListener, InstanceListener {
 
@@ -37,9 +33,9 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     private static final List<String> TRUTHY = Arrays.asList("y", "true", "yes", "1", "1.0");
     private NamedObjectId id;
 
-    public ParameterChannelHandler(String channelName) {
-        super(channelName);
-        id = NamedObjectId.newBuilder().setName(channelName).build();
+    public ParameterChannelHandler(NamedObjectId id) {
+        super(id.getName());
+        this.id = id;
         YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
     }

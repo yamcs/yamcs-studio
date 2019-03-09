@@ -6,32 +6,29 @@ import org.csstudio.autocomplete.parser.ContentType;
 import org.csstudio.autocomplete.parser.IContentParser;
 
 /**
- * Yamcs Parameter DataSource content parser.
+ * Yamcs Opsname DataSource content parser.
  */
-public class ParameterContentParser implements IContentParser {
+public class OpsContentParser implements IContentParser {
 
-    public static final String PARA_SOURCE = "para://";
+    public static final String OPS_SOURCE = "ops://";
 
     @Override
     public boolean accept(ContentDescriptor desc) {
         if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX)) {
             return false;
+        } else if (desc.getValue().startsWith("/")) {
+            return false;
         }
-        if (desc.getValue().startsWith(PARA_SOURCE)
-                || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                        && PARA_SOURCE.equals(desc.getDefaultDataSource()))) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     @Override
     public ContentDescriptor parse(ContentDescriptor desc) {
         int startIndex = 0;
         String contentToParse = desc.getValue();
-        if (contentToParse.startsWith(PARA_SOURCE)) {
-            contentToParse = contentToParse.substring(PARA_SOURCE.length());
-            // startIndex = PARA_SOURCE.length();
+        if (contentToParse.startsWith(OPS_SOURCE)) {
+            contentToParse = contentToParse.substring(OPS_SOURCE.length());
+            // startIndex = OPS_SOURCE.length();
         }
         ContentDescriptor currentDesc = new ContentDescriptor();
         currentDesc.setContentType(ContentType.PVName);

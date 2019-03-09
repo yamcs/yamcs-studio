@@ -29,10 +29,16 @@ public class ParameterWebSocketRequest extends WebSocketRequest {
     @Override
     public Message getRequestData() {
         if ("subscribe".equals(getOperation())) {
-            return ParameterSubscriptionRequest.newBuilder().setAbortOnInvalid(false).setSendFromCache(true)
-                    .setUpdateOnExpiration(true).addAllId(ids).build();
+            return ParameterSubscriptionRequest.newBuilder()
+                    .setAbortOnInvalid(false)
+                    .setSendFromCache(true)
+                    .setUpdateOnExpiration(true)
+                    .addAllId(ids)
+                    .build();
         } else {
-            return NamedObjectList.newBuilder().addAllList(ids).build();
+            return ParameterSubscriptionRequest.newBuilder()
+                    .addAllId(ids)
+                    .build();
         }
     }
 

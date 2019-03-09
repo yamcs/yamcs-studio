@@ -11,6 +11,7 @@ import org.csstudio.autocomplete.parser.ContentType;
 import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
 /**
@@ -20,11 +21,8 @@ import org.yamcs.studio.core.model.ParameterCatalogue;
  * the user types a new character, using a new thread for each lookup. Before starting a new lookup, however,
  * <code>cancel()</code> is invoked. This means there are never multiple concurrent lookups started on purpose, but a
  * previously started lookup may still continue in its thread in case <code>cancel()</code> has no immediate effect.
- *
- * TODO this is marked in the osgi file as a high-level provider, we should try to make it as one of the
- * datasource-providers instead, but had some problems trying to figure that out, and this seems to work fine for now.
  */
-public class ParameterContentProvider implements IAutoCompleteProvider {
+public class OpsContentProvider implements IAutoCompleteProvider {
 
     @Override
     public boolean accept(ContentType type) {
@@ -34,8 +32,8 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
     @Override
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
         String content = desc.getValue();
-        if (content.startsWith(ParameterContentParser.PARA_SOURCE)) {
-            content = content.substring(ParameterContentParser.PARA_SOURCE.length());
+        if (content.startsWith(OpsContentParser.OPS_SOURCE)) {
+            content = content.substring(OpsContentParser.OPS_SOURCE.length());
         }
 
         content = AutoCompleteHelper.trimWildcards(content);
@@ -45,18 +43,31 @@ public class ParameterContentProvider implements IAutoCompleteProvider {
         AutoCompleteResult pvs = new AutoCompleteResult();
         int matchCount = 0;
         for (ParameterInfo para : ParameterCatalogue.getInstance().getMetaParameters()) {
-            Matcher m = namePattern.matcher(para.getQualifiedName());
-            if (m.find()) {
-                Proposal p = new Proposal(para.getQualifiedName(), false);
-                p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
-                pvs.addProposal(p);
-                matchCount++;
-                if (matchCount >= limit)
-                    break;
+            String opsname = findOpsname(para);
+            if (opsname != null) {
+                Matcher m = namePattern.matcher(opsname);
+                if (m.find()) {
+                    Proposal p = new Proposal(OpsContentParser.OPS_SOURCE + opsname, false);
+                    p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
+                    pvs.addProposal(p);
+                    matchCount++;
+                    if (matchCount >= limit) {
+                        break;
+                    }
+                }
             }
         }
         pvs.setCount(matchCount);
         return pvs;
+    }
+
+    private String findOpsname(ParameterInfo parameter) {
+        for (NamedObjectId id : parameter.getAliasList()) {
+            if (id.hasNamespace() && "MDB:OPS Name".equals(id.getNamespace())) {
+                return id.getName();
+            }
+        }
+        return null;
     }
 
     @Override

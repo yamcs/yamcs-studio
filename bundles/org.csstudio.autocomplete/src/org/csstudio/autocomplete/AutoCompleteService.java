@@ -30,9 +30,8 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
 /**
- * Service which handles content parsing (see {@link IContentParser}) and
- * requesting proposals from defined providers (see
- * {@link IAutoCompleteProvider}.
+ * Service which handles content parsing (see {@link IContentParser}) and requesting proposals from defined providers
+ * (see {@link IAutoCompleteProvider}.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -66,11 +65,13 @@ public class AutoCompleteService {
         public void run() {
             AutoCompleteResult result = settings.getProvider().listResult(desc, settings.getMaxResults());
             if (result != null
-                    && !settings.getName().equals(DataSourceProvider.NAME))
+                    && !settings.getName().equals(DataSourceProvider.NAME)) {
                 // TODO: find a better solution to hide DataSourceProvider...
                 result.setProvider(settings.getName());
-            if (!canceled)
+            }
+            if (!canceled) {
                 listener.handleResult(uniqueId, index, result);
+            }
             synchronized (workQueue) {
                 workQueue.remove(this);
             }
@@ -94,25 +95,33 @@ public class AutoCompleteService {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj)
+            if (this == obj) {
                 return true;
-            if (obj == null)
+            }
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             ProviderTask other = (ProviderTask) obj;
-            if (!getOuterType().equals(other.getOuterType()))
+            if (!getOuterType().equals(other.getOuterType())) {
                 return false;
+            }
             if (index == null) {
-                if (other.index != null)
+                if (other.index != null) {
                     return false;
-            } else if (!index.equals(other.index))
+                }
+            } else if (!index.equals(other.index)) {
                 return false;
+            }
             if (uniqueId == null) {
-                if (other.uniqueId != null)
+                if (other.uniqueId != null) {
                     return false;
-            } else if (!uniqueId.equals(other.uniqueId))
+                }
+            } else if (!uniqueId.equals(other.uniqueId)) {
                 return false;
+            }
             return true;
         }
 
@@ -153,17 +162,20 @@ public class AutoCompleteService {
     private AutoCompleteService() {
         try {
             providerByName = getOSGIProviders();
-            if (providerByName.get("History") != null)
+            if (providerByName.get("History") != null) {
                 defaultProvider = providerByName.get("History");
+            }
             parsers = getOSGIParsers();
         } catch (Exception e) {
-            if (providerByName == null)
-                providerByName = new TreeMap<String, ProviderSettings>();
-            if (parsers == null)
-                parsers = new ArrayList<IContentParser>();
+            if (providerByName == null) {
+                providerByName = new TreeMap<>();
+            }
+            if (parsers == null) {
+                parsers = new ArrayList<>();
+            }
         }
-        providersByType = new TreeMap<String, List<ProviderSettings>>();
-        workQueue = new ArrayList<ProviderTask>();
+        providersByType = new TreeMap<>();
+        workQueue = new ArrayList<>();
     }
 
     public static AutoCompleteService getInstance() {
@@ -178,8 +190,9 @@ public class AutoCompleteService {
         AutoCompletePlugin.getLogger().log(Level.FINE,
                 ">> ChannelNameService get: " + content + " for type: " + acType.value() + " <<");
 
-        if (content == null || content.isEmpty())
+        if (content == null || content.isEmpty()) {
             return 0; // no result
+        }
 
         // Useful to handle default data source
         ContentDescriptor desc = new ContentDescriptor();
@@ -187,8 +200,9 @@ public class AutoCompleteService {
                 InstanceScope.INSTANCE, "org.csstudio.utility.pv");
         // Note: "default_type" is a common setting between pv, pv.ui, pvmanager and pvmanager.ui
         // They need to be kept synchronized.
-        if (store != null)
+        if (store != null) {
             desc.setDefaultDataSource(store.getString("default_type") + "://");
+        }
         desc.setContentType(ContentType.Undefined);
         desc.setAutoCompleteType(acType);
         desc.setOriginalContent(content);
@@ -198,8 +212,9 @@ public class AutoCompleteService {
         if (DEBUG) {
             System.out.println("=============================================");
             System.out.println("--- ContentDescriptor list ---");
-            for (ContentDescriptor ct : descList)
+            for (ContentDescriptor ct : descList) {
                 System.out.println(ct);
+            }
         }
 
         int index = 0; // Useful to keep the order
@@ -228,8 +243,9 @@ public class AutoCompleteService {
         AutoCompletePlugin.getLogger().log(Level.FINE,
                 ">> ChannelNameService canceled for type: " + type + " <<");
         synchronized (workQueue) {
-            for (ProviderTask task : workQueue)
+            for (ProviderTask task : workQueue) {
                 task.cancel();
+            }
         }
     }
 
@@ -240,7 +256,7 @@ public class AutoCompleteService {
     /* Get providers from OSGI services */
     private Map<String, ProviderSettings> getOSGIProviders()
             throws InvalidSyntaxException {
-        final Map<String, ProviderSettings> map = new TreeMap<String, ProviderSettings>();
+        final Map<String, ProviderSettings> map = new TreeMap<>();
 
         BundleContext context = AutoCompletePlugin.getBundleContext();
         Collection<ServiceReference<IAutoCompleteProvider>> references = context
@@ -251,8 +267,9 @@ public class AutoCompleteService {
             String name = (String) ref.getProperty("component.name");
             boolean highLevelProvider = false;
             String prop = (String) ref.getProperty("highLevelProvider");
-            if (prop != null && !prop.isEmpty())
+            if (prop != null && !prop.isEmpty()) {
                 highLevelProvider = Boolean.valueOf(prop);
+            }
             map.put(name, new ProviderSettings(name, provider, highLevelProvider));
         }
         return map;
@@ -260,7 +277,7 @@ public class AutoCompleteService {
 
     /* Get providers from OSGI services */
     private List<IContentParser> getOSGIParsers() throws InvalidSyntaxException {
-        final List<IContentParser> list = new ArrayList<IContentParser>();
+        final List<IContentParser> list = new ArrayList<>();
 
         BundleContext context = AutoCompletePlugin.getBundleContext();
         Collection<ServiceReference<IContentParser>> references = context
@@ -275,7 +292,7 @@ public class AutoCompleteService {
 
     /* Read the list of providers from preference string */
     private List<ProviderSettings> parseProviderList(String pref) {
-        List<ProviderSettings> providerList = new ArrayList<ProviderSettings>();
+        List<ProviderSettings> providerList = new ArrayList<>();
 
         if (pref != null && !pref.isEmpty()) {
             int index = -1;
@@ -285,27 +302,33 @@ public class AutoCompleteService {
 
                 if (token_provider.contains(",")) {
                     String name = token_provider.substring(0, token_provider.indexOf(',')).trim();
-                    int max_results = Integer.parseInt(token_provider.substring(token_provider.indexOf(',') + 1, token_provider.length()).trim());
-                    if (providerByName.get(name) != null)
+                    int max_results = Integer.parseInt(
+                            token_provider.substring(token_provider.indexOf(',') + 1, token_provider.length()).trim());
+                    if (providerByName.get(name) != null) {
                         providerList.add(new ProviderSettings(providerByName.get(name), ++index, max_results));
+                    }
                 } else {
                     String name = token_provider.trim();
-                    if (providerByName.get(name) != null)
+                    if (providerByName.get(name) != null) {
                         providerList.add(new ProviderSettings(providerByName.get(name), ++index));
+                    }
                 }
             }
         }
 
         // add default provider
-        if (providerList.isEmpty() && defaultProvider != null)
+        if (providerList.isEmpty() && defaultProvider != null) {
             providerList.add(defaultProvider);
+        }
 
         // add high level providers
         // TODO: all type have high level providers defined
         // => need restrictions ?
-        for (ProviderSettings ps : providerByName.values())
-            if (ps.isHighLevelProvider() && !providerList.contains(ps))
+        for (ProviderSettings ps : providerByName.values()) {
+            if (ps.isHighLevelProvider() && !providerList.contains(ps)) {
                 providerList.add(new ProviderSettings(ps));
+            }
+        }
 
         Collections.sort(providerList);
         return providerList;
@@ -316,12 +339,13 @@ public class AutoCompleteService {
             List<ContentDescriptor> tokens) {
         // retrieve the list from preferences
         String type = acType.value();
-        if (providersByType.get(type) == null)
+        if (providersByType.get(type) == null) {
             providersByType.put(type, parseProviderList(Preferences.getProviders(type)));
-        List<ProviderSettings> definedProviderList = new ArrayList<ProviderSettings>(providersByType.get(type));
+        }
+        List<ProviderSettings> definedProviderList = new ArrayList<>(providersByType.get(type));
 
         // associate descriptor to a provider
-        List<ScheduledContent> acceptedProviderList = new ArrayList<ScheduledContent>();
+        List<ScheduledContent> acceptedProviderList = new ArrayList<>();
         for (ContentDescriptor desc : tokens) {
             Iterator<ProviderSettings> it = definedProviderList.iterator();
             while (it.hasNext()) {
@@ -341,7 +365,7 @@ public class AutoCompleteService {
 
     /* Handle recursive parsing of a content desc. */
     private List<ContentDescriptor> parseContent(ContentDescriptor desc) {
-        List<ContentDescriptor> tokenList = new ArrayList<ContentDescriptor>();
+        List<ContentDescriptor> tokenList = new ArrayList<>();
 
         ContentDescriptor newDesc = null;
         // backup data
