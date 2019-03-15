@@ -16,8 +16,9 @@ import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
 public class CommandParser {
 
     public static ParseResult parseCommand(String commandString) {
-        if (commandString == null)
+        if (commandString == null) {
             return null;
+        }
 
         commandString = commandString.trim();
 
