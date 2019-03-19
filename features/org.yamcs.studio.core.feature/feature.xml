@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.core.feature"
       label="Yamcs Studio Components"
-      version="1.2.2.qualifier"
+      version="1.2.2"
       provider-name="Space Applications Services"
       plugin="org.yamcs.studio.core.ui">
 

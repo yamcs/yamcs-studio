@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.p2.feature"
       label="Yamcs P2 Update Components"
-      version="1.2.2.qualifier"
+      version="1.2.2"
       provider-name="Space Applications Services">
 
    <plugin
