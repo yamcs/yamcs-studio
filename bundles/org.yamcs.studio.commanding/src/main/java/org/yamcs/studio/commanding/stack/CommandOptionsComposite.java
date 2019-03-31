@@ -132,6 +132,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
 
             if ("integer".equals(argument.getType())) {
                 Spinner argumentSpinner = new Spinner(composite, SWT.BORDER);
+                argumentSpinner.setMinimum(Integer.MIN_VALUE);
                 argumentSpinner.setMaximum(Integer.MAX_VALUE);
                 argumentSpinner.setLayoutData(new GridData(150, SWT.DEFAULT));
                 argumentSpinner.setData(argument);
