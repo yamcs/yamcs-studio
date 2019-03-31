@@ -11,7 +11,6 @@ import org.diirt.datasource.DataSourceTypeAdapter;
 import org.diirt.datasource.MultiplexedChannelHandler;
 import org.diirt.datasource.ValueCache;
 import org.yamcs.protobuf.Mdb.DataSourceType;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
@@ -103,8 +102,8 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
         try {
-            ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
-            Value v = toValue(p, newValue);
+            ParameterTypeInfo ptype = ParameterCatalogue.getInstance().getParameterTypeInfo(id);
+            Value v = toValue(ptype, newValue);
             ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
             catalogue.setParameter("realtime", id, v).whenComplete((data, e) -> {
                 if (e != null) {
@@ -125,8 +124,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         }
     }
 
-    private static Value toValue(ParameterInfo p, Object value) {
-        ParameterTypeInfo ptype = p.getType();
+    private static Value toValue(ParameterTypeInfo ptype, Object value) {
         if (ptype != null) {
             switch (ptype.getEngType()) {
             case "string":

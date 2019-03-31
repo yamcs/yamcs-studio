@@ -1,5 +1,7 @@
 package org.yamcs.studio.css.core.pvmanager.autocomplete;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +12,9 @@ import org.csstudio.autocomplete.parser.ContentDescriptor;
 import org.csstudio.autocomplete.parser.ContentType;
 import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
+import org.yamcs.protobuf.Mdb.MemberInfo;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 
 /**
@@ -39,22 +43,46 @@ public class XtceContentProvider implements IAutoCompleteProvider {
         Pattern namePattern = AutoCompleteHelper.convertToPattern(content);
         namePattern = Pattern.compile(namePattern.pattern(), Pattern.CASE_INSENSITIVE);
 
-        AutoCompleteResult pvs = new AutoCompleteResult();
+        AutoCompleteResult result = new AutoCompleteResult();
         int matchCount = 0;
         for (ParameterInfo para : ParameterCatalogue.getInstance().getMetaParameters()) {
-            Matcher m = namePattern.matcher(para.getQualifiedName());
-            if (m.find()) {
-                Proposal p = new Proposal(para.getQualifiedName(), false);
-                p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
-                pvs.addProposal(p);
-                matchCount++;
-                if (matchCount >= limit) {
-                    break;
+            List<String> pvCandidates = new ArrayList<>();
+            pvCandidates.add(para.getQualifiedName());
+            if (para.hasType()) {
+                scanTypeForPvCandidates(para.getQualifiedName(), para.getType(), pvCandidates);
+            }
+
+            for (String pvCandidate : pvCandidates) {
+                Matcher m = namePattern.matcher(pvCandidate);
+                if (m.find()) {
+                    Proposal p = new Proposal(pvCandidate, false);
+                    p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
+                    result.addProposal(p);
+                    matchCount++;
+                    if (matchCount >= limit) {
+                        break;
+                    }
                 }
             }
+
+            if (matchCount >= limit) {
+                break;
+            }
         }
-        pvs.setCount(matchCount);
-        return pvs;
+
+        result.setCount(matchCount);
+        return result;
+    }
+
+    private void scanTypeForPvCandidates(String basePvName, ParameterTypeInfo type, List<String> pvCandidates) {
+        for (MemberInfo member : type.getMemberList()) {
+            String memberPvName = basePvName + "." + member.getName();
+            pvCandidates.add(memberPvName);
+            if (member.hasType()) {
+                scanTypeForPvCandidates(memberPvName, member.getType(), pvCandidates);
+            }
+
+        }
     }
 
     @Override

@@ -28,8 +28,9 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public AlarmSeverity getAlarmSeverity() {
         if (pval.getAcquisitionStatus() == AcquisitionStatus.EXPIRED
                 || pval.getAcquisitionStatus() == AcquisitionStatus.NOT_RECEIVED
-                || pval.getAcquisitionStatus() == AcquisitionStatus.INVALID)
+                || pval.getAcquisitionStatus() == AcquisitionStatus.INVALID) {
             return AlarmSeverity.INVALID; // Workaround to display LOS in the displays, should be 'Expired'
+        }
 
         if (!pval.hasMonitoringResult()) {
             return AlarmSeverity.NONE;
@@ -223,6 +224,8 @@ public class YamcsVType implements VType, Alarm, Time, Display {
                 return new BinaryVType(pval);
             case TIMESTAMP:
                 return new TimestampVType(pval);
+            case AGGREGATE:
+                return new AggregateVType(pval);
             default:
                 throw new IllegalStateException(
                         "Unexpected type for parameter value. Got: " + pval.getEngValue().getType());

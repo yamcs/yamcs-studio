@@ -19,6 +19,7 @@ import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.css.core.pvmanager.ParameterChannelHandler;
+import org.yamcs.utils.StringConverter;
 
 public class PVCatalogue implements YamcsConnectionListener, InstanceListener, ParameterListener {
 
@@ -62,8 +63,8 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
         channelHandlersById.put(channelHandler.getId(), channelHandler);
         // Report current connection state
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
-        ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(channelHandler.getId());
-        channelHandler.processConnectionInfo(new PVConnectionInfo(connected, p));
+        ParameterInfo parameter = ParameterCatalogue.getInstance().getParameterInfo(channelHandler.getId());
+        channelHandler.processConnectionInfo(new PVConnectionInfo(connected, parameter));
         // Register (pending) websocket request
         NamedObjectList idList = toNamedObjectList(channelHandler.getId());
         ParameterCatalogue.getInstance().subscribeParameters(idList);
@@ -99,7 +100,7 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
             if (channelHandler != null) {
                 if (log.isLoggable(Level.FINER)) {
                     log.finer(String.format("Request to update channel %s to %s", channelHandler.getId().getName(),
-                            pval.getEngValue()));
+                            StringConverter.toString(pval.getEngValue(), false)));
                 }
                 channelHandler.processParameterValue(pval);
             }
@@ -109,8 +110,8 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
     private void reportConnectionState() {
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
         channelHandlersById.forEach((id, channelHandler) -> {
-            ParameterInfo p = ParameterCatalogue.getInstance().getParameterInfo(id);
-            channelHandler.processConnectionInfo(new PVConnectionInfo(connected, p));
+            ParameterInfo parameter = ParameterCatalogue.getInstance().getParameterInfo(id);
+            channelHandler.processConnectionInfo(new PVConnectionInfo(connected, parameter));
         });
     }
 }
