@@ -45,9 +45,10 @@ public class OpsContentProvider implements IAutoCompleteProvider {
         for (ParameterInfo para : ParameterCatalogue.getInstance().getMetaParameters()) {
             String opsname = findOpsname(para);
             if (opsname != null) {
-                Matcher m = namePattern.matcher(opsname);
+                String proposalValue = OpsContentParser.OPS_SOURCE + opsname;
+                Matcher m = namePattern.matcher(proposalValue);
                 if (m.find()) {
-                    Proposal p = new Proposal(OpsContentParser.OPS_SOURCE + opsname, false);
+                    Proposal p = new Proposal(proposalValue, false);
                     p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                     pvs.addProposal(p);
                     matchCount++;
