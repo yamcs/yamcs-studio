@@ -1,14 +1,18 @@
 package org.yamcs.studio.script;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
 import org.yamcs.studio.commanding.CommandParser;
 import org.yamcs.studio.commanding.CommandParser.ParseResult;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 
 public class Yamcs {
+
+    public static Logger log = Logger.getLogger(Yamcs.class.getName());
 
     /**
      * Sample use:
@@ -23,7 +27,11 @@ public class Yamcs {
         req.addAllAssignment(parsed.getAssignments());
 
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-        catalogue.sendCommand("realtime", parsed.getQualifiedName(), req.build());
+        if (YamcsPlugin.getYamcsClient().isConnected()) {
+            catalogue.sendCommand("realtime", parsed.getQualifiedName(), req.build());
+        } else {
+            log.warning("Not connected to Yamcs");
+        }
     }
 
     /**
@@ -43,6 +51,10 @@ public class Yamcs {
         }
 
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-        catalogue.sendCommand("realtime", command, req.build());
+        if (YamcsPlugin.getYamcsClient().isConnected()) {
+            catalogue.sendCommand("realtime", command, req.build());
+        } else {
+            log.warning("Not connected to Yamcs");
+        }
     }
 }
