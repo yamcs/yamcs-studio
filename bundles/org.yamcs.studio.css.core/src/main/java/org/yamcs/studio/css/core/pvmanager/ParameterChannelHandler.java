@@ -130,6 +130,15 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
             case "string":
             case "enumeration":
                 return Value.newBuilder().setType(Type.STRING).setStringValue(String.valueOf(value)).build();
+            case "string[]":
+            case "enumeration[]":
+                Value.Builder stringValueArray = Value.newBuilder().setType(Type.ARRAY);
+                for (Object objectValue : (Object[]) value) {
+                    stringValueArray.addArrayValue(Value.newBuilder()
+                            .setType(Type.STRING)
+                            .setStringValue(String.valueOf(objectValue)));
+                }
+                return stringValueArray.build();
             case "integer":
                 if (value instanceof Double) {
                     return Value.newBuilder().setType(Type.UINT64).setUint64Value(((Double) value).longValue()).build();
@@ -137,12 +146,39 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
                     return Value.newBuilder().setType(Type.UINT64).setUint64Value(Long.parseLong(String.valueOf(value)))
                             .build();
                 }
+            case "integer[]":
+                Value.Builder intValueArray = Value.newBuilder().setType(Type.ARRAY);
+                if (value instanceof int[]) {
+                    for (int intValue : (int[]) value) {
+                        intValueArray.addArrayValue(Value.newBuilder().setType(Type.UINT64).setUint64Value(intValue));
+                    }
+                } else {
+                    for (Object objectValue : (Object[]) value) {
+                        long longValue = Long.parseLong(String.valueOf(objectValue));
+                        intValueArray.addArrayValue(Value.newBuilder().setType(Type.UINT64).setUint64Value(longValue));
+                    }
+                }
+                return intValueArray.build();
             case "float":
                 return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(Double.parseDouble(String.valueOf(value)))
                         .build();
+            case "float[]":
+                Value.Builder floatValueArray = Value.newBuilder().setType(Type.ARRAY);
+                for (float floatValue : (float[]) value) {
+                    floatValueArray.addArrayValue(Value.newBuilder().setType(Type.FLOAT).setFloatValue(floatValue));
+                }
+                return floatValueArray.build();
             case "boolean":
                 boolean booleanValue = TRUTHY.contains(String.valueOf(value).toLowerCase());
                 return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
+            case "boolean[]":
+                Value.Builder booleanValueArray = Value.newBuilder().setType(Type.ARRAY);
+                for (Object objectValue : (Object[]) value) {
+                    booleanValueArray.addArrayValue(Value.newBuilder()
+                            .setType(Type.BOOLEAN)
+                            .setBooleanValue(TRUTHY.contains(String.valueOf(objectValue).toLowerCase())));
+                }
+                return booleanValueArray.build();
             }
         }
         return null;

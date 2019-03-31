@@ -40,6 +40,7 @@ public class XtceContentProvider implements IAutoCompleteProvider {
         }
 
         content = AutoCompleteHelper.trimWildcards(content);
+        content = content.replaceAll("\\[[0-9]+\\]", "[]"); // Ignore specific index into array
         Pattern namePattern = AutoCompleteHelper.convertToPattern(content);
         namePattern = Pattern.compile(namePattern.pattern(), Pattern.CASE_INSENSITIVE);
 
@@ -81,7 +82,11 @@ public class XtceContentProvider implements IAutoCompleteProvider {
             if (member.hasType()) {
                 scanTypeForPvCandidates(memberPvName, member.getType(), pvCandidates);
             }
-
+        }
+        if (type.hasArrayInfo()) {
+            String entryPvName = basePvName + "[]";
+            ParameterTypeInfo entryType = type.getArrayInfo().getType();
+            scanTypeForPvCandidates(entryPvName, entryType, pvCandidates);
         }
     }
 

@@ -7,8 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.model;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.csstudio.opibuilder.model.AbstractContainerModel;
@@ -24,16 +22,18 @@ import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.swt.graphics.RGB;
 import org.osgi.framework.Version;
 
-/**The model for array widget.
+/**
+ * The model for array widget.
+ * 
  * @author Xihui Chen
  *
  */
-public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel{
+public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel {
 
     public enum ArrayDataType {
         DOUBLE_ARRAY("double[]"),
-        STRING_ARRAY("String[]"),       
-        INT_ARRAY("int[]"),       
+        STRING_ARRAY("String[]"),
+        INT_ARRAY("int[]"),
         BYTE_ARRAY("byte[]"),
         LONG_ARRAY("long[]"),
         SHORT_ARRAY("short[]"),
@@ -41,6 +41,7 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         OBJECT_ARRAY("Object[]");
 
         private String description;
+
         private ArrayDataType(String description) {
             this.description = description;
         }
@@ -50,10 +51,10 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
             return description;
         }
 
-        public static String[] stringValues(){
+        public static String[] stringValues() {
             String[] result = new String[values().length];
-            int i =0 ;
-            for(ArrayDataType f : values()){
+            int i = 0;
+            for (ArrayDataType f : values()) {
                 result[i++] = f.toString();
             }
             return result;
@@ -73,13 +74,12 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
     /**
      * Array Length
      */
-    public static final String PROP_ARRAY_LENGTH= "array_length";
+    public static final String PROP_ARRAY_LENGTH = "array_length";
 
     /**
      * If the array widget is layoutted in horizontal.
      */
-    public static final String PROP_HORIZONTAL= "horizontal";
-
+    public static final String PROP_HORIZONTAL = "horizontal";
 
     public static final String PROP_SHOW_SPINNER = "show_spinner";
 
@@ -98,21 +98,23 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         setForegroundColor(new RGB(0, 0, 0));
     }
 
-    public PVWidgetModelDelegate getDelegate(){
-        if(delegate == null)
+    public PVWidgetModelDelegate getDelegate() {
+        if (delegate == null) {
             delegate = new PVWidgetModelDelegate(this);
+        }
         return delegate;
     }
 
     @Override
     public synchronized void addChild(AbstractWidgetModel child,
             boolean changeParent) {
-        if(!getChildren().isEmpty())
+        if (!getChildren().isEmpty()) {
             return;
-        //child should not be scalable because their size are layoutted by the array figure.
+        }
+        // child should not be scalable because their size are layoutted by the array figure.
         child.setScaleOptions(false, false, false);
         super.addChild(child, changeParent);
-        for(int i=1; i<getVisibleElementsCount(); i++){
+        for (int i = 1; i < getVisibleElementsCount(); i++) {
             try {
                 AbstractWidgetModel clone = XMLUtil.XMLElementToWidget(XMLUtil.widgetToXMLElement(child));
                 super.addChild(clone, changeParent);
@@ -156,16 +158,13 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
                 WidgetPropertyCategory.Behavior, ArrayDataType.stringValues(), 0));
 
         setPropertyVisibleAndSavable(PROP_VISIBLE_ELEMENTS_COUNT, false, true);
-        getProperty(PROP_VISIBLE_ELEMENTS_COUNT).addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if(getChildren().size() <1)
-                    return;
-                AbstractWidgetModel child = getChildren().get(0);
-                removeAllChildren();
-                addChild(child);
+        getProperty(PROP_VISIBLE_ELEMENTS_COUNT).addPropertyChangeListener(evt -> {
+            if (getChildren().size() < 1) {
+                return;
             }
+            AbstractWidgetModel child = getChildren().get(0);
+            removeAllChildren();
+            addChild(child);
         });
     }
 
@@ -174,32 +173,32 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         return ID;
     }
 
-    public int getArrayLength(){
-        return (Integer)getPropertyValue(PROP_ARRAY_LENGTH);
+    public int getArrayLength() {
+        return (Integer) getPropertyValue(PROP_ARRAY_LENGTH);
     }
 
-    public int getSpinnerWidth(){
-        return (Integer)getPropertyValue(PROP_SPINNER_WIDTH);
+    public int getSpinnerWidth() {
+        return (Integer) getPropertyValue(PROP_SPINNER_WIDTH);
     }
 
-    public int getVisibleElementsCount(){
-        return (Integer)getPropertyValue(PROP_VISIBLE_ELEMENTS_COUNT);
+    public int getVisibleElementsCount() {
+        return (Integer) getPropertyValue(PROP_VISIBLE_ELEMENTS_COUNT);
     }
 
     public boolean isHorizontal() {
-        return (Boolean)getPropertyValue(PROP_HORIZONTAL);
+        return (Boolean) getPropertyValue(PROP_HORIZONTAL);
     }
 
     public boolean isShowSpinner() {
-        return (Boolean)getPropertyValue(PROP_SHOW_SPINNER);
+        return (Boolean) getPropertyValue(PROP_SHOW_SPINNER);
     }
 
-    public Boolean isShowScrollbar(){
-        return (Boolean)getPropertyValue(PROP_SHOW_SCROLLBAR);
+    public Boolean isShowScrollbar() {
+        return (Boolean) getPropertyValue(PROP_SHOW_SCROLLBAR);
     }
 
-    public ArrayDataType getDataType(){
-        return ArrayDataType.values()[(Integer)getPropertyValue(PROP_DATA_TYPE)];
+    public ArrayDataType getDataType() {
+        return ArrayDataType.values()[(Integer) getPropertyValue(PROP_DATA_TYPE)];
     }
 
     @Override
@@ -208,16 +207,15 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         delegate.processVersionDifference(boyVersionOnFile);
     }
 
-
-
     /* (non-Javadoc)
      * @see org.csstudio.opibuilder.model.AbstractContainerModel#getChildren()
      * Array widget only needs to save the first one child.
      */
     @Override
     public List<AbstractWidgetModel> getChildren() {
-        if(super.getChildren().size()>1)
+        if (super.getChildren().size() > 1) {
             return super.getChildren().subList(0, 1);
+        }
         return super.getChildren();
     }
 
@@ -225,53 +223,50 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         return super.getChildren();
     }
 
-
-
     @Override
     public boolean isChildrenOperationAllowable() {
         return false;
     }
 
     @Override
-    public boolean isBorderAlarmSensitve(){
+    public boolean isBorderAlarmSensitve() {
         return getDelegate().isBorderAlarmSensitve();
     }
 
     @Override
-    public boolean isForeColorAlarmSensitve(){
+    public boolean isForeColorAlarmSensitve() {
         return getDelegate().isForeColorAlarmSensitve();
     }
 
     @Override
-    public boolean isBackColorAlarmSensitve(){
+    public boolean isBackColorAlarmSensitve() {
         return getDelegate().isBackColorAlarmSensitve();
     }
 
     @Override
-    public String getPVName(){
+    public String getPVName() {
         return getDelegate().getPVName();
     }
 
     @Override
-    public boolean isAlarmPulsing(){
+    public boolean isAlarmPulsing() {
         return getDelegate().isAlarmPulsing();
     }
 
-
-    public void setArrayLength(int length){
+    public void setArrayLength(int length) {
         getProperty(PROP_ARRAY_LENGTH).setPropertyValue(length);
     }
 
-    public void setDataType(ArrayDataType type){
+    public void setDataType(ArrayDataType type) {
         getProperty(PROP_DATA_TYPE).setPropertyValue(type.ordinal());
     }
 
     @Override
     public void scaleChildren() {
-//        if(!getChildren().isEmpty() && getChildren().get(0) instanceof AbstractContainerModel)
-//            for(AbstractWidgetModel child : getAllChildren()){
-//                ((AbstractContainerModel) child).scaleChildren();
-//            }
+        // if(!getChildren().isEmpty() && getChildren().get(0) instanceof AbstractContainerModel)
+        // for(AbstractWidgetModel child : getAllChildren()){
+        // ((AbstractContainerModel) child).scaleChildren();
+        // }
     }
 
 }

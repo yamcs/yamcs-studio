@@ -3,6 +3,7 @@ package org.yamcs.studio.css.core.vtype;
 import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 import org.diirt.util.NumberFormats;
 import org.diirt.vtype.Alarm;
@@ -14,6 +15,7 @@ import org.yamcs.protobuf.Mdb.AlarmLevelType;
 import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 
@@ -226,6 +228,39 @@ public class YamcsVType implements VType, Alarm, Time, Display {
                 return new TimestampVType(pval);
             case AGGREGATE:
                 return new AggregateVType(pval);
+            case ARRAY:
+                // TODO: array of enums (need to find correct ptype)
+
+                List<Value> arrayValues = pval.getEngValue().getArrayValueList();
+                if (arrayValues.isEmpty()) {
+                    return null; // TODO
+                } else {
+                    switch (arrayValues.get(0).getType()) {
+                    case UINT32:
+                        return new Uint32ArrayVType(pval);
+                    case SINT32:
+                        return new Sint32ArrayVType(pval);
+                    case UINT64:
+                        return new Uint64ArrayVType(pval);
+                    case SINT64:
+                        return new Sint64ArrayVType(pval);
+                    case FLOAT:
+                        return new FloatArrayVType(pval);
+                    case DOUBLE:
+                        return new DoubleArrayVType(pval);
+                    case BOOLEAN:
+                        return new BooleanArrayVType(pval);
+                    case STRING:
+                        return new StringArrayVType(pval);
+                    case AGGREGATE:
+                        return new AggregateArrayVType(pval);
+                    case ARRAY:
+                        return new ArrayArrayVType(pval);
+                    default:
+                        throw new IllegalStateException(
+                                "Unexpected type for parameter array value. Got: " + arrayValues.get(0).getType());
+                    }
+                }
             default:
                 throw new IllegalStateException(
                         "Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
