@@ -3,7 +3,7 @@ package org.yamcs.studio.commanding.cmdhist;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-public class VerificationStepsTableContentProvider implements IStructuredContentProvider {
+public class StagesTableContentProvider implements IStructuredContentProvider {
 
     @Override
     public void dispose() {

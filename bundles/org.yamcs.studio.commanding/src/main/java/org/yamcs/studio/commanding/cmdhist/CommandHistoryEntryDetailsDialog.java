@@ -42,7 +42,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     private CommandHistoryRecord previousRec;
     private CommandHistoryRecord nextRec;
 
-    private VerificationStepsTableViewer tableViewer;
+    private StagesTableViewer tableViewer;
 
     public CommandHistoryEntryDetailsDialog(Shell shell, CommandHistoryView commandHistoryView,
             CommandHistoryRecord rec) {
@@ -118,7 +118,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
         createSashForm(container);
         createDetailsSection(sashForm);
-        createVerificationSection(sashForm);
+        createStagesSection(sashForm);
 
         sashForm.setWeights(new int[] { 300, 400 });
 
@@ -152,25 +152,25 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         createToolbarButtonBar(container);
     }
 
-    private void createVerificationSection(Composite parent) {
-        Composite verificationContainer = new Composite(parent, SWT.NONE);
+    private void createStagesSection(Composite parent) {
+        Composite stagesContainer = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
-        verificationContainer.setLayout(layout);
-        verificationContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+        stagesContainer.setLayout(layout);
+        stagesContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Label verificationLabel = new Label(verificationContainer, SWT.NONE);
-        verificationLabel.setText("Verification Steps:");
+        Label stagesLabel = new Label(stagesContainer, SWT.NONE);
+        stagesLabel.setText("Stages:");
 
-        createVerificationTable(verificationContainer);
+        createStagesTable(stagesContainer);
     }
 
-    private void createVerificationTable(Composite parent) {
+    private void createStagesTable(Composite parent) {
         Composite tableContainer = new Composite(parent, SWT.NONE);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        tableViewer = new VerificationStepsTableViewer(tableContainer, commandHistoryView);
+        tableViewer = new StagesTableViewer(tableContainer, commandHistoryView);
     }
 
     private void createTextSection(Composite parent) {

@@ -85,24 +85,27 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
 
             if (attr.getName().startsWith(ACKNOWLEDGE_PREFIX)) {
                 if (attr.getName().endsWith(ACKNOWLEDGE_STATUS_SUFFIX)) {
-                    if (attr.getValue().getStringValue().contains("OK")) {
-                        rec.addCellImage(shortName, GREEN);
-                    } else {
-                        rec.addCellImage(shortName, RED);
-                    }
-                }
-            }
-
-            if (attr.getName().startsWith(VERIFIER_PREFIX)) {
-                if (attr.getName().endsWith(VERIFIER_STATUS_SUFFIX)) {
-                    rec.addVerificationStep(new VerificationStep(rec, shortName, attr));
-                    if (attr.getValue().getStringValue().contains("OK")) {
+                    rec.addStage(new Stage(rec, shortName, attr));
+                    if (attr.getValue().getStringValue().equals("OK")) {
                         rec.addCellImage(shortName, GREEN);
                     } else {
                         rec.addCellImage(shortName, RED);
                     }
                 } else if (attr.getName().endsWith(VERIFIER_TIME_SUFFIX)) {
-                    rec.updateVerificationStepTime(shortName, attr);
+                    rec.updateStageTime(shortName, attr);
+                }
+            }
+
+            if (attr.getName().startsWith(VERIFIER_PREFIX)) {
+                if (attr.getName().endsWith(VERIFIER_STATUS_SUFFIX)) {
+                    rec.addStage(new Stage(rec, shortName, attr));
+                    if (attr.getValue().getStringValue().equals("OK")) {
+                        rec.addCellImage(shortName, GREEN);
+                    } else {
+                        rec.addCellImage(shortName, RED);
+                    }
+                } else if (attr.getName().endsWith(VERIFIER_TIME_SUFFIX)) {
+                    rec.updateStageTime(shortName, attr);
                 }
             }
 

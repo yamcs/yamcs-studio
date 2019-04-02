@@ -10,18 +10,18 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Lists the arguments for the selected Telecommand
+ * Lists the stages for the selected Telecommand
  */
-public class VerificationStepsTableViewer extends TableViewer {
+public class StagesTableViewer extends TableViewer {
 
-    public static final String COL_NAME = "Step";
+    public static final String COL_NAME = "Name";
     public static final String COL_STATUS = "Status";
     public static final String COL_DELTA = "Delta";
     public static final String COL_DATE = "Date";
 
     private CommandHistoryView commandHistoryView;
 
-    public VerificationStepsTableViewer(Composite parent, CommandHistoryView commandHistoryView) {
+    public StagesTableViewer(Composite parent, CommandHistoryView commandHistoryView) {
         super(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
         this.commandHistoryView = commandHistoryView;
 
@@ -33,7 +33,7 @@ public class VerificationStepsTableViewer extends TableViewer {
 
         addFixedColumns(tl);
 
-        setContentProvider(new VerificationStepsTableContentProvider());
+        setContentProvider(new StagesTableContentProvider());
     }
 
     private void addFixedColumns(TableLayout tl) {
@@ -43,8 +43,8 @@ public class VerificationStepsTableViewer extends TableViewer {
 
             @Override
             public String getText(Object element) {
-                VerificationStep step = (VerificationStep) element;
-                return step.getName();
+                Stage stage = (Stage) element;
+                return stage.getName();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
@@ -55,8 +55,8 @@ public class VerificationStepsTableViewer extends TableViewer {
 
             @Override
             public Image getImage(Object element) {
-                VerificationStep step = (VerificationStep) element;
-                if (step.getStatus().contains("OK")) {
+                Stage stage = (Stage) element;
+                if (stage.getStatus().equals("OK")) {
                     return commandHistoryView.greenBubble;
                 } else {
                     return commandHistoryView.redBubble;
@@ -65,8 +65,8 @@ public class VerificationStepsTableViewer extends TableViewer {
 
             @Override
             public String getText(Object element) {
-                VerificationStep step = (VerificationStep) element;
-                return step.getStatus();
+                Stage stage = (Stage) element;
+                return stage.getStatus();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
@@ -76,8 +76,8 @@ public class VerificationStepsTableViewer extends TableViewer {
         deltaColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                VerificationStep step = (VerificationStep) element;
-                return step.getDelta();
+                Stage stage = (Stage) element;
+                return stage.getDelta();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
@@ -87,8 +87,8 @@ public class VerificationStepsTableViewer extends TableViewer {
         dateColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                VerificationStep step = (VerificationStep) element;
-                return step.getTime();
+                Stage stage = (Stage) element;
+                return stage.getTime();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));

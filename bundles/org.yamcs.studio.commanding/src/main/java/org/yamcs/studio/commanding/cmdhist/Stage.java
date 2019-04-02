@@ -10,7 +10,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.utils.TimeEncoding;
 
-public class VerificationStep {
+public class Stage {
 
     private static final long ONE_SECOND = 1000; // millis
     private static final long ONE_MINUTE = 60 * ONE_SECOND;
@@ -22,7 +22,7 @@ public class VerificationStep {
     private String status;
     private long instant = TimeEncoding.INVALID_INSTANT;
 
-    public VerificationStep(CommandHistoryRecord rec, String name, CommandHistoryAttribute statusAttribute) {
+    public Stage(CommandHistoryRecord rec, String name, CommandHistoryAttribute statusAttribute) {
         this.rec = rec;
         this.name = name;
         this.status = statusAttribute.getValue().getStringValue();

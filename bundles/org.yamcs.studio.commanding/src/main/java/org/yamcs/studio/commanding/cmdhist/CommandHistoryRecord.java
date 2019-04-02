@@ -54,7 +54,7 @@ public class CommandHistoryRecord {
     private String comment;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
-    private Map<String, VerificationStep> verificationStepsByName = new LinkedHashMap<>();
+    private Map<String, Stage> verificationStepsByName = new LinkedHashMap<>();
 
     public CommandHistoryRecord(CommandId id) {
         this.id = id;
@@ -89,12 +89,12 @@ public class CommandHistoryRecord {
         this.binary = binary;
     }
 
-    public void addVerificationStep(VerificationStep step) {
+    public void addStage(Stage step) {
         verificationStepsByName.put(step.getName(), step);
     }
 
-    public void updateVerificationStepTime(String shortName, CommandHistoryAttribute timeAttribute) {
-        VerificationStep step = verificationStepsByName.get(shortName);
+    public void updateStageTime(String shortName, CommandHistoryAttribute timeAttribute) {
+        Stage step = verificationStepsByName.get(shortName);
         step.setTime(timeAttribute);
     }
 
@@ -195,7 +195,7 @@ public class CommandHistoryRecord {
         return ptvInfo;
     }
 
-    public List<VerificationStep> getVerificationSteps() {
+    public List<Stage> getVerificationSteps() {
         return new ArrayList<>(verificationStepsByName.values());
     }
 
