@@ -45,6 +45,10 @@ public class YamcsAuthorizations {
         return null;
     }
 
+    private boolean isSuperuser() {
+        return userInfo != null && (userInfo.hasSuperuser() && userInfo.getSuperuser());
+    }
+
     public boolean hasSystemPrivilege(String systemPrivilege) {
         if (!isAuthorizationEnabled()) {
             return true;
@@ -53,7 +57,7 @@ public class YamcsAuthorizations {
             return false;
         }
 
-        return userInfo.getSystemPrivilegeList().contains(systemPrivilege);
+        return isSuperuser() || userInfo.getSystemPrivilegeList().contains(systemPrivilege);
     }
 
     public boolean isAuthorizationEnabled() {
