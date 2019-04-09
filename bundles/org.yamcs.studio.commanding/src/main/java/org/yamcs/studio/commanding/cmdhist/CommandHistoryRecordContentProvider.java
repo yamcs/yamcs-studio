@@ -127,7 +127,8 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
                 rec.getPTVInfo().setFailureMessage(attr.getValue().getStringValue());
             } else if (attr.getName().equals(ATTR_BINARY)) {
                 rec.setBinary(attr.getValue().getBinaryValue());
-            } else if (attr.getName().equals(ATTR_COMMENT)) {
+            } else if (attr.getName().equalsIgnoreCase(ATTR_COMMENT)) { // ignore case to support both old versions of
+                                                                        // Yamcs ("Comment") and new ones ("comment")
                 rec.setComment(attr.getValue().getStringValue());
             } else {
                 rec.addCellValue(shortName, attr.getValue());
