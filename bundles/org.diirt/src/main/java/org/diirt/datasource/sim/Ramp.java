@@ -4,16 +4,17 @@
  */
 package org.diirt.datasource.sim;
 
+import static org.diirt.vtype.ValueFactory.alarmNone;
+import static org.diirt.vtype.ValueFactory.newDisplay;
+import static org.diirt.vtype.ValueFactory.newVDouble;
+import static org.diirt.vtype.ValueFactory.timeNow;
+
 import org.diirt.vtype.VDouble;
-import static org.diirt.vtype.ValueFactory.*;
-import java.time.Instant;
 
 /**
- * Function to simulate a signal that increases constantly within a range
- * (saw-tooth shape). The warning
- * limits are set at 80% of the range and the alarm at 90% the range.
- * All values are going to have no alarm status, with the timestamp set at the
- * moment the sample was generated.
+ * Function to simulate a signal that increases constantly within a range (saw-tooth shape). The warning limits are set
+ * at 80% of the range and the alarm at 90% the range. All values are going to have no alarm status, with the timestamp
+ * set at the moment the sample was generated.
  *
  * @author carcassi
  */
@@ -27,13 +28,16 @@ public class Ramp extends SimFunction<VDouble> {
     private VDouble lastValue;
 
     /**
-     * Creates a ramp shaped signal between min and max, updating a step amount
-     * every interval seconds.
+     * Creates a ramp shaped signal between min and max, updating a step amount every interval seconds.
      *
-     * @param min minimum value
-     * @param max maximum value
-     * @param step increment for each sample
-     * @param interval interval between samples in seconds
+     * @param min
+     *            minimum value
+     * @param max
+     *            maximum value
+     * @param step
+     *            increment for each sample
+     * @param interval
+     *            interval between samples in seconds
      */
     public Ramp(Double min, Double max, Double step, Double interval) {
         super(interval, VDouble.class);
@@ -42,7 +46,7 @@ public class Ramp extends SimFunction<VDouble> {
         }
         this.min = min;
         this.max = max;
-        if (step >=0) {
+        if (step >= 0) {
             this.currentValue = min - step;
         } else {
             this.currentValue = max - step;
@@ -51,16 +55,18 @@ public class Ramp extends SimFunction<VDouble> {
         range = max - min;
         lastValue = newVDouble(currentValue, alarmNone(), timeNow(),
                 newDisplay(min, min + range * 0.1, min + range * 0.2, "x", Constants.DOUBLE_FORMAT,
-                min + range * 0.8, min + range * 0.9, max, min, max));
+                        min + range * 0.8, min + range * 0.9, max, min, max));
     }
 
     /**
-     * Creates a ramp shaped signal between min and max, incrementing 1
-     * every interval seconds.
+     * Creates a ramp shaped signal between min and max, incrementing 1 every interval seconds.
      *
-     * @param min minimum value
-     * @param max maximum value
-     * @param interval interval between samples in seconds
+     * @param min
+     *            minimum value
+     * @param max
+     *            maximum value
+     * @param interval
+     *            interval between samples in seconds
      */
     public Ramp(Double min, Double max, Double interval) {
         this(min, max, 1.0, interval);
@@ -70,7 +76,7 @@ public class Ramp extends SimFunction<VDouble> {
      * Creates a ramp shaped signal between -5 and +5, incrementing 1 every second.
      */
     public Ramp() {
-        this (-5.0, 5.0, 1.0);
+        this(-5.0, 5.0, 1.0);
     }
 
     @Override

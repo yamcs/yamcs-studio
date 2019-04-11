@@ -19,10 +19,6 @@ import java.awt.image.BufferedImage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.anim.dom.SVGStylableElement;
@@ -214,15 +210,17 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     public void setColor(Color newColor) {
-        if (newColor == null || (this.colorToApply != null && newColor.equals(this.colorToApply)))
+        if (newColor == null || (this.colorToApply != null && newColor.equals(this.colorToApply))) {
             return;
+        }
         this.colorToApply = newColor;
         contentChanged();
     }
 
     public void setColorToChange(Color newColor) {
-        if (newColor == null || (this.colorToChange != null && newColor.equals(this.colorToChange)))
+        if (newColor == null || (this.colorToChange != null && newColor.equals(this.colorToChange))) {
             return;
+        }
         this.colorToChange = newColor;
     }
 
@@ -231,8 +229,9 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     }
 
     public void setTransformMatrix(double[][] newMatrix) {
-        if (newMatrix == null)
+        if (newMatrix == null) {
             return;
+        }
         this.matrix = newMatrix;
         this.document = applyMatrix(matrix);
         // Transformed document is based on original => reset color
@@ -247,25 +246,10 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
         return new Dimension((int) Math.round(width), (int) Math.round(height));
     }
 
-    public Document copyDocument() {
-        if (document == null)
-            return null;
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try {
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Node originalRoot = document.getDocumentElement();
-            Document copiedDocument = db.newDocument();
-            Node copiedRoot = copiedDocument.importNode(originalRoot, true);
-            copiedDocument.appendChild(copiedRoot);
-            return copiedDocument;
-        } catch (ParserConfigurationException e) {
-        }
-        return null;
-    }
-
     private void changeColor(Document doc, Color oldColor, Color newColor) {
-        if (oldColor.equals(newColor))
+        if (oldColor.equals(newColor)) {
             return;
+        }
 
         Matcher matcher = null;
         String svgOldColor = toHexString(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue());
@@ -304,8 +288,9 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     private void recursiveCC(Element elmt, Color oldColor, Color newColor,
             Pattern fillPattern, Pattern strokePattern, String fillReplace,
             String strokeReplace) {
-        if (elmt == null)
+        if (elmt == null) {
             return;
+        }
         Matcher matcher = null;
         NodeList styleList = elmt.getChildNodes();
         if (styleList != null) {
@@ -463,9 +448,11 @@ public class SimpleImageTranscoder extends SVGAbstractTranscoder {
     private double[] transformP(double x, double y, double z, double[][] matrix) {
         double[] p = { x, y, z };
         double[] pp = new double[3];
-        for (int a = 0; a < 3; a++)
-            for (int b = 0; b < 3; b++)
+        for (int a = 0; a < 3; a++) {
+            for (int b = 0; b < 3; b++) {
                 pp[a] += matrix[a][b] * p[b];
+            }
+        }
         return pp;
     }
 
