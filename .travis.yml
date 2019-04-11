@@ -1,5 +1,8 @@
+sudo: false
 language: java
-jdk: oraclejdk8
+jdk:
+  - openjdk8
+  - openjdk11
 
 cache:
   directories:
@@ -16,14 +19,19 @@ script:
   - mvn verify -f p2deps/pom.xml
   - mvn verify
 
-deploy:
-  provider: releases
-  api_key:
-    secure: wRRoOFh5iNtS6I6miZokq8IgGG8gNJV1D36mx46z7wacusOEA35TGLieegNzfTvwLMgLYZN4vbMyouwimaApokP+aJdhpHiGQ4pJLQ9Y1mEyjGAXiYcQ9qC6k2/mv4b3p/72cajtLfVeKT/0PIURQ6bAhiliBcUerq1Gx/9u8KU=		
-  file_glob: true
-  file:
-    - releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-*.zip
-    - releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-*.tar.gz
-  skip_cleanup: true
-  on:
-    tags: true
+jobs:
+  include:
+    - stage: deploy
+      jdk: openjdk8
+      deploy:
+        provider: releases
+        api_key:
+          secure: wRRoOFh5iNtS6I6miZokq8IgGG8gNJV1D36mx46z7wacusOEA35TGLieegNzfTvwLMgLYZN4vbMyouwimaApokP+aJdhpHiGQ4pJLQ9Y1mEyjGAXiYcQ9qC6k2/mv4b3p/72cajtLfVeKT/0PIURQ6bAhiliBcUerq1Gx/9u8KU=		
+        file_glob: true
+        file:
+          - releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-*.zip
+          - releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-*.tar.gz
+        skip_cleanup: true
+        on:
+          tags: true
+
