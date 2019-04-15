@@ -131,18 +131,31 @@ public class CommandOptionsComposite extends ScrolledComposite {
             argumentLabel.setText(argument.getName());
 
             if ("integer".equals(argument.getType())) {
-                Spinner argumentSpinner = new Spinner(composite, SWT.BORDER);
-                argumentSpinner.setMinimum(Integer.MIN_VALUE);
-                argumentSpinner.setMaximum(Integer.MAX_VALUE);
-                argumentSpinner.setLayoutData(new GridData(150, SWT.DEFAULT));
-                argumentSpinner.setData(argument);
-                if (command.isAssigned(argument.getArgumentInfo())) {
-                    String value = command.getAssignedStringValue(argument.getArgumentInfo());
-                    argumentSpinner.setSelection(Integer.parseInt(value));
-                } else if (argument.getValue() != null) {
-                    argumentSpinner.setSelection(Integer.parseInt(argument.getValue()));
+                if (argument.isIntegerWithinJavaIntRange()) {
+                    Spinner argumentSpinner = new Spinner(composite, SWT.BORDER);
+                    argumentSpinner.setMinimum(Integer.MIN_VALUE);
+                    argumentSpinner.setMaximum(Integer.MAX_VALUE);
+                    argumentSpinner.setLayoutData(new GridData(150, SWT.DEFAULT));
+                    argumentSpinner.setData(argument);
+                    if (command.isAssigned(argument.getArgumentInfo())) {
+                        String value = command.getAssignedStringValue(argument.getArgumentInfo());
+                        argumentSpinner.setSelection(Integer.parseInt(value));
+                    } else if (argument.getValue() != null) {
+                        argumentSpinner.setSelection(Integer.parseInt(argument.getValue()));
+                    }
+                    controls.add(argumentSpinner);
+                } else {
+                    Text argumentText = new Text(composite, SWT.BORDER);
+                    argumentText.setLayoutData(new GridData(150, SWT.DEFAULT));
+                    argumentText.setData(argument);
+                    if (command.isAssigned(argument.getArgumentInfo())) {
+                        String value = command.getAssignedStringValue(argument.getArgumentInfo());
+                        argumentText.setText(value);
+                    } else if (argument.getValue() != null) {
+                        argumentText.setText(argument.getValue());
+                    }
+                    controls.add(argumentText);
                 }
-                controls.add(argumentSpinner);
             } else if ("enumeration".equals(argument.getType())) {
                 Combo argumentCombo = new Combo(composite, SWT.READ_ONLY);
                 argumentCombo.setLayoutData(new GridData(150, SWT.DEFAULT));
