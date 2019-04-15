@@ -1,7 +1,9 @@
 package org.yamcs.studio.commanding.cmdhist;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -34,7 +36,9 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
     public static final String ATTR_SOURCE = "source";
     public static final String ATTR_BINARY = "binary";
     public static final String ATTR_USERNAME = "username";
+    @Deprecated
     public static final String ATTR_COMMENT = "Comment";
+    public static final String ATTR_COMMENT_NEW = "comment";
 
     private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
     private TableViewer tableViewer;
@@ -64,6 +68,17 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
                 .replace(VERIFIER_PREFIX, "")
                 .replace(VERIFIER_STATUS_SUFFIX, "")
                 .replace(VERIFIER_TIME_SUFFIX, "");
+    }
+
+    public void addEntries(List<CommandHistoryEntry> entries) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        Collections.reverse(entries);
+        for (CommandHistoryEntry entry : entries) {
+            processCommandHistoryEntry(entry);
+        }
     }
 
     public void processCommandHistoryEntry(CommandHistoryEntry entry) {

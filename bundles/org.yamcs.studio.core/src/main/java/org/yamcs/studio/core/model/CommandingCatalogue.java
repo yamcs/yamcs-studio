@@ -228,6 +228,13 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
         }
     }
 
+    public CompletableFuture<byte[]> fetchLatestEntries(String instance) {
+        String resource = "/archive/" + instance + "/commands";
+
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+        return yamcsClient.get(resource, null);
+    }
+
     public CompletableFuture<byte[]> updateCommandComment(String processor, CommandId cmdId, String newComment) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();

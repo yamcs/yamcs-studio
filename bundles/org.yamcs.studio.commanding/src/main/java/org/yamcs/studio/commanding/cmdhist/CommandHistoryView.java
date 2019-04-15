@@ -3,6 +3,7 @@ package org.yamcs.studio.commanding.cmdhist;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.action.Action;
@@ -35,6 +36,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Rest.ListCommandsResponse;
 import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -46,6 +48,8 @@ import org.yamcs.studio.core.ui.utils.ColumnData;
 import org.yamcs.studio.core.ui.utils.ColumnDef;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class CommandHistoryView extends ViewPart implements YamcsConnectionListener, InstanceListener {
 
@@ -72,7 +76,8 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
             CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS,
             CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE,
             CommandHistoryRecordContentProvider.ATTR_COMMAND_FAILED,
-            CommandHistoryRecordContentProvider.ATTR_COMMENT);
+            CommandHistoryRecordContentProvider.ATTR_COMMENT,
+            CommandHistoryRecordContentProvider.ATTR_COMMENT_NEW);
 
     private LocalResourceManager resourceManager;
 
@@ -156,11 +161,18 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
 
     @Override
     public void onYamcsConnected() {
+        Display.getDefault().asyncExec(() -> {
+            clear();
+            fetchLatestEntries();
+        });
     }
 
     @Override
     public void instanceChanged(String oldInstance, String newInstance) {
-        Display.getDefault().asyncExec(() -> clear());
+        Display.getDefault().asyncExec(() -> {
+            clear();
+            fetchLatestEntries();
+        });
     }
 
     @Override
@@ -558,6 +570,23 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         }
     }
 
+    private void fetchLatestEntries() {
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        CommandingCatalogue.getInstance().fetchLatestEntries(instance).whenComplete((data, exc) -> {
+            try {
+                ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
+
+                List<CommandHistoryEntry> entryList = new ArrayList<>(response.getEntryList());
+
+                Display.getDefault().asyncExec(() -> {
+                    addEntries(entryList);
+                });
+            } catch (InvalidProtocolBufferException e) {
+                log.log(Level.SEVERE, "Failed to decode server message", e);
+            }
+        });
+    }
+
     public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
         // Maybe we need to update structure
         for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
@@ -575,6 +604,13 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
 
         // Now add content
         tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+    }
+
+    public void addEntries(List<CommandHistoryEntry> entries) {
+        if (tableViewer.getTable().isDisposed()) {
+            return;
+        }
+        tableContentProvider.addEntries(entries);
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {
