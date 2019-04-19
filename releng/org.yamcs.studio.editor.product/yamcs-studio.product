@@ -36,10 +36,10 @@ See https://www.yamcs.org
       startupMessageRect="20,195,560,20"
       startupForegroundColor="2F376D" />
    <launcher name="Yamcs Studio">
-      <linux icon="/launcher/css.xpm"/>
-      <macosx icon="/launcher/css.icns"/>
+      <linux icon="/launcher/yamcs.xpm"/>
+      <macosx icon="/launcher/yamcs.icns"/>
       <win useIco="true">
-         <ico path="/launcher/css.ico"/>
+         <ico path="/launcher/yamcs.ico"/>
          <bmp/>
       </win>
    </launcher>

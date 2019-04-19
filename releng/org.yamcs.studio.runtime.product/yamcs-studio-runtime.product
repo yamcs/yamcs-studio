@@ -30,10 +30,10 @@ See https://www.yamcs.org
    <windowImages i16="/org.yamcs.studio.runtime/icons/logo16.png" i32="/org.yamcs.studio.runtime/icons/logo32.png" i48="/org.yamcs.studio.runtime/icons/logo48.png" i64="/org.yamcs.studio.runtime/icons/logo64.png" i128="/org.yamcs.studio.runtime/icons/logo128.png" i256="/org.yamcs.studio.runtime/icons/logo256.png"/>
 
    <launcher name="Yamcs Studio Runtime">
-      <linux icon="/launcher/css.xpm"/>
-      <macosx icon="/launcher/css.icns"/>
+      <linux icon="/launcher/yamcs.xpm"/>
+      <macosx icon="/launcher/yamcs.icns"/>
       <win useIco="true">
-         <ico path="/launcher/css.ico"/>
+         <ico path="/launcher/yamcs.ico"/>
          <bmp/>
       </win>
    </launcher>
