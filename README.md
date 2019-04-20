@@ -10,7 +10,7 @@ Below instructions are targeted at Yamcs Studio core contributors.
 ---
 
 ### Prerequisites
-* JDK 8
+* JDK 8+
 * Maven
 
 
