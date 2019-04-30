@@ -7,8 +7,11 @@ import org.diirt.util.array.ArrayInt;
 import org.diirt.util.array.ListInt;
 import org.diirt.vtype.VEnumArray;
 import org.diirt.vtype.VTypeToString;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 
 public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
@@ -16,8 +19,7 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
     private ListInt sizes;
 
     private ListInt indexes;
-    private List<String> labels;
-    private List<String> array;
+    private List<String> data;
 
     public EnumeratedArrayVType(PVConnectionInfo info, ParameterValue pval) {
         super(pval);
@@ -26,30 +28,29 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
         sizes = new ArrayInt(size);
 
         List<Integer> indexes = new ArrayList<>();
+        data = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Value value = pval.getEngValue().getArrayValue(i);
-            int index = EnumeratedVType.getIndexForValue(value);
+            int index = (int) value.getSint64Value();
             indexes.add(index);
+            data.add(value.getStringValue());
         }
         this.indexes = new ArrayInt(indexes.stream().mapToInt(Integer::intValue).toArray());
-
-        // TODO this may not be the correct ptype if the enum array is somwhere inside an aggregate or array.
-        this.labels = EnumeratedVType.getLabelsForType(info.parameter.getType());
-
-        List<String> tempArray = new ArrayList<>(this.indexes.size());
-        for (int i = 0; i < this.indexes.size(); i++) {
-            int index = this.indexes.getInt(i);
-            if (index < 0 || index >= labels.size()) {
-                throw new IndexOutOfBoundsException("VEnumArray indexes must be within the label range");
-            }
-            tempArray.add(labels.get(index));
-        }
-        this.array = tempArray;
     }
 
     @Override
     public List<String> getLabels() {
-        return labels;
+        ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
+
+        // TODO Get an id matching the qualified name from the info object
+        // (not e.g. the opsname)
+        // But be careful that any suffixes ('[]' or '.') are kept
+        NamedObjectId id = NamedObjectId.newBuilder()
+                .setName(pval.getId().getName())
+                .build();
+
+        ParameterTypeInfo specificPtype = catalogue.getParameterTypeInfo(id);
+        return EnumeratedVType.getLabelsForType(specificPtype);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
 
     @Override
     public List<String> getData() {
-        return array;
+        return data;
     }
 
     @Override

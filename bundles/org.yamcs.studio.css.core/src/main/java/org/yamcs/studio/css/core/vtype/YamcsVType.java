@@ -198,73 +198,67 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      * Converts a yamcs ParameterValue to a VType.
      */
     public static YamcsVType fromYamcs(PVConnectionInfo info, ParameterValue pval) {
-        if (pval.hasEngValue()
-                && info != null
-                && info.parameter != null
-                && info.parameter.getType() != null
-                && "enumeration".equals(info.parameter.getType().getEngType())) {
+        switch (pval.getEngValue().getType()) {
+        case UINT32:
+            return new Uint32VType(pval);
+        case SINT32:
+            return new Sint32VType(pval);
+        case UINT64:
+            return new Uint64VType(pval);
+        case SINT64:
+            return new Sint64VType(pval);
+        case FLOAT:
+            return new FloatVType(pval);
+        case DOUBLE:
+            return new DoubleVType(pval);
+        case BOOLEAN:
+            return new BooleanVType(pval);
+        case STRING:
+            return new StringVType(pval);
+        case BINARY:
+            return new BinaryVType(pval);
+        case TIMESTAMP:
+            return new TimestampVType(pval);
+        case ENUMERATED:
             return new EnumeratedVType(info, pval);
-        } else {
-            switch (pval.getEngValue().getType()) {
-            case UINT32:
-                return new Uint32VType(pval);
-            case SINT32:
-                return new Sint32VType(pval);
-            case UINT64:
-                return new Uint64VType(pval);
-            case SINT64:
-                return new Sint64VType(pval);
-            case FLOAT:
-                return new FloatVType(pval);
-            case DOUBLE:
-                return new DoubleVType(pval);
-            case BOOLEAN:
-                return new BooleanVType(pval);
-            case STRING:
-                return new StringVType(pval);
-            case BINARY:
-                return new BinaryVType(pval);
-            case TIMESTAMP:
-                return new TimestampVType(pval);
-            case AGGREGATE:
-                return new AggregateVType(pval);
-            case ARRAY:
-                // TODO: array of enums (need to find correct ptype)
-
-                List<Value> arrayValues = pval.getEngValue().getArrayValueList();
-                if (arrayValues.isEmpty()) {
-                    return null; // TODO
-                } else {
-                    switch (arrayValues.get(0).getType()) {
-                    case UINT32:
-                        return new Uint32ArrayVType(pval);
-                    case SINT32:
-                        return new Sint32ArrayVType(pval);
-                    case UINT64:
-                        return new Uint64ArrayVType(pval);
-                    case SINT64:
-                        return new Sint64ArrayVType(pval);
-                    case FLOAT:
-                        return new FloatArrayVType(pval);
-                    case DOUBLE:
-                        return new DoubleArrayVType(pval);
-                    case BOOLEAN:
-                        return new BooleanArrayVType(pval);
-                    case STRING:
-                        return new StringArrayVType(pval);
-                    case AGGREGATE:
-                        return new AggregateArrayVType(pval);
-                    case ARRAY:
-                        return new ArrayArrayVType(pval);
-                    default:
-                        throw new IllegalStateException(
-                                "Unexpected type for parameter array value. Got: " + arrayValues.get(0).getType());
-                    }
+        case AGGREGATE:
+            return new AggregateVType(pval);
+        case ARRAY:
+            List<Value> arrayValues = pval.getEngValue().getArrayValueList();
+            if (arrayValues.isEmpty()) {
+                return null; // TODO
+            } else {
+                switch (arrayValues.get(0).getType()) {
+                case UINT32:
+                    return new Uint32ArrayVType(pval);
+                case SINT32:
+                    return new Sint32ArrayVType(pval);
+                case UINT64:
+                    return new Uint64ArrayVType(pval);
+                case SINT64:
+                    return new Sint64ArrayVType(pval);
+                case FLOAT:
+                    return new FloatArrayVType(pval);
+                case DOUBLE:
+                    return new DoubleArrayVType(pval);
+                case BOOLEAN:
+                    return new BooleanArrayVType(pval);
+                case STRING:
+                    return new StringArrayVType(pval);
+                case ENUMERATED:
+                    return new EnumeratedArrayVType(info, pval);
+                case AGGREGATE:
+                    return new AggregateArrayVType(pval);
+                case ARRAY:
+                    return new ArrayArrayVType(pval);
+                default:
+                    throw new IllegalStateException(
+                            "Unexpected type for parameter array value. Got: " + arrayValues.get(0).getType());
                 }
-            default:
-                throw new IllegalStateException(
-                        "Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
             }
+        default:
+            throw new IllegalStateException(
+                    "Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
         }
     }
 }
