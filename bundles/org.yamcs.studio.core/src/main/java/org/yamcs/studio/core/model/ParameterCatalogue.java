@@ -1,5 +1,7 @@
 package org.yamcs.studio.core.model;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -152,25 +154,44 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
     public CompletableFuture<byte[]> requestParameterDetail(String qualifiedName) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return yamcsClient.get("/mdb/" + instance + "/parameters" + qualifiedName, null);
+        String path = encodePath("/mdb/" + instance + "/parameters" + qualifiedName);
+        return yamcsClient.get(path, null);
     }
 
     public CompletableFuture<byte[]> fetchParameterValue(String instance, String qualifiedName) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.get("/archive/" + instance + "/parameters2" + qualifiedName + "?limit=1", null);
+        String path = encodePath("/archive/" + instance + "/parameters2" + qualifiedName);
+        return yamcsClient.get(path + "?limit=1", null);
     }
 
     public CompletableFuture<byte[]> setParameter(String processor, NamedObjectId id, Value value) {
         String pResource = toURISegments(id);
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return yamcsClient.put("/processors/" + instance + "/" + processor + "/parameters" + pResource, value);
+        String path = encodePath("/processors/" + instance + "/" + processor + "/parameters" + pResource);
+        return yamcsClient.put(path, value);
     }
 
     public void subscribeParameters(NamedObjectList idList) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         if (yamcsClient.isConnected()) {
             yamcsClient.subscribe(new ParameterWebSocketRequest("subscribe", idList), this);
+        }
+    }
+
+    /**
+     * This encodes the path only (not the query string). This was introduced to encode square brackets in a qualified
+     * name of an array entry.
+     */
+    private static String encodePath(String arg) {
+        try {
+            String[] segments = arg.split("/");
+            for (int i = 0; i < segments.length; i++) {
+                segments[i] = URLEncoder.encode(segments[i], "UTF-8");
+            }
+            return String.join("/", segments);
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError();
         }
     }
 
