@@ -1,5 +1,7 @@
 package org.yamcs.studio.core.client;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -55,6 +57,7 @@ public class YamcsStudioClient implements WebSocketClientCallback {
     private static final int MAX_FRAME_PAYLOAD_LENGTH = 10 * 1024 * 1024;
 
     private YamcsConnectionProperties yprops;
+    private String caCertFile;
     private String application;
 
     private volatile boolean connecting;
@@ -108,11 +111,28 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         }
 
         restClient = new RestClient(yprops);
+        restClient.setInsecureTls(true);
         restClient.setAutoclose(false);
+        if (caCertFile != null) {
+            try {
+                restClient.setCaCertFile(caCertFile);
+            } catch (IOException | GeneralSecurityException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         wsclient = new WebSocketClient(yprops, this);
         wsclient.setUserAgent(application);
+        wsclient.setInsecureTls(true);
         wsclient.enableReconnection(true);
         wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
+        if (caCertFile != null) {
+            try {
+                wsclient.setCaCertFile(caCertFile);
+            } catch (IOException | GeneralSecurityException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         FutureTask<YamcsConnectionProperties> future = new FutureTask<>(() -> {
             log.info("Connecting to " + yprops);
@@ -169,12 +189,12 @@ public class YamcsStudioClient implements WebSocketClientCallback {
                         return;
                     } catch (Exception e1) {
                         // For anything other than a security exception, re-try
-                        if (log.isLoggable(Level.FINEST)) {
-                            log.log(Level.FINEST, String.format("Connection to %s failed (attempt %d of %d)",
+                        if (log.isLoggable(Level.FINE)) {
+                            log.log(Level.FINE, String.format("Connection to %s failed (attempt %d of %d)",
                                     yprops, i + 1, maxAttempts), e1);
                         } else {
-                            log.warning(String.format("Connection to %s failed (attempt %d of %d)",
-                                    yprops, i + 1, maxAttempts));
+                            log.warning(String.format("Connection to %s failed: %s (attempt %d of %d)",
+                                    yprops, e1.getMessage(), i + 1, maxAttempts));
                         }
                         Thread.sleep(5000);
                     }

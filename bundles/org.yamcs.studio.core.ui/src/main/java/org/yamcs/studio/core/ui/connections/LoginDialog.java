@@ -51,7 +51,7 @@ public class LoginDialog extends TitleAreaDialog {
     @Override
     public void create() {
         super.create();
-        setTitle("Connect to " + nvl(conf.getName(), conf.getPrimaryConnectionString()));
+        setTitle("Connect to " + nvl(conf.getName(), conf.getConnectionString()));
         setMessage("Please provide your credentials");
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), getShell());
         Image titleImage = resourceManager
@@ -62,7 +62,7 @@ public class LoginDialog extends TitleAreaDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(conf.getPrimaryConnectionString());
+        newShell.setText(conf.getConnectionString());
     }
 
     @Override

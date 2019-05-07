@@ -51,7 +51,7 @@ public class AutoConnectHandler extends AbstractHandler {
         ConnectionPreferences.setLastUsedConfiguration(conf);
 
         // Check if authentication is needed
-        YamcsConnectionProperties yprops = conf.getPrimaryConnectionProperties();
+        YamcsConnectionProperties yprops = conf.getConnectionProperties();
         if (conf.isAnonymous()) {
             log.fine("Will connect anonymously to " + yprops);
             YamcsPlugin.getYamcsClient().connect(yprops);

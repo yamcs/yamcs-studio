@@ -3,6 +3,7 @@ package org.yamcs.studio.core.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -55,6 +56,7 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
             YamcsUIConnector connector = new YamcsUIConnector(shell, yprops);
             new ProgressMonitorDialog(shell).run(true, true, connector);
         } catch (InvocationTargetException e) {
+            log.log(Level.SEVERE, "Failed to connect", e);
             MessageDialog.openError(shell, "Failed to connect", e.getMessage());
         } catch (InterruptedException e) {
             log.info("Connection attempt cancelled");
