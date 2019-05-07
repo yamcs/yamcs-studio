@@ -79,7 +79,8 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
     public void onMessage(WebSocketSubscriptionData msg) {
         if (msg.hasTimeInfo()) {
             TimeInfo timeInfo = msg.getTimeInfo();
-            distributeTime(timeInfo.getCurrentTime());
+            long instant = TimeEncoding.fromProtobufTimestamp(timeInfo.getCurrentTime());
+            distributeTime(instant);
         }
     }
 

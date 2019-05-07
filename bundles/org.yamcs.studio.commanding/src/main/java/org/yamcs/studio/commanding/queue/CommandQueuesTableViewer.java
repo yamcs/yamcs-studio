@@ -34,6 +34,7 @@ import org.yamcs.studio.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
+import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuesTableViewer extends TableViewer {
 
@@ -103,8 +104,9 @@ public class CommandQueuesTableViewer extends TableViewer {
 
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (column.getColumn().getWidth() < 5)
+                    if (column.getColumn().getWidth() < 5) {
                         column.getColumn().setWidth(5);
+                    }
                 }
             });
         }
@@ -195,8 +197,9 @@ public class CommandQueuesTableViewer extends TableViewer {
 
             CommandQueueInfo q = null;
             for (RowCommandQueueInfo rcqi : commandQueueView.currentQueuesModel.queues) {
-                if (rcqi.cq == commandQueue)
+                if (rcqi.cq == commandQueue) {
                     q = rcqi.commandQueueInfo;
+                }
             }
             // CommandQueueInfo q = queues.get(row);
             if (newState == QueueState.BLOCKED) {
@@ -223,7 +226,8 @@ public class CommandQueuesTableViewer extends TableViewer {
         if (cmds != null) {
             for (CommandQueueEntry cqe : cmds) {
                 long missionTime = TimeCatalogue.getInstance().getMissionTime();
-                if (missionTime - cqe.getGenerationTime() > CommandQueueView.oldCommandWarningTime * 1000L) {
+                long generationTime = TimeEncoding.fromProtobufTimestamp(cqe.getGenerationTime());
+                if (missionTime - generationTime > CommandQueueView.oldCommandWarningTime * 1000L) {
                     oldcommandsfound = true;
                     break;
                 }
@@ -281,8 +285,9 @@ public class CommandQueuesTableViewer extends TableViewer {
                 }
                 return state;
             case 2:
-                if (model.getCommands() == null)
+                if (model.getCommands() == null) {
                     return 0 + "";
+                }
                 return model.getCommands().size() + "";
             case 3:
                 return model.getNbSentCommands() + "";
@@ -303,8 +308,9 @@ public class CommandQueuesTableViewer extends TableViewer {
         long seconds = TimeUnit.SECONDS.toSeconds(totalSeconds) - (TimeUnit.SECONDS.toMinutes(totalSeconds) * 60);
 
         result = hours + ":" + minutes + ":" + seconds;
-        if (days > 0)
+        if (days > 0) {
             result = days + "d " + result;
+        }
 
         return result;
     }

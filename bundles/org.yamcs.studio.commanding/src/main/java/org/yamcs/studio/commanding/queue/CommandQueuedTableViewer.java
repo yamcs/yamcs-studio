@@ -27,6 +27,7 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuedTableViewer extends TableViewer {
 
@@ -64,7 +65,7 @@ public class CommandQueuedTableViewer extends TableViewer {
                     return;
                 }
                 long missionTime = TimeCatalogue.getInstance().getMissionTime();
-                long timeinthequeue = missionTime - cqe.getGenerationTime();
+                long timeinthequeue = missionTime - TimeEncoding.fromProtobufTimestamp(cqe.getGenerationTime());
                 if (timeinthequeue > CommandQueueView.oldCommandWarningTime * 1000L) {
                     int res = CommandFateDialog.showDialog(parent.getShell(), cqe.getCmdId());
                     switch (res) {
@@ -189,16 +190,17 @@ public class CommandQueuedTableViewer extends TableViewer {
             if (!(element instanceof CommandQueueEntry)) {
                 return "";
             }
-            CommandQueueEntry model = (CommandQueueEntry) element;
+            CommandQueueEntry entry = (CommandQueueEntry) element;
             switch (columnIndex) {
             case 0:
-                return model.getQueueName();
+                return entry.getQueueName();
             case 1:
-                return model.getUsername();
+                return entry.getUsername();
             case 2:
-                return model.getSource();
+                return entry.getSource();
             case 3:
-                return YamcsUIPlugin.getDefault().formatInstant(model.getGenerationTime());
+                long instant = TimeEncoding.fromProtobufTimestamp(entry.getGenerationTime());
+                return YamcsUIPlugin.getDefault().formatInstant(instant);
             default:
                 break;
             }
