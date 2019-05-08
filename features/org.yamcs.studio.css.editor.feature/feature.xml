@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.css.editor.feature"
       label="Yamcs CS-Studio Editor Components"
-      version="1.2.5.qualifier"
+      version="1.2.5"
       provider-name="Space Applications Services">
 
    <plugin

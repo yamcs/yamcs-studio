@@ -6,7 +6,7 @@
 
   <groupId>org.yamcs.studio</groupId>
   <artifactId>yamcs-studio</artifactId>
-  <version>1.2.5-SNAPSHOT</version>
+  <version>1.2.5</version>
   <packaging>pom</packaging>
 
   <organization>
@@ -15,7 +15,7 @@
   </organization>
 
   <properties>
-    <yamcs.version>4.9.4-SNAPSHOT</yamcs.version>
+    <yamcs.version>4.9.4</yamcs.version>
     <tycho.version>1.4.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
