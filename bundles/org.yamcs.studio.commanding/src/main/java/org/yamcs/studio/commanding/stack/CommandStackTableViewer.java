@@ -1,5 +1,6 @@
 package org.yamcs.studio.commanding.stack;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ public class CommandStackTableViewer extends TableViewer {
     private static final Logger log = Logger.getLogger(CommandStackTableViewer.class.getName());
 
     public static final String COL_ROW_ID = "#";
+    public static final String COL_DELAY = "Issue Delay";
     public static final String COL_COMMAND = "Command";
     public static final String COL_SIGNIFICANCE = "Sig.";
     public static final String COL_CONSTRAINTS = "Constraints";
@@ -47,6 +49,8 @@ public class CommandStackTableViewer extends TableViewer {
     private CommandStackView styleProvider;
     private CommandStackTableContentProvider contentProvider;
     private ResourceManager resourceManager;
+    
+    private TableViewerColumn delayColumn;
 
     public CommandStackTableViewer(Composite parent, TableColumnLayout tcl, CommandStackView styleProvider) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.HIDE_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
@@ -84,6 +88,23 @@ public class CommandStackTableViewer extends TableViewer {
         });
         rowIdColumn.getColumn().setWidth(50);
         tcl.setColumnData(rowIdColumn.getColumn(), new ColumnPixelData(50));
+        
+        
+        delayColumn = new TableViewerColumn(this, SWT.NONE);
+        delayColumn.getColumn().setText(COL_DELAY);
+        delayColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                StackedCommand cmd = (StackedCommand) element;
+                int delayMs = cmd.getDelayMs();
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0");
+                String numberAsString = decimalFormat.format(delayMs);
+                return (delayMs > 0) ? numberAsString + " ms" : "-";
+            }
+        });
+        // the delay column is shown when the command stack is in automatic mode with stack delays.
+        tcl.setColumnData(delayColumn.getColumn(), new ColumnPixelData(0));
+        //this.hideDelayColumn();
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
@@ -320,4 +341,14 @@ public class CommandStackTableViewer extends TableViewer {
     public void insertTelecommand(StackedCommand command, int index) {
         contentProvider.insertTelecommand(command, index);
     }
+    
+    public void showDelayColumn()
+    {
+        delayColumn.getColumn().setWidth(110);
+    }
+    
+    public void hideDelayColumn() {
+        delayColumn.getColumn().setWidth(0);
+    }
+    
 }

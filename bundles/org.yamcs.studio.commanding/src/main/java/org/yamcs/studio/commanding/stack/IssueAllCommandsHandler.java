@@ -117,10 +117,20 @@ public class IssueAllCommandsHandler extends AbstractHandler {
 
                         if (commandIndex + 1 < CommandStack.getInstance().getCommands().size()) {
                             // Executing next command
-                            if (stack.autoMode == AutoMode.FIX_DELAY) {
+                            if (stack.autoMode == AutoMode.FIX_DELAY || stack.autoMode == AutoMode.STACK_DELAYS) {
                                 try {
-                                    // with fix delay
-                                    Thread.sleep(stack.fixDelayMs);
+                                    int delayMs = 0;
+                                    if (stack.autoMode == AutoMode.FIX_DELAY) {
+                                        // with fix delay
+                                        delayMs = stack.fixDelayMs;
+                                    }
+                                    else
+                                    {
+                                        // with stack delays
+                                        StackedCommand nextCommand = CommandStack.getInstance().getCommands().get(commandIndex+1);
+                                        delayMs = nextCommand.getDelayMs();
+                                    }
+                                    Thread.sleep(delayMs);
                                 } catch (InterruptedException e) {
                                     log.severe(
                                             "Automatic stack, unable to wait/sleep between commands: " + e.toString());

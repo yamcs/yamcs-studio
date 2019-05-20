@@ -52,6 +52,10 @@ public class ExportCommandStackHandler extends AbstractHandler {
             c.setQualifiedName(sc.getMetaCommand().getQualifiedName());
             c.setSelectedAlias(sc.getSelectedAlias());
             c.setComment(sc.getComment());
+            if(sc.getDelayMs() > 0)
+            {
+                c.setDelayMs(sc.getDelayMs());
+            }
             exportedCommands.add(c);
             List<CommandArgument> cas = c.getCommandArgument();
 

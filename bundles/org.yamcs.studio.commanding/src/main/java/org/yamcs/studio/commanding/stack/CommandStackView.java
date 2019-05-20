@@ -203,7 +203,7 @@ public class CommandStackView extends ViewPart {
         comboStackType.select(0);
 
         Combo comboAutoParameters = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
-        String[] items2 = new String[] { "AFAP (no delays)", "Fix delays" };
+        String[] items2 = new String[] { "AFAP (no delays)", "Fix Delays", "Stack Delays" };
         comboAutoParameters.setItems(items2);
         comboAutoParameters.select(0);
         comboAutoParameters.setVisible(false);
@@ -232,6 +232,7 @@ public class CommandStackView extends ViewPart {
                 comboAutoParameters.setVisible(false);
                 fixDelaySpinner.setVisible(false);
                 labelUnit.setVisible(false);
+                commandTableViewer.hideDelayColumn();
             } else {
                 // Automatic
                 stack.stackMode = StackMode.AUTOMATIC;
@@ -240,9 +241,18 @@ public class CommandStackView extends ViewPart {
                     // fix delay
                     fixDelaySpinner.setVisible(true);
                     labelUnit.setVisible(true);
-                } else {
+                    commandTableViewer.hideDelayColumn();
+                } else if(comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()){
+                    // stack delays
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
+                    commandTableViewer.showDelayColumn();
+                }
+                else {
+                    // afap
+                    fixDelaySpinner.setVisible(false);
+                    labelUnit.setVisible(false);
+                    commandTableViewer.hideDelayColumn();
                 }
             }
             // disarm the stack
@@ -255,16 +265,36 @@ public class CommandStackView extends ViewPart {
         comboAutoParameters.addListener(SWT.Selection, evt -> {
             CommandStack stack = CommandStack.getInstance();
             if (stack.stackMode == StackMode.AUTOMATIC) {
-                // fix delay
-                fixDelaySpinner.setVisible(true);
-                labelUnit.setVisible(true);
+                if (comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
+                    // fix delay
+                    fixDelaySpinner.setVisible(true);
+                    labelUnit.setVisible(true);
+                    commandTableViewer.hideDelayColumn();
+                }
+                else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
+                    // stack delay
+                    fixDelaySpinner.setVisible(false);
+                    labelUnit.setVisible(false);
+                    commandTableViewer.showDelayColumn();
+                }
+                else if (comboAutoParameters.getSelectionIndex() == AutoMode.AFAP.index()) {
+                    // fix delay
+                    fixDelaySpinner.setVisible(false);
+                    labelUnit.setVisible(false);
+                    commandTableViewer.hideDelayColumn();
+                }
             } else {
+                // manual mode
                 fixDelaySpinner.setVisible(false);
                 labelUnit.setVisible(false);
+                commandTableViewer.hideDelayColumn();
             }
             if (comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                 stack.autoMode = AutoMode.FIX_DELAY;
-            } else {
+            } else if(comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()){
+                stack.autoMode = AutoMode.STACK_DELAYS;
+            }
+            else {
                 stack.autoMode = AutoMode.AFAP;
             }
         });

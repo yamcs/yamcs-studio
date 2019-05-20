@@ -74,6 +74,8 @@ public class ImportCommandStackHandler extends AbstractHandler {
                 sc.setMetaCommand(mc);
                 sc.setSelectedAliase(c.getSelectedAlias());
                 sc.setComment(c.getComment());
+                if(c.getDelayMs() != null)
+                    sc.setDelayMs(c.getDelayMs());
 
                 for (CommandArgument ca : c.getCommandArgument()) {
                     ArgumentInfo a = getArgumentFromYamcs(mc, ca.getArgumentName());
