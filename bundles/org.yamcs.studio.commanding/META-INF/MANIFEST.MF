@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui,
  javax.xml,
  javax.xml.bind,
  javax.xml.stream,
- javax.activation
+ javax.activation,
+ org.apache.velocity;bundle-version="1.5.0"
 Export-Package: org.yamcs.studio.commanding
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.commanding
