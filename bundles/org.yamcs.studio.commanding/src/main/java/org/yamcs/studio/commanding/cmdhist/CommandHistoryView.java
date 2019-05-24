@@ -54,7 +54,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 public class CommandHistoryView extends ViewPart implements YamcsConnectionListener, InstanceListener {
 
     private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
-
+    public static final String ID = "org.yamcs.studio.commanding.cmdhist.CommandHistoryView";
     public static final String COL_COMPLETION = "";
     public static final String COL_COMMAND = "Command";
     public static final String COL_ORIGIN_ID = "Ori.ID";

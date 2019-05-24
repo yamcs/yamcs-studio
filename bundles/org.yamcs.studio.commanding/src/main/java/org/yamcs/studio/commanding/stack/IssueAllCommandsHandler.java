@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,9 +16,12 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.commanding.cmdhist.CommandHistoryView;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
@@ -31,29 +35,34 @@ public class IssueAllCommandsHandler extends AbstractHandler {
         Shell shell = HandlerUtil.getActiveShell(event);
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
         CommandStackView commandStackView = (CommandStackView) window.getActivePage().findView(CommandStackView.ID);
+        CommandHistoryView commandHistoryView = (CommandHistoryView) window.getActivePage()
+                .findView(CommandHistoryView.ID);
 
-        CommandIssuer issuer = new CommandIssuer(shell, commandStackView);
+        // lock scroll during command stack execution, or this would slow down the UI
+        // refresh too much
+        ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        Command command = service.getCommand("org.yamcs.studio.commanding.cmdhist.scrollLockCommand");
+        boolean oldState = HandlerUtil.toggleCommandState(command);
+        commandHistoryView.enableScrollLock(true);
+
         try {
+            CommandIssuer issuer = new CommandIssuer(shell, commandStackView);
             new ProgressMonitorDialog(shell).run(true, true, issuer);
-        } catch (InvocationTargetException e) {
-            log.severe("Automatic Command Stack cancelled");
-            MessageDialog.openError(shell, "Failed to issue commands: ", e.getMessage());
-        } catch (InterruptedException e) {
-            log.severe("Automatic Command Stack cancelled");
+        } catch (Exception e) {
+            log.severe("Automatic Command Stack errror:" + e.getMessage());
             MessageDialog.openError(shell, "Failed to issue commands: ", e.getMessage());
         }
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        log.info("Issue all commands execute done");
+
+        // restore scroll state of the command history view
+        commandHistoryView.enableScrollLock(oldState);
 
         return null;
     }
 
     private static class CommandIssuer implements IRunnableWithProgress {
+        // private static class CommandIssuer implements Runnable {
         private Shell shell;
         private CommandStackView commandStackView;
         private IProgressMonitor monitor;
@@ -61,7 +70,6 @@ public class IssueAllCommandsHandler extends AbstractHandler {
         CommandIssuer(Shell shell, CommandStackView commandStackView) {
             this.shell = shell;
             this.commandStackView = commandStackView;
-            monitor = null;
         }
 
         @Override
@@ -74,7 +82,8 @@ public class IssueAllCommandsHandler extends AbstractHandler {
 
             stack.stackStatus = StackStatus.EXECUTING;
             log.info("Issuing the Automatic Command Stack...");
-            this.monitor.beginTask("The Automatic Stack is issuing " + nbCommands + " commands", stack.getCommands().size() - startIndex);
+            this.monitor.beginTask("The Automatic Stack is issuing " + nbCommands + " commands",
+                    stack.getCommands().size() - startIndex);
 
             try {
                 issueAllCommands(shell, commandStackView, stack, stack.getCommands().indexOf(stack.getActiveCommand()));
@@ -85,7 +94,18 @@ public class IssueAllCommandsHandler extends AbstractHandler {
 
             while (stack.stackStatus == StackStatus.EXECUTING && !monitor.isCanceled()) {
                 // Todo would be nicer with Futures
-                Thread.sleep(200);
+                try {
+                    Display.getDefault().asyncExec(() -> {
+                        // refresh the ui periodically, this takes too much time to
+                        // do it for each commands
+                        commandStackView.selectActiveCommand();
+                        commandStackView.refreshState();
+                    });
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
             monitor.done();
             stack.stackStatus = StackStatus.IDLE;
@@ -123,11 +143,10 @@ public class IssueAllCommandsHandler extends AbstractHandler {
                                     if (stack.autoMode == AutoMode.FIX_DELAY) {
                                         // with fix delay
                                         delayMs = stack.fixDelayMs;
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         // with stack delays
-                                        StackedCommand nextCommand = CommandStack.getInstance().getCommands().get(commandIndex+1);
+                                        StackedCommand nextCommand = CommandStack.getInstance().getCommands()
+                                                .get(commandIndex + 1);
                                         delayMs = nextCommand.getDelayMs();
                                     }
                                     Thread.sleep(delayMs);
@@ -166,8 +185,9 @@ public class IssueAllCommandsHandler extends AbstractHandler {
 
                 } else {
                     monitor.done();
-                    stack.stackStatus = StackStatus.IDLE;                    
+                    stack.stackStatus = StackStatus.IDLE;
                     Display.getDefault().asyncExec(() -> {
+                        log.info("a2");
                         command.setStackedState(StackedState.REJECTED);
                         view.refreshState();
                     });

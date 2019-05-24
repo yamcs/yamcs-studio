@@ -1,8 +1,14 @@
 package org.yamcs.studio.commanding.stack;
 
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -19,11 +25,13 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ComparisonInfo;
 import org.yamcs.protobuf.Mdb.TransmissionConstraintInfo;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
+
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 
 public class CommandStackTableViewer extends TableViewer {
@@ -49,17 +57,21 @@ public class CommandStackTableViewer extends TableViewer {
     private CommandStackView styleProvider;
     private CommandStackTableContentProvider contentProvider;
     private ResourceManager resourceManager;
-    
+
     private TableViewerColumn delayColumn;
 
     public CommandStackTableViewer(Composite parent, TableColumnLayout tcl, CommandStackView styleProvider) {
         super(new Table(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.HIDE_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
         this.styleProvider = styleProvider;
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        greenBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/ok.png"));
-        redBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/nok.png"));
-        grayBubble = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/undef.png"));
-        waitingImage = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/waiting.png"));
+        greenBubble = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/ok.png"));
+        redBubble = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/nok.png"));
+        grayBubble = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/undef.png"));
+        waitingImage = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/obj16/waiting.png"));
 
         getTable().setHeaderVisible(true);
         getTable().setLinesVisible(true);
@@ -71,11 +83,16 @@ public class CommandStackTableViewer extends TableViewer {
     }
 
     private void addFixedColumns(TableColumnLayout tcl) {
-        Image level1Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
-        Image level2Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
-        Image level3Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
-        Image level4Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
-        Image level5Image = resourceManager.createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
+        Image level1Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
+        Image level2Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
+        Image level3Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
+        Image level4Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
+        Image level5Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
 
         TableViewerColumn rowIdColumn = new TableViewerColumn(this, SWT.CENTER);
         rowIdColumn.getColumn().setText(COL_ROW_ID);
@@ -88,8 +105,7 @@ public class CommandStackTableViewer extends TableViewer {
         });
         rowIdColumn.getColumn().setWidth(50);
         tcl.setColumnData(rowIdColumn.getColumn(), new ColumnPixelData(50));
-        
-        
+
         delayColumn = new TableViewerColumn(this, SWT.NONE);
         delayColumn.getColumn().setText(COL_DELAY);
         delayColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -102,9 +118,10 @@ public class CommandStackTableViewer extends TableViewer {
                 return (delayMs > 0) ? numberAsString + " ms" : "-";
             }
         });
-        // the delay column is shown when the command stack is in automatic mode with stack delays.
+        // the delay column is shown when the command stack is in automatic mode with
+        // stack delays.
         tcl.setColumnData(delayColumn.getColumn(), new ColumnPixelData(0));
-        //this.hideDelayColumn();
+        // this.hideDelayColumn();
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_COMMAND);
@@ -341,14 +358,52 @@ public class CommandStackTableViewer extends TableViewer {
     public void insertTelecommand(StackedCommand command, int index) {
         contentProvider.insertTelecommand(command, index);
     }
-    
-    public void showDelayColumn()
-    {
+
+    public void showDelayColumn() {
         delayColumn.getColumn().setWidth(110);
     }
-    
+
     public void hideDelayColumn() {
         delayColumn.getColumn().setWidth(0);
     }
-    
+
+    // Enqueue a refresh request
+    // Restrict to no more than 1 refresh every 200 ms
+    private long refreshDelayMs = 200;
+    Date lastRefreshTime = new Date();
+    boolean refreshScheduled = false;
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    public void refresh() {
+        // if scheduled, skip the request
+        if (refreshScheduled)
+            return;
+        refreshScheduled = true;
+
+        long delayMs = refreshDelayMs;
+        Date currentTime = new Date();
+        long ellapsedMs = currentTime.getTime() - lastRefreshTime.getTime();
+        if (ellapsedMs > delayMs) {
+            // if last refresh if older than 200 ms, schedule the refresh now
+            delayMs = 0;
+        } else {
+            // else, schedule such that the time between the 2 refresh is 200ms
+            delayMs = delayMs - ellapsedMs;
+        }
+
+        // schedule the refresh
+        scheduler.schedule(new Runnable() {
+            @Override
+            public void run() {
+                Display.getDefault().asyncExec(() -> {
+                    superRefresh();
+                    refreshScheduled = false;
+                });
+            }
+        }, delayMs, TimeUnit.MILLISECONDS);
+    }
+
+    private void superRefresh() {
+        super.refresh();
+    }
 }
