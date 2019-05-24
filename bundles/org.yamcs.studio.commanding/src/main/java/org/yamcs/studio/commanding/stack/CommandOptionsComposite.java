@@ -92,16 +92,30 @@ public class CommandOptionsComposite extends ScrolledComposite {
         optionsGroup.setText("Options");
         optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         optionsGroup.setLayout(new GridLayout(2, false));
+        
+        // option for stack delay
+        Label l0 = new Label(optionsGroup, SWT.NONE);
+        l0.setText("Issue Delay (ms)");
+        GridData gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
+        l0.setLayoutData(gridData);
+        Spinner delayMs = new Spinner(optionsGroup, SWT.BORDER );
+        delayMs.setValues(command.getDelayMs(), 0, Integer.MAX_VALUE, 0, 1, 100);
+        gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);        
+        delayMs.setLayoutData(gridData);
+        delayMs.addModifyListener(evt -> {           
+                command.setDelayMs(delayMs.getSelection());            
+        });
+        
+        // option for comment
         Label l1 = new Label(optionsGroup, SWT.NONE);
         l1.setText("Comment");
-        GridData gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
+        gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
         l1.setLayoutData(gridData);
         Text comment = new Text(optionsGroup, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
         comment.setText(command.getComment() != null ? command.getComment() : "");
         gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
         gridData.heightHint = 3 * comment.getLineHeight();
         comment.setLayoutData(gridData);
-
         comment.addModifyListener(evt -> {
             if (comment.getText().trim().isEmpty()) {
                 command.setComment(null);

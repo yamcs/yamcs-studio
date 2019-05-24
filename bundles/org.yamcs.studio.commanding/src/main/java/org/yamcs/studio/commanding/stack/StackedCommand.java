@@ -45,12 +45,13 @@ public class StackedCommand {
         private StackedState(String text) {
             this.text = text;
         }
-
+        
         public String getText() {
             return text;
         }
     }
 
+    private int delayMs = 0;
     private CommandInfo meta;
     private Map<ArgumentInfo, String> assignments = new HashMap<>();
 
@@ -153,6 +154,15 @@ public class StackedCommand {
         });
 
         return req;
+    }
+    
+
+    public void setDelayMs(int delayMs) {
+        this.delayMs = delayMs;
+    }
+    
+    public int getDelayMs() {
+        return this.delayMs;
     }
 
     public void setMetaCommand(CommandInfo meta) {

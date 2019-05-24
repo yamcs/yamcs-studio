@@ -48,7 +48,7 @@ public class CommandStack {
     }
 
     public enum AutoMode {
-        AFAP(0), FIX_DELAY(1);
+        AFAP(0), FIX_DELAY(1), STACK_DELAYS(2);
 
         private final int index;
 

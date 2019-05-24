@@ -61,8 +61,7 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
             }
         }
 
-        Map newState = getCurrentState();
-        log.fine(String.format("Fire new stack state %s", newState));
+        Map newState = getCurrentState();        
         fireSourceChanged(ISources.WORKBENCH, newState);
     }
 

@@ -68,6 +68,11 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
+            id="org.yamcs.studio.commanding.stack.exportSpell"
+            name="Export Stack to SPELL procedure...">
+      </command>
+      <command
+            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.commanding.stack.import"
             name="Import a Stack">
       </command>
@@ -224,6 +229,20 @@
          </activeWhen>
       </handler>
       <handler
+            class="org.yamcs.studio.commanding.stack.ExportCommandStackHandlerSpell"
+            commandId="org.yamcs.studio.commanding.stack.exportSpell">
+         <activeWhen>
+            <and>
+               <with variable="org.yamcs.studio.commanding.stack.state.remaining">
+                  <equals value="true"/>
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
+                  <equals value="true"/>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
             class="org.yamcs.studio.commanding.stack.ImportCommandStackHandler"
             commandId="org.yamcs.studio.commanding.stack.import">
          <activeWhen>
@@ -329,11 +348,12 @@
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="toolbar:org.yamcs.studio.commanding.stack.CommandStackView">
          <command
+               id="org.yamcs.studio.commanding.stack.exportDropdown"
                commandId="org.yamcs.studio.commanding.stack.export"
                icon="icons/elcl16/export_log.png"
                disabledIcon="icons/dlcl16/export_log.png"
                label="Export Stack"
-               style="push"/>
+               style="pulldown"/>
          <command
                commandId="org.yamcs.studio.commanding.stack.import"
                icon="icons/elcl16/import_log.png"
@@ -375,6 +395,22 @@
          <control class="org.yamcs.studio.core.ui.utils.ToolbarSpacer"/>
       </menuContribution>
       
+       <menuContribution
+            locationURI="menu:org.yamcs.studio.commanding.stack.exportDropdown">
+          <command
+               commandId="org.yamcs.studio.commanding.stack.export"
+               icon="icons/elcl16/export_log.png"
+               disabledIcon="icons/dlcl16/export_log.png"
+               label="Export Stack to XML..."
+               style="push"/>
+          <command
+               commandId="org.yamcs.studio.commanding.stack.exportSpell"
+               icon="icons/elcl16/export_log.png"
+               disabledIcon="icons/dlcl16/export_log.png"
+               label="Export Stack to SPELL procedure..."
+               style="push"/>
+      </menuContribution>
+      
       <menuContribution locationURI="toolbar:org.yamcs.studio.commanding.cmdhist.CommandHistoryView">
          <command
                commandId="org.yamcs.studio.commanding.cmdhist.exportCommand"
@@ -401,6 +437,8 @@
                label="Fetch Commands"
                style="push"/>
       </menuContribution>
+      
+     
       
       <menuContribution locationURI="popup:org.yamcs.studio.commanding.cmdhist.CommandHistoryView">
          <command

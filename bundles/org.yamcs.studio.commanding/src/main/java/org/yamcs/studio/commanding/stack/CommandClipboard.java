@@ -1,6 +1,9 @@
 package org.yamcs.studio.commanding.stack;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -42,14 +45,52 @@ public class CommandClipboard {
         }
         textToClipboard(source, display);
     }
-
+    static class SortByGenerationTime implements Comparator<CommandHistoryRecord> 
+    { 
+        // Used for sorting in ascending order of 
+        // roll number 
+        public int compare(CommandHistoryRecord a, CommandHistoryRecord b) 
+        { 
+            long compare =a.getCommandId().getGenerationTime() - b.getCommandId().getGenerationTime();
+            int result = 0;
+            if (compare > 1)
+                result = 1;
+            else if (compare < 1)
+                result = -1;
+            return result;
+        }
+    }
+     
     public static List<StackedCommand> getCopiedCommands() throws Exception {
         List<StackedCommand> result = new ArrayList<>();
 
-        // convert CommandHistoryRecord to new Stacked Command
+        // Convert CommandHistoryRecord to new Stacked Command
+        // first compute the stack delays from the cmd history generation times 
+        List <CommandHistoryRecord> sortedRecords = new ArrayList<>();
+        HashMap<CommandHistoryRecord, Integer> commandHistoryRecordDelays = new HashMap<CommandHistoryRecord, Integer>();
         for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
+            sortedRecords.add(chr);
+        }
+        Collections.sort(sortedRecords, new SortByGenerationTime());
+        long lastTime = 0;
+        for (CommandHistoryRecord chr : sortedRecords) {
+            long currentTime = chr.getCommandId().getGenerationTime();
+            if(lastTime == 0) {
+                commandHistoryRecordDelays.put(chr, 0);
+            }
+            else {
+                int currentDelay = (int) (currentTime - lastTime);
+                commandHistoryRecordDelays.put(chr, currentDelay);                
+            }
+            lastTime = currentTime;
+        }        
+        // then add to the result
+        for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
+            chr.getGenerationTime();
+            chr.getCommandId().getGenerationTime();
             StackedCommand pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommandString());
             pastedCommand.setComment(chr.getTextForColumn("Comment", false));
+            pastedCommand.setDelayMs(commandHistoryRecordDelays.get(chr));
             result.add(pastedCommand);
         }
 
@@ -66,7 +107,7 @@ public class CommandClipboard {
             for (Entry<ArgumentInfo, String> entry : sc.getAssignments().entrySet()) {
                 copy.addAssignment(entry.getKey(), entry.getValue());
             }
-
+            copy.setDelayMs(sc.getDelayMs());
             result.add(copy);
         }
 
