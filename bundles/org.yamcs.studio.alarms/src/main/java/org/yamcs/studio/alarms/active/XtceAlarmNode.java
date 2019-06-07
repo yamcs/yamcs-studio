@@ -1,15 +1,14 @@
 package org.yamcs.studio.alarms.active;
 
 import org.yamcs.protobuf.Alarms.AlarmData;
-import org.yamcs.studio.core.ui.XtceTreeNode;
 
-public class XtceAlarmNode implements XtceTreeNode<AlarmData> {
+public class XtceAlarmNode implements XtceTreeNode {
 
-    private XtceTreeNode<AlarmData> parent;
+    private XtceTreeNode parent;
     private String name;
     private AlarmData alarmData;
 
-    public XtceAlarmNode(XtceTreeNode<AlarmData> parent, String name, AlarmData alarmData) {
+    public XtceAlarmNode(XtceTreeNode parent, String name, AlarmData alarmData) {
         this.parent = parent;
         this.name = name;
         this.alarmData = alarmData;
@@ -21,7 +20,7 @@ public class XtceAlarmNode implements XtceTreeNode<AlarmData> {
     }
 
     @Override
-    public XtceTreeNode<AlarmData> getParent() {
+    public XtceTreeNode getParent() {
         return parent;
     }
 

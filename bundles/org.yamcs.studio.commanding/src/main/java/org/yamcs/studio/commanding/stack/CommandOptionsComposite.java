@@ -1,24 +1,18 @@
 package org.yamcs.studio.commanding.stack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -30,86 +24,46 @@ import org.yamcs.protobuf.Mdb.ArgumentTypeInfo;
 import org.yamcs.protobuf.Mdb.EnumValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
-public class CommandOptionsComposite extends ScrolledComposite {
+public class CommandOptionsComposite extends Composite {
 
-    private Group argumentsGroup;
+    private Composite argumentsComposite;
     private Combo namespaceCombo;
     private List<String> aliases;
     private List<Control> controls = new ArrayList<>();
 
     public CommandOptionsComposite(Composite parent, int style, StackedCommand command) {
-        super(parent, style | SWT.V_SCROLL);
+        super(parent, style);
+        setLayout(new GridLayout());
+        argumentsComposite = new Composite(this, SWT.NONE);
+        argumentsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        argumentsComposite.setLayout(new GridLayout(3, false));
+        addArgumentControls(argumentsComposite, command);
 
-        Composite scrollpane = new Composite(this, SWT.NONE);
-        scrollpane.setLayout(new GridLayout());
+        // expandable command options
+        ExpandableComposite expandable = new ExpandableComposite(this, ExpandableComposite.TREE_NODE |
+                ExpandableComposite.CLIENT_INDENT);
+        expandable.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        expandable.setLayout(new GridLayout(1, false));
+        expandable.setExpanded(false);
+        expandable.setText("Command Options");
 
-        argumentsGroup = new Group(scrollpane, SWT.NONE);
-        argumentsGroup.setText("Arguments");
-        argumentsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        GridLayout gl = new GridLayout();
-        gl.marginHeight = 0;
-        gl.marginWidth = 0;
-        argumentsGroup.setLayout(gl);
-
-        Collection<TelecommandArgument> allArguments = command.getEffectiveAssignments();
-
-        List<TelecommandArgument> argumentsWithoutInitialValue = allArguments.stream()
-                .filter(arg -> arg.isEditable() && !arg.getArgumentInfo().hasInitialValue())
-                .collect(Collectors.toList());
-
-        List<TelecommandArgument> argumentsWithInitialValue = allArguments.stream()
-                .filter(arg -> arg.isEditable() && arg.getArgumentInfo().hasInitialValue())
-                .collect(Collectors.toList());
-
-        if (argumentsWithoutInitialValue.isEmpty()) {
-            Label lbl = new Label(argumentsGroup, SWT.NONE);
-            lbl.setText("No arguments required");
-        } else {
-            addArgumentControls(argumentsGroup, command, argumentsWithoutInitialValue);
-        }
-
-        if (!argumentsWithInitialValue.isEmpty()) {
-            ExpandableComposite expandable = new ExpandableComposite(argumentsGroup, ExpandableComposite.TREE_NODE |
-                    ExpandableComposite.CLIENT_INDENT);
-            expandable.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            expandable.setLayout(new GridLayout(1, false));
-            expandable.setExpanded(false);
-            if (argumentsWithInitialValue.size() == 1) {
-                expandable.setText("1 argument with default");
-            } else {
-                expandable.setText(argumentsWithInitialValue.size() + " arguments with defaults");
-            }
-            Composite defaultArguments = new Composite(expandable, SWT.NONE);
-            defaultArguments.setLayout(new FillLayout());
-            addArgumentControls(defaultArguments, command, argumentsWithInitialValue);
-            expandable.setClient(defaultArguments);
-            expandable.addExpansionListener(new ExpansionAdapter() {
-                @Override
-                public void expansionStateChanged(ExpansionEvent e) {
-                    parent.layout(true);
-                }
-            });
-        }
-
-        Group optionsGroup = new Group(scrollpane, SWT.NONE);
-        optionsGroup.setText("Options");
-        optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        optionsGroup.setLayout(new GridLayout(2, false));
-        Label l1 = new Label(optionsGroup, SWT.NONE);
+        Composite optionsComposite = new Composite(expandable, SWT.NONE);
+        optionsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        optionsComposite.setLayout(new GridLayout(2, false));
+        Label l1 = new Label(optionsComposite, SWT.NONE);
         l1.setText("Comment");
         GridData gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
         l1.setLayoutData(gridData);
-        Text comment = new Text(optionsGroup, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+        Text comment = new Text(optionsComposite, SWT.WRAP | SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
         comment.setText(command.getComment() != null ? command.getComment() : "");
         gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gridData.heightHint = 3 * comment.getLineHeight();
+        gridData.heightHint = 2 * comment.getLineHeight();
         comment.setLayoutData(gridData);
 
         // command namespace selection
-        Label chooseNamespace = new Label(optionsGroup, SWT.NONE);
+        Label chooseNamespace = new Label(optionsComposite, SWT.NONE);
         chooseNamespace.setText("Alias");
-        namespaceCombo = new Combo(optionsGroup, SWT.READ_ONLY);
+        namespaceCombo = new Combo(optionsComposite, SWT.READ_ONLY);
         namespaceCombo.addSelectionListener(new SelectionListener() {
 
             @Override
@@ -138,6 +92,13 @@ public class CommandOptionsComposite extends ScrolledComposite {
         namespaceCombo.select(0);
         command.setSelectedAliase(aliases.get(0));
 
+        expandable.setClient(optionsComposite);
+        expandable.addExpansionListener(new ExpansionAdapter() {
+            @Override
+            public void expansionStateChanged(ExpansionEvent e) {
+                parent.layout(true);
+            }
+        });
         comment.addModifyListener(evt -> {
             if (comment.getText().trim().isEmpty()) {
                 command.setComment(null);
@@ -145,24 +106,13 @@ public class CommandOptionsComposite extends ScrolledComposite {
                 command.setComment(comment.getText());
             }
         });
-
-        setContent(scrollpane);
-        setExpandVertical(true);
-        setExpandHorizontal(true);
-
-        Point size = scrollpane.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        setMinSize(size);
-        scrollpane.setSize(size);
     }
 
-    private void addArgumentControls(Composite parent, StackedCommand command,
-            Collection<TelecommandArgument> arguments) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout gl = new GridLayout(3, false);
-        gl.marginWidth = 0;
-        gl.marginHeight = 0;
-        composite.setLayout(gl);
-        for (TelecommandArgument argument : arguments) {
+    private void addArgumentControls(Composite composite, StackedCommand command) {
+        for (TelecommandArgument argument : command.getEffectiveAssignments()) {
+            if (!argument.isEditable()) {
+                continue;
+            }
             Label argumentLabel = new Label(composite, SWT.NONE);
             argumentLabel.setText(argument.getName());
 
