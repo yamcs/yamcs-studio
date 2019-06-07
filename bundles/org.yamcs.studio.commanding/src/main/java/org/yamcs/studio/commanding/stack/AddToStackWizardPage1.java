@@ -36,8 +36,9 @@ import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class AddToStackWizardPage1 extends WizardPage {
 
-    public static final String COL_PATH = "Command";
+    public static final String COL_PATH = "XTCE Path";
     public static final String COL_SIGN = "Sig.";
+    public static final String COL_QNAME = "Qualified Name";
     public static final int COLUMN_WIDTH = 10;
     public static final int COLUMN_MAX_WIDTH = 600;
 
@@ -48,10 +49,10 @@ public class AddToStackWizardPage1 extends WizardPage {
     private Image level5Image;
 
     private StackedCommand command;
-    private TreeViewer commandsTreeTable;
-    private TreeColumnLayout tcl;
+    TreeViewer commandsTreeTable;
+    TreeColumnLayout tcl;
 
-    private List<String> namespaces = new ArrayList<>();
+    List<String> namespaces = new ArrayList<>();
 
     public AddToStackWizardPage1(StackedCommand command) {
         super("Choose a Command");
@@ -76,9 +77,8 @@ public class AddToStackWizardPage1 extends WizardPage {
                 }
                 List<NamedObjectId> aliases = cmd.getAliasList();
                 for (NamedObjectId aliase : aliases) {
-                    if (aliase.getNamespace().equals(namespace)) {
+                    if (aliase.getNamespace().equals(namespace))
                         return aliase.getName();
-                    }
                 }
                 return "";
             }
@@ -88,6 +88,7 @@ public class AddToStackWizardPage1 extends WizardPage {
 
     @Override
     public void createControl(Composite parent) {
+
         Composite composite = new Composite(parent, SWT.NONE);
         setControl(composite);
 
@@ -113,14 +114,12 @@ public class AddToStackWizardPage1 extends WizardPage {
         level5Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level5s.png"));
 
-        Composite treeWrapper = new Composite(composite, SWT.NONE);
+        Composite tableWrapper = new Composite(composite, SWT.NONE);
         tcl = new TreeColumnLayout();
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.heightHint = 400;
-        treeWrapper.setLayoutData(gd);
-        treeWrapper.setLayout(tcl);
+        tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        tableWrapper.setLayout(tcl);
 
-        commandsTreeTable = new TreeViewer(treeWrapper, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        commandsTreeTable = new TreeViewer(tableWrapper, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
         commandsTreeTable.getTree().setHeaderVisible(true);
         commandsTreeTable.getTree().setLinesVisible(false);
 
@@ -145,9 +144,8 @@ public class AddToStackWizardPage1 extends WizardPage {
             @Override
             public Image getImage(Object element) {
                 CommandInfo cmd = (CommandInfo) element;
-                if (cmd.getSignificance() == null) {
+                if (cmd.getSignificance() == null)
                     return null;
-                }
                 switch (cmd.getSignificance().getConsequenceLevel()) {
                 case WATCH:
                     return level1Image;
@@ -165,6 +163,22 @@ public class AddToStackWizardPage1 extends WizardPage {
             }
         });
         tcl.setColumnData(significanceColumn.getColumn(), new ColumnPixelData(40));
+
+        // column qualified name
+        TreeViewerColumn nameColumn = new TreeViewerColumn(commandsTreeTable, SWT.NONE);
+        nameColumn.getColumn().setText(COL_QNAME);
+        nameColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                CommandInfo cmd = (CommandInfo) element;
+                if (cmd.getAbstract()) {
+                    // show a blank line if the command is abstract
+                    return "";
+                }
+                return cmd.getQualifiedName();
+            }
+        });
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(COLUMN_WIDTH));
 
         // on item selection update significance message and page completion status
         commandsTreeTable.addSelectionChangedListener(evt -> {
@@ -203,14 +217,12 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         // adjust columns width to content up to COLUMN_MAX_WIDTH
         // with a small hack to display full data on the first column
-        for (TreeColumn tc : commandsTreeTable.getTree().getColumns()) {
+        for (TreeColumn tc : commandsTreeTable.getTree().getColumns())
             tc.pack();
-        }
         pathColumn.getColumn().setWidth(pathColumn.getColumn().getWidth() + 11 * commandTreeContentProvider.nbLevels);
         for (TreeColumn tc : commandsTreeTable.getTree().getColumns()) {
-            if (tc.getWidth() > COLUMN_MAX_WIDTH) {
+            if (tc.getWidth() > COLUMN_MAX_WIDTH)
                 tc.setWidth(COLUMN_MAX_WIDTH);
-            }
         }
 
         // filter
@@ -233,12 +245,12 @@ public class AddToStackWizardPage1 extends WizardPage {
                 return c1.getQualifiedName().compareTo(c2.getQualifiedName());
             }
         });
+
     }
 
-    public static String getMessage(CommandInfo cmd) {
-        if (cmd == null) {
+    static public String getMessage(CommandInfo cmd) {
+        if (cmd == null)
             return null;
-        }
 
         StringBuilder buf = new StringBuilder();
 
@@ -262,39 +274,39 @@ public class AddToStackWizardPage1 extends WizardPage {
         }
     }
 
-    static class CommandTreeContentProvider implements ITreeContentProvider {
+    class CommandTreeContentProvider implements ITreeContentProvider {
 
-        private ArrayList<CommandInfo> commandInfos;
+        ArrayList<CommandInfo> commandInfos;
         public int nbLevels = 1;
 
         @Override
         public void dispose() {
+            // TODO Auto-generated method stub
+
         }
 
         @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         }
 
-        @Override
         @SuppressWarnings("unchecked")
+        @Override
         public Object[] getElements(Object inputElement) {
             commandInfos = (ArrayList<CommandInfo>) inputElement;
             ArrayList<CommandInfo> rootCommands = new ArrayList<>();
 
             // find root commands
             for (CommandInfo ci : commandInfos) {
-                if (!hasParent(ci)) {
+                if (!hasParent(ci))
                     rootCommands.add(ci);
-                }
             }
 
             // compute number of inheritance level
             int currentNbLevels = 1;
             for (CommandInfo ci : commandInfos) {
                 currentNbLevels = nbParents(ci) + 1;
-                if (currentNbLevels > nbLevels) {
+                if (currentNbLevels > nbLevels)
                     nbLevels = currentNbLevels;
-                }
             }
 
             return rootCommands.toArray();
@@ -318,9 +330,8 @@ public class AddToStackWizardPage1 extends WizardPage {
             ArrayList<CommandInfo> children = new ArrayList<>();
             CommandInfo parentCi = (CommandInfo) parentElement;
             for (CommandInfo ci : commandInfos) {
-                if (ci.getBaseCommand().getQualifiedName().equals(parentCi.getQualifiedName())) {
+                if (ci.getBaseCommand().getQualifiedName().equals(parentCi.getQualifiedName()))
                     children.add(ci);
-                }
             }
             return children.toArray();
         }
@@ -329,9 +340,8 @@ public class AddToStackWizardPage1 extends WizardPage {
         public Object getParent(Object element) {
             CommandInfo baseCommand = ((CommandInfo) element).getBaseCommand();
             for (CommandInfo ci : commandInfos) {
-                if (ci.getQualifiedName().equals(baseCommand.getQualifiedName())) {
+                if (ci.getQualifiedName().equals(baseCommand.getQualifiedName()))
                     return ci;
-                }
             }
             return null;
         }
@@ -341,5 +351,7 @@ public class AddToStackWizardPage1 extends WizardPage {
             Object[] children = getChildren(element);
             return children != null && children.length > 0;
         }
+
     }
+
 }
