@@ -141,9 +141,9 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
                 return stringValueArray.build();
             case "integer":
                 if (value instanceof Double) {
-                    return Value.newBuilder().setType(Type.UINT64).setUint64Value(((Double) value).longValue()).build();
+                    return Value.newBuilder().setType(Type.SINT64).setSint64Value(((Double) value).longValue()).build();
                 } else {
-                    return Value.newBuilder().setType(Type.UINT64).setUint64Value(Long.parseLong(String.valueOf(value)))
+                    return Value.newBuilder().setType(Type.SINT64).setSint64Value(Long.parseLong(String.valueOf(value)))
                             .build();
                 }
             case "integer[]":
