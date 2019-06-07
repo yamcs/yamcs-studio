@@ -34,7 +34,7 @@ Polylines have a direction and can be decorated with arrow heads using the vario
 Polygon
 -------
 
-Similar in functionality to polylines, but the last point is always connected to the first point to form a closed shape. Unlike polylines, polygons are not directed. The can be filled from left to right or from bottom to top using the **Fill Level**, and **Horizontal Fill** properties. In the section `<rules>`_ we'll learn that this (or just about any other property) can also be dynamically modified.
+Similar in functionality to polylines, but the last point is always connected to the first point to form a closed shape. Unlike polylines, polygons are not directed. The can be filled from left to right or from bottom to top using the **Fill Level**, and **Horizontal Fill** properties. In the section :doc:`rules` we'll see that this (or just about any other property) can also be dynamically modified.
 
 .. image:: _images/polygon.png
     :alt: Polygon

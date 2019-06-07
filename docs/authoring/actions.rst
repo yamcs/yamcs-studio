@@ -18,7 +18,7 @@ Write PV
     Writes the specified value to a PV. The variable ``$(pv_name)`` is automatically substituted with the PV attached to the widget.
 
 Execute Command
-    This executes a command on your operating system. It does not execute a telecommand. To execute a telecommand, select "Execute JavaScript" or "Execute Python Script", an example is provided in the script section, as described in <a href="../Scripts/Example_Action_Telecommand/" title="Action Telecommand">this example</a>
+    This executes a command on your operating system. It does not execute a telecommand. To execute a telecommand, select "Execute JavaScript" or "Execute Python Script". See `this example <example-action-telecommand>`_.
 
 Execute JavaScript
     Execute a JavaScript. Link to a script file in your workspace, or alternatively embed it into the Action

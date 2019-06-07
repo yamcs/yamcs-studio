@@ -1,7 +1,7 @@
 Rules
 =====
 
-Making OPI displays is flexible using the `<palette>`_  and the `<properties>`_, but the resulting displays are still fairly static. But what if we want to make the position of a widget dynamic based on a PV? Or if we want to dynamically change widget colors?
+Making OPI displays is flexible using the :doc:`palette`  and the :doc:`properties`, but the resulting displays are still fairly static. But what if we want to make the position of a widget dynamic based on a PV? Or if we want to dynamically change widget colors?
 
 Every widget has a **Rules** property. Rules are a user-friendly way for adding dynamic behaviour to widgets. They are most often used for changing the widget's properties at runtime.
 

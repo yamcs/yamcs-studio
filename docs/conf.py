@@ -28,6 +28,8 @@ release = version
 
 extensions = [
     'sphinxcontrib.fulltoc',
+    
+    'sphinx.ext.intersphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

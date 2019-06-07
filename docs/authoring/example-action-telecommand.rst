@@ -10,13 +10,13 @@ The second example shows how to retrieve a telecommand argument from another wid
 
 .. rubric:: Simple telecommand
 
-#. Create a telecommand in the view "Command Stack". Right click and select "Copy". The telecommand source is saved in the clipboard and will be used when creating the action button.
+#. Create a telecommand in the :doc:`../views/command-stack` view. Right click and select **Copy**. The telecommand source is saved in the clipboard and will be used when creating the action button.
 
    .. image:: _images/command-source.png
        :alt: Retrieve Telecommand Source
        :align: center
 
-#. In the display builder, create an Action button. Add an action of type **Javascript**, activate the property **Embedded**.
+#. In the display builder, create an Action button. Add an action of type **JavaScript**, activate the property **Embedded**.
 
 #. In the window **Edit Script Text**, enter the instruction ``Yamcs.issueCommand("")``, and paste the content of the clipboard insert the command source as a string. The result should be similar to:
 
@@ -24,7 +24,7 @@ The second example shows how to retrieve a telecommand argument from another wid
        :alt: Action Telecommand
        :align: center
 
-#. Save the display. In the Display Runner, refresh the display and try the new action button. A command is inserted in the `<../views/command-history>`_ view with the defined command source content.
+#. Save the display. In the Display Runner, refresh the display and try the new action button. A command is inserted in the :doc:`../views/command-history` view with the defined command source content.
 
 
 .. rubric:: Retrieve telecommand argument from another widget
@@ -48,4 +48,4 @@ The second example shows how to retrieve a telecommand argument from another wid
 
        When the scripts get more complex, it is recommended to defined them in their own file to ease their edition and maintenance.
 
-#. Save the display. In the Display Runner, refresh the display, select a value in the combo widget and try the action button. A command is inserted in the `<../views/command-history>`_ view with the selected voltage as argument.
+#. Save the display. In the Display Runner, refresh the display, select a value in the combo widget and try the action button. A command is inserted in the :doc:`../views/command-history` view with the selected voltage as argument.

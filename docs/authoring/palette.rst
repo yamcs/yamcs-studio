@@ -1,7 +1,7 @@
 Palette
 =======
 
-The Palette is a fold-out zone of the `<editor-area>`_ that contains the widgets bundled with your version of Yamcs Studio, which may contain less or more widgets than the default widgets documented below.
+The Palette is a fold-out zone of the :doc:`editor-area` that contains the widgets bundled with your version of Yamcs Studio, which may contain less or more widgets than the default widgets documented below.
 
 Widgets come in all different kinds, and are grouped in four different categories.
 

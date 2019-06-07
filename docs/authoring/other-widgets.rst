@@ -112,7 +112,7 @@ But at runtime, with 3 columns, it renders like this:
     :alt: Run Grid Layout
     :align: center
 
-The order of the container's children is important for this layout, and can be modified in the `<outline>`_ view.
+The order of the container's children is important for this layout, and can be modified in the :doc:`outline` view.
 
 .. image:: _images/grid-layout-outline.png
     :alt: Grid Layout Outline

@@ -13,8 +13,8 @@ The view is split into two panels:
 
   | In addition to setting the new state of the queue, the following additional actions happen when changing the state of a blocked queue:
 
-    * blocked → disabled: all the commands in the queue will be automatically rejected
-    * blocked → enabled: all the commands in the queue will be automatically sent
+   * blocked → disabled: all the commands in the queue will be automatically rejected
+   * blocked → enabled: all the commands in the queue will be automatically sent
 
 * | The bottom panel contains the list of commands currently present in the queue that is selected in the upper panel. For each command the queue name, the command id, the user that has sent the command and the command string are displayed. The list is empty if the selected queue is not in the state blocked.
 

@@ -6,7 +6,7 @@ Control Widgets
 Action Button
 -------------
 
-A button that can be used to trigger `<actions>`_. Use the **Toggle** property to have the option of adding a different action on press and release.
+A button that can be used to trigger :doc:`actions`. Use the **Toggle** property to have the option of adding a different action on press and release.
 
 .. image:: _images/action-button.png
     :alt: Action Button

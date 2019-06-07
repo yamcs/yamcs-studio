@@ -22,7 +22,7 @@ Widget Properties
 Different widgets have different properties, but many of those properties are shared among them. These include:
 
 Name
-    A name that identifies this widget in the `<outline>`_ view. There is no constraint on uniqueness, but when not specified by the user, Yamcs Studio will try to determine a unique name by concatenating the widget type with a sequential number.
+    A name that identifies this widget in the :doc:`outline` view. There is no constraint on uniqueness, but when not specified by the user, Yamcs Studio will try to determine a unique name by concatenating the widget type with a sequential number.
 
 X, Y, Width, Height
     | Widgets are contained in a bounding box which is controlled by these properties.
