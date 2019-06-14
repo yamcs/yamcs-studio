@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.eclipse.feature"
       label="Yamcs Eclipse Components"
-      version="1.2.6"
+      version="1.2.7.qualifier"
       provider-name="Space Applications Services">
 
    <includes
