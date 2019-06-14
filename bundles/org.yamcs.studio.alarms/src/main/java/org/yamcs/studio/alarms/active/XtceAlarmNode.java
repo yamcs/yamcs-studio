@@ -3,6 +3,7 @@ package org.yamcs.studio.alarms.active;
 import java.util.Objects;
 
 import org.yamcs.protobuf.Alarms.AlarmData;
+import org.yamcs.protobuf.Alarms.ParameterAlarmData;
 import org.yamcs.studio.core.ui.XtceTreeNode;
 
 public class XtceAlarmNode implements XtceTreeNode<AlarmData> {
@@ -38,11 +39,13 @@ public class XtceAlarmNode implements XtceTreeNode<AlarmData> {
         if (obj == null || !(obj instanceof XtceAlarmNode)) {
             return false;
         }
+        ParameterAlarmData parameterDetail = alarmData.getParameterDetail();
         XtceAlarmNode other = (XtceAlarmNode) obj;
-        return Objects.equals(alarmData.getTriggerValue().getGenerationTime(),
-                other.alarmData.getTriggerValue().getGenerationTime())
-                && Objects.equals(alarmData.getParameter().getQualifiedName(),
-                        other.alarmData.getParameter().getQualifiedName())
+        ParameterAlarmData otherParameterDetail = other.alarmData.getParameterDetail();
+        return Objects.equals(parameterDetail.getTriggerValue().getGenerationTime(),
+                otherParameterDetail.getTriggerValue().getGenerationTime())
+                && Objects.equals(parameterDetail.getParameter().getQualifiedName(),
+                        otherParameterDetail.getParameter().getQualifiedName())
                 && Objects.equals(alarmData.getSeqNum(), other.alarmData.getSeqNum());
     }
 }

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Alarms.AlarmData;
+import org.yamcs.protobuf.Alarms.ParameterAlarmData;
 import org.yamcs.protobuf.Mdb.UnitInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Pvalue.RangeCondition;
@@ -79,7 +80,9 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             public String getText(Object element) {
                 if (element instanceof XtceAlarmNode) {
                     AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
-                    return YamcsUIPlugin.getDefault().formatInstant(alarmData.getTriggerValue().getGenerationTime());
+                    ParameterAlarmData parameterDetail = alarmData.getParameterDetail();
+                    return YamcsUIPlugin.getDefault().formatInstant(
+                            parameterDetail.getTriggerValue().getGenerationTime());
                 } else {
                     return null;
                 }
@@ -94,12 +97,13 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             public String getText(Object element) {
                 if (element instanceof XtceAlarmNode) {
                     AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
-                    ParameterValue pval = alarmData.getTriggerValue();
+                    ParameterAlarmData parameterDetail = alarmData.getParameterDetail();
+                    ParameterValue pval = parameterDetail.getTriggerValue();
 
                     String stringValue = StringConverter.toString(pval.getEngValue(), false);
-                    if (alarmData.getParameter().hasType()
-                            && alarmData.getParameter().getType().getUnitSetCount() > 0) {
-                        for (UnitInfo unitInfo : alarmData.getParameter().getType().getUnitSetList()) {
+                    if (parameterDetail.getParameter().hasType()
+                            && parameterDetail.getParameter().getType().getUnitSetCount() > 0) {
+                        for (UnitInfo unitInfo : parameterDetail.getParameter().getType().getUnitSetList()) {
                             stringValue += " " + unitInfo.getUnit();
                         }
                     }
@@ -124,7 +128,8 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             public Image getImage(Object element) {
                 if (element instanceof XtceAlarmNode) {
                     AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
-                    switch (alarmData.getTriggerValue().getMonitoringResult()) {
+                    ParameterAlarmData parameterDetail = alarmData.getParameterDetail();
+                    switch (parameterDetail.getTriggerValue().getMonitoringResult()) {
                     case IN_LIMITS:
                         return infoIcon;
                     case WATCH:
@@ -167,11 +172,12 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             public String getText(Object element) {
                 if (element instanceof XtceAlarmNode) {
                     AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
-                    ParameterValue pval = alarmData.getCurrentValue();
+                    ParameterAlarmData parameterDetail = alarmData.getParameterDetail();
+                    ParameterValue pval = parameterDetail.getCurrentValue();
                     String stringValue = StringConverter.toString(pval.getEngValue(), false);
-                    if (alarmData.getParameter().hasType()
-                            && alarmData.getParameter().getType().getUnitSetCount() > 0) {
-                        for (UnitInfo unitInfo : alarmData.getParameter().getType().getUnitSetList()) {
+                    if (parameterDetail.getParameter().hasType()
+                            && parameterDetail.getParameter().getType().getUnitSetCount() > 0) {
+                        for (UnitInfo unitInfo : parameterDetail.getParameter().getType().getUnitSetList()) {
                             stringValue += " " + unitInfo.getUnit();
                         }
                     }
@@ -191,7 +197,8 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
             public Image getImage(Object element) {
                 if (element instanceof XtceAlarmNode) {
                     AlarmData alarmData = ((XtceAlarmNode) element).getAlarmData();
-                    switch (alarmData.getCurrentValue().getMonitoringResult()) {
+                    ParameterAlarmData parameterDetail = alarmData.getParameterDetail();
+                    switch (parameterDetail.getCurrentValue().getMonitoringResult()) {
                     case IN_LIMITS:
                         return infoIcon;
                     case WATCH:
@@ -256,8 +263,13 @@ public class ActiveAlarmsView extends ViewPart implements AlarmListener {
 
     @Override
     public void processAlarmData(AlarmData alarmData) {
+        if (!alarmData.hasParameterDetail()) {
+            return;
+        }
+
         Display.getDefault().asyncExec(() -> {
-            ParameterValue triggerValue = alarmData.getTriggerValue();
+            ParameterAlarmData parameterDetail = alarmData.getParameterDetail();
+            ParameterValue triggerValue = parameterDetail.getTriggerValue();
             String qname = triggerValue.getId().getName();
             if (!qname.startsWith("/")) {
                 throw new IllegalArgumentException("Unexpected id " + qname);
