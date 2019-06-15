@@ -18,9 +18,6 @@ public class YamcsConfiguration {
     private String primaryHost;
     private Integer primaryPort;
 
-    private String failoverHost;
-    private Integer failoverPort;
-
     private boolean savePassword;
 
     public String getInstance() {
@@ -75,26 +72,6 @@ public class YamcsConfiguration {
         this.primaryPort = primaryPort;
     }
 
-    public void setFailoverHost(String failoverHost) {
-        this.failoverHost = failoverHost;
-    }
-
-    public String getFailoverHost() {
-        return failoverHost;
-    }
-
-    public void setFailoverPort(Integer failoverPort) {
-        this.failoverPort = failoverPort;
-    }
-
-    public Integer getFailoverPort() {
-        return failoverPort;
-    }
-
-    public boolean isFailoverConfigured() {
-        return failoverHost != null;
-    }
-
     public boolean isSavePassword() {
         return savePassword;
     }
@@ -111,38 +88,13 @@ public class YamcsConfiguration {
         }
     }
 
-    public String getFailoverConnectionString() {
-        if (isFailoverConfigured()) {
-            if (instance == null || "".equals(instance)) {
-                return "yamcs://" + failoverHost + ":" + failoverPort;
-            } else {
-                return "yamcs://" + failoverHost + ":" + failoverPort + "/" + instance;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public YamcsConnectionProperties getPrimaryConnectionProperties() {
+    public YamcsConnectionProperties getConnectionProperties() {
         YamcsConnectionProperties yprops = new YamcsConnectionProperties(primaryHost, primaryPort, instance);
         yprops.setProtocol(Protocol.http);
         if (!isAnonymous()) {
             yprops.setAuthenticationToken(new UsernamePasswordToken(user, password));
         }
         return yprops;
-    }
-
-    public YamcsConnectionProperties getFailoverConnectionProperties() {
-        if (failoverHost != null) {
-            YamcsConnectionProperties yprops = new YamcsConnectionProperties(failoverHost, failoverPort, instance);
-            yprops.setProtocol(Protocol.http);
-            if (!isAnonymous()) {
-                yprops.setAuthenticationToken(new UsernamePasswordToken(user, password));
-            }
-            return yprops;
-        } else {
-            return null;
-        }
     }
 
     @Override

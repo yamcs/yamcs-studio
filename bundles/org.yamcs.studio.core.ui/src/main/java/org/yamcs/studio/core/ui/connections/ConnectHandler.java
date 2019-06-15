@@ -55,7 +55,7 @@ public class ConnectHandler extends AbstractHandler {
         // FIXME get the password out before doing this
         ConnectionPreferences.setLastUsedConfiguration(conf);
 
-        YamcsConnectionProperties yprops = conf.getPrimaryConnectionProperties();
+        YamcsConnectionProperties yprops = conf.getConnectionProperties();
         ConnectionUIHelper.connectWithProgressDialog(shell, yprops);
     }
 }

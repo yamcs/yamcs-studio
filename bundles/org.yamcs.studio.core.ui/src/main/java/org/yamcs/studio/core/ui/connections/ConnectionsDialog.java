@@ -40,18 +40,16 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
- * A modal dialog for managing connection to Yamcs servers. Extracted out of
- * preferences, because these kind of settings are a lot more variable and
- * depending on the user configuration.
+ * A modal dialog for managing connection to Yamcs servers. Extracted out of preferences, because these kind of settings
+ * are a lot more variable and depending on the user configuration.
  * <p>
- * The idea is that when you start Yamcs Studio for the very first time, it does
- * not attempt any connection. Auto-connect is an option.
+ * The idea is that when you start Yamcs Studio for the very first time, it does not attempt any connection.
+ * Auto-connect is an option.
  * <p>
- * Another thing we want to address with this dialog is to make it easy to
- * manage different yamcs servers. Especially as yamcs developers, we often have
- * to switch from one server to another. Through this dialog these settings can
- * be managed and stored. The settings are stored using java (so inside the home
- * directory). This makes it easier to migrate from one Yamcs Studio to another.
+ * Another thing we want to address with this dialog is to make it easy to manage different yamcs servers. Especially as
+ * yamcs developers, we often have to switch from one server to another. Through this dialog these settings can be
+ * managed and stored. The settings are stored using java (so inside the home directory). This makes it easier to
+ * migrate from one Yamcs Studio to another.
  */
 public class ConnectionsDialog extends Dialog {
 
@@ -71,12 +69,11 @@ public class ConnectionsDialog extends Dialog {
     private Text yamcsPasswordText;
     private Text yamcsPrimaryHostText;
     private Text yamcsPrimaryPortText;
-    private Text yamcsFailoverHostText;
-    private Text yamcsFailoverPortText;
     private Text nameText;
     private Button savePasswordButton;
 
     private YamcsConfiguration chosenConfiguration;
+    private String passwordForChosenConfiguration;
 
     public ConnectionsDialog(Shell parentShell) {
         super(parentShell);
@@ -137,10 +134,11 @@ public class ConnectionsDialog extends Dialog {
         });
 
         YamcsConfiguration lastConf = ConnectionPreferences.getLastUsedConfiguration();
-        if (lastConf != null)
+        if (lastConf != null) {
             selectServer(lastConf);
-        else
+        } else {
             selectFirstServer();
+        }
         updateState();
 
         return contentArea;
@@ -153,15 +151,17 @@ public class ConnectionsDialog extends Dialog {
             selectedConfiguration = null;
             detailPanel.setVisible(false);
             removeServerButton.setEnabled(false);
-            if (ok != null) // It's null during initial creation
+            if (ok != null) {
                 ok.setText("Save"); // Give opportunity to user to quit dialog
-            // without connecting and saving changes
+                // without connecting and saving changes
+            }
         } else {
             selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
             removeServerButton.setEnabled(true);
-            if (ok != null) // It's null during initial creation
+            if (ok != null) {
                 ok.setText("Connect");
+            }
         }
     }
 
@@ -169,6 +169,7 @@ public class ConnectionsDialog extends Dialog {
     protected void okPressed() {
         if (selectedConfiguration != null) {
             chosenConfiguration = selectedConfiguration;
+            passwordForChosenConfiguration = chosenConfiguration.getPassword();
         }
         ConnectionPreferences.setAutoConnect(autoConnect.getSelection());
         List<YamcsConfiguration> confs = new ArrayList<>();
@@ -176,8 +177,9 @@ public class ConnectionsDialog extends Dialog {
         int i = 0;
         while ((el = connViewer.getElementAt(i++)) != null) {
             YamcsConfiguration conf = (YamcsConfiguration) el;
-            if (!conf.isSavePassword())
+            if (!conf.isSavePassword()) {
                 conf.setPassword(null);
+            }
             confs.add(conf);
         }
         ConnectionPreferences.setConfigurations(confs);
@@ -275,8 +277,6 @@ public class ConnectionsDialog extends Dialog {
                 savePasswordButton.setSelection(conf.isSavePassword());
                 yamcsPrimaryHostText.setText(forceString(conf.getPrimaryHost()));
                 yamcsPrimaryPortText.setText(forceString(conf.getPrimaryPort()));
-                yamcsFailoverHostText.setText(forceString(conf.getFailoverHost()));
-                yamcsFailoverPortText.setText(forceString(conf.getFailoverPort()));
                 nameText.setText(forceString(conf.getName()));
 
                 updateState();
@@ -288,10 +288,11 @@ public class ConnectionsDialog extends Dialog {
             public int compare(Viewer viewer, Object o1, Object o2) {
                 YamcsConfiguration c1 = (YamcsConfiguration) o1;
                 YamcsConfiguration c2 = (YamcsConfiguration) o2;
-                if (c1.getName() != null && c2.getName() != null)
+                if (c1.getName() != null && c2.getName() != null) {
                     return c1.getName().compareTo(c2.getName());
-                else
+                } else {
                     return 0;
+                }
             }
         });
 
@@ -306,15 +307,9 @@ public class ConnectionsDialog extends Dialog {
         detailPanel.setLayout(gl);
 
         Label lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Primary Yamcs Server");
-        GridData gd = new GridData();
-        gd.horizontalSpan = 2;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Host:");
         yamcsPrimaryHostText = new Text(detailPanel, SWT.BORDER);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         yamcsPrimaryHostText.setLayoutData(gd);
         yamcsPrimaryHostText.addListener(SWT.KeyUp, evt -> {
             if (!isBlank(yamcsPrimaryHostText.getText()) && selectedConfiguration != null) {
@@ -341,51 +336,6 @@ public class ConnectionsDialog extends Dialog {
                 }
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setPrimaryPort(null);
-            }
-        });
-
-        // Spacer
-        lbl = new Label(detailPanel, SWT.NONE);
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Failover (optional)");
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Host:");
-        yamcsFailoverHostText = new Text(detailPanel, SWT.BORDER);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        yamcsFailoverHostText.setLayoutData(gd);
-        yamcsFailoverHostText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsFailoverHostText.getText()) && selectedConfiguration != null) {
-                selectedConfiguration.setFailoverHost(yamcsFailoverHostText.getText());
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setFailoverHost(null);
-            }
-        });
-
-        lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Port:");
-        yamcsFailoverPortText = new Text(detailPanel, SWT.BORDER);
-        gd = new GridData();
-        gd.widthHint = 50;
-        yamcsFailoverPortText.setLayoutData(gd);
-        yamcsFailoverPortText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsFailoverPortText.getText()) && selectedConfiguration != null) {
-                try {
-                    int d = Integer.parseInt(yamcsFailoverPortText.getText());
-                    selectedConfiguration.setFailoverPort(d);
-                } catch (NumberFormatException e) {
-                    log.warning("Ignoring invalid number for failover port " + yamcsFailoverPortText.getText());
-                    selectedConfiguration.setFailoverPort(null);
-                }
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setFailoverPort(null);
             }
         });
 
@@ -480,10 +430,11 @@ public class ConnectionsDialog extends Dialog {
     public YamcsConfiguration getChosenConfiguration() {
         // Add our credentials back in (they could have been removed during
         // serialization)
-        /*if (chosenConfiguration != null) {
-            chosenConfiguration.setUser(chosenCredentials.getUsername());
-            chosenConfiguration.setPassword(chosenCredentials.getPasswordS());
-        }*/
+        if (chosenConfiguration != null) {
+            if (passwordForChosenConfiguration != null && !passwordForChosenConfiguration.isEmpty()) {
+                chosenConfiguration.setPassword(passwordForChosenConfiguration);
+            }
+        }
         return chosenConfiguration;
     }
 }
