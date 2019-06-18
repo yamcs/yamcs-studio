@@ -102,7 +102,7 @@ class ExecuteJavaScriptJdkAction extends AbstractExecuteScriptAction {
                             try {
                                 String line;
                                 while ((line = reader.readLine()) != null) {
-                                    buf.append(line);
+                                    buf.append(line).append("\n");
                                 }
                             } finally {
                                 closeReader();
