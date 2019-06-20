@@ -22,6 +22,7 @@ import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
+import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
@@ -55,8 +56,9 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         String errorMessage = null;
         Calendar start = RCPUtils.toCalendar(startDate, startTime);
         Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
-        if (start.after(stop))
+        if (start.after(stop)) {
             errorMessage = "Stop has to be greater than start";
+        }
 
         setErrorMessage(errorMessage);
         getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
@@ -133,8 +135,9 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         long stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
         TimeInterval interval = new TimeInterval(start, stop);
 
+        String instance = ManagementCatalogue.getCurrentYamcsInstance();
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.downloadCommands(interval, data -> {
+        catalogue.downloadCommands(instance, interval, data -> {
             try {
                 CommandHistoryEntry commandHistoryEntry = CommandHistoryEntry.parseFrom(data);
                 Display.getDefault().asyncExec(() -> {

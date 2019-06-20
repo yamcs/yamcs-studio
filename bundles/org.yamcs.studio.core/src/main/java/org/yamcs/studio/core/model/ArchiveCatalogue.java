@@ -32,26 +32,30 @@ public class ArchiveCatalogue implements Catalogue {
     public void onYamcsDisconnected() {
     }
 
-    public CompletableFuture<Void> downloadCommands(TimeInterval interval, BulkRestDataReceiver receiver) {
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+    public CompletableFuture<Void> downloadCommands(String instance, TimeInterval interval,
+            BulkRestDataReceiver receiver) {
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/downloads/commands");
-        if (interval.hasStart())
+        if (interval.hasStart()) {
             urlb.setParam("start", interval.getStartUTC());
-        if (interval.hasStop())
+        }
+        if (interval.hasStop()) {
             urlb.setParam("stop", interval.getStopUTC());
+        }
 
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.streamGet(urlb.toString(), null, receiver);
     }
 
-    public CompletableFuture<Void> downloadIndexes(TimeInterval interval, BulkRestDataReceiver receiver) {
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+    public CompletableFuture<Void> downloadIndexes(String instance, TimeInterval interval,
+            BulkRestDataReceiver receiver) {
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/indexes");
         urlb.setParam("filter", Arrays.asList("tm", "pp", "commands", "completeness"));
-        if (interval.hasStart())
+        if (interval.hasStart()) {
             urlb.setParam("start", interval.getStartUTC());
-        if (interval.hasStop())
+        }
+        if (interval.hasStop()) {
             urlb.setParam("stop", interval.getStopUTC());
+        }
 
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.streamGet(urlb.toString(), null, receiver);
@@ -75,14 +79,14 @@ public class ArchiveCatalogue implements Catalogue {
         return yamcsClient.delete("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, null);
     }
 
-    public CompletableFuture<byte[]> listTags(TimeInterval interval) {
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-
+    public CompletableFuture<byte[]> listTags(String instance, TimeInterval interval) {
         URLBuilder urlb = new URLBuilder("/archive/" + instance + "/tags");
-        if (interval.hasStart())
+        if (interval.hasStart()) {
             urlb.setParam("start", interval.getStartUTC());
-        if (interval.hasStop())
+        }
+        if (interval.hasStop()) {
             urlb.setParam("stop", interval.getStopUTC());
+        }
 
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         return yamcsClient.get(urlb.toString(), null);

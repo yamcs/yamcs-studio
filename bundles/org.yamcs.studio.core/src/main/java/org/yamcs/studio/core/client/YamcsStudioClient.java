@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
@@ -30,7 +29,6 @@ import org.yamcs.api.ws.ConnectionListener;
 import org.yamcs.api.ws.WebSocketClient;
 import org.yamcs.api.ws.WebSocketClientCallback;
 import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Rest.GetApiOverviewResponse;
 import org.yamcs.protobuf.Web.ConnectionInfo;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
@@ -149,6 +147,7 @@ public class YamcsStudioClient implements WebSocketClientCallback {
                 for (int i = 0; i < maxAttempts; i++) {
                     try {
                         log.fine(String.format("Connecting to %s attempt %d", yprops, i));
+                        /*String defaultInstanceName = null;
                         GetApiOverviewResponse serverInfo = restClient.doRequest("", HttpMethod.GET)
                                 .thenApply(b -> {
                                     try {
@@ -157,29 +156,34 @@ public class YamcsStudioClient implements WebSocketClientCallback {
                                         throw new CompletionException(e);
                                     }
                                 }).get(5, TimeUnit.SECONDS);
-                        String defaultInstanceName = null;
+                        
                         if (serverInfo.hasDefaultYamcsInstance()) {
                             defaultInstanceName = serverInfo.getDefaultYamcsInstance();
-                        }
+                        }*/
 
                         instances = restClient.blockingGetYamcsInstances();
-                        if (instances == null || instances.isEmpty()) {
-                            log.warning("No configured yamcs instance");
-                            return;
+                        if (instances.isEmpty()) {
+                            if (yprops.getInstance() != null) {
+                                log.severe("No instance named '" + yprops.getInstance() + "'");
+                                connecting = false;
+                                for (ConnectionListener cl2 : connectionListeners) {
+                                    cl2.connectionFailed(null,
+                                            new YamcsException("No instance named '" + yprops.getInstance() + "'"));
+                                }
+                                return;
+                            }
+                        } else {
+                            String defaultInstanceName = instances.get(0).getName();
+                            String instanceName = defaultInstanceName;
+                            if (yprops.getInstance() != null) { // check if the instance saved in properties exists,
+                                                                // otherwise use the default one
+                                instanceName = instances.stream().map(yi -> yi.getName())
+                                        .filter(s -> s.equals(yprops.getInstance()))
+                                        .findFirst()
+                                        .orElse(defaultInstanceName);
+                            }
+                            yprops.setInstance(instanceName);
                         }
-
-                        if (defaultInstanceName == null) {
-                            defaultInstanceName = instances.get(0).getName();
-                        }
-                        String instanceName = defaultInstanceName;
-                        if (yprops.getInstance() != null) { // check if the instance saved in properties exists,
-                                                            // otherwise use the default one
-                            instanceName = instances.stream().map(yi -> yi.getName())
-                                    .filter(s -> s.equals(yprops.getInstance()))
-                                    .findFirst()
-                                    .orElse(defaultInstanceName);
-                        }
-                        yprops.setInstance(instanceName);
 
                         ChannelFuture future1 = wsclient.connect();
                         future1.get(5000, TimeUnit.MILLISECONDS);

@@ -113,35 +113,37 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
             log.fine("Fetching available parameters");
             YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            int pageSize = 500;
             List<ParameterInfo> parameters = new ArrayList<>();
 
-            String next = null;
-            while (true) {
-                String url = "/mdb/" + instance + "/parameters?details&limit=" + pageSize;
-                if (next != null) {
-                    url += "&next=" + next;
-                }
-                try {
-                    byte[] data = yamcsClient.get(url, null).get();
+            if (instance != null) {
+                int pageSize = 500;
+                String next = null;
+                while (true) {
+                    String url = "/mdb/" + instance + "/parameters?details&limit=" + pageSize;
+                    if (next != null) {
+                        url += "&next=" + next;
+                    }
                     try {
-                        ListParametersResponse response = ListParametersResponse.parseFrom(data);
-                        parameters.addAll(response.getParameterList());
-                        if (response.hasContinuationToken()) {
-                            next = response.getContinuationToken();
-                        } else {
+                        byte[] data = yamcsClient.get(url, null).get();
+                        try {
+                            ListParametersResponse response = ListParametersResponse.parseFrom(data);
+                            parameters.addAll(response.getParameterList());
+                            if (response.hasContinuationToken()) {
+                                next = response.getContinuationToken();
+                            } else {
+                                break;
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            log.log(Level.SEVERE, "Failed to decode server response", e);
                             break;
                         }
-                    } catch (InvalidProtocolBufferException e) {
-                        log.log(Level.SEVERE, "Failed to decode server response", e);
-                        break;
+                    } catch (InterruptedException e) {
+                        return Status.CANCEL_STATUS;
+                    } catch (ExecutionException e) {
+                        Throwable cause = e.getCause();
+                        log.log(Level.SEVERE, "Exception while loading parameters: " + cause.getMessage(), cause);
+                        return Status.OK_STATUS;
                     }
-                } catch (InterruptedException e) {
-                    return Status.CANCEL_STATUS;
-                } catch (ExecutionException e) {
-                    Throwable cause = e.getCause();
-                    log.log(Level.SEVERE, "Exception while loading parameters: " + cause.getMessage(), cause);
-                    return Status.OK_STATUS;
                 }
             }
             processMetaParameters(parameters);

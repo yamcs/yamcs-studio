@@ -272,20 +272,22 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
 
     private void fetchLatestEvents() {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        EventCatalogue.getInstance().fetchLatestEvents(instance).whenComplete((data, exc) -> {
-            try {
-                ListEventsResponse response = ListEventsResponse.parseFrom(data);
+        if (instance != null) {
+            EventCatalogue.getInstance().fetchLatestEvents(instance).whenComplete((data, exc) -> {
+                try {
+                    ListEventsResponse response = ListEventsResponse.parseFrom(data);
 
-                List<Event> eventList = new ArrayList<>(response.getEventList());
-                Collections.reverse(eventList); // REST output is reverse chronological
+                    List<Event> eventList = new ArrayList<>(response.getEventList());
+                    Collections.reverse(eventList); // REST output is reverse chronological
 
-                Display.getDefault().asyncExec(() -> {
-                    addEvents(eventList);
-                });
-            } catch (InvalidProtocolBufferException e) {
-                log.log(Level.SEVERE, "Failed to decode server message", e);
-            }
-        });
+                    Display.getDefault().asyncExec(() -> {
+                        addEvents(eventList);
+                    });
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server message", e);
+                }
+            });
+        }
     }
 
     @Override

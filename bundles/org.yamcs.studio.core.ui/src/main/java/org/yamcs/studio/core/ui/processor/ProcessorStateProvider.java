@@ -17,21 +17,28 @@ public class ProcessorStateProvider extends AbstractSourceProvider {
 
     private static final Logger log = Logger.getLogger(ProcessorStateProvider.class.getName());
 
+    public static final String STATE_KEY_NAME = "org.yamcs.studio.core.ui.processor.state.name";
     public static final String STATE_KEY_PROCESSING = "org.yamcs.studio.core.ui.processor.state.processing";
     public static final String STATE_KEY_REPLAY = "org.yamcs.studio.core.ui.processor.state.replay";
     public static final String STATE_KEY_REPLAY_SPEED = "org.yamcs.studio.core.ui.processor.state.speed";
-    private static final String[] SOURCE_NAMES = { STATE_KEY_REPLAY, STATE_KEY_PROCESSING, STATE_KEY_REPLAY_SPEED };
 
+    private static final String[] SOURCE_NAMES = {
+            STATE_KEY_NAME, STATE_KEY_REPLAY, STATE_KEY_PROCESSING, STATE_KEY_REPLAY_SPEED
+    };
+
+    private String name = "";
     private boolean replay = false;
     private String processing = "";
     private float speed = 1;
 
     public void updateState(ProcessorInfo processorInfo) {
         if (processorInfo == null) {
+            name = "";
             replay = false;
             processing = "";
             speed = 1;
         } else {
+            name = processorInfo.getName();
             replay = processorInfo.hasReplayRequest();
             processing = replay ? processorInfo.getReplayState().toString() : "";
             if (replay) {
@@ -52,7 +59,8 @@ public class ProcessorStateProvider extends AbstractSourceProvider {
 
     @Override
     public Map getCurrentState() {
-        Map map = new HashMap(3);
+        Map map = new HashMap(4);
+        map.put(STATE_KEY_NAME, name);
         map.put(STATE_KEY_REPLAY, replay);
         map.put(STATE_KEY_PROCESSING, processing);
         map.put(STATE_KEY_REPLAY_SPEED, speed);

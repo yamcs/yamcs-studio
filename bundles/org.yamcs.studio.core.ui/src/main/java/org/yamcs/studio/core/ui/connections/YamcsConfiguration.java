@@ -109,7 +109,7 @@ public class YamcsConfiguration {
         YamcsConnectionProperties yprops = new YamcsConnectionProperties(primaryHost, primaryPort, instance);
         yprops.setProtocol(Protocol.http);
         yprops.setTls(ssl);
-        if (!isAnonymous()) {
+        if (!isAnonymous() && password != null) {
             yprops.setCredentials(user, password.toCharArray());
         }
         return yprops;

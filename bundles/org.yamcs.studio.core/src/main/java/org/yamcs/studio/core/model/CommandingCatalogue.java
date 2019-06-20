@@ -133,35 +133,37 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
             log.fine("Fetching available commands");
             YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             String instance = ManagementCatalogue.getCurrentYamcsInstance();
-            int pageSize = 200;
             List<CommandInfo> commands = new ArrayList<>();
 
-            String next = null;
-            while (true) {
-                try {
-                    String url = "/mdb/" + instance + "/commands?details&limit=" + pageSize;
-                    if (next != null) {
-                        url += "&next=" + next;
-                    }
-                    byte[] data = yamcsClient.get(url, null).get();
+            if (instance != null) {
+                int pageSize = 200;
+                String next = null;
+                while (true) {
                     try {
-                        ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
-                        commands.addAll(response.getCommandList());
-                        if (response.hasContinuationToken()) {
-                            next = response.getContinuationToken();
-                        } else {
+                        String url = "/mdb/" + instance + "/commands?details&limit=" + pageSize;
+                        if (next != null) {
+                            url += "&next=" + next;
+                        }
+                        byte[] data = yamcsClient.get(url, null).get();
+                        try {
+                            ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
+                            commands.addAll(response.getCommandList());
+                            if (response.hasContinuationToken()) {
+                                next = response.getContinuationToken();
+                            } else {
+                                break;
+                            }
+                        } catch (InvalidProtocolBufferException e) {
+                            log.log(Level.SEVERE, "Failed to decode server response", e);
                             break;
                         }
-                    } catch (InvalidProtocolBufferException e) {
-                        log.log(Level.SEVERE, "Failed to decode server response", e);
-                        break;
+                    } catch (InterruptedException e) {
+                        return Status.CANCEL_STATUS;
+                    } catch (ExecutionException e) {
+                        Throwable cause = e.getCause();
+                        log.log(Level.SEVERE, "Exception while loading commands: " + cause.getMessage(), cause);
+                        return Status.OK_STATUS;
                     }
-                } catch (InterruptedException e) {
-                    return Status.CANCEL_STATUS;
-                } catch (ExecutionException e) {
-                    Throwable cause = e.getCause();
-                    log.log(Level.SEVERE, "Exception while loading commands: " + cause.getMessage(), cause);
-                    return Status.OK_STATUS;
                 }
             }
 

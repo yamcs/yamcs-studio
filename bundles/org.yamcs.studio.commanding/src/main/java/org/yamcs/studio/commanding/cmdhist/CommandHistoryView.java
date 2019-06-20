@@ -572,19 +572,21 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
 
     private void fetchLatestEntries() {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        CommandingCatalogue.getInstance().fetchLatestEntries(instance).whenComplete((data, exc) -> {
-            try {
-                ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
+        if (instance != null) {
+            CommandingCatalogue.getInstance().fetchLatestEntries(instance).whenComplete((data, exc) -> {
+                try {
+                    ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
 
-                List<CommandHistoryEntry> entryList = new ArrayList<>(response.getEntryList());
+                    List<CommandHistoryEntry> entryList = new ArrayList<>(response.getEntryList());
 
-                Display.getDefault().asyncExec(() -> {
-                    addEntries(entryList);
-                });
-            } catch (InvalidProtocolBufferException e) {
-                log.log(Level.SEVERE, "Failed to decode server message", e);
-            }
-        });
+                    Display.getDefault().asyncExec(() -> {
+                        addEntries(entryList);
+                    });
+                } catch (InvalidProtocolBufferException e) {
+                    log.log(Level.SEVERE, "Failed to decode server message", e);
+                }
+            });
+        }
     }
 
     public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {

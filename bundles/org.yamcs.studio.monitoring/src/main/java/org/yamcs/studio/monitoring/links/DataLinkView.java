@@ -70,11 +70,6 @@ public class DataLinkView extends ViewPart implements YamcsConnectionListener, I
     private void updateYamcsInstance() {
         String yamcsInstance = ManagementCatalogue.getCurrentYamcsInstance();
         contentProvider.processYamcsInstance(yamcsInstance);
-        if (yamcsInstance != null) {
-            setContentDescription("Showing links for Yamcs instance " + yamcsInstance);
-        } else {
-            setContentDescription(null);
-        }
     }
 
     @Override
@@ -92,13 +87,15 @@ public class DataLinkView extends ViewPart implements YamcsConnectionListener, I
 
     @Override
     public void linkUpdated(LinkInfo linkInfo) {
-        if (tableViewer.getTable().isDisposed())
+        if (tableViewer.getTable().isDisposed()) {
             return;
+        }
 
         Display display = tableViewer.getTable().getDisplay();
         display.asyncExec(() -> {
-            if (display.isDisposed())
+            if (display.isDisposed()) {
                 return;
+            }
 
             contentProvider.processLinkInfo(linkInfo);
         });

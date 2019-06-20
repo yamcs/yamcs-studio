@@ -74,30 +74,32 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
                 updateText(null);
             }
 
-            YamcsInstance instance = connectionInfo.getInstance();
-            String baseText = instance.getName(); // TODO don't get processor??
-            switch (instance.getState()) {
-            case INITIALIZING:
-            case INITIALIZED:
-            case STARTING:
-                // setText("Starting " + instance.getName()); // TODO text currently managed by processorInfo events
-                break;
-            case STOPPING:
-                setErrorText(baseText + " (stopping...)", null);
-                break;
-            case OFFLINE:
-                setErrorText(baseText + " (offline)", null);
-                break;
-            case FAILED:
-                String detail = (instance.hasFailureCause() ? instance.getFailureCause() : null);
-                setErrorText(baseText + " (start failure)", detail);
-                break;
-            case RUNNING:
-                setErrorText(null, null);
-                break;
-            default:
-                log.warning("Unexpected instance state " + instance.getState());
-                setErrorText(null, null);
+            if (connectionInfo.hasInstance()) {
+                YamcsInstance instance = connectionInfo.getInstance();
+                String baseText = instance.getName(); // TODO don't get processor??
+                switch (instance.getState()) {
+                case INITIALIZING:
+                case INITIALIZED:
+                case STARTING:
+                    // setText("Starting " + instance.getName()); // TODO text currently managed by processorInfo events
+                    break;
+                case STOPPING:
+                    setErrorText(baseText + " (stopping...)", null);
+                    break;
+                case OFFLINE:
+                    setErrorText(baseText + " (offline)", null);
+                    break;
+                case FAILED:
+                    String detail = (instance.hasFailureCause() ? instance.getFailureCause() : null);
+                    setErrorText(baseText + " (start failure)", detail);
+                    break;
+                case RUNNING:
+                    setErrorText(null, null);
+                    break;
+                default:
+                    log.warning("Unexpected instance state " + instance.getState());
+                    setErrorText(null, null);
+                }
             }
         });
     }
