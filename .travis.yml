@@ -8,12 +8,8 @@ cache:
   directories:
     - $HOME/.m2
 
-install:
-  - git clone --depth 1 https://github.com/yamcs/yamcs
-  - mvn install -DskipTests -f yamcs/pom.xml
-
 # Prevent Travis from automatically running mvn install
-#install: true
+install: true
 
 script:
   - mvn verify -f p2deps/pom.xml

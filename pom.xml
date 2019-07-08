@@ -15,7 +15,7 @@
   </organization>
 
   <properties>
-    <yamcs.version>4.10.1-SNAPSHOT</yamcs.version>
+    <yamcs.version>4.10.1</yamcs.version>
     <tycho.version>1.4.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -218,6 +218,17 @@
       <id>yamcs-studio-deps</id>
       <url>${project.baseUri}/../../p2deps/org.yamcs.studio.p2deps.repository/target/repository</url>
       <layout>p2</layout>
+    </repository>
+    <repository>
+      <id>maven-snapshots</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
   </repositories>
 </project>
