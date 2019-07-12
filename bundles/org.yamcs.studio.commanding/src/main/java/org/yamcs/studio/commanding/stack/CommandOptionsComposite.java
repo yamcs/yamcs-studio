@@ -51,36 +51,40 @@ public class CommandOptionsComposite extends ScrolledComposite {
 
         Collection<TelecommandArgument> allArguments = command.getEffectiveAssignments();
 
-        List<TelecommandArgument> requiredArguments = allArguments.stream()
-                .filter(arg -> arg.isEditable() && !arg.getArgumentInfo().hasInitialValue())
+        List<TelecommandArgument> customArguments = allArguments.stream()
+                .filter(arg -> arg.isEditable())
+                .filter(arg -> !arg.getArgumentInfo().hasInitialValue()
+                        || command.isDefaultChanged(arg.getArgumentInfo()))
                 .collect(Collectors.toList());
 
-        List<TelecommandArgument> optionalArguments = allArguments.stream()
-                .filter(arg -> arg.isEditable() && arg.getArgumentInfo().hasInitialValue())
+        List<TelecommandArgument> defaultArguments = allArguments.stream()
+                .filter(arg -> arg.isEditable())
+                .filter(arg -> arg.getArgumentInfo().hasInitialValue()
+                        && !command.isDefaultChanged(arg.getArgumentInfo()))
                 .collect(Collectors.toList());
 
-        if (requiredArguments.isEmpty()) {
+        if (customArguments.isEmpty()) {
             Label lbl = new Label(argumentsGroup, SWT.NONE);
             lbl.setText("No arguments required");
         } else {
-            addArgumentControls(argumentsGroup, command, requiredArguments);
+            addArgumentControls(argumentsGroup, command, customArguments);
         }
 
-        if (!optionalArguments.isEmpty()) {
+        if (!defaultArguments.isEmpty()) {
             ExpandableComposite expandable = new ExpandableComposite(argumentsGroup, ExpandableComposite.TREE_NODE |
                     ExpandableComposite.CLIENT_INDENT);
             expandable.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             expandable.setLayout(new GridLayout(1, false));
             expandable.setExpanded(false);
-            if (optionalArguments.size() == 1) {
+            if (defaultArguments.size() == 1) {
                 expandable.setText("1 argument with default");
             } else {
-                expandable.setText(optionalArguments.size() + " arguments with defaults");
+                expandable.setText(defaultArguments.size() + " arguments with defaults");
             }
-            Composite defaultArguments = new Composite(expandable, SWT.NONE);
-            defaultArguments.setLayout(new FillLayout());
-            addArgumentControls(defaultArguments, command, optionalArguments);
-            expandable.setClient(defaultArguments);
+            Composite defaultArgumentsComposite = new Composite(expandable, SWT.NONE);
+            defaultArgumentsComposite.setLayout(new FillLayout());
+            addArgumentControls(defaultArgumentsComposite, command, defaultArguments);
+            expandable.setClient(defaultArgumentsComposite);
             expandable.addExpansionListener(new ExpansionAdapter() {
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
