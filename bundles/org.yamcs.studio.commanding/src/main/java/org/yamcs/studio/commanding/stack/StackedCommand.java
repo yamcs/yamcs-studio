@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,7 +44,7 @@ public class StackedCommand {
         private StackedState(String text) {
             this.text = text;
         }
-        
+
         public String getText() {
             return text;
         }
@@ -91,7 +90,7 @@ public class StackedCommand {
 
         Styler identifierStyler = styleProvider != null ? styleProvider.getIdentifierStyler(this) : null;
         Styler bracketStyler = styleProvider != null ? styleProvider.getBracketStyler(this) : null;
-        Styler argNameSyler = styleProvider != null ? styleProvider.getArgNameStyler(this) : null;
+        Styler argNameStyler = styleProvider != null ? styleProvider.getArgNameStyler(this) : null;
         Styler errorStyler = styleProvider != null ? styleProvider.getErrorStyler(this) : null;
         Styler numberStyler = styleProvider != null ? styleProvider.getNumberStyler(this) : null;
 
@@ -99,10 +98,18 @@ public class StackedCommand {
         str.append(getSelectedAlias(), identifierStyler);
         str.append("(", bracketStyler);
         boolean first = true;
-        for (ArgumentInfo arg : meta.getArgumentList()) {
-            String value = getAssignedStringValue(arg);
+        for (TelecommandArgument arg : getEffectiveAssignments()) {
+            String value = getAssignedStringValue(arg.getArgumentInfo());
 
-            if (value == null && arg.hasInitialValue()) {
+            if (value == null && arg.getArgumentInfo().hasInitialValue()) {
+                continue;
+            }
+
+            if (!arg.isEditable()) {
+                continue;
+            }
+
+            if (arg.getArgumentInfo().hasInitialValue() && !isDefaultChanged(arg.getArgumentInfo())) {
                 continue;
             }
 
@@ -110,19 +117,19 @@ public class StackedCommand {
                 str.append("\n, ", bracketStyler);
             }
             first = false;
-            str.append(arg.getName() + ": ", argNameSyler);
+            str.append(arg.getName() + ": ", argNameStyler);
 
             if (value == null) {
                 str.append("  ", errorStyler);
             } else {
-                boolean needQuotationMark = "string".equals(arg.getType().getEngType())
-                        || "enumeration".equals(arg.getType().getEngType());
+                boolean needQuotationMark = "string".equals(arg.getType())
+                        || "enumeration".equals(arg.getType());
                 if (needQuotationMark) {
-                    str.append("\"", isValid(arg) ? numberStyler : errorStyler);
+                    str.append("\"", isValid(arg.getArgumentInfo()) ? numberStyler : errorStyler);
                 }
-                str.append(value, isValid(arg) ? numberStyler : errorStyler);
+                str.append(value, isValid(arg.getArgumentInfo()) ? numberStyler : errorStyler);
                 if (needQuotationMark) {
-                    str.append("\"", isValid(arg) ? numberStyler : errorStyler);
+                    str.append("\"", isValid(arg.getArgumentInfo()) ? numberStyler : errorStyler);
                 }
             }
         }
@@ -155,12 +162,11 @@ public class StackedCommand {
 
         return req;
     }
-    
 
     public void setDelayMs(int delayMs) {
         this.delayMs = delayMs;
     }
-    
+
     public int getDelayMs() {
         return this.delayMs;
     }
@@ -222,7 +228,10 @@ public class StackedCommand {
             }
         }
 
-        return argumentsByName.values();
+        // Order required arguments before optional for better visual results
+        return Stream.concat(
+                argumentsByName.values().stream().filter(arg -> arg.getValue() == null),
+                argumentsByName.values().stream().filter(arg -> arg.getValue() != null)).collect(Collectors.toList());
     }
 
     public List<String> getMessages() {
@@ -249,6 +258,14 @@ public class StackedCommand {
             return false;
         }
         return true; // TODO more local checks
+    }
+
+    public boolean isDefaultChanged(ArgumentInfo arg) {
+        String assignment = assignments.get(arg);
+        if (assignment != null && arg.hasInitialValue()) {
+            return !assignment.equals(arg.getInitialValue());
+        }
+        return false;
     }
 
     public boolean isValid() {

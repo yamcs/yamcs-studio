@@ -2,6 +2,7 @@ package org.yamcs.studio.commanding.stack;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -42,5 +43,10 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
             command.addAssignment(assignmentInfo, value);
         });
         super.okPressed();
+    }
+
+    @Override
+    protected Point getInitialSize() {
+        return new Point(500, 500);
     }
 }
