@@ -1,13 +1,11 @@
 package org.yamcs.studio.commanding.stack;
 
 import java.text.DecimalFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -29,10 +27,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ComparisonInfo;
 import org.yamcs.protobuf.Mdb.TransmissionConstraintInfo;
+import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-
-import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 
 public class CommandStackTableViewer extends TableViewer {
 
@@ -135,8 +132,9 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public Image getImage(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getMetaCommand().getSignificance() == null)
+                if (cmd.getMetaCommand().getSignificance() == null) {
                     return null;
+                }
                 switch (cmd.getMetaCommand().getSignificance().getConsequenceLevel()) {
                 case WATCH:
                     return level1Image;
@@ -156,8 +154,9 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public String getToolTipText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getMetaCommand().getSignificance() == null)
+                if (cmd.getMetaCommand().getSignificance() == null) {
                     return super.getToolTipText(element);
+                }
                 return cmd.getMetaCommand().getSignificance().getReasonForWarning();
             }
         });
@@ -172,12 +171,14 @@ public class CommandStackTableViewer extends TableViewer {
                 StackedCommand cmd = (StackedCommand) element;
                 StringBuilder buf = new StringBuilder();
                 for (int i = 0; i < cmd.getMetaCommand().getConstraintCount(); i++) {
-                    if (i != 0)
+                    if (i != 0) {
                         buf.append(" and ");
+                    }
                     TransmissionConstraintInfo constraint = cmd.getMetaCommand().getConstraint(i);
                     for (int j = 0; j < constraint.getComparisonCount(); j++) {
-                        if (j != 0)
+                        if (j != 0) {
                             buf.append(", ");
+                        }
                         appendConstraint(constraint.getComparison(j), buf);
                     }
                 }
@@ -194,8 +195,9 @@ public class CommandStackTableViewer extends TableViewer {
             public String getText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
                 long timeout = -1;
-                for (TransmissionConstraintInfo constraint : cmd.getMetaCommand().getConstraintList())
+                for (TransmissionConstraintInfo constraint : cmd.getMetaCommand().getConstraintList()) {
                     timeout = Math.max(timeout, constraint.getTimeout());
+                }
 
                 return (timeout >= 0) ? Long.toString(timeout) + " ms" : "-";
             }
@@ -239,10 +241,11 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public String getToolTipText(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getPTVInfo().getFailureMessage() != null)
+                if (cmd.getPTVInfo().getFailureMessage() != null) {
                     return cmd.getPTVInfo().getFailureMessage();
-                else
+                } else {
                     return super.getToolTipText(element);
+                }
             }
         });
         tcl.setColumnData(ptvColumn.getColumn(), new ColumnPixelData(50));
@@ -260,12 +263,13 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public Color getBackground(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.isArmed())
+                if (cmd.isArmed()) {
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_YELLOW);
-                else if (cmd.getStackedState() == StackedState.ISSUED)
+                } else if (cmd.getStackedState() == StackedState.ISSUED) {
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_GREEN);
-                else if (cmd.getStackedState() == StackedState.REJECTED)
+                } else if (cmd.getStackedState() == StackedState.REJECTED) {
                     return styleProvider.getErrorBackgroundColor();
+                }
 
                 return super.getBackground(element);
             }
@@ -273,8 +277,9 @@ public class CommandStackTableViewer extends TableViewer {
             @Override
             public Color getForeground(Object element) {
                 StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getStackedState() == StackedState.REJECTED)
+                if (cmd.getStackedState() == StackedState.REJECTED) {
                     return getTable().getDisplay().getSystemColor(SWT.COLOR_RED);
+                }
 
                 return super.getForeground(element);
             }
@@ -313,8 +318,9 @@ public class CommandStackTableViewer extends TableViewer {
 
                 @Override
                 public void controlResized(ControlEvent e) {
-                    if (column.getColumn().getWidth() < 5)
+                    if (column.getColumn().getWidth() < 5) {
                         column.getColumn().setWidth(5);
+                    }
                 }
             });
         }
@@ -374,10 +380,12 @@ public class CommandStackTableViewer extends TableViewer {
     boolean refreshScheduled = false;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    @Override
     public void refresh() {
         // if scheduled, skip the request
-        if (refreshScheduled)
+        if (refreshScheduled) {
             return;
+        }
         refreshScheduled = true;
 
         long delayMs = refreshDelayMs;
@@ -392,15 +400,10 @@ public class CommandStackTableViewer extends TableViewer {
         }
 
         // schedule the refresh
-        scheduler.schedule(new Runnable() {
-            @Override
-            public void run() {
-                Display.getDefault().asyncExec(() -> {
-                    superRefresh();
-                    refreshScheduled = false;
-                });
-            }
-        }, delayMs, TimeUnit.MILLISECONDS);
+        scheduler.schedule(() -> Display.getDefault().asyncExec(() -> {
+            superRefresh();
+            refreshScheduled = false;
+        }), delayMs, TimeUnit.MILLISECONDS);
     }
 
     private void superRefresh() {

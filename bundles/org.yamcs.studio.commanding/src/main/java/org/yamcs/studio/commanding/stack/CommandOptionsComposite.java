@@ -30,13 +30,14 @@ import org.yamcs.protobuf.Mdb.EnumValue;
 
 public class CommandOptionsComposite extends ScrolledComposite {
 
+    private Composite scrollpane;
     private Group argumentsGroup;
     private List<Control> controls = new ArrayList<>();
 
     public CommandOptionsComposite(Composite parent, int style, StackedCommand command) {
         super(parent, style | SWT.V_SCROLL);
 
-        Composite scrollpane = new Composite(this, SWT.NONE);
+        scrollpane = new Composite(this, SWT.NONE);
         scrollpane.setLayout(new GridLayout());
 
         argumentsGroup = new Group(scrollpane, SWT.NONE);
@@ -83,7 +84,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
             expandable.addExpansionListener(new ExpansionAdapter() {
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
-                    parent.layout(true);
+                    resizeScrollpane();
                 }
             });
         }
@@ -92,20 +93,20 @@ public class CommandOptionsComposite extends ScrolledComposite {
         optionsGroup.setText("Options");
         optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         optionsGroup.setLayout(new GridLayout(2, false));
-        
+
         // option for stack delay
         Label l0 = new Label(optionsGroup, SWT.NONE);
         l0.setText("Issue Delay (ms)");
         GridData gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
         l0.setLayoutData(gridData);
-        Spinner delayMs = new Spinner(optionsGroup, SWT.BORDER );
+        Spinner delayMs = new Spinner(optionsGroup, SWT.BORDER);
         delayMs.setValues(command.getDelayMs(), 0, Integer.MAX_VALUE, 0, 1, 100);
-        gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);        
+        gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
         delayMs.setLayoutData(gridData);
-        delayMs.addModifyListener(evt -> {           
-                command.setDelayMs(delayMs.getSelection());            
+        delayMs.addModifyListener(evt -> {
+            command.setDelayMs(delayMs.getSelection());
         });
-        
+
         // option for comment
         Label l1 = new Label(optionsGroup, SWT.NONE);
         l1.setText("Comment");
@@ -128,6 +129,10 @@ public class CommandOptionsComposite extends ScrolledComposite {
         setExpandVertical(true);
         setExpandHorizontal(true);
 
+        resizeScrollpane();
+    }
+
+    private void resizeScrollpane() {
         Point size = scrollpane.computeSize(SWT.DEFAULT, SWT.DEFAULT);
         setMinSize(size);
         scrollpane.setSize(size);

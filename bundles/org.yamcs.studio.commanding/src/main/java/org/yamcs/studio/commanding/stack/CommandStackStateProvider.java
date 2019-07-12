@@ -2,7 +2,6 @@ package org.yamcs.studio.commanding.stack;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
@@ -13,8 +12,6 @@ import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CommandStackStateProvider extends AbstractSourceProvider {
-
-    private static final Logger log = Logger.getLogger(CommandStackStateProvider.class.getName());
 
     public static final String STATE_KEY_REMAINING = "org.yamcs.studio.commanding.stack.state.remaining";
     public static final String STATE_KEY_EXECUTION_STARTED = "org.yamcs.studio.commanding.stack.state.executionStarted";
@@ -61,13 +58,13 @@ public class CommandStackStateProvider extends AbstractSourceProvider {
             }
         }
 
-        Map newState = getCurrentState();        
+        Map newState = getCurrentState();
         fireSourceChanged(ISources.WORKBENCH, newState);
     }
 
     @Override
     public Map getCurrentState() {
-        Map map = new HashMap(2);
+        Map map = new HashMap(4);
         map.put(STATE_KEY_REMAINING, remaining);
         map.put(STATE_KEY_EXECUTION_STARTED, executionStarted);
         map.put(STATE_KEY_EMPTY, empty);
