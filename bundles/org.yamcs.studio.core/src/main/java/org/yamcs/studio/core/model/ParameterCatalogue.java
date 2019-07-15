@@ -177,7 +177,10 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
     public void subscribeParameters(NamedObjectList idList) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         if (yamcsClient.isConnected()) {
-            yamcsClient.subscribe(new ParameterWebSocketRequest("subscribe", idList), this);
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
+            if (instance != null) {
+                yamcsClient.subscribe(new ParameterWebSocketRequest("subscribe", idList), this);
+            }
         }
     }
 
@@ -210,7 +213,10 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
     public void unsubscribeParameters(NamedObjectList idList) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         if (yamcsClient.isConnected()) {
-            yamcsClient.sendWebSocketMessage(new ParameterWebSocketRequest("unsubscribe", idList));
+            String instance = ManagementCatalogue.getCurrentYamcsInstance();
+            if (instance != null) {
+                yamcsClient.sendWebSocketMessage(new ParameterWebSocketRequest("unsubscribe", idList));
+            }
         }
     }
 
