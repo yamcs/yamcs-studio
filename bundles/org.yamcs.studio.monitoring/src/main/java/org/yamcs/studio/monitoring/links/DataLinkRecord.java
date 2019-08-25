@@ -1,6 +1,6 @@
 package org.yamcs.studio.monitoring.links;
 
-import org.yamcs.protobuf.YamcsManagement.LinkInfo;
+import org.yamcs.protobuf.LinkInfo;
 
 /**
  * Wrapper around LinkInfo with some extra metadata for use in the table

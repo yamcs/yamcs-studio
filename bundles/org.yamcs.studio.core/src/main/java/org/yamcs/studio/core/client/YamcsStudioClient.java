@@ -21,18 +21,18 @@ import java.util.stream.Collectors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.yamcs.YamcsException;
 import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.api.rest.BulkRestDataReceiver;
-import org.yamcs.api.rest.RestClient;
-import org.yamcs.api.ws.ConnectionListener;
-import org.yamcs.api.ws.WebSocketClient;
-import org.yamcs.api.ws.WebSocketClientCallback;
-import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Web.ConnectionInfo;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
+import org.yamcs.client.BulkRestDataReceiver;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.RestClient;
+import org.yamcs.client.WebSocketClient;
+import org.yamcs.client.WebSocketClientCallback;
+import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.ConnectionInfo;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketReplyData;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
+import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.protobuf.MessageLite;
@@ -168,7 +168,7 @@ public class YamcsStudioClient implements WebSocketClientCallback {
                                 connecting = false;
                                 for (ConnectionListener cl2 : connectionListeners) {
                                     cl2.connectionFailed(null,
-                                            new YamcsException("No instance named '" + yprops.getInstance() + "'"));
+                                            new ClientException("No instance named '" + yprops.getInstance() + "'"));
                                 }
                                 return;
                             }
@@ -206,14 +206,14 @@ public class YamcsStudioClient implements WebSocketClientCallback {
                 connecting = false;
                 for (ConnectionListener cl1 : connectionListeners) {
                     cl1.connectionFailed(null,
-                            new YamcsException(maxAttempts + " connection attempts failed, giving up."));
+                            new ClientException(maxAttempts + " connection attempts failed, giving up."));
                 }
                 log.warning(maxAttempts + " connection attempts failed, giving up.");
             } catch (InterruptedException e2) {
                 log.info("Connection cancelled by user");
                 connecting = false;
                 for (ConnectionListener cl2 : connectionListeners) {
-                    cl2.connectionFailed(null, new YamcsException("Thread interrupted", e2));
+                    cl2.connectionFailed(null, new ClientException("Thread interrupted", e2));
                 }
             }
         }, yprops);
@@ -339,6 +339,10 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         return doRequestWithDelimitedResponse(HttpMethod.GET, uri, msg, receiver);
     }
 
+    public CompletableFuture<Void> streamPost(String uri, MessageLite msg, BulkRestDataReceiver receiver) {
+        return doRequestWithDelimitedResponse(HttpMethod.POST, uri, msg, receiver);
+    }
+
     public CompletableFuture<byte[]> post(String uri, MessageLite msg) {
         return requestAsync(HttpMethod.POST, uri, msg);
     }
@@ -373,9 +377,9 @@ public class YamcsStudioClient implements WebSocketClientCallback {
             String uri, MessageLite requestBody, BulkRestDataReceiver receiver) {
         CompletableFuture<Void> cf;
         if (requestBody != null) {
-            cf = restClient.doBulkGetRequest(uri, requestBody.toByteArray(), receiver);
+            cf = restClient.doBulkRequest(method, uri, requestBody.toByteArray(), receiver);
         } else {
-            cf = restClient.doBulkGetRequest(uri, receiver);
+            cf = restClient.doBulkRequest(method, uri, receiver);
         }
 
         String jobName = method + " /api" + uri;

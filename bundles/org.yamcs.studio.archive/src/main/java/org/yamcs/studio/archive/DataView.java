@@ -121,9 +121,9 @@ public class DataView extends JScrollPane {
 
         setOpaque(false);
     }
-    
+
     public void clearArchiveRecords() {
-        for(IndexBox ib : indexBoxes.values()) {
+        for (IndexBox ib : indexBoxes.values()) {
             ib.allPackets.clear();
             ib.removeIndexLines();
         }

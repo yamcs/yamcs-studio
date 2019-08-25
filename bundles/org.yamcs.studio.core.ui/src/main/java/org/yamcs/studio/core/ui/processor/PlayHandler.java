@@ -3,14 +3,13 @@ package org.yamcs.studio.core.ui.processor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.yamcs.protobuf.Rest.EditProcessorRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.protobuf.EditProcessorRequest;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 /**
- * Currently only resumes a paused replay. Should eventually also seek to the
- * beginning and replay a stopped replay. We should probably do this at the
- * server level, rather than stitching it in here.
+ * Currently only resumes a paused replay. Should eventually also seek to the beginning and replay a stopped replay. We
+ * should probably do this at the server level, rather than stitching it in here.
  */
 public class PlayHandler extends AbstractHandler {
 

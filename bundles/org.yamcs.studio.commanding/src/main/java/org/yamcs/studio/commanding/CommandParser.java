@@ -3,7 +3,7 @@ package org.yamcs.studio.commanding;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
+import org.yamcs.protobuf.IssueCommandRequest.Assignment;
 
 /**
  * Hand-written ugly command parser. Follows some very simple logic:

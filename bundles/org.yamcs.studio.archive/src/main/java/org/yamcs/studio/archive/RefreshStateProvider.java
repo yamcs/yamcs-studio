@@ -7,8 +7,8 @@ import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
 
 /**
- * Used in plugin.xml core-expressions to keep track of enabled/disabled state of the
- * refresh-archive button in the ArchiveView toolbar.
+ * Used in plugin.xml core-expressions to keep track of enabled/disabled state of the refresh-archive button in the
+ * ArchiveView toolbar.
  */
 public class RefreshStateProvider extends AbstractSourceProvider {
 

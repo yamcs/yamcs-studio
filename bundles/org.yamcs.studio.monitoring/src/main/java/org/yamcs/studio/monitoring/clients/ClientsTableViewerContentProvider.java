@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.protobuf.ClientInfo;
 
 /**
  * Manages data for all links (regardless of which instance). Based on external configuration, it will switch the

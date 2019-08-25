@@ -3,10 +3,10 @@ package org.yamcs.studio.archive;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.api.YamcsApiException;
-import org.yamcs.protobuf.Rest.CreateTagRequest;
-import org.yamcs.protobuf.Rest.EditTagRequest;
-import org.yamcs.protobuf.Rest.ListTagsResponse;
+import org.yamcs.client.ClientException;
+import org.yamcs.protobuf.CreateTagRequest;
+import org.yamcs.protobuf.EditTagRequest;
+import org.yamcs.protobuf.ListTagsResponse;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.TimeInterval;
@@ -42,7 +42,7 @@ public class ArchiveIndexReceiver {
                     log.fine(String.format("Received %d archive records", response.getRecordsCount()));
                     archiveView.receiveArchiveRecords(response);
                 } catch (InvalidProtocolBufferException e) {
-                    throw new YamcsApiException("Failed to decode server message", e);
+                    throw new ClientException("Failed to decode server message", e);
                 }
             }).whenComplete((data, exc) -> {
                 if (exc == null) {

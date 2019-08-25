@@ -9,18 +9,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
-import org.yamcs.api.ws.WebSocketClientCallback;
-import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Rest.CreateProcessorRequest;
-import org.yamcs.protobuf.Rest.EditClientRequest;
-import org.yamcs.protobuf.Rest.EditProcessorRequest;
-import org.yamcs.protobuf.Web.ConnectionInfo;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo.ClientState;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
+import org.yamcs.client.WebSocketClientCallback;
+import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.ClientInfo;
+import org.yamcs.protobuf.ClientInfo.ClientState;
+import org.yamcs.protobuf.ConnectionInfo;
+import org.yamcs.protobuf.CreateProcessorRequest;
+import org.yamcs.protobuf.EditClientRequest;
+import org.yamcs.protobuf.EditProcessorRequest;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.Statistics;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
+import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 
@@ -186,12 +186,12 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> fetchInstanceInformationRequest(String yamcsInstance) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.get("/instances/" + yamcsInstance + "?aggregate", null);
+        return yamcsClient.get("/instances/" + yamcsInstance, null);
     }
 
     public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.patch("/instances/" + yamcsInstance + "?state=restarted", null);
+        return yamcsClient.post("/instances/" + yamcsInstance + ":restart", null);
     }
 
     public CompletableFuture<byte[]> fetchProcessors() {

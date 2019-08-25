@@ -21,8 +21,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
-import org.yamcs.protobuf.Rest.ListProcessorsResponse;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.protobuf.ListProcessorsResponse;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 import com.google.protobuf.InvalidProtocolBufferException;

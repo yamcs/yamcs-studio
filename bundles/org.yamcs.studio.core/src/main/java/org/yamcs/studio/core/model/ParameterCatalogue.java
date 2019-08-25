@@ -17,13 +17,13 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.yamcs.api.ws.WebSocketClientCallback;
+import org.yamcs.client.WebSocketClientCallback;
 import org.yamcs.protobuf.Mdb.ListParametersResponse;
 import org.yamcs.protobuf.Mdb.MemberInfo;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.protobuf.Yamcs.Value;
@@ -127,7 +127,7 @@ public class ParameterCatalogue implements Catalogue, WebSocketClientCallback {
                         byte[] data = yamcsClient.get(url, null).get();
                         try {
                             ListParametersResponse response = ListParametersResponse.parseFrom(data);
-                            parameters.addAll(response.getParameterList());
+                            parameters.addAll(response.getParametersList());
                             if (response.hasContinuationToken()) {
                                 next = response.getContinuationToken();
                             } else {

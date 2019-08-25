@@ -1,9 +1,9 @@
 package org.yamcs.studio.core.model;
 
-import org.yamcs.protobuf.Web.ConnectionInfo;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.Statistics;
+import org.yamcs.protobuf.ClientInfo;
+import org.yamcs.protobuf.ConnectionInfo;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.Statistics;
 
 /**
  * Server-wide updates on yamcs processors and their connected clients. Register for updates with YamcsPlugin

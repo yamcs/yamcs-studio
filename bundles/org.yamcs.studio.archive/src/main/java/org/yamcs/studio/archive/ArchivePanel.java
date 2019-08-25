@@ -23,11 +23,11 @@ import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.Rest.EditProcessorRequest;
+import org.yamcs.protobuf.EditProcessorRequest;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.Prefs;
@@ -193,8 +193,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         dataViewer.receiveArchiveRecords(ir);
         long start, stop;
         for (ArchiveRecord r : ir.getRecordsList()) {
-            start = r.getFirst();
-            stop = r.getLast();
+            start = r.getYamcsFirst();
+            stop = r.getYamcsLast();
 
             if ((dataStart == INVALID_INSTANT) || (start < dataStart)) {
                 dataStart = start;
@@ -212,9 +212,10 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         SwingUtilities.invokeLater(() -> {
 
             // it might be that the archive index service of this Yamcs instance is disabled
-            log.log(Level.WARNING, "Error when receiving archive records, it might be that the archive index service of this Yamcs instance is disabled: " + errorMessage);
-            
-            
+            log.log(Level.WARNING,
+                    "Error when receiving archive records, it might be that the archive index service of this Yamcs instance is disabled: "
+                            + errorMessage);
+
             archiveView.setRefreshEnabled(true);
             setNormalPointer();
         });

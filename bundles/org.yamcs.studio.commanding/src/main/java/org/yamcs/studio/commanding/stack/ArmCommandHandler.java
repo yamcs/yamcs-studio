@@ -12,10 +12,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.IssueCommandRequest;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
-import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 
 public class ArmCommandHandler extends AbstractHandler {
 
@@ -35,7 +35,8 @@ public class ArmCommandHandler extends AbstractHandler {
         return null;
     }
 
-    private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command) throws ExecutionException {
+    private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command)
+            throws ExecutionException {
         IssueCommandRequest req = command.toIssueCommandRequest().setDryRun(true).build();
 
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
@@ -58,7 +59,7 @@ public class ArmCommandHandler extends AbstractHandler {
                     case CRITICAL:
                     case SEVERE:
                         String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
-                        + significance.getConsequenceLevel().toString().substring(1);
+                                + significance.getConsequenceLevel().toString().substring(1);
                         if (MessageDialog.openConfirm(activeShell, "Confirm",
                                 level + ": Are you sure you want to arm this command?\n" +
                                         "    " + command.toStyledString(view).getString() + "\n\n" +
@@ -70,7 +71,8 @@ public class ArmCommandHandler extends AbstractHandler {
                         doArm = true;
                         break;
                     default:
-                        throw new IllegalStateException("Unexpected significance level " + significance.getConsequenceLevel());
+                        throw new IllegalStateException(
+                                "Unexpected significance level " + significance.getConsequenceLevel());
                     }
 
                     if (doArm) {

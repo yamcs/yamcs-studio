@@ -9,10 +9,15 @@
     <version>1.2.7-SNAPSHOT</version>
   </parent>
 
-  <artifactId>org.yamcs.client</artifactId>
+  <artifactId>org.yamcs.studio.p2deps.yamcs</artifactId>
   <packaging>bundle</packaging>
 
   <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-client</artifactId>
+      <version>${yamcs.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.yamcs</groupId>
       <artifactId>yamcs-xtce</artifactId>
@@ -32,9 +37,9 @@
           <unpackBundle>true</unpackBundle>
           <instructions>
             <Bundle-Name>Yamcs OSGI Client</Bundle-Name>
-            <Bundle-SymbolicName>org.yamcs.client;singleton:=true</Bundle-SymbolicName>
+            <Bundle-SymbolicName>org.yamcs.studio.p2deps.yamcs;singleton:=true</Bundle-SymbolicName>
             <Bundle-Vendor>Space Applications Services</Bundle-Vendor>
-            <Bundle-Description>OSGI-friendly repackaging of yamcs-api</Bundle-Description>
+            <Bundle-Description>OSGI-friendly repackaging of yamcs-client</Bundle-Description>
             <Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
             <!-- 
               Attempt to resolve all and dump in Export-Package.
@@ -54,8 +59,7 @@
               org.yaml.snakeyaml,
               org.yamcs,
               org.yamcs.api,
-              org.yamcs.api.rest,
-              org.yamcs.api.ws,
+              org.yamcs.client,
               org.yamcs.protobuf,
               org.yamcs.security,
               org.yamcs.utils,

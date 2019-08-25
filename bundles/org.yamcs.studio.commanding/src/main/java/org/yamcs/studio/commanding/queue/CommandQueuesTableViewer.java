@@ -29,7 +29,7 @@ import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Commanding.QueueState;
-import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
+import org.yamcs.protobuf.EditCommandQueueRequest;
 import org.yamcs.studio.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;

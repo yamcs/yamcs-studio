@@ -6,8 +6,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.EditClientRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.protobuf.EditClientRequest;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 public class ChooseProcessorDialogHandler extends AbstractHandler {

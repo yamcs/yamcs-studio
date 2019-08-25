@@ -7,12 +7,12 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.yamcs.api.YamcsApiException;
-import org.yamcs.api.rest.BulkRestDataReceiver;
-import org.yamcs.api.ws.WebSocketClientCallback;
-import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Rest.CreateEventRequest;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
+import org.yamcs.client.BulkRestDataReceiver;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.WebSocketClientCallback;
+import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.Archive.CreateEventRequest;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -53,10 +53,10 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
     @Override
     public void instanceChanged(String oldInstance, String newInstance) {
         // Don't assume anything. Let listeners choose whether they want
-        // to register as an instance listeners.  
+        // to register as an instance listeners.
 
         // but make sure to subscribe to the events of the new instance
-        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient(); 
+        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("events", "subscribe"), this);
     }
 
@@ -124,11 +124,11 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
         }
 
         @Override
-        public void receiveData(byte[] data) throws YamcsApiException {
+        public void receiveData(byte[] data) throws ClientException {
             try {
                 events.add(Event.parseFrom(data));
             } catch (InvalidProtocolBufferException e) {
-                throw new YamcsApiException("Failed to decode server response", e);
+                throw new ClientException("Failed to decode server response", e);
             }
             if (events.size() >= 500) {
                 listener.processEvents(new ArrayList<>(events));

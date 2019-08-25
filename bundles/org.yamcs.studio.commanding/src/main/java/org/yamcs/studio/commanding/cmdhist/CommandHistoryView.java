@@ -36,7 +36,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Rest.ListCommandsResponse;
+import org.yamcs.protobuf.ListCommandsResponse;
 import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;

@@ -18,21 +18,21 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.yamcs.api.ws.WebSocketClientCallback;
-import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.client.WebSocketClientCallback;
+import org.yamcs.client.WebSocketRequest;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueEvent;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.protobuf.EditCommandQueueEntryRequest;
+import org.yamcs.protobuf.EditCommandQueueRequest;
+import org.yamcs.protobuf.IssueCommandRequest;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.ListCommandsResponse;
-import org.yamcs.protobuf.Rest.EditCommandQueueEntryRequest;
-import org.yamcs.protobuf.Rest.EditCommandQueueRequest;
-import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest;
-import org.yamcs.protobuf.Rest.UpdateCommandHistoryRequest.KeyValue;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
+import org.yamcs.protobuf.UpdateCommandHistoryRequest;
+import org.yamcs.protobuf.UpdateCommandHistoryRequest.KeyValue;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 
@@ -147,7 +147,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
                         byte[] data = yamcsClient.get(url, null).get();
                         try {
                             ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
-                            commands.addAll(response.getCommandList());
+                            commands.addAll(response.getCommandsList());
                             if (response.hasContinuationToken()) {
                                 next = response.getContinuationToken();
                             } else {

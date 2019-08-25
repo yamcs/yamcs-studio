@@ -21,8 +21,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.protobuf.Rest.ListProcessorsResponse;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.protobuf.ListProcessorsResponse;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 import com.google.protobuf.InvalidProtocolBufferException;

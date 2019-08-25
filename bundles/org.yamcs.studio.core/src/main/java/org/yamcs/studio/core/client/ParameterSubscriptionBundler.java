@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Web.ParameterSubscriptionResponse;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketReplyData;
+import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.ParameterSubscriptionResponse;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 
 import com.google.protobuf.InvalidProtocolBufferException;

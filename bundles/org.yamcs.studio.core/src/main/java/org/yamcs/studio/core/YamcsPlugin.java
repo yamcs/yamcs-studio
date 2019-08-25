@@ -10,8 +10,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
-import org.yamcs.YamcsException;
-import org.yamcs.api.ws.ConnectionListener;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ConnectionListener;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.studio.core.model.AlarmCatalogue;
 import org.yamcs.studio.core.model.ArchiveCatalogue;
@@ -127,7 +127,7 @@ public class YamcsPlugin extends Plugin {
         }
 
         @Override
-        public void connectionFailed(String url, YamcsException exception) {
+        public void connectionFailed(String url, ClientException exception) {
             connectionListeners.forEach(l -> l.onYamcsConnectionFailed(exception));
         }
 

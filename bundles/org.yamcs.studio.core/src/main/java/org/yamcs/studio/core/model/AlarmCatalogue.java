@@ -5,10 +5,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.yamcs.api.ws.WebSocketClientCallback;
-import org.yamcs.api.ws.WebSocketRequest;
+import org.yamcs.client.WebSocketClientCallback;
+import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.AlarmSubscriptionRequest;
 import org.yamcs.protobuf.Alarms.AlarmData;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 
@@ -25,7 +26,11 @@ public class AlarmCatalogue implements Catalogue, WebSocketClientCallback {
     @Override
     public void onYamcsConnected() {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        yamcsClient.subscribe(new WebSocketRequest("alarms", "subscribe"), this);
+
+        AlarmSubscriptionRequest options = AlarmSubscriptionRequest.newBuilder()
+                .setDetail(true)
+                .build();
+        yamcsClient.subscribe(new WebSocketRequest("alarms", "subscribe", options), this);
     }
 
     @Override

@@ -53,8 +53,8 @@ public class IndexBox extends Box {
     private String name;
 
     /**
-     * because the histogram contains regular splits each 3600 seconds, merge here the records that
-     * are close enough to each other. -1 means no merging
+     * because the histogram contains regular splits each 3600 seconds, merge here the records that are close enough to
+     * each other. -1 means no merging
      */
     long mergeTime = -1;
     Preferences prefs;
@@ -79,10 +79,12 @@ public class IndexBox extends Box {
         cons.gridx = 0;
         titleLabel = new JLabel(name);
         titleLabel.setBackground(Color.red);
-        titleLabel.setMaximumSize(new Dimension(titleLabel.getMaximumSize().width, titleLabel.getPreferredSize().height));
-        //titleLabel.setForeground(new Color(51, 51, 51));
+        titleLabel
+                .setMaximumSize(new Dimension(titleLabel.getMaximumSize().width, titleLabel.getPreferredSize().height));
+        // titleLabel.setForeground(new Color(51, 51, 51));
         titleLabel.setFont(titleLabel.getFont().deriveFont(~Font.BOLD));
-        topPanel.setMaximumSize(new Dimension(topPanel.getMaximumSize().width, titleLabel.getPreferredSize().height + 13));
+        topPanel.setMaximumSize(
+                new Dimension(topPanel.getMaximumSize().width, titleLabel.getPreferredSize().height + 13));
         topPanel.add(titleLabel, cons);
         topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(topPanel);
@@ -161,15 +163,15 @@ public class IndexBox extends Box {
     public void receiveArchiveRecords(List<ArchiveRecord> records) {
         String[] nameparts;
         synchronized (tmData) {
-            //progressMonitor.setProgress(30);
-            //progressMonitor.setNote("Receiving data");
+            // progressMonitor.setProgress(30);
+            // progressMonitor.setNote("Receiving data");
 
             for (ArchiveRecord r : records) {
-                //debugLog(r.packet+"\t"+r.num+"\t"+new Date(r.first)+"\t"+new Date(r.last));
+                // debugLog(r.packet+"\t"+r.num+"\t"+new Date(r.first)+"\t"+new Date(r.last));
                 NamedObjectId id = r.getId();
                 String grpName = null;
                 String shortName = null;
-                //split the id into group->name
+                // split the id into group->name
                 if (!id.hasNamespace()) {
                     int idx = id.getName().lastIndexOf("/");
                     if (idx != -1) {
@@ -192,7 +194,7 @@ public class IndexBox extends Box {
                 }
                 TreeSet<IndexChunkSpec> al = tmData.get(id.getName());
                 String info = r.hasInfo() ? r.getInfo() : null;
-                IndexChunkSpec tnew = new IndexChunkSpec(r.getFirst(), r.getLast(), r.getNum(), info);
+                IndexChunkSpec tnew = new IndexChunkSpec(r.getYamcsFirst(), r.getYamcsLast(), r.getNum(), info);
                 IndexChunkSpec told = al.floor(tnew);
                 if ((told == null) || (mergeTime == -1) || (!told.merge(tnew, mergeTime))) {
                     al.add(tnew);
@@ -250,11 +252,11 @@ public class IndexBox extends Box {
         final int panelw = zoom.getPixels();
         JLabel pktlab;
         Font font = null;
-        int x1, y = 0;//, count = 0;
+        int x1, y = 0;// , count = 0;
 
         indexLine.removeAll();
 
-        //debugLog("redrawTmPanel() "+pkt.name+" mark 1");
+        // debugLog("redrawTmPanel() "+pkt.name+" mark 1");
         // set labels
         x1 = 10;
         indexLine.setBackground(Color.RED);
@@ -285,13 +287,13 @@ public class IndexBox extends Box {
             indexLine.add(tmt);
         }
 
-        //   centerPanel.setPreferredSize(new Dimension(panelw, centerPanel.getPreferredSize().height));
+        // centerPanel.setPreferredSize(new Dimension(panelw, centerPanel.getPreferredSize().height));
         // centerPanel.setMaximumSize(centerPanel.getPreferredSize());
 
         indexLine.revalidate();
         indexLine.repaint();
 
-        //  System.out.println("indexLine.preferred size: "+indexLine.getPreferredSize());
+        // System.out.println("indexLine.preferred size: "+indexLine.getPreferredSize());
     }
 
     class IndexLineSpec implements Comparable<IndexLineSpec> {

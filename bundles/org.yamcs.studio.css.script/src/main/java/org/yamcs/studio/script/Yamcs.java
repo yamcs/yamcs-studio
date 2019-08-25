@@ -3,8 +3,8 @@ package org.yamcs.studio.script;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
+import org.yamcs.protobuf.IssueCommandRequest;
+import org.yamcs.protobuf.IssueCommandRequest.Assignment;
 import org.yamcs.studio.commanding.CommandParser;
 import org.yamcs.studio.commanding.CommandParser.ParseResult;
 import org.yamcs.studio.core.YamcsPlugin;

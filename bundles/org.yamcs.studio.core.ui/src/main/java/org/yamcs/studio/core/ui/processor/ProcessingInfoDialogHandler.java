@@ -25,13 +25,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.ClientInfo;
+import org.yamcs.protobuf.ConnectionInfo;
 import org.yamcs.protobuf.Mdb.MissionDatabase;
 import org.yamcs.protobuf.Mdb.SpaceSystemInfo;
-import org.yamcs.protobuf.Web.ConnectionInfo;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.Statistics;
+import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ManagementListener;
 import org.yamcs.studio.core.model.TimeCatalogue;
@@ -164,54 +164,6 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
                     }
                 });
                 tcl.setColumnData(ssColumn.getColumn(), new ColumnPixelData(150));
-
-                TableViewerColumn parameterCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
-                parameterCountColumn.getColumn().setText("PAR");
-                parameterCountColumn.getColumn().setToolTipText("Parameter Count");
-                parameterCountColumn.setLabelProvider(new ColumnLabelProvider() {
-                    @Override
-                    public String getText(Object element) {
-                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
-                        return Integer.toString(ss.getParameterCount());
-                    }
-                });
-                tcl.setColumnData(parameterCountColumn.getColumn(), new ColumnPixelData(50));
-
-                TableViewerColumn containerCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
-                containerCountColumn.getColumn().setText("CON");
-                containerCountColumn.getColumn().setToolTipText("Container Count");
-                containerCountColumn.setLabelProvider(new ColumnLabelProvider() {
-                    @Override
-                    public String getText(Object element) {
-                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
-                        return Integer.toString(ss.getContainerCount());
-                    }
-                });
-                tcl.setColumnData(containerCountColumn.getColumn(), new ColumnPixelData(50));
-
-                TableViewerColumn commandCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
-                commandCountColumn.getColumn().setText("CMD");
-                commandCountColumn.getColumn().setToolTipText("Command Count");
-                commandCountColumn.setLabelProvider(new ColumnLabelProvider() {
-                    @Override
-                    public String getText(Object element) {
-                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
-                        return Integer.toString(ss.getCommandCount());
-                    }
-                });
-                tcl.setColumnData(commandCountColumn.getColumn(), new ColumnPixelData(50));
-
-                TableViewerColumn algorithmCountColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
-                algorithmCountColumn.getColumn().setText("ALG");
-                algorithmCountColumn.getColumn().setToolTipText("Algorithm Count");
-                algorithmCountColumn.setLabelProvider(new ColumnLabelProvider() {
-                    @Override
-                    public String getText(Object element) {
-                        SpaceSystemInfo ss = (SpaceSystemInfo) element;
-                        return Integer.toString(ss.getAlgorithmCount());
-                    }
-                });
-                tcl.setColumnData(algorithmCountColumn.getColumn(), new ColumnPixelData(50));
 
                 tableViewer.setInput(mdb.getSpaceSystemList());
             }

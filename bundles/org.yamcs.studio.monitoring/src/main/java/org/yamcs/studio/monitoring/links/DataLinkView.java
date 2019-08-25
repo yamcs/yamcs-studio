@@ -7,7 +7,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
-import org.yamcs.protobuf.YamcsManagement.LinkInfo;
+import org.yamcs.protobuf.LinkInfo;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;

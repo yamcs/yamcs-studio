@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.protobuf.IssueCommandRequest;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 
 public class IssueCommandHandler extends AbstractHandler {
 
@@ -28,7 +28,8 @@ public class IssueCommandHandler extends AbstractHandler {
         return null;
     }
 
-    private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command) throws ExecutionException {
+    private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command)
+            throws ExecutionException {
         IssueCommandRequest req = command.toIssueCommandRequest().build();
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
         String qname;

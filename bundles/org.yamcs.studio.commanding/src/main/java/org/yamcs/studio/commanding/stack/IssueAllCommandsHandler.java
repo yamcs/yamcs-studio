@@ -2,7 +2,6 @@ package org.yamcs.studio.commanding.stack;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -19,12 +18,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.Rest.IssueCommandRequest;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.protobuf.IssueCommandRequest;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryView;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
+import org.yamcs.studio.core.model.CommandingCatalogue;
 
 public class IssueAllCommandsHandler extends AbstractHandler {
 

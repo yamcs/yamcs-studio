@@ -33,7 +33,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
-import org.yamcs.protobuf.Rest.ListEventsResponse;
+import org.yamcs.protobuf.Archive.ListEventsResponse;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsConnectionListener;

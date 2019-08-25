@@ -3,8 +3,8 @@ package org.yamcs.studio.core.ui.processor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.yamcs.protobuf.Rest.EditProcessorRequest;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
+import org.yamcs.protobuf.EditProcessorRequest;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 public class PauseHandler extends AbstractHandler {

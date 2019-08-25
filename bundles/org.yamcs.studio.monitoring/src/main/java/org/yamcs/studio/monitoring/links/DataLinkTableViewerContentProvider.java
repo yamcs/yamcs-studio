@@ -9,12 +9,11 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.yamcs.protobuf.YamcsManagement.LinkInfo;
+import org.yamcs.protobuf.LinkInfo;
 
 /**
- * Manages data for all links (regardless of which instance). Based on external configuration, it
- * will switch the content of the associated table viewer to only show links for a specific Yamcs
- * instance.
+ * Manages data for all links (regardless of which instance). Based on external configuration, it will switch the
+ * content of the associated table viewer to only show links for a specific Yamcs instance.
  */
 public class DataLinkTableViewerContentProvider implements IStructuredContentProvider {
 
@@ -31,8 +30,8 @@ public class DataLinkTableViewerContentProvider implements IStructuredContentPro
     }
 
     /**
-     * Sets the toggle that will determine which of the known links will be show in the view. Also
-     * ensures a full refresh of the table.
+     * Sets the toggle that will determine which of the known links will be show in the view. Also ensures a full
+     * refresh of the table.
      */
     public void processYamcsInstance(String yamcsInstance) {
         this.yamcsInstance = yamcsInstance;
@@ -53,8 +52,9 @@ public class DataLinkTableViewerContentProvider implements IStructuredContentPro
             return new Object[0];
         } else {
             Map<String, DataLinkRecord> linksByName = linksByNameByInstance.get(yamcsInstance);
-            if (linksByName == null)
+            if (linksByName == null) {
                 return new Object[0];
+            }
             Collection<DataLinkRecord> records = linksByName.values();
             return (records != null) ? records.toArray() : new Object[0];
         }

@@ -12,8 +12,8 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
-import org.yamcs.protobuf.Rest.EditClientRequest;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
+import org.yamcs.protobuf.ClientInfo;
+import org.yamcs.protobuf.EditClientRequest;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 
 public class SwitchProcessorHandler extends AbstractHandler implements IElementUpdater {

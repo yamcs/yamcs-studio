@@ -10,12 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Logger;
 
-import org.yamcs.api.ws.WebSocketClientCallback;
-import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Rest.EditLinkRequest;
-import org.yamcs.protobuf.Web.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.protobuf.YamcsManagement.LinkEvent;
-import org.yamcs.protobuf.YamcsManagement.LinkInfo;
+import org.yamcs.client.WebSocketClientCallback;
+import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.EditLinkRequest;
+import org.yamcs.protobuf.LinkEvent;
+import org.yamcs.protobuf.LinkInfo;
+import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 

@@ -11,7 +11,6 @@
 
   <artifactId>org.yamcs.studio.p2deps.repository</artifactId>
   <packaging>pom</packaging>
-
   <build>
     <plugins>
       <!-- Non-Tycho dependencies of Yamcs Studio -->
@@ -30,7 +29,7 @@
               <artifacts>
                 <artifact>
                   <id>org.yamcs.studio:org.diirt:${project.version}</id>
-                  <id>org.yamcs.studio:org.yamcs.client:${project.version}</id>
+                  <id>org.yamcs.studio:org.yamcs.studio.p2deps.yamcs:${project.version}</id>
                 </artifact>
               </artifacts>
             </configuration>

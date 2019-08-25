@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.model;
 
-import org.yamcs.protobuf.YamcsManagement.LinkInfo;
+import org.yamcs.protobuf.LinkInfo;
 
 /**
  * Server-wide updates on yamcs data links. Register for updates with YamcsPlugin
@@ -14,8 +14,8 @@ public interface LinkListener {
     public void linkUpdated(LinkInfo linkInfo);
 
     /**
-     * The listener should clear its internal state, as if there are no links. This usually happens
-     * when the connection was lost
+     * The listener should clear its internal state, as if there are no links. This usually happens when the connection
+     * was lost
      */
     public void clearDataLinkData();
 }

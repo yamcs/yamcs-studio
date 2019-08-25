@@ -43,7 +43,7 @@ public class DataViewer extends JPanel implements ActionListener {
         addIndex("cmdhist", "cmdhist histogram", 1000);
         addVerticalGlue();
     }
-    
+
     public void clearView() {
         this.dataView.clearArchiveRecords();
     }

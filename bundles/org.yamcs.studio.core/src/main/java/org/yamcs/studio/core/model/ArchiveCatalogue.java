@@ -3,9 +3,9 @@ package org.yamcs.studio.core.model;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
-import org.yamcs.api.rest.BulkRestDataReceiver;
-import org.yamcs.protobuf.Rest.CreateTagRequest;
-import org.yamcs.protobuf.Rest.EditTagRequest;
+import org.yamcs.client.BulkRestDataReceiver;
+import org.yamcs.protobuf.CreateTagRequest;
+import org.yamcs.protobuf.EditTagRequest;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.URLBuilder;

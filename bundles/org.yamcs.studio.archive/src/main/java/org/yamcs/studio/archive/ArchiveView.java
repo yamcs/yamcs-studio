@@ -33,10 +33,10 @@ import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
-import org.yamcs.protobuf.Rest.EditProcessorRequest;
+import org.yamcs.protobuf.EditProcessorRequest;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -422,14 +422,6 @@ public class ArchiveView extends ViewPart
         });
     }
 
-    public boolean isZoomInEnabled() {
-        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ZoomInStateProvider commandState = (ZoomInStateProvider) service
-                .getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(ZoomInStateProvider.STATE_KEY_ENABLED);
-    }
-
     public void setZoomInEnabled(boolean enabled) {
         // Back to the SWT thread, to be sure
         Display.getDefault().asyncExec(() -> {
@@ -439,14 +431,6 @@ public class ArchiveView extends ViewPart
                     .getSourceProvider(ZoomInStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
-    }
-
-    public boolean isZoomOutEnabled() {
-        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ZoomOutStateProvider commandState = (ZoomOutStateProvider) service
-                .getSourceProvider(ZoomOutStateProvider.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(ZoomOutStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setZoomOutEnabled(boolean enabled) {
@@ -460,14 +444,6 @@ public class ArchiveView extends ViewPart
         });
     }
 
-    public boolean isZoomClearEnabled() {
-        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        ClearZoomStateProvider commandState = (ClearZoomStateProvider) service
-                .getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(ClearZoomStateProvider.STATE_KEY_ENABLED);
-    }
-
     public void setZoomClearEnabled(boolean enabled) {
         // Back to the SWT thread, to be sure
         Display.getDefault().asyncExec(() -> {
@@ -477,14 +453,6 @@ public class ArchiveView extends ViewPart
                     .getSourceProvider(ClearZoomStateProvider.STATE_KEY_ENABLED);
             commandState.setEnabled(enabled);
         });
-    }
-
-    public boolean isTagEnabled() {
-        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-        ISourceProviderService service = (ISourceProviderService) window.getService(ISourceProviderService.class);
-        AnnotateRangeStateProvider commandState = (AnnotateRangeStateProvider) service
-                .getSourceProvider(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
-        return (Boolean) commandState.getCurrentState().get(AnnotateRangeStateProvider.STATE_KEY_ENABLED);
     }
 
     public void setTagEnabled(boolean enabled) {

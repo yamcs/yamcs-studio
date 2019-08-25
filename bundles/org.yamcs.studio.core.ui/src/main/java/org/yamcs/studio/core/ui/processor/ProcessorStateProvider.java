@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
+import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
 
 /**
  * Used in plugin.xml core-expressions to keep track of play/pause button state

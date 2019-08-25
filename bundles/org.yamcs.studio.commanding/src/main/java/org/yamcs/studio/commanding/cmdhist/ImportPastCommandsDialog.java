@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.api.YamcsApiException;
+import org.yamcs.client.ClientException;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -144,7 +144,7 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
                     cmdhistView.processCommandHistoryEntry(commandHistoryEntry);
                 });
             } catch (InvalidProtocolBufferException e) {
-                throw new YamcsApiException("Failed to decode server message", e);
+                throw new ClientException("Failed to decode server message", e);
             }
         }).whenComplete((data, exc) -> {
             if (exc == null) {

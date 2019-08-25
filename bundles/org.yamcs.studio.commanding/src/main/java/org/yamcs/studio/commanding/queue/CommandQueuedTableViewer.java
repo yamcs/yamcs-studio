@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
-import org.yamcs.protobuf.Rest.EditCommandQueueEntryRequest;
+import org.yamcs.protobuf.EditCommandQueueEntryRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;

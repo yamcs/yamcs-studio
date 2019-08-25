@@ -3,7 +3,7 @@ package org.yamcs.studio.commanding;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.yamcs.protobuf.Rest.IssueCommandRequest.Assignment;
+import org.yamcs.protobuf.IssueCommandRequest.Assignment;
 import org.yamcs.studio.commanding.CommandParser.ParseResult;
 
 public class CommandParserTest {
@@ -56,7 +56,8 @@ public class CommandParserTest {
     public void testStringArgumentEscaping() {
         // Actual test string after java interpets it: '\'Hello\' \"world\"'
         // which our parser should interpet then as: 'Hello' "world"
-        ParseResult commandType = CommandParser.parseCommand("/YSS/SIMULATOR/TestCmd(Param: '\\'Hello\\' \\\"world\\\"')");
+        ParseResult commandType = CommandParser
+                .parseCommand("/YSS/SIMULATOR/TestCmd(Param: '\\'Hello\\' \\\"world\\\"')");
 
         assertEquals("/YSS/SIMULATOR/TestCmd", commandType.getQualifiedName());
         assertEquals(1, commandType.getAssignments().size());

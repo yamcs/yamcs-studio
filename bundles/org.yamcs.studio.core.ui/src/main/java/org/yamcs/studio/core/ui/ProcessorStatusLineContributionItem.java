@@ -3,11 +3,11 @@ package org.yamcs.studio.core.ui;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.Web.ConnectionInfo;
-import org.yamcs.protobuf.YamcsManagement.ClientInfo;
-import org.yamcs.protobuf.YamcsManagement.ProcessorInfo;
-import org.yamcs.protobuf.YamcsManagement.Statistics;
-import org.yamcs.protobuf.YamcsManagement.YamcsInstance;
+import org.yamcs.protobuf.ClientInfo;
+import org.yamcs.protobuf.ConnectionInfo;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.Statistics;
+import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.ManagementCatalogue;

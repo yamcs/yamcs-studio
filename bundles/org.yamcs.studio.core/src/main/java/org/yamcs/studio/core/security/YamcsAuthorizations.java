@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.protobuf.YamcsManagement.UserInfo;
+import org.yamcs.protobuf.UserInfo;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 
@@ -40,7 +40,7 @@ public class YamcsAuthorizations {
 
     public String getUsername() {
         if (userInfo != null) {
-            return userInfo.getLogin();
+            return userInfo.getName();
         }
         return null;
     }

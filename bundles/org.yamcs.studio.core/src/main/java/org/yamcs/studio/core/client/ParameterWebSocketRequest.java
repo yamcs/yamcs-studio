@@ -3,8 +3,8 @@ package org.yamcs.studio.core.client;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.yamcs.api.ws.WebSocketRequest;
-import org.yamcs.protobuf.Web.ParameterSubscriptionRequest;
+import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.ParameterSubscriptionRequest;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
 

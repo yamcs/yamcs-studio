@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.IssueCommandRequest;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
-import org.yamcs.protobuf.Rest.IssueCommandRequest;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 
@@ -31,8 +31,9 @@ public class ArmAllCommandHandler extends AbstractHandler {
         CommandStack stack = CommandStack.getInstance();
 
         int commandIndex = stack.getCommands().indexOf(stack.getActiveCommand());
-        if(commandIndex < stack.getCommands().size())
+        if (commandIndex < stack.getCommands().size()) {
             armAllCommands(shell, commandStackView, stack, commandIndex);
+        }
         return null;
     }
 
@@ -81,7 +82,6 @@ public class ArmAllCommandHandler extends AbstractHandler {
                     if (doArm) {
                         log.info(String.format("Command armed %s", command));
                         command.setStackedState(StackedState.ARMED);
-                       
 
                         if (commandIndex + 1 == stack.getCommands().size()) {
                             view.refreshState();
@@ -93,7 +93,7 @@ public class ArmAllCommandHandler extends AbstractHandler {
                             } catch (ExecutionException e) {
                                 log.severe("Not able to arm the command in automatic mode: " + e.toString());
                             }
-                            //view.refreshState();
+                            // view.refreshState();
                         }
                     }
                 });
