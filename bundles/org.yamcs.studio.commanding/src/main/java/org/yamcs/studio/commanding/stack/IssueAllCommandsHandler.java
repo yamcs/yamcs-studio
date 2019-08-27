@@ -43,7 +43,9 @@ public class IssueAllCommandsHandler extends AbstractHandler {
         ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command command = service.getCommand("org.yamcs.studio.commanding.cmdhist.scrollLockCommand");
         boolean oldState = HandlerUtil.toggleCommandState(command);
-        commandHistoryView.enableScrollLock(true);
+        if(commandHistoryView != null) {
+            commandHistoryView.enableScrollLock(true);
+        }
 
         try {
             CommandIssuer issuer = new CommandIssuer(shell, commandStackView);
