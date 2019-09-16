@@ -53,6 +53,7 @@
             </Import-Package>
             <Export-Package>
               com.google.protobuf,
+              com.google.protobuf.util,
               io.netty.channel,
               io.netty.handler.codec.http,
               io.netty.util.concurrent,
