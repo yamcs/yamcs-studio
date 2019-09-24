@@ -44,11 +44,6 @@
       </command>
       <command
             categoryId="org.yamcs.studio"
-            id="org.yamcs.studio.core.ui.processor.forwardCommand"
-            name="Step to Next Update">
-      </command>
-      <command
-            categoryId="org.yamcs.studio"
             id="org.yamcs.studio.core.ui.processor.infoCommand"
             name="Connection Context Info">
       </command>
@@ -177,23 +172,6 @@
                      <equals value="STOPPED"/>
                   </with>
                </or>
-               <with variable="org.yamcs.studio.core.ui.processor.state.replay">
-                  <equals value="true"/>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.yamcs.studio.core.ui.processor.ForwardHandler"
-            commandId="org.yamcs.studio.core.ui.processor.forwardCommand">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true"/>
-               </with>
-               <with variable="org.yamcs.studio.core.ui.processor.state.processing">
-                  <equals value="RUNNING"/>
-               </with>
                <with variable="org.yamcs.studio.core.ui.processor.state.replay">
                   <equals value="true"/>
                </with>

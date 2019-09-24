@@ -60,12 +60,10 @@ public class ArchiveView extends ViewPart
 
     private Image playImage;
     private Image pauseImage;
-    private Image forwardImage;
     private Image leaveReplayImage;
 
     private Button seekButton;
     private Button playButton;
-    private Button forwardButton;
     private Button leaveReplayButton;
 
     private Combo speedCombo;
@@ -79,7 +77,6 @@ public class ArchiveView extends ViewPart
 
         playImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/play.png"));
         pauseImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/pause.png"));
-        forwardImage = resourceManager.createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/forward.png"));
         leaveReplayImage = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(ArchiveView.class, "icons/redo.png"));
 
@@ -169,13 +166,6 @@ public class ArchiveView extends ViewPart
             } else {
                 RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.pauseCommand");
             }
-        });
-
-        forwardButton = new Button(controlsComposite, SWT.PUSH);
-        forwardButton.setImage(forwardImage);
-        forwardButton.setToolTipText("Forward");
-        forwardButton.addListener(SWT.Selection, evt -> {
-            RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.forwardCommand");
         });
 
         Label label = new Label(controlsComposite, SWT.PUSH);
@@ -571,17 +561,12 @@ public class ArchiveView extends ViewPart
         pauseEnabled &= ("RUNNING".equals(processing));
         pauseEnabled &= (Boolean.TRUE.equals(replay));
 
-        boolean forwardEnabled = (Boolean.TRUE.equals(connected));
-        forwardEnabled &= ("RUNNING".equals(processing));
-        forwardEnabled &= (Boolean.TRUE.equals(replay));
-
         boolean speedEnabled = (Boolean.TRUE.equals(connected));
         speedEnabled &= replaySpeed != null && replaySpeed > 0;
 
         boolean leaveReplayEnabled = (Boolean.TRUE.equals(connected));
 
         playButton.setEnabled(playEnabled || pauseEnabled);
-        forwardButton.setEnabled(forwardEnabled);
         leaveReplayButton.setEnabled(leaveReplayEnabled);
         speedCombo.setEnabled(speedEnabled);
 
