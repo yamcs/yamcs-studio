@@ -1,3 +1,4 @@
+=======================
 Yamcs Studio User Guide
 =======================
 
@@ -10,7 +11,6 @@ Yamcs Studio is a rich desktop client for use with Yamcs, the server. In its def
 .. toctree::
     :maxdepth: 1
     :titlesonly:
-    :caption: Table of Contents
 
     intro/index
     display-runner/index
