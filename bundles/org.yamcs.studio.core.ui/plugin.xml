@@ -238,11 +238,6 @@
    
    <extension point="org.eclipse.ui.preferencePages">
       <page
-            class="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
-            id="org.yamcs.studio.core.ui.prefs.ConnectionPreferencePage"
-            name="Yamcs Server">
-      </page>
-      <page
             class="org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage"
             id="org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage"
             name="Date Format">

@@ -1,5 +1,6 @@
 package org.yamcs.studio.runtime.base;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -23,5 +24,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     public void postStartup() {
         IWorkbench workbench = PlatformUI.getWorkbench();
         YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
+        System.out.println("got.. " + Platform.getInstanceLocation());
     }
 }

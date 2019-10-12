@@ -141,8 +141,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         });
 
         // Request connection to Yamcs server
-        boolean singleConnectionMode = getPreferenceStore().getBoolean("singleConnectionMode");
-        if (!singleConnectionMode && ConnectionPreferences.isAutoConnect()) {
+        if (ConnectionPreferences.isAutoConnect()) {
             RCPUtils.runCommand("org.yamcs.studio.core.ui.autoconnect");
         }
     }
