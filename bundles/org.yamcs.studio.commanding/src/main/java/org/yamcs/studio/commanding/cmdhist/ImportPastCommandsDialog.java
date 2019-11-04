@@ -141,7 +141,7 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
             try {
                 CommandHistoryEntry commandHistoryEntry = CommandHistoryEntry.parseFrom(data);
                 Display.getDefault().asyncExec(() -> {
-                    cmdhistView.processCommandHistoryEntry(commandHistoryEntry);
+                    cmdhistView.processCommandHistoryEntry(commandHistoryEntry, true);
                 });
             } catch (InvalidProtocolBufferException e) {
                 throw new ClientException("Failed to decode server message", e);

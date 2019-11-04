@@ -130,7 +130,7 @@ public class CommandQueuedTableViewer extends TableViewer {
 
         TableViewerColumn userColumn = new TableViewerColumn(this, SWT.NONE);
         userColumn.getColumn().setText(COL_USER);
-        userColumn.getColumn().setToolTipText("The user who submitted the command");
+        userColumn.getColumn().setToolTipText("The issuer");
         tcl.setColumnData(userColumn.getColumn(), new ColumnWeightData(200));
 
         TableViewerColumn stringColumn = new TableViewerColumn(this, SWT.CENTER);

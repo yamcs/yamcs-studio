@@ -10,9 +10,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Lists the stages for the selected Telecommand
+ * Lists acknowledgments
  */
-public class StagesTableViewer extends TableViewer {
+public class AckTableViewer extends TableViewer {
 
     public static final String COL_NAME = "Name";
     public static final String COL_STATUS = "Status";
@@ -21,7 +21,7 @@ public class StagesTableViewer extends TableViewer {
 
     private CommandHistoryView commandHistoryView;
 
-    public StagesTableViewer(Composite parent, CommandHistoryView commandHistoryView) {
+    public AckTableViewer(Composite parent, CommandHistoryView commandHistoryView) {
         super(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
         this.commandHistoryView = commandHistoryView;
 
@@ -33,7 +33,7 @@ public class StagesTableViewer extends TableViewer {
 
         addFixedColumns(tl);
 
-        setContentProvider(new StagesTableContentProvider());
+        setContentProvider(new AckTableContentProvider());
     }
 
     private void addFixedColumns(TableLayout tl) {
@@ -43,8 +43,8 @@ public class StagesTableViewer extends TableViewer {
 
             @Override
             public String getText(Object element) {
-                Stage stage = (Stage) element;
-                return stage.getName();
+                Acknowledgment ack = (Acknowledgment) element;
+                return ack.getName();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
@@ -55,8 +55,8 @@ public class StagesTableViewer extends TableViewer {
 
             @Override
             public Image getImage(Object element) {
-                Stage stage = (Stage) element;
-                if (stage.getStatus().equals("OK")) {
+                Acknowledgment ack = (Acknowledgment) element;
+                if (ack.getStatus().equals("OK")) {
                     return commandHistoryView.greenBubble;
                 } else {
                     return commandHistoryView.redBubble;
@@ -65,8 +65,8 @@ public class StagesTableViewer extends TableViewer {
 
             @Override
             public String getText(Object element) {
-                Stage stage = (Stage) element;
-                return stage.getStatus();
+                Acknowledgment ack = (Acknowledgment) element;
+                return ack.getStatus();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
@@ -76,8 +76,8 @@ public class StagesTableViewer extends TableViewer {
         deltaColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                Stage stage = (Stage) element;
-                return stage.getDelta();
+                Acknowledgment ack = (Acknowledgment) element;
+                return ack.getDelta();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
@@ -87,8 +87,8 @@ public class StagesTableViewer extends TableViewer {
         dateColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                Stage stage = (Stage) element;
-                return stage.getTime();
+                Acknowledgment ack = (Acknowledgment) element;
+                return ack.getTime();
             }
         });
         tl.addColumnData(new ColumnWeightData(200));

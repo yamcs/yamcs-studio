@@ -54,7 +54,8 @@ public class CommandHistoryRecord {
     private String comment;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
-    private Map<String, Stage> verificationStepsByName = new LinkedHashMap<>();
+    private Map<String, Acknowledgment> localAcksByName = new LinkedHashMap<>();
+    private Map<String, Acknowledgment> extraAcksByName = new LinkedHashMap<>();
 
     public CommandHistoryRecord(CommandId id) {
         this.id = id;
@@ -89,13 +90,23 @@ public class CommandHistoryRecord {
         this.binary = binary;
     }
 
-    public void addStage(Stage step) {
-        verificationStepsByName.put(step.getName(), step);
+    public void addAcknowledgment(Acknowledgment ack) {
+        if (ack.isYamcsLocal()) {
+            localAcksByName.put(ack.getName(), ack);
+        } else {
+            extraAcksByName.put(ack.getName(), ack);
+        }
     }
 
-    public void updateStageTime(String shortName, CommandHistoryAttribute timeAttribute) {
-        Stage step = verificationStepsByName.get(shortName);
-        step.setTime(timeAttribute);
+    public void updateAcknowledgmentTime(String shortName, CommandHistoryAttribute timeAttribute) {
+        Acknowledgment ack = localAcksByName.get(shortName);
+        if (ack != null) {
+            ack.setTime(timeAttribute);
+        }
+        ack = extraAcksByName.get(shortName);
+        if (ack != null) {
+            ack.setTime(timeAttribute);
+        }
     }
 
     public void addCellValue(String columnName, Value value) {
@@ -195,8 +206,24 @@ public class CommandHistoryRecord {
         return ptvInfo;
     }
 
-    public List<Stage> getVerificationSteps() {
-        return new ArrayList<>(verificationStepsByName.values());
+    public Acknowledgment getQueuedAcknowledgment() {
+        return localAcksByName.get("Queued");
+    }
+
+    public Acknowledgment getReleasedAcknowledgment() {
+        return localAcksByName.get("Released");
+    }
+
+    public Acknowledgment getSentAcknowledgment() {
+        return localAcksByName.get("Sent");
+    }
+
+    public List<Acknowledgment> getLocalAcknowledgments() {
+        return new ArrayList<>(localAcksByName.values());
+    }
+
+    public List<Acknowledgment> getExtraAcknowledgments() {
+        return new ArrayList<>(extraAcksByName.values());
     }
 
     public String getTextForColumn(String columnName, boolean showRelativeTime) {

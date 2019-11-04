@@ -33,5 +33,4 @@ public class CommandQueuesTableContentProvider implements IStructuredContentProv
         // return queues.getQueues().indexOf(element);
         return 0;
     }
-
 }

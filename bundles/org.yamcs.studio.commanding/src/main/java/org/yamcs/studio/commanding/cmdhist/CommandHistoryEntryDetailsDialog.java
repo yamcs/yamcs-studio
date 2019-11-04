@@ -42,7 +42,8 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     private CommandHistoryRecord previousRec;
     private CommandHistoryRecord nextRec;
 
-    private StagesTableViewer tableViewer;
+    private AckTableViewer localAckTableViewer;
+    private AckTableViewer extraAckTableViewer;
 
     public CommandHistoryEntryDetailsDialog(Shell shell, CommandHistoryView commandHistoryView,
             CommandHistoryRecord rec) {
@@ -118,7 +119,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
         createSashForm(container);
         createDetailsSection(sashForm);
-        createStagesSection(sashForm);
+        createAckSection(sashForm);
 
         sashForm.setWeights(new int[] { 300, 400 });
 
@@ -152,25 +153,36 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         createToolbarButtonBar(container);
     }
 
-    private void createStagesSection(Composite parent) {
-        Composite stagesContainer = new Composite(parent, SWT.NONE);
+    private void createAckSection(Composite parent) {
+        Composite ackContainer = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.marginWidth = 0;
-        stagesContainer.setLayout(layout);
-        stagesContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ackContainer.setLayout(layout);
+        ackContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Label stagesLabel = new Label(stagesContainer, SWT.NONE);
-        stagesLabel.setText("Stages:");
+        Label ackLabel = new Label(ackContainer, SWT.NONE);
+        ackLabel.setText("Yamcs acknowledgments:");
+        createLocalAckTable(ackContainer);
 
-        createStagesTable(stagesContainer);
+        ackLabel = new Label(ackContainer, SWT.NONE);
+        ackLabel.setText("Extra acknowledgments:");
+        createExtraAckTable(ackContainer);
     }
 
-    private void createStagesTable(Composite parent) {
+    private void createLocalAckTable(Composite parent) {
         Composite tableContainer = new Composite(parent, SWT.NONE);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        tableViewer = new StagesTableViewer(tableContainer, commandHistoryView);
+        localAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
+    }
+
+    private void createExtraAckTable(Composite parent) {
+        Composite tableContainer = new Composite(parent, SWT.NONE);
+        tableContainer.setLayout(new FillLayout());
+        tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        extraAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
     }
 
     private void createTextSection(Composite parent) {
@@ -214,15 +226,6 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         originLabel.setLayoutData(gd);
-
-        label = new Label(textContainer, SWT.NONE);
-        label.setText("Origin ID");
-        originIdLabel = new StyledText(textContainer, SWT.NONE);
-        originIdLabel.setEditable(false);
-        originIdLabel.setCaret(null);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        originIdLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Binary");
@@ -296,7 +299,6 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         } else {
             originLabel.setText("-");
         }
-        originIdLabel.setText(String.valueOf(rec.getSequenceNumber()));
 
         if (rec.getComment() != null) {
             commentLabel.setText(rec.getComment());
@@ -325,7 +327,8 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
             binaryLabel.setText("");
         }
 
-        tableViewer.setInput(rec.getVerificationSteps().toArray());
+        localAckTableViewer.setInput(rec.getLocalAcknowledgments().toArray());
+        extraAckTableViewer.setInput(rec.getExtraAcknowledgments().toArray());
     }
 
     private void updateButtonState() {

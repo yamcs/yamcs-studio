@@ -7,25 +7,18 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
 import org.yamcs.protobuf.Commanding.QueueState;
@@ -33,16 +26,14 @@ import org.yamcs.protobuf.EditCommandQueueRequest;
 import org.yamcs.studio.commanding.queue.QueuesTableModel.RowCommandQueueInfo;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.utils.TimeEncoding;
 
 public class CommandQueuesTableViewer extends TableViewer {
 
+    public static final String COL_ORDER = "#";
     public static final String COL_QUEUE = "Queue";
-    public static final String COL_STATE = "State";
-    public static final String COL_COMMANDS = "Commands";
-    public static final String COL_SENT = "Sent";
-    public static final String COL_REJECTED = "Rejected";
+    public static final String COL_ACTION = "Action";
+    public static final String COL_COMMANDS = "Pending";
 
     private CommandQueueView commandQueueView;
 
@@ -59,42 +50,81 @@ public class CommandQueuesTableViewer extends TableViewer {
         getTable().setLinesVisible(true);
         addFixedColumns(tcl);
         createContextMenu();
-
-        setLabelProvider(new ModelLabelProvider());
-
     }
 
     private void addFixedColumns(TableColumnLayout tcl) {
+        TableViewerColumn orderColumn = new TableViewerColumn(this, SWT.NONE);
+        orderColumn.getColumn().setText(COL_ORDER);
+        orderColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                CommandQueue model = (CommandQueue) element;
+                return String.valueOf(model.getOrder());
+            }
+        });
+        tcl.setColumnData(orderColumn.getColumn(), new ColumnPixelData(30));
 
         TableViewerColumn nameColumn = new TableViewerColumn(this, SWT.NONE);
         nameColumn.getColumn().setText(COL_QUEUE);
+        nameColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                CommandQueue model = (CommandQueue) element;
+                return model.getQueue();
+            }
+        });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(40));
 
-        TableViewerColumn stateColumn = new TableViewerColumn(this, SWT.CENTER);
-        stateColumn.getColumn().setText(COL_STATE);
-        stateColumn.getColumn().setWidth(250);
-        stateColumn.setEditingSupport(new StateEditingSupport(stateColumn.getViewer()));
-        tcl.setColumnData(stateColumn.getColumn(), new ColumnWeightData(30));
+        TableViewerColumn actionColumn = new TableViewerColumn(this, SWT.CENTER);
+        actionColumn.getColumn().setText(COL_ACTION);
+        actionColumn.getColumn().setWidth(250);
+        actionColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                CommandQueue model = (CommandQueue) element;
+                String action;
+                switch (model.getState()) {
+                case BLOCKED:
+                    action = "HOLD";
+                    break;
+                case DISABLED:
+                    action = "REJECT";
+                    break;
+                case ENABLED:
+                    action = "ACCEPT";
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected state " + model.getState());
+                }
+                if (model.getStateExpirationTimeS() > 0) {
+                    action += " (" + toDayHourMinuteSecond(model.getStateExpirationTimeS()) + ")";
+                }
+                return action;
+            }
+        });
+        tcl.setColumnData(actionColumn.getColumn(), new ColumnWeightData(30));
 
         TableViewerColumn commandsColumn = new TableViewerColumn(this, SWT.CENTER);
         commandsColumn.getColumn().setText(COL_COMMANDS);
+        commandsColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                CommandQueue model = (CommandQueue) element;
+                if (model.getCommands() == null) {
+                    return "0";
+                } else {
+                    return String.valueOf(model.getCommands().size());
+                }
+            }
+        });
         tcl.setColumnData(commandsColumn.getColumn(), new ColumnWeightData(10));
-
-        TableViewerColumn sentColumn = new TableViewerColumn(this, SWT.CENTER);
-        sentColumn.getColumn().setText(COL_SENT);
-        tcl.setColumnData(sentColumn.getColumn(), new ColumnWeightData(10));
-
-        TableViewerColumn rejectedColumn = new TableViewerColumn(this, SWT.CENTER);
-        rejectedColumn.getColumn().setText(COL_REJECTED);
-        tcl.setColumnData(rejectedColumn.getColumn(), new ColumnWeightData(10));
 
         // Common properties to all columns
         List<TableViewerColumn> columns = new ArrayList<>();
+        columns.add(orderColumn);
         columns.add(nameColumn);
-        columns.add(stateColumn);
+        columns.add(actionColumn);
         columns.add(commandsColumn);
-        columns.add(sentColumn);
-        columns.add(rejectedColumn);
         for (TableViewerColumn column : columns) {
             // prevent resize to 0
             column.getColumn().addControlListener(new ControlListener() {
@@ -115,7 +145,7 @@ public class CommandQueuesTableViewer extends TableViewer {
 
     private void createContextMenu() {
         MenuManager popupManager = new MenuManager();
-        popupManager.add(new Action("Block Queue") {
+        popupManager.add(new Action("Action: HOLD") {
             @Override
             public void run() {
                 IStructuredSelection sel = (IStructuredSelection) getSelection();
@@ -125,7 +155,7 @@ public class CommandQueuesTableViewer extends TableViewer {
                 }
             }
         });
-        popupManager.add(new Action("Disable Queue") {
+        popupManager.add(new Action("Action: REJECT") {
             @Override
             public void run() {
                 IStructuredSelection sel = (IStructuredSelection) getSelection();
@@ -135,7 +165,7 @@ public class CommandQueuesTableViewer extends TableViewer {
                 }
             }
         });
-        popupManager.add(new Action("Enable Queue") {
+        popupManager.add(new Action("Action: ACCEPT") {
             @Override
             public void run() {
                 IStructuredSelection sel = (IStructuredSelection) getSelection();
@@ -150,50 +180,8 @@ public class CommandQueuesTableViewer extends TableViewer {
         getTable().setMenu(popup);
     }
 
-    class StateEditingSupport extends EditingSupport {
-        private ComboBoxViewerCellEditor cellEditor = null;
-
-        private StateEditingSupport(ColumnViewer viewer) {
-            super(viewer);
-            cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY);
-            cellEditor.setLabelProvider(new LabelProvider());
-            cellEditor.setContentProvider(new ArrayContentProvider());
-            cellEditor.setInput(Commanding.QueueState.values());
-        }
-
-        @Override
-        protected CellEditor getCellEditor(Object element) {
-            return cellEditor;
-        }
-
-        @Override
-        protected boolean canEdit(Object element) {
-            return YamcsAuthorizations.getInstance().hasSystemPrivilege(YamcsAuthorizations.ControlCommandQueue);
-        }
-
-        @Override
-        protected Object getValue(Object element) {
-            if (element instanceof CommandQueue) {
-                CommandQueue data = (CommandQueue) element;
-                return data.getState();
-            }
-            return null;
-        }
-
-        @Override
-        protected void setValue(Object element, Object value) {
-            if (element instanceof CommandQueue && value instanceof Commanding.QueueState) {
-                CommandQueue data = (CommandQueue) element;
-                QueueState newValue = (QueueState) value;
-                updateCommandQueueState(data, newValue);
-            }
-        }
-    }
-
     private void updateCommandQueueState(CommandQueue commandQueue, QueueState newState) {
-        /* only set new value if it differs from old one */
         if (!commandQueue.getState().equals(newState)) {
-            commandQueue.setState(newState);
 
             CommandQueueInfo q = null;
             for (RowCommandQueueInfo rcqi : commandQueueView.currentQueuesModel.queues) {
@@ -201,7 +189,6 @@ public class CommandQueuesTableViewer extends TableViewer {
                     q = rcqi.commandQueueInfo;
                 }
             }
-            // CommandQueueInfo q = queues.get(row);
             if (newState == QueueState.BLOCKED) {
                 blockQueue(q);
             } else if (newState == QueueState.DISABLED) {
@@ -259,48 +246,7 @@ public class CommandQueuesTableViewer extends TableViewer {
         catalogue.editQueue(queue, req);
     }
 
-    class ModelLabelProvider extends LabelProvider implements
-            ITableLabelProvider {
-
-        @Override
-        public Image getColumnImage(Object element, int columnIndex) {
-            // no image to show
-            return null;
-        }
-
-        @Override
-        public String getColumnText(Object element, int columnIndex) {
-            // each element comes from the ContentProvider.getElements(Object)
-            if (!(element instanceof CommandQueue)) {
-                return "";
-            }
-            CommandQueue model = (CommandQueue) element;
-            switch (columnIndex) {
-            case 0:
-                return model.getQueue();
-            case 1:
-                String state = model.getState().name();
-                if (model.getStateExpirationTimeS() > 0) {
-                    state += " (" + toDayHourMinuteSecond(model.getStateExpirationTimeS()) + ")";
-                }
-                return state;
-            case 2:
-                if (model.getCommands() == null) {
-                    return 0 + "";
-                }
-                return model.getCommands().size() + "";
-            case 3:
-                return model.getNbSentCommands() + "";
-            case 4:
-                return model.getNbRejectedCommands() + "";
-            default:
-                break;
-            }
-            return "";
-        }
-    }
-
-    static public String toDayHourMinuteSecond(int totalSeconds) {
+    private static String toDayHourMinuteSecond(int totalSeconds) {
         String result = "";
         int days = (int) TimeUnit.SECONDS.toDays(totalSeconds);
         long hours = TimeUnit.SECONDS.toHours(totalSeconds) - (days * 24);
@@ -313,21 +259,5 @@ public class CommandQueuesTableViewer extends TableViewer {
         }
 
         return result;
-    }
-
-    public static void main(String arg[]) {
-        int nbSeconds = 5; // 00:00:05
-        System.out
-                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
-        nbSeconds = 65; // 00:01:05
-        System.out
-                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
-        nbSeconds = 3665; // 01:01:05
-        System.out
-                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
-        nbSeconds = 90065; // 1d 01:01:05
-        System.out
-                .println("nbSeconds = " + nbSeconds + "=" + CommandQueuesTableViewer.toDayHourMinuteSecond(nbSeconds));
-
     }
 }

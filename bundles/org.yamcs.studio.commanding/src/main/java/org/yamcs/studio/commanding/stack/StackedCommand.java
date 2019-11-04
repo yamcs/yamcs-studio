@@ -54,40 +54,44 @@ public class StackedCommand {
     private CommandInfo meta;
     private Map<ArgumentInfo, String> assignments = new HashMap<>();
 
-    // Increases every attempt
-    private int clientId = -1;
-
     private StackedState state = StackedState.DISARMED;
 
-    private PTVInfo ptvInfo = new PTVInfo();
+    private String comment;
+    private String selectedAlias;
 
-    private String comment = null;
-    private String selectedAlias = null;
+    private String commandId;
+
+    private PTVInfo.State queued;
+    private PTVInfo.State released;
+    private PTVInfo.State sent;
 
     public boolean matches(CommandId commandId) {
-        // FIXME add user too
-        String ourOrigin = CommandingCatalogue.getInstance().getCommandOrigin();
-        return clientId == commandId.getSequenceNumber() && commandId.getOrigin().equals(ourOrigin);
+        String otherCommandId = commandId.getGenerationTime() + "-" + commandId.getOrigin() + "-"
+                + commandId.getSequenceNumber();
+        return otherCommandId.equals(this.commandId);
     }
 
     public void resetExecutionState() {
         state = StackedState.DISARMED;
-        ptvInfo = new PTVInfo();
-        clientId = -1;
+        commandId = null;
+        queued = null;
+        released = null;
+        sent = null;
     }
 
     public void updateExecutionState(CommandHistoryEntry entry) {
         for (CommandHistoryAttribute attr : entry.getAttrList()) {
-            if (attr.getName().equals("TransmissionConstraints")) {
-                ptvInfo.setState(PTVInfo.State.fromYamcsValue(attr.getValue()));
-            } else if (attr.getName().equals("CommandFailed")) {
-                ptvInfo.setFailureMessage(attr.getValue().getStringValue());
+            if (attr.getName().equals("Acknowledge_Queued_Status")) {
+                queued = PTVInfo.State.fromYamcsValue(attr.getValue());
+            } else if (attr.getName().equals("Acknowledge_Released_Status")) {
+                released = PTVInfo.State.fromYamcsValue(attr.getValue());
+            } else if (attr.getName().equals("Acknowledge_Sent_Status")) {
+                sent = PTVInfo.State.fromYamcsValue(attr.getValue());
             }
         }
     }
 
     public StyledString toStyledString(CommandStackView styleProvider) {
-
         Styler identifierStyler = styleProvider != null ? styleProvider.getIdentifierStyler(this) : null;
         Styler bracketStyler = styleProvider != null ? styleProvider.getBracketStyler(this) : null;
         Styler argNameStyler = styleProvider != null ? styleProvider.getArgNameStyler(this) : null;
@@ -137,10 +141,6 @@ public class StackedCommand {
         return str;
     }
 
-    public int getClientId() {
-        return clientId;
-    }
-
     public boolean isArmed() {
         return state == StackedState.ARMED;
     }
@@ -152,7 +152,6 @@ public class StackedCommand {
     public IssueCommandRequest.Builder toIssueCommandRequest() {
         IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
-        req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         if (comment != null) {
             req.setComment(comment);
         }
@@ -161,6 +160,10 @@ public class StackedCommand {
         });
 
         return req;
+    }
+
+    public void setCommandId(String commandId) {
+        this.commandId = commandId;
     }
 
     public void setDelayMs(int delayMs) {
@@ -187,8 +190,16 @@ public class StackedCommand {
         return state;
     }
 
-    public PTVInfo getPTVInfo() {
-        return ptvInfo;
+    public PTVInfo.State getQueuedState() {
+        return queued;
+    }
+
+    public PTVInfo.State getReleasedState() {
+        return released;
+    }
+
+    public PTVInfo.State getSentState() {
+        return sent;
     }
 
     public void addAssignment(ArgumentInfo arg, String value) {

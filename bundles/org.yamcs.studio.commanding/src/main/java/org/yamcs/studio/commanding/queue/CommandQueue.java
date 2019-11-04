@@ -1,86 +1,64 @@
 package org.yamcs.studio.commanding.queue;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import org.yamcs.protobuf.Commanding;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.protobuf.Commanding.QueueState;
 
 public class CommandQueue {
 
+    private int order;
     private String queue;
-    private Commanding.QueueState state;
+    private QueueState state;
     private int stateExpirationTimeS;
-    //  private int commands;
+    private List<CommandQueueEntry> commands;
 
-    ArrayList<CommandQueueEntry> commands;
-    private int nbSentCommands;
-    private int nbRejectedCommands;
-
-    public CommandQueue(CommandQueueInfo cqi, ArrayList<CommandQueueEntry> commands)
-    {
-        this.queue = cqi.getName();
-        this.state = cqi.getState();
-        this.setStateExpirationTimeS(cqi.getStateExpirationTimeS());
-        this.setNbRejectedCommands(cqi.getNbRejectedCommands());
-        this.setNbSentCommands(cqi.getNbSentCommands());
+    public CommandQueue(CommandQueueInfo proto, List<CommandQueueEntry> commands) {
+        order = proto.getOrder();
+        queue = proto.getName();
+        state = proto.getState();
+        stateExpirationTimeS = proto.getStateExpirationTimeS();
         this.commands = commands;
     }
 
-    public String getQueue()
-    {
+    public int getOrder() {
+        return order;
+    }
+
+    public String getQueue() {
         return queue;
     }
 
-    public void setQueue(String queue)
-    {
-        this.queue = queue;
-    }
-
-    public Commanding.QueueState getState()
-    {
+    public QueueState getState() {
         return state;
     }
 
-    public void setState(Commanding.QueueState state)
-    {
-        this.state = state;
-    }
-
-    public int getStateExpirationTimeS()
-    {
+    public int getStateExpirationTimeS() {
         return stateExpirationTimeS;
     }
 
-    public void setStateExpirationTimeS(int stateExpirationTimeS)
-    {
-        this.stateExpirationTimeS = stateExpirationTimeS;
-    }
-
-    public ArrayList<CommandQueueEntry> getCommands()
-    {
+    public List<CommandQueueEntry> getCommands() {
         return commands;
     }
 
-    public void setCommands(ArrayList<CommandQueueEntry> commands)
-    {
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public void setQueue(String queue) {
+        this.queue = queue;
+    }
+
+    public void setState(QueueState state) {
+        this.state = state;
+    }
+
+    public void setStateExpirationTimeS(int stateExpirationTimeS) {
+        this.stateExpirationTimeS = stateExpirationTimeS;
+    }
+
+    public void setCommands(List<CommandQueueEntry> commands) {
         this.commands = commands;
     }
-
-    public int getNbSentCommands() {
-        return nbSentCommands;
-    }
-
-    public void setNbSentCommands(int nbSentCommands) {
-        this.nbSentCommands = nbSentCommands;
-    }
-
-    public int getNbRejectedCommands() {
-        return nbRejectedCommands;
-    }
-
-    public void setNbRejectedCommands(int nbRejectedCommands) {
-        this.nbRejectedCommands = nbRejectedCommands;
-    }
-
 }

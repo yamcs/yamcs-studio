@@ -23,7 +23,6 @@ public class Yamcs {
         ParseResult parsed = CommandParser.parseCommand(commandText);
         IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
-        req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         req.addAllAssignment(parsed.getAssignments());
 
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
@@ -42,7 +41,6 @@ public class Yamcs {
     public static void issueCommand(String command, Map<String, Object> args) {
         IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
         req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
-        req.setOrigin(CommandingCatalogue.getInstance().getCommandOrigin());
         if (args != null) {
             args.forEach((k, v) -> {
                 req.addAssignment(Assignment.newBuilder()

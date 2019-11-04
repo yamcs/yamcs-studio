@@ -17,8 +17,8 @@ public class QueuesTableModel implements IStructuredContentProvider {
     private CommandQueueView commandQueueView;
     private TableViewer queuesTableViewer;
     private TableViewer commandsTableViewer;
-    List<RowCommandQueueInfo> queues = new ArrayList<RowCommandQueueInfo>(3);
-    Map<String, ArrayList<CommandQueueEntry>> commands = new HashMap<String, ArrayList<CommandQueueEntry>>();
+    List<RowCommandQueueInfo> queues = new ArrayList<>(3);
+    Map<String, ArrayList<CommandQueueEntry>> commands = new HashMap<>();
     String instance, channel;
 
     public QueuesTableModel(CommandQueueView commandQueueView, TableViewer queuesTableViewer,
@@ -32,19 +32,16 @@ public class QueuesTableModel implements IStructuredContentProvider {
     }
 
     void updateQueue(CommandQueueInfo cqi) {
-
         ArrayList<CommandQueueEntry> cmds = commands.get(cqi.getName());
         if (cmds == null) {
-            cmds = new ArrayList<CommandQueueEntry>();
+            cmds = new ArrayList<>();
             commands.put(cqi.getName(), cmds);
         }
         CommandQueue newCq = new CommandQueue(cqi, cmds);
 
         boolean found = updateQueueProperties(cqi.getName(), newCq);
 
-        if (!found)
-        {
-
+        if (!found) {
             queues.add(new RowCommandQueueInfo(newCq, cqi));
             queuesTableViewer.add(newCq);
         }
@@ -53,7 +50,7 @@ public class QueuesTableModel implements IStructuredContentProvider {
     void commandAdded(final CommandQueueEntry cqe) {
         ArrayList<CommandQueueEntry> cmds = commands.get(cqe.getQueueName());
         if (cmds == null) {
-            cmds = new ArrayList<CommandQueueEntry>();
+            cmds = new ArrayList<>();
             commands.put(cqe.getQueueName(), cmds);
         }
         cmds.add(cqe);
@@ -62,19 +59,16 @@ public class QueuesTableModel implements IStructuredContentProvider {
         updateQueueProperties(cqe.getQueueName(), null);
     }
 
-    boolean updateQueueProperties(String queueName, CommandQueue newCq)
-    {
+    boolean updateQueueProperties(String queueName, CommandQueue newCq) {
         for (int i = 0; i < queues.size(); i++) {
             RowCommandQueueInfo rq = queues.get(i);
             if (rq.commandQueueInfo.getName().equals(queueName)) {
-                if (newCq != null)
-                {
+                if (newCq != null) {
+                    rq.cq.setOrder(newCq.getOrder());
                     rq.cq.setQueue(newCq.getQueue());
                     rq.cq.setState(newCq.getState());
                     rq.cq.setStateExpirationTimeS(newCq.getStateExpirationTimeS());
                     rq.cq.setCommands(newCq.getCommands());
-                    rq.cq.setNbRejectedCommands(newCq.getNbRejectedCommands());
-                    rq.cq.setNbSentCommands(newCq.getNbSentCommands());
                 }
                 queuesTableViewer.update(rq.cq, null);
                 return true;
@@ -99,8 +93,7 @@ public class QueuesTableModel implements IStructuredContentProvider {
     }
 
     /**
-     * Called when some rows are selected in the queue table. Shows all the commands in the selected
-     * queues
+     * Called when some rows are selected in the queue table. Shows all the commands in the selected queues
      */
     void setQueue(CommandQueueInfo q) {
         commandsTableViewer.getTable().removeAll();
@@ -117,16 +110,15 @@ public class QueuesTableModel implements IStructuredContentProvider {
 
     public void reloadCommandsTable(IStructuredSelection selection) {
         currentSelection = selection;
-        if (selection == null)
+        if (selection == null) {
             return;
+        }
         if (this == commandQueueView.currentQueuesModel) {
 
             CommandQueueInfo q = null;
             try {
-                for (RowCommandQueueInfo rcqi : queues)
-                {
-                    if (rcqi.cq == selection.getFirstElement())
-                    {
+                for (RowCommandQueueInfo rcqi : queues) {
+                    if (rcqi.cq == selection.getFirstElement()) {
                         q = rcqi.commandQueueInfo;
                     }
                 }
@@ -142,8 +134,9 @@ public class QueuesTableModel implements IStructuredContentProvider {
 
     CommandQueueEntry getCommand(String queueName, int index) {
         ArrayList<CommandQueueEntry> cmds = commands.get(queueName);
-        if (cmds == null)
+        if (cmds == null) {
             return null;
+        }
         return cmds.get(index);
     }
 
@@ -163,8 +156,7 @@ public class QueuesTableModel implements IStructuredContentProvider {
     // Associate a table row to a CommandQueueInfo
     // Convenient to retrieve the selected queue
     class RowCommandQueueInfo {
-        public RowCommandQueueInfo(CommandQueue cq, CommandQueueInfo commandQueueInfo)
-        {
+        public RowCommandQueueInfo(CommandQueue cq, CommandQueueInfo commandQueueInfo) {
             this.cq = cq;
             this.commandQueueInfo = commandQueueInfo;
         }
@@ -172,5 +164,4 @@ public class QueuesTableModel implements IStructuredContentProvider {
         CommandQueue cq;
         CommandQueueInfo commandQueueInfo;
     }
-
 }

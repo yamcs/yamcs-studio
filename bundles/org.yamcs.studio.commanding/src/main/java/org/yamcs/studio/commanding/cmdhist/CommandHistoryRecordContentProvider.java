@@ -23,22 +23,32 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
     public static final String GREEN = "icons/obj16/ok.png";
     public static final String RED = "icons/obj16/nok.png";
 
-    public static final String ACKNOWLEDGE_PREFIX = "Acknowledge_";
-    public static final String ACKNOWLEDGE_STATUS_SUFFIX = "_Status";
-    public static final String VERIFIER_PREFIX = "Verifier_";
-    public static final String VERIFIER_STATUS_SUFFIX = "_Status";
-    public static final String VERIFIER_TIME_SUFFIX = "_Time";
+    public static final String ATTR_ACKNOWLEDGE_QUEUED_STATUS = "Acknowledge_Queued_Status";
+    public static final String ATTR_ACKNOWLEDGE_QUEUED_TIME = "Acknowledge_Queued_Time";
+    public static final String ATTR_ACKNOWLEDGE_QUEUED_MESSAGE = "Acknowledge_Queued_Message";
+    public static final String ATTR_ACKNOWLEDGE_RELEASED_STATUS = "Acknowledge_Released_Status";
+    public static final String ATTR_ACKNOWLEDGE_RELEASED_TIME = "Acknowledge_Released_Time";
+    public static final String ATTR_ACKNOWLEDGE_RELEASED_MESSAGE = "Acknowledge_Released_Message";
+    public static final String ATTR_ACKNOWLEDGE_SENT_STATUS = "Acknowledge_Sent_Status";
+    public static final String ATTR_ACKNOWLEDGE_SENT_TIME = "Acknowledge_Sent_Time";
+    public static final String ATTR_ACKNOWLEDGE_SENT_MESSAGE = "Acknowledge_Sent_Message";
 
-    public static final String ATTR_TRANSMISSION_CONSTRAINTS = "TransmissionConstraints";
-    public static final String ATTR_COMMAND_COMPLETE = "CommandComplete";
-    public static final String ATTR_COMMAND_FAILED = "CommandFailed";
+    public static final String ACKNOWLEDGE_PREFIX = "Acknowledge_";
+    public static final String VERIFIER_PREFIX = "Verifier_";
+    public static final String STATUS_SUFFIX = "_Status";
+    public static final String TIME_SUFFIX = "_Time";
+
+    public static final String ATTR_TRANSMISSION_CONSTRAINTS_STATUS = "TransmissionConstraints_Status";
+    public static final String ATTR_TRANSMISSION_CONSTRAINTS_TIME = "TransmissionConstraints_Time";
+    public static final String ATTR_TRANSMISSION_CONSTRAINTS_MESSAGE = "TransmissionConstraints_Message";
+    public static final String ATTR_COMMAND_COMPLETE_STATUS = "CommandComplete_Status";
+    public static final String ATTR_COMMAND_COMPLETE_TIME = "CommandComplete_Time";
+    public static final String ATTR_COMMAND_COMPLETE_MESSAGE = "CommandComplete_Message";
     public static final String ATTR_FINAL_SEQUENCE_COUNT = "Final_Sequence_Count";
     public static final String ATTR_SOURCE = "source";
     public static final String ATTR_BINARY = "binary";
     public static final String ATTR_USERNAME = "username";
-    @Deprecated
-    public static final String ATTR_COMMENT = "Comment";
-    public static final String ATTR_COMMENT_NEW = "comment";
+    public static final String ATTR_COMMENT = "comment";
 
     private Map<CommandId, CommandHistoryRecord> recordsByCommandId = new LinkedHashMap<>();
     private TableViewer tableViewer;
@@ -65,9 +75,8 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
     public static String toHumanReadableName(CommandHistoryAttribute attribute) {
         return attribute.getName()
                 .replace(ACKNOWLEDGE_PREFIX, "")
-                .replace(VERIFIER_PREFIX, "")
-                .replace(VERIFIER_STATUS_SUFFIX, "")
-                .replace(VERIFIER_TIME_SUFFIX, "");
+                .replace(STATUS_SUFFIX, "")
+                .replace(TIME_SUFFIX, "");
     }
 
     public void addEntries(List<CommandHistoryEntry> entries) {
@@ -97,53 +106,55 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         // Autoprocess attributes for additional columns
         for (CommandHistoryAttribute attr : entry.getAttrList()) {
             String shortName = toHumanReadableName(attr);
-
             if (attr.getName().startsWith(ACKNOWLEDGE_PREFIX)) {
-                if (attr.getName().endsWith(ACKNOWLEDGE_STATUS_SUFFIX)) {
-                    rec.addStage(new Stage(rec, shortName, attr));
+                if (attr.getName().endsWith(STATUS_SUFFIX)) {
+                    rec.addAcknowledgment(new Acknowledgment(rec, shortName, attr));
                     if (attr.getValue().getStringValue().equals("OK")) {
                         rec.addCellImage(shortName, GREEN);
-                    } else {
+                    } else if (attr.getValue().getStringValue().equals("NOK")) {
                         rec.addCellImage(shortName, RED);
                     }
-                } else if (attr.getName().endsWith(VERIFIER_TIME_SUFFIX)) {
-                    rec.updateStageTime(shortName, attr);
+                } else if (attr.getName().endsWith(TIME_SUFFIX)) {
+                    rec.updateAcknowledgmentTime(shortName, attr);
                 }
             }
 
             if (attr.getName().startsWith(VERIFIER_PREFIX)) {
-                if (attr.getName().endsWith(VERIFIER_STATUS_SUFFIX)) {
-                    rec.addStage(new Stage(rec, shortName, attr));
+                if (attr.getName().endsWith(STATUS_SUFFIX)) {
+                    rec.addAcknowledgment(new Acknowledgment(rec, shortName, attr));
                     if (attr.getValue().getStringValue().equals("OK")) {
                         rec.addCellImage(shortName, GREEN);
-                    } else {
+                    } else if (attr.getValue().getStringValue().equals("NOK")) {
                         rec.addCellImage(shortName, RED);
                     }
-                } else if (attr.getName().endsWith(VERIFIER_TIME_SUFFIX)) {
-                    rec.updateStageTime(shortName, attr);
+                } else if (attr.getName().endsWith(TIME_SUFFIX)) {
+                    rec.updateAcknowledgmentTime(shortName, attr);
                 }
             }
 
-            if (attr.getName().equals(ATTR_COMMAND_COMPLETE)) {
+            if (attr.getName().equals(ATTR_COMMAND_COMPLETE_STATUS)) {
                 if (attr.getValue().getStringValue().equals("OK")) {
                     rec.setCommandState(CommandState.COMPLETED);
                 } else {
                     rec.setCommandState(CommandState.FAILED);
                 }
+            } else if (attr.getName().equals(ATTR_COMMAND_COMPLETE_MESSAGE)) {
+                rec.getPTVInfo().setFailureMessage(attr.getValue().getStringValue());
+            } else if (attr.getName().equals(ATTR_COMMAND_COMPLETE_TIME)) {
+                // Ignore
+            } else if (attr.getName().equals("CommandComplete")) { // Legacy
+                // Ignore
             } else if (attr.getName().equals(ATTR_FINAL_SEQUENCE_COUNT)) {
                 rec.setFinalSequenceCount(attr.getValue());
             } else if (attr.getName().equals(ATTR_SOURCE)) {
                 rec.setCommandString(attr.getValue());
             } else if (attr.getName().equals(ATTR_USERNAME)) {
                 rec.setUsername(attr.getValue());
-            } else if (attr.getName().equals(ATTR_TRANSMISSION_CONSTRAINTS)) {
+            } else if (attr.getName().equals(ATTR_TRANSMISSION_CONSTRAINTS_STATUS)) {
                 rec.getPTVInfo().setState(PTVInfo.State.fromYamcsValue(attr.getValue()));
-            } else if (attr.getName().equals(ATTR_COMMAND_FAILED)) {
-                rec.getPTVInfo().setFailureMessage(attr.getValue().getStringValue());
             } else if (attr.getName().equals(ATTR_BINARY)) {
                 rec.setBinary(attr.getValue().getBinaryValue());
-            } else if (attr.getName().equalsIgnoreCase(ATTR_COMMENT)) { // ignore case to support both old versions of
-                                                                        // Yamcs ("Comment") and new ones ("comment")
+            } else if (attr.getName().equals(ATTR_COMMENT)) {
                 rec.setComment(attr.getValue().getStringValue());
             } else {
                 rec.addCellValue(shortName, attr.getValue());

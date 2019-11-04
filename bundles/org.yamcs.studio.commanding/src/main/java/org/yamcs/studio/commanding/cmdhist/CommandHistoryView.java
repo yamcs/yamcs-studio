@@ -63,6 +63,9 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
     public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
+    public static final String COL_QUEUED = "Q";
+    public static final String COL_RELEASED = "R";
+    public static final String COL_SENT = "S";
 
     private static final int DYNAMIC_COLUMN_WIDTH = 90;
 
@@ -73,11 +76,23 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
             CommandHistoryRecordContentProvider.ATTR_USERNAME,
             CommandHistoryRecordContentProvider.ATTR_SOURCE,
             CommandHistoryRecordContentProvider.ATTR_FINAL_SEQUENCE_COUNT,
-            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS,
-            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE,
-            CommandHistoryRecordContentProvider.ATTR_COMMAND_FAILED,
+            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS_STATUS,
+            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS_TIME,
+            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS_MESSAGE,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_QUEUED_STATUS,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_QUEUED_TIME,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_QUEUED_MESSAGE,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_RELEASED_STATUS,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_RELEASED_TIME,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_RELEASED_MESSAGE,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_SENT_STATUS,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_SENT_TIME,
+            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_SENT_MESSAGE,
+            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE_STATUS,
+            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE_TIME,
+            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE_MESSAGE,
             CommandHistoryRecordContentProvider.ATTR_COMMENT,
-            CommandHistoryRecordContentProvider.ATTR_COMMENT_NEW);
+            "CommandComplete");
 
     private LocalResourceManager resourceManager;
 
@@ -155,7 +170,7 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
         CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
-            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
+            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry, true));
         });
     }
 
@@ -190,6 +205,9 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         data.addColumn(COL_ORIGIN_ID, 50, false, true, true);
         data.addColumn(COL_PTV, 50);
         data.addColumn(COL_SEQ_ID, 50, false, true, true);
+        data.addColumn(COL_QUEUED, 50);
+        data.addColumn(COL_RELEASED, 50);
+        data.addColumn(COL_SENT, 50);
 
         for (String dynamicColumn : dynamicColumns) {
             ColumnDef def = columnData.getColumn(dynamicColumn);
@@ -443,6 +461,123 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_QUEUED)) {
+                TableViewerColumn queuedColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                queuedColumn.getColumn().setText(COL_QUEUED);
+                queuedColumn.getColumn().addControlListener(columnResizeListener);
+                queuedColumn.getColumn().addSelectionListener(getSelectionAdapter(queuedColumn.getColumn()));
+                queuedColumn.getColumn().setToolTipText("Queued acknowledgment");
+                queuedColumn.setLabelProvider(new CenteredImageLabelProvider() {
+
+                    @Override
+                    public Image getImage(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        Acknowledgment ack = rec.getQueuedAcknowledgment();
+                        if (ack == null) {
+                            return grayBubble;
+                        } else {
+                            switch (ack.getStatus()) {
+                            case "NEW":
+                                return grayBubble;
+                            case "OK":
+                                return greenBubble;
+                            case "PENDING":
+                                return waitingImage;
+                            case "NOK":
+                                return redBubble;
+                            default:
+                                log.warning("Unexpected ack state " + ack.getStatus());
+                                return grayBubble;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public String getToolTipText(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        Acknowledgment ack = rec.getQueuedAcknowledgment();
+                        return (ack != null) ? ack.getMessage() : null;
+                    }
+                });
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_RELEASED)) {
+                TableViewerColumn releasedColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                releasedColumn.getColumn().setText(COL_RELEASED);
+                releasedColumn.getColumn().addControlListener(columnResizeListener);
+                releasedColumn.getColumn().addSelectionListener(getSelectionAdapter(releasedColumn.getColumn()));
+                releasedColumn.getColumn().setToolTipText("Released acknowledgment");
+                releasedColumn.setLabelProvider(new CenteredImageLabelProvider() {
+
+                    @Override
+                    public Image getImage(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        Acknowledgment ack = rec.getReleasedAcknowledgment();
+                        if (ack == null) {
+                            return grayBubble;
+                        } else {
+                            switch (ack.getStatus()) {
+                            case "NEW":
+                                return grayBubble;
+                            case "OK":
+                                return greenBubble;
+                            case "PENDING":
+                                return waitingImage;
+                            case "NOK":
+                                return redBubble;
+                            default:
+                                log.warning("Unexpected ack state " + ack.getStatus());
+                                return grayBubble;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public String getToolTipText(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        Acknowledgment ack = rec.getReleasedAcknowledgment();
+                        return (ack != null) ? ack.getMessage() : null;
+                    }
+                });
+                layout.addColumnData(new ColumnPixelData(def.width));
+            } else if (def.name.equals(COL_SENT)) {
+                TableViewerColumn sentColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
+                sentColumn.getColumn().setText(COL_SENT);
+                sentColumn.getColumn().addControlListener(columnResizeListener);
+                sentColumn.getColumn().addSelectionListener(getSelectionAdapter(sentColumn.getColumn()));
+                sentColumn.getColumn().setToolTipText("Sent acknowledgment");
+                sentColumn.setLabelProvider(new CenteredImageLabelProvider() {
+
+                    @Override
+                    public Image getImage(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        Acknowledgment ack = rec.getSentAcknowledgment();
+                        if (ack == null) {
+                            return grayBubble;
+                        } else {
+                            switch (ack.getStatus()) {
+                            case "NEW":
+                                return grayBubble;
+                            case "OK":
+                                return greenBubble;
+                            case "PENDING":
+                                return waitingImage;
+                            case "NOK":
+                                return redBubble;
+                            default:
+                                log.warning("Unexpected ack state " + ack.getStatus());
+                                return grayBubble;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public String getToolTipText(Object element) {
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        Acknowledgment ack = rec.getSentAcknowledgment();
+                        return (ack != null) ? ack.getMessage() : null;
+                    }
+                });
+                layout.addColumnData(new ColumnPixelData(def.width));
             } else if (def.name.equals(COL_SEQ_ID)) {
                 TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
                 finalSeqColumn.getColumn().setText(COL_SEQ_ID);
@@ -589,12 +724,11 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         }
     }
 
-    public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
+    public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry, boolean update) {
         // Maybe we need to update structure
         for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
             if (!IGNORED_ATTRIBUTES.contains(attr.getName())) {
                 String shortName = CommandHistoryRecordContentProvider.toHumanReadableName(attr);
-
                 if (!dynamicColumns.contains(shortName)) {
                     dynamicColumns.add(shortName);
                     columnData.addColumn(shortName, 90);
@@ -605,12 +739,17 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         }
 
         // Now add content
-        tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+        if (update) {
+            tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+        }
     }
 
     public void addEntries(List<CommandHistoryEntry> entries) {
         if (tableViewer.getTable().isDisposed()) {
             return;
+        }
+        for (CommandHistoryEntry entry : entries) {
+            processCommandHistoryEntry(entry, false);
         }
         tableContentProvider.addEntries(entries);
     }

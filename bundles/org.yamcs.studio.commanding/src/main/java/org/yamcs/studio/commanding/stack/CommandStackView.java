@@ -242,13 +242,12 @@ public class CommandStackView extends ViewPart {
                     fixDelaySpinner.setVisible(true);
                     labelUnit.setVisible(true);
                     commandTableViewer.hideDelayColumn();
-                } else if(comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()){
+                } else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
                     // stack delays
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
                     commandTableViewer.showDelayColumn();
-                }
-                else {
+                } else {
                     // afap
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
@@ -270,14 +269,12 @@ public class CommandStackView extends ViewPart {
                     fixDelaySpinner.setVisible(true);
                     labelUnit.setVisible(true);
                     commandTableViewer.hideDelayColumn();
-                }
-                else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
+                } else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
                     // stack delay
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
                     commandTableViewer.showDelayColumn();
-                }
-                else if (comboAutoParameters.getSelectionIndex() == AutoMode.AFAP.index()) {
+                } else if (comboAutoParameters.getSelectionIndex() == AutoMode.AFAP.index()) {
                     // fix delay
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
@@ -291,10 +288,9 @@ public class CommandStackView extends ViewPart {
             }
             if (comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                 stack.autoMode = AutoMode.FIX_DELAY;
-            } else if(comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()){
+            } else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
                 stack.autoMode = AutoMode.STACK_DELAYS;
-            }
-            else {
+            } else {
                 stack.autoMode = AutoMode.AFAP;
             }
         });
@@ -568,10 +564,12 @@ public class CommandStackView extends ViewPart {
     private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
         for (StackedCommand cmd : CommandStack.getInstance().getCommands()) {
             if (cmd.matches(cmdhistEntry.getCommandId())) {
-                log.finer(String.format("Processing update %s", cmdhistEntry));
+                System.out.println("GOOD>>>");
+                log.info(String.format("Processing update %s", cmdhistEntry));
                 cmd.updateExecutionState(cmdhistEntry);
             } else {
-                log.finer(String.format("Ignoring update %s", cmdhistEntry));
+                System.out.println("BAD>>>");
+                log.info(String.format("Ignoring update %s", cmdhistEntry));
             }
         }
         commandTableViewer.refresh();

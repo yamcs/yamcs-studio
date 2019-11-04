@@ -11,8 +11,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.IssueCommandRequest;
+import org.yamcs.protobuf.IssueCommandResponse;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.model.CommandingCatalogue;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class IssueCommandHandler extends AbstractHandler {
 
@@ -41,6 +44,14 @@ public class IssueCommandHandler extends AbstractHandler {
 
         catalogue.sendCommand("realtime", qname, req).whenComplete((data, exc) -> {
             if (exc == null) {
+                try {
+                    IssueCommandResponse response = IssueCommandResponse.newBuilder()
+                            .mergeFrom(data)
+                            .build();
+                    command.setCommandId(response.getId());
+                } catch (InvalidProtocolBufferException e) {
+                    throw new RuntimeException(e);
+                }
                 Display.getDefault().asyncExec(() -> {
                     log.info(String.format("Command issued. %s", req));
                     command.setStackedState(StackedState.ISSUED);

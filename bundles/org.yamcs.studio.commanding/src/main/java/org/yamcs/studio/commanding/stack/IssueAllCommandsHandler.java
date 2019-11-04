@@ -19,11 +19,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.IssueCommandRequest;
+import org.yamcs.protobuf.IssueCommandResponse;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryView;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.model.CommandingCatalogue;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class IssueAllCommandsHandler extends AbstractHandler {
 
@@ -42,7 +45,7 @@ public class IssueAllCommandsHandler extends AbstractHandler {
         ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command command = service.getCommand("org.yamcs.studio.commanding.cmdhist.scrollLockCommand");
         boolean oldState = HandlerUtil.toggleCommandState(command);
-        if(commandHistoryView != null) {
+        if (commandHistoryView != null) {
             commandHistoryView.enableScrollLock(true);
         }
 
@@ -50,7 +53,7 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             CommandIssuer issuer = new CommandIssuer(shell, commandStackView);
             new ProgressMonitorDialog(shell).run(true, true, issuer);
         } catch (Exception e) {
-            log.severe("Automatic Command Stack errror:" + e.getMessage());
+            log.severe("Automatic Command Stack error:" + e.getMessage());
             MessageDialog.openError(shell, "Failed to issue commands: ", e.getMessage());
         }
 
@@ -133,6 +136,14 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             catalogue.sendCommand("realtime", qname, req).whenComplete((data, exc) -> {
                 if (exc == null) {
                     try {
+                        IssueCommandResponse response = IssueCommandResponse.newBuilder()
+                                .mergeFrom(data)
+                                .build();
+                        command.setCommandId(response.getId());
+                    } catch (InvalidProtocolBufferException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
                         command.setStackedState(StackedState.ISSUED);
                         monitor.worked(1);
 
@@ -188,7 +199,6 @@ public class IssueAllCommandsHandler extends AbstractHandler {
                     monitor.done();
                     stack.stackStatus = StackStatus.IDLE;
                     Display.getDefault().asyncExec(() -> {
-                        log.info("a2");
                         command.setStackedState(StackedState.REJECTED);
                         view.refreshState();
                     });

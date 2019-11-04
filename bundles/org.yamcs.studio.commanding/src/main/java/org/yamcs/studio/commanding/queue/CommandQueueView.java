@@ -63,8 +63,9 @@ public class CommandQueueView extends ViewPart implements CommandQueueListener {
         commandQueuesTableViewer.addSelectionChangedListener(evt -> {
             currentQueuesModel.reloadCommandsTable((IStructuredSelection) evt.getSelection());
         });
-        if (getViewSite() != null)
+        if (getViewSite() != null) {
             getViewSite().setSelectionProvider(commandQueuesTableViewer);
+        }
 
         Composite tableWrapper2 = new Composite(sash, SWT.NONE);
         tableWrapper2.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -95,15 +96,17 @@ public class CommandQueueView extends ViewPart implements CommandQueueListener {
     @Override
     public void setFocus() {
         commandQueuesTableViewer.getTable().setFocus();
-        //  commandQueuedTableViewer.getTable().setFocus();
+        // commandQueuedTableViewer.getTable().setFocus();
 
     }
 
     public void addProcessor(String instance, String channelName) {
-        QueuesTableModel model = new QueuesTableModel(this, commandQueuesTableViewer, commandQueuedTableViewer, instance, channelName);
+        QueuesTableModel model = new QueuesTableModel(this, commandQueuesTableViewer, commandQueuedTableViewer,
+                instance, channelName);
         queuesModels.put(instance + "." + channelName, model);
-        if (currentQueuesModel == null)
+        if (currentQueuesModel == null) {
             currentQueuesModel = model;
+        }
     }
 
     public void removeProcessor(String instance, String channelName) {
@@ -113,20 +116,22 @@ public class CommandQueueView extends ViewPart implements CommandQueueListener {
     public void setProcessor(String instance, String channelName) {
         log.fine("setting channel : " + instance + " cn: " + channelName);
         currentQueuesModel = channelName == null ? null : queuesModels.get(instance + "." + channelName);
-        if (currentQueuesModel == null)
+        if (currentQueuesModel == null) {
             return;
+        }
 
         commandQueuedTableViewer.setContentProvider(currentQueuesModel);
     }
 
     @Override
     public void updateQueue(CommandQueueInfo cqi) {
-        if (commandQueuesTableViewer.getTable().isDisposed())
+        if (commandQueuesTableViewer.getTable().isDisposed()) {
             return;
+        }
         commandQueuesTableViewer.getTable().getDisplay().asyncExec(() -> {
-            if (commandQueuesTableViewer.getTable().isDisposed())
+            if (commandQueuesTableViewer.getTable().isDisposed()) {
                 return;
-            log.fine(String.format("processing updateQueue %s", cqi));
+            }
             String modelName = cqi.getInstance() + "." + cqi.getProcessorName();
             if (!queuesModels.containsKey(modelName)) {
                 addProcessor(cqi.getInstance(), cqi.getProcessorName());

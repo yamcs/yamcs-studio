@@ -43,7 +43,9 @@ public class CommandStackTableViewer extends TableViewer {
     public static final String COL_CONSTRAINTS_TIMEOUT = "T/O";
     public static final String COL_RELEASE = "Release";
     public static final String COL_STATE = "Stack State";
-    public static final String COL_PTV = "PTV";
+    public static final String COL_QUEUED = "Q";
+    public static final String COL_RELEASED = "R";
+    public static final String COL_SENT = "S";
     public static final String COL_COMMENT = "Comment";
 
     private Image greenBubble;
@@ -215,41 +217,6 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(releaseColumn.getColumn(), new ColumnPixelData(80));
 
-        TableViewerColumn ptvColumn = new TableViewerColumn(this, SWT.CENTER);
-        ptvColumn.getColumn().setText(COL_PTV);
-        ptvColumn.getColumn().setToolTipText("Pre-Transmission Verification");
-        ptvColumn.setLabelProvider(new CenteredImageLabelProvider() {
-            @Override
-            public Image getImage(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
-                switch (cmd.getPTVInfo().getState()) {
-                case UNDEF:
-                    return grayBubble;
-                case NA:
-                case OK:
-                    return greenBubble;
-                case PENDING:
-                    return waitingImage;
-                case NOK:
-                    return redBubble;
-                default:
-                    log.warning("Unexpected PTV state " + cmd.getPTVInfo().getState());
-                    return grayBubble;
-                }
-            }
-
-            @Override
-            public String getToolTipText(Object element) {
-                StackedCommand cmd = (StackedCommand) element;
-                if (cmd.getPTVInfo().getFailureMessage() != null) {
-                    return cmd.getPTVInfo().getFailureMessage();
-                } else {
-                    return super.getToolTipText(element);
-                }
-            }
-        });
-        tcl.setColumnData(ptvColumn.getColumn(), new ColumnPixelData(50));
-
         TableViewerColumn stateColumn = new TableViewerColumn(this, SWT.CENTER);
         stateColumn.getColumn().setText(COL_STATE);
         stateColumn.getColumn().setToolTipText("Stack State");
@@ -286,6 +253,90 @@ public class CommandStackTableViewer extends TableViewer {
         });
         tcl.setColumnData(stateColumn.getColumn(), new ColumnPixelData(80));
 
+        TableViewerColumn qColumn = new TableViewerColumn(this, SWT.CENTER);
+        qColumn.getColumn().setText(COL_QUEUED);
+        qColumn.getColumn().setToolTipText("Queued");
+        qColumn.setLabelProvider(new CenteredImageLabelProvider() {
+            @Override
+            public Image getImage(Object element) {
+                StackedCommand cmd = (StackedCommand) element;
+                if (cmd.getQueuedState() == null) {
+                    return grayBubble;
+                }
+                switch (cmd.getQueuedState()) {
+                case UNDEF:
+                    return grayBubble;
+                case NA:
+                case OK:
+                    return greenBubble;
+                case PENDING:
+                    return waitingImage;
+                case NOK:
+                    return redBubble;
+                default:
+                    log.warning("Unexpected state " + cmd.getQueuedState());
+                    return grayBubble;
+                }
+            }
+        });
+        tcl.setColumnData(qColumn.getColumn(), new ColumnPixelData(50));
+
+        TableViewerColumn rColumn = new TableViewerColumn(this, SWT.CENTER);
+        rColumn.getColumn().setText(COL_RELEASED);
+        rColumn.getColumn().setToolTipText("Released");
+        rColumn.setLabelProvider(new CenteredImageLabelProvider() {
+            @Override
+            public Image getImage(Object element) {
+                StackedCommand cmd = (StackedCommand) element;
+                if (cmd.getReleasedState() == null) {
+                    return grayBubble;
+                }
+                switch (cmd.getReleasedState()) {
+                case UNDEF:
+                    return grayBubble;
+                case NA:
+                case OK:
+                    return greenBubble;
+                case PENDING:
+                    return waitingImage;
+                case NOK:
+                    return redBubble;
+                default:
+                    log.warning("Unexpected state " + cmd.getReleasedState());
+                    return grayBubble;
+                }
+            }
+        });
+        tcl.setColumnData(rColumn.getColumn(), new ColumnPixelData(50));
+
+        TableViewerColumn sColumn = new TableViewerColumn(this, SWT.CENTER);
+        sColumn.getColumn().setText(COL_SENT);
+        sColumn.getColumn().setToolTipText("Sent");
+        sColumn.setLabelProvider(new CenteredImageLabelProvider() {
+            @Override
+            public Image getImage(Object element) {
+                StackedCommand cmd = (StackedCommand) element;
+                if (cmd.getSentState() == null) {
+                    return grayBubble;
+                }
+                switch (cmd.getSentState()) {
+                case UNDEF:
+                    return grayBubble;
+                case NA:
+                case OK:
+                    return greenBubble;
+                case PENDING:
+                    return waitingImage;
+                case NOK:
+                    return redBubble;
+                default:
+                    log.warning("Unexpected state " + cmd.getSentState());
+                    return grayBubble;
+                }
+            }
+        });
+        tcl.setColumnData(sColumn.getColumn(), new ColumnPixelData(50));
+
         // column comment
         TableViewerColumn commentColumn = new TableViewerColumn(this, SWT.LEFT);
         commentColumn.getColumn().setText(COL_COMMENT);
@@ -306,7 +357,9 @@ public class CommandStackTableViewer extends TableViewer {
         columns.add(constraintsColumn);
         columns.add(constraintsTimeOutColumn);
         columns.add(releaseColumn);
-        columns.add(ptvColumn);
+        columns.add(qColumn);
+        columns.add(rColumn);
+        columns.add(sColumn);
         columns.add(stateColumn);
         columns.add(commentColumn);
         for (TableViewerColumn column : columns) {

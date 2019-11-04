@@ -1,7 +1,5 @@
 package org.yamcs.studio.core.model;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -219,14 +217,6 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
 
         for (CommandInfo cmd : this.metaCommands) {
             commandsByQualifiedName.put(cmd.getQualifiedName(), cmd);
-        }
-    }
-
-    public String getCommandOrigin() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            return "Unknown";
         }
     }
 
