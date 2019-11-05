@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PV Autocomplete
 Bundle-SymbolicName: org.csstudio.autocomplete;singleton:=true
-Bundle-Version: 1.3.1
+Bundle-Version: 1.3.2.qualifier
 Bundle-Activator: org.csstudio.autocomplete.AutoCompletePlugin
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
