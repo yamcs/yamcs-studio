@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>org.yamcs.studio.releng</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.1</version>
   </parent>
 
   <artifactId>org.yamcs.studio.editor.product</artifactId>
@@ -23,6 +23,9 @@
               <id>yamcs-studio</id> <!-- 'uid' in the *.product -->
               <attachId>yamcs-studio</attachId>
               <rootFolder>yamcs-studio-${project.version}</rootFolder>
+              <rootFolders>
+                <macosx>Yamcs Studio</macosx>
+              </rootFolders>
               <archiveFileName>yamcs-studio-${project.version}</archiveFileName>
             </product>
           </products>
