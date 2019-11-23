@@ -13,6 +13,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.api.YamcsConnectionProperties;
+import org.yamcs.protobuf.ConnectionInfo;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
@@ -35,7 +36,6 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
     @Override
     public void onYamcsConnectionFailed(Throwable t) {
         Display.getDefault().asyncExec(() -> {
-
             if (t.getMessage() != null && t.getMessage().contains("401")) {
                 // Show Login Pane
                 RCPUtils.runCommand("org.yamcs.studio.ui.login");
@@ -78,10 +78,12 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
             monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
             YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             try {
-                Future<YamcsConnectionProperties> future = yamcsClient.connect(yprops);
+                Future<ConnectionInfo> future = yamcsClient.connect(yprops);
                 RCPUtils.monitorCancellableFuture(monitor, future);
             } catch (ExecutionException e) {
-                MessageDialog.openError(shell, "Failed to connect", e.getMessage());
+                Display.getDefault().asyncExec(() -> {
+                    MessageDialog.openError(shell, "Failed to connect", e.getCause().getMessage());
+                });
             }
             monitor.done();
         }

@@ -44,7 +44,7 @@ public class YamcsPlugin extends Plugin {
 
         TimeEncoding.setUp();
 
-        yamcsClient = new YamcsStudioClient(getProductString(), true);
+        yamcsClient = new YamcsStudioClient(getProductString());
         yamcsClient.addConnectionListener(new UIConnectionListener());
 
         ManagementCatalogue managementCatalogue = new ManagementCatalogue();

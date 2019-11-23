@@ -1,7 +1,6 @@
 package org.yamcs.studio.core.client;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -16,29 +15,22 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.client.BulkRestDataReceiver;
-import org.yamcs.client.ClientException;
 import org.yamcs.client.ConnectionListener;
-import org.yamcs.client.RestClient;
 import org.yamcs.client.WebSocketClient;
 import org.yamcs.client.WebSocketClientCallback;
 import org.yamcs.client.WebSocketRequest;
+import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.ConnectionInfo;
 import org.yamcs.protobuf.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.protobuf.YamcsInstance;
-import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.protobuf.MessageLite;
-
-import io.netty.channel.ChannelFuture;
-import io.netty.handler.codec.http.HttpMethod;
 
 /**
  * Provides passage to Yamcs. This covers both the REST and WebSocket API.
@@ -50,39 +42,24 @@ public class YamcsStudioClient implements WebSocketClientCallback {
 
     private static final Logger log = Logger.getLogger(YamcsStudioClient.class.getName());
 
-    // WebSocketClient max frame payload length, otherwise we get "frame length 65535 exceeded" error for displays with
-    // many parameters
-    private static final int MAX_FRAME_PAYLOAD_LENGTH = 10 * 1024 * 1024;
-
     private YamcsConnectionProperties yprops;
     private String caCertFile;
     private String application;
 
-    private volatile boolean connecting;
-    private volatile boolean connected;
+    private YamcsClient yamcsClient;
 
-    private RestClient restClient;
-    private WebSocketClient wsclient;
-
-    private boolean retry = true;
-    private boolean reconnecting = false;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private List<YamcsInstance> instances;
 
     private List<ConnectionListener> connectionListeners = new CopyOnWriteArrayList<>();
-    private List<WebSocketClientCallback> subscribers = new CopyOnWriteArrayList<>();
 
     private ParameterSubscriptionBundler parameterSubscriptionBundler;
-
-    private ConnectionInfo connectionInfo;
 
     // Keep track of ongoing jobs, to respond to user cancellation requests.
     private ScheduledExecutorService canceller = Executors.newSingleThreadScheduledExecutor();
     private Map<IProgressMonitor, Future<?>> cancellableJobs = new ConcurrentHashMap<>();
 
-    public YamcsStudioClient(String application, boolean retry) {
+    public YamcsStudioClient(String application) {
         this.application = application;
-        this.retry = retry;
 
         canceller.scheduleWithFixedDelay(() -> {
             cancellableJobs.forEach((monitor, future) -> {
@@ -103,120 +80,33 @@ public class YamcsStudioClient implements WebSocketClientCallback {
         this.connectionListeners.add(connectionListener);
     }
 
-    private FutureTask<YamcsConnectionProperties> doConnect() {
-        if (connected) {
-            disconnect();
+    private FutureTask<ConnectionInfo> doConnect() {
+        if (yamcsClient != null) {
+            yamcsClient.close();
         }
 
-        restClient = new RestClient(yprops);
-        restClient.setInsecureTls(true);
-        restClient.setAutoclose(false);
+        YamcsClient.Builder yamcsClientBuilder = YamcsClient.newBuilder(yprops.getHost(), yprops.getPort())
+                // .withConnectionAttempts(10) // This works, but is not very useful unless reconnecting
+                .withTls(yprops.isTls())
+                .withVerifyTls(false)
+                .withUserAgent(application)
+                .withInitialInstance(yprops.getInstance(), false, true);
+
         if (caCertFile != null) {
-            try {
-                restClient.setCaCertFile(caCertFile);
-            } catch (IOException | GeneralSecurityException e) {
-                throw new RuntimeException(e);
-            }
+            yamcsClientBuilder.withCaCertFile(Paths.get(caCertFile));
         }
 
-        wsclient = new WebSocketClient(yprops, this);
-        wsclient.setUserAgent(application);
-        wsclient.setInsecureTls(true);
-        wsclient.enableReconnection(true);
-        wsclient.setMaxFramePayloadLength(MAX_FRAME_PAYLOAD_LENGTH);
-        if (caCertFile != null) {
-            try {
-                wsclient.setCaCertFile(caCertFile);
-            } catch (IOException | GeneralSecurityException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        yamcsClient = yamcsClientBuilder.build();
+        yamcsClient.addWebSocketListener(this);
 
-        FutureTask<YamcsConnectionProperties> future = new FutureTask<>(() -> {
+        FutureTask<ConnectionInfo> future = new FutureTask<>(() -> {
             log.info("Connecting to " + yprops);
-            int maxAttempts = 10;
-            try {
-                if (reconnecting && !retry) {
-                    log.warning("Retries are disabled, cancelling reconnection");
-                    reconnecting = false;
-                    return;
-                }
-
-                connecting = true;
-                connecting();
-                for (int i = 0; i < maxAttempts; i++) {
-                    try {
-                        log.fine(String.format("Connecting to %s attempt %d", yprops, i));
-                        /*String defaultInstanceName = null;
-                        GetApiOverviewResponse serverInfo = restClient.doRequest("", HttpMethod.GET)
-                                .thenApply(b -> {
-                                    try {
-                                        return GetApiOverviewResponse.parseFrom(b);
-                                    } catch (Exception e) {
-                                        throw new CompletionException(e);
-                                    }
-                                }).get(5, TimeUnit.SECONDS);
-                        
-                        if (serverInfo.hasDefaultYamcsInstance()) {
-                            defaultInstanceName = serverInfo.getDefaultYamcsInstance();
-                        }*/
-
-                        instances = restClient.blockingGetYamcsInstances();
-                        if (instances.isEmpty()) {
-                            if (yprops.getInstance() != null) {
-                                log.severe("No instance named '" + yprops.getInstance() + "'");
-                                connecting = false;
-                                for (ConnectionListener cl2 : connectionListeners) {
-                                    cl2.connectionFailed(null,
-                                            new ClientException("No instance named '" + yprops.getInstance() + "'"));
-                                }
-                                return;
-                            }
-                        } else {
-                            String defaultInstanceName = instances.get(0).getName();
-                            String instanceName = defaultInstanceName;
-                            if (yprops.getInstance() != null) { // check if the instance saved in properties exists,
-                                                                // otherwise use the default one
-                                instanceName = instances.stream().map(yi -> yi.getName())
-                                        .filter(s -> s.equals(yprops.getInstance()))
-                                        .findFirst()
-                                        .orElse(defaultInstanceName);
-                            }
-                            yprops.setInstance(instanceName);
-                        }
-
-                        ChannelFuture future1 = wsclient.connect();
-                        future1.get(5000, TimeUnit.MILLISECONDS);
-                        // now the TCP connection is established but we have to wait for the websocket to be setup
-                        // the connected callback will handle that
-
-                        return;
-                    } catch (Exception e1) {
-                        // For anything other than a security exception, re-try
-                        if (log.isLoggable(Level.FINE)) {
-                            log.log(Level.FINE, String.format("Connection to %s failed (attempt %d of %d)",
-                                    yprops, i + 1, maxAttempts), e1);
-                        } else {
-                            log.warning(String.format("Connection to %s failed: %s (attempt %d of %d)",
-                                    yprops, e1.getMessage(), i + 1, maxAttempts));
-                        }
-                        Thread.sleep(5000);
-                    }
-                }
-                connecting = false;
-                for (ConnectionListener cl1 : connectionListeners) {
-                    cl1.connectionFailed(null,
-                            new ClientException(maxAttempts + " connection attempts failed, giving up."));
-                }
-                log.warning(maxAttempts + " connection attempts failed, giving up.");
-            } catch (InterruptedException e2) {
-                log.info("Connection cancelled by user");
-                connecting = false;
-                for (ConnectionListener cl2 : connectionListeners) {
-                    cl2.connectionFailed(null, new ClientException("Thread interrupted", e2));
-                }
+            if (yprops.getUsername() == null) {
+                return yamcsClient.connectAnonymously();
+            } else {
+                return yamcsClient.connect(yprops.getUsername(), yprops.getPassword());
             }
-        }, yprops);
+        });
         executor.submit(future);
 
         // Add Progress indicator in status bar
@@ -237,8 +127,6 @@ public class YamcsStudioClient implements WebSocketClientCallback {
     public void connected() {
         log.info("Connected to " + yprops);
         parameterSubscriptionBundler.clearQueue();
-
-        connected = true;
         for (ConnectionListener listener : connectionListeners) {
             listener.connected(null);
         }
@@ -246,34 +134,35 @@ public class YamcsStudioClient implements WebSocketClientCallback {
 
     @Override
     public void disconnected() {
-        if (connected) {
+        if (isConnected()) {
             log.warning("Connection to " + yprops + " lost");
         }
-        connected = false;
-        connectionInfo = null;
         for (ConnectionListener listener : connectionListeners) {
             listener.disconnected();
         }
     }
 
+    @Override
+    public void onMessage(WebSocketSubscriptionData data) {
+        // NOP
+    }
+
     public void disconnect() {
         log.info("Disconnecting from " + yprops);
-        if (!connected) {
-            return;
+        if (yamcsClient != null) {
+            yamcsClient.close();
         }
-        wsclient.disconnect();
-        connected = false;
     }
 
     public boolean isConnected() {
-        return connected;
+        return yamcsClient != null && yamcsClient.isConnected();
     }
 
     public boolean isConnecting() {
-        return connecting;
+        return yamcsClient != null && yamcsClient.isConnecting();
     }
 
-    public Future<YamcsConnectionProperties> connect(YamcsConnectionProperties yprops) {
+    public Future<ConnectionInfo> connect(YamcsConnectionProperties yprops) {
         this.yprops = yprops;
         return doConnect();
     }
@@ -283,26 +172,17 @@ public class YamcsStudioClient implements WebSocketClientCallback {
     }
 
     public ConnectionInfo getConnectionInfo() {
-        return connectionInfo;
-    }
-
-    public List<String> getYamcsInstances() {
-        if (instances == null) {
-            return null;
-        }
-        return instances.stream().map(r -> r.getName()).collect(Collectors.toList());
+        return yamcsClient.getConnectionInfo();
     }
 
     public CompletableFuture<WebSocketReplyData> subscribe(WebSocketRequest req,
             WebSocketClientCallback messageHandler) {
-        if (!subscribers.contains(messageHandler)) {
-            subscribers.add(messageHandler);
-        }
+        yamcsClient.addWebSocketListener(messageHandler);
         if (req instanceof ParameterWebSocketRequest) {
             parameterSubscriptionBundler.queue((ParameterWebSocketRequest) req);
             return null; // TODO ?
         } else {
-            return wsclient.sendRequest(req);
+            return yamcsClient.getWebSocketClient().sendRequest(req);
         }
     }
 
@@ -311,79 +191,56 @@ public class YamcsStudioClient implements WebSocketClientCallback {
             parameterSubscriptionBundler.queue((ParameterWebSocketRequest) req);
             return null; // TODO ?
         } else {
-            return wsclient.sendRequest(req);
+            return yamcsClient.getWebSocketClient().sendRequest(req);
         }
-    }
-
-    @Override
-    public void onMessage(WebSocketSubscriptionData data) {
-
-        // Stop processing messages on shutdown
-        YamcsPlugin plugin = YamcsPlugin.getDefault();
-        if (plugin == null) {
-            return;
-        }
-
-        if (data.hasConnectionInfo()) {
-            connectionInfo = data.getConnectionInfo();
-        }
-
-        subscribers.forEach(s -> s.onMessage(data));
     }
 
     public CompletableFuture<byte[]> get(String uri, MessageLite msg) {
-        return requestAsync(HttpMethod.GET, uri, msg);
-    }
-
-    public CompletableFuture<Void> streamGet(String uri, MessageLite msg, BulkRestDataReceiver receiver) {
-        return doRequestWithDelimitedResponse(HttpMethod.GET, uri, msg, receiver);
-    }
-
-    public CompletableFuture<Void> streamPost(String uri, MessageLite msg, BulkRestDataReceiver receiver) {
-        return doRequestWithDelimitedResponse(HttpMethod.POST, uri, msg, receiver);
-    }
-
-    public CompletableFuture<byte[]> post(String uri, MessageLite msg) {
-        return requestAsync(HttpMethod.POST, uri, msg);
-    }
-
-    public CompletableFuture<byte[]> patch(String uri, MessageLite msg) {
-        return requestAsync(HttpMethod.PATCH, uri, msg);
-    }
-
-    public CompletableFuture<byte[]> put(String uri, MessageLite msg) {
-        return requestAsync(HttpMethod.PUT, uri, msg);
-    }
-
-    public CompletableFuture<byte[]> delete(String uri, MessageLite msg) {
-        return requestAsync(HttpMethod.DELETE, uri, msg);
-    }
-
-    private <S extends MessageLite> CompletableFuture<byte[]> requestAsync(HttpMethod method, String uri,
-            MessageLite requestBody) {
-        CompletableFuture<byte[]> cf;
-        if (requestBody != null) {
-            cf = restClient.doRequest(uri, method, requestBody.toByteArray());
-        } else {
-            cf = restClient.doRequest(uri, method);
-        }
-
-        String jobName = method + " /api" + uri;
+        CompletableFuture<byte[]> cf = yamcsClient.get(uri, msg);
+        String jobName = "GET /api" + uri;
         scheduleAsJob(jobName, cf, Job.SHORT);
         return cf;
     }
 
-    private <S extends MessageLite> CompletableFuture<Void> doRequestWithDelimitedResponse(HttpMethod method,
-            String uri, MessageLite requestBody, BulkRestDataReceiver receiver) {
-        CompletableFuture<Void> cf;
-        if (requestBody != null) {
-            cf = restClient.doBulkRequest(method, uri, requestBody.toByteArray(), receiver);
-        } else {
-            cf = restClient.doBulkRequest(method, uri, receiver);
-        }
-
-        String jobName = method + " /api" + uri;
+    public CompletableFuture<Void> streamGet(String uri, MessageLite msg, BulkRestDataReceiver receiver) {
+        CompletableFuture<Void> cf = yamcsClient.streamGet(uri, msg, receiver);
+        String jobName = "GET /api" + uri;
         scheduleAsJob(jobName, cf, Job.LONG);
+        return cf;
+    }
+
+    public CompletableFuture<Void> streamPost(String uri, MessageLite msg, BulkRestDataReceiver receiver) {
+        CompletableFuture<Void> cf = yamcsClient.streamPost(uri, msg, receiver);
+        String jobName = "POST /api" + uri;
+        scheduleAsJob(jobName, cf, Job.LONG);
+        return cf;
+    }
+
+    public CompletableFuture<byte[]> post(String uri, MessageLite msg) {
+        CompletableFuture<byte[]> cf = yamcsClient.post(uri, msg);
+        String jobName = "POST /api" + uri;
+        scheduleAsJob(jobName, cf, Job.SHORT);
+        return cf;
+    }
+
+    public CompletableFuture<byte[]> patch(String uri, MessageLite msg) {
+        CompletableFuture<byte[]> cf = yamcsClient.patch(uri, msg);
+        String jobName = "PATCH /api" + uri;
+        scheduleAsJob(jobName, cf, Job.SHORT);
+        return cf;
+    }
+
+    public CompletableFuture<byte[]> put(String uri, MessageLite msg) {
+        CompletableFuture<byte[]> cf = yamcsClient.put(uri, msg);
+        String jobName = "PUT /api" + uri;
+        scheduleAsJob(jobName, cf, Job.SHORT);
+        return cf;
+    }
+
+    public CompletableFuture<byte[]> delete(String uri, MessageLite msg) {
+        CompletableFuture<byte[]> cf = yamcsClient.delete(uri, msg);
+        String jobName = "DELETE /api" + uri;
+        scheduleAsJob(jobName, cf, Job.SHORT);
         return cf;
     }
 
@@ -408,18 +265,15 @@ public class YamcsStudioClient implements WebSocketClientCallback {
     }
 
     public WebSocketClient getWebSocketClient() {
-        return wsclient;
+        return yamcsClient.getWebSocketClient();
     }
 
     /**
      * Performs an orderly shutdown of this service
      */
     public void shutdown() {
-        if (restClient != null) {
-            restClient.close(); // Shuts down the thread pool
-        }
-        if (wsclient != null) {
-            wsclient.shutdown();
+        if (yamcsClient != null) {
+            yamcsClient.close();
         }
         executor.shutdown();
         canceller.shutdown();
