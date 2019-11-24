@@ -58,10 +58,15 @@
    </extension>
    
    <extension point="org.eclipse.ui.handlers">
+      <!-- For some weird reason, core expressions don't work properly anymore.
+           Maybe upgrade RCP? Workaround is to force a change in the application
+           context by selecting another view, and then returning to the Archive View...
+           The issue is not limited to zoom, it also happens with for example connection state,
+           but so far only in the archive view. SWT bridge? -->
       <handler
             class="org.yamcs.studio.archive.RefreshArchiveHandler"
             commandId="org.yamcs.studio.archive.refreshCommand">
-         <activeWhen>
+         <!--activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
@@ -70,30 +75,30 @@
                   <equals value="true"/>
                </with>
             </and>
-         </activeWhen>
+         </activeWhen-->
       </handler>
       <handler
             class="org.yamcs.studio.archive.ZoomInHandler"
             commandId="org.yamcs.studio.archive.zoomInCommand">
-         <activeWhen>
+         <!--activeWhen>
             <with variable="org.yamcs.studio.archive.state.zoomInEnabled">
                <equals value="true"/>
             </with>
-         </activeWhen>
+         </activeWhen-->
       </handler>
       <handler
             class="org.yamcs.studio.archive.ZoomOutHandler"
             commandId="org.yamcs.studio.archive.zoomOutCommand">
-         <activeWhen>
+         <!--activeWhen>
             <with variable="org.yamcs.studio.archive.state.zoomOutEnabled">
                <equals value="true"/>
             </with>
-         </activeWhen>
+         </activeWhen-->
       </handler>
       <handler
             class="org.yamcs.studio.archive.ZoomClearHandler"
             commandId="org.yamcs.studio.archive.zoomClearCommand">
-         <activeWhen>
+         <!--activeWhen>
             <and>
                <with variable="org.yamcs.studio.archive.state.zoomOutEnabled">
                   <equals value="true"/>
@@ -102,12 +107,12 @@
                   <equals value="true"/>
                </with>
             </and>
-         </activeWhen>
+         </activeWhen-->
       </handler>
       <handler
             class="org.yamcs.studio.archive.AnnotateArchiveHandler"
             commandId="org.yamcs.studio.archive.createTagCommand">
-         <activeWhen>
+         <!--activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
@@ -116,18 +121,18 @@
                   <equals value="true"/>
                </with>
             </and>
-         </activeWhen>
+         </activeWhen-->
       </handler>
       <handler
             class="org.yamcs.studio.archive.CreateReplayHandler"
             commandId="org.yamcs.studio.archive.createReplayCommand">
-         <activeWhen>
+         <!--activeWhen>
             <and>
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true"/>
                </with>
             </and>
-         </activeWhen>
+         </activeWhen-->
       </handler>
    </extension>
    
