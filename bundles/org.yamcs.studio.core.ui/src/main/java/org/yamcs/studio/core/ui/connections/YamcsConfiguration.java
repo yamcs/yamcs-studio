@@ -9,6 +9,12 @@ import org.yamcs.api.YamcsConnectionProperties.Protocol;
  * UI class. Used to maintain state of a server in the connection manager dialog
  */
 public class YamcsConfiguration {
+
+    public enum AuthType {
+        STANDARD,
+        KERBEROS;
+    }
+
     private String name;
     private String instance;
     private String user;
@@ -20,6 +26,8 @@ public class YamcsConfiguration {
     private boolean savePassword;
     private boolean ssl;
     private String caCertFile;
+
+    private AuthType authType;
 
     public String getInstance() {
         return instance;
@@ -51,6 +59,14 @@ public class YamcsConfiguration {
 
     public String getCaCertFile() {
         return caCertFile;
+    }
+
+    public AuthType getAuthType() {
+        return authType;
+    }
+
+    public void setAuthType(AuthType authType) {
+        this.authType = authType;
     }
 
     public boolean isAnonymous() {
@@ -109,8 +125,13 @@ public class YamcsConfiguration {
         YamcsConnectionProperties yprops = new YamcsConnectionProperties(primaryHost, primaryPort, instance);
         yprops.setProtocol(Protocol.http);
         yprops.setTls(ssl);
-        if (!isAnonymous() && password != null) {
-            yprops.setCredentials(user, password.toCharArray());
+        if (authType == AuthType.KERBEROS) {
+            yprops.setAuthType(org.yamcs.api.YamcsConnectionProperties.AuthType.KERBEROS);
+        } else {
+            yprops.setAuthType(org.yamcs.api.YamcsConnectionProperties.AuthType.STANDARD);
+            if (!isAnonymous() && password != null) {
+                yprops.setCredentials(user, password.toCharArray());
+            }
         }
         return yprops;
     }

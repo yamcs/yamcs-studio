@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -37,6 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.yamcs.studio.core.ui.connections.YamcsConfiguration.AuthType;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
@@ -54,6 +56,8 @@ import org.yamcs.studio.core.ui.utils.RCPUtils;
 public class ConnectionsDialog extends Dialog {
 
     private static final Logger log = Logger.getLogger(ConnectionsDialog.class.getName());
+    private static final String ITEM_STANDARD = "Standard";
+    private static final String ITEM_KERBEROS = "Kerberos";
 
     private TableViewer connViewer;
     private Composite detailPanel;
@@ -65,14 +69,19 @@ public class ConnectionsDialog extends Dialog {
 
     private Button autoConnect;
     private Text yamcsInstanceText;
-    private Text yamcsUserText;
-    private Text yamcsPasswordText;
     private Text yamcsHostText;
     private Text yamcsPortText;
     private Text nameText;
+
+    private Label yamcsUserLabel;
+    private Text yamcsUserText;
+    private Label yamcsPasswordLabel;
+    private Text yamcsPasswordText;
+
     private Button sslCheckbox;
     private Button savePasswordButton;
     private Text caCertFileText;
+    private Combo authTypeCombo;
 
     private YamcsConfiguration chosenConfiguration;
     private String passwordForChosenConfiguration;
@@ -148,27 +157,41 @@ public class ConnectionsDialog extends Dialog {
 
     private void updateState() {
         IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
-        Button ok = getButton(IDialogConstants.OK_ID);
         if (sel.isEmpty()) {
             selectedConfiguration = null;
             detailPanel.setVisible(false);
             removeServerButton.setEnabled(false);
-            if (ok != null) {
-                ok.setText("Save"); // Give opportunity to user to quit dialog
-                // without connecting and saving changes
-            }
         } else {
             selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
             removeServerButton.setEnabled(true);
-            if (ok != null) {
-                ok.setText("Connect");
+
+            if (selectedConfiguration.getAuthType() == null
+                    || selectedConfiguration.getAuthType() == AuthType.STANDARD) {
+                yamcsUserLabel.setVisible(true);
+                yamcsUserText.setVisible(true);
+                yamcsPasswordLabel.setVisible(true);
+                yamcsPasswordText.setVisible(true);
+                savePasswordButton.setVisible(true);
+            } else {
+                yamcsUserLabel.setVisible(false);
+                yamcsUserText.setVisible(false);
+                yamcsPasswordLabel.setVisible(false);
+                yamcsPasswordText.setVisible(false);
+                savePasswordButton.setVisible(false);
             }
         }
     }
 
     @Override
     protected void okPressed() {
+        // TODO maybe only save changes when "save" button is used (and only for the active detail pane)
+        // Then connection naming is an optional feature.
+        saveChanges();
+        super.okPressed();
+    }
+
+    private void saveChanges() {
         if (selectedConfiguration != null) {
             chosenConfiguration = selectedConfiguration;
             passwordForChosenConfiguration = chosenConfiguration.getPassword();
@@ -185,7 +208,6 @@ public class ConnectionsDialog extends Dialog {
             confs.add(conf);
         }
         ConnectionPreferences.setConfigurations(confs);
-        super.okPressed();
     }
 
     @Override
@@ -200,6 +222,14 @@ public class ConnectionsDialog extends Dialog {
         GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns++;
         layout.makeColumnsEqualWidth = false;
+
+        Button saveButton = createButton(parent, 123, "Save", false);
+        saveButton.addListener(SWT.Selection, evt -> saveChanges());
+
+        /*Button testButton = createButton(parent, 124, "Test", false);
+        testButton.addListener(SWT.Selection, evt -> {
+            System.out.println("Test connection");
+        });*/
 
         super.createButtonsForButtonBar(parent);
 
@@ -222,6 +252,7 @@ public class ConnectionsDialog extends Dialog {
         YamcsConfiguration conf = new YamcsConfiguration();
         conf.setName("Untitled");
         conf.setPrimaryPort(8090);
+        conf.setAuthType(AuthType.STANDARD);
         connViewer.add(conf);
         connViewer.setSelection(new StructuredSelection(conf), true);
         yamcsHostText.setFocus();
@@ -274,14 +305,26 @@ public class ConnectionsDialog extends Dialog {
             if (sel.getFirstElement() != null) {
                 YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
                 yamcsInstanceText.setText(forceString(conf.getInstance()));
-                yamcsUserText.setText(forceString(conf.getUser()));
-                yamcsPasswordText.setText(forceString(conf.getPassword()));
-                savePasswordButton.setSelection(conf.isSavePassword());
                 sslCheckbox.setSelection(conf.isSsl());
                 /// caCertFileText.setText(forceString(conf.getCaCertFile()));
                 yamcsHostText.setText(forceString(conf.getPrimaryHost()));
                 yamcsPortText.setText(forceString(conf.getPrimaryPort()));
                 nameText.setText(forceString(conf.getName()));
+
+                AuthType authType = (conf.getAuthType() == null) ? AuthType.STANDARD : conf.getAuthType();
+                if (authType == AuthType.STANDARD) {
+                    authTypeCombo.select(0);
+                    yamcsUserText.setText(forceString(conf.getUser()));
+                    yamcsPasswordText.setText(forceString(conf.getPassword()));
+                    savePasswordButton.setSelection(conf.isSavePassword());
+                } else if (authType == AuthType.KERBEROS) {
+                    authTypeCombo.select(1);
+                    yamcsUserText.setText("");
+                    yamcsPasswordText.setText("");
+                    savePasswordButton.setSelection(false);
+                } else {
+                    throw new IllegalArgumentException("Unexpected auth type " + authType);
+                }
 
                 updateState();
             }
@@ -353,34 +396,6 @@ public class ConnectionsDialog extends Dialog {
         });
 
         lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("User:");
-        yamcsUserText = new Text(detailPanel, SWT.BORDER);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        yamcsUserText.setLayoutData(gd);
-        yamcsUserText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsUserText.getText()) && selectedConfiguration != null) {
-                selectedConfiguration.setUser(yamcsUserText.getText());
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setUser(null);
-            }
-        });
-
-        lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Password:");
-        yamcsPasswordText = new Text(detailPanel, SWT.BORDER | SWT.PASSWORD);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        yamcsPasswordText.setLayoutData(gd);
-        yamcsPasswordText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsPasswordText.getText()) && selectedConfiguration != null) {
-                selectedConfiguration.setPassword(yamcsPasswordText.getText());
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setPassword(null);
-            }
-        });
-
-        lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Yamcs Instance:");
         yamcsInstanceText = new Text(detailPanel, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -407,6 +422,70 @@ public class ConnectionsDialog extends Dialog {
                 // selectedConfiguration.setUser(null);
             }
         });*/
+
+        // Spacer
+        lbl = new Label(detailPanel, SWT.NONE);
+        gd = new GridData();
+        gd.horizontalSpan = 3;
+        lbl.setLayoutData(gd);
+
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Authentication:");
+        gd = new GridData();
+        gd.horizontalSpan = 3;
+        lbl.setLayoutData(gd);
+
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Type:");
+        authTypeCombo = new Combo(detailPanel, SWT.READ_ONLY);
+        authTypeCombo.setItems(ITEM_STANDARD, ITEM_KERBEROS);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        authTypeCombo.setLayoutData(gd);
+        authTypeCombo.addListener(SWT.Selection, evt -> {
+            if (authTypeCombo.getSelectionIndex() == 0) {
+                selectedConfiguration.setAuthType(AuthType.STANDARD);
+            } else if (authTypeCombo.getSelectionIndex() == 1) {
+                selectedConfiguration.setAuthType(AuthType.KERBEROS);
+                selectedConfiguration.setUser(null);
+                yamcsUserText.setText("");
+                selectedConfiguration.setPassword(null);
+                yamcsPasswordText.setText("");
+                selectedConfiguration.setSavePassword(false);
+                savePasswordButton.setSelection(false);
+            } else {
+                throw new IllegalArgumentException("Unexpected auth type " + authTypeCombo.getSelectionIndex());
+            }
+            updateState();
+        });
+
+        yamcsUserLabel = new Label(detailPanel, SWT.NONE);
+        yamcsUserLabel.setText("User:");
+        yamcsUserText = new Text(detailPanel, SWT.BORDER);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        yamcsUserText.setLayoutData(gd);
+        yamcsUserText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(yamcsUserText.getText()) && selectedConfiguration != null) {
+                selectedConfiguration.setUser(yamcsUserText.getText());
+            } else if (selectedConfiguration != null) {
+                selectedConfiguration.setUser(null);
+            }
+        });
+
+        yamcsPasswordLabel = new Label(detailPanel, SWT.NONE);
+        yamcsPasswordLabel.setText("Password:");
+        yamcsPasswordText = new Text(detailPanel, SWT.BORDER | SWT.PASSWORD);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        yamcsPasswordText.setLayoutData(gd);
+        yamcsPasswordText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(yamcsPasswordText.getText()) && selectedConfiguration != null) {
+                selectedConfiguration.setPassword(yamcsPasswordText.getText());
+            } else if (selectedConfiguration != null) {
+                selectedConfiguration.setPassword(null);
+            }
+        });
 
         // Spacer
         lbl = new Label(detailPanel, SWT.NONE);

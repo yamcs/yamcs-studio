@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.yamcs.api.YamcsConnectionProperties;
+import org.yamcs.api.YamcsConnectionProperties.AuthType;
 import org.yamcs.client.BulkRestDataReceiver;
 import org.yamcs.client.ConnectionListener;
 import org.yamcs.client.WebSocketClient;
@@ -101,7 +102,9 @@ public class YamcsStudioClient implements WebSocketClientCallback {
 
         FutureTask<ConnectionInfo> future = new FutureTask<>(() -> {
             log.info("Connecting to " + yprops);
-            if (yprops.getUsername() == null) {
+            if (yprops.getAuthType() == AuthType.KERBEROS) {
+                return yamcsClient.connectWithKerberos();
+            } else if (yprops.getUsername() == null) {
                 return yamcsClient.connectAnonymously();
             } else {
                 return yamcsClient.connect(yprops.getUsername(), yprops.getPassword());
