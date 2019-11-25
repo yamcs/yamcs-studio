@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>org.yamcs.studio.releng</artifactId>
-    <version>1.3.2</version>
+    <version>1.3.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.yamcs.studio.platform</artifactId>
