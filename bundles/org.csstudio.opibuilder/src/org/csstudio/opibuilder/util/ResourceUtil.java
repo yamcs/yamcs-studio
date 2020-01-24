@@ -132,8 +132,8 @@ public class ResourceUtil {
                 localFile = new File(localFile.getPath().substring(5));
                 return new FileInputStream(localFile);
             } else if (localFile.getPath().startsWith("platform:")) {
-                URL bundleEntry = FileLocator.find(new URL(localFile.getPath()));
-                return bundleEntry.openStream();
+                URL url = new URL(path.toString());
+                return url.openConnection().getInputStream();
             } else {
                 return new FileInputStream(localFile);
             }
@@ -295,7 +295,7 @@ public class ResourceUtil {
      *            true if this method should run as an UI Job. If it is true, this method must be called in UI thread.
      * @return
      */
-    public static boolean isExsitingFile(final IPath absolutePath, boolean runInUIJob) {
+    public static boolean isExsitingFile(IPath absolutePath, boolean runInUIJob) {
         if (isExistingWorkspaceFile(absolutePath)) {
             return true;
         }
