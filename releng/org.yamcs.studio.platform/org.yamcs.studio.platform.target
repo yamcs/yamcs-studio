@@ -41,6 +41,7 @@
             <unit id="org.mockito" version="1.9.5.v201605172210"/>
             <unit id="org.yaml.snakeyaml" version="1.14.0.v201604211500"/>
             <unit id="org.objectweb.asm" version="5.0.1.v201404251740"/>
+            <unit id="org.apache.batik.constants" version="1.9.1.v20180227-1645"/>
             <unit id="org.apache.batik.bridge" version="1.9.1.v20181015-1528"/>
             <unit id="org.apache.batik.codec" version="1.9.1.v20180313-1559"/>
             <unit id="org.apache.batik.dom" version="1.9.1.v20181015-1528"/>
