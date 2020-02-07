@@ -7,7 +7,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,14 +22,13 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
     private SashForm sashForm;
 
-    private StyledText originLabel;
-    private StyledText dateLabel;
-    private StyledText userLabel;
+    private Text originLabel;
+    private Text dateLabel;
+    private Text userLabel;
     private Label completedImageLabel;
     private Label completedLabel;
-    private StyledText originIdLabel;
-    private StyledText binaryLabel;
-    private StyledText commentLabel;
+    private Text binaryLabel;
+    private Text commentLabel;
     private Text commandStringText;
 
     private Button prevButton;
@@ -195,9 +193,8 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
         Label label = new Label(textContainer, SWT.NONE);
         label.setText("Date");
-        dateLabel = new StyledText(textContainer, SWT.NONE);
+        dateLabel = new Text(textContainer, SWT.BORDER);
         dateLabel.setEditable(false);
-        dateLabel.setCaret(null);
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         dateLabel.setLayoutData(gd);
@@ -211,36 +208,32 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("User");
-        userLabel = new StyledText(textContainer, SWT.NONE);
+        userLabel = new Text(textContainer, SWT.BORDER);
         userLabel.setEditable(false);
-        userLabel.setCaret(null);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         userLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Origin");
-        originLabel = new StyledText(textContainer, SWT.NONE);
+        originLabel = new Text(textContainer, SWT.BORDER);
         originLabel.setEditable(false);
-        originLabel.setCaret(null);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         originLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Binary");
-        binaryLabel = new StyledText(textContainer, SWT.NONE);
+        binaryLabel = new Text(textContainer, SWT.BORDER);
         binaryLabel.setEditable(false);
-        binaryLabel.setCaret(null);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         binaryLabel.setLayoutData(gd);
 
         label = new Label(textContainer, SWT.NONE);
         label.setText("Comment");
-        commentLabel = new StyledText(textContainer, SWT.NONE);
+        commentLabel = new Text(textContainer, SWT.BORDER);
         commentLabel.setEditable(false);
-        commentLabel.setCaret(null);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         commentLabel.setLayoutData(gd);

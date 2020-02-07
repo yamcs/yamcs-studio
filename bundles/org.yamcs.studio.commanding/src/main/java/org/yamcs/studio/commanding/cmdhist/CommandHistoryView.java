@@ -601,7 +601,18 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
                 column.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        return ((CommandHistoryRecord) element).getTextForColumn(def.name, showRelativeTime);
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+
+                        // Avoid showing delta if ack status is "PENDING".
+                        // should refactor this...
+                        if (rec.getAckDurationForColumn(def.name) != 0) {
+                            String imgLoc = rec.getImageForColumn(def.name);
+                            if (!CommandHistoryRecordContentProvider.GREEN.equals(imgLoc)
+                                    && !CommandHistoryRecordContentProvider.RED.equals(imgLoc)) {
+                                return null;
+                            }
+                        }
+                        return rec.getTextForColumn(def.name, showRelativeTime);
                     }
 
                     @Override

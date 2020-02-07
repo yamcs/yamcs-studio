@@ -58,8 +58,10 @@ public class AckTableViewer extends TableViewer {
                 Acknowledgment ack = (Acknowledgment) element;
                 if (ack.getStatus().equals("OK")) {
                     return commandHistoryView.greenBubble;
-                } else {
+                } else if (!ack.getStatus().equals("PENDING")) {
                     return commandHistoryView.redBubble;
+                } else {
+                    return null;
                 }
             }
 
@@ -77,7 +79,11 @@ public class AckTableViewer extends TableViewer {
             @Override
             public String getText(Object element) {
                 Acknowledgment ack = (Acknowledgment) element;
-                return ack.getDelta();
+                if (!ack.getStatus().equals("PENDING")) {
+                    return ack.getDelta();
+                } else {
+                    return null;
+                }
             }
         });
         tl.addColumnData(new ColumnWeightData(200));
