@@ -7,6 +7,8 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -36,6 +38,15 @@ public class DataLinkTableViewer extends TableViewer {
         addFixedColumns(tcl);
 
         setLabelProvider(new DataLinkTableViewerLabelProvider());
+
+        setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object o1, Object o2) {
+                DataLinkRecord rec1 = (DataLinkRecord) o1;
+                DataLinkRecord rec2 = (DataLinkRecord) o2;
+                return rec1.getLinkInfo().getName().compareToIgnoreCase(rec2.getLinkInfo().getName());
+            }
+        });
 
         addPopupMenu();
     }
