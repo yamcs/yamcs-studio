@@ -51,7 +51,7 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
             byte[] data = catalogue.fetchProcessors().get(3000, TimeUnit.MILLISECONDS);
             ListProcessorsResponse response = ListProcessorsResponse.parseFrom(data);
-            List<ProcessorInfo> processors = new ArrayList<>(response.getProcessorList());
+            List<ProcessorInfo> processors = new ArrayList<>(response.getProcessorsList());
             Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
 
             processors.stream().filter(p -> instance.equals(p.getInstance())).forEach(processor -> {

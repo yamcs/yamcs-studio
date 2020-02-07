@@ -28,7 +28,6 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.osgi.framework.Version;
-import org.yamcs.CompactFormatter;
 
 public class Application implements IApplication {
 
@@ -126,13 +125,13 @@ public class Application implements IApplication {
         int limit = 10_000_000; // ~10 MB
         int count = 10;
         FileHandler fileHandler = new FileHandler(pattern, limit, count);
-        fileHandler.setFormatter(new CompactFormatter());
+        fileHandler.setFormatter(new LogFormatter());
         root.addHandler(fileHandler);
 
         // At this point in the startup there should be only one handler (for stdout)
         for (Handler handler : root.getHandlers()) {
             handler.setLevel(Level.FINE);
-            handler.setFormatter(new CompactFormatter());
+            handler.setFormatter(new LogFormatter());
         }
 
         // A third user-level handler will be created by the workbench window advisor when the ConsoleView

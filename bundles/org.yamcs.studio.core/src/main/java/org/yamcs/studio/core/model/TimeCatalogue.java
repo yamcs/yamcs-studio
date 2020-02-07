@@ -7,8 +7,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.yamcs.client.WebSocketClientCallback;
 import org.yamcs.client.WebSocketRequest;
+import org.yamcs.protobuf.TimeInfo;
 import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
-import org.yamcs.protobuf.Yamcs.TimeInfo;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.utils.TimeEncoding;

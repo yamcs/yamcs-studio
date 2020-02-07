@@ -33,6 +33,8 @@ import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.Prefs;
 import org.yamcs.utils.TimeEncoding;
 
+import com.google.protobuf.Timestamp;
+
 /**
  * Main panel of the ArchiveBrowser
  *
@@ -232,7 +234,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
                 return;
             }
 
-            String seekTime = TimeEncoding.toString(newPosition);
+            Timestamp seekTime = TimeEncoding.toProtobufTimestamp(newPosition);
             EditProcessorRequest req = EditProcessorRequest.newBuilder().setSeek(seekTime).build();
             ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
             catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req);

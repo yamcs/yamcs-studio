@@ -116,7 +116,7 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
                 if (exc == null) {
                     try {
                         ListProcessorsResponse response = ListProcessorsResponse.parseFrom(data);
-                        processorsTable.setInput(response.getProcessorList());
+                        processorsTable.setInput(response.getProcessorsList());
                     } catch (InvalidProtocolBufferException e) {
                         log.log(Level.SEVERE, "Failed to decode server message", e);
                     }

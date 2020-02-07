@@ -1,6 +1,6 @@
 package org.yamcs.studio.core.model;
 
-import org.yamcs.protobuf.Alarms.AlarmData;
+import org.yamcs.protobuf.AlarmData;
 
 /**
  * Reports on alarms on the studio-wide processor

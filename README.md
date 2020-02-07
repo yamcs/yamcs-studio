@@ -10,7 +10,7 @@ Below instructions are targeted at Yamcs Studio core contributors.
 ---
 
 ### Prerequisites
-* JDK 8+
+* JDK 8 or 11
 * Maven
 
 
@@ -21,8 +21,6 @@ There are two different maven reactors (the first bundles up non-OSGI dependenci
 ```
 make
 ```
-
-**Do not use Maven 3.6.1.** It contains a blocking bug that causes dependency resolution to fail: https://issues.apache.org/jira/browse/MNG-6642
 
 
 ### Eclipse Development

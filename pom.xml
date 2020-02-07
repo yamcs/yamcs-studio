@@ -15,7 +15,7 @@
   </organization>
 
   <properties>
-    <yamcs.version>4.10.5</yamcs.version>
+    <yamcs.version>4.10.6-SNAPSHOT</yamcs.version>
     <tycho.version>1.5.1</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

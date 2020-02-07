@@ -1,7 +1,7 @@
 package org.yamcs.studio.alarms.active;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.yamcs.protobuf.Alarms.AlarmData;
+import org.yamcs.protobuf.AlarmData;
 import org.yamcs.studio.core.ui.XtceTreeContentProvider;
 import org.yamcs.studio.core.ui.XtceTreeNode;
 

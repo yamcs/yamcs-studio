@@ -2,8 +2,8 @@ package org.yamcs.studio.alarms.active;
 
 import java.util.Objects;
 
-import org.yamcs.protobuf.Alarms.AlarmData;
-import org.yamcs.protobuf.Alarms.ParameterAlarmData;
+import org.yamcs.protobuf.AlarmData;
+import org.yamcs.protobuf.ParameterAlarmData;
 import org.yamcs.studio.core.ui.XtceTreeNode;
 
 public class XtceAlarmNode implements XtceTreeNode<AlarmData> {

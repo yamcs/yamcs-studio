@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
-import org.yamcs.protobuf.EditCommandQueueEntryRequest;
+import org.yamcs.protobuf.EditQueueEntryRequest;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
@@ -169,7 +169,7 @@ public class CommandQueuedTableViewer extends TableViewer {
     // rebuild doesn't seem to do anything and therefore is not currently included in rest api
     // keeping it around for future reference mostly
     private void updateQueueEntryState(CommandQueueEntry entry, String state, boolean rebuild) {
-        EditCommandQueueEntryRequest req = EditCommandQueueEntryRequest.newBuilder().setState(state).build();
+        EditQueueEntryRequest req = EditQueueEntryRequest.newBuilder().setState(state).build();
         CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
         catalogue.editQueuedCommand(entry, req);
     }

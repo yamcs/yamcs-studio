@@ -11,7 +11,7 @@ import org.yamcs.client.BulkRestDataReceiver;
 import org.yamcs.client.ClientException;
 import org.yamcs.client.WebSocketClientCallback;
 import org.yamcs.client.WebSocketRequest;
-import org.yamcs.protobuf.Archive.CreateEventRequest;
+import org.yamcs.protobuf.CreateEventRequest;
 import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;

@@ -6,8 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -21,6 +24,8 @@ import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.studio.commanding.stack.xml.CommandStack.Command.CommandArgument;
 
 public class ExportCommandStackHandler extends AbstractHandler {
+    
+    private static final Logger log = Logger.getLogger(ExportCommandStackHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -80,7 +85,8 @@ public class ExportCommandStackHandler extends AbstractHandler {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(exportCommandStack, file);
             jaxbMarshaller.marshal(exportCommandStack, System.out);
-        } catch (Exception e) {
+        } catch (JAXBException e) {
+            log.log(Level.SEVERE, "Error while exporting stack", e);
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Export Command Stack",
                     "Unable to perform command stack export.\nDetails:" + e.getMessage());
             return null;
