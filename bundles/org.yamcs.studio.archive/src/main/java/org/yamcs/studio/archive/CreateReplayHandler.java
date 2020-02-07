@@ -20,9 +20,17 @@ public class CreateReplayHandler extends AbstractHandler {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
         SwingUtilities.invokeLater(() -> {
             ArchiveView view = (ArchiveView) part;
-            long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
-            missionTime -= 30 * 1000;
-            TimeInterval interval = TimeInterval.starting(missionTime);
+
+            TimeInterval interval;
+            Selection sel = view.archivePanel.getSelection();
+            if (sel != null) {
+                interval = new TimeInterval(sel.getStartInstant(), sel.getStopInstant());
+            } else {
+                long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+                missionTime -= 30 * 1000;
+                interval = TimeInterval.starting(missionTime);
+            }
+
             List<String> pps = view.archivePanel.getSelectedPackets("pp");
             Display.getDefault().asyncExec(() -> {
                 CreateReplayDialog dialog = new CreateReplayDialog(Display.getCurrent().getActiveShell());

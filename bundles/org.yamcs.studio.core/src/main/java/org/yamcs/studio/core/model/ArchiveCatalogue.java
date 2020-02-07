@@ -1,15 +1,16 @@
 package org.yamcs.studio.core.model;
 
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 import org.yamcs.client.BulkRestDataReceiver;
 import org.yamcs.protobuf.CreateTagRequest;
 import org.yamcs.protobuf.EditTagRequest;
+import org.yamcs.protobuf.StreamIndexRequest;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.URLBuilder;
 import org.yamcs.studio.core.client.YamcsStudioClient;
+import org.yamcs.utils.TimeEncoding;
 
 /**
  * Groups generic archive operations (index, tags).
@@ -48,17 +49,23 @@ public class ArchiveCatalogue implements Catalogue {
 
     public CompletableFuture<Void> downloadIndexes(String instance, TimeInterval interval,
             BulkRestDataReceiver receiver) {
-        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/indexes");
-        urlb.setParam("filter", Arrays.asList("tm", "pp", "commands", "completeness"));
+        String uri = "/archive/" + instance + ":streamIndex";
+        StreamIndexRequest.Builder optionsb = StreamIndexRequest.newBuilder();
+        optionsb.addFilters("tm");
+        optionsb.addFilters("pp");
+        optionsb.addFilters("commands");
+        optionsb.addFilters("completeness");
         if (interval.hasStart()) {
-            urlb.setParam("start", interval.getStartUTC());
+            long start = TimeEncoding.parse(interval.getStartUTC());
+            optionsb.setStart(TimeEncoding.toProtobufTimestamp(start));
         }
         if (interval.hasStop()) {
-            urlb.setParam("stop", interval.getStopUTC());
+            long stop = TimeEncoding.parse(interval.getStopUTC());
+            optionsb.setStop(TimeEncoding.toProtobufTimestamp(stop));
         }
 
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.streamGet(urlb.toString(), null, receiver);
+        return yamcsClient.streamPost(uri, optionsb.build(), receiver);
     }
 
     public CompletableFuture<byte[]> createTag(CreateTagRequest request) {
