@@ -16,11 +16,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.eclipse.ui.forms,
  com.google.gson,
- com.sun.xml.bind,
- javax.xml,
- javax.xml.bind,
- javax.xml.stream,
- javax.activation,
  org.apache.velocity
 Export-Package: org.yamcs.studio.commanding
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))

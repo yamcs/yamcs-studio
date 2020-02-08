@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -16,38 +15,34 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-
-
 public class ExportCommandStackSpellDialog extends TitleAreaDialog {
 
     // input data
-    Collection<StackedCommand> scs;
+    Collection<StackedCommand> commands;
     String filename;
-    
+
     // controls
     Button delaysButton;
     Text spacecraftNameText;
     Text procedureNameText;
-    
+
     // dialog results:
     public boolean exportDelays;
     public String procedureName;
     public String spaceCraftName;
-    
 
-    public ExportCommandStackSpellDialog(Shell parent,  Collection<StackedCommand> scs, String filename) {
-        super (parent);
-        this.scs = scs;
-        this.filename = filename;        
+    public ExportCommandStackSpellDialog(Shell parent, Collection<StackedCommand> commands, String filename) {
+        super(parent);
+        this.commands = commands;
+        this.filename = filename;
     }
 
     @Override
     public void create() {
         super.create();
-        setTitle("SPELL Procedure Export Options");    
-        getButton(IDialogConstants.OK_ID).setFocus();    
+        setTitle("SPELL Procedure Export Options");
+        getButton(IDialogConstants.OK_ID).setFocus();
     }
-
 
     @Override
     protected void buttonPressed(int buttonId) {
@@ -58,7 +53,7 @@ public class ExportCommandStackSpellDialog extends TitleAreaDialog {
             okPressed();
         } else {
             cancelPressed();
-        } 
+        }
     }
 
     @Override
@@ -104,19 +99,17 @@ public class ExportCommandStackSpellDialog extends TitleAreaDialog {
 
         Label label = new Label(textContainer, SWT.NONE);
         label.setText("Export Stack Delays:");
-        delaysButton = new Button(textContainer,SWT.CHECK);       
-        
+        delaysButton = new Button(textContainer, SWT.CHECK);
+
         label = new Label(textContainer, SWT.NONE);
         label.setText("Spacecraft Name:");
         spacecraftNameText = new Text(textContainer, SWT.NONE);
         spacecraftNameText.setText("spacecraft");
-                
+
         label = new Label(textContainer, SWT.NONE);
         label.setText("Procedure Name:");
         procedureNameText = new Text(textContainer, SWT.NONE);
-        String defaultName =  this.filename;
+        String defaultName = this.filename;
         procedureNameText.setText(defaultName);
-        
     }
-    
 }

@@ -2,16 +2,19 @@ package org.yamcs.studio.commanding.stack;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -20,19 +23,22 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
-import org.yamcs.studio.commanding.stack.xml.CommandStack.Command.CommandArgument;
 
 public class ExportCommandStackHandler extends AbstractHandler {
-    
+
     private static final Logger log = Logger.getLogger(ExportCommandStackHandler.class.getName());
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
         // Get current command stack
-        Collection<StackedCommand> scs = org.yamcs.studio.commanding.stack.CommandStack.getInstance().getCommands();
-        if (scs == null || scs.isEmpty()) {
+        Collection<StackedCommand> commands = org.yamcs.studio.commanding.stack.CommandStack.getInstance()
+                .getCommands();
+        if (commands == null || commands.isEmpty()) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Export Command Stack",
                     "Current command stack is empty. No command to export.");
             return null;
@@ -40,59 +46,82 @@ public class ExportCommandStackHandler extends AbstractHandler {
 
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.xml" });
-        //  dialog.setFilterPath("c:\\temp");
+        // dialog.setFilterPath("c:\\temp");
         String exportFile = dialog.open();
-        System.out.println("export file choosen: " + exportFile);
 
         if (exportFile == null) {
             // cancelled
             return null;
         }
 
-        // Build model
-        org.yamcs.studio.commanding.stack.xml.CommandStack exportCommandStack = new org.yamcs.studio.commanding.stack.xml.CommandStack();
-        List<org.yamcs.studio.commanding.stack.xml.CommandStack.Command> exportedCommands = exportCommandStack.getCommand();
-        for (StackedCommand sc : scs) {
-            org.yamcs.studio.commanding.stack.xml.CommandStack.Command c = new org.yamcs.studio.commanding.stack.xml.CommandStack.Command();
-            c.setQualifiedName(sc.getMetaCommand().getQualifiedName());
-            c.setSelectedAlias(sc.getSelectedAlias());
-            c.setComment(sc.getComment());
-            if(sc.getDelayMs() > 0)
-            {
-                c.setDelayMs(sc.getDelayMs());
-            }
-            exportedCommands.add(c);
-            List<CommandArgument> cas = c.getCommandArgument();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new Error(e);
+        }
+        Document doc = builder.newDocument();
+        Element rootElement = doc.createElement("commandStack");
+        doc.appendChild(rootElement);
 
-            Iterator<Entry<ArgumentInfo, String>> it = sc.getAssignments().entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<ArgumentInfo, String> pair = it.next();
-                String argName = pair.getKey().getName();
-                String argValue = pair.getValue();
+        for (StackedCommand command : commands) {
+            Element commandElement = doc.createElement("command");
 
-                CommandArgument ca = new CommandArgument();
-                ca.setArgumentName(argName);
-                ca.setArgumentValue(argValue);
-                cas.add(ca);
+            Attr attr = doc.createAttribute("qualifiedName");
+            attr.setValue(command.getMetaCommand().getQualifiedName());
+            commandElement.setAttributeNode(attr);
+
+            attr = doc.createAttribute("selectedAlias");
+            attr.setValue(command.getSelectedAlias());
+            commandElement.setAttributeNode(attr);
+
+            if (command.getComment() != null) {
+                attr = doc.createAttribute("comment");
+                attr.setValue(command.getComment());
+                commandElement.setAttributeNode(attr);
             }
+
+            if (command.getDelayMs() > 0) {
+                attr = doc.createAttribute("delayMs");
+                attr.setValue(Integer.toString(command.getDelayMs()));
+                commandElement.setAttributeNode(attr);
+            }
+
+            for (Entry<ArgumentInfo, String> entry : command.getAssignments().entrySet()) {
+                Element argumentElement = doc.createElement("commandArgument");
+
+                attr = doc.createAttribute("argumentName");
+                attr.setValue(entry.getKey().getName());
+                argumentElement.setAttributeNode(attr);
+
+                attr = doc.createAttribute("argumentValue");
+                attr.setValue(entry.getValue());
+                argumentElement.setAttributeNode(attr);
+
+                commandElement.appendChild(argumentElement);
+            }
+
+            rootElement.appendChild(commandElement);
         }
 
-        // Write model to file
         try {
-            File file = new File(exportFile);
-            JAXBContext jaxbContext = JAXBContext.newInstance(org.yamcs.studio.commanding.stack.xml.CommandStack.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(exportCommandStack, file);
-            jaxbMarshaller.marshal(exportCommandStack, System.out);
-        } catch (JAXBException e) {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File(exportFile));
+            transformer.transform(source, result);
+        } catch (TransformerException e) {
             log.log(Level.SEVERE, "Error while exporting stack", e);
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Export Command Stack",
                     "Unable to perform command stack export.\nDetails:" + e.getMessage());
             return null;
         }
 
-        MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Export Command Stack", "Command stack exported successfully.");
+        MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Export Command Stack",
+                "Command stack exported successfully.");
         return null;
     }
 }
