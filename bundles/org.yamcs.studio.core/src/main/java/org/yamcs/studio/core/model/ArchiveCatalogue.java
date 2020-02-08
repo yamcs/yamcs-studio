@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import org.yamcs.client.BulkRestDataReceiver;
 import org.yamcs.protobuf.CreateTagRequest;
 import org.yamcs.protobuf.EditTagRequest;
+import org.yamcs.protobuf.StreamCommandsRequest;
 import org.yamcs.protobuf.StreamIndexRequest;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -35,16 +36,20 @@ public class ArchiveCatalogue implements Catalogue {
 
     public CompletableFuture<Void> downloadCommands(String instance, TimeInterval interval,
             BulkRestDataReceiver receiver) {
-        URLBuilder urlb = new URLBuilder("/archive/" + instance + "/downloads/commands");
+        String uri = "/stream-archive/" + instance + ":streamCommands";
+        StreamCommandsRequest.Builder optionsb = StreamCommandsRequest.newBuilder();
+
         if (interval.hasStart()) {
-            urlb.setParam("start", interval.getStartUTC());
+            long start = TimeEncoding.parse(interval.getStartUTC());
+            optionsb.setStart(TimeEncoding.toProtobufTimestamp(start));
         }
         if (interval.hasStop()) {
-            urlb.setParam("stop", interval.getStopUTC());
+            long stop = TimeEncoding.parse(interval.getStopUTC());
+            optionsb.setStop(TimeEncoding.toProtobufTimestamp(stop));
         }
 
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.streamGet(urlb.toString(), null, receiver);
+        return yamcsClient.streamPost(uri, optionsb.build(), receiver);
     }
 
     public CompletableFuture<Void> downloadIndexes(String instance, TimeInterval interval,

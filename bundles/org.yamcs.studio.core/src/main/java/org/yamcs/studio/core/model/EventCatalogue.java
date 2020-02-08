@@ -12,6 +12,7 @@ import org.yamcs.client.ClientException;
 import org.yamcs.client.WebSocketClientCallback;
 import org.yamcs.client.WebSocketRequest;
 import org.yamcs.protobuf.CreateEventRequest;
+import org.yamcs.protobuf.StreamEventsRequest;
 import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
@@ -79,20 +80,22 @@ public class EventCatalogue implements Catalogue, WebSocketClientCallback {
      * Downloads a batch of events in the specified time range. These events are not distributed to registered
      * listeners, but only to the provided listener.
      */
-    public CompletableFuture<Void> downloadEvents(long start, long stop, BulkEventListener listener) {
+    public CompletableFuture<Void> streamEvents(long start, long stop, BulkEventListener listener) {
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        String resource = "/archive/" + instance + "/downloads/events";
+        String resource = "/stream-archive/" + instance + ":streamEvents";
+
+        StreamEventsRequest.Builder optionsb = StreamEventsRequest.newBuilder();
         if (start != TimeEncoding.INVALID_INSTANT) {
-            resource += "?start=" + start;
+            optionsb.setStart(TimeEncoding.toProtobufTimestamp(start));
             if (stop != TimeEncoding.INVALID_INSTANT) {
-                resource += "&stop=" + stop;
+                optionsb.setStop(TimeEncoding.toProtobufTimestamp(stop));
             }
         } else if (stop != TimeEncoding.INVALID_INSTANT) {
-            resource += "?stop=" + stop;
+            optionsb.setStop(TimeEncoding.toProtobufTimestamp(stop));
         }
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         EventBatchGenerator batchGenerator = new EventBatchGenerator(listener);
-        return yamcsClient.streamGet(resource, null, batchGenerator).whenComplete((data, exc) -> {
+        return yamcsClient.streamPost(resource, optionsb.build(), batchGenerator).whenComplete((data, exc) -> {
             if (!batchGenerator.events.isEmpty()) {
                 listener.processEvents(new ArrayList<>(batchGenerator.events));
             }

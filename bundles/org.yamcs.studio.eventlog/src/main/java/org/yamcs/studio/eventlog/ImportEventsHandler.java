@@ -70,7 +70,7 @@ public class ImportEventsHandler extends AbstractHandler {
             List<Event> newEvents = new ArrayList<>();
 
             EventCatalogue catalogue = EventCatalogue.getInstance();
-            CompletableFuture<Void> future = catalogue.downloadEvents(start, stop, batch -> {
+            CompletableFuture<Void> future = catalogue.streamEvents(start, stop, batch -> {
                 newEvents.addAll(batch);
                 monitor.subTask(String.format("Fetched %,d events", newEvents.size()));
             });
