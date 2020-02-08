@@ -20,7 +20,6 @@ import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
 import org.csstudio.swt.widgets.util.IJobErrorHandler;
 import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.csstudio.utility.batik.SVGHandler;
-import org.csstudio.utility.batik.SVGHandlerListener;
 import org.csstudio.utility.batik.SVGUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -185,8 +184,9 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         Dimension newImgDimension = new Dimension((int) Math.round(cropedWidth / scale), (int) Math.round(cropedHeight
                 / scale));
         if (imgDimension == null || newImgDimension.width != imgDimension.width
-                || newImgDimension.height != imgDimension.height)
+                || newImgDimension.height != imgDimension.height) {
             fireSizeChanged();
+        }
         imgDimension = newImgDimension;
         needRender = false;
     }
@@ -199,8 +199,9 @@ public class SVGSymbolImage extends AbstractSymbolImage {
     public void setAbsoluteScale(double newScale) {
         double oldScale = scale;
         super.setAbsoluteScale(newScale);
-        if (oldScale != newScale)
+        if (oldScale != newScale) {
             resizeImage();
+        }
     }
 
     @Override
@@ -257,8 +258,9 @@ public class SVGSymbolImage extends AbstractSymbolImage {
 
     @Override
     public void asyncLoadImage() {
-        if (imagePath == null)
+        if (imagePath == null) {
             return;
+        }
         loadingImage = true;
         loadImage(new IJobErrorHandler() {
             private int maxAttempts = 5;
@@ -295,12 +297,7 @@ public class SVGSymbolImage extends AbstractSymbolImage {
                         }
                     }
                     loadingImage = false;
-                    Display.getCurrent().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            fireSymbolImageLoaded();
-                        }
-                    });
+                    Display.getCurrent().syncExec(() -> fireSymbolImageLoaded());
                 }
             }
         };
@@ -328,16 +325,13 @@ public class SVGSymbolImage extends AbstractSymbolImage {
                 this.originalImageData = SVGUtils.toSWT(Display.getCurrent(), awtImage);
                 resetData();
             }
-            svgHandler.setRenderListener(new SVGHandlerListener() {
-                @Override
-                public void newImage(final Image image) {
-                    if (disposed) {
-                        return;
-                    }
-                    animatedImage = image;
-                    repaintAnimated = true;
-                    repaint();
+            svgHandler.setRenderListener(image -> {
+                if (disposed) {
+                    return;
                 }
+                animatedImage = image;
+                repaintAnimated = true;
+                repaint();
             });
             needRender = true;
             failedToLoadDocument = false;

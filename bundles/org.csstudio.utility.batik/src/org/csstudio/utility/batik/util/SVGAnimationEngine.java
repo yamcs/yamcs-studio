@@ -26,5 +26,4 @@ public class SVGAnimationEngine extends org.apache.batik.bridge.SVGAnimationEngi
     public TimedDocumentRoot getTimedDocumentRoot() {
         return timedDocumentRoot;
     }
-
 }

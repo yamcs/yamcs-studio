@@ -6,18 +6,14 @@ Bundle-SymbolicName: org.csstudio.swt.widgets
 Bundle-Version: 1.3.3.qualifier
 Bundle-Activator: org.csstudio.swt.widgets.Activator
 Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
-Require-Bundle: org.apache.batik.constants;bundle-version="[1.9.1,1.9.2)",
- org.eclipse.ui,
+Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.utility.batik,
  org.eclipse.gef,
  org.eclipse.nebula.visualization.xygraph,
  org.csstudio.ui.util,
- org.apache.batik.dom.svg,
- org.apache.batik.util,
- org.apache.batik.dom,
+ org.yamcs.studio.p2deps.batik,
  com.google.guava,
- org.apache.batik.anim,
  org.eclipse.core.resources,
  org.apache.commons.lang3
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

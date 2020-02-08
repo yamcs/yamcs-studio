@@ -11,6 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>org.yamcs.studio.p2deps.batik</module>
     <module>org.yamcs.studio.p2deps.yamcs</module>
     <module>org.yamcs.studio.p2deps.repository</module>
   </modules>

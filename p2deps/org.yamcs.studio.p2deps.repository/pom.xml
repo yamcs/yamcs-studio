@@ -28,7 +28,9 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <id>org.yamcs.studio:org.diirt:${project.version}</id>
+                  <id>org.yamcs.studio:org.yamcs.studio.p2deps.batik:${project.version}</id>
+                </artifact>
+                <artifact>
                   <id>org.yamcs.studio:org.yamcs.studio.p2deps.yamcs:${project.version}</id>
                 </artifact>
               </artifacts>
