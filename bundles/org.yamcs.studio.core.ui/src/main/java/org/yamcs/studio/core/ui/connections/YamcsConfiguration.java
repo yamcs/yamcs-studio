@@ -70,7 +70,8 @@ public class YamcsConfiguration {
     }
 
     public boolean isAnonymous() {
-        return getUser() == null;
+        return authType == AuthType.STANDARD
+                && getUser() == null;
     }
 
     public void setPassword(String password) {

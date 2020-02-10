@@ -13,6 +13,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.ConnectionUIHelper;
+import org.yamcs.studio.core.ui.connections.YamcsConfiguration.AuthType;
 
 /**
  * Does a connection on the last-used configuration, with potential UI interactions if a password is required and this
@@ -54,6 +55,9 @@ public class AutoConnectHandler extends AbstractHandler {
         YamcsConnectionProperties yprops = conf.getConnectionProperties();
         if (conf.isAnonymous()) {
             log.fine("Will connect anonymously to " + yprops);
+            YamcsPlugin.getYamcsClient().connect(yprops);
+        } else if (conf.getAuthType() == AuthType.KERBEROS) {
+            log.fine("Will connect with Kerberos to " + yprops);
             YamcsPlugin.getYamcsClient().connect(yprops);
         } else if (conf.isSavePassword() || noPasswordPopup) {
             log.fine("Will connect as user '" + conf.getUser() + "' to " + yprops);

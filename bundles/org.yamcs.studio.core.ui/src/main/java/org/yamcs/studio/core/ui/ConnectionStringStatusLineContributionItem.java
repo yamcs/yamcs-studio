@@ -1,7 +1,5 @@
 package org.yamcs.studio.core.ui;
 
-import static org.yamcs.studio.core.ui.utils.TextUtils.isBlank;
-
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.core.YamcsConnectionListener;
@@ -54,7 +52,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         Display.getDefault().asyncExec(() -> {
             setErrorText(null, null);
             setImage(null);
-            setText(getConnectionString(yprops));
+            setText(yprops.getHost());
         });
     }
 
@@ -81,17 +79,5 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
             setImage(null);
             setText("Offline");
         });
-    }
-
-    private String getConnectionString(YamcsConnectionProperties yprops) {
-        String subjectName = null;
-        if (yprops.getUsername() != null) {
-            subjectName = "" + yprops.getUsername();
-        }
-        if (subjectName == null || isBlank(subjectName)) {
-            subjectName = "anonymous";
-        }
-
-        return String.format("%s@%s", subjectName, yprops.getHost());
     }
 }
