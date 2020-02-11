@@ -35,4 +35,84 @@
             name="Sound">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="org.yamcs.studio.css.core.toolbar1">
+            <command
+                  commandId="dropdownSoundCommand"
+                  icon="icons/sound_low_16px.png"
+                  label="Toogle Beep"
+                  style="pulldown"
+                  tooltip="Beep on event">
+               <parameter
+                     name="org.yamcs.studio.css.core.prefs.beep"
+                     value="toogle">
+               </parameter>
+            </command>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:dropdownSoundCommand">
+         <command
+               commandId="org.yamcs.studio.css.core.prefs.SoundCommandCommand"
+               icon="icons/sound_mute_16px.png"
+               label="Do Not Beep"
+               style="pulldown"
+               tooltip="Do Not Beep">
+            <parameter
+                  name="org.yamcs.studio.css.core.prefs.beep"
+                  value="NONE">
+            </parameter>
+         </command>
+         <command
+               commandId="org.yamcs.studio.css.core.prefs.SoundCommandCommand"
+               icon="icons/sound_low_16px.png"
+               label="Parameter Firt Out-of-Limit"
+               style="pulldown"
+               tooltip="Parameter Firt Out-of-Limit">
+            <parameter
+                  name="org.yamcs.studio.css.core.prefs.beep"
+                  value="FIRST">
+            </parameter>
+         </command>
+         <command
+               commandId="org.yamcs.studio.css.core.prefs.SoundCommandCommand"
+               icon="icons/sound_on_16px.png"
+               label="Parameter Each Out-of-Limit"
+               style="push">
+            <parameter
+                  name="org.yamcs.studio.css.core.prefs.beep"
+                  value="EACH">
+            </parameter>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.yamcs.studio.css.core.prefs.SoundCommandHandler"
+            id="org.yamcs.studio.css.core.prefs.SoundCommandCommand"
+            name="Sound">
+         <commandParameter
+               id="org.yamcs.studio.css.core.prefs.beep"
+               name="beep"
+               optional="true">
+         </commandParameter>
+      </command>
+      <command
+            defaultHandler="org.yamcs.studio.css.core.prefs.SoundCommandHandler"
+            id="dropdownSoundCommand"
+            name="dropdownSoundCommand">
+         <commandParameter
+               id="org.yamcs.studio.css.core.prefs.beep"
+               name="beep"
+               optional="true">
+         </commandParameter>
+      </command>
+   </extension>
 </plugin>

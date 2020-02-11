@@ -19,9 +19,15 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
@@ -33,6 +39,8 @@ import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.ui.XtceSubSystemNode;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
+
+import com.sun.xml.bind.v2.runtime.reflect.Lister.Pack;
 
 public class AddToStackWizardPage1 extends WizardPage {
 
@@ -93,9 +101,86 @@ public class AddToStackWizardPage1 extends WizardPage {
         gl.marginWidth = 0;
         composite.setLayout(gl);
 
-        // add filter box
-        Text searchbox = new Text(composite, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
+        // grid for expand+filter box
+        GridLayout gl2 = new GridLayout(3, false);
+        gl2.marginHeight = 0;
+        gl2.marginWidth = 0;
+        Composite row = new Composite(composite, SWT.NONE);
+        row.setLayout(gl2);
+        row.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        
+        // add expand all / collapse all button
+        Button expandAll = new Button(row, SWT.ARROW | SWT.DOWN);      
+        GridData expandAllData = new GridData(SWT.NONE);
+        expandAll.setLayoutData(expandAllData);
+        expandAll.setText("Expand All");   
+        expandAll.setToolTipText("Expand All");
+        expandAll.setVisible(false);
+        expandAllData.exclude = true;
+        
+        
+        Button collapseAll = new Button(row, SWT.ARROW | SWT.RIGHT);
+        GridData collapseAllData = new GridData(SWT.NONE);
+        collapseAll.setLayoutData(collapseAllData);
+        collapseAll.setText("Collapse All");
+        collapseAll.setToolTipText("Collapse All");
+        collapseAll.setVisible(true);
+        
+
+        // add filter box        
+        Text searchbox = new Text(row, SWT.SEARCH | SWT.BORDER | SWT.ICON_CANCEL);
         searchbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        
+        expandAll.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                commandsTreeTable.expandAll();
+                expandAll.setVisible(false);
+                collapseAll.setVisible(true); 
+                expandAllData.exclude = true;
+                collapseAllData.exclude = false;
+                expandAll.pack();
+                collapseAll.pack();         
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                commandsTreeTable.expandAll();
+                expandAll.setVisible(false);
+                collapseAll.setVisible(true);
+                expandAllData.exclude = true;
+                collapseAllData.exclude = false;
+                expandAll.pack();
+                collapseAll.pack();
+                
+            }
+        });
+        collapseAll.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                commandsTreeTable.collapseAll();
+                expandAll.setVisible(true);
+                collapseAll.setVisible(false);
+                expandAllData.exclude = false;
+                collapseAllData.exclude = true;
+                expandAll.pack();
+                collapseAll.pack();
+              }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) { 
+                commandsTreeTable.collapseAll();
+                expandAll.setVisible(true);
+                collapseAll.setVisible(false);
+                expandAllData.exclude = false;
+                collapseAllData.exclude = true;
+                expandAll.pack();
+                collapseAll.pack();
+            }
+        });
 
         // build tree table
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), composite);

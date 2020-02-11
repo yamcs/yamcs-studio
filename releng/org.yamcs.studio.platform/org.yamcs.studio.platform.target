@@ -5,15 +5,15 @@
             <repository location="https://nexus.spaceapplications.com/repository/yamcs/p2/yamcs-studio-build-deps"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <unit id="org.eclipse.equinox.sdk.feature.group" version="3.17.0.v20190305-2225"/>
-            <unit id="org.eclipse.platform.ide" version="4.11.0.I20190307-0500"/>
-            <unit id="org.eclipse.rcp.feature.group" version="4.11.0.v20190307-0500"/>
-            <repository location="http://download.eclipse.org/eclipse/updates/4.11"/>
+            <unit id="org.eclipse.equinox.sdk.feature.group" version="3.20.0.v20191122-2104"/>
+            <unit id="org.eclipse.platform.ide" version="4.14.0.I20191210-0610"/>
+            <unit id="org.eclipse.rcp.feature.group" version=" 4.14.0.v20191210-0610"/>
+            <repository location="http://download.eclipse.org/eclipse/updates/4.14"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.gef.sdk.feature.group" version="3.11.0.201606061308"/>
-            <repository location="http://download.eclipse.org/releases/2019-03"/>
-            <unit id="org.eclipse.emf.sdk.feature.group" version="2.17.0.v20190301-1325"/>
+            <repository location="http://download.eclipse.org/releases/2019-12"/>
+            <unit id="org.eclipse.emf.sdk.feature.group" version="2.20.0.v20191028-0905"/>
         </location>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.nebula.visualization.feature.feature.group" version="2.1.0.201812241324"/>
@@ -41,6 +41,7 @@
             <unit id="org.mockito" version="1.9.5.v201605172210"/>
             <unit id="org.yaml.snakeyaml" version="1.14.0.v201604211500"/>
             <unit id="org.objectweb.asm" version="5.0.1.v201404251740"/>
+            <unit id="org.apache.batik.constants" version="1.9.1.v20180227-1645"/>
             <unit id="org.apache.batik.bridge" version="1.9.1.v20181015-1528"/>
             <unit id="org.apache.batik.codec" version="1.9.1.v20180313-1559"/>
             <unit id="org.apache.batik.dom" version="1.9.1.v20181015-1528"/>

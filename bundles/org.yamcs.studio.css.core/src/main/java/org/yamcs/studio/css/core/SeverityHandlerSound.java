@@ -3,12 +3,16 @@ package org.yamcs.studio.css.core;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.yamcs.protobuf.Pvalue.MonitoringResult;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.core.ui.SoundSystem;
+import org.yamcs.studio.css.core.prefs.SoundCommandHandler;
 
 public class SeverityHandlerSound implements ParameterListener {
 
@@ -31,6 +35,18 @@ public class SeverityHandlerSound implements ParameterListener {
             beepLevel = MonitoringResult.CRITICAL.getNumber();
         }
         pvals.clear();
+
+        // update toolbar icon
+        try {
+            SoundCommandHandler.beep = triggerCondition;
+            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+            if (commandService != null) {
+                commandService.refreshElements("dropdownSoundCommand", null);
+            }
+        } catch (Exception e) {
+            // might pass here at startup when the workbench is not created yet
+        }
     }
 
     @Override

@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.csstudio.utility.batik;singleton:=true
 Bundle-Version: 1.3.3.qualifier
 Bundle-Vendor: CS-Studio <cs-studio-core@lists.sourceforge.net>
 Bundle-Activator: org.csstudio.utility.batik.Activator
-Require-Bundle: org.apache.batik.bridge,
+Require-Bundle: org.apache.batik.constants;bundle-version="[1.9.1,1.9.2)",
+ org.apache.batik.bridge,
  org.apache.batik.dom,
  org.apache.batik.dom.svg,
  org.apache.batik.transcoder,
