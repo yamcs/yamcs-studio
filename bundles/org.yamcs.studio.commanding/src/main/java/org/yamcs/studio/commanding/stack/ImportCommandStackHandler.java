@@ -81,7 +81,6 @@ public class ImportCommandStackHandler extends AbstractHandler {
                     }
 
                     StackedCommand command = new StackedCommand();
-                    command.setCommandId(qname);
                     command.setSelectedAliase(qname);
                     command.setMetaCommand(mdbInfo);
                     if (commandElement.hasAttribute("comment")) {

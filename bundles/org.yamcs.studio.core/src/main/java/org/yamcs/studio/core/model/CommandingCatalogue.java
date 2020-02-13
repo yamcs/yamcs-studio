@@ -105,6 +105,9 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
             case COMMAND_SENT:
                 queueListeners.forEach(l -> l.commandSent(queueEvent.getData()));
                 break;
+            case COMMAND_UPDATED:
+                // Ignore
+                break;
             default:
                 log.log(Level.SEVERE, "Unsupported queue event type " + queueEvent.getType());
             }
