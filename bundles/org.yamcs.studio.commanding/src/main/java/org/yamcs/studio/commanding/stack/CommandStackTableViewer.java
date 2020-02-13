@@ -380,7 +380,7 @@ public class CommandStackTableViewer extends TableViewer {
     }
 
     public void appendConstraint(ComparisonInfo comparison, StringBuilder buf) {
-        buf.append(comparison.getParameter());
+        buf.append(comparison.getParameter().getQualifiedName());
         switch (comparison.getOperator()) {
         case EQUAL_TO:
             buf.append("=");

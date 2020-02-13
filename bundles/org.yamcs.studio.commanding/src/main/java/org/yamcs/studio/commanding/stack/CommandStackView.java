@@ -1,6 +1,7 @@
 package org.yamcs.studio.commanding.stack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackMode;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
@@ -72,6 +74,8 @@ public class CommandStackView extends ViewPart {
     private Button issueButton;
 
     Spinner fixDelaySpinner;
+
+    private Map<String, List<CommandHistoryEntry>> unassignedUpdates = new HashMap<>();
 
     @Override
     public void createPartControl(Composite parent) {
@@ -561,18 +565,36 @@ public class CommandStackView extends ViewPart {
         commandTableViewer.getTable().setFocus();
     }
 
+    // On the GUI thread
     private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
+        boolean match = false;
         for (StackedCommand cmd : CommandStack.getInstance().getCommands()) {
             if (cmd.matches(cmdhistEntry.getCommandId())) {
-                System.out.println("GOOD>>>");
-                log.info(String.format("Processing update %s", cmdhistEntry));
+                log.fine(String.format("Processing update %s", cmdhistEntry));
                 cmd.updateExecutionState(cmdhistEntry);
-            } else {
-                System.out.println("BAD>>>");
-                log.info(String.format("Ignoring update %s", cmdhistEntry));
+                match = true;
             }
         }
+        if (!match) { // Put them aside. Possibly the REST response is slower than the websocket
+            String commandId = toCommandId(cmdhistEntry.getCommandId());
+            List<CommandHistoryEntry> entries = unassignedUpdates.get(commandId);
+            if (entries == null) {
+                entries = new ArrayList<>();
+                unassignedUpdates.put(commandId, entries);
+            }
+            entries.add(cmdhistEntry);
+        }
         commandTableViewer.refresh();
+    }
+
+    private static String toCommandId(CommandId commandId) {
+        return commandId.getGenerationTime() + "-" + commandId.getOrigin() + "-"
+                + commandId.getSequenceNumber();
+    }
+
+    public List<CommandHistoryEntry> takeUnassignedCommandHistoryEntries(String commandId) {
+        List<CommandHistoryEntry> result = unassignedUpdates.remove(commandId);
+        return result == null ? Collections.emptyList() : result;
     }
 
     enum PastingType {

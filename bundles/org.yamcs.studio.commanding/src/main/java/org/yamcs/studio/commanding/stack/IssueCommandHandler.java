@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.IssueCommandRequest;
 import org.yamcs.protobuf.IssueCommandResponse;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
@@ -44,17 +45,23 @@ public class IssueCommandHandler extends AbstractHandler {
 
         catalogue.sendCommand("realtime", qname, req).whenComplete((data, exc) -> {
             if (exc == null) {
+                String commandId;
                 try {
                     IssueCommandResponse response = IssueCommandResponse.newBuilder()
                             .mergeFrom(data)
                             .build();
-                    command.setCommandId(response.getId());
+                    commandId = response.getId();
                 } catch (InvalidProtocolBufferException e) {
                     throw new RuntimeException(e);
                 }
                 Display.getDefault().asyncExec(() -> {
                     log.info(String.format("Command issued. %s", req));
                     command.setStackedState(StackedState.ISSUED);
+                    command.setCommandId(commandId);
+                    for (CommandHistoryEntry entry : view.takeUnassignedCommandHistoryEntries(commandId)) {
+                        command.updateExecutionState(entry);
+                    }
+
                     view.selectActiveCommand();
                     view.refreshState();
                 });
