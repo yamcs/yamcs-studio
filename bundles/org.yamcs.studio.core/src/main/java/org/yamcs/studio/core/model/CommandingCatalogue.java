@@ -24,16 +24,19 @@ import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Commanding.CommandQueueEntry;
 import org.yamcs.protobuf.Commanding.CommandQueueEvent;
 import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.protobuf.ConnectionInfo;
 import org.yamcs.protobuf.EditQueueEntryRequest;
 import org.yamcs.protobuf.EditQueueRequest;
 import org.yamcs.protobuf.IssueCommandRequest;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.ListCommandsResponse;
+import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.UpdateCommandHistoryRequest;
 import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.client.ClearanceListener;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -45,9 +48,10 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
     private AtomicInteger cmdClientId = new AtomicInteger(1);
     private List<CommandInfo> metaCommands = Collections.emptyList();
     private Map<String, CommandQueueInfo> queuesByName = new ConcurrentHashMap<>();
-    // Indexes
     private Map<String, CommandInfo> commandsByQualifiedName = new LinkedHashMap<>();
+    private SignificanceLevelType clearance;
 
+    private Set<ClearanceListener> clearanceListeners = new CopyOnWriteArraySet<>();
     private Set<CommandHistoryListener> cmdhistListeners = new CopyOnWriteArraySet<>();
     private Set<CommandQueueListener> queueListeners = new CopyOnWriteArraySet<>();
 
@@ -78,16 +82,42 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
         queueListeners.remove(listener);
     }
 
+    public SignificanceLevelType getClearance() {
+        return clearance;
+    }
+
+    public void addClearanceListener(ClearanceListener clearanceListener) {
+        clearanceListeners.add(clearanceListener);
+    }
+
+    public void removeClearanceListener(ClearanceListener clearanceListener) {
+        clearanceListeners.remove(clearanceListener);
+    }
+
     @Override
     public void onYamcsConnected() {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         yamcsClient.subscribe(new WebSocketRequest("cmdhistory", "subscribe"), this);
         yamcsClient.subscribe(new WebSocketRequest("cqueues", "subscribe"), this);
+        ConnectionInfo connectionInfo = yamcsClient.getConnectionInfo();
+        boolean clearanceEnabled = connectionInfo.getProcessor().getCheckCommandClearance();
+        clearance = connectionInfo.hasClearance() ? connectionInfo.getClearance() : null;
+        clearanceListeners.forEach(l -> l.clearanceChanged(clearanceEnabled, clearance));
         initialiseState();
     }
 
     @Override
     public void onMessage(WebSocketSubscriptionData msg) {
+        if (msg.hasConnectionInfo()) {
+            ConnectionInfo connectionInfo = msg.getConnectionInfo();
+            boolean clearanceEnabled = connectionInfo.getProcessor().getCheckCommandClearance();
+            if (connectionInfo.hasClearance()) {
+                clearanceListeners.forEach(l -> l.clearanceChanged(clearanceEnabled, connectionInfo.getClearance()));
+            } else {
+                clearanceListeners.forEach(l -> l.clearanceChanged(clearanceEnabled, null));
+            }
+        }
+
         if (msg.hasCommand()) {
             CommandHistoryEntry cmdhistEntry = msg.getCommand();
             cmdhistListeners.forEach(l -> l.processCommandHistoryEntry(cmdhistEntry));
@@ -129,6 +159,7 @@ public class CommandingCatalogue implements Catalogue, WebSocketClientCallback {
     @Override
     public void onYamcsDisconnected() {
         clearState();
+        clearanceListeners.forEach(l -> l.clearanceChanged(false, null));
     }
 
     private void initialiseState() {

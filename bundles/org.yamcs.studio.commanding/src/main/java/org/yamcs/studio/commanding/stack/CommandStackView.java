@@ -22,6 +22,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
@@ -73,12 +74,39 @@ public class CommandStackView extends ViewPart {
     private Button armButton;
     private Button issueButton;
 
-    Spinner fixDelaySpinner;
+    private ResourceManager resourceManager;
+    private Image level0Image;
+    private Image level1Image;
+    private Image level2Image;
+    private Image level3Image;
+    private Image level4Image;
+    private Image level5Image;
+
+    private Composite bottomLeft;
+    private Label clearanceLabel;
+    private Label clearanceImageLabel;
+    private Label clearanceSeparator;
+
+    private Spinner fixDelaySpinner;
 
     private Map<String, List<CommandHistoryEntry>> unassignedUpdates = new HashMap<>();
 
     @Override
     public void createPartControl(Composite parent) {
+        resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
+        level0Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level0s.png"));
+        level1Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
+        level2Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level2s.png"));
+        level3Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level3s.png"));
+        level4Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level4s.png"));
+        level5Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level5s.png"));
+
         GridLayout gl = new GridLayout();
         gl.marginHeight = 0;
         gl.marginWidth = 0;
@@ -162,16 +190,28 @@ public class CommandStackView extends ViewPart {
         controls.setLayout(gl);
         controls.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
-        Composite bottomLeft = new Composite(controls, SWT.NONE);
+        bottomLeft = new Composite(controls, SWT.NONE);
         gd = new GridData(GridData.FILL_BOTH);
         gd.verticalAlignment = SWT.CENTER;
         bottomLeft.setLayoutData(gd);
-        gl = new GridLayout(2, false);
-        gl.marginHeight = 0;
+
+        gl = new GridLayout(4, false);
         gl.marginWidth = 0;
-        gl.horizontalSpacing = 0;
-        gl.verticalSpacing = 0;
+        gl.marginHeight = 0;
         bottomLeft.setLayout(gl);
+
+        clearanceLabel = new Label(bottomLeft, SWT.NONE);
+        clearanceLabel.setVisible(false);
+
+        clearanceImageLabel = new Label(bottomLeft, SWT.NONE);
+        clearanceImageLabel.setVisible(false);
+
+        clearanceSeparator = new Label(bottomLeft, SWT.SEPARATOR);
+        gd = new GridData();
+        gd.heightHint = 15;
+        clearanceSeparator.setLayoutData(gd);
+        clearanceSeparator.setVisible(false);
+
         messageLabel = new Label(bottomLeft, SWT.NONE);
         messageLabel.setText("");
         messageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -409,6 +449,50 @@ public class CommandStackView extends ViewPart {
 
         CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
+        });
+
+        CommandingCatalogue.getInstance().addClearanceListener((enabled, clearance) -> {
+            Display.getDefault().asyncExec(() -> {
+                if (!enabled) {
+                    clearanceLabel.setText("");
+                    clearanceLabel.setVisible(false);
+                    clearanceImageLabel.setImage(null);
+                    clearanceImageLabel.setVisible(false);
+                    clearanceSeparator.setVisible(false);
+                } else if (clearance == null) {
+                    clearanceLabel.setVisible(true);
+                    clearanceLabel.setText("No clearance");
+                    clearanceImageLabel.setImage(null);
+                    clearanceImageLabel.setVisible(false);
+                    clearanceSeparator.setVisible(true);
+                } else {
+                    clearanceLabel.setText("Clearance:");
+                    clearanceLabel.setVisible(true);
+                    clearanceImageLabel.setVisible(true);
+                    clearanceSeparator.setVisible(true);
+                    switch (clearance) {
+                    case NONE:
+                        clearanceImageLabel.setImage(level0Image);
+                        break;
+                    case WATCH:
+                        clearanceImageLabel.setImage(level1Image);
+                        break;
+                    case WARNING:
+                        clearanceImageLabel.setImage(level2Image);
+                        break;
+                    case DISTRESS:
+                        clearanceImageLabel.setImage(level3Image);
+                        break;
+                    case CRITICAL:
+                        clearanceImageLabel.setImage(level4Image);
+                        break;
+                    case SEVERE:
+                        clearanceImageLabel.setImage(level5Image);
+                        break;
+                    }
+                }
+                bottomLeft.layout(true);
+            });
         });
     }
 
@@ -773,5 +857,13 @@ public class CommandStackView extends ViewPart {
             }
 
         });
+    }
+
+    @Override
+    public void dispose() {
+        if (resourceManager != null) {
+            resourceManager.dispose();
+        }
+        super.dispose();
     }
 }
