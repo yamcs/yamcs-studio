@@ -2,7 +2,6 @@ package org.yamcs.studio.commanding.stack;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +25,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.yamcs.protobuf.Mdb.ArgumentInfo;
 
 public class ExportCommandStackHandler extends AbstractHandler {
 
@@ -88,15 +86,27 @@ public class ExportCommandStackHandler extends AbstractHandler {
                 commandElement.setAttributeNode(attr);
             }
 
-            for (Entry<ArgumentInfo, String> entry : command.getAssignments().entrySet()) {
+            for (TelecommandArgument arg : command.getEffectiveAssignments()) {
+                String value = command.getAssignedStringValue(arg.getArgumentInfo());
+
+                if (value == null && arg.getArgumentInfo().hasInitialValue()) {
+                    continue;
+                }
+                if (!arg.isEditable()) {
+                    continue;
+                }
+                if (arg.getArgumentInfo().hasInitialValue() && !command.isDefaultChanged(arg.getArgumentInfo())) {
+                    continue;
+                }
+
                 Element argumentElement = doc.createElement("commandArgument");
 
                 attr = doc.createAttribute("argumentName");
-                attr.setValue(entry.getKey().getName());
+                attr.setValue(arg.getName());
                 argumentElement.setAttributeNode(attr);
 
                 attr = doc.createAttribute("argumentValue");
-                attr.setValue(entry.getValue());
+                attr.setValue(value);
                 argumentElement.setAttributeNode(attr);
 
                 commandElement.appendChild(argumentElement);

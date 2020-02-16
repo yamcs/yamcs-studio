@@ -82,6 +82,8 @@ public class CommandStackTableViewer extends TableViewer {
     }
 
     private void addFixedColumns(TableColumnLayout tcl) {
+        Image level0Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level0s.png"));
         Image level1Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(CommandStackTableViewer.class, "icons/level1s.png"));
         Image level2Image = resourceManager
@@ -149,7 +151,7 @@ public class CommandStackTableViewer extends TableViewer {
                 case SEVERE:
                     return level5Image;
                 default:
-                    return null;
+                    return level0Image;
                 }
             }
 
