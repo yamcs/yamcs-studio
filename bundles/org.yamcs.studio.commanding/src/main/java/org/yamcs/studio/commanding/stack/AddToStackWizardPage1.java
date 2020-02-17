@@ -42,6 +42,7 @@ public class AddToStackWizardPage1 extends WizardPage {
     public static final String COL_PATH = "Command";
     public static final String COL_SIGN = "Sig.";
 
+    private Image level0Image;
     private Image level1Image;
     private Image level2Image;
     private Image level3Image;
@@ -175,6 +176,8 @@ public class AddToStackWizardPage1 extends WizardPage {
 
         // build tree table
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), composite);
+        level0Image = resourceManager
+                .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level0s.png"));
         level1Image = resourceManager
                 .createImage(RCPUtils.getImageDescriptor(AddToStackWizardPage1.class, "icons/level1s.png"));
         level2Image = resourceManager
@@ -227,9 +230,11 @@ public class AddToStackWizardPage1 extends WizardPage {
                     XtceCommandNode node = (XtceCommandNode) element;
                     CommandInfo cmd = node.getCommandInfo();
                     if (cmd.getSignificance() == null) {
-                        return null;
+                        return level0Image;
                     }
                     switch (cmd.getSignificance().getConsequenceLevel()) {
+                    case NONE:
+                        return level0Image;
                     case WATCH:
                         return level1Image;
                     case WARNING:
