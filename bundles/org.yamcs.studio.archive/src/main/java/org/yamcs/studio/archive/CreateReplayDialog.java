@@ -204,7 +204,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         CreateProcessorRequest req = toCreateProcessorRequest(ci);
 
         ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        catalogue.createProcessorRequest(ci.getInstance(), req).whenComplete((data, exc) -> {
+        catalogue.createProcessorRequest(req).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     CreateReplayDialog.super.okPressed();
@@ -234,7 +234,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
         ppValue = pps;
     }
 
-    public CreateProcessorRequest toCreateProcessorRequest(ClientInfo ci) {
+    private CreateProcessorRequest toCreateProcessorRequest(ClientInfo ci) {
         JsonObject spec = new JsonObject();
         spec.addProperty("start", TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime)));
         spec.addProperty("stop", TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime)));
@@ -262,6 +262,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
         String specJson = new Gson().toJson(spec);
         CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
+                .setInstance(ci.getInstance())
                 .setName(name.getText())
                 .setType("Archive")
                 .setConfig(specJson)

@@ -168,9 +168,9 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
         return new ArrayList<>(clientInfoById.values());
     }
 
-    public CompletableFuture<byte[]> createProcessorRequest(String yamcsInstance, CreateProcessorRequest request) {
+    public CompletableFuture<byte[]> createProcessorRequest(CreateProcessorRequest request) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.post("/processors/" + yamcsInstance, request);
+        return yamcsClient.post("/processors", request);
     }
 
     public CompletableFuture<byte[]> editProcessorRequest(String yamcsInstance, String processor,
