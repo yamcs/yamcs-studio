@@ -4,10 +4,6 @@ jdk:
   - openjdk8
   - openjdk11
 
-cache:
-  directories:
-    - $HOME/.m2
-
 # Prevent Travis from automatically running mvn install
 install: true
 
