@@ -24,6 +24,8 @@ import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 
+import com.google.protobuf.Empty;
+
 /**
  * Provides access to aggregated state on yamcs management-type information.
  * <p>
@@ -191,7 +193,7 @@ public class ManagementCatalogue implements Catalogue, WebSocketClientCallback {
 
     public CompletableFuture<byte[]> restartInstance(String yamcsInstance) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        return yamcsClient.post("/instances/" + yamcsInstance + ":restart", null);
+        return yamcsClient.post("/instances/" + yamcsInstance + ":restart", Empty.getDefaultInstance());
     }
 
     public CompletableFuture<byte[]> fetchProcessors() {

@@ -31,6 +31,7 @@ import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.api.YamcsConnectionProperties.AuthType;
 import org.yamcs.client.BulkRestDataReceiver;
 import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.RestClient;
 import org.yamcs.client.WebSocketClient;
 import org.yamcs.client.WebSocketClientCallback;
 import org.yamcs.client.WebSocketRequest;
@@ -40,6 +41,8 @@ import org.yamcs.protobuf.WebSocketServerMessage.WebSocketReplyData;
 import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
 
 import com.google.protobuf.MessageLite;
+
+import io.netty.handler.codec.http.HttpMethod;
 
 /**
  * Provides passage to Yamcs. This covers both the REST and WebSocket API.
@@ -232,6 +235,14 @@ public class YamcsStudioClient implements WebSocketClientCallback {
 
     public CompletableFuture<byte[]> post(String uri, MessageLite msg) {
         CompletableFuture<byte[]> cf = yamcsClient.post(uri, msg);
+        String jobName = "POST /api" + uri;
+        scheduleAsJob(jobName, cf, Job.SHORT);
+        return cf;
+    }
+
+    public CompletableFuture<byte[]> post(String uri, byte[] body) {
+        RestClient restClient = yamcsClient.getRestClient();
+        CompletableFuture<byte[]> cf = restClient.doRequest(uri, HttpMethod.POST, body);
         String jobName = "POST /api" + uri;
         scheduleAsJob(jobName, cf, Job.SHORT);
         return cf;
