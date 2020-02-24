@@ -6,9 +6,9 @@
    <aboutInfo>
       <image path="/org.yamcs.studio.runtime/icons/aboutSide.png"/>
       <text>
-         Rich desktop client for Yamcs - The Open Source Mission Control System
+         Desktop client for Yamcs - The Open Source Mission Control System
 
-See https://www.yamcs.org
+See https://yamcs.org
       </text>
    </aboutInfo>
 
