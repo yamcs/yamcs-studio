@@ -60,6 +60,7 @@ class Timeline extends JPanel {
                 int width = (x2 - x1 <= 1) ? 1 : x2 - x1 - 1;
                 big.fillRect(x1 - leftDelta, 0, width, getHeight());
             }
+            big.dispose();
         }
         g.drawImage(image, 0, 0, this);
     }

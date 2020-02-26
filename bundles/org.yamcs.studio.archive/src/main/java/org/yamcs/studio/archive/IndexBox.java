@@ -105,6 +105,7 @@ public class IndexBox extends Box {
 
     void removeIndexLines() {
         centerPanel.removeAll();
+        indexLines.clear();
     }
 
     @Override
