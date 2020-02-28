@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -60,10 +61,10 @@ public class ArmCommandHandler extends AbstractHandler {
                     case SEVERE:
                         String level = Character.toUpperCase(significance.getConsequenceLevel().toString().charAt(0))
                                 + significance.getConsequenceLevel().toString().substring(1);
-                        if (MessageDialog.openConfirm(activeShell, "Confirm",
-                                level + ": Are you sure you want to arm this command?\n" +
-                                        "    " + command.toStyledString(view).getString() + "\n\n" +
-                                        significance.getReasonForWarning())) {
+                        String message = String.format("%s: Are you sure you want to arm this command?\n    %s\n\n%s",
+                                level, command.toStyledString(view).getString(), significance.getReasonForWarning());
+                        MessageDialog dialog = new ConfirmDialogWithCancelDefault(activeShell, "Confirm", message);
+                        if (dialog.open() == MessageDialog.OK) {
                             doArm = true;
                         }
                         break;
@@ -89,5 +90,16 @@ public class ArmCommandHandler extends AbstractHandler {
                 });
             }
         });
+    }
+
+    private static class ConfirmDialogWithCancelDefault extends MessageDialog {
+
+        public ConfirmDialogWithCancelDefault(Shell parentShell, String title, String message) {
+            super(parentShell, title, null, message, MessageDialog.CONFIRM, new String[] {
+                    IDialogConstants.OK_LABEL,
+                    IDialogConstants.CANCEL_LABEL,
+            }, 1 /* cancel */);
+            // setShellStyle(getShellStyle() | SWT.SHEET);
+        }
     }
 }
