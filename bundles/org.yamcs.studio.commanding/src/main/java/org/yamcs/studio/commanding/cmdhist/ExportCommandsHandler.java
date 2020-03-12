@@ -64,8 +64,8 @@ public class ExportCommandsHandler extends AbstractHandler {
                     rec[i] = item.getText(i);
                 }
                 writer.write(String.join("\t", rec));
+                writer.write("\n");
             }
         }
     }
-
 }
