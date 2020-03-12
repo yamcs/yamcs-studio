@@ -1,6 +1,4 @@
 # Yamcs Studio
-[![Website](https://img.shields.io/website/http/shields.io.svg?label=docs)](https://yamcs.org/docs/yamcs-studio/)
-[![Build Status](https://travis-ci.org/yamcs/yamcs-studio.svg?branch=master)](https://travis-ci.org/yamcs/yamcs-studio)
 
 Below instructions are targeted at Yamcs Studio core contributors.
 

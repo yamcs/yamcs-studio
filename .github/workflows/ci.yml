@@ -1,0 +1,38 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  java:
+    name: Java ${{ matrix.java }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ['1.8', '11']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Build
+        run: |
+          mvn -B --no-transfer-progress -f p2deps/pom.xml package
+          mvn -B --no-transfer-progress -DskipTests package
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Set up sphinx
+        run: |
+          cd docs
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Generate docs
+        run: |
+          cd docs
+          make html
