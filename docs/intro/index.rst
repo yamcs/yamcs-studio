@@ -7,7 +7,6 @@ Yamcs Studio is a TM/TC front-end for Yamcs. It contains an editor for building 
 .. toctree::
     :maxdepth: 1
 
-    installation
     first-steps
     ui
     connecting-to-yamcs
