@@ -1,3 +1,5 @@
+# Yamcs Studio
+
 Below instructions are targeted at Yamcs Studio core contributors.
 
 * **End-User documentation** is available at: [https://www.yamcs.org/docs/studio/](https://www.yamcs.org/docs/studio/)

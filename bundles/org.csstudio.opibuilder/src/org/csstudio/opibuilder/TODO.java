@@ -21,7 +21,7 @@ public interface TODO
 
      From BNL, Ralph Lange v2 Feb 25, 2010
     Issues found by playing around, trying to recreate some example panels originally created for edm and
-    medm. Tentative importance ratings 1 (minor issue) – 5 (show stopper).
+    medm. Tentative importance ratings 1 (minor issue) 5 (show stopper).
     The plot widgets were not tested. (I have no experience with plots in panels.)
 
     ** Runtime **
@@ -46,17 +46,17 @@ public interface TODO
     TODO More General Bar Widget Needed 5
     Progress Bar and Tank are the only bar type widgets available.
     There is a need for a general bar widget, that:
-    • shows the value as label (not limited to percentage)
-    • has a configurable direction (up, down, left, right)
-    • has (in additional to “bar”) a “marker only” mode (to e.g. show positions of steppers).
+    - shows the value as label (not limited to percentage)
+    - has a configurable direction (up, down, left, right)
+    - has (in additional to bar) a marker only mode (to e.g. show positions of steppers).
 
     TODO Boolean Button, Boolean Switch: Modes and Actions Need to Be Decoupled 5
     The Boolean Button and Boolean Switch widgets currently support two modes: push button, where one
-    “Click Action” can be linked to writing a value to a PV, and toggle button, with two actions (“Push
-    Action” and “Release Action”).
-    To allow for buttons that do something as long as they are pushed (e.g. “jog” buttons for motor
-    control), the Push Button mode needs an optional “Release Action”, or alternatively the widget could
-    have a configuration switch between “Click Action” and “Push/Release Action” modes – independent
+    Click Action can be linked to writing a value to a PV, and toggle button, with two actions (Push
+    Action and Release Action).
+    To allow for buttons that do something as long as they are pushed (e.g. "jog" buttons for motor
+    control), the Push Button mode needs an optional "Release Action", or alternatively the widget could
+    have a configuration switch between "Click Action" and "Push/Release Action" modes independent
     from push vs. toggle button mode.
 
     TODO LED: Multi-Color Mode for Alarm Severity 5
@@ -116,7 +116,7 @@ public interface TODO
     TODO Thermometer: Configurable Unit Label 3
     Currently, the Thermometer widget does only allow Celsius or Fahrenheit as predefined temperature
     units.
-    This does not work for cryo systems that usually use Kelvin – the unit text should either be freely
+    This does not work for cryo systems that usually use Kelvin the unit text should either be freely
     configurable or have Kelvin as the third option.
 
     TODO Meter, Gauge: No Out-Of-Range Indication 3
@@ -125,7 +125,7 @@ public interface TODO
 
     TODO Menu Button and Combo Box: Should Be Renamed 3
     Combo Box is a misleading name. These widgets should be renamed to something more obvious, e.g.
-    “Action Menu” and “Enum Menu”.
+    "Action Menu" and "Enum Menu".
 
     TODO Progress Bar: Wrong Initial Value 2
     The Progress Bar shows a wrong initial value in case of Minimum != 0. For all later value updates, the
@@ -168,8 +168,8 @@ public interface TODO
 
     TODO Properties List Jumps from Cursor Position 3
     When changing a property that implies a change of the number of properties displayed in the Properties
-    View (e.g. the Boolean Button's “Toggle Button” property), the list jumps away under the mouse cursor
-    position, so that – after the click – the mouse pointer is over a different property.
+    View (e.g. the Boolean Button's "Toggle Button" property), the list jumps away under the mouse cursor
+    position, so that after the click the mouse pointer is over a different property.
     Instead, properties that are not editable should always be shown (greyed out), so that their position in
     the properties list never changes.
 
