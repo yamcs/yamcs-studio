@@ -8,6 +8,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -61,6 +62,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     volatile boolean lowOnMemoryReported = false;
 
+    private AWTEventListener mouseEventListener;
+
     public ArchivePanel(ArchiveView archiveView) {
         super(new BorderLayout());
         this.archiveView = archiveView;
@@ -70,7 +73,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         add(dataViewer, BorderLayout.CENTER);
 
         // Catch mouse events globally, to deal more easily with events on child components
-        Toolkit.getDefaultToolkit().addAWTEventListener(event -> { // EDT
+        mouseEventListener = event -> { // EDT
             DataView dataView = dataViewer.getDataView();
             if (!(event.getSource() instanceof JScrollBar)
                     && !(event.getSource() instanceof TagTimeline)
@@ -89,7 +92,9 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
                     dataView.doMouseExited(me);
                 }
             }
-        }, AWTEvent.MOUSE_EVENT_MASK + AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        };
+        Toolkit.getDefaultToolkit().addAWTEventListener(mouseEventListener,
+                AWTEvent.MOUSE_EVENT_MASK + AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
     public DataViewer getDataViewer() {
@@ -284,5 +289,10 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     public void onWindowResized() {
         dataViewer.windowResized();
+    }
+
+    public void dispose() {
+        dataViewer.dispose();
+        Toolkit.getDefaultToolkit().removeAWTEventListener(mouseEventListener);
     }
 }

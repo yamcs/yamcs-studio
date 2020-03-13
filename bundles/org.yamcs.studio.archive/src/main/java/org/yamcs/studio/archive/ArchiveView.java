@@ -3,6 +3,7 @@ package org.yamcs.studio.archive;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,9 @@ public class ArchiveView extends ViewPart
     private ProcessorStateProvider processorState;
     private ConnectionStateProvider connectionState;
 
+    private java.awt.Frame frame;
+    private ComponentListener frameListener;
+
     @Override
     public void createPartControl(Composite parent) {
         ResourceManager resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
@@ -96,18 +100,18 @@ public class ArchiveView extends ViewPart
 
         Composite locationComp = new Composite(contentArea, SWT.EMBEDDED);
         locationComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        java.awt.Frame frame = SWT_AWT.new_Frame(locationComp);
+        frame = SWT_AWT.new_Frame(locationComp);
 
         archivePanel = new ArchivePanel(this);
         archivePanel.setPreferredSize(new Dimension(300, 400));
 
-        frame.addComponentListener(new ComponentAdapter() {
+        frameListener = new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 archivePanel.onWindowResized();
             }
-        });
-
+        };
+        frame.addComponentListener(frameListener);
         frame.add(archivePanel);
 
         replayComposite = new Composite(contentArea, SWT.NONE);
@@ -242,11 +246,20 @@ public class ArchiveView extends ViewPart
     @Override
     public void dispose() {
         super.dispose();
+        archivePanel.dispose();
+
         ManagementCatalogue.getInstance().removeInstanceListener(this);
         TimeCatalogue.getInstance().removeTimeListener(this);
         processorState.removeSourceProviderListener(this);
         connectionState.removeSourceProviderListener(this);
         YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
+
+        if (frame != null) {
+            SwingUtilities.invokeLater(() -> {
+                frame.removeComponentListener(frameListener);
+                frame.removeAll();
+            });
+        }
     }
 
     private void toggleReplayComposite(boolean enabled) {

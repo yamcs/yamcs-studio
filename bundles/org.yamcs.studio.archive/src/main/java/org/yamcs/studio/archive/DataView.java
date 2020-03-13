@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
@@ -73,6 +74,8 @@ public class DataView extends JScrollPane {
     int antsOffset = 0;
     final int antsLength = 8;
 
+    private Timer timer = new Timer();
+
     public DataView(ArchivePanel archivePanel, DataViewer dataViewer) {
         super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.dataViewer = dataViewer;
@@ -94,7 +97,8 @@ public class DataView extends JScrollPane {
         drawPreviewLocator = false;
 
         resetSelection();
-        new java.util.Timer().schedule(new TimerTask() {
+
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 synchronized (this) {
@@ -441,6 +445,10 @@ public class DataView extends JScrollPane {
         startX = currentSelection.getStartX();
         stopX = currentSelection.getStopX();
         repaint();
+    }
+
+    public void dispose() {
+        timer.cancel();
     }
 
     class SelectionImpl implements Selection {
