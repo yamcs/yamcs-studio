@@ -40,6 +40,7 @@ import org.yamcs.protobuf.ListCommandsResponse;
 import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.CommandHistoryListener;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.core.model.ManagementCatalogue;
@@ -116,6 +117,7 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         }
     };
 
+    private CommandHistoryListener commandHistoryListener;
     private CommandHistoryRecordContentProvider tableContentProvider;
 
     private ColumnData columnData;
@@ -169,9 +171,11 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
 
         YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().addInstanceListener(this);
-        CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
+
+        commandHistoryListener = cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry, true));
-        });
+        };
+        CommandingCatalogue.getInstance().addCommandHistoryListener(commandHistoryListener);
     }
 
     @Override
@@ -291,6 +295,7 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
     public void dispose() {
         YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().removeInstanceListener(this);
+        CommandingCatalogue.getInstance().removeCommandHistoryListener(commandHistoryListener);
         super.dispose();
     }
 
