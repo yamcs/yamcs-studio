@@ -167,4 +167,8 @@ public class DataViewer extends JPanel implements ActionListener {
     public void tagChanged(ArchiveTag oldTag, ArchiveTag newTag) {
         dataView.headerPanel.tagBox.updateTag(oldTag, newTag);
     }
+
+    public void dispose() {
+        dataView.dispose();
+    }
 }

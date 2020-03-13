@@ -58,6 +58,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     volatile boolean lowOnMemoryReported = false;
 
+    private AWTEventListener mouseEventListener;
+
     public ArchivePanel(ArchiveView archiveView) {
         super(new BorderLayout());
         this.archiveView = archiveView;
@@ -67,29 +69,28 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         add(dataViewer, BorderLayout.CENTER);
 
         // Catch mouse events globally, to deal more easily with events on child components
-        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-            @Override
-            public void eventDispatched(AWTEvent event) { // EDT
-                DataView dataView = dataViewer.getDataView();
-                if (!(event.getSource() instanceof JScrollBar)
-                        && !(event.getSource() instanceof TagTimeline)
-                        && SwingUtilities.isDescendingFrom((Component) event.getSource(), dataView)) {
-                    MouseEvent me = SwingUtilities.convertMouseEvent((Component) event.getSource(), (MouseEvent) event,
-                            dataView.indexPanel);
-                    if (event.getID() == MouseEvent.MOUSE_DRAGGED) {
-                        dataView.doMouseDragged(me);
-                    } else if (event.getID() == MouseEvent.MOUSE_PRESSED) {
-                        dataView.doMousePressed(me);
-                    } else if (event.getID() == MouseEvent.MOUSE_RELEASED) {
-                        dataView.doMouseReleased(me);
-                    } else if (event.getID() == MouseEvent.MOUSE_MOVED) {
-                        dataView.doMouseMoved(me);
-                    } else if (event.getID() == MouseEvent.MOUSE_EXITED) {
-                        dataView.doMouseExited(me);
-                    }
+        mouseEventListener = event -> { // EDT
+            DataView dataView = dataViewer.getDataView();
+            if (!(event.getSource() instanceof JScrollBar)
+                    && !(event.getSource() instanceof TagTimeline)
+                    && SwingUtilities.isDescendingFrom((Component) event.getSource(), dataView)) {
+                MouseEvent me = SwingUtilities.convertMouseEvent((Component) event.getSource(), (MouseEvent) event,
+                        dataView.indexPanel);
+                if (event.getID() == MouseEvent.MOUSE_DRAGGED) {
+                    dataView.doMouseDragged(me);
+                } else if (event.getID() == MouseEvent.MOUSE_PRESSED) {
+                    dataView.doMousePressed(me);
+                } else if (event.getID() == MouseEvent.MOUSE_RELEASED) {
+                    dataView.doMouseReleased(me);
+                } else if (event.getID() == MouseEvent.MOUSE_MOVED) {
+                    dataView.doMouseMoved(me);
+                } else if (event.getID() == MouseEvent.MOUSE_EXITED) {
+                    dataView.doMouseExited(me);
                 }
             }
-        }, AWTEvent.MOUSE_EVENT_MASK + AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        };
+        Toolkit.getDefaultToolkit().addAWTEventListener(mouseEventListener,
+                AWTEvent.MOUSE_EVENT_MASK + AWTEvent.MOUSE_MOTION_EVENT_MASK);
     }
 
     public DataViewer getDataViewer() {
@@ -157,12 +158,14 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         public boolean merge(IndexChunkSpec t, long mergeTime) {
             boolean merge = false;
             if (tmcount == 1) {
-                if (t.startInstant - stopInstant < mergeTime)
+                if (t.startInstant - stopInstant < mergeTime) {
                     merge = true;
+                }
             } else {
                 float dist = (stopInstant - startInstant) / ((float) (tmcount - 1));
-                if (t.startInstant - stopInstant < dist + mergeTime)
+                if (t.startInstant - stopInstant < dist + mergeTime) {
                     merge = true;
+                }
             }
             if (merge) {
                 stopInstant = t.stopInstant;
@@ -196,10 +199,12 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             start = r.getFirst();
             stop = r.getLast();
 
-            if ((dataStart == INVALID_INSTANT) || (start < dataStart))
+            if ((dataStart == INVALID_INSTANT) || (start < dataStart)) {
                 dataStart = start;
-            if ((dataStop == INVALID_INSTANT) || (stop > dataStop))
+            }
+            if ((dataStop == INVALID_INSTANT) || (stop > dataStop)) {
                 dataStop = stop;
+            }
 
             recCount++;
             loadCount++;
@@ -216,13 +221,15 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     public void seekReplay(long newPosition) {
-        if (newPosition == TimeEncoding.INVALID_INSTANT)
+        if (newPosition == TimeEncoding.INVALID_INSTANT) {
             return;
+        }
 
         Display.getDefault().asyncExec(() -> {
             ProcessorInfo processor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
-            if (processor == null || processor.getName().equals("realtime"))
+            if (processor == null || processor.getName().equals("realtime")) {
                 return;
+            }
 
             String seekTime = TimeEncoding.toString(newPosition);
             EditProcessorRequest req = EditProcessorRequest.newBuilder().setSeek(seekTime).build();
@@ -233,8 +240,9 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     public synchronized void archiveLoadFinished() {
         loadCount = 0;
-        if ((dataStart != INVALID_INSTANT) && (dataStop != INVALID_INSTANT))
+        if ((dataStart != INVALID_INSTANT) && (dataStop != INVALID_INSTANT)) {
             dataViewer.archiveLoadFinished();
+        }
 
         SwingUtilities.invokeLater(() -> {
             archiveView.setRefreshEnabled(true);
@@ -265,12 +273,18 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
 
     // TODO only used by selector. Rework maybe in custom replay launcher
     public List<String> getSelectedPackets(String tableName) {
-        if (dataViewer.getDataView().indexBoxes.containsKey(tableName))
+        if (dataViewer.getDataView().indexBoxes.containsKey(tableName)) {
             return dataViewer.getDataView().getSelectedPackets(tableName);
+        }
         return Collections.emptyList();
     }
 
     public void onWindowResized() {
         dataViewer.windowResized();
+    }
+
+    public void dispose() {
+        dataViewer.dispose();
+        Toolkit.getDefaultToolkit().removeAWTEventListener(mouseEventListener);
     }
 }
