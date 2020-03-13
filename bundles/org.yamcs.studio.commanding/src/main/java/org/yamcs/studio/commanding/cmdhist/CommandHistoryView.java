@@ -36,6 +36,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryFilters.Filter;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryRecord.CommandState;
+import org.yamcs.studio.core.model.CommandHistoryListener;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
@@ -79,6 +80,7 @@ public class CommandHistoryView extends ViewPart {
     private TableLayout tableLayout;
     private CommandHistoryViewerComparator tableViewerComparator;
 
+    private CommandHistoryListener commandHistoryListener;
     private CommandHistoryRecordContentProvider tableContentProvider;
     private Set<String> dynamicColumns = new HashSet<>();
 
@@ -140,9 +142,10 @@ public class CommandHistoryView extends ViewPart {
 
         getViewSite().setSelectionProvider(tableViewer);
 
-        CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
+        commandHistoryListener = cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
-        });
+        };
+        CommandingCatalogue.getInstance().addCommandHistoryListener(commandHistoryListener);
     }
 
     private void updateSummaryLine() {
@@ -241,7 +244,6 @@ public class CommandHistoryView extends ViewPart {
     }
 
     private void addFixedColumns() {
-
         TableViewerColumn stateColumn = new TableViewerColumn(tableViewer, SWT.NONE);
         stateColumn.getColumn().setImage(headerCompleteImage);
         stateColumn.getColumn().addSelectionListener(getSelectionAdapter(stateColumn.getColumn()));
@@ -509,5 +511,11 @@ public class CommandHistoryView extends ViewPart {
 
     public TableViewer getTableViewer() {
         return this.tableViewer;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        CommandingCatalogue.getInstance().removeCommandHistoryListener(commandHistoryListener);
     }
 }

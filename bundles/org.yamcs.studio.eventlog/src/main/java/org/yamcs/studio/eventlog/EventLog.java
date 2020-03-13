@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -39,6 +40,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     private EventLogTableViewer tableViewer;
     private EventLogContentProvider tableContentProvider;
     private MenuManager menuManager;
+    private IPropertyChangeListener prefListener;
 
     public EventLog(Composite parent, int style) {
         super(parent, style);
@@ -164,7 +166,7 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
 
     @Override
     public void dispose() {
-        EventCatalogue.getInstance().addEventListener(this);
+        EventCatalogue.getInstance().removeEventListener(this);
         YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
         ManagementCatalogue.getInstance().removeInstanceListener(this);
         super.dispose();
