@@ -105,7 +105,7 @@ public class ArchiveIndexReceiver {
         }
         ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
         catalogue.createTag(requestb.build()).whenComplete((data, exc) -> {
-            if (exc != null) {
+            if (exc == null) {
                 ArchiveTag response;
                 try {
                     response = ArchiveTag.parseFrom(data);

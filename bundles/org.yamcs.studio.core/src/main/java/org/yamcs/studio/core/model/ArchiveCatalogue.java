@@ -82,7 +82,7 @@ public class ArchiveCatalogue implements Catalogue {
     public CompletableFuture<byte[]> editTag(long tagTime, int tagId, EditTagRequest request) {
         YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
         String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        return yamcsClient.put("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request);
+        return yamcsClient.patch("/archive/" + instance + "/tags/" + tagTime + "/" + tagId, request);
     }
 
     public CompletableFuture<byte[]> deleteTag(long tagTime, int tagId) {
