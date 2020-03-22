@@ -1,11 +1,16 @@
 # Yamcs Studio
 
-Below instructions are targeted at Yamcs Studio core contributors.
+## Binary Releases
 
-* **End-User documentation** is available at: [https://yamcs.org/docs/yamcs-studio/](https://yamcs.org/docs/yamcs-studio/)
-* Extension development is not currently documented.
+https://github.com/yamcs/yamcs-studio/releases
 
----
+
+## End-User Documentation
+
+https://yamcs.org/docs/yamcs-studio/
+
+
+## Source Builds
 
 ### Prerequisites
 * JDK 8 or 11
@@ -14,10 +19,8 @@ Below instructions are targeted at Yamcs Studio core contributors.
 
 ### Headless Build
 
-There are two different maven reactors (the first bundles up non-OSGI dependencies). To run both:
-
 ```
-make
+mvn clean package -DskipTests
 ```
 
 
@@ -32,8 +35,6 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 - Under `Preferences > Maven > Discovery`, click on the `Open Catalog` button and install the Tycho Configurator from there. This plugin will add support for Tycho artefacts to the integrated Maven build cycle.
 
 - Import the Yamcs Studio maven projects into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.
-
-- Repeat the previous step by importing the projects found directly under the `p2deps` subfolder. These are detached from the main maven build, and need to be imported separately.
 
 - Open the `*.platform` file found in the project `org.yamcs.studio.platform`. Click the upper right link `Set as target platform`. This operation may take a while, as it will attempt to resolve and download third-party dependencies.
 

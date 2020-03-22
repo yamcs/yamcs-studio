@@ -15,9 +15,7 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: Build
-        run: |
-          mvn -B --no-transfer-progress -f p2deps/pom.xml package
-          mvn -B --no-transfer-progress -DskipTests package
+        run: mvn -B --no-transfer-progress -DskipTests package
 
   docs:
     name: Documentation

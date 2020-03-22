@@ -9,7 +9,7 @@ Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.3.4.qualifier
 Require-Bundle: org.eclipse.core.runtime,
- org.yamcs.studio.p2deps.yamcs
+ org.yamcs.p2.client
 Export-Package: org.yamcs.studio.core,
  org.yamcs.studio.core.client,
  org.yamcs.studio.core.model,

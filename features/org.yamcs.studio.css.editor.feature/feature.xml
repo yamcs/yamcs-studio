@@ -125,7 +125,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.yamcs.studio.p2deps.batik"
+         id="org.yamcs.p2.batik"
          download-size="0"
          install-size="0"
          version="0.0.0"

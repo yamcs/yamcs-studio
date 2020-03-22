@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.console,
  org.eclipse.core.runtime,
  org.yamcs.studio.core,
- org.yamcs.studio.p2deps.yamcs,
+ org.yamcs.p2.client,
  org.eclipse.core.expressions,
  org.eclipse.equinox.security,
  com.google.gson

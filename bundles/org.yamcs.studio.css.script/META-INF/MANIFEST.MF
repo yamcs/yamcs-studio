@@ -8,6 +8,6 @@ Bundle-Vendor: Space Applications Services
 Fragment-Host: org.csstudio.opibuilder
 Require-Bundle: org.yamcs.studio.core,
  org.yamcs.studio.commanding,
- org.yamcs.studio.p2deps.yamcs
+ org.yamcs.p2.client
 Export-Package: org.yamcs.studio.script
 Automatic-Module-Name: org.yamcs.studio.css.script

@@ -23,9 +23,7 @@ jobs:
           echo "::set-output name=version::$VERSION"
 
       - name: Generate assets
-        run: |
-          mvn -B --no-transfer-progress -f p2deps/pom.xml package
-          mvn -B --no-transfer-progress -DskipTests package
+        run: mvn -B --no-transfer-progress -DskipTests package
 
       - name: Draft Release
         id: create_release

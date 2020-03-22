@@ -11,6 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.yamcs.studio.core.ui,
  org.eclipse.core.runtime,
- org.yamcs.studio.p2deps.yamcs
+ org.yamcs.p2.client
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.monitoring
