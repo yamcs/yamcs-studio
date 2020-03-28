@@ -2,7 +2,7 @@
 
 ## Binary Releases
 
-https://github.com/yamcs/yamcs-studio/releases
+https://github.com/yamcs/yamcs-studio/releases/
 
 
 ## End-User Documentation

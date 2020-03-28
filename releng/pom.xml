@@ -14,7 +14,5 @@
     <module>org.yamcs.studio.platform</module>
     <module>org.yamcs.studio.editor</module>
     <module>org.yamcs.studio.editor.product</module>
-    <module>org.yamcs.studio.runtime</module>
-    <module>org.yamcs.studio.runtime.product</module>
   </modules>
 </project>
