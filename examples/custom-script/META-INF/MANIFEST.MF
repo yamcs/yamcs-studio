@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Custom ScriptUtil Example
-Bundle-SymbolicName: org.yamcs.studio.customscript;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: org.csstudio.opibuilder
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.yamcs.studio.customscript
-Automatic-Module-Name: org.yamcs.studio.customscript
