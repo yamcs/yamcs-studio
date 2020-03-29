@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ActivationPolicy: lazy
+Bundle-Description: Yamcs Connectivity
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs Connectivity
+Bundle-SymbolicName: org.yamcs.studio.connect;singleton:=true
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 1.3.4.qualifier
+Require-Bundle: org.yamcs.p2.client,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.google.gson
+Export-Package: org.yamcs.studio.connect
+Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Automatic-Module-Name: org.yamcs.studio.connect

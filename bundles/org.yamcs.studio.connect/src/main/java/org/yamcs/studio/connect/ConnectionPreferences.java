@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.ui.connections;
+package org.yamcs.studio.connect;
 
 import java.lang.reflect.Type;
 import java.util.Collections;

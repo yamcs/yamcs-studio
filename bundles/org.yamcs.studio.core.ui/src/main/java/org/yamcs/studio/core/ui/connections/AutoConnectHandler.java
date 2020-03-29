@@ -11,9 +11,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.api.YamcsConnectionProperties;
+import org.yamcs.studio.connect.ConnectionPreferences;
+import org.yamcs.studio.connect.ConnectionsDialog;
+import org.yamcs.studio.connect.YamcsConfiguration;
+import org.yamcs.studio.connect.YamcsConfiguration.AuthType;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.ConnectionUIHelper;
-import org.yamcs.studio.core.ui.connections.YamcsConfiguration.AuthType;
 
 /**
  * Does a connection on the last-used configuration, with potential UI interactions if a password is required and this

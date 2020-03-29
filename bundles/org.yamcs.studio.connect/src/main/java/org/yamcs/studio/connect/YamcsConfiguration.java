@@ -1,4 +1,4 @@
-package org.yamcs.studio.core.ui.connections;
+package org.yamcs.studio.connect;
 
 import java.util.Objects;
 
@@ -70,8 +70,7 @@ public class YamcsConfiguration {
     }
 
     public boolean isAnonymous() {
-        return authType == AuthType.STANDARD
-                && getUser() == null;
+        return getUser() == null;
     }
 
     public void setPassword(String password) {

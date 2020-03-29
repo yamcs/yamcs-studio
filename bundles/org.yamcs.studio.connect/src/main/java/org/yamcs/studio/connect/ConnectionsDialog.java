@@ -1,16 +1,16 @@
-package org.yamcs.studio.core.ui.connections;
-
-import static org.yamcs.studio.core.ui.utils.TextUtils.forceString;
-import static org.yamcs.studio.core.ui.utils.TextUtils.isBlank;
+package org.yamcs.studio.connect;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
@@ -38,8 +38,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.yamcs.studio.core.ui.connections.YamcsConfiguration.AuthType;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.yamcs.studio.connect.YamcsConfiguration.AuthType;
 
 /**
  * A modal dialog for managing connection to Yamcs servers. Extracted out of preferences, because these kind of settings
@@ -104,7 +105,7 @@ public class ConnectionsDialog extends Dialog {
         ToolBar editBar = new ToolBar(contentArea, SWT.NO_FOCUS);
         addServerButton = new ToolItem(editBar, SWT.NONE);
         addServerButton.setImage(resourceManager
-                .createImage(RCPUtils.getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_add.png")));
+                .createImage(getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_add.png")));
         addServerButton.setToolTipText("Add Connection");
         addServerButton.addListener(SWT.Selection, evt -> {
             addServer();
@@ -113,7 +114,7 @@ public class ConnectionsDialog extends Dialog {
 
         removeServerButton = new ToolItem(editBar, SWT.NONE);
         removeServerButton.setImage(resourceManager
-                .createImage(RCPUtils.getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_remove.png")));
+                .createImage(getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server_remove.png")));
         removeServerButton.setToolTipText("Delete Connection");
         removeServerButton.addListener(SWT.Selection, evt -> {
             removeSelectedServer();
@@ -277,7 +278,7 @@ public class ConnectionsDialog extends Dialog {
         serverPanel.setLayout(tcl);
 
         Image serverImage = resourceManager
-                .createImage(RCPUtils.getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server.gif"));
+                .createImage(getImageDescriptor(ConnectionsDialog.class, "icons/obj16/server.gif"));
 
         connViewer = new TableViewer(serverPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
         connViewer.getTable().setHeaderVisible(true);
@@ -539,5 +540,18 @@ public class ConnectionsDialog extends Dialog {
             }
         }
         return chosenConfiguration;
+    }
+
+    public static ImageDescriptor getImageDescriptor(Class<?> classFromBundle, String path) {
+        Bundle bundle = FrameworkUtil.getBundle(classFromBundle);
+        return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
+    }
+
+    private static boolean isBlank(String string) {
+        return string == null || "".equals(string);
+    }
+
+    private static String forceString(Object obj) {
+        return (obj != null) ? obj.toString() : "";
     }
 }

@@ -18,12 +18,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.studio.connect.YamcsConfiguration;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 /**
- * Uses Eclipse {@link ILoginContext} to perform a JAAS-based login. This dialog
- * stays open until the user either successfully connects, or the dialog is
- * cancelled.
+ * Uses Eclipse {@link ILoginContext} to perform a JAAS-based login. This dialog stays open until the user either
+ * successfully connects, or the dialog is cancelled.
  */
 public class LoginDialog extends TitleAreaDialog {
 
@@ -101,10 +101,11 @@ public class LoginDialog extends TitleAreaDialog {
         gd = new GridData(GridData.FILL_HORIZONTAL);
         l.setLayoutData(gd);
 
-        if (isBlank(user.getText()))
+        if (isBlank(user.getText())) {
             user.setFocus();
-        else
+        } else {
             password.setFocus();
+        }
 
         return composite;
     }
