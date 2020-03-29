@@ -12,11 +12,5 @@
             icon="icons/eview16/datalinks.png"
             id="org.yamcs.studio.monitoring.links.LinksView"
             name="Data Links"/>
-      <view
-            category="org.yamcs.studio.server"
-            class="org.yamcs.studio.monitoring.clients.ClientsView"
-            icon="icons/eview16/clients.png"
-            id="org.yamcs.studio.monitoring.clients.ClientsView"
-            name="Yamcs Clients"/>
    </extension>
 </plugin>
