@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Optional;
 
 import org.csstudio.csdata.ProcessVariable;
+import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.runmode.RunModeService;
 import org.csstudio.opibuilder.runmode.RunModeService.DisplayMode;
 import org.csstudio.opibuilder.util.MacrosInput;
@@ -25,7 +26,10 @@ public class OpenOPIProbeHandler extends AbstractHandler {
         ISelection selection = HandlerUtil.getActiveMenuSelection(event);
         ProcessVariable[] pvs = AdapterUtil.convert(selection, ProcessVariable.class);
 
-        IPath probeOPIPath = ResourceUtil.getPathFromString("platform:/plugin/org.csstudio.opibuilder/opi/probe.opi");
+        IPath probeOPIPath = PreferencesHelper.getProbeOPIPath();
+        if (probeOPIPath == null || probeOPIPath.isEmpty()) {
+            probeOPIPath = ResourceUtil.getPathFromString("platform:/plugin/org.csstudio.opibuilder/opi/probe.opi");
+        }
 
         LinkedHashMap<String, String> macros = new LinkedHashMap<>();
         if (pvs.length > 0) {

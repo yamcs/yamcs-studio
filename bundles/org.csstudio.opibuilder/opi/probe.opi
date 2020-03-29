@@ -10,7 +10,7 @@
   <background_color>
     <color red="255" green="255" blue="255" />
   </background_color>
-  <boy_version>1.0.0.qualifier</boy_version>
+  <boy_version>1.3.4.qualifier</boy_version>
   <foreground_color>
     <color red="192" green="192" blue="192" />
   </foreground_color>
@@ -45,7 +45,7 @@
     <enabled>true</enabled>
     <fc>false</fc>
     <font>
-      <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="192" green="192" blue="192" />
@@ -85,7 +85,7 @@
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+        <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -126,7 +126,7 @@
       <enabled>true</enabled>
       <fc>false</fc>
       <font>
-        <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+        <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="192" green="192" blue="192" />
@@ -181,7 +181,7 @@
         <effect_3d>false</effect_3d>
         <enabled>true</enabled>
         <font>
-          <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+          <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
         </font>
         <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
         <foreground_color>
@@ -213,7 +213,7 @@
           </rule>
         </rules>
         <scale_font>
-          <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+          <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
         </scale_font>
         <scale_format></scale_format>
         <scale_options>
@@ -257,7 +257,7 @@ $(pv_value)</tooltip>
         <confirm_message></confirm_message>
         <enabled>true</enabled>
         <font>
-          <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+          <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
         </font>
         <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
         <foreground_color>
@@ -319,7 +319,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+        <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -364,7 +364,7 @@ $(pv_value)</tooltip>
       <confirm_message></confirm_message>
       <enabled>true</enabled>
       <font>
-        <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+        <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -428,7 +428,7 @@ if(m!=null)
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
     </font>
     <foreground_color>
       <color red="0" green="0" blue="0" />
@@ -447,14 +447,14 @@ if(m!=null)
     <text>Buffer Size:</text>
     <tooltip></tooltip>
     <transparent>true</transparent>
-    <vertical_alignment>2</vertical_alignment>
+    <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
     <width>67</width>
     <wrap_words>true</wrap_words>
     <wuid>6d1d6840:137dc33d1ba:-5e9a</wuid>
     <x>300</x>
-    <y>366</y>
+    <y>369</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.checkbox" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -473,7 +473,7 @@ if(m!=null)
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -482,7 +482,7 @@ if(m!=null)
     <height>22</height>
     <label>Concatenate Data</label>
     <name>Check Box</name>
-    <pv_name>loc://$(DID)_ContanateData(1)</pv_name>
+    <pv_name>loc://$(DID)_ConcatenateData(1)</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -500,8 +500,8 @@ $(pv_value)</tooltip>
     <widget_type>Check Box</widget_type>
     <width>151</width>
     <wuid>6d1d6840:137dc33d1ba:-5b90</wuid>
-    <x>570</x>
-    <y>369</y>
+    <x>609</x>
+    <y>368</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
     <actions hook="false" hook_all="false" />
@@ -520,7 +520,7 @@ $(pv_value)</tooltip>
     <confirm_message></confirm_message>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -578,7 +578,7 @@ $(pv_value)</tooltip>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
-      <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
     </font>
     <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
@@ -603,9 +603,9 @@ $(pv_value)</tooltip>
 $(pv_value)</tooltip>
     <visible>true</visible>
     <widget_type>Check Box</widget_type>
-    <width>115</width>
+    <width>101</width>
     <wuid>6d1d6840:137dc33d1ba:-57ba</wuid>
-    <x>474</x>
+    <x>498</x>
     <y>368</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.xyGraph" version="1.0.0">
@@ -625,13 +625,13 @@ $(pv_value)</tooltip>
     <axis_0_maximum>100.0</axis_0_maximum>
     <axis_0_minimum>0.0</axis_0_minimum>
     <axis_0_scale_font>
-      <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
     </axis_0_scale_font>
     <axis_0_scale_format></axis_0_scale_format>
     <axis_0_show_grid>true</axis_0_show_grid>
     <axis_0_time_format>8</axis_0_time_format>
     <axis_0_title_font>
-      <opifont.name fontName=".SF NS Text" height="11" style="1" pixels="false">Default Bold</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
     </axis_0_title_font>
     <axis_0_visible>true</axis_0_visible>
     <axis_1_auto_scale>true</axis_1_auto_scale>
@@ -648,13 +648,13 @@ $(pv_value)</tooltip>
     <axis_1_maximum>100.0</axis_1_maximum>
     <axis_1_minimum>0.0</axis_1_minimum>
     <axis_1_scale_font>
-      <opifont.name fontName=".SF NS Text" height="11" style="0" pixels="false">Default</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="0" pixels="false">Default</opifont.name>
     </axis_1_scale_font>
     <axis_1_scale_format></axis_1_scale_format>
     <axis_1_show_grid>true</axis_1_show_grid>
     <axis_1_time_format>0</axis_1_time_format>
     <axis_1_title_font>
-      <opifont.name fontName=".SF NS Text" height="11" style="1" pixels="false">Default Bold</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
     </axis_1_title_font>
     <axis_1_visible>true</axis_1_visible>
     <axis_count>2</axis_count>
@@ -697,7 +697,7 @@ $(pv_value)</tooltip>
         <exp bool_exp="pv0==0">
           <value>false</value>
         </exp>
-        <pv trig="true">loc://$(DID)_ContanateData(1)</pv>
+        <pv trig="true">loc://$(DID)_ConcatenateData(1)</pv>
       </rule>
     </rules>
     <scale_options>
@@ -725,7 +725,7 @@ else
     <show_toolbar>true</show_toolbar>
     <title></title>
     <title_font>
-      <opifont.name fontName=".SF NS Text" height="11" style="1" pixels="false">Default Bold</opifont.name>
+      <opifont.name fontName="Liberation Sans" height="11" style="1" pixels="false">Default Bold</opifont.name>
     </title_font>
     <tooltip>$(trace_0_y_pv)
 $(trace_0_y_pv_value)</tooltip>

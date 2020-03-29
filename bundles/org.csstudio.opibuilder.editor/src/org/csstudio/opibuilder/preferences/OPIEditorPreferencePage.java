@@ -22,8 +22,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class OPIEditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    // private static final String RESTART_MESSAGE = "Changes only takes effect after restart.";
-
     public OPIEditorPreferencePage() {
         super(FieldEditorPreferencePage.GRID);
         setPreferenceStore(OPIBuilderPlugin.getDefault().getPreferenceStore());

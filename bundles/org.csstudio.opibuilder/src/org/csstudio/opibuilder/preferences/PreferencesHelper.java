@@ -40,6 +40,7 @@ public class PreferencesHelper {
     public static final String RUN_MACROS = "macros";
     public static final String AUTOSAVE = "auto_save";
     public static final String OPI_GUI_REFRESH_CYCLE = "opi_gui_refresh_cycle";
+    public static final String PROBE_OPI = "probe_opi";
     public static final String SCHEMA_OPI = "schema_opi";
     public static final String PYTHON_PATH = "python_path";
     public static final String SHOW_FULLSCREEN_DIALOG = "show_fullscreen_dialog";
@@ -58,6 +59,14 @@ public class PreferencesHelper {
     protected static String getString(String preferenceName, String defaultValue) {
         IPreferencesService service = Platform.getPreferencesService();
         return service.getString(OPIBuilderPlugin.PLUGIN_ID, preferenceName, defaultValue, null);
+    }
+
+    public static IPath getProbeOPIPath() {
+        String probeOPIPath = getString(PROBE_OPI);
+        if (probeOPIPath == null || probeOPIPath.trim().isEmpty()) {
+            return null;
+        }
+        return ResourceUtil.getPathFromString(probeOPIPath);
     }
 
     public static IPath getSchemaOPIPath() {

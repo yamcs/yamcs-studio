@@ -58,27 +58,24 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="org.csstudio.opibuilder.preferences.MainPreferencePage"
-            id="org.csstudio.opibuilder.preferences"
-            name="OPI Displays">
-      </page>
-      <page
-            category="org.csstudio.opibuilder.preferences"
             class="org.csstudio.opibuilder.preferences.OPIColorsPreferencePage"
             id="org.csstudio.opibuilder.preferences.colors"
-            name="Colors">
+            name="OPI Colors">
       </page>
       <page
-            category="org.csstudio.opibuilder.preferences"
             class="org.csstudio.opibuilder.preferences.OPIFontsPreferencePage"
             id="org.csstudio.opibuilder.preferences.fonts"
-            name="Fonts">
+            name="OPI Fonts">
       </page>
       <page
-            category="org.csstudio.opibuilder.preferences"
             class="org.csstudio.opibuilder.preferences.OPIRuntimePreferencePage"
             id="org.csstudio.opibuilder.preferences.runtime"
-            name="Runtime">
+            name="OPI Runtime">
+      </page>
+      <page
+            class="org.csstudio.opibuilder.preferences.ProbePreferencePage"
+            id="org.csstudio.opibuilder.preferences.probe"
+            name="Probe">
       </page>
    </extension>
    <extension
