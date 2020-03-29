@@ -6,7 +6,7 @@
    <aboutInfo>
       <image path="/org.yamcs.studio.editor/icons/aboutSide.png"/>
       <text>
-         Desktop client for Yamcs - The Open Source Mission Control System
+         Desktop client for Yamcs Mission Control
 
 See https://yamcs.org
       </text>

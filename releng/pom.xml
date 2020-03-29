@@ -15,7 +15,6 @@
     <module>org.yamcs.studio.editor</module>
     <module>org.yamcs.studio.editor.feature</module>
     <module>org.yamcs.studio.editor.product</module>
-    <module>org.yamcs.studio.p2.feature</module>
     <module>org.yamcs.studio.platform</module>
   </modules>
 </project>
