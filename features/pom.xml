@@ -12,7 +12,6 @@
 
   <modules>
     <module>org.yamcs.studio.core.feature</module>
-    <module>org.yamcs.studio.eclipse.feature</module>
     <module>org.yamcs.studio.editor.feature</module>
     <module>org.yamcs.studio.p2.feature</module>
   </modules>
