@@ -88,7 +88,7 @@
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
-               visible="true"
+               visible="false"
                closeable="true"
                id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
          <view
