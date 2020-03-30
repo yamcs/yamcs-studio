@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <feature id="org.yamcs.studio.core.feature">
+    <category name="org.yamcs.studio.category"/>
+  </feature>
+  <feature id="org.yamcs.studio.core.feature.source">
+    <category name="org.yamcs.studio.category"/>
+  </feature>
+  <feature id="org.yamcs.studio.editor.feature">
+    <category name="org.yamcs.studio.category"/>
+  </feature>
+  <category-def name="org.yamcs.studio.category" label="Yamcs Studio"/>
+</site>

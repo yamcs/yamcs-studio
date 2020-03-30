@@ -70,11 +70,6 @@
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-p2-plugin</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-p2-publisher-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
@@ -100,6 +95,11 @@
         </plugin>
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-p2-plugin</artifactId>
+          <version>${tycho.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-p2-repository-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
@@ -116,6 +116,11 @@
         <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-versions-plugin</artifactId>
+          <version>${tycho.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho.extras</groupId>
+          <artifactId>tycho-source-feature-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
       </plugins>
@@ -153,7 +158,7 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <configuration>
-          <!--  targetDefinitionIncludeSource>honor</targetDefinitionIncludeSource-->
+          <targetDefinitionIncludeSource>honor</targetDefinitionIncludeSource>
           <target>
             <artifact>
               <groupId>org.yamcs.studio</groupId>
