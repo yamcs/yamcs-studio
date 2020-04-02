@@ -6,7 +6,7 @@
 
   <groupId>org.yamcs.studio</groupId>
   <artifactId>yamcs-studio</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <organization>
