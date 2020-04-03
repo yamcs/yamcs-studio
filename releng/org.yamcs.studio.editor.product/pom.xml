@@ -12,6 +12,10 @@
   <artifactId>org.yamcs.studio.editor.product</artifactId>
   <packaging>eclipse-repository</packaging>
 
+  <properties>
+    <maven.deploy.skip>false</maven.deploy.skip>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
