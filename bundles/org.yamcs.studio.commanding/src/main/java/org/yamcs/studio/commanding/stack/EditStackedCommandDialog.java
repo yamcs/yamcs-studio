@@ -4,11 +4,12 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-public class EditStackedCommandDialog extends TitleAreaDialog {
+public class EditStackedCommandDialog extends TitleAreaDialog implements CommandOptionsValidityListener {
 
     private StackedCommand command;
     private CommandOptionsComposite composite;
@@ -32,7 +33,7 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        composite = new CommandOptionsComposite(parent, SWT.NONE, command);
+        composite = new CommandOptionsComposite(parent, SWT.NONE, command, this);
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
         return composite;
     }
@@ -48,5 +49,20 @@ public class EditStackedCommandDialog extends TitleAreaDialog {
     @Override
     protected Point getInitialSize() {
         return new Point(500, 500);
+    }
+
+    @Override
+    public void validityUpdated(String invalidMessage) {
+        setErrorMessage(invalidMessage);
+        Button okButton = getButton(OK);
+        if (okButton != null) { // Null during initial setup
+            okButton.setEnabled(invalidMessage == null);
+        }
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(OK).setEnabled(getErrorMessage() == null);
     }
 }

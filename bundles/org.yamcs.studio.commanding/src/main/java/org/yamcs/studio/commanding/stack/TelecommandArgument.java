@@ -1,7 +1,6 @@
 package org.yamcs.studio.commanding.stack;
 
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
-import org.yamcs.protobuf.Mdb.DataEncodingInfo;
 
 /**
  * An argument to a telecommand, whether that's assigned or not -- doesn't matter
@@ -44,15 +43,5 @@ public class TelecommandArgument {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
-    }
-
-    public boolean isIntegerWithinJavaIntRange() {
-        DataEncodingInfo dataEncoding = argumentInfo.getType().getDataEncoding();
-        boolean unsigned = "UNSIGNED".equals(dataEncoding.getEncoding());
-        if (unsigned) {
-            return dataEncoding.getSizeInBits() < 16;
-        } else {
-            return dataEncoding.getSizeInBits() <= 32;
-        }
     }
 }

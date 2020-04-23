@@ -1,5 +1,6 @@
 package org.yamcs.studio.commanding.stack;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,9 +34,13 @@ public class CommandOptionsComposite extends ScrolledComposite {
     private Composite scrollpane;
     private Group argumentsGroup;
     private List<Control> controls = new ArrayList<>();
+    private CommandOptionsValidityListener validityListener;
 
-    public CommandOptionsComposite(Composite parent, int style, StackedCommand command) {
+    public CommandOptionsComposite(Composite parent, int style, StackedCommand command,
+            CommandOptionsValidityListener validityListener) {
         super(parent, style | SWT.V_SCROLL);
+
+        this.validityListener = validityListener;
 
         scrollpane = new Composite(this, SWT.NONE);
         scrollpane.setLayout(new GridLayout());
@@ -134,6 +139,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
         setExpandHorizontal(true);
 
         resizeScrollpane();
+        updateValidity();
     }
 
     private void resizeScrollpane() {
@@ -153,33 +159,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
             Label argumentLabel = new Label(composite, SWT.NONE);
             argumentLabel.setText(argument.getName());
 
-            if ("integer".equals(argument.getType())) {
-                if (argument.isIntegerWithinJavaIntRange()) {
-                    Spinner argumentSpinner = new Spinner(composite, SWT.BORDER);
-                    argumentSpinner.setMinimum(Integer.MIN_VALUE);
-                    argumentSpinner.setMaximum(Integer.MAX_VALUE);
-                    argumentSpinner.setLayoutData(new GridData(150, SWT.DEFAULT));
-                    argumentSpinner.setData(argument);
-                    if (command.isAssigned(argument.getArgumentInfo())) {
-                        String value = command.getAssignedStringValue(argument.getArgumentInfo());
-                        argumentSpinner.setSelection(Integer.parseInt(value));
-                    } else if (argument.getValue() != null) {
-                        argumentSpinner.setSelection(Integer.parseInt(argument.getValue()));
-                    }
-                    controls.add(argumentSpinner);
-                } else {
-                    Text argumentText = new Text(composite, SWT.BORDER);
-                    argumentText.setLayoutData(new GridData(150, SWT.DEFAULT));
-                    argumentText.setData(argument);
-                    if (command.isAssigned(argument.getArgumentInfo())) {
-                        String value = command.getAssignedStringValue(argument.getArgumentInfo());
-                        argumentText.setText(value);
-                    } else if (argument.getValue() != null) {
-                        argumentText.setText(argument.getValue());
-                    }
-                    controls.add(argumentText);
-                }
-            } else if ("enumeration".equals(argument.getType())) {
+            if ("enumeration".equals(argument.getType())) {
                 Combo argumentCombo = new Combo(composite, SWT.READ_ONLY);
                 argumentCombo.setLayoutData(new GridData(150, SWT.DEFAULT));
                 argumentCombo.setData(argument);
@@ -224,6 +204,11 @@ public class CommandOptionsComposite extends ScrolledComposite {
                 } else if (argument.getValue() != null) {
                     argumentText.setText(argument.getValue());
                 }
+
+                if ("integer".equals(argument.getType())) {
+                    argumentText.addListener(SWT.Modify, evt -> updateValidity());
+                }
+
                 controls.add(argumentText);
             }
 
@@ -247,19 +232,77 @@ public class CommandOptionsComposite extends ScrolledComposite {
         }
     }
 
+    public void updateValidity() {
+        String invalidMessage = null;
+
+        for (Control control : controls) {
+            TelecommandArgument argument = (TelecommandArgument) control.getData();
+            if ("integer".equals(argument.getType())) {
+                String text = ((Text) control).getText();
+                BigDecimal value;
+                try {
+                    value = new BigDecimal(text);
+                } catch (NumberFormatException e) {
+                    invalidMessage = argument.getName() + " is not a valid integer";
+                    break;
+                }
+
+                ArgumentTypeInfo argumentType = argument.getArgumentInfo().getType();
+                if (argumentType.hasRangeMin()) {
+                    double doubleValue = value.doubleValue();
+                    if (doubleValue < argumentType.getRangeMin()) {
+                        invalidMessage = argument.getName() + " is out of range";
+                        break;
+                    }
+                }
+                if (argumentType.hasRangeMax()) {
+                    double doubleValue = value.doubleValue();
+                    if (doubleValue > argumentType.getRangeMax()) {
+                        invalidMessage = argument.getName() + " is out of range";
+                        break;
+                    }
+                }
+            } else if ("float".equals(argument.getType())) {
+                String text = ((Text) control).getText();
+                Double value;
+                try {
+                    value = Double.parseDouble(text);
+                } catch (NumberFormatException e) {
+                    invalidMessage = argument.getName() + " is not a valid float";
+                    break;
+                }
+
+                ArgumentTypeInfo argumentType = argument.getArgumentInfo().getType();
+                if (argumentType.hasRangeMin()) {
+                    if (value < argumentType.getRangeMin()) {
+                        invalidMessage = argument.getName() + " is out of range";
+                        break;
+                    }
+                }
+                if (argumentType.hasRangeMax()) {
+                    if (value > argumentType.getRangeMax()) {
+                        invalidMessage = argument.getName() + " is out of range";
+                        break;
+                    }
+                }
+            }
+        }
+
+        validityListener.validityUpdated(invalidMessage);
+    }
+
     public Map<ArgumentInfo, String> getAssignments() {
         Map<ArgumentInfo, String> assignments = new HashMap<>();
         for (Control control : controls) {
             TelecommandArgument argument = (TelecommandArgument) control.getData();
             if (control instanceof Text) {
                 String text = ((Text) control).getText();
-                assignments.put(argument.getArgumentInfo(), text);
+                if (text != null && !text.isEmpty()) {
+                    assignments.put(argument.getArgumentInfo(), text);
+                }
             } else if (control instanceof Combo) {
                 String text = ((Combo) control).getText();
                 assignments.put(argument.getArgumentInfo(), text);
-            } else if (control instanceof Spinner) {
-                int number = ((Spinner) control).getSelection();
-                assignments.put(argument.getArgumentInfo(), Integer.toString(number));
             } else if (control instanceof Composite) { // boolean
                 Button trueButton = (Button) ((Composite) control).getChildren()[0];
                 Button falseButton = (Button) ((Composite) control).getChildren()[1];

@@ -8,7 +8,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 
-public class AddToStackWizardPage2 extends WizardPage {
+public class AddToStackWizardPage2 extends WizardPage implements CommandOptionsValidityListener {
 
     private StackedCommand command;
     private Composite controlComposite;
@@ -20,7 +20,6 @@ public class AddToStackWizardPage2 extends WizardPage {
         super("Specify Arguments");
         setTitle("Specify Arguments");
         this.command = command;
-        setPageComplete(true);
     }
 
     @Override
@@ -58,12 +57,18 @@ public class AddToStackWizardPage2 extends WizardPage {
         if (optionsComposite != null) {
             optionsComposite.dispose();
         }
-        optionsComposite = new CommandOptionsComposite(controlComposite, SWT.NONE, command);
+        optionsComposite = new CommandOptionsComposite(controlComposite, SWT.NONE, command, this);
         optionsComposite.layout();
         controlComposite.layout();
     }
 
     public Map<ArgumentInfo, String> getAssignments() {
         return optionsComposite.getAssignments();
+    }
+
+    @Override
+    public void validityUpdated(String invalidMessage) {
+        setErrorMessage(invalidMessage);
+        setPageComplete(invalidMessage == null);
     }
 }
