@@ -2,7 +2,6 @@ package org.yamcs.studio.css.core.vtype;
 
 import java.text.NumberFormat;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 import org.diirt.util.NumberFormats;
@@ -62,8 +61,11 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public Instant getTimestamp() {
-        Date dt = YamcsUTCString.parse(pval.getGenerationTimeUTC());
-        return (dt != null) ? dt.toInstant() : null;
+        if (pval.hasGenerationTime()) {
+            return Instant.ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos());
+        } else {
+            return null;
+        }
     }
 
     @Override

@@ -9,10 +9,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.menus.UIElement;
 import org.osgi.framework.Bundle;
@@ -59,14 +56,14 @@ public class SoundCommandHandler extends AbstractHandler implements IElementUpda
         }
         preferenceStore.setValue("triggerBeep", newBeep);
         this.beep = newBeep;
-        
+
         SeverityHandlerSound.updatePrefence();
 
-//        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-//        ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
-//        if (commandService != null) {
-//            commandService.refreshElements("dropdownSoundCommand", null);
-//        }
+        // IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+        // ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
+        // if (commandService != null) {
+        // commandService.refreshElements("dropdownSoundCommand", null);
+        // }
 
         return null;
     }
@@ -77,8 +74,7 @@ public class SoundCommandHandler extends AbstractHandler implements IElementUpda
     public void updateElement(UIElement element, Map parameters) {
 
         String param = (String) parameters.get("org.yamcs.studio.css.core.prefs.beep");
-        if (!param.equals("toogle"))
-        {
+        if (!param.equals("toogle")) {
             return;
         }
 

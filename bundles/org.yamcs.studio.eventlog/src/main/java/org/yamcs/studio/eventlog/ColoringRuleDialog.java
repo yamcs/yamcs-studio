@@ -1,5 +1,7 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -17,6 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
+
+import com.google.protobuf.Timestamp;
 
 public class ColoringRuleDialog extends TitleAreaDialog {
 
@@ -115,8 +119,8 @@ public class ColoringRuleDialog extends TitleAreaDialog {
         try {
             Event anyEvent = Event.newBuilder().setMessage("a message")
                     .setSource("a source")
-                    .setGenerationTime(123L)
-                    .setReceptionTime(456L)
+                    .setGenerationTime(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()))
+                    .setReceptionTime(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()))
                     .setSeqNumber(123)
                     .setSeverity(EventSeverity.WARNING)
                     .setType("a type")

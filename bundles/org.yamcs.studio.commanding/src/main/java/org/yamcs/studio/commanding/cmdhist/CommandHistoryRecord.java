@@ -4,6 +4,7 @@ import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,7 +18,6 @@ import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.commanding.PTVInfo;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.utils.TimeEncoding;
 
 import com.google.protobuf.ByteString;
 
@@ -45,6 +45,7 @@ public class CommandHistoryRecord {
     private static final long ONE_DAY = 24 * ONE_HOUR;
 
     private CommandId id;
+    private Instant generationTime;
     private CommandState commandState = CommandState.UNKNOWN;
     private String commandString;
     private ByteString binary;
@@ -57,8 +58,9 @@ public class CommandHistoryRecord {
     private Map<String, Acknowledgment> localAcksByName = new LinkedHashMap<>();
     private Map<String, Acknowledgment> extraAcksByName = new LinkedHashMap<>();
 
-    public CommandHistoryRecord(CommandId id) {
+    public CommandHistoryRecord(CommandId id, Instant generationTime) {
         this.id = id;
+        this.generationTime = generationTime;
         ptvInfo = new PTVInfo();
     }
 
@@ -117,20 +119,20 @@ public class CommandHistoryRecord {
         cellPropsByColumn.get(columnName).put(KEY_RAW_VALUE, valueToRawValue(value));
         if (value.getType() == Value.Type.TIMESTAMP) {
             cellPropsByColumn.get(columnName).put(KEY_ACK_DURATION, id.getGenerationTime() - value.getTimestampValue());
-            cellPropsByColumn.get(columnName).put(KEY_VALUE, TimeEncoding.toString(value.getTimestampValue()));
+            cellPropsByColumn.get(columnName).put(KEY_VALUE, Instant.parse(value.getStringValue()));
             cellPropsByColumn.get(columnName).put(KEY_RELATIVE_VALUE,
-                    toHumanTimeDiff(value.getTimestampValue(), id.getGenerationTime()));
-            cellPropsByColumn.get(columnName).put(KEY_TOOLTIP, TimeEncoding.toString(value.getTimestampValue()));
+                    toHumanTimeDiff(Instant.parse(value.getStringValue()), generationTime));
+            cellPropsByColumn.get(columnName).put(KEY_TOOLTIP, Instant.parse(value.getStringValue()));
         } else {
             cellPropsByColumn.get(columnName).put(KEY_VALUE, valueToString(value));
         }
     }
 
-    private String toHumanTimeDiff(long generationTime, long timestamp) {
-        long millis = generationTime - timestamp;
+    private String toHumanTimeDiff(Instant generationTime, Instant timestamp) {
+        long millis = generationTime.toEpochMilli() - timestamp.toEpochMilli();
         String sign = (millis >= 0) ? "+" : "-";
         if (millis >= ONE_DAY) {
-            return TimeEncoding.toString(timestamp);
+            return YamcsUIPlugin.getDefault().formatInstant(timestamp);
         } else if (millis >= ONE_HOUR) {
             return sign + String.format("%d h, %d m",
                     MILLISECONDS.toHours(millis),
@@ -178,12 +180,8 @@ public class CommandHistoryRecord {
         return commandState;
     }
 
-    public String getGenerationTime() {
-        return YamcsUIPlugin.getDefault().formatInstant(id.getGenerationTime());
-    }
-
-    public long getRawGenerationTime() {
-        return id.getGenerationTime();
+    public Instant getGenerationTime() {
+        return generationTime;
     }
 
     public String getFinalSequenceCount() {

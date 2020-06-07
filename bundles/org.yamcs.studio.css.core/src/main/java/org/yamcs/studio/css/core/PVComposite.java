@@ -1,6 +1,7 @@
 package org.yamcs.studio.css.core;
 
 import java.text.DecimalFormat;
+import java.time.Instant;
 
 import org.csstudio.simplepv.IPV;
 import org.csstudio.simplepv.VTypeHelper;
@@ -19,9 +20,9 @@ import org.yamcs.protobuf.Mdb.UnitInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
-import org.yamcs.utils.StringConverter;
 
 public class PVComposite extends Composite implements ParameterListener {
 
@@ -227,10 +228,14 @@ public class PVComposite extends Composite implements ParameterListener {
             }
             for (ParameterValue pval : pdata.getParameterList()) {
                 if (pval.getId().getName().equals(pvInfo.getDisplayName())) {
-                    gentimeField.setText(pval.getGenerationTimeUTC());
-                    rectimeField.setText(pval.getAcquisitionTimeUTC());
+                    gentimeField.setText(Instant
+                            .ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos())
+                            .toString());
+                    rectimeField.setText(Instant
+                            .ofEpochSecond(pval.getAcquisitionTime().getSeconds(), pval.getAcquisitionTime().getNanos())
+                            .toString());
 
-                    String engValue = StringConverter.toString(pval.getEngValue(), false);
+                    String engValue = StringConverter.toString(pval.getEngValue());
                     if (pvInfo.getParameterInfo().hasType()) {
                         ParameterTypeInfo ptype = pvInfo.getParameterInfo().getType();
                         if (ptype.getUnitSetCount() > 0) {
@@ -249,7 +254,7 @@ public class PVComposite extends Composite implements ParameterListener {
                     }
 
                     if (pval.hasRawValue()) {
-                        rawValueField.setText(StringConverter.toString(pval.getRawValue(), false));
+                        rawValueField.setText(StringConverter.toString(pval.getRawValue()));
                         rawTypeField.setText(capitalize(pval.getRawValue().getType().toString()));
                     } else {
                         rawValueField.setText("---");

@@ -11,16 +11,13 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 
 /**
- * Responsible for playing sound. Currently supports just one loop track which
- * can be turned on or off, and a beep
+ * Responsible for playing sound. Currently supports just one loop track which can be turned on or off, and a beep
  */
 public class SoundSystem {
 
-    private static final Logger log = Logger.getLogger(SoundSystem.class
-            .getName());
+    private static final Logger log = Logger.getLogger(SoundSystem.class.getName());
     private static final String ALARM_SOUND = "/sounds/alarm.wav";
     private static final String BEEP_SOUND = "/sounds/beep.wav";
 
@@ -34,8 +31,9 @@ public class SoundSystem {
     public void mute() {
         executorService.execute(() -> {
             muted = true;
-            if (alarmState)
+            if (alarmState) {
                 playAlarm();
+            }
         });
     }
 
@@ -64,13 +62,10 @@ public class SoundSystem {
             beepClip.start();
 
             // explicitly stop the clip when sound has stopped
-            beepClip.addLineListener(new LineListener() {
-                @Override
-                public void update(LineEvent event) {
-                    if (event.getType() == LineEvent.Type.STOP) {
-                        event.getLine().close();
-                        beepClip = null;
-                    }
+            beepClip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    event.getLine().close();
+                    beepClip = null;
                 }
             });
 
@@ -81,19 +76,20 @@ public class SoundSystem {
     }
 
     /**
-     * Starts the alarm sound if the system is not muted. Otherwise will start
-     * the sound whenever the system is unmuted.
+     * Starts the alarm sound if the system is not muted. Otherwise will start the sound whenever the system is unmuted.
      */
     public void startAlarmSound() {
         executorService.execute(() -> {
-            if (alarmState)
+            if (alarmState) {
                 return; // Already on
+            }
 
             alarmState = true;
             log.fine("Alarm ON");
 
-            if (!muted)
+            if (!muted) {
                 playAlarm();
+            }
         });
     }
 
@@ -130,12 +126,5 @@ public class SoundSystem {
 
     public void dispose() {
         executorService.shutdown();
-    }
-
-    public static void main(String[] arg) {
-        System.out.println("playing test beeps");
-        while (true) {
-            SoundSystem.beep();
-        }
     }
 }

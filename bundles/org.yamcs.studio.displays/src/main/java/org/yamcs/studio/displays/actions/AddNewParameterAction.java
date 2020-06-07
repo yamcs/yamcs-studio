@@ -29,7 +29,7 @@ public class AddNewParameterAction extends Action {
         WizardDialog dialog = new WizardDialog(shell, wizard);
         if (dialog.open() == Window.OK) {
             for (ParameterInfo info : wizard.getParameter()) {
-                viewer.attachParameterInfo(info);
+                // viewer.attachParameterInfo(info);
             }
         }
     }

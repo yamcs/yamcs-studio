@@ -1,6 +1,9 @@
 package org.yamcs.studio.archive;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -27,7 +30,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Timestamp;
 
 public class CreateAnnotationDialog extends TitleAreaDialog {
 
@@ -39,12 +43,12 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
 
     private DateTime startDate;
     private DateTime startTime;
-    private Calendar startTimeValue;
+    private Instant startTimeValue;
     private Button startClosed;
 
     private DateTime stopDate;
     private DateTime stopTime;
-    private Calendar stopTimeValue;
+    private Instant stopTimeValue;
     private Button stopClosed;
 
     private Label colorSelector;
@@ -71,9 +75,9 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
         if (!startClosed.getSelection() && !stopClosed.getSelection()) {
             errorMessage = "At least one of start or stop has to be specified";
         } else if (startClosed.getSelection() && stopClosed.getSelection()) {
-            Calendar start = CreateAnnotationDialog.toCalendar(startDate, startTime);
-            Calendar stop = CreateAnnotationDialog.toCalendar(stopDate, stopTime);
-            if (start.after(stop)) {
+            Instant start = toInstant(startDate, startTime);
+            Instant stop = toInstant(stopDate, stopTime);
+            if (start.isAfter(stop)) {
                 errorMessage = "Stop has to be greater than start";
             }
         }
@@ -123,8 +127,9 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
                 ColorDialog colorDialog = new ColorDialog(colorSelector.getShell());
                 colorDialog.setRGB(colorSelector.getBackground().getRGB());
                 RGB newColor = colorDialog.open();
-                if (newColor != null)
+                if (newColor != null) {
                     colorSelector.setBackground(resourceManager.createColor(newColor));
+                }
             }
         });
 
@@ -166,8 +171,10 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         startTime.addListener(SWT.Selection, e -> validate());
         if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(startTimeValue, TimeCatalogue.getInstance().getZoneId());
+            Calendar cal = GregorianCalendar.from(zdt);
+            startDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            startTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
         }
 
         Composite stopLabelWrapper = new Composite(container, SWT.NONE);
@@ -198,21 +205,23 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
         stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         stopTime.addListener(SWT.Selection, e -> validate());
         if (stopTimeValue != null) {
-            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH), stopTimeValue.get(Calendar.DAY_OF_MONTH));
-            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE), stopTimeValue.get(Calendar.SECOND));
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(stopTimeValue, TimeCatalogue.getInstance().getZoneId());
+            Calendar cal = GregorianCalendar.from(zdt);
+            stopDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            stopTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
         }
 
         return container;
     }
 
-    private static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
+    private static Instant toInstant(DateTime dateWidget, DateTime timeWidget) {
+        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
         cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
         cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
         cal.set(Calendar.MINUTE, timeWidget.getMinutes());
         cal.set(Calendar.SECOND, timeWidget.getSeconds());
         cal.set(Calendar.MILLISECOND, 0);
-        return cal;
+        return cal.toInstant();
     }
 
     /**
@@ -223,8 +232,8 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
         tagValue = tag.getText();
         descriptionValue = description.getText();
         colorValue = colorSelector.getBackground().getRGB();
-        startTimeValue = (startClosed.getSelection()) ? toCalendar(startDate, startTime) : null;
-        stopTimeValue = (stopClosed.getSelection()) ? toCalendar(stopDate, stopTime) : null;
+        startTimeValue = (startClosed.getSelection()) ? toInstant(startDate, startTime) : null;
+        stopTimeValue = (stopClosed.getSelection()) ? toInstant(stopDate, stopTime) : null;
         super.okPressed();
     }
 
@@ -242,35 +251,41 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
 
     public void fillFrom(ArchiveTag tag) {
         tagValue = tag.getName();
-        if (tag.hasStart())
-            setStartTime(tag.getStart());
-        if (tag.hasStop())
-            setStopTime(tag.getStop());
+        if (tag.hasStartUTC()) {
+            startTimeValue = Instant.ofEpochSecond(tag.getStartUTC().getSeconds(), tag.getStartUTC().getNanos());
+        }
+        if (tag.hasStopUTC()) {
+            stopTimeValue = Instant.ofEpochSecond(tag.getStopUTC().getSeconds(), tag.getStopUTC().getNanos());
+        }
         descriptionValue = (tag.hasDescription()) ? tag.getDescription() : "";
-        if (tag.hasColor())
+        if (tag.hasColor()) {
             colorValue = TagTimeline.toRGB(tag);
+        }
     }
 
-    public void setStartTime(long startTime) {
-        startTimeValue = TimeEncoding.toCalendar(startTime);
-        if (startTimeValue != null)
-            startTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+    public void setStartTime(Instant startTime) {
+        startTimeValue = startTime;
     }
 
-    public void setStopTime(long stopTime) {
-        stopTimeValue = TimeEncoding.toCalendar(stopTime);
-        if (stopTimeValue != null)
-            stopTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+    public void setStopTime(Instant stopTime) {
+        stopTimeValue = stopTime;
     }
 
     public ArchiveTag buildArchiveTag() {
         ArchiveTag.Builder atb = ArchiveTag.newBuilder();
         atb.setName(tagValue);
         atb.setColor(String.format("#%02x%02x%02x", colorValue.red, colorValue.green, colorValue.blue));
-        atb.setStart((startTimeValue != null) ? TimeEncoding.fromCalendar(startTimeValue) : TimeEncoding.INVALID_INSTANT);
-        atb.setStop((stopTimeValue != null) ? TimeEncoding.fromCalendar(stopTimeValue) : TimeEncoding.INVALID_INSTANT);
-        if (!descriptionValue.isEmpty())
+        if (startTimeValue != null) {
+            atb.setStartUTC(Timestamp.newBuilder().setSeconds(startTimeValue.getEpochSecond())
+                    .setNanos(startTimeValue.getNano()));
+        }
+        if (stopTimeValue != null) {
+            atb.setStopUTC(Timestamp.newBuilder().setSeconds(stopTimeValue.getEpochSecond())
+                    .setNanos(stopTimeValue.getNano()));
+        }
+        if (!descriptionValue.isEmpty()) {
             atb.setDescription(descriptionValue);
+        }
         return atb.build();
     }
 

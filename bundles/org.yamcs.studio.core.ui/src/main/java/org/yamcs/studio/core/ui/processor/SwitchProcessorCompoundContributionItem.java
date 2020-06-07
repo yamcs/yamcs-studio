@@ -21,11 +21,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
-import org.yamcs.protobuf.ListProcessorsResponse;
+import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.ProcessorInfo;
-import org.yamcs.studio.core.model.ManagementCatalogue;
-
-import com.google.protobuf.InvalidProtocolBufferException;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * A dynamic menu for showing the processors and joining them when selected
@@ -40,23 +38,21 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
     public IContributionItem[] getContributionItems() {
         List<IContributionItem> items = new ArrayList<>();
 
-        ProcessorInfo currentProcessor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
+        String instance = YamcsPlugin.getInstance();
+        String currentProcessor = YamcsPlugin.getProcessor();
         if (currentProcessor != null) {
             items.add(createProcessorItem(currentProcessor));
             items.add(new Separator());
         }
 
         try {
-            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            byte[] data = catalogue.fetchProcessors().get(3000, TimeUnit.MILLISECONDS);
-            ListProcessorsResponse response = ListProcessorsResponse.parseFrom(data);
-            List<ProcessorInfo> processors = new ArrayList<>(response.getProcessorsList());
+            YamcsClient client = YamcsPlugin.getYamcsClient();
+            List<ProcessorInfo> processors = client.listProcessors(instance).get(3000, TimeUnit.MILLISECONDS);
             Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
 
             processors.stream().filter(p -> instance.equals(p.getInstance())).forEach(processor -> {
-                if (currentProcessor != null && !processor.getName().equals(currentProcessor.getName())) {
-                    CommandContributionItem item = createProcessorItem(processor);
+                if (currentProcessor != null && !processor.getName().equals(currentProcessor)) {
+                    CommandContributionItem item = createProcessorItem(processor.getName());
                     items.add(item);
                 }
             });
@@ -66,23 +62,21 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
             // Ignore
         } catch (java.util.concurrent.ExecutionException e) {
 
-        } catch (InvalidProtocolBufferException e) {
-            log.log(Level.SEVERE, "Failed to decode server message", e);
         }
         updateSelection();
 
         return items.toArray(new IContributionItem[0]);
     }
 
-    private CommandContributionItem createProcessorItem(ProcessorInfo processor) {
+    private CommandContributionItem createProcessorItem(String processor) {
         CommandContributionItemParameter itemParameter = new CommandContributionItemParameter(
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow(), null, SWITCH_PROCESSOR_COMMAND,
                 CommandContributionItem.STYLE_RADIO);
 
         HashMap<String, String> params = new HashMap<>();
-        params.put(RadioState.PARAMETER_ID, processor.getName());
+        params.put(RadioState.PARAMETER_ID, processor);
 
-        itemParameter.label = processor.getName();
+        itemParameter.label = processor;
         itemParameter.parameters = params;
 
         return new CommandContributionItem(itemParameter);
@@ -93,8 +87,8 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
         ICommandService commandService = (ICommandService) workbench.getService(ICommandService.class);
         Command command = commandService.getCommand(SWITCH_PROCESSOR_COMMAND);
         try {
-            ProcessorInfo currentProcessor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
-            HandlerUtil.updateRadioState(command, currentProcessor.getName());
+            String currentProcessor = YamcsPlugin.getProcessor();
+            HandlerUtil.updateRadioState(command, currentProcessor);
         } catch (ExecutionException e) {
             log.log(Level.SEVERE, "Could not update radio state", e);
         }

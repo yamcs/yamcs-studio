@@ -4,7 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -34,21 +35,18 @@ import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.ISourceProviderService;
-import org.yamcs.protobuf.EditProcessorRequest;
-import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.utils.TimeEncoding;
 
 public class ArchiveView extends ViewPart
         implements YamcsConnectionListener, InstanceListener, TimeListener, ISourceProviderListener {
@@ -143,7 +141,7 @@ public class ArchiveView extends ViewPart
         seekButton.addListener(SWT.Selection, evt -> {
             JumpToDialog dialog = new JumpToDialog(parent.getShell());
             if (dialog.open() == Dialog.OK) {
-                long seekInstant = TimeEncoding.fromCalendar(dialog.getTime());
+                long seekInstant = dialog.getTime().toEpochMilli();
                 archivePanel.seekReplay(seekInstant);
             }
         });
@@ -220,7 +218,6 @@ public class ArchiveView extends ViewPart
         indexReceiver.setIndexListener(this);
         TimeCatalogue.getInstance().addTimeListener(this);
         YamcsPlugin.getDefault().addYamcsConnectionListener(this);
-        ManagementCatalogue.getInstance().addInstanceListener(this);
 
         updateState();
     }
@@ -235,11 +232,8 @@ public class ArchiveView extends ViewPart
         }
         if (speedFactor > 0) {
             speedCombo.setText(speedFactor + "x");
-
-            ProcessorInfo processor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
-            EditProcessorRequest req = EditProcessorRequest.newBuilder().setSpeed(speedFactor + "x").build();
-            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req);
+            ProcessorClient processor = YamcsPlugin.getProcessorClient();
+            processor.changeSpeed(speedFactor + "x");
         }
     }
 
@@ -248,7 +242,6 @@ public class ArchiveView extends ViewPart
         super.dispose();
         archivePanel.dispose();
 
-        ManagementCatalogue.getInstance().removeInstanceListener(this);
         TimeCatalogue.getInstance().removeTimeListener(this);
         processorState.removeSourceProviderListener(this);
         connectionState.removeSourceProviderListener(this);
@@ -297,9 +290,13 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    public void processTime(long missionTime) {
+    public void processTime(Instant missionTime) {
         SwingUtilities.invokeLater(() -> {
-            archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime);
+            if (missionTime == null) {
+                archivePanel.getDataViewer().getDataView().setCurrentLocator(-1);
+            } else {
+                archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime.toEpochMilli());
+            }
         });
     }
 
@@ -310,13 +307,10 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
-                    cal.add(Calendar.DAY_OF_MONTH, -1);
-                    cal.set(Calendar.HOUR_OF_DAY, 0);
-                    cal.set(Calendar.MINUTE, 0);
-                    cal.set(Calendar.SECOND, 0);
-                    cal.set(Calendar.MILLISECOND, 0);
-                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                            .minus(1, ChronoUnit.DAYS)
+                            .truncatedTo(ChronoUnit.DAYS);
+                    doFilter(TimeInterval.starting(instant));
                 }
             }
         });
@@ -324,13 +318,10 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
-                    cal.add(Calendar.DAY_OF_MONTH, -7);
-                    cal.set(Calendar.HOUR_OF_DAY, 0);
-                    cal.set(Calendar.MINUTE, 0);
-                    cal.set(Calendar.SECOND, 0);
-                    cal.set(Calendar.MILLISECOND, 0);
-                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                            .minus(7, ChronoUnit.DAYS)
+                            .truncatedTo(ChronoUnit.DAYS);
+                    doFilter(TimeInterval.starting(instant));
                 }
             }
         });
@@ -338,13 +329,10 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
-                    cal.add(Calendar.MONTH, -1);
-                    cal.set(Calendar.HOUR_OF_DAY, 0);
-                    cal.set(Calendar.MINUTE, 0);
-                    cal.set(Calendar.SECOND, 0);
-                    cal.set(Calendar.MILLISECOND, 0);
-                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                            .minus(1, ChronoUnit.MONTHS)
+                            .truncatedTo(ChronoUnit.DAYS);
+                    doFilter(TimeInterval.starting(instant));
                 }
             }
         });
@@ -352,13 +340,10 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
-                    cal.add(Calendar.MONTH, -3);
-                    cal.set(Calendar.HOUR_OF_DAY, 0);
-                    cal.set(Calendar.MINUTE, 0);
-                    cal.set(Calendar.SECOND, 0);
-                    cal.set(Calendar.MILLISECOND, 0);
-                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                            .minus(3, ChronoUnit.MONTHS)
+                            .truncatedTo(ChronoUnit.DAYS);
+                    doFilter(TimeInterval.starting(instant));
                 }
             }
         });
@@ -366,13 +351,10 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
-                    cal.add(Calendar.MONTH, -12);
-                    cal.set(Calendar.HOUR_OF_DAY, 0);
-                    cal.set(Calendar.MINUTE, 0);
-                    cal.set(Calendar.SECOND, 0);
-                    cal.set(Calendar.MILLISECOND, 0);
-                    doFilter(TimeInterval.starting(TimeEncoding.fromCalendar(cal)));
+                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                            .minus(1, ChronoUnit.YEARS)
+                            .truncatedTo(ChronoUnit.DAYS);
+                    doFilter(TimeInterval.starting(instant));
                 }
             }
         });

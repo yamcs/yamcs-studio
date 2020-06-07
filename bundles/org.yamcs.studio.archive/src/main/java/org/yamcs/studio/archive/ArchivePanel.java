@@ -1,7 +1,5 @@
 package org.yamcs.studio.archive;
 
-import static org.yamcs.utils.TimeEncoding.INVALID_INSTANT;
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -12,6 +10,7 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,17 +23,13 @@ import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.EditProcessorRequest;
-import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.protobuf.Yamcs.ArchiveRecord;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.utils.Prefs;
-import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.Timestamp;
 
 /**
  * Main panel of the ArchiveBrowser
@@ -57,8 +52,8 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     int loadCount, recCount;
     boolean passiveUpdate = false;
 
-    long dataStart = TimeEncoding.INVALID_INSTANT;
-    long dataStop = TimeEncoding.INVALID_INSTANT;
+    long dataStart = -1;
+    long dataStop = -1;
 
     volatile boolean lowOnMemoryReported = false;
 
@@ -113,7 +108,7 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             System.gc();
             lowOnMemoryReported = false;
         }
-        dataStart = dataStop = INVALID_INSTANT;
+        dataStart = dataStop = -1;
     }
 
     static protected void debugLog(String s) {
@@ -200,13 +195,13 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
         dataViewer.receiveArchiveRecords(ir);
         long start, stop;
         for (ArchiveRecord r : ir.getRecordsList()) {
-            start = r.getYamcsFirst();
-            stop = r.getYamcsLast();
+            start = Instant.ofEpochSecond(r.getFirst().getSeconds(), r.getFirst().getNanos()).toEpochMilli();
+            stop = Instant.ofEpochSecond(r.getLast().getSeconds(), r.getLast().getNanos()).toEpochMilli();
 
-            if ((dataStart == INVALID_INSTANT) || (start < dataStart)) {
+            if ((dataStart == -1) || (start < dataStart)) {
                 dataStart = start;
             }
-            if ((dataStop == INVALID_INSTANT) || (stop > dataStop)) {
+            if ((dataStop == -1) || (stop > dataStop)) {
                 dataStop = stop;
             }
 
@@ -229,26 +224,19 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
     }
 
     public void seekReplay(long newPosition) {
-        if (newPosition == TimeEncoding.INVALID_INSTANT) {
+        if (newPosition == -1) {
             return;
         }
 
         Display.getDefault().asyncExec(() -> {
-            ProcessorInfo processor = ManagementCatalogue.getInstance().getCurrentProcessorInfo();
-            if (processor == null || !processor.hasReplay()) {
-                return;
-            }
-
-            Timestamp seekTime = TimeEncoding.toProtobufTimestamp(newPosition);
-            EditProcessorRequest req = EditProcessorRequest.newBuilder().setSeek(seekTime).build();
-            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            catalogue.editProcessorRequest(processor.getInstance(), processor.getName(), req);
+            ProcessorClient processorClient = YamcsPlugin.getProcessorClient();
+            processorClient.seek(Instant.ofEpochMilli(newPosition));
         });
     }
 
     public synchronized void archiveLoadFinished() {
         loadCount = 0;
-        if ((dataStart != INVALID_INSTANT) && (dataStop != INVALID_INSTANT)) {
+        if (dataStart != -1 && dataStop != -1) {
             dataViewer.archiveLoadFinished();
         }
 

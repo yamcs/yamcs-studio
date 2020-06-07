@@ -27,8 +27,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.client.storage.ObjectId;
+import org.yamcs.client.storage.StorageClient;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsStudioClient;
 
 public class SaveStackToYamcsHandler extends AbstractHandler {
 
@@ -66,9 +67,9 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
                 throw new ExecutionException("Unsupported encoding", e);
             }
 
-            YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-            String url = "/buckets/_global/stacks/objects/" + objectName;
-            yamcsClient.post(url, xml.getBytes(StandardCharsets.UTF_8)).exceptionally(err -> {
+            StorageClient storage = YamcsPlugin.getStorageClient();
+            ObjectId id = ObjectId.of("stacks", objectName);
+            storage.uploadObject(id, xml.getBytes(StandardCharsets.UTF_8)).exceptionally(err -> {
                 MessageDialog.openError(shell, "Export Command Stack",
                         "Unable to save stack.\nDetails:" + err.getMessage());
                 return null;

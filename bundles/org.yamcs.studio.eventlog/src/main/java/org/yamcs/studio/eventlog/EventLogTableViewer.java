@@ -1,5 +1,6 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -241,7 +242,9 @@ public class EventLogTableViewer extends TableViewer {
                     @Override
                     public String getText(Object element) {
                         Event event = ((EventLogItem) element).event;
-                        return YamcsUIPlugin.getDefault().formatInstant(event.getGenerationTime());
+                        Instant generationTime = Instant.ofEpochSecond(event.getGenerationTime().getSeconds(),
+                                event.getGenerationTime().getNanos());
+                        return YamcsUIPlugin.getDefault().formatInstant(generationTime);
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -320,7 +323,9 @@ public class EventLogTableViewer extends TableViewer {
                     @Override
                     public String getText(Object element) {
                         Event event = ((EventLogItem) element).event;
-                        return YamcsUIPlugin.getDefault().formatInstant(event.getReceptionTime());
+                        Instant receptionTime = Instant.ofEpochSecond(event.getReceptionTime().getSeconds(),
+                                event.getReceptionTime().getNanos());
+                        return YamcsUIPlugin.getDefault().formatInstant(receptionTime);
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));

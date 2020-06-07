@@ -12,7 +12,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.utils.StringConverter;
+import org.yamcs.studio.core.StringConverter;
 
 public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
 
@@ -48,7 +48,7 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
                     text.append(rec.getSequenceNumber());
                     break;
                 case PARAM_BIN:
-                	String hexString = StringConverter.arrayToHexString(rec.getBinary().toByteArray());
+                    String hexString = StringConverter.arrayToHexString(rec.getBinary().toByteArray());
                     text.append(hexString);
                     break;
                 default:

@@ -21,7 +21,6 @@ public class Activator extends AbstractUIPlugin {
 
         pvCatalogue = new PVCatalogue();
         severityHandler = new SeverityHandlerSound();
-        DisplayOpener.init();
     }
 
     @Override

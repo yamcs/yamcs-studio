@@ -1,10 +1,11 @@
 package org.yamcs.studio.core.ui;
 
+import java.time.Instant;
+
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
-import org.yamcs.utils.TimeEncoding;
 
 public class MissionTimeStatusLineContributionItem extends StatusLineContributionItem implements TimeListener {
 
@@ -34,12 +35,12 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
     }
 
     @Override
-    public void processTime(long missionTime) {
+    public void processTime(Instant missionTime) {
         if (isDisposed()) {
             return;
         }
         Display.getDefault().asyncExec(() -> {
-            if (missionTime == TimeEncoding.INVALID_INSTANT) {
+            if (missionTime == null) {
                 setText(DEFAULT_TEXT);
             } else {
                 setText(YamcsUIPlugin.getDefault().formatInstant(missionTime, true));

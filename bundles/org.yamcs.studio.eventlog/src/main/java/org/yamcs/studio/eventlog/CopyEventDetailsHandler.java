@@ -1,5 +1,6 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
 import java.util.Iterator;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -47,10 +48,14 @@ public class CopyEventDetailsHandler extends AbstractHandler {
                     text.append(rec.getSource());
                     break;
                 case PARAM_GENTIME:
-                    text.append(rec.getGenerationTimeUTC());
+                    Instant generationTime = Instant.ofEpochSecond(rec.getGenerationTime().getSeconds(),
+                            rec.getGenerationTime().getNanos());
+                    text.append(generationTime.toString());
                     break;
                 case PARAM_RECTIME:
-                    text.append(rec.getReceptionTimeUTC());
+                    Instant receptionTime = Instant.ofEpochSecond(rec.getReceptionTime().getSeconds(),
+                            rec.getReceptionTime().getNanos());
+                    text.append(receptionTime.toString());
                     break;
                 case PARAM_SEQNO:
                     text.append(rec.getSeqNumber());

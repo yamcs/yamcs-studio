@@ -18,15 +18,14 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.IssueCommandRequest;
-import org.yamcs.protobuf.IssueCommandResponse;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
 import org.yamcs.studio.commanding.cmdhist.CommandHistoryView;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackStatus;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 public class IssueAllCommandsHandler extends AbstractHandler {
 
@@ -124,8 +123,6 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             }
 
             StackedCommand command = CommandStack.getInstance().getCommands().get(commandIndex);
-            IssueCommandRequest req = command.toIssueCommandRequest().build();
-            CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
             String qname;
             try {
                 qname = command.getSelectedAliasEncoded();
@@ -133,16 +130,18 @@ public class IssueAllCommandsHandler extends AbstractHandler {
                 throw new ExecutionException(e1.getMessage());
             }
 
-            catalogue.sendCommand("realtime", qname, req).whenComplete((data, exc) -> {
+            ProcessorClient processor = YamcsPlugin.getProcessorClient();
+            CommandBuilder builder = processor.prepareCommand(qname)
+                    .withSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
+            if (command.getComment() != null) {
+                builder.withComment(command.getComment());
+            }
+            command.getAssignments().forEach((argument, value) -> {
+                builder.withArgument(argument.getName(), value);
+            });
+
+            builder.issue().whenComplete((response, exc) -> {
                 if (exc == null) {
-                    try {
-                        IssueCommandResponse response = IssueCommandResponse.newBuilder()
-                                .mergeFrom(data)
-                                .build();
-                        command.setCommandId(response.getId());
-                    } catch (InvalidProtocolBufferException e) {
-                        throw new RuntimeException(e);
-                    }
                     try {
                         command.setStackedState(StackedState.ISSUED);
                         monitor.worked(1);

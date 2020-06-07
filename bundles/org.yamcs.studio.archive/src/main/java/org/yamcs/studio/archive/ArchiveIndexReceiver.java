@@ -1,20 +1,15 @@
 package org.yamcs.studio.archive;
 
-import java.util.logging.Level;
+import java.time.Instant;
 import java.util.logging.Logger;
 
-import org.yamcs.client.ClientException;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.IndexOptions;
 import org.yamcs.protobuf.CreateTagRequest;
 import org.yamcs.protobuf.EditTagRequest;
-import org.yamcs.protobuf.ListTagsResponse;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.model.ArchiveCatalogue;
-import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.utils.TimeEncoding;
-
-import com.google.protobuf.InvalidProtocolBufferException;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class ArchiveIndexReceiver {
 
@@ -33,26 +28,21 @@ public class ArchiveIndexReceiver {
             return;
         }
 
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        if (instance != null) {
-            ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-            catalogue.downloadIndexes(instance, interval, data -> {
-                try {
-                    IndexResult response = IndexResult.parseFrom(data);
-                    log.fine(String.format("Received %d archive records", response.getRecordsCount()));
-                    archiveView.receiveArchiveRecords(response);
-                } catch (InvalidProtocolBufferException e) {
-                    throw new ClientException("Failed to decode server message", e);
-                }
-            }).whenComplete((data, exc) -> {
-                if (exc == null) {
-                    log.info("Done receiving archive records.");
-                    archiveView.receiveArchiveRecordsFinished();
-                    receiving = false;
-                } else {
-                    archiveView.receiveArchiveRecordsError(exc.toString());
-                }
-            });
+        ArchiveClient archive = YamcsPlugin.getArchiveClient();
+        if (archive != null) {
+            archive.streamIndex(response -> {
+                log.fine(String.format("Received %d archive records", response.getRecordsCount()));
+                archiveView.receiveArchiveRecords(response);
+            }, interval.getStart(), interval.getStop(), IndexOptions.filter("tm", "pp", "commands", "completeness"))
+                    .whenComplete((data, exc) -> {
+                        if (exc == null) {
+                            log.info("Done receiving archive records.");
+                            archiveView.receiveArchiveRecordsFinished();
+                            receiving = false;
+                        } else {
+                            archiveView.receiveArchiveRecordsError(exc.toString());
+                        }
+                    });
         } else {
             archiveView.receiveArchiveRecordsFinished();
             receiving = false;
@@ -65,18 +55,12 @@ public class ArchiveIndexReceiver {
             return;
         }
 
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        if (instance != null) {
-            ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-            catalogue.listTags(instance, interval).whenComplete((data, exc) -> {
+        ArchiveClient archive = YamcsPlugin.getArchiveClient();
+        if (archive != null) {
+            archive.listTags(interval.getStart(), interval.getStop()).whenComplete((tags, exc) -> {
                 if (exc == null) {
-                    try {
-                        ListTagsResponse response = ListTagsResponse.parseFrom(data);
-                        archiveView.receiveTags(response.getTagList());
-                        archiveView.receiveTagsFinished();
-                    } catch (InvalidProtocolBufferException e) {
-                        log.log(Level.SEVERE, "Failed to decode server message", e);
-                    }
+                    archiveView.receiveTags(tags);
+                    archiveView.receiveTagsFinished();
                 }
                 receiving = false;
             });
@@ -98,21 +82,17 @@ public class ArchiveIndexReceiver {
             requestb.setDescription(tag.getDescription());
         }
         if (tag.hasStart()) {
-            requestb.setStart(TimeEncoding.toString(tag.getStart()));
+            Instant start = Instant.ofEpochSecond(tag.getStartUTC().getSeconds(), tag.getStartUTC().getNanos());
+            requestb.setStart(start.toString());
         }
         if (tag.hasStop()) {
-            requestb.setStop(TimeEncoding.toString(tag.getStop()));
+            Instant stop = Instant.ofEpochSecond(tag.getStopUTC().getSeconds(), tag.getStopUTC().getNanos());
+            requestb.setStop(stop.toString());
         }
-        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.createTag(requestb.build()).whenComplete((data, exc) -> {
+        ArchiveClient archive = YamcsPlugin.getArchiveClient();
+        archive.createTag(requestb.build()).whenComplete((response, exc) -> {
             if (exc == null) {
-                ArchiveTag response;
-                try {
-                    response = ArchiveTag.parseFrom(data);
-                    archiveView.tagAdded(response);
-                } catch (InvalidProtocolBufferException e) {
-                    log.log(Level.SEVERE, "Failed to decode server message", e);
-                }
+                archiveView.tagAdded(response);
             }
         });
     }
@@ -129,15 +109,18 @@ public class ArchiveIndexReceiver {
             requestb.setDescription(newTag.getDescription());
         }
         if (newTag.hasStart()) {
-            requestb.setStart(TimeEncoding.toString(newTag.getStart()));
+            Instant start = Instant.ofEpochSecond(newTag.getStartUTC().getSeconds(), newTag.getStartUTC().getNanos());
+            requestb.setStart(start.toString());
         }
         if (newTag.hasStop()) {
-            requestb.setStop(TimeEncoding.toString(newTag.getStop()));
+            Instant stop = Instant.ofEpochSecond(newTag.getStopUTC().getSeconds(), newTag.getStopUTC().getNanos());
+            requestb.setStop(stop.toString());
         }
-        long tagTime = oldTag.hasStart() ? oldTag.getStart() : 0;
-        int tagId = oldTag.getId();
-        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.editTag(tagTime, tagId, requestb.build()).thenRun(() -> {
+
+        requestb.setTagTime(oldTag.hasStart() ? oldTag.getStart() : 0);
+        requestb.setTagId(oldTag.getId());
+        ArchiveClient archive = YamcsPlugin.getArchiveClient();
+        archive.updateTag(requestb.build()).thenRun(() -> {
             archiveView.tagChanged(oldTag, newTag);
         });
     }
@@ -145,8 +128,8 @@ public class ArchiveIndexReceiver {
     public void deleteTag(ArchiveTag tag) {
         long tagTime = tag.hasStart() ? tag.getStart() : 0;
         int tagId = tag.getId();
-        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.deleteTag(tagTime, tagId).thenRun(() -> {
+        ArchiveClient archive = YamcsPlugin.getArchiveClient();
+        archive.deleteTag(tagTime, tagId).thenRun(() -> {
             archiveView.tagRemoved(tag);
         });
     }

@@ -1,11 +1,13 @@
 package org.yamcs.studio.core.ui;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -22,7 +24,6 @@ import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.utils.TimeEncoding;
 
 public class YamcsUIPlugin extends AbstractUIPlugin {
 
@@ -35,18 +36,12 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
     private SimpleDateFormat format;
     private SimpleDateFormat tzFormat;
 
-    // private EventLogViewActivator eventLogActivator; // TODO remove? very annoying actually
-
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
 
         plugin = this;
-        TimeEncoding.setUp();
         ConnectionUIHelper.getInstance();
-
-        // TODO should maybe move this to eventlog-plugin, but verify lazy behaviour
-        // eventLogActivator = new EventLogViewActivator(); // TODO remove? very annoying actually
 
         // Warning to future self: don't access preference store here. It triggers before workspace selection, causing
         // chaos.
@@ -71,7 +66,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
      * Formats a Yamcs instant. Timezone information is not added. Must be called on SWT thread due to reuse of
      * dateformatter.
      */
-    public String formatInstant(long instant) {
+    public String formatInstant(Instant instant) {
         return formatInstant(instant, false);
     }
 
@@ -81,14 +76,14 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
      * @param tzOffset
      *            whether timezone offset is added to the output string.
      */
-    public String formatInstant(long instant, boolean tzOffset) {
+    public String formatInstant(Instant instant, boolean tzOffset) {
         if (format == null) {
             IPreferenceStore store = getPreferenceStore();
             String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
             setDateFormat(pattern);
         }
-        // TODO Improve this. Don't use Date
-        Calendar cal = TimeEncoding.toCalendar(instant);
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, TimeCatalogue.getInstance().getZoneId());
+        Calendar cal = GregorianCalendar.from(zdt);
         cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
         if (tzOffset) {
             tzFormat.setTimeZone(cal.getTimeZone());
@@ -164,9 +159,5 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
                     .getSourceProvider(ProcessorStateProvider.STATE_KEY_PROCESSING);
             state.updateState(processorInfo);
         }
-    }
-
-    public ImageDescriptor getImageDescriptor(String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 }

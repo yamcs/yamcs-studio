@@ -33,10 +33,11 @@ public class ConnectionPreferences {
     public static YamcsConfiguration getLastUsedConfiguration() {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);
         String confString = prefs.get(KEY_LAST_USED_CONFIGURATION, null);
-        if (confString != null)
+        if (confString != null) {
             return new Gson().fromJson(confString, YamcsConfiguration.class);
-        else
+        } else {
             return null;
+        }
     }
 
     public static void setLastUsedConfiguration(YamcsConfiguration conf) {

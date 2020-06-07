@@ -21,8 +21,6 @@ public class EventLogView extends ViewPart {
 
         eventlog.attachToSite(getViewSite());
         createActions(getSite().getShell());
-
-        eventlog.connect();
     }
 
     private void createActions(Shell shell) {

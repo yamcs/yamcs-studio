@@ -1,6 +1,9 @@
 package org.yamcs.studio.archive;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -25,13 +28,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.yamcs.protobuf.ClientInfo;
+import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.CreateProcessorRequest;
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.utils.TimeEncoding;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -49,11 +51,11 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     private DateTime startDate;
     private DateTime startTime;
-    private Calendar startTimeValue;
+    private Instant startTimeValue;
 
     private DateTime stopDate;
     private DateTime stopTime;
-    private Calendar stopTimeValue;
+    private Instant stopTimeValue;
 
     private Button stepByStepButton;
 
@@ -73,9 +75,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     private void validate() {
         String errorMessage = null;
-        Calendar start = RCPUtils.toCalendar(startDate, startTime);
-        Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
-        if (start.after(stop)) {
+        Instant start = RCPUtils.toInstant(startDate, startTime);
+        Instant stop = RCPUtils.toInstant(stopDate, stopTime);
+        if (start.isAfter(stop)) {
             errorMessage = "Stop has to be greater than start";
         }
 
@@ -109,10 +111,10 @@ public class CreateReplayDialog extends TitleAreaDialog {
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         startTime.addListener(SWT.Selection, e -> validate());
         if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH),
-                    startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE),
-                    startTimeValue.get(Calendar.SECOND));
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(startTimeValue, TimeCatalogue.getInstance().getZoneId());
+            Calendar cal = GregorianCalendar.from(zdt);
+            startDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            startTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
         }
 
         lbl = new Label(container, SWT.NONE);
@@ -130,10 +132,10 @@ public class CreateReplayDialog extends TitleAreaDialog {
         stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         stopTime.addListener(SWT.Selection, e -> validate());
         if (stopTimeValue != null) {
-            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH),
-                    stopTimeValue.get(Calendar.DAY_OF_MONTH));
-            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE),
-                    stopTimeValue.get(Calendar.SECOND));
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(stopTimeValue, TimeCatalogue.getInstance().getZoneId());
+            Calendar cal = GregorianCalendar.from(zdt);
+            stopDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            stopTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
         }
 
         lbl = new Label(container, SWT.NONE);
@@ -200,11 +202,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
     protected void okPressed() {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
 
-        ClientInfo ci = ManagementCatalogue.getInstance().getCurrentClientInfo();
-        CreateProcessorRequest req = toCreateProcessorRequest(ci);
-
-        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        catalogue.createProcessorRequest(req).whenComplete((data, exc) -> {
+        CreateProcessorRequest req = toCreateProcessorRequest();
+        YamcsClient client = YamcsPlugin.getYamcsClient();
+        client.createProcessor(req).whenComplete((processorClient, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     CreateReplayDialog.super.okPressed();
@@ -225,19 +225,15 @@ public class CreateReplayDialog extends TitleAreaDialog {
     }
 
     public void initialize(TimeInterval interval, List<String> pps) {
-        startTimeValue = TimeEncoding.toCalendar(interval.calculateStart());
-        startTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
-
-        stopTimeValue = TimeEncoding.toCalendar(interval.calculateStop());
-        stopTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
-
+        startTimeValue = interval.calculateStart();
+        stopTimeValue = interval.calculateStop();
         ppValue = pps;
     }
 
-    private CreateProcessorRequest toCreateProcessorRequest(ClientInfo ci) {
+    private CreateProcessorRequest toCreateProcessorRequest() {
         JsonObject spec = new JsonObject();
-        spec.addProperty("start", TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime)));
-        spec.addProperty("stop", TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime)));
+        spec.addProperty("utcStart", RCPUtils.toInstant(startDate, startTime).toString());
+        spec.addProperty("utcStop", RCPUtils.toInstant(stopDate, stopTime).toString());
 
         spec.add("packetRequest", new JsonObject());
 
@@ -262,17 +258,11 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
         String specJson = new Gson().toJson(spec);
         CreateProcessorRequest.Builder resultb = CreateProcessorRequest.newBuilder()
-                .setInstance(ci.getInstance())
+                .setInstance(YamcsPlugin.getInstance())
                 .setName(name.getText())
                 .setType("Archive")
-                .setConfig(specJson)
-                .addClientId(ci.getId());
+                .setConfig(specJson);
 
         return resultb.build();
-    }
-
-    @Override
-    public boolean close() {
-        return super.close();
     }
 }

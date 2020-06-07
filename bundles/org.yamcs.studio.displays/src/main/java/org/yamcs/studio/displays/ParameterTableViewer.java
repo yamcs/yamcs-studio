@@ -1,5 +1,6 @@
 package org.yamcs.studio.displays;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,14 +22,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.utils.StringConverter;
+
+import com.google.protobuf.Timestamp;
 
 public class ParameterTableViewer extends TableViewer implements ParameterListener {
 
@@ -114,7 +115,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 if (value == null) {
                     return "-";
                 }
-                return StringConverter.toString(value.getEngValue(), false);
+                return StringConverter.toString(value.getEngValue());
             }
         });
 
@@ -128,7 +129,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 if (value == null) {
                     return "-";
                 }
-                return StringConverter.toString(value.getRawValue(), false);
+                return StringConverter.toString(value.getRawValue());
             }
         });
 
@@ -142,7 +143,9 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 if (value == null) {
                     return "-";
                 }
-                return YamcsUIPlugin.getDefault().formatInstant(value.getGenerationTime());
+                Timestamp proto = value.getGenerationTime();
+                Instant generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                return YamcsUIPlugin.getDefault().formatInstant(generationTime);
             }
         });
 
@@ -156,7 +159,9 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 if (value == null) {
                     return "-";
                 }
-                return YamcsUIPlugin.getDefault().formatInstant(value.getAcquisitionTime());
+                Timestamp proto = value.getAcquisitionTime();
+                Instant receptionTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                return YamcsUIPlugin.getDefault().formatInstant(receptionTime);
             }
         });
 
@@ -168,7 +173,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 .find(Platform.getBundle("org.yamcs.studio.displays"), new Path(path), null));
     }
 
-    public void attachParameterInfo(ParameterInfo info) {
+    /*public void attachParameterInfo(ParameterInfo info) {
         NamedObjectList list = NamedObjectList.newBuilder()
                 .addList(info.getAlias(0)).build();
         ParameterCatalogue.getInstance().subscribeParameters(list);
@@ -176,7 +181,7 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
             values.put(info.getQualifiedName(), null);
         }
         refresh();
-    }
+    }*/
 
     public void removeParameter(String info) {
         values.remove(info);

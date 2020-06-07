@@ -11,6 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -195,7 +196,9 @@ public class IndexBox extends Box {
                 }
                 TreeSet<IndexChunkSpec> al = tmData.get(id.getName());
                 String info = r.hasInfo() ? r.getInfo() : null;
-                IndexChunkSpec tnew = new IndexChunkSpec(r.getYamcsFirst(), r.getYamcsLast(), r.getNum(), info);
+                long first = Instant.ofEpochSecond(r.getFirst().getSeconds()).toEpochMilli();
+                long last = Instant.ofEpochSecond(r.getLast().getSeconds()).toEpochMilli();
+                IndexChunkSpec tnew = new IndexChunkSpec(first, last, r.getNum(), info);
                 IndexChunkSpec told = al.floor(tnew);
                 if ((told == null) || (mergeTime == -1) || (!told.merge(tnew, mergeTime))) {
                     al.add(tnew);

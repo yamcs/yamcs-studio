@@ -1,11 +1,11 @@
 package org.yamcs.studio.core;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.utils.TimeEncoding;
 
 /**
  * Time interval where both ends can be open
@@ -13,12 +13,10 @@ import org.yamcs.utils.TimeEncoding;
 public class TimeInterval implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private long start;
-    private long stop;
-    private boolean hasStart = false;
-    private boolean hasStop = false;
+    private Instant start;
+    private Instant stop;
 
-    public TimeInterval(long start, long stop) {
+    public TimeInterval(Instant start, Instant stop) {
         setStart(start);
         setStop(stop);
     }
@@ -29,91 +27,75 @@ public class TimeInterval implements Serializable {
     public TimeInterval() {
     }
 
-    public static TimeInterval starting(long start) {
+    public static TimeInterval starting(Instant start) {
         TimeInterval range = new TimeInterval();
         range.setStart(start);
         return range;
     }
 
     public boolean hasStart() {
-        return hasStart;
+        return start != null;
     }
 
     public boolean hasStop() {
-        return hasStop;
+        return stop != null;
     }
 
-    public void setStart(long start) {
-        hasStart = true;
+    public void setStart(Instant start) {
         this.start = start;
     }
 
-    public long getStart() {
+    public Instant getStart() {
         return start;
     }
 
-    public String getStartUTC() {
-        return TimeEncoding.toString(start);
-    }
-
-    public void setStop(long stop) {
-        hasStop = true;
+    public void setStop(Instant stop) {
         this.stop = stop;
     }
 
-    public long getStop() {
+    public Instant getStop() {
         return stop;
     }
 
-    public String getStopUTC() {
-        return TimeEncoding.toString(stop);
-    }
-
-    public long calculateStart() {
-        if (hasStart)
+    public Instant calculateStart() {
+        if (start != null) {
             return start;
-        else {
-            Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            return TimeEncoding.fromCalendar(cal);
+        } else {
+            return TimeCatalogue.getInstance().getMissionTime(true)
+                    .truncatedTo(ChronoUnit.DAYS);
         }
     }
 
-    public long calculateStop() {
-        if (hasStop)
+    public Instant calculateStop() {
+        if (stop != null) {
             return stop;
-        else {
-            Calendar cal = TimeCatalogue.getInstance().getMissionTimeAsCalendar(true);
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            return TimeEncoding.fromCalendar(cal);
+        } else {
+            return TimeCatalogue.getInstance().getMissionTime(true)
+                    .plus(1, ChronoUnit.MONTHS)
+                    .truncatedTo(ChronoUnit.DAYS);
         }
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof TimeInterval))
+        if (!(obj instanceof TimeInterval)) {
             return false;
+        }
         TimeInterval other = (TimeInterval) obj;
-        return Objects.equals(start, other.start) && Objects.equals(stop, other.stop)
-                && Objects.equals(hasStart, other.hasStart) && Objects.equals(hasStop, other.hasStop);
+        return Objects.equals(start, other.start) && Objects.equals(stop, other.stop);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        if (hasStart)
+        if (start != null) {
             sb.append(start);
+        }
         sb.append(",");
-        if (hasStop)
+        if (stop != null) {
             sb.append(stop);
+        }
         sb.append(")");
         return sb.toString();
     }

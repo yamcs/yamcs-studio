@@ -1,21 +1,19 @@
 package org.yamcs.studio.core.model;
 
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.yamcs.client.WebSocketClientCallback;
-import org.yamcs.client.WebSocketRequest;
-import org.yamcs.protobuf.TimeInfo;
-import org.yamcs.protobuf.WebSocketServerMessage.WebSocketSubscriptionData;
+import org.yamcs.client.TimeSubscription;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsStudioClient;
-import org.yamcs.utils.TimeEncoding;
 
-public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
+public class TimeCatalogue extends Catalogue {
 
-    private volatile long currentTime = TimeEncoding.INVALID_INSTANT;
+    private volatile Instant currentTime;
+
+    private TimeSubscription subscription;
     private Set<TimeListener> timeListeners = new CopyOnWriteArraySet<>();
 
     public static TimeCatalogue getInstance() {
@@ -33,31 +31,16 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
         timeListeners.remove(listener);
     }
 
-    public long getMissionTime() {
+    public Instant getMissionTime() {
         return getMissionTime(false);
     }
 
-    public long getMissionTime(boolean wallClockIfUnset) {
-        long t = currentTime;
-        if (wallClockIfUnset && t == TimeEncoding.INVALID_INSTANT) {
-            t = TimeEncoding.getWallclockTime();
+    public Instant getMissionTime(boolean wallClockIfUnset) {
+        Instant t = currentTime;
+        if (wallClockIfUnset && t == null) {
+            t = Instant.now();
         }
         return t;
-    }
-
-    public Calendar getMissionTimeAsCalendar() {
-        return getMissionTimeAsCalendar(false);
-    }
-
-    public Calendar getMissionTimeAsCalendar(boolean wallClockIfUnset) {
-        long t = getMissionTime(wallClockIfUnset);
-        if (t == TimeEncoding.INVALID_INSTANT) {
-            return null;
-        }
-
-        Calendar cal = TimeEncoding.toCalendar(t);
-        cal.setTimeZone(getTimeZone());
-        return cal;
     }
 
     public TimeZone getTimeZone() {
@@ -68,34 +51,25 @@ public class TimeCatalogue implements Catalogue, WebSocketClientCallback {
         return TimeZone.getDefault();
     }
 
-    @Override
-    public void onYamcsConnected() {
-        YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        yamcsClient.subscribe(new WebSocketRequest("time", "subscribe"), this);
-        distributeTime(TimeEncoding.INVALID_INSTANT);
+    public ZoneId getZoneId() {
+        return ZoneId.systemDefault();
     }
 
     @Override
-    public void onMessage(WebSocketSubscriptionData msg) {
-        if (msg.hasTimeInfo()) {
-            TimeInfo timeInfo = msg.getTimeInfo();
-            long instant = TimeEncoding.fromProtobufTimestamp(timeInfo.getCurrentTime());
-            distributeTime(instant);
+    public void changeInstance(String instance) {
+        if (subscription != null) {
+            subscription.cancel(true);
+            timeListeners.forEach(l -> l.processTime(null));
         }
-    }
 
-    @Override
-    public void instanceChanged(String oldInstance, String newInstance) {
-        distributeTime(TimeEncoding.INVALID_INSTANT);
-    }
-
-    @Override
-    public void onYamcsDisconnected() {
-        distributeTime(TimeEncoding.INVALID_INSTANT);
-    }
-
-    private void distributeTime(long time) {
-        currentTime = time;
-        timeListeners.forEach(l -> l.processTime(time));
+        if (instance == null) {
+            timeListeners.forEach(l -> l.processTime(null));
+        } else {
+            subscription = YamcsPlugin.getYamcsClient().createTimeSubscription();
+            subscription.addMessageListener(proto -> {
+                currentTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                timeListeners.forEach(l -> l.processTime(currentTime));
+            });
+        }
     }
 }

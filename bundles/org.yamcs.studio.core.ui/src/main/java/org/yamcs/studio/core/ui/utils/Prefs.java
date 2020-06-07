@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.prefs.Preferences;
 
 import org.yamcs.studio.core.TimeInterval;
@@ -18,20 +20,20 @@ public class Prefs {
     private Preferences prefs = Preferences.userNodeForPackage(Prefs.class);
 
     public void saveRange(TimeInterval range) {
-        putObject(prefs, "archiveRange", range);
+        putObject(prefs, "archiveRange2", range);
     }
 
     public TimeInterval getInterval() {
         TimeInterval range;
         try {
-            range = (TimeInterval) getObject(prefs, "archiveRange");
+            range = (TimeInterval) getObject(prefs, "archiveRange2");
         } catch (ClassNotFoundException e) {
             range = null; // Keep this around for a while until we migrate prefs
                           // to gson. TimeInterval was moved multiple times.
         }
         if (range == null) {
-            long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
-            range = TimeInterval.starting(missionTime - 30 * 24 * 3600);
+            Instant missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+            range = TimeInterval.starting(missionTime.minus(1, ChronoUnit.MONTHS));
         }
         return range;
     }
@@ -61,8 +63,9 @@ public class Prefs {
 
     static public Object getObject(Preferences prefs, String key) throws ClassNotFoundException {
         byte[] raw = prefs.getByteArray(key, null);
-        if (raw == null)
+        if (raw == null) {
             return null;
+        }
         try {
             return bytes2Object(raw);
         } catch (IOException e) {

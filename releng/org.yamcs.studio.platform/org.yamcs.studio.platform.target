@@ -18,7 +18,7 @@
             <unit id="org.apache.velocity" version="1.5.0.v200905192330"/>
             <unit id="org.eclipse.equinox.sdk.feature.group" version="3.20.0.v20191122-2104"/>
             <unit id="org.eclipse.platform.ide" version="4.14.0.I20191210-0610"/>
-            <unit id="org.eclipse.rcp.feature.group" version=" 4.14.0.v20191210-0610"/>
+            <unit id="org.eclipse.rcp.feature.group" version="4.14.0.v20191210-0610"/>
             <unit id="org.eclipse.gef.sdk.feature.group" version="3.11.0.201606061308"/>
             <unit id="org.eclipse.emf.sdk.feature.group" version="2.20.0.v20191028-0905"/>
             <unit id="org.eclipse.nebula.visualization.feature.feature.group" version="2.1.0.201812241324"/>
@@ -31,6 +31,10 @@
             <unit id="org.yaml.snakeyaml" version="1.14.0.v201604211500"/>
             <unit id="org.yamcs.p2.batik" version="1.11.0"/>
             <unit id="org.yamcs.p2.client" version="4.10.8"/>
+        </location>
+        <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+            <repository location="http://localhost:7800"/>
+            <unit id="org.yamcs.p2.client" version="4.11.0.20200606194116"/>
         </location>
     </locations>
 </target>

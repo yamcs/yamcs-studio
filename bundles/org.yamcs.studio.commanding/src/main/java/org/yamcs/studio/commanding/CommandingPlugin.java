@@ -28,7 +28,7 @@ public class CommandingPlugin extends AbstractUIPlugin {
     }
 
     public ImageDescriptor getImageDescriptor(String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
+        return ImageDescriptor.createFromURL(getBundle().getEntry(path));
     }
 
     public IDialogSettings getCommandHistoryTableSettings() {

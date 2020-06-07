@@ -1,5 +1,6 @@
 package org.yamcs.studio.commanding.cmdhist;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -98,7 +99,8 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
             rec = recordsByCommandId.get(commandId);
             create = false;
         } else {
-            rec = new CommandHistoryRecord(commandId);
+            Instant generationTime = Instant.parse(entry.getGenerationTimeUTC());
+            rec = new CommandHistoryRecord(commandId, generationTime);
             recordsByCommandId.put(commandId, rec);
             create = true;
         }

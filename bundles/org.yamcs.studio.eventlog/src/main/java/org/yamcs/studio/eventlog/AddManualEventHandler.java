@@ -1,5 +1,6 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
 import java.util.Iterator;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -33,7 +34,8 @@ public class AddManualEventHandler extends AbstractHandler {
                 IStructuredSelection selection = (IStructuredSelection) sel;
                 Iterator<?> it = selection.iterator();
                 Event rec = ((EventLogItem) it.next()).event;
-                long generationTime = rec.getGenerationTime();
+                Instant generationTime = Instant.ofEpochSecond(
+                        rec.getGenerationTime().getSeconds(), rec.getGenerationTime().getNanos());
 
                 AddManualEventDialog addManualEventDialog = new AddManualEventDialog(part.getSite().getShell(),
                         generationTime);

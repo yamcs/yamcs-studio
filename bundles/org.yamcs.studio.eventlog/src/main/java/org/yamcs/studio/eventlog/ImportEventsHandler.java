@@ -1,6 +1,7 @@
 package org.yamcs.studio.eventlog;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -20,8 +21,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.client.StreamReceiver;
+import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.model.EventCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class ImportEventsHandler extends AbstractHandler {
 
@@ -36,8 +39,8 @@ public class ImportEventsHandler extends AbstractHandler {
         ImportPastEventsDialog dialog = new ImportPastEventsDialog(shell);
         if (dialog.open() == Window.OK) {
             try {
-                long start = dialog.getStart();
-                long stop = dialog.getStop();
+                Instant start = dialog.getStart();
+                Instant stop = dialog.getStop();
                 EventImporter importer = new EventImporter(shell, start, stop, view.getEventLog());
                 new ProgressMonitorDialog(shell).run(true, true, importer);
             } catch (InvocationTargetException e) {
@@ -52,11 +55,11 @@ public class ImportEventsHandler extends AbstractHandler {
     private static class EventImporter implements IRunnableWithProgress {
 
         private Shell shell;
-        private long start;
-        private long stop;
+        private Instant start;
+        private Instant stop;
         private EventLog eventLog;
 
-        EventImporter(Shell shell, long start, long stop, EventLog eventLog) {
+        EventImporter(Shell shell, Instant start, Instant stop, EventLog eventLog) {
             this.shell = shell;
             this.start = start;
             this.stop = stop;
@@ -69,11 +72,19 @@ public class ImportEventsHandler extends AbstractHandler {
 
             List<Event> newEvents = new ArrayList<>();
 
-            EventCatalogue catalogue = EventCatalogue.getInstance();
-            CompletableFuture<Void> future = catalogue.streamEvents(start, stop, batch -> {
+            ArchiveClient client = YamcsPlugin.getArchiveClient();
+
+            BulkEventListener listener = batch -> {
                 newEvents.addAll(batch);
                 monitor.subTask(String.format("Fetched %,d events", newEvents.size()));
-            });
+            };
+            EventBatchGenerator batchGenerator = new EventBatchGenerator(listener);
+            CompletableFuture<Void> future = client.streamEvents(batchGenerator, start, stop)
+                    .whenComplete((data, exc) -> {
+                        if (!batchGenerator.events.isEmpty()) {
+                            listener.processEvents(new ArrayList<>(batchGenerator.events));
+                        }
+                    });
 
             try {
                 while (!monitor.isCanceled() && !future.isDone()) {
@@ -99,5 +110,31 @@ public class ImportEventsHandler extends AbstractHandler {
                 MessageDialog.openError(shell, "Failed to import events", e.getCause().getMessage());
             }
         }
+    }
+
+    private static class EventBatchGenerator implements StreamReceiver<Event> {
+
+        private BulkEventListener listener;
+        private List<Event> events = new ArrayList<>();
+
+        public EventBatchGenerator(BulkEventListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public void accept(Event event) {
+            events.add(event);
+            if (events.size() >= 500) {
+                listener.processEvents(new ArrayList<>(events));
+                events.clear();
+            }
+        }
+    }
+
+    /**
+     * Reports on a batches of events. Useful for limiting GUI updates.
+     */
+    private static interface BulkEventListener {
+        void processEvents(List<Event> events);
     }
 }

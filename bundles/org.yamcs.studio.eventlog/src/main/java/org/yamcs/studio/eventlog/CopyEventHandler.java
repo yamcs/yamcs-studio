@@ -1,5 +1,6 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
 import java.util.Iterator;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -28,12 +29,18 @@ public class CopyEventHandler extends AbstractHandler {
             while (it.hasNext()) {
                 Event rec = ((EventLogItem) it.next()).event;
 
+                Instant generationTime = Instant.ofEpochSecond(rec.getGenerationTime().getSeconds(),
+                        rec.getGenerationTime().getNanos());
+
+                Instant receptionTime = Instant.ofEpochSecond(rec.getReceptionTime().getSeconds(),
+                        rec.getReceptionTime().getNanos());
+
                 text.append(rec.getSeverity())
                         .append("\t").append(rec.getMessage())
                         .append("\t").append(rec.getType())
                         .append("\t").append(rec.getSource())
-                        .append("\t").append(rec.getGenerationTimeUTC())
-                        .append("\t").append(rec.getReceptionTimeUTC())
+                        .append("\t").append(generationTime.toString())
+                        .append("\t").append(receptionTime.toString())
                         .append("\t").append(rec.getSeqNumber())
                         .append("\n");
             }

@@ -11,15 +11,14 @@ import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.css.core.pvmanager.ParameterChannelHandler;
-import org.yamcs.utils.StringConverter;
 
 public class PVCatalogue implements YamcsConnectionListener, InstanceListener, ParameterListener {
 
@@ -34,7 +33,6 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
     }
 
     public PVCatalogue() {
-        ManagementCatalogue.getInstance().addInstanceListener(this);
         YamcsPlugin.getDefault().addYamcsConnectionListener(this);
         ParameterCatalogue.getInstance().addParameterListener(this);
     }
@@ -100,7 +98,7 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
             if (channelHandler != null) {
                 if (log.isLoggable(Level.FINER)) {
                     log.finer(String.format("Request to update channel %s to %s", channelHandler.getId().getName(),
-                            StringConverter.toString(pval.getEngValue(), false)));
+                            StringConverter.toString(pval.getEngValue())));
                 }
                 channelHandler.processParameterValue(pval);
             }

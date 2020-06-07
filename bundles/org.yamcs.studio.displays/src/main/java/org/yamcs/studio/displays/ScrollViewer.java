@@ -1,5 +1,6 @@
 package org.yamcs.studio.displays;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +20,11 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.Yamcs.NamedObjectList;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.utils.StringConverter;
+
+import com.google.protobuf.Timestamp;
 
 public class ScrollViewer extends TableViewer implements ParameterListener {
 
@@ -31,8 +32,8 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
 
     private final int MAX_SIZE = 100;
 
-    public final static String ENG = "ENG";
-    public final static String RAW = "RAW";
+    public static final String ENG = "ENG";
+    public static final String RAW = "RAW";
 
     private String valueType = ENG;
 
@@ -64,7 +65,9 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
             public String getText(Object element) {
                 ParameterData pdata = (ParameterData) element;
                 ParameterValue pval = pdata.getParameter(0);
-                return YamcsUIPlugin.getDefault().formatInstant(pval.getGenerationTime());
+                Timestamp proto = pval.getGenerationTime();
+                Instant generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                return YamcsUIPlugin.getDefault().formatInstant(generationTime);
             }
         });
 
@@ -72,8 +75,8 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
 
     }
 
-    private void addColumn(ParameterInfo info) {
-
+    /*private void addColumn(ParameterInfo info) {
+    
         ParameterCatalogue.getInstance().subscribeParameters(NamedObjectList.newBuilder()
                 .addList(info.getAlias(0)).build());
         TableViewerColumn column = new TableViewerColumn(this, SWT.RIGHT);
@@ -81,23 +84,23 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
         column.getColumn().setToolTipText(info.getQualifiedName());
         tcl.setColumnData(column.getColumn(), new ColumnWeightData(20));
         column.setLabelProvider(new ColumnLabelProvider() {
-
+    
             @Override
             public String getText(Object element) {
                 ParameterData data = (ParameterData) element;
                 for (ParameterValue value : data.getParameterList()) {
                     if (value.getId().getName().equals(info.getName())) {
                         if (valueType.equals(ENG)) {
-                            return StringConverter.toString(value.getEngValue(), false);
+                            return StringConverter.toString(value.getEngValue());
                         }
-                        return StringConverter.toString(value.getRawValue(), false);
-
+                        return StringConverter.toString(value.getRawValue());
+    
                     }
                 }
                 return "-";
             }
         });
-    }
+    }*/
 
     public void addParameter(ParameterInfo element) {
         if (parameters.contains(element.getName())) {
@@ -105,7 +108,7 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
         }
         parameters.add(element.getName());
         qualifiedNames.add(element.getQualifiedName());
-        addColumn(element);
+        // addColumn(element);
         getTable().getColumn(0).setWidth(180);
         for (int i = 1; i < getTable().getColumnCount(); i++) {
             getTable().getColumn(i).setWidth(60);

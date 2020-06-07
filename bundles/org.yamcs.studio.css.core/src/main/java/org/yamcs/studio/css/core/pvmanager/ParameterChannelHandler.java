@@ -10,6 +10,7 @@ import org.diirt.datasource.ChannelWriteCallback;
 import org.diirt.datasource.DataSourceTypeAdapter;
 import org.diirt.datasource.MultiplexedChannelHandler;
 import org.diirt.datasource.ValueCache;
+import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.protobuf.Mdb.DataSourceType;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
@@ -19,7 +20,6 @@ import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.css.core.PVCatalogue;
 import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
@@ -36,7 +36,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         super(id.getName());
         this.id = id;
         YamcsPlugin.getDefault().addYamcsConnectionListener(this);
-        ManagementCatalogue.getInstance().addInstanceListener(this);
     }
 
     public NamedObjectId getId() {
@@ -104,8 +103,12 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         try {
             ParameterTypeInfo ptype = ParameterCatalogue.getInstance().getParameterTypeInfo(id);
             Value v = toValue(ptype, newValue);
-            ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
-            catalogue.setParameter("realtime", id, v).whenComplete((data, e) -> {
+            ProcessorClient processor = YamcsPlugin.getProcessorClient();
+            String parameterName = id.getName();
+            if (id.hasNamespace()) {
+                parameterName = id.getNamespace() + "/" + parameterName;
+            }
+            processor.setValue(parameterName, v).whenComplete((data, e) -> {
                 if (e != null) {
                     log.log(Level.SEVERE, "Could not write to parameter", e);
                     if (e instanceof Exception) {

@@ -98,7 +98,7 @@ public class ParameterTableEditor extends EditorPart {
                 NamedObjectId id = NamedObjectId.newBuilder().setName(parameter).build();
                 ParameterInfo meta = ParameterCatalogue.getInstance().getParameterInfo(id);
                 if (meta != null) {
-                    tableViewer.attachParameterInfo(meta);
+                    // tableViewer.attachParameterInfo(meta);
                 }
             }
         } catch (CoreException e) {

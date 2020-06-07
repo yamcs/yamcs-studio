@@ -12,10 +12,9 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.api.YamcsConnectionProperties;
-import org.yamcs.protobuf.ConnectionInfo;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.client.YamcsConfiguration;
 import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
@@ -51,7 +50,7 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
     public void onYamcsDisconnected() {
     }
 
-    public static void connectWithProgressDialog(Shell shell, YamcsConnectionProperties yprops) {
+    public static void connectWithProgressDialog(Shell shell, YamcsConfiguration yprops) {
         try {
             YamcsUIConnector connector = new YamcsUIConnector(shell, yprops);
             new ProgressMonitorDialog(shell).run(true, true, connector);
@@ -66,9 +65,9 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
     private static class YamcsUIConnector implements IRunnableWithProgress {
 
         private Shell shell;
-        private YamcsConnectionProperties yprops;
+        private YamcsConfiguration yprops;
 
-        YamcsUIConnector(Shell shell, YamcsConnectionProperties yprops) {
+        YamcsUIConnector(Shell shell, YamcsConfiguration yprops) {
             this.shell = shell;
             this.yprops = yprops;
         }
@@ -78,7 +77,7 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
             monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
             YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
             try {
-                Future<ConnectionInfo> future = yamcsClient.connect(yprops);
+                Future<Void> future = yamcsClient.connect(yprops);
                 RCPUtils.monitorCancellableFuture(monitor, future);
             } catch (ExecutionException e) {
                 Display.getDefault().asyncExec(() -> {

@@ -2,7 +2,7 @@ package org.yamcs.studio.css.core.vtype;
 
 import org.diirt.vtype.VString;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.utils.StringConverter;
+import org.yamcs.studio.core.StringConverter;
 
 public class AggregateVType extends YamcsVType implements VString {
 
@@ -12,7 +12,7 @@ public class AggregateVType extends YamcsVType implements VString {
 
     @Override
     public String getValue() {
-        return StringConverter.toString(pval.getEngValue(), false);
+        return StringConverter.toString(pval.getEngValue());
     }
 
     @Override

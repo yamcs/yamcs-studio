@@ -4,11 +4,11 @@ import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+import java.time.Instant;
 import java.util.Locale;
 
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.utils.TimeEncoding;
 
 public class Acknowledgment {
 
@@ -23,7 +23,7 @@ public class Acknowledgment {
     private String name;
     private String status;
     private String message;
-    private long instant = TimeEncoding.INVALID_INSTANT;
+    private Instant instant;
 
     public Acknowledgment(CommandHistoryRecord rec, String name, CommandHistoryAttribute statusAttribute) {
         this.rec = rec;
@@ -36,7 +36,7 @@ public class Acknowledgment {
     }
 
     public void setTime(CommandHistoryAttribute timeAttribute) {
-        instant = timeAttribute.getValue().getTimestampValue();
+        instant = Instant.parse(timeAttribute.getValue().getStringValue());
     }
 
     public void setMessage(CommandHistoryAttribute messageAttribute) {
@@ -60,7 +60,7 @@ public class Acknowledgment {
     }
 
     public String getTime() {
-        if (instant != TimeEncoding.INVALID_INSTANT) {
+        if (instant != null) {
             return YamcsUIPlugin.getDefault().formatInstant(instant);
         } else {
             return null;
@@ -68,18 +68,18 @@ public class Acknowledgment {
     }
 
     public String getDelta() {
-        if (instant != TimeEncoding.INVALID_INSTANT) {
-            return toHumanTimeDiff(instant, rec.getRawGenerationTime());
+        if (instant != null) {
+            return toHumanTimeDiff(instant, rec.getGenerationTime());
         } else {
             return null;
         }
     }
 
-    private String toHumanTimeDiff(long generationTime, long timestamp) {
-        long millis = generationTime - timestamp;
+    private String toHumanTimeDiff(Instant generationTime, Instant timestamp) {
+        long millis = generationTime.toEpochMilli() - timestamp.toEpochMilli();
         String sign = (millis >= 0) ? "+" : "-";
         if (millis >= ONE_DAY) {
-            return TimeEncoding.toString(timestamp);
+            return YamcsUIPlugin.getDefault().formatInstant(timestamp);
         } else if (millis >= ONE_HOUR) {
             return sign + String.format("%d h, %d m",
                     MILLISECONDS.toHours(millis),

@@ -1,28 +1,25 @@
 package org.yamcs.studio.archive;
 
-import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.utils.TimeEncoding;
 
 public class TagBox extends Box implements MouseListener {
     private static final long serialVersionUID = 1L;
@@ -137,14 +134,13 @@ public class TagBox extends Box implements MouseListener {
         editTagPopup.add(removeTagMenuItem);
     }
 
-    public void createNewTag(long start, long stop) {
+    public void createNewTag(Instant start, Instant stop) {
         Display.getDefault().asyncExec(() -> {
             CreateAnnotationDialog dialog = new CreateAnnotationDialog(Display.getCurrent().getActiveShell());
             dialog.setStartTime(start);
             dialog.setStopTime(stop);
             if (dialog.open() == Window.OK) {
                 SwingUtilities.invokeLater(() -> {
-                    System.out.println("signal insertion of " + dialog.buildArchiveTag());
                     dataView.emitActionEvent(new TagEvent(this, "insert-tag", null, dialog.buildArchiveTag()));
                 });
             }
@@ -219,30 +215,6 @@ public class TagBox extends Box implements MouseListener {
     public void mouseClicked(MouseEvent e) {
     }
 
-    static public void main(String[] args) {
-        TimeEncoding.setUp();
-        JFrame frame = new JFrame();
-        frame.setSize(new Dimension(1000, 100));
-        TagBox atb = new TagBox(null);
-        /*
-         * atb.insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build()); atb
-         * .insertTag(ArchiveTag.newBuilder().setName("cucucurigo long laaaaaaabel").setStart(100)
-         * .setStop(300).setColor("red").build()); atb.insertTag(ArchiveTag.newBuilder().setName("tag2"
-         * ).setStart(500).setStop(700).setColor("blue").build());
-         * 
-         * atb.insertTag(ArchiveTag.newBuilder().setName("minus infinity").setStop(150).build());
-         * atb.insertTag(ArchiveTag.newBuilder().setName("plus infinity").setStart(450).build()); atb
-         * .insertTag(ArchiveTag.newBuilder().setName("tag3").setStart(701).setStop(800).setColor( "orange").build());
-         * atb.insertTag(ArchiveTag.newBuilder().setName("tag4").setStart(800).setStop
-         * (900).setColor("magenta").build()); atb.insertTag(ArchiveTag.newBuilder().setName("tag5").
-         * setStart(801).setStop(1000).setColor("gray").build());
-         */
-        atb.setToZoom(new ZoomSpec(0, 3600 * 1000, 3600 * 1000, 3 * 3600 * 1000));
-        frame.add(atb);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
-    }
-
     public void addTags(List<ArchiveTag> tagList) {
         for (ArchiveTag tag : tagList) {
             insertTag(tag);
@@ -264,8 +236,9 @@ public class TagBox extends Box implements MouseListener {
             if (id != -1) {
                 if (rtag.equals(tagList.get(id))) {
                     tagList.remove(id);
-                    if (tagList.isEmpty())
+                    if (tagList.isEmpty()) {
                         tags.remove(tagList);
+                    }
                     redrawTags();
                     return;
                 }

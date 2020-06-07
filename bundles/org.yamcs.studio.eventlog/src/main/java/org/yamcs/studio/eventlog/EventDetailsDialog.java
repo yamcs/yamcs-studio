@@ -1,5 +1,7 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
@@ -309,8 +311,12 @@ public class EventDetailsDialog extends TrayDialog {
         }
 
         YamcsUIPlugin uiPlugin = YamcsUIPlugin.getDefault();
-        generationTimeLabel.setText(uiPlugin.formatInstant(rec.event.getGenerationTime()));
-        receptionTimeLabel.setText(uiPlugin.formatInstant(rec.event.getReceptionTime()));
+        Instant generationTime = Instant.ofEpochSecond(rec.event.getGenerationTime().getSeconds(),
+                rec.event.getGenerationTime().getNanos());
+        generationTimeLabel.setText(uiPlugin.formatInstant(generationTime));
+        Instant receptionTime = Instant.ofEpochSecond(rec.event.getReceptionTime().getSeconds(),
+                rec.event.getReceptionTime().getNanos());
+        receptionTimeLabel.setText(uiPlugin.formatInstant(receptionTime));
     }
 
     private void updateButtonState() {

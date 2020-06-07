@@ -1,5 +1,6 @@
 package org.yamcs.studio.core.ui.utils;
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -97,14 +98,14 @@ public class RCPUtils {
         return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
     }
 
-    public static Calendar toCalendar(DateTime dateWidget, DateTime timeWidget) {
+    public static Instant toInstant(DateTime dateWidget, DateTime timeWidget) {
         Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
         cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
         cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
         cal.set(Calendar.MINUTE, timeWidget.getMinutes());
         cal.set(Calendar.SECOND, timeWidget.getSeconds());
         cal.set(Calendar.MILLISECOND, 0);
-        return cal;
+        return cal.toInstant();
     }
 
     public static void monitorCancellableFuture(IProgressMonitor monitor, Future<?> future)

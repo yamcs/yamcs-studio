@@ -2,6 +2,7 @@ package org.yamcs.studio.eventlog;
 
 import static org.yamcs.studio.core.ui.utils.Comparators.LONG_COMPARATOR;
 import static org.yamcs.studio.core.ui.utils.Comparators.STRING_COMPARATOR;
+import static org.yamcs.studio.core.ui.utils.Comparators.TIMESTAMP_COMPARATOR;
 
 import java.util.Comparator;
 
@@ -86,32 +87,32 @@ public class EventLogSorter extends ViewerComparator {
         case EventLogTableViewer.COL_SEVERITY:
             rc = SEVERITY_COMPARATOR.compare(r1.getSeverity(), r2.getSeverity());
             if (rc == 0) {
-                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+                rc = TIMESTAMP_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             }
             break;
         case EventLogTableViewer.COL_SEQNUM:
             rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             if (rc == 0) {
-                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+                rc = TIMESTAMP_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             }
             break;
         case EventLogTableViewer.COL_MESSAGE:
             rc = STRING_COMPARATOR.compare(r1.getMessage(), r2.getMessage());
             if (rc == 0) {
-                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+                rc = TIMESTAMP_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             }
             break;
         case EventLogTableViewer.COL_RECEPTION:
-            rc = LONG_COMPARATOR.compare(r1.getReceptionTime(), r2.getReceptionTime());
+            rc = TIMESTAMP_COMPARATOR.compare(r1.getReceptionTime(), r2.getReceptionTime());
             if (rc == 0) {
                 rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             }
             if (rc == 0) {
-                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+                rc = TIMESTAMP_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             }
             break;
         case EventLogTableViewer.COL_GENERATION:
-            rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+            rc = TIMESTAMP_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             if (rc == 0) {
                 rc = LONG_COMPARATOR.compare((long) r1.getSeqNumber(), (long) r2.getSeqNumber());
             }
@@ -122,7 +123,7 @@ public class EventLogSorter extends ViewerComparator {
                 rc = STRING_COMPARATOR.compare(r1.getType(), r2.getType());
             }
             if (rc == 0) {
-                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+                rc = TIMESTAMP_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             }
             break;
         case EventLogTableViewer.COL_TYPE:
@@ -131,7 +132,7 @@ public class EventLogSorter extends ViewerComparator {
                 rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
             }
             if (rc == 0) {
-                rc = LONG_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
+                rc = TIMESTAMP_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             }
             break;
         default:

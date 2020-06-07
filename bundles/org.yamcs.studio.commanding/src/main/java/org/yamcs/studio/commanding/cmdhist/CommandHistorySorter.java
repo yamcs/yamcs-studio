@@ -1,5 +1,6 @@
 package org.yamcs.studio.commanding.cmdhist;
 
+import static org.yamcs.studio.core.ui.utils.Comparators.INSTANT_COMPARATOR;
 import static org.yamcs.studio.core.ui.utils.Comparators.INTEGER_COMPARATOR;
 import static org.yamcs.studio.core.ui.utils.Comparators.LONG_COMPARATOR;
 import static org.yamcs.studio.core.ui.utils.Comparators.OBJECT_COMPARATOR;
@@ -48,7 +49,7 @@ public class CommandHistorySorter extends ViewerComparator {
         case CommandHistoryView.COL_USER:
             rc = STRING_COMPARATOR.compare(r1.getUsername(), r2.getUsername());
             if (rc == 0) {
-                rc = LONG_COMPARATOR.compare(r1.getRawGenerationTime(), r2.getRawGenerationTime());
+                rc = INSTANT_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             }
             break;
         case CommandHistoryView.COL_ORIGIN:
@@ -61,7 +62,7 @@ public class CommandHistorySorter extends ViewerComparator {
             rc = STRING_COMPARATOR.compare(r1.getFinalSequenceCount(), r2.getFinalSequenceCount());
             break;
         case CommandHistoryView.COL_T:
-            rc = LONG_COMPARATOR.compare(r1.getRawGenerationTime(), r2.getRawGenerationTime());
+            rc = INSTANT_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             break;
         case CommandHistoryView.COL_PTV:
             rc = OBJECT_COMPARATOR.compare(r1.getPTVInfo(), r2.getPTVInfo());

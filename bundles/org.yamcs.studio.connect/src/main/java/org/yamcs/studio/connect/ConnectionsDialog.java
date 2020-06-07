@@ -48,11 +48,6 @@ import org.yamcs.studio.connect.YamcsConfiguration.AuthType;
  * <p>
  * The idea is that when you start Yamcs Studio for the very first time, it does not attempt any connection.
  * Auto-connect is an option.
- * <p>
- * Another thing we want to address with this dialog is to make it easy to manage different yamcs servers. Especially as
- * yamcs developers, we often have to switch from one server to another. Through this dialog these settings can be
- * managed and stored. The settings are stored using java (so inside the home directory). This makes it easier to
- * migrate from one Yamcs Studio to another.
  */
 public class ConnectionsDialog extends Dialog {
 

@@ -1,7 +1,7 @@
 package org.yamcs.studio.core.ui.processor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.time.Instant;
+import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -25,44 +25,46 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.ClientInfo;
-import org.yamcs.protobuf.ConnectionInfo;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.protobuf.Mdb.MissionDatabase;
 import org.yamcs.protobuf.Mdb.SpaceSystemInfo;
 import org.yamcs.protobuf.ProcessorInfo;
-import org.yamcs.protobuf.Statistics;
 import org.yamcs.protobuf.YamcsInstance;
-import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.core.model.ManagementListener;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.model.TimeListener;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * Ensemble of information for the subscribed instance (and matching MDB), and processor.
  */
 public class ProcessingInfoDialogHandler extends AbstractHandler {
 
-    private static final Logger log = Logger.getLogger(ProcessingInfoDialogHandler.class.getName());
-
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         Shell shell = HandlerUtil.getActiveShellChecked(event);
-        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        ProcessorInfo processor = catalogue.getCurrentProcessorInfo();
-        if (processor != null) {
-            catalogue.fetchInstanceInformationRequest(processor.getInstance()).whenComplete((data, exc) -> {
+        String instance = YamcsPlugin.getInstance();
+        String processor = YamcsPlugin.getProcessor();
+        if (instance != null && processor != null) {
+            YamcsClient client = YamcsPlugin.getYamcsClient();
+            ProcessorClient processorClient = client.createProcessorClient(instance, processor);
+
+            CompletableFuture<YamcsInstance> instanceFuture = client.getInstance(instance);
+            CompletableFuture<ProcessorInfo> processorFuture = processorClient.getInfo();
+            CompletableFuture.allOf(instanceFuture, processorFuture).whenComplete((done, exc) -> {
                 if (exc == null) {
                     Display display = Display.getDefault();
                     if (!display.isDisposed()) {
                         display.asyncExec(() -> {
                             try {
-                                YamcsInstance instance = YamcsInstance.parseFrom(data);
-                                new ProcessingInfoDialog(shell, instance, processor).open();
-                            } catch (InvalidProtocolBufferException e) {
-                                log.log(Level.SEVERE, "Failed to decode server message", e);
+                                YamcsInstance instanceInfo = instanceFuture.get();
+                                ProcessorInfo processorInfo = processorFuture.get();
+                                new ProcessingInfoDialog(shell, instanceInfo, processorInfo).open();
+                            } catch (java.util.concurrent.ExecutionException e) {
+                                throw new RuntimeException(e.getCause());
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
                             }
                         });
                     }
@@ -72,13 +74,12 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         return null;
     }
 
-    public static class ProcessingInfoDialog extends Dialog implements ManagementListener, TimeListener {
+    public static class ProcessingInfoDialog extends Dialog implements TimeListener {
 
         private YamcsInstance instance;
         private ProcessorInfo processor;
 
         private StyledText missionTimeTxt;
-        private StyledText processorStateTxt;
 
         public ProcessingInfoDialog(Shell parentShell, YamcsInstance instance, ProcessorInfo processor) {
             super(parentShell);
@@ -87,13 +88,11 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             setShellStyle(SWT.CLOSE | SWT.MODELESS | SWT.BORDER);
             setBlockOnOpen(false);
 
-            ManagementCatalogue.getInstance().addManagementListener(this);
             TimeCatalogue.getInstance().addTimeListener(this);
         }
 
         @Override
         public boolean close() {
-            ManagementCatalogue.getInstance().removeManagementListener(this);
             TimeCatalogue.getInstance().removeTimeListener(this);
             return super.close();
         }
@@ -133,10 +132,9 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             createKeyValueTextPair(composite, "Type", processor.getType());
             createKeyValueTextPair(composite, "Created by", processor.getCreator());
 
-            long missionTime = TimeCatalogue.getInstance().getMissionTime();
+            Instant missionTime = TimeCatalogue.getInstance().getMissionTime();
             missionTimeTxt = createKeyValueTextPair(composite, "Mission Time",
                     YamcsUIPlugin.getDefault().formatInstant(missionTime));
-            processorStateTxt = createKeyValueTextPair(composite, "Processor State", "" + processor.getState());
 
             if (instance.hasMissionDatabase()) {
                 MissionDatabase mdb = instance.getMissionDatabase();
@@ -172,7 +170,7 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         }
 
         @Override
-        public void processTime(long missionTime) {
+        public void processTime(Instant missionTime) {
             Display.getDefault().asyncExec(() -> {
                 if (missionTimeTxt.isDisposed()) {
                     return;
@@ -183,45 +181,6 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
                     missionTimeTxt.setText("---");
                 }
             });
-        }
-
-        @Override
-        public void processorUpdated(ProcessorInfo processorInfo) {
-            Display.getDefault().asyncExec(() -> refreshProcessorState());
-        }
-
-        @Override
-        public void clearAllManagementData() {
-            Display.getDefault().asyncExec(() -> processorStateTxt.setText("---"));
-        }
-
-        @Override
-        public void clientUpdated(ClientInfo clientInfo) {
-        }
-
-        @Override
-        public void clientDisconnected(ClientInfo clientInfo) {
-        }
-
-        @Override
-        public void statisticsUpdated(Statistics stats) {
-        }
-
-        @Override
-        public void instanceUpdated(ConnectionInfo connectionInfo) {
-        }
-
-        private void refreshProcessorState() {
-            if (processorStateTxt.isDisposed()) {
-                return;
-            }
-            ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-            ProcessorInfo latestInfo = catalogue.getCurrentProcessorInfo();
-            if (latestInfo != null) {
-                processorStateTxt.setText("" + latestInfo.getState());
-            } else {
-                processorStateTxt.setText("---");
-            }
         }
 
         private StyledText createKeyValueTextPair(Composite parent, String key, String value) {

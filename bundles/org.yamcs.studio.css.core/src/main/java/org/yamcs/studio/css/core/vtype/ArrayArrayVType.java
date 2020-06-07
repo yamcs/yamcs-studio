@@ -9,7 +9,7 @@ import org.diirt.vtype.VStringArray;
 import org.diirt.vtype.VTypeToString;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.Value;
-import org.yamcs.utils.StringConverter;
+import org.yamcs.studio.core.StringConverter;
 
 // Array of arrays, just render them with string values.
 public class ArrayArrayVType extends YamcsVType implements VStringArray {
@@ -27,7 +27,7 @@ public class ArrayArrayVType extends YamcsVType implements VStringArray {
         data = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Value arrayValue = pval.getEngValue().getArrayValue(i);
-            data.add(StringConverter.toString(arrayValue, false));
+            data.add(StringConverter.toString(arrayValue));
         }
     }
 

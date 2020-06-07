@@ -1,8 +1,5 @@
 package org.yamcs.studio.core.ui.processor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -21,15 +18,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.protobuf.ListProcessorsResponse;
+import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.ProcessorInfo;
-import org.yamcs.studio.core.model.ManagementCatalogue;
-
-import com.google.protobuf.InvalidProtocolBufferException;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class SwitchProcessorDialog extends TitleAreaDialog {
-
-    private static final Logger log = Logger.getLogger(SwitchProcessorDialog.class.getName());
 
     private TableViewer processorsTable;
     private ProcessorInfo processorInfo;
@@ -42,7 +35,6 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
     public void create() {
         super.create();
         setTitle("Choose a different processor");
-        // setMessage("informative message");
     }
 
     @Override
@@ -110,16 +102,11 @@ public class SwitchProcessorDialog extends TitleAreaDialog {
             }
         });
 
-        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        catalogue.fetchProcessors().whenComplete((data, exc) -> {
+        YamcsClient client = YamcsPlugin.getYamcsClient();
+        client.listProcessors(YamcsPlugin.getInstance()).whenComplete((processors, exc) -> {
             parent.getDisplay().asyncExec(() -> {
                 if (exc == null) {
-                    try {
-                        ListProcessorsResponse response = ListProcessorsResponse.parseFrom(data);
-                        processorsTable.setInput(response.getProcessorsList());
-                    } catch (InvalidProtocolBufferException e) {
-                        log.log(Level.SEVERE, "Failed to decode server message", e);
-                    }
+                    processorsTable.setInput(processors);
                 }
             });
         });

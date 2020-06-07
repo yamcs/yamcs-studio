@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.swt.graphics.RGB;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 
 public class ColoringRule {
 
@@ -70,19 +69,5 @@ public class ColoringRule {
             }
         }
         return matches;
-    }
-
-    public static void main(String... args) {
-        ColoringRule rule = new ColoringRule("severity == WARNING && type == LVPDU", new RGB(0, 0, 0),
-                new RGB(0, 0, 0));
-        Event event = Event.newBuilder().setMessage("a message")
-                .setSource("source")
-                .setGenerationTime(123L)
-                .setReceptionTime(456L)
-                .setSeqNumber(123)
-                .setSeverity(EventSeverity.WARNING)
-                .setType("LVPDU")
-                .build();
-        System.out.println(rule.matches(event));
     }
 }

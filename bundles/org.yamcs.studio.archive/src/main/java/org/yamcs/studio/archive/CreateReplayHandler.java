@@ -1,5 +1,7 @@
 package org.yamcs.studio.archive;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -24,11 +26,12 @@ public class CreateReplayHandler extends AbstractHandler {
             TimeInterval interval;
             Selection sel = view.archivePanel.getSelection();
             if (sel != null) {
-                interval = new TimeInterval(sel.getStartInstant(), sel.getStopInstant());
+                Instant start = Instant.ofEpochMilli(sel.getStartInstant());
+                Instant stop = Instant.ofEpochMilli(sel.getStopInstant());
+                interval = new TimeInterval(start, stop);
             } else {
-                long missionTime = TimeCatalogue.getInstance().getMissionTime(true);
-                missionTime -= 30 * 1000;
-                interval = TimeInterval.starting(missionTime);
+                Instant missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+                interval = TimeInterval.starting(missionTime.minus(30, ChronoUnit.SECONDS));
             }
 
             List<String> pps = view.archivePanel.getSelectedPackets("pp");

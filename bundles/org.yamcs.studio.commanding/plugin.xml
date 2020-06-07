@@ -356,12 +356,6 @@
             icon="icons/eview16/tc_add.png"
             id="org.yamcs.studio.commanding.stack.CommandStackView"
             name="Command Stack"/>
-      <view
-            category="org.yamcs.studio.server"
-            class="org.yamcs.studio.commanding.queue.CommandQueueView"
-            icon="icons/eview16/tc_queue.png"
-            id="org.yamcs.studio.commanding.queue.CommandQueueView"
-            name="Command Queues"/>            
    </extension>
 
    <extension point="org.eclipse.ui.menus">

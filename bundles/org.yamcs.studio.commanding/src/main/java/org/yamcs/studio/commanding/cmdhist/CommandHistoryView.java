@@ -1,9 +1,9 @@
 package org.yamcs.studio.commanding.cmdhist;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.action.Action;
@@ -34,23 +34,21 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.ListCommandsResponse;
 import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.CommandHistoryListener;
 import org.yamcs.studio.core.model.CommandingCatalogue;
 import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.ColumnData;
 import org.yamcs.studio.core.ui.utils.ColumnDef;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 public class CommandHistoryView extends ViewPart implements YamcsConnectionListener, InstanceListener {
 
@@ -129,15 +127,16 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
     public void createPartControl(Composite parent) {
         CommandingPlugin plugin = CommandingPlugin.getDefault();
         resourceManager = new LocalResourceManager(JFaceResources.getResources(), parent);
-        greenBubble = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/ok.png"));
-        redBubble = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/nok.png"));
-        grayBubble = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/undef.png"));
-        waitingImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/waiting.png"));
-        headerCompleteImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/header_complete.png"));
-        checkmarkImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/checkmark.gif"));
-        errorImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/error_tsk.png"));
-        prevImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/event_prev.png"));
-        nextImage = resourceManager.createImage(plugin.getImageDescriptor("icons/obj16/event_next.png"));
+        greenBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/ok.png"));
+        redBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/nok.png"));
+        grayBubble = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/undef.png"));
+        waitingImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/waiting.png"));
+        headerCompleteImage = resourceManager
+                .createImage(plugin.getImageDescriptor("/icons/obj16/header_complete.png"));
+        checkmarkImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/checkmark.gif"));
+        errorImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/error_tsk.png"));
+        prevImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/event_prev.png"));
+        nextImage = resourceManager.createImage(plugin.getImageDescriptor("/icons/obj16/event_next.png"));
 
         createActions(parent.getShell());
 
@@ -170,7 +169,6 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         getViewSite().setSelectionProvider(tableViewer);
 
         YamcsPlugin.getDefault().addYamcsConnectionListener(this);
-        ManagementCatalogue.getInstance().addInstanceListener(this);
 
         commandHistoryListener = cmdhistEntry -> {
             Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry, true));
@@ -294,7 +292,6 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
     @Override
     public void dispose() {
         YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
-        ManagementCatalogue.getInstance().removeInstanceListener(this);
         CommandingCatalogue.getInstance().removeCommandHistoryListener(commandHistoryListener);
         super.dispose();
     }
@@ -360,7 +357,8 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
                 gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        return ((CommandHistoryRecord) element).getGenerationTime();
+                        Instant generationTime = ((CommandHistoryRecord) element).getGenerationTime();
+                        return YamcsUIPlugin.getDefault().formatInstant(generationTime);
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -722,20 +720,15 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
     }
 
     private void fetchLatestEntries() {
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        if (instance != null) {
-            CommandingCatalogue.getInstance().fetchLatestEntries(instance).whenComplete((data, exc) -> {
-                try {
-                    ListCommandsResponse response = ListCommandsResponse.parseFrom(data);
+        ArchiveClient archiveClient = YamcsPlugin.getArchiveClient();
+        if (archiveClient != null) {
+            archiveClient.listCommands().whenComplete((page, exc) -> {
+                List<CommandHistoryEntry> entryList = new ArrayList<>();
+                page.forEach(entryList::add);
 
-                    List<CommandHistoryEntry> entryList = new ArrayList<>(response.getEntryList());
-
-                    Display.getDefault().asyncExec(() -> {
-                        addEntries(entryList);
-                    });
-                } catch (InvalidProtocolBufferException e) {
-                    log.log(Level.SEVERE, "Failed to decode server message", e);
-                }
+                Display.getDefault().asyncExec(() -> {
+                    addEntries(entryList);
+                });
             });
         }
     }

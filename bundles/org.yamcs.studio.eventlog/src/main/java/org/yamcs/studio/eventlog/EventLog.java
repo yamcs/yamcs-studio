@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.Command;
@@ -34,21 +32,17 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
-import org.yamcs.protobuf.ListEventsResponse;
+import org.yamcs.client.EventSubscription;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.protobuf.SubscribeEventsRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
-import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.EventCatalogue;
-import org.yamcs.studio.core.model.EventListener;
-import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.studio.core.model.ContextAware;
 import org.yamcs.studio.core.ui.utils.Debouncer;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
-public class EventLog extends Composite implements YamcsConnectionListener, InstanceListener, EventListener {
+public class EventLog extends Composite implements ContextAware {
 
     public static final String CMD_SCROLL_LOCK = "org.yamcs.studio.eventlog.scrollLockCommand";
     public static final String CMD_EVENT_PROPERTIES = "org.yamcs.studio.eventlog.showDetailsCommand";
@@ -56,8 +50,6 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     public static final String STATE_SCROLL_LOCK = "org.eclipse.ui.commands.toggleState";
 
     private static final long TABLE_UPDATE_RATE = 1000;
-
-    private static final Logger log = Logger.getLogger(EventLog.class.getName());
 
     private EventLogTableViewer tableViewer;
     private EventLogContentProvider tableContentProvider;
@@ -218,38 +210,34 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
         site.setSelectionProvider(tableViewer);
     }
 
-    public void connect() {
-        if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null) {
-            EventCatalogue.getInstance().addEventListener(this);
-        }
-        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
-        ManagementCatalogue.getInstance().addInstanceListener(this);
-    }
-
     @Override
     public boolean setFocus() {
         return tableViewer.getTable().setFocus();
     }
 
-    @Override
-    public void onYamcsConnected() {
-        Display.getDefault().asyncExec(() -> {
-            clear();
-            fetchLatestEvents();
-        });
-    }
+    private EventSubscription subscription;
 
     @Override
-    public void instanceChanged(String oldInstance, String newInstance) {
-        Display.getDefault().asyncExec(() -> {
+    public void changeInstance(String instance) {
+        if (subscription != null) {
+            subscription.cancel(true);
             clear();
-            fetchLatestEvents();
-        });
-    }
+        }
 
-    @Override
-    public void onYamcsDisconnected() {
-        Display.getDefault().asyncExec(() -> clear());
+        if (instance == null) {
+            clear();
+        } else {
+            Display.getDefault().asyncExec(() -> {
+                fetchLatestEvents();
+            });
+            subscription = YamcsPlugin.getYamcsClient().createEventSubscription();
+            subscription.addMessageListener(event -> {
+                Display.getDefault().asyncExec(() -> processEvent(event));
+            });
+            subscription.sendMessage(SubscribeEventsRequest.newBuilder()
+                    .setInstance(instance)
+                    .build());
+        }
     }
 
     public EventLogItem getPreviousRecord(EventLogItem rec) {
@@ -275,27 +263,21 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     }
 
     private void fetchLatestEvents() {
-        String instance = ManagementCatalogue.getCurrentYamcsInstance();
-        if (instance != null) {
-            EventCatalogue.getInstance().fetchLatestEvents(instance).whenComplete((data, exc) -> {
-                try {
-                    ListEventsResponse response = ListEventsResponse.parseFrom(data);
+        ArchiveClient archiveClient = YamcsPlugin.getArchiveClient();
+        if (archiveClient != null) {
+            archiveClient.listEvents().whenComplete((page, exc) -> {
+                List<Event> eventList = new ArrayList<>();
+                page.iterator().forEachRemaining(eventList::add);
+                Collections.reverse(eventList); // Output is reverse chronological
 
-                    List<Event> eventList = new ArrayList<>(response.getEventList());
-                    Collections.reverse(eventList); // REST output is reverse chronological
-
-                    Display.getDefault().asyncExec(() -> {
-                        addEvents(eventList);
-                    });
-                } catch (InvalidProtocolBufferException e) {
-                    log.log(Level.SEVERE, "Failed to decode server message", e);
-                }
+                Display.getDefault().asyncExec(() -> {
+                    addEvents(eventList);
+                });
             });
         }
     }
 
-    @Override
-    public void processEvent(Event event) {
+    private void processEvent(Event event) {
         synchronized (realtimeEvents) {
             realtimeEvents.add(event);
         }
@@ -339,9 +321,9 @@ public class EventLog extends Composite implements YamcsConnectionListener, Inst
     @Override
     public void dispose() {
         tableUpdater.shutdown();
-        EventCatalogue.getInstance().removeEventListener(this);
-        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
-        ManagementCatalogue.getInstance().removeInstanceListener(this);
+        if (subscription != null) {
+            subscription.cancel(true);
+        }
         EventLogPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(prefListener);
         super.dispose();
     }

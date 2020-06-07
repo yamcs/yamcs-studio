@@ -21,7 +21,6 @@
     <module>org.csstudio.ui.util</module>
     <module>org.csstudio.utility.batik</module>
     <module>org.diirt</module>
-    <module>org.yamcs.studio.alarms</module>
     <module>org.yamcs.studio.archive</module>
     <module>org.yamcs.studio.commanding</module>
     <module>org.yamcs.studio.connect</module>
@@ -33,6 +32,5 @@
     <module>org.yamcs.studio.editor.base</module>
     <module>org.yamcs.studio.eventlog</module>
     <module>org.yamcs.studio.explorer</module>
-    <module>org.yamcs.studio.monitoring</module>
   </modules>
 </project>

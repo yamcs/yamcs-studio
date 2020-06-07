@@ -1,10 +1,8 @@
 package org.yamcs.studio.core.model;
 
-import org.yamcs.studio.core.YamcsConnectionListener;
+public abstract class Catalogue implements ContextAware {
 
-public interface Catalogue extends YamcsConnectionListener, InstanceListener {
-
-    default void shutdown() {
+    public void shutdown() {
         // NOP
     }
 }

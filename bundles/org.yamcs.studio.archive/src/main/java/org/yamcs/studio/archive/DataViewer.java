@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Instant;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -81,7 +82,9 @@ public class DataViewer extends JPanel implements ActionListener {
 
     public void tagSelectedRange() {
         Selection sel = dataView.getSelection();
-        dataView.headerPanel.tagBox.createNewTag(sel.getStartInstant(), sel.getStopInstant());
+        Instant start = Instant.ofEpochMilli(sel.getStartInstant());
+        Instant stop = Instant.ofEpochMilli(sel.getStopInstant());
+        dataView.headerPanel.tagBox.createNewTag(start, stop);
     }
 
     @Override

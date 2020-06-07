@@ -1,6 +1,9 @@
 package org.yamcs.studio.archive;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -17,18 +20,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.utils.TimeEncoding;
 
 public class CustomizeRangeDialog extends TitleAreaDialog {
 
     private DateTime startDate;
     private DateTime startTime;
-    private Calendar startTimeValue;
+    private Instant startTimeValue;
     private Button startClosed;
 
     private DateTime stopDate;
     private DateTime stopTime;
-    private Calendar stopTimeValue;
+    private Instant stopTimeValue;
     private Button stopClosed;
 
     private boolean startClosedValue;
@@ -49,9 +51,9 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         if (!startClosed.getSelection() && !stopClosed.getSelection()) {
             errorMessage = "At least one of start or stop has to be specified";
         } else if (startClosed.getSelection() && stopClosed.getSelection()) {
-            Calendar start = RCPUtils.toCalendar(startDate, startTime);
-            Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
-            if (start.after(stop)) {
+            Instant start = RCPUtils.toInstant(startDate, startTime);
+            Instant stop = RCPUtils.toInstant(stopDate, stopTime);
+            if (start.isAfter(stop)) {
                 errorMessage = "Stop has to be greater than start";
             }
         }
@@ -99,8 +101,10 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         startTime.addListener(SWT.Selection, e -> validate());
         if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH), startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE), startTimeValue.get(Calendar.SECOND));
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(startTimeValue, TimeCatalogue.getInstance().getZoneId());
+            Calendar cal = GregorianCalendar.from(zdt);
+            startDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            startTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
         }
         startDate.setVisible(startClosedValue);
         startTime.setVisible(startClosedValue);
@@ -133,8 +137,10 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         stopTime.addListener(SWT.Selection, e -> validate());
         if (stopTimeValue != null) {
-            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH), stopTimeValue.get(Calendar.DAY_OF_MONTH));
-            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE), stopTimeValue.get(Calendar.SECOND));
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(stopTimeValue, TimeCatalogue.getInstance().getZoneId());
+            Calendar cal = GregorianCalendar.from(zdt);
+            stopDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            stopTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
         }
         stopDate.setVisible(stopClosedValue);
         stopTime.setVisible(stopClosedValue);
@@ -147,9 +153,9 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
      */
     @Override
     protected void okPressed() {
-        startTimeValue = (startClosed.getSelection()) ? RCPUtils.toCalendar(startDate, startTime) : null;
+        startTimeValue = (startClosed.getSelection()) ? RCPUtils.toInstant(startDate, startTime) : null;
         startClosedValue = startClosed.getSelection();
-        stopTimeValue = (stopClosed.getSelection()) ? RCPUtils.toCalendar(stopDate, stopTime) : null;
+        stopTimeValue = (stopClosed.getSelection()) ? RCPUtils.toInstant(stopDate, stopTime) : null;
         stopClosedValue = stopClosed.getSelection();
         super.okPressed();
     }
@@ -157,20 +163,8 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
     public void setInitialRange(TimeInterval range) {
         startClosedValue = range.hasStart();
         stopClosedValue = range.hasStop();
-        setStartTime(range.calculateStart());
-        setStopTime(range.calculateStop());
-    }
-
-    private void setStartTime(long startTime) {
-        startTimeValue = TimeEncoding.toCalendar(startTime);
-        if (startTimeValue != null)
-            startTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
-    }
-
-    private void setStopTime(long stopTime) {
-        stopTimeValue = TimeEncoding.toCalendar(stopTime);
-        if (stopTimeValue != null)
-            stopTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+        startTimeValue = range.calculateStart();
+        stopTimeValue = range.calculateStop();
     }
 
     public boolean hasStartTime() {
@@ -181,16 +175,11 @@ public class CustomizeRangeDialog extends TitleAreaDialog {
         return stopClosedValue;
     }
 
-    public long getStartTime() {
-        return TimeEncoding.fromCalendar(startTimeValue);
+    public Instant getStartTime() {
+        return startTimeValue;
     }
 
-    public long getStopTime() {
-        return TimeEncoding.fromCalendar(stopTimeValue);
-    }
-
-    @Override
-    public boolean close() {
-        return super.close();
+    public Instant getStopTime() {
+        return stopTimeValue;
     }
 }

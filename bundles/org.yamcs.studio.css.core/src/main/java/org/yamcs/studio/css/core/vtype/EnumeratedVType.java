@@ -14,11 +14,8 @@ import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 
 public class EnumeratedVType extends YamcsVType implements VEnum {
 
-    private PVConnectionInfo info;
-
     public EnumeratedVType(PVConnectionInfo info, ParameterValue pval) {
         super(pval);
-        this.info = info;
     }
 
     @Override

@@ -14,16 +14,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.studio.core.model.ParameterCatalogue;
-
-import com.google.protobuf.InvalidProtocolBufferException;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Show detailed information of a widget's PVs.
  * <p>
- * If it's a yamcs parameter, the information is enriched, otherwise show the
- * typical CS-Studio content.
+ * If it's a yamcs parameter, the information is enriched, otherwise show the typical CS-Studio content.
  */
 public class ShowPVInfoAction implements IObjectActionDelegate {
 
@@ -52,16 +49,17 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
     }
 
     /**
-     * Gets detailed information on yamcs parameters. We do this one-by-one,
-     * because otherwise we risk having one invalid parameter spoil the whole
-     * bunch. Idealy we would rewrite this API a bit on yamcs server, so we
-     * avoid the use of a latch.
+     * Gets detailed information on yamcs parameters. We do this one-by-one, because otherwise we risk having one
+     * invalid parameter spoil the whole bunch. Idealy we would rewrite this API a bit on yamcs server, so we avoid the
+     * use of a latch.
      */
     private void loadParameterInfoAndShowDialog(List<PVInfo> pvInfos) {
         List<PVInfo> yamcsPvs = new ArrayList<>();
-        for (PVInfo pvInfo : pvInfos)
-            if (pvInfo.isYamcsParameter())
+        for (PVInfo pvInfo : pvInfos) {
+            if (pvInfo.isYamcsParameter()) {
                 yamcsPvs.add(pvInfo);
+            }
+        }
 
         // Start a worker thread that will show the dialog when a response for
         // all yamcs parameters arrived
@@ -78,16 +76,11 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
                         continue;
                     }
 
-                    ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
-                    catalogue.requestParameterDetail(pvInfo.getYamcsQualifiedName()).whenComplete((data, exc) -> {
+                    MissionDatabaseClient mdbClient = YamcsPlugin.getMissionDatabaseClient();
+                    mdbClient.getParameter(pvInfo.getYamcsQualifiedName()).whenComplete((response, exc) -> {
                         if (exc == null) {
-                            try {
-                                ParameterInfo response = ParameterInfo.parseFrom(data);
-                                pvInfo.setParameterInfo(response);
-                                latch.countDown();
-                            } catch (InvalidProtocolBufferException e) {
-                                log.log(Level.SEVERE, "Failed to decode server message", e);
-                            }
+                            pvInfo.setParameterInfo(response);
+                            latch.countDown();
                         } else {
                             pvInfo.setParameterInfoException(exc.getMessage());
                             latch.countDown();
@@ -116,14 +109,16 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        if (selection instanceof IStructuredSelection)
+        if (selection instanceof IStructuredSelection) {
             this.selection = (IStructuredSelection) selection;
+        }
     }
 
     private AbstractBaseEditPart getSelectedWidget() {
-        if (selection.getFirstElement() instanceof AbstractBaseEditPart)
+        if (selection.getFirstElement() instanceof AbstractBaseEditPart) {
             return (AbstractBaseEditPart) selection.getFirstElement();
-        else
+        } else {
             return null;
+        }
     }
 }

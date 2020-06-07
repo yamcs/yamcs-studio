@@ -1,6 +1,10 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -18,10 +22,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.protobuf.CreateEventRequest;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
-import org.yamcs.studio.core.model.EventCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.utils.TimeEncoding;
 
 public class AddManualEventDialog extends TitleAreaDialog {
 
@@ -36,9 +42,10 @@ public class AddManualEventDialog extends TitleAreaDialog {
         super(shell);
     }
 
-    protected AddManualEventDialog(Shell shell, long generationTime) {
+    protected AddManualEventDialog(Shell shell, Instant generationTime) {
         super(shell);
-        generationTimeValue = TimeEncoding.toCalendar(generationTime);
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(generationTime, TimeCatalogue.getInstance().getZoneId());
+        generationTimeValue = GregorianCalendar.from(zdt);
     }
 
     @Override
@@ -116,25 +123,30 @@ public class AddManualEventDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         String message = messageText.getText();
-        Calendar cal = RCPUtils.toCalendar(generationDatePicker, generationTimePicker);
+        Instant time = RCPUtils.toInstant(generationDatePicker, generationTimePicker);
         String severityString = severityCombo.getItem(severityCombo.getSelectionIndex());
         EventSeverity severity = EventSeverity.valueOf(severityString);
 
-        EventCatalogue catalogue = EventCatalogue.getInstance();
-        catalogue.createEvent(message, cal.getTime(), severity)
-                .whenComplete((data, exc) -> {
-                    if (exc == null) {
-                        Display.getDefault().asyncExec(() -> close());
-                    } else {
-                        Display.getDefault().asyncExec(() -> {
-                            MessageBox m = new MessageBox(getShell(),
-                                    SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
-                            m.setText("Error");
-                            m.setMessage(exc.getMessage());
-                            m.open();
-                        });
-                    }
+        YamcsClient client = YamcsPlugin.getYamcsClient();
+
+        CreateEventRequest.Builder requestb = CreateEventRequest.newBuilder();
+        requestb.setInstance(YamcsPlugin.getInstance());
+        requestb.setMessage(message);
+        requestb.setSeverity(severity.toString());
+        requestb.setTime(time.atOffset(ZoneOffset.UTC).toString());
+        client.createEvent(requestb.build()).whenComplete((data, exc) -> {
+            if (exc == null) {
+                Display.getDefault().asyncExec(() -> close());
+            } else {
+                Display.getDefault().asyncExec(() -> {
+                    MessageBox m = new MessageBox(getShell(),
+                            SWT.OK | SWT.ICON_ERROR | SWT.APPLICATION_MODAL);
+                    m.setText("Error");
+                    m.setMessage(exc.getMessage());
+                    m.open();
                 });
+            }
+        });
 
     }
 

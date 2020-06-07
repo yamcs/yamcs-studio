@@ -1,7 +1,7 @@
 package org.yamcs.studio.eventlog;
 
+import java.time.Instant;
 import java.util.Calendar;
-import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -14,10 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.utils.TimeEncoding;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
 
@@ -29,8 +26,8 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
     private DateTime stopTime;
     private Calendar stopTimeValue;
 
-    private long start;
-    private long stop;
+    private Instant start;
+    private Instant stop;
 
     public ImportPastEventsDialog(Shell parentShell) {
         super(parentShell);
@@ -44,9 +41,9 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     private void validate() {
         String errorMessage = null;
-        Calendar start = RCPUtils.toCalendar(startDate, startTime);
-        Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
-        if (start.after(stop)) {
+        Instant start = RCPUtils.toInstant(startDate, startTime);
+        Instant stop = RCPUtils.toInstant(stopDate, stopTime);
+        if (start.isAfter(stop)) {
             errorMessage = "Stop has to be greater than start";
         }
 
@@ -116,24 +113,17 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        start = TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime));
-        stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
+        start = RCPUtils.toInstant(startDate, startTime);
+        stop = RCPUtils.toInstant(stopDate, stopTime);
         super.okPressed();
     }
 
-    public long getStart() {
+    public Instant getStart() {
         return start;
     }
 
-    public long getStop() {
+    public Instant getStop() {
         return stop;
-    }
-
-    public void initialize(TimeInterval interval, List<String> packets, List<String> ppGroups) {
-        startTimeValue = TimeEncoding.toCalendar(interval.calculateStart());
-        startTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
-        stopTimeValue = TimeEncoding.toCalendar(interval.calculateStop());
-        stopTimeValue.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
     }
 
     @Override

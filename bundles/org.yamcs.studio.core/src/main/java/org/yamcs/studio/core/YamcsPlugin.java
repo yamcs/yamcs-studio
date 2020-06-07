@@ -12,18 +12,17 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 import org.yamcs.client.ClientException;
 import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.storage.StorageClient;
 import org.yamcs.studio.core.client.YamcsStudioClient;
-import org.yamcs.studio.core.model.AlarmCatalogue;
-import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.Catalogue;
 import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.model.EventCatalogue;
-import org.yamcs.studio.core.model.LinkCatalogue;
-import org.yamcs.studio.core.model.ManagementCatalogue;
 import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
-import org.yamcs.utils.TimeEncoding;
 
 public class YamcsPlugin extends Plugin {
 
@@ -32,6 +31,9 @@ public class YamcsPlugin extends Plugin {
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());
 
     private static YamcsPlugin plugin;
+
+    private String instance;
+    private String processor;
 
     private YamcsStudioClient yamcsClient;
     private Set<YamcsConnectionListener> connectionListeners = new CopyOnWriteArraySet<>();
@@ -42,23 +44,12 @@ public class YamcsPlugin extends Plugin {
         super.start(context);
         plugin = this;
 
-        TimeEncoding.setUp();
-
         yamcsClient = new YamcsStudioClient(getProductString());
         yamcsClient.addConnectionListener(new UIConnectionListener());
-
-        ManagementCatalogue managementCatalogue = new ManagementCatalogue();
-        catalogues.put(ManagementCatalogue.class, managementCatalogue);
-
-        addYamcsConnectionListener(managementCatalogue);
 
         registerCatalogue(new TimeCatalogue());
         registerCatalogue(new ParameterCatalogue());
         registerCatalogue(new CommandingCatalogue());
-        registerCatalogue(new AlarmCatalogue());
-        registerCatalogue(new EventCatalogue());
-        registerCatalogue(new LinkCatalogue());
-        registerCatalogue(new ArchiveCatalogue());
     }
 
     public void addYamcsConnectionListener(YamcsConnectionListener listener) {
@@ -79,8 +70,6 @@ public class YamcsPlugin extends Plugin {
 
     private <T extends Catalogue> void registerCatalogue(T catalogue) {
         catalogues.put(catalogue.getClass(), catalogue);
-        ManagementCatalogue managementCatalogue = getCatalogue(ManagementCatalogue.class);
-        managementCatalogue.addInstanceListener(catalogue);
         addYamcsConnectionListener(catalogue);
     }
 
@@ -99,8 +88,48 @@ public class YamcsPlugin extends Plugin {
         return plugin;
     }
 
-    public static YamcsStudioClient getYamcsClient() {
-        return plugin.yamcsClient;
+    public static YamcsClient getYamcsClient() {
+        return plugin.yamcsClient.getYamcsClient();
+    }
+
+    public static ArchiveClient getArchiveClient() {
+        YamcsClient client = getYamcsClient();
+        if (client != null) {
+            return client.createArchiveClient(plugin.instance);
+        }
+        return null;
+    }
+
+    public static StorageClient getStorageClient() {
+        YamcsClient client = getYamcsClient();
+        if (client != null) {
+            return client.createStorageClient();
+        }
+        return null;
+    }
+
+    public static ProcessorClient getProcessorClient() {
+        YamcsClient client = getYamcsClient();
+        if (client != null) {
+            return client.createProcessorClient(plugin.instance, plugin.processor);
+        }
+        return null;
+    }
+
+    public static MissionDatabaseClient getMissionDatabaseClient() {
+        YamcsClient client = getYamcsClient();
+        if (client != null) {
+            return client.createMissionDatabaseClient(plugin.instance);
+        }
+        return null;
+    }
+
+    public static String getInstance() {
+        return plugin.instance;
+    }
+
+    public static String getProcessor() {
+        return plugin.processor;
     }
 
     public static String getProductString() {

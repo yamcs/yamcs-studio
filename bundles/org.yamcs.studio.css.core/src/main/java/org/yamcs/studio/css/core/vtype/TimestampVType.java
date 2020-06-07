@@ -1,11 +1,11 @@
 package org.yamcs.studio.css.core.vtype;
 
+import java.time.Instant;
 import java.util.Date;
 
 import org.diirt.vtype.VTimestamp;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.utils.TimeEncoding;
 
 public class TimestampVType extends YamcsVType implements VTimestamp {
 
@@ -16,13 +16,13 @@ public class TimestampVType extends YamcsVType implements VTimestamp {
     @Override
     public Date getValue() {
         String stringValue = pval.getEngValue().getStringValue();
-        return YamcsUTCString.parse(stringValue);
+        return Date.from(Instant.parse(stringValue));
     }
 
     @Override
     public String toString() {
-        Date dt = getValue();
-        long instant = TimeEncoding.fromUnixMillisec(dt.getTime());
+        String stringValue = pval.getEngValue().getStringValue();
+        Instant instant = Instant.parse(stringValue);
         return YamcsUIPlugin.getDefault().formatInstant(instant);
     }
 }

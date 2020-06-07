@@ -17,9 +17,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.EventCatalogue;
-import org.yamcs.studio.core.model.EventListener;
 
 /*
  * DisplayOpener on request.
@@ -29,7 +26,7 @@ import org.yamcs.studio.core.model.EventListener;
  * or
  * "OpenDisplay: [displayName], hostname: [hostname]"
  */
-public class DisplayOpener implements EventListener {
+public class DisplayOpener {
 
     private static DisplayOpener instance = new DisplayOpener();
     private static final Logger log = Logger.getLogger(DisplayOpener.class.getName());
@@ -38,17 +35,10 @@ public class DisplayOpener implements EventListener {
     Pattern pHostName = Pattern.compile("OpenDisplay: (.*?), hostname: (.*)");
     Pattern p = Pattern.compile("OpenDisplay: (.*)");
 
-    private DisplayOpener() {
-        if (YamcsPlugin.getDefault() != null && EventCatalogue.getInstance() != null) {
-            EventCatalogue.getInstance().addEventListener(this);
-        }
-    }
-
     public static DisplayOpener init() {
         return instance;
     }
 
-    @Override
     public void processEvent(Event event) {
         // check if this is an OpenDisplay event.
         String eventMessage = event.getMessage();

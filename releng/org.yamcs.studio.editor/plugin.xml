@@ -78,19 +78,7 @@
                relationship="stack"
                visible="true"
                closeable="true"
-               id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="true"
-               closeable="true"
                id="org.yamcs.studio.commanding.stack.CommandStackView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
@@ -103,27 +91,12 @@
                visible="false"
                closeable="true"
                id="org.yamcs.studio.editor.base.views.FunctionsView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.editor.base.views.ParametersView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.monitoring.links.LinksView"/>
 
          <viewShortcut id="org.yamcs.studio.explorer.view"/>
          <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
-         <viewShortcut id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
          <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
          <viewShortcut id="org.yamcs.studio.commanding.stack.CommandStackView"/>
-         <viewShortcut id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
          <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
-         <viewShortcut id="org.yamcs.studio.monitoring.links.LinksView"/>
       </perspectiveExtension>
       
       <!-- OPI Editor Perspective -->
@@ -148,31 +121,13 @@
                relationship="stack"
                visible="false"
                closeable="true"
-               id="org.yamcs.studio.alarms.active.ActiveAlarmsView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
                id="org.yamcs.studio.commanding.stack.CommandStackView"/>
          <view
                relative="org.eclipse.ui.console.ConsoleView"
                relationship="stack"
                visible="false"
                closeable="true"
-               id="org.yamcs.studio.commanding.queue.CommandQueueView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
                id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
-         <view
-               relative="org.eclipse.ui.console.ConsoleView"
-               relationship="stack"
-               visible="false"
-               closeable="true"
-               id="org.yamcs.studio.monitoring.links.LinksView"/>
       </perspectiveExtension>
    </extension>
 </plugin>

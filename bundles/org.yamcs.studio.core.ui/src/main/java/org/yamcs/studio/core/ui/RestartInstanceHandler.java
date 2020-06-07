@@ -10,8 +10,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.ClientInfo;
-import org.yamcs.studio.core.model.ManagementCatalogue;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class RestartInstanceHandler extends AbstractHandler {
 
@@ -19,12 +19,11 @@ public class RestartInstanceHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        ClientInfo clientInfo = catalogue.getCurrentClientInfo();
         Shell shell = HandlerUtil.getActiveShell(event);
 
-        String instance = clientInfo.getInstance();
-        catalogue.restartInstance(clientInfo.getInstance()).whenComplete((ret, ex) -> {
+        YamcsClient client = YamcsPlugin.getYamcsClient();
+        String instance = YamcsPlugin.getInstance();
+        client.restartInstance(instance).whenComplete((ret, ex) -> {
             log.log(Level.SEVERE, "Failed to restart instance '" + instance + "'", ex);
             Display.getDefault().asyncExec(() -> {
                 MessageDialog.openError(shell, "Failed to restart instance '" + instance + "'", ex.getMessage());

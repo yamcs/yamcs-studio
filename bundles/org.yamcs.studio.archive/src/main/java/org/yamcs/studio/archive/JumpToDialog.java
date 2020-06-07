@@ -1,6 +1,9 @@
 package org.yamcs.studio.archive;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -20,7 +23,7 @@ public class JumpToDialog extends TitleAreaDialog {
     private DateTime date;
     private DateTime time;
 
-    private Calendar selectedTime;
+    private Instant selectedTime;
 
     public JumpToDialog(Shell parentShell) {
         super(parentShell);
@@ -56,7 +59,9 @@ public class JumpToDialog extends TitleAreaDialog {
         date = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
         time = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
 
-        Calendar now = TimeCatalogue.getInstance().getMissionTimeAsCalendar();
+        Instant missionTime = TimeCatalogue.getInstance().getMissionTime();
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(missionTime, TimeCatalogue.getInstance().getZoneId());
+        Calendar now = GregorianCalendar.from(zdt);
         if (now != null) {
             date.setDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
             time.setTime(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND));
@@ -67,11 +72,11 @@ public class JumpToDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        selectedTime = RCPUtils.toCalendar(date, time);
+        selectedTime = RCPUtils.toInstant(date, time);
         super.okPressed();
     }
 
-    public Calendar getTime() {
+    public Instant getTime() {
         return selectedTime;
     }
 }

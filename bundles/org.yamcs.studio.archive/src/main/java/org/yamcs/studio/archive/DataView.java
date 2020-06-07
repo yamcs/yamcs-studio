@@ -13,6 +13,7 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,6 @@ import javax.swing.SwingUtilities;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.utils.TimeEncoding;
 
 /**
  * Shows a number of IndexBoxes together. A timeline and a tag bar is shared among all included IndexBoxes. Range
@@ -196,7 +196,7 @@ public class DataView extends JScrollPane {
 
     long getMouseInstant(int mouseX) {
         if (zoomStack.isEmpty()) {
-            return TimeEncoding.INVALID_INSTANT;
+            return -1;
         }
         previewLocator = zoomStack.peek().convertPixelToInstant(mouseX);
         return previewLocator;
@@ -219,7 +219,7 @@ public class DataView extends JScrollPane {
             int nextStopX = nextStartX + (extentWidth / 3);
             startInstant = zoom.convertPixelToInstant(nextStartX);
             stopInstant = zoom.convertPixelToInstant(nextStopX);
-            zoom.setSelectedRange(TimeEncoding.INVALID_INSTANT, TimeEncoding.INVALID_INSTANT);
+            zoom.setSelectedRange(-1, -1);
         } else {
             startInstant = currentSelection.getStartInstant();
             stopInstant = currentSelection.getStopInstant();
@@ -228,15 +228,15 @@ public class DataView extends JScrollPane {
 
         long range = stopInstant - startInstant;
 
-        long reqStart = archivePanel.getRequestedDataInterval().calculateStart();
-        long reqStop = archivePanel.getRequestedDataInterval().calculateStop();
+        Instant reqStart = archivePanel.getRequestedDataInterval().calculateStart();
+        Instant reqStop = archivePanel.getRequestedDataInterval().calculateStop();
         long zstart = startInstant - range * 2;
-        if (reqStart != TimeEncoding.INVALID_INSTANT) {
-            zstart = Math.max(zstart, reqStart);
+        if (reqStart != null) {
+            zstart = Math.max(zstart, reqStart.toEpochMilli());
         }
         long zstop = stopInstant + range * 2;
-        if (reqStop != TimeEncoding.INVALID_INSTANT) {
-            zstop = Math.min(zstop, reqStop);
+        if (reqStop != null) {
+            zstop = Math.min(zstop, reqStop.toEpochMilli());
         }
         zoom = new ZoomSpec(zstart, zstop, vp.getExtentSize().width, range);
         zoom.viewLocation = startInstant;
@@ -268,21 +268,21 @@ public class DataView extends JScrollPane {
             ib.dataLoadFinished();
         }
         TimeInterval intv = archivePanel.getRequestedDataInterval();
-        long intvStart = intv.calculateStart();
-        long intvStop = intv.calculateStop();
+        long intvStart = intv.calculateStart() != null ? intv.calculateStart().toEpochMilli() : -1;
+        long intvStop = intv.calculateStop() != null ? intv.calculateStop().toEpochMilli() : -1;
         if (zoomStack.isEmpty() || intvStart != lastStartTimestamp || intvStop != lastEndTimestamp) {
             int w = getViewport().getExtentSize().width;
             zoomStack.clear();
             long reqStart = intvStart;
             long zstart = archivePanel.dataStart;
-            if (reqStart != TimeEncoding.INVALID_INSTANT) {
+            if (reqStart != -1) {
                 zstart = Math.min(reqStart, zstart);
             }
 
             long reqStop = intvStop;
             long zstop = archivePanel.dataStop;
 
-            if (reqStop != TimeEncoding.INVALID_INSTANT) {
+            if (reqStop != -1) {
                 zstop = Math.max(reqStop, zstop);
             }
             long range = zstop - zstart;
@@ -324,8 +324,7 @@ public class DataView extends JScrollPane {
         if (zoomStack.size() > 1) {
             zoomStack.pop();
             ZoomSpec zoom = zoomStack.peek();
-            if (zoom.selectionStart != TimeEncoding.INVALID_INSTANT
-                    && zoom.selectionStop != TimeEncoding.INVALID_INSTANT) {
+            if (zoom.selectionStart != -1 && zoom.selectionStop != -1) {
                 // Restore selection as it was made before zoom in (to make it easier to go back and forth between zoom
                 // in/out)
                 updateSelection(zoom.selectionStart, zoom.selectionStop);
@@ -363,10 +362,10 @@ public class DataView extends JScrollPane {
 
     public void updateSelection(Long selectionStart, Long selectionStop) {
         if (!archivePanel.passiveUpdate) {
-            if ((selectionStart != null) && (selectionStop != null)) {
+            if (selectionStart != null && selectionStop != null) {
                 long start = selectionStart;
                 long stop = selectionStop;
-                if ((start != TimeEncoding.INVALID_INSTANT) && (stop != TimeEncoding.INVALID_INSTANT)) {
+                if (start != -1 && stop != -1) {
                     updateSelection(start, stop);
                     emitActionEvent("histo_selection_finished");
                 }
@@ -711,7 +710,7 @@ public class DataView extends JScrollPane {
         // Draw the date and time that is under the current mouse X position, high is 11 pixels
         void drawMouseTime(Graphics g, int mouseX, int offsetY) {
             int boxPadding = 1;
-            long instant = getMouseInstant(mouseX);
+            Instant instant = Instant.ofEpochMilli(getMouseInstant(mouseX));
             String dateTimeText = YamcsUIPlugin.getDefault().formatInstant(instant);
             int fontWidth = g.getFontMetrics().stringWidth(dateTimeText);
             int fontHeight = 9;
