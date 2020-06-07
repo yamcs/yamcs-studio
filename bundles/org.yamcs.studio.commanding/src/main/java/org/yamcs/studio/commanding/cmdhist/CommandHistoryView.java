@@ -167,6 +167,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         });
 
         getViewSite().setSelectionProvider(tableViewer);
+
+        YamcsPlugin.addListener(this);
     }
 
     @Override
@@ -174,10 +176,10 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         if (subscription != null) {
             subscription.cancel(true);
         }
-        clear();
+        Display.getDefault().syncExec(this::clear);
 
         if (instance != null) {
-            fetchLatestEntries();
+            Display.getDefault().asyncExec(this::fetchLatestEntries);
         }
         if (processor != null) {
             YamcsClient client = YamcsPlugin.getYamcsClient();

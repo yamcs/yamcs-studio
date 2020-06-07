@@ -33,10 +33,10 @@ public class ArchiveIndexReceiver {
             archive.streamIndex(response -> {
                 log.fine(String.format("Received %d archive records", response.getRecordsCount()));
                 archiveView.receiveArchiveRecords(response);
-            }, interval.getStart(), interval.getStop(), IndexOptions.filter("tm", "pp", "commands", "completeness"))
+            }, interval.getStart(), interval.getStop(), IndexOptions.filter("tm", "pp", "commands"/*, "completeness"*/))
                     .whenComplete((data, exc) -> {
                         if (exc == null) {
-                            log.info("Done receiving archive records.");
+                            log.info("Done receiving archive records");
                             archiveView.receiveArchiveRecordsFinished();
                             receiving = false;
                         } else {

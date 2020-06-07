@@ -270,6 +270,7 @@ public class DataView extends JScrollPane {
         TimeInterval intv = archivePanel.getRequestedDataInterval();
         long intvStart = intv.calculateStart() != null ? intv.calculateStart().toEpochMilli() : -1;
         long intvStop = intv.calculateStop() != null ? intv.calculateStop().toEpochMilli() : -1;
+
         if (zoomStack.isEmpty() || intvStart != lastStartTimestamp || intvStop != lastEndTimestamp) {
             int w = getViewport().getExtentSize().width;
             zoomStack.clear();

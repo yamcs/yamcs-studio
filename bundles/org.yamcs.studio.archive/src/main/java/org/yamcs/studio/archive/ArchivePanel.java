@@ -198,10 +198,10 @@ public class ArchivePanel extends JPanel implements PropertyChangeListener {
             start = Instant.ofEpochSecond(r.getFirst().getSeconds(), r.getFirst().getNanos()).toEpochMilli();
             stop = Instant.ofEpochSecond(r.getLast().getSeconds(), r.getLast().getNanos()).toEpochMilli();
 
-            if ((dataStart == -1) || (start < dataStart)) {
+            if (dataStart == -1 || start < dataStart) {
                 dataStart = start;
             }
-            if ((dataStop == -1) || (stop > dataStop)) {
+            if (dataStop == -1 || stop > dataStop) {
                 dataStop = stop;
             }
 

@@ -69,7 +69,7 @@ public class TimeInterval implements Serializable {
             return stop;
         } else {
             return YamcsPlugin.getMissionTime(true)
-                    .plus(1, ChronoUnit.MONTHS)
+                    .plus(1, ChronoUnit.DAYS)
                     .truncatedTo(ChronoUnit.DAYS);
         }
     }

@@ -31,7 +31,7 @@
 
    <extension point="org.eclipse.ui.handlers">
       <!-- For some weird reason, core expressions don't work properly anymore.
-           Maybe upgrade RCP? Workaround is to force a change in the application
+           Workaround is to force a change in the application
            context by selecting another view, and then returning to the Archive View...
            The issue is not limited to zoom, it also happens with for example connection state,
            but so far only in the archive view. SWT bridge? -->

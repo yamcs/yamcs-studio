@@ -33,7 +33,7 @@ public class Prefs {
         }
         if (range == null) {
             Instant missionTime = YamcsPlugin.getMissionTime(true);
-            range = TimeInterval.starting(missionTime.minus(1, ChronoUnit.MONTHS));
+            range = TimeInterval.starting(missionTime.minus(30, ChronoUnit.DAYS));
         }
         return range;
     }

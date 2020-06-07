@@ -1,6 +1,7 @@
 package org.yamcs.studio.eventlog;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -27,6 +28,8 @@ import org.yamcs.protobuf.CreateEventRequest;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.RCPUtils;
+
+import com.google.protobuf.Timestamp;
 
 public class AddManualEventDialog extends TitleAreaDialog {
 
@@ -132,7 +135,8 @@ public class AddManualEventDialog extends TitleAreaDialog {
         requestb.setInstance(YamcsPlugin.getInstance());
         requestb.setMessage(message);
         requestb.setSeverity(severity.toString());
-        requestb.setTime(time.atOffset(ZoneOffset.UTC).toString());
+        OffsetDateTime t = time.atOffset(ZoneOffset.UTC);
+        requestb.setTime(Timestamp.newBuilder().setSeconds(t.toEpochSecond()).setNanos(t.getNano()));
         client.createEvent(requestb.build()).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> close());
