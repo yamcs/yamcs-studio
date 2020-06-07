@@ -45,9 +45,6 @@ import org.yamcs.studio.connect.YamcsConfiguration.AuthType;
 /**
  * A modal dialog for managing connection to Yamcs servers. Extracted out of preferences, because these kind of settings
  * are a lot more variable and depending on the user configuration.
- * <p>
- * The idea is that when you start Yamcs Studio for the very first time, it does not attempt any connection.
- * Auto-connect is an option.
  */
 public class ConnectionsDialog extends Dialog {
 
@@ -63,7 +60,6 @@ public class ConnectionsDialog extends Dialog {
 
     private YamcsConfiguration selectedConfiguration;
 
-    private Button autoConnect;
     private Text yamcsInstanceText;
     private Text yamcsHostText;
     private Text yamcsPortText;
@@ -192,7 +188,6 @@ public class ConnectionsDialog extends Dialog {
             chosenConfiguration = selectedConfiguration;
             passwordForChosenConfiguration = chosenConfiguration.getPassword();
         }
-        ConnectionPreferences.setAutoConnect(autoConnect.getSelection());
         List<YamcsConfiguration> confs = new ArrayList<>();
         Object el;
         int i = 0;
@@ -210,10 +205,8 @@ public class ConnectionsDialog extends Dialog {
     protected void createButtonsForButtonBar(Composite parent) {
         parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        autoConnect = new Button(parent, SWT.CHECK);
-        autoConnect.setText("Connect on startup");
-        autoConnect.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        autoConnect.setSelection(ConnectionPreferences.isAutoConnect());
+        Label filler = new Label(parent, SWT.NONE);
+        filler.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         GridLayout layout = (GridLayout) parent.getLayout();
         layout.numColumns++;

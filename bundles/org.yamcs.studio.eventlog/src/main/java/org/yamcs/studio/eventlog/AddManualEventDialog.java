@@ -26,7 +26,7 @@ import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.CreateEventRequest;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.RCPUtils;
 
 public class AddManualEventDialog extends TitleAreaDialog {
 

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class EventDetailsDialog extends TrayDialog {
 
@@ -310,7 +310,7 @@ public class EventDetailsDialog extends TrayDialog {
             }
         }
 
-        YamcsUIPlugin uiPlugin = YamcsUIPlugin.getDefault();
+        YamcsPlugin uiPlugin = YamcsPlugin.getDefault();
         Instant generationTime = Instant.ofEpochSecond(rec.event.getGenerationTime().getSeconds(),
                 rec.event.getGenerationTime().getNanos());
         generationTimeLabel.setText(uiPlugin.formatInstant(generationTime));

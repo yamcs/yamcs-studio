@@ -1,8 +1,8 @@
 package org.yamcs.studio.commanding.cmdhist;
 
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.studio.core.ui.utils.ColumnData;
-import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
+import org.yamcs.studio.core.utils.ColumnData;
+import org.yamcs.studio.core.utils.ViewerColumnsDialog;
 
 public class CommandHistoryViewerColumnsDialog extends ViewerColumnsDialog {
 

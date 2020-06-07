@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.studio.core.ui.utils.ColumnData;
-import org.yamcs.studio.core.ui.utils.ColumnDef;
-import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.utils.ColumnData;
+import org.yamcs.studio.core.utils.ColumnDef;
+import org.yamcs.studio.core.utils.ViewerColumnsDialog;
 
 public class EventLogTableViewer extends TableViewer {
 
@@ -244,7 +244,7 @@ public class EventLogTableViewer extends TableViewer {
                         Event event = ((EventLogItem) element).event;
                         Instant generationTime = Instant.ofEpochSecond(event.getGenerationTime().getSeconds(),
                                 event.getGenerationTime().getNanos());
-                        return YamcsUIPlugin.getDefault().formatInstant(generationTime);
+                        return YamcsPlugin.getDefault().formatInstant(generationTime);
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -325,7 +325,7 @@ public class EventLogTableViewer extends TableViewer {
                         Event event = ((EventLogItem) element).event;
                         Instant receptionTime = Instant.ofEpochSecond(event.getReceptionTime().getSeconds(),
                                 event.getReceptionTime().getNanos());
-                        return YamcsUIPlugin.getDefault().formatInstant(receptionTime);
+                        return YamcsPlugin.getDefault().formatInstant(receptionTime);
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));

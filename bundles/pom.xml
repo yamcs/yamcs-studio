@@ -25,7 +25,6 @@
     <module>org.yamcs.studio.commanding</module>
     <module>org.yamcs.studio.connect</module>
     <module>org.yamcs.studio.core</module>
-    <module>org.yamcs.studio.core.ui</module>
     <module>org.yamcs.studio.css.core</module>
     <module>org.yamcs.studio.css.script</module>
     <module>org.yamcs.studio.displays</module>

@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Shows a number of IndexBoxes together. A timeline and a tag bar is shared among all included IndexBoxes. Range
@@ -711,7 +711,7 @@ public class DataView extends JScrollPane {
         void drawMouseTime(Graphics g, int mouseX, int offsetY) {
             int boxPadding = 1;
             Instant instant = Instant.ofEpochMilli(getMouseInstant(mouseX));
-            String dateTimeText = YamcsUIPlugin.getDefault().formatInstant(instant);
+            String dateTimeText = YamcsPlugin.getDefault().formatInstant(instant);
             int fontWidth = g.getFontMetrics().stringWidth(dateTimeText);
             int fontHeight = 9;
             // g.setColor(Color.LIGHT_GRAY);

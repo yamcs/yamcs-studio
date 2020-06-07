@@ -34,8 +34,8 @@ import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.XtceSubSystemNode;
-import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
+import org.yamcs.studio.core.utils.RCPUtils;
 
 public class AddToStackWizardPage1 extends WizardPage {
 

@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.protobuf.Timestamp;
 
@@ -65,7 +65,7 @@ public class ScrollViewer extends TableViewer {
                 ParameterValue pval = pdata.getParameter(0);
                 Timestamp proto = pval.getGenerationTime();
                 Instant generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
-                return YamcsUIPlugin.getDefault().formatInstant(generationTime);
+                return YamcsPlugin.getDefault().formatInstant(generationTime);
             }
         });
     }

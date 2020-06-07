@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.RCPUtils;
 
 public class JumpToDialog extends TitleAreaDialog {
 

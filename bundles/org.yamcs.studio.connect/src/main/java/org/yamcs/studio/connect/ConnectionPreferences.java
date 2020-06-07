@@ -16,19 +16,8 @@ import com.google.gson.reflect.TypeToken;
 @SuppressWarnings("deprecation")
 public class ConnectionPreferences {
 
-    private static final String KEY_AUTO_CONNECT = "autoConnect";
     private static final String KEY_LAST_USED_CONFIGURATION = "lastUsedConf";
     private static final String KEY_CONFIGURATIONS = "confs";
-
-    public static boolean isAutoConnect() {
-        Preferences prefs = Preferences.userNodeForPackage(Stub.class);
-        return prefs.getBoolean(KEY_AUTO_CONNECT, false);
-    }
-
-    public static void setAutoConnect(boolean enabled) {
-        Preferences prefs = Preferences.userNodeForPackage(Stub.class);
-        prefs.putBoolean(KEY_AUTO_CONNECT, enabled);
-    }
 
     public static YamcsConfiguration getLastUsedConfiguration() {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);

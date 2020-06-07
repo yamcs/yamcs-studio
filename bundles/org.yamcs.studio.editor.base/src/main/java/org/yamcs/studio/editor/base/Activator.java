@@ -2,7 +2,7 @@ package org.yamcs.studio.editor.base;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class Activator extends AbstractUIPlugin {
 
@@ -16,7 +16,7 @@ public class Activator extends AbstractUIPlugin {
         plugin = this;
 
         // Trigger other bundles
-        YamcsUIPlugin.getDefault();
+        YamcsPlugin.getDefault();
     }
 
     @Override

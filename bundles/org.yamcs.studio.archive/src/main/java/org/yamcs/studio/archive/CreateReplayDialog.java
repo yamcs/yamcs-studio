@@ -32,7 +32,7 @@ import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.CreateProcessorRequest;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.RCPUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

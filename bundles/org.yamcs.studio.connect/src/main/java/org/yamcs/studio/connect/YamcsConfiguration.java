@@ -131,4 +131,9 @@ public class YamcsConfiguration {
         YamcsConfiguration other = (YamcsConfiguration) obj;
         return Objects.equals(name, other.name);
     }
+
+    @Override
+    public String toString() {
+        return primaryHost + ":" + primaryPort;
+    }
 }

@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.studio.core.StringConverter;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 
@@ -283,7 +283,7 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     private void updateProperties() {
-        dateLabel.setText(YamcsUIPlugin.getDefault().formatInstant(rec.getGenerationTime()));
+        dateLabel.setText(YamcsPlugin.getDefault().formatInstant(rec.getGenerationTime()));
         commandStringText.setText(rec.getCommandString());
 
         userLabel.setText(rec.getUsername());

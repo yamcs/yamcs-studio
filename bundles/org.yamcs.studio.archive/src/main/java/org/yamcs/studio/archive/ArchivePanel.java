@@ -29,7 +29,7 @@ import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.ui.utils.Prefs;
+import org.yamcs.studio.core.utils.Prefs;
 
 /**
  * Main panel of the ArchiveBrowser

@@ -37,10 +37,10 @@ import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.protobuf.SubscribeEventsRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
+import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.YamcsAware;
-import org.yamcs.studio.core.ui.utils.Debouncer;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.Debouncer;
+import org.yamcs.studio.core.utils.RCPUtils;
 
 public class EventLog extends Composite implements YamcsAware {
 

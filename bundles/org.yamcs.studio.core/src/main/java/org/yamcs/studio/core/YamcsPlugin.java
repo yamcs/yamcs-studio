@@ -1,59 +1,69 @@
 package org.yamcs.studio.core;
 
-import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
+import org.yamcs.client.ClearanceSubscription;
 import org.yamcs.client.ClientException;
 import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.ProcessorSubscription;
+import org.yamcs.client.TimeSubscription;
 import org.yamcs.client.YamcsClient;
 import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.client.mdb.MissionDatabaseClient;
 import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.client.storage.StorageClient;
+import org.yamcs.protobuf.ClearanceInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
-import org.yamcs.studio.connect.YamcsConfiguration;
-import org.yamcs.studio.connect.YamcsConfiguration.AuthType;
-import org.yamcs.studio.core.model.YamcsAware;
-import org.yamcs.studio.core.security.YamcsAuthorizations;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.SubscribeProcessorsRequest;
+import org.yamcs.protobuf.SubscribeTimeRequest;
+import org.yamcs.protobuf.UserInfo;
+import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
 
-public class YamcsPlugin extends Plugin {
+import com.google.protobuf.Empty;
+
+public class YamcsPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "org.yamcs.studio.core";
+    public static final String CMD_CONNECT = "org.yamcs.studio.core.ui.connect";
     private static final Logger log = Logger.getLogger(YamcsPlugin.class.getName());
     private static final AtomicInteger COMMAND_SEQUENCE = new AtomicInteger(1);
 
     private static YamcsPlugin plugin;
 
+    private SimpleDateFormat format;
+    private SimpleDateFormat tzFormat;
+
     private YamcsClient yamcsClient;
 
     private String instance;
-    private String processor;
-    private SignificanceLevelType clearance;
+    private ProcessorInfo processor;
     private MissionDatabase missionDatabase;
-    private Instant currentTime;
+    private UserInfo userInfo;
 
-    private Set<YamcsConnectionListener> connectionListeners = new CopyOnWriteArraySet<>();
+    private TimeSubscription timeSubscription;
+    private ClearanceSubscription clearanceSubscription;
+    private ProcessorSubscription processorSubscription;
+
     private Set<YamcsAware> listeners = new CopyOnWriteArraySet<>();
 
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -62,81 +72,8 @@ public class YamcsPlugin extends Plugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-    }
-
-    public static FutureTask<Void> connect(YamcsConfiguration configuration) {
-        if (plugin.yamcsClient != null) {
-            plugin.yamcsClient.close();
-        }
-
-        YamcsClient.Builder clientBuilder = YamcsClient
-                .newBuilder(configuration.getPrimaryHost(), configuration.getPrimaryPort())
-                .withTls(configuration.isSsl())
-                .withVerifyTls(false)
-                .withUserAgent(getProductString());
-
-        if (configuration.getCaCertFile() != null) {
-            clientBuilder.withCaCertFile(Paths.get(configuration.getCaCertFile()));
-        }
-        plugin.yamcsClient = clientBuilder.build();
-
-        FutureTask<Void> future = new FutureTask<>(() -> {
-            log.info("Connecting to " + configuration);
-            if (configuration.getAuthType() == AuthType.KERBEROS) {
-                plugin.yamcsClient.connectWithKerberos();
-            } else if (configuration.getUser() == null) {
-                plugin.yamcsClient.connectAnonymously();
-            } else {
-                plugin.yamcsClient.connect(configuration.getUser(), configuration.getPassword().toCharArray());
-            }
-            return null;
-        });
-        plugin.executor.submit(future);
-
-        // Add Progress indicator in status bar
-        String jobName = "Connecting to " + configuration;
-        scheduleAsJob(jobName, future, Job.SHORT);
-
-        return future;
-    }
-
-    private static void scheduleAsJob(String jobName, Future<?> cf, int priority) {
-        Job job = Job.create(jobName, monitor -> {
-            try {
-                cf.get();
-                return Status.OK_STATUS;
-            } catch (CancellationException | InterruptedException e) {
-                return Status.CANCEL_STATUS;
-            } catch (ExecutionException e) {
-                Throwable cause = e.getCause();
-                log.log(Level.SEVERE, "Exception while executing job '" + jobName + "': " + cause.getMessage(),
-                        cause);
-                return Status.OK_STATUS;
-            }
-        });
-        job.setPriority(Job.LONG);
-        job.schedule();
-
-        job.addJobChangeListener(new JobChangeAdapter() {
-            @Override
-            public void done(IJobChangeEvent event) {
-                MissionDatabaseLoader loader = new MissionDatabaseLoader();
-                Job job = Job.create("Loading mission database", loader);
-                job.setPriority(Job.LONG);
-                job.schedule(1000L);
-            }
-        });
-    }
-
-    public void addYamcsConnectionListener(YamcsConnectionListener listener) {
-        connectionListeners.add(listener);
-        /*if (yamcsClient.isConnected()) {
-            listener.onYamcsConnected();
-        }*/
-    }
-
-    public void removeYamcsConnectionListener(YamcsConnectionListener listener) {
-        connectionListeners.remove(listener);
+        // Warning to future self: don't access preference store here. It triggers before workspace selection, causing
+        // chaos.
     }
 
     public static void addListener(YamcsAware listener) {
@@ -145,6 +82,37 @@ public class YamcsPlugin extends Plugin {
 
     public static void removeListener(YamcsAware listener) {
         plugin.listeners.remove(listener);
+    }
+
+    public static UserInfo getUser() {
+        return plugin.userInfo;
+    }
+
+    private static boolean isSuperuser() {
+        UserInfo userInfo = getUser();
+        return userInfo != null && (userInfo.hasSuperuser() && userInfo.getSuperuser());
+    }
+
+    public static boolean hasSystemPrivilege(String systemPrivilege) {
+        if (!isAuthorizationEnabled()) {
+            return true;
+        }
+        if (getUser() == null) {
+            return false;
+        }
+
+        return isSuperuser() || getUser().getSystemPrivilegeList().contains(systemPrivilege);
+    }
+
+    public static boolean isAuthorizationEnabled() {
+        return false;
+        /*YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+        // TODO we should probably control this from the server, rather than here. Just because
+        // the creds are null, does not really mean anything. We could also send creds to an
+        // unsecured yamcs server. It would just ignore it, and then our client state would
+        // be wrong
+        YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
+        return (yprops == null) ? false : yprops.getPassword() != null;*/
     }
 
     @Override
@@ -164,6 +132,43 @@ public class YamcsPlugin extends Plugin {
 
     public static YamcsPlugin getDefault() {
         return plugin;
+    }
+
+    public void setDateFormat(String pattern) {
+        format = new SimpleDateFormat(pattern, Locale.US);
+        tzFormat = new SimpleDateFormat(pattern + " Z", Locale.US);
+    }
+
+    /**
+     * Formats a Yamcs instant. Timezone information is not added. Must be called on SWT thread due to reuse of
+     * dateformatter.
+     */
+    public String formatInstant(Instant instant) {
+        return formatInstant(instant, false);
+    }
+
+    /**
+     * Formats a Yamcs instant. Must be called on SWT thread due to reuse of dateformatter.
+     * 
+     * @param tzOffset
+     *            whether timezone offset is added to the output string.
+     */
+    public String formatInstant(Instant instant, boolean tzOffset) {
+        if (format == null) {
+            IPreferenceStore store = getPreferenceStore();
+            String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
+            setDateFormat(pattern);
+        }
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, YamcsPlugin.getZoneId());
+        Calendar cal = GregorianCalendar.from(zdt);
+        cal.setTimeZone(YamcsPlugin.getTimeZone());
+        if (tzOffset) {
+            tzFormat.setTimeZone(cal.getTimeZone());
+            return tzFormat.format(cal.getTime());
+        } else {
+            format.setTimeZone(cal.getTimeZone());
+            return format.format(cal.getTime());
+        }
     }
 
     public static YamcsClient getYamcsClient() {
@@ -189,7 +194,7 @@ public class YamcsPlugin extends Plugin {
     public static ProcessorClient getProcessorClient() {
         YamcsClient client = getYamcsClient();
         if (client != null) {
-            return client.createProcessorClient(plugin.instance, plugin.processor);
+            return client.createProcessorClient(plugin.instance, plugin.processor.getName());
         }
         return null;
     }
@@ -207,11 +212,16 @@ public class YamcsPlugin extends Plugin {
     }
 
     public static String getProcessor() {
+        return plugin.processor.getName();
+    }
+
+    public static ProcessorInfo getProcessorInfo() {
         return plugin.processor;
     }
 
     public static SignificanceLevelType getClearance() {
-        return plugin.clearance;
+        ClearanceInfo info = plugin.clearanceSubscription.getCurrent();
+        return info.hasLevel() ? info.getLevel() : null;
     }
 
     public static MissionDatabase getMissionDatabase() {
@@ -223,7 +233,7 @@ public class YamcsPlugin extends Plugin {
     }
 
     public static Instant getMissionTime(boolean wallClockIfUnset) {
-        Instant t = plugin.currentTime;
+        Instant t = plugin.timeSubscription.getCurrent();
         if (wallClockIfUnset && t == null) {
             t = Instant.now();
         }
@@ -252,41 +262,128 @@ public class YamcsPlugin extends Plugin {
         return COMMAND_SEQUENCE.incrementAndGet();
     }
 
-    /**
-     * Connection listener that maps the connection events from Yamcs API to the slightly different Studio API.
-     */
-    private class UIConnectionListener implements ConnectionListener {
+    public static Iterator<YamcsAware> listeners() {
+        return plugin.listeners.iterator();
+    }
 
-        @Override
-        public void connecting() {
-            connectionListeners.forEach(l -> l.onYamcsConnecting());
+    public static void updateEntities(RemoteEntityHolder holder) {
+        // First update state
+        plugin.yamcsClient = holder.yamcsClient;
+        plugin.userInfo = holder.userInfo;
+        plugin.missionDatabase = holder.missionDatabase;
+        plugin.instance = holder.instance;
+        plugin.processor = holder.processor;
+
+        // Then see if anything needs notifying
+        if (plugin.instance != null) {
+            plugin.listeners.forEach(l -> l.changeInstance(plugin.instance));
+        }
+        if (plugin.processor != null) {
+            plugin.listeners.forEach(l -> l.changeProcessor(plugin.instance, plugin.processor.getName()));
+            plugin.listeners.forEach(l -> l.changeProcessorInfo(plugin.processor));
         }
 
-        @Override
-        public void connected() {
-            YamcsAuthorizations.getInstance().loadAuthorizations().thenRun(() -> {
-                connectionListeners.forEach(l -> l.onYamcsConnected());
+        setupGlobalTimeSubscription();
+        setupGlobalClearanceSubscription();
+        setupGlobalProcessorSubscription();
+
+        plugin.yamcsClient.addConnectionListener(new ConnectionListener() {
+            @Override
+            public void connected() {
+                // Already handled by YamcsConnector
+            }
+
+            @Override
+            public void connecting() {
+                // Already handled by YamcsConnector
+            }
+
+            @Override
+            public void connectionFailed(ClientException exception) {
+                // Already handled by YamcsConnector
+            }
+
+            @Override
+            public void disconnected() {
+                if (plugin == null) {
+                    // Plugin is shutting down
+                    // Prevent downstream exceptions
+                    return;
+                }
+
+                log.fine("Notify downstream components of Studio disconnect");
+                for (YamcsAware l : plugin.listeners) {
+                    log.fine(String.format(" -> Inform %s", l.getClass().getSimpleName()));
+                    l.onYamcsDisconnected();
+                }
+
+                // Clean UI state
+                disconnect();
+            }
+        });
+    }
+
+    private static void setupGlobalTimeSubscription() {
+        if (plugin.instance != null) {
+            plugin.timeSubscription = getYamcsClient().createTimeSubscription();
+            plugin.timeSubscription.addMessageListener(proto -> {
+                Instant instant = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+                plugin.listeners.forEach(l -> l.updateTime(instant));
             });
-        }
-
-        @Override
-        public void connectionFailed(ClientException exception) {
-            connectionListeners.forEach(l -> l.onYamcsConnectionFailed(exception));
-        }
-
-        @Override
-        public void disconnected() {
-            if (plugin == null) {
-                // Plugin is shutting down
-                // Prevent downstream exceptions
-                return;
+            SubscribeTimeRequest.Builder requestb = SubscribeTimeRequest.newBuilder()
+                    .setInstance(plugin.instance);
+            if (plugin.processor != null) {
+                requestb.setProcessor(plugin.processor.getName());
             }
-
-            log.fine("Notify downstream components of Studio disconnect");
-            for (YamcsConnectionListener l : connectionListeners) {
-                log.fine(String.format(" -> Inform %s", l.getClass().getSimpleName()));
-                l.onYamcsDisconnected();
-            }
+            plugin.timeSubscription.sendMessage(requestb.build());
         }
+    }
+
+    private static void setupGlobalClearanceSubscription() {
+        plugin.clearanceSubscription = getYamcsClient().createClearanceSubscription();
+        plugin.clearanceSubscription.addMessageListener(info -> {
+            if (info.hasLevel()) {
+                plugin.listeners.forEach(l -> l.updateClearance(info.getLevel()));
+            } else {
+                plugin.listeners.forEach(l -> l.updateClearance(null));
+            }
+        });
+        plugin.clearanceSubscription.sendMessage(Empty.getDefaultInstance());
+    }
+
+    private static void setupGlobalProcessorSubscription() {
+        if (plugin.processor != null) {
+            plugin.processorSubscription = getYamcsClient().createProcessorSubscription();
+            plugin.processorSubscription.addMessageListener(info -> {
+                plugin.listeners.forEach(l -> l.changeProcessorInfo(info));
+            });
+            plugin.processorSubscription.sendMessage(SubscribeProcessorsRequest.newBuilder()
+                    .setInstance(plugin.instance)
+                    .setProcessor(plugin.processor.getName())
+                    .build());
+        }
+    }
+
+    public static void disconnect() {
+        if (plugin.yamcsClient != null) {
+            log.info("Disconnecting from " + plugin.yamcsClient.getHost() + ":" + plugin.yamcsClient.getPort());
+            plugin.yamcsClient.close();
+            plugin.yamcsClient = null;
+        }
+        plugin.userInfo = null;
+        plugin.instance = null;
+        plugin.processor = null;
+        plugin.missionDatabase = null;
+
+        plugin.timeSubscription = null;
+        plugin.clearanceSubscription = null;
+
+        plugin.listeners.forEach(listener -> {
+            listener.updateClearance(null);
+            listener.changeInstance(null);
+            listener.changeProcessor(null, null);
+            listener.changeProcessorInfo(null);
+            listener.updateTime(null);
+        });
     }
 }

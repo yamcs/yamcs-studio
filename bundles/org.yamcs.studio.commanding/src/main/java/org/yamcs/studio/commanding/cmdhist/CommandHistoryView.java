@@ -41,14 +41,13 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.CommandingPlugin;
+import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.YamcsAware;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
-import org.yamcs.studio.core.ui.utils.ColumnData;
-import org.yamcs.studio.core.ui.utils.ColumnDef;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
-import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
+import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
+import org.yamcs.studio.core.utils.ColumnData;
+import org.yamcs.studio.core.utils.ColumnDef;
+import org.yamcs.studio.core.utils.RCPUtils;
+import org.yamcs.studio.core.utils.ViewerColumnsDialog;
 
 public class CommandHistoryView extends ViewPart implements YamcsAware {
 
@@ -355,7 +354,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getText(Object element) {
                         Instant generationTime = ((CommandHistoryRecord) element).getGenerationTime();
-                        return YamcsUIPlugin.getDefault().formatInstant(generationTime);
+                        return YamcsPlugin.getDefault().formatInstant(generationTime);
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));

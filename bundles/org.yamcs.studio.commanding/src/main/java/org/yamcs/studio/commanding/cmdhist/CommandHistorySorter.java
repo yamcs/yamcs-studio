@@ -1,10 +1,10 @@
 package org.yamcs.studio.commanding.cmdhist;
 
-import static org.yamcs.studio.core.ui.utils.Comparators.INSTANT_COMPARATOR;
-import static org.yamcs.studio.core.ui.utils.Comparators.INTEGER_COMPARATOR;
-import static org.yamcs.studio.core.ui.utils.Comparators.LONG_COMPARATOR;
-import static org.yamcs.studio.core.ui.utils.Comparators.OBJECT_COMPARATOR;
-import static org.yamcs.studio.core.ui.utils.Comparators.STRING_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.INSTANT_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.INTEGER_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.LONG_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.OBJECT_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.STRING_COMPARATOR;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;

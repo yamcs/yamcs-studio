@@ -5,7 +5,7 @@ import java.util.Date;
 
 import org.diirt.vtype.VTimestamp;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class TimestampVType extends YamcsVType implements VTimestamp {
 
@@ -23,6 +23,6 @@ public class TimestampVType extends YamcsVType implements VTimestamp {
     public String toString() {
         String stringValue = pval.getEngValue().getStringValue();
         Instant instant = Instant.parse(stringValue);
-        return YamcsUIPlugin.getDefault().formatInstant(instant);
+        return YamcsPlugin.getDefault().formatInstant(instant);
     }
 }

@@ -61,8 +61,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.RCPUtils;
 import org.yamcs.studio.css.core.pvmanager.OpsDataSourceProvider;
 import org.yamcs.studio.css.core.pvmanager.XtceDataSourceProvider;
 
@@ -187,8 +186,6 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         PreferenceManager pm = workbench.getPreferenceManager();
         pm.remove("org.eclipse.help.ui.browsersPreferencePage");
         pm.remove("org.eclipse.team.ui.TeamPreferences");
-
-        YamcsUIPlugin.getDefault().postWorkbenchStartup(workbench);
     }
 
     @Override

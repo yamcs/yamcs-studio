@@ -1,8 +1,8 @@
 package org.yamcs.studio.eventlog;
 
-import static org.yamcs.studio.core.ui.utils.Comparators.LONG_COMPARATOR;
-import static org.yamcs.studio.core.ui.utils.Comparators.STRING_COMPARATOR;
-import static org.yamcs.studio.core.ui.utils.Comparators.TIMESTAMP_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.LONG_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.STRING_COMPARATOR;
+import static org.yamcs.studio.core.utils.Comparators.TIMESTAMP_COMPARATOR;
 
 import java.util.Comparator;
 

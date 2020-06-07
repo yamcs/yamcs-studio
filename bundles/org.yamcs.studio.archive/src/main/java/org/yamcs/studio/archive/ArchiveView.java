@@ -39,16 +39,13 @@ import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
 import org.yamcs.protobuf.Yamcs.IndexResult;
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.RCPUtils;
 
-public class ArchiveView extends ViewPart
-        implements YamcsConnectionListener, InstanceListener, YamcsAware, ISourceProviderListener {
+public class ArchiveView extends ViewPart implements YamcsAware, ISourceProviderListener {
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
@@ -264,7 +261,6 @@ public class ArchiveView extends ViewPart
         });
     }
 
-    @Override
     public void instanceChanged(String oldInstance, String newInstance) {
         clearInstanceSpecificState();
     }

@@ -17,7 +17,7 @@ import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.commanding.PTVInfo;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.protobuf.ByteString;
 
@@ -132,7 +132,7 @@ public class CommandHistoryRecord {
         long millis = generationTime.toEpochMilli() - timestamp.toEpochMilli();
         String sign = (millis >= 0) ? "+" : "-";
         if (millis >= ONE_DAY) {
-            return YamcsUIPlugin.getDefault().formatInstant(timestamp);
+            return YamcsPlugin.getDefault().formatInstant(timestamp);
         } else if (millis >= ONE_HOUR) {
             return sign + String.format("%d h, %d m",
                     MILLISECONDS.toHours(millis),

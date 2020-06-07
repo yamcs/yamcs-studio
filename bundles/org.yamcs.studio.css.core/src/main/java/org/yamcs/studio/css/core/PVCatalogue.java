@@ -2,7 +2,6 @@ package org.yamcs.studio.css.core;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.widgets.Display;
@@ -10,9 +9,8 @@ import org.yamcs.client.ParameterSubscription;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
-import org.yamcs.studio.core.MissionDatabase;
+import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.css.core.pvmanager.ParameterChannelHandler;
 
@@ -75,7 +73,7 @@ public class PVCatalogue implements YamcsAware {
         return NamedObjectList.newBuilder().addList(id).build();
     }
 
-    @Override
+    /*@Override
     public void changeMissionDatabase(MissionDatabase missionDatabase) {
         channelHandlersById.forEach((id, channelHandler) -> {
             ParameterInfo parameter = missionDatabase.getParameterInfo(id);
@@ -84,7 +82,7 @@ public class PVCatalogue implements YamcsAware {
             }
             channelHandler.processConnectionInfo(new PVConnectionInfo(true, parameter));
         });
-    }
+    }*/
 
     /*@Override
     public void onParameterData(ParameterData pdata) {

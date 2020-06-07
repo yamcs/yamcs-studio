@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Yamcs.Event;
-import org.yamcs.studio.core.ui.utils.CsvWriter;
+import org.yamcs.studio.core.utils.CsvWriter;
 
 public class ExportEventsHandler extends AbstractHandler {
 

@@ -23,7 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.studio.core.security.YamcsAuthorizations;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class ExportCommandStackHandlerSpell extends AbstractHandler {
 
@@ -92,7 +92,7 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
             String template = buf.toString();
 
             // create a context and add data
-            String author = YamcsAuthorizations.getInstance().getUsername();
+            String author = YamcsPlugin.getUser().getName();
 
             DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
             Date date = new Date();

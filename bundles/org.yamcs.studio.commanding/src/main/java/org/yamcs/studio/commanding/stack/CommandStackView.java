@@ -52,11 +52,11 @@ import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackMode;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
+import org.yamcs.studio.core.Privileges;
+import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.YamcsAware;
-import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.RCPUtils;
 
 public class CommandStackView extends ViewPart implements YamcsAware {
 
@@ -658,7 +658,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
     // Enable the buttons if user is authorized to command payload
     private void setButtonEnable(Button button, boolean isEnabled) {
-        if (YamcsAuthorizations.getInstance().hasSystemPrivilege(YamcsAuthorizations.Command)) {
+        if (YamcsPlugin.hasSystemPrivilege(Privileges.Command)) {
             button.setEnabled(isEnabled);
         } else {
             button.setEnabled(false);

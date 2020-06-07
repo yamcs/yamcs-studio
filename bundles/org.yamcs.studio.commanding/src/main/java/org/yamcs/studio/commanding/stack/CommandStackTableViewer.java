@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ComparisonInfo;
 import org.yamcs.protobuf.Mdb.TransmissionConstraintInfo;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
-import org.yamcs.studio.core.ui.utils.RCPUtils;
+import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
+import org.yamcs.studio.core.utils.RCPUtils;
 
 public class CommandStackTableViewer extends TableViewer {
 

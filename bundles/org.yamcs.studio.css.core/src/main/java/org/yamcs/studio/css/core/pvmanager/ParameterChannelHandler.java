@@ -17,14 +17,13 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
-import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.InstanceListener;
 import org.yamcs.studio.css.core.PVCatalogue;
 import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
 
 public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsConnectionListener, InstanceListener {
+        implements YamcsAware {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
@@ -34,7 +33,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     public ParameterChannelHandler(NamedObjectId id) {
         super(id.getName());
         this.id = id;
-        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
+        YamcsPlugin.addListener(this);
     }
 
     public NamedObjectId getId() {
@@ -47,7 +46,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
         connect();
     }
 
-    @Override
     public void instanceChanged(String oldInstance, String newInstance) {
         // The server will normally transfer our parameter subscription,
         // but don't necessarily trust that right now. So reconnect all pvs

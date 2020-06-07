@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.StringConverter;
-import org.yamcs.studio.core.ui.YamcsUIPlugin;
+import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.protobuf.Timestamp;
 
@@ -143,7 +143,7 @@ public class ParameterTableViewer extends TableViewer {
                 }
                 Timestamp proto = value.getGenerationTime();
                 Instant generationTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
-                return YamcsUIPlugin.getDefault().formatInstant(generationTime);
+                return YamcsPlugin.getDefault().formatInstant(generationTime);
             }
         });
 
@@ -159,7 +159,7 @@ public class ParameterTableViewer extends TableViewer {
                 }
                 Timestamp proto = value.getAcquisitionTime();
                 Instant receptionTime = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
-                return YamcsUIPlugin.getDefault().formatInstant(receptionTime);
+                return YamcsPlugin.getDefault().formatInstant(receptionTime);
             }
         });
     }
