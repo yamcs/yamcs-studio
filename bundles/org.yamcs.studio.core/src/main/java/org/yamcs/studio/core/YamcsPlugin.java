@@ -78,6 +78,20 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public static void addListener(YamcsAware listener) {
         plugin.listeners.add(listener);
+
+        if (plugin.instance != null) {
+            listener.changeInstance(plugin.instance);
+        }
+        if (plugin.processor != null) {
+            listener.changeProcessor(plugin.instance, plugin.processor.getName());
+            listener.changeProcessorInfo(plugin.processor);
+        }
+        if (plugin.clearanceSubscription != null) {
+            ClearanceInfo clearanceInfo = plugin.clearanceSubscription.getCurrent();
+            if (clearanceInfo != null && clearanceInfo.hasLevel()) {
+                listener.updateClearance(clearanceInfo.getLevel());
+            }
+        }
     }
 
     public static void removeListener(YamcsAware listener) {

@@ -59,6 +59,8 @@ public class EventLog extends Composite implements YamcsAware {
     private List<Event> realtimeEvents = new ArrayList<>();
     private ScheduledExecutorService tableUpdater = Executors.newSingleThreadScheduledExecutor();
 
+    private EventSubscription subscription;
+
     public EventLog(Composite parent, int style) {
         super(parent, style);
         GridLayout gl = new GridLayout();
@@ -195,6 +197,7 @@ public class EventLog extends Composite implements YamcsAware {
             }
         };
 
+        YamcsPlugin.addListener(this);
         plugin.getPreferenceStore().addPropertyChangeListener(prefListener);
     }
 
@@ -215,18 +218,14 @@ public class EventLog extends Composite implements YamcsAware {
         return tableViewer.getTable().setFocus();
     }
 
-    private EventSubscription subscription;
-
     @Override
     public void changeInstance(String instance) {
         if (subscription != null) {
             subscription.cancel(true);
-            clear();
         }
+        Display.getDefault().syncExec(this::clear);
 
-        if (instance == null) {
-            clear();
-        } else {
+        if (instance != null) {
             Display.getDefault().asyncExec(() -> {
                 fetchLatestEvents();
             });
@@ -325,6 +324,7 @@ public class EventLog extends Composite implements YamcsAware {
             subscription.cancel(true);
         }
         EventLogPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(prefListener);
+        YamcsPlugin.removeListener(this);
         super.dispose();
     }
 

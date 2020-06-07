@@ -60,8 +60,11 @@ public class RCPUtils {
         IEvaluationService evaluationService = (IEvaluationService) window.getService(IEvaluationService.class);
         try {
             Command cmd = commandService.getCommand(commandId);
-            cmd.executeWithChecks(
-                    new ExecutionEvent(cmd, new HashMap<String, String>(), null, evaluationService.getCurrentState()));
+            if (cmd.isEnabled()) {
+                cmd.executeWithChecks(
+                        new ExecutionEvent(cmd, new HashMap<String, String>(), null,
+                                evaluationService.getCurrentState()));
+            }
         } catch (Exception exception) {
             log.log(Level.SEVERE, "Could not execute command " + commandId, exception);
         }
