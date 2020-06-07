@@ -12,9 +12,6 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
 import org.eclipse.ui.menus.UIElement;
-import org.yamcs.protobuf.ClientInfo;
-import org.yamcs.protobuf.EditClientRequest;
-import org.yamcs.studio.core.model.ManagementCatalogue;
 
 public class SwitchProcessorHandler extends AbstractHandler implements IElementUpdater {
 
@@ -27,10 +24,10 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
         String radioParameter = event.getParameter(RadioState.PARAMETER_ID);
         HandlerUtil.updateRadioState(event.getCommand(), radioParameter);
 
-        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+        /*ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
         ClientInfo clientInfo = catalogue.getCurrentClientInfo();
         EditClientRequest req = EditClientRequest.newBuilder().setProcessor(radioParameter).build();
-        catalogue.editClientRequest(clientInfo.getId(), req);
+        catalogue.editClientRequest(clientInfo.getId(), req);*/
 
         return null;
     }

@@ -13,14 +13,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.BundleContext;
-import org.yamcs.protobuf.ClientInfo;
-import org.yamcs.protobuf.ConnectionInfo;
 import org.yamcs.protobuf.ProcessorInfo;
-import org.yamcs.protobuf.Statistics;
 import org.yamcs.studio.connect.ConnectionPreferences;
-import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.core.model.ManagementListener;
-import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
@@ -82,9 +77,9 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
             String pattern = store.getString(DateFormatPreferencePage.PREF_DATEFORMAT);
             setDateFormat(pattern);
         }
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, TimeCatalogue.getInstance().getZoneId());
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, YamcsPlugin.getZoneId());
         Calendar cal = GregorianCalendar.from(zdt);
-        cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+        cal.setTimeZone(YamcsPlugin.getTimeZone());
         if (tzOffset) {
             tzFormat.setTimeZone(cal.getTimeZone());
             return tzFormat.format(cal.getTime());
@@ -100,24 +95,12 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
     public void postWorkbenchStartup(IWorkbench workbench) {
         // Listen to processing-info updates
         doUpdateGlobalProcessingState(workbench, null); // Trigger initial state
-        ManagementCatalogue.getInstance().addManagementListener(new ManagementListener() {
+        /*ManagementCatalogue.getInstance().addManagementListener(new ManagementListener() {
             @Override
             public void processorUpdated(ProcessorInfo processorInfo) {
                 updateGlobalProcessingState(processorInfo);
             }
-
-            @Override
-            public void statisticsUpdated(Statistics stats) {
-            }
-
-            @Override
-            public void clientUpdated(ClientInfo clientInfo) {
-            }
-
-            @Override
-            public void clientDisconnected(ClientInfo clientInfo) {
-            }
-
+        
             @Override
             public void instanceUpdated(ConnectionInfo connectionInfo) {
                 IWorkbench workbench = PlatformUI.getWorkbench();
@@ -129,11 +112,7 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
                     }
                 });
             }
-
-            @Override
-            public void clearAllManagementData() {
-            }
-        });
+        });*/
 
         // Request connection to Yamcs server
         if (ConnectionPreferences.isAutoConnect()) {
@@ -145,10 +124,10 @@ public class YamcsUIPlugin extends AbstractUIPlugin {
         // First update state of various buttons (at the level of the workbench)
         IWorkbench workbench = PlatformUI.getWorkbench();
         workbench.getDisplay().asyncExec(() -> {
-            ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
+            /*ClientInfo clientInfo = ManagementCatalogue.getInstance().getCurrentClientInfo();
             if (clientInfo != null && clientInfo.getProcessorName().equals(processor.getName())) {
                 doUpdateGlobalProcessingState(workbench, processor);
-            }
+            }*/
         });
     }
 

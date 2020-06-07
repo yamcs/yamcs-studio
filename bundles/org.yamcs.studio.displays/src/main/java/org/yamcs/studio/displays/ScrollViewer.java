@@ -20,13 +20,11 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 import com.google.protobuf.Timestamp;
 
-public class ScrollViewer extends TableViewer implements ParameterListener {
+public class ScrollViewer extends TableViewer {
 
     public static final String COL_TIME = "Timestamp";
 
@@ -70,9 +68,6 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
                 return YamcsUIPlugin.getDefault().formatInstant(generationTime);
             }
         });
-
-        ParameterCatalogue.getInstance().addParameterListener(this);
-
     }
 
     /*private void addColumn(ParameterInfo info) {
@@ -212,12 +207,6 @@ public class ScrollViewer extends TableViewer implements ParameterListener {
         }
     }
 
-    @Override
-    public void mdbUpdated() {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public void onParameterData(ParameterData pdata) {
         contentProvider.addParameterData(pdata);
     }

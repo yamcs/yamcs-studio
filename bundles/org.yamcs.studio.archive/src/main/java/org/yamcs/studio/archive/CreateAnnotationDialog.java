@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.protobuf.Yamcs.ArchiveTag;
-import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.protobuf.Timestamp;
 
@@ -171,7 +171,7 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
         startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         startTime.addListener(SWT.Selection, e -> validate());
         if (startTimeValue != null) {
-            ZonedDateTime zdt = ZonedDateTime.ofInstant(startTimeValue, TimeCatalogue.getInstance().getZoneId());
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(startTimeValue, YamcsPlugin.getZoneId());
             Calendar cal = GregorianCalendar.from(zdt);
             startDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
             startTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
@@ -205,7 +205,7 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
         stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
         stopTime.addListener(SWT.Selection, e -> validate());
         if (stopTimeValue != null) {
-            ZonedDateTime zdt = ZonedDateTime.ofInstant(stopTimeValue, TimeCatalogue.getInstance().getZoneId());
+            ZonedDateTime zdt = ZonedDateTime.ofInstant(stopTimeValue, YamcsPlugin.getZoneId());
             Calendar cal = GregorianCalendar.from(zdt);
             stopDate.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
             stopTime.setTime(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
@@ -215,7 +215,7 @@ public class CreateAnnotationDialog extends TitleAreaDialog {
     }
 
     private static Instant toInstant(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
+        Calendar cal = Calendar.getInstance(YamcsPlugin.getTimeZone());
         cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
         cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
         cal.set(Calendar.MINUTE, timeWidget.getMinutes());

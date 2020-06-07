@@ -32,8 +32,7 @@ import org.yamcs.protobuf.Mdb.SpaceSystemInfo;
 import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.YamcsInstance;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.model.TimeListener;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 /**
@@ -74,7 +73,7 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         return null;
     }
 
-    public static class ProcessingInfoDialog extends Dialog implements TimeListener {
+    public static class ProcessingInfoDialog extends Dialog implements YamcsAware {
 
         private YamcsInstance instance;
         private ProcessorInfo processor;
@@ -88,12 +87,12 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             setShellStyle(SWT.CLOSE | SWT.MODELESS | SWT.BORDER);
             setBlockOnOpen(false);
 
-            TimeCatalogue.getInstance().addTimeListener(this);
+            YamcsPlugin.addListener(this);
         }
 
         @Override
         public boolean close() {
-            TimeCatalogue.getInstance().removeTimeListener(this);
+            YamcsPlugin.removeListener(this);
             return super.close();
         }
 
@@ -132,7 +131,7 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
             createKeyValueTextPair(composite, "Type", processor.getType());
             createKeyValueTextPair(composite, "Created by", processor.getCreator());
 
-            Instant missionTime = TimeCatalogue.getInstance().getMissionTime();
+            Instant missionTime = YamcsPlugin.getMissionTime();
             missionTimeTxt = createKeyValueTextPair(composite, "Mission Time",
                     YamcsUIPlugin.getDefault().formatInstant(missionTime));
 
@@ -170,7 +169,7 @@ public class ProcessingInfoDialogHandler extends AbstractHandler {
         }
 
         @Override
-        public void processTime(Instant missionTime) {
+        public void updateTime(Instant missionTime) {
             Display.getDefault().asyncExec(() -> {
                 if (missionTimeTxt.isDisposed()) {
                     return;

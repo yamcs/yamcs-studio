@@ -6,9 +6,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.EditClientRequest;
 import org.yamcs.protobuf.ProcessorInfo;
-import org.yamcs.studio.core.model.ManagementCatalogue;
 
 public class ChooseProcessorDialogHandler extends AbstractHandler {
 
@@ -19,14 +17,14 @@ public class ChooseProcessorDialogHandler extends AbstractHandler {
         if (dialog.open() == Window.OK) {
             ProcessorInfo info = dialog.getProcessorInfo();
             if (info != null) {
-                ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
+                /*ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
                 int currentClientId = catalogue.getCurrentClientInfo().getId();
                 EditClientRequest req = EditClientRequest.newBuilder().setInstance(info.getInstance())
                         .setProcessor(info.getName()).build();
-
+                
                 // Internal state will be changed automatically within
                 // the ManagementCatalogue.
-                catalogue.editClientRequest(currentClientId, req);
+                catalogue.editClientRequest(currentClientId, req);*/
             }
         }
 

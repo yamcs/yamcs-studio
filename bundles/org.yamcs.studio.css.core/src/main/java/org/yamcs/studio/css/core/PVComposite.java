@@ -21,10 +21,8 @@ import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.StringConverter;
-import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.ParameterListener;
 
-public class PVComposite extends Composite implements ParameterListener {
+public class PVComposite extends Composite {
 
     private PVInfo pvInfo;
 
@@ -53,8 +51,6 @@ public class PVComposite extends Composite implements ParameterListener {
             createSeparator();
             createPVProperties(pvInfo);
         }
-
-        ParameterCatalogue.getInstance().addParameterListener(this);
     }
 
     private void createYamcsProperties(ParameterInfo pinfo) {
@@ -212,12 +208,7 @@ public class PVComposite extends Composite implements ParameterListener {
         return String.valueOf(chars);
     }
 
-    @Override
-    public void mdbUpdated() {
-    }
-
     // TODO move this onto a digest thread. We shouldn't update GUI for _every_ value.
-    @Override
     public void onParameterData(ParameterData pdata) {
         if (isDisposed()) {
             return;
@@ -263,11 +254,5 @@ public class PVComposite extends Composite implements ParameterListener {
                 }
             }
         });
-    }
-
-    @Override
-    public void dispose() {
-        ParameterCatalogue.getInstance().removeParameterListener(this);
-        super.dispose();
     }
 }

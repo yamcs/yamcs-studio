@@ -20,7 +20,6 @@ import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ParameterCatalogue;
 import org.yamcs.studio.css.core.PVCatalogue;
 import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
 
@@ -101,7 +100,7 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     @Override
     protected void write(Object newValue, ChannelWriteCallback callback) {
         try {
-            ParameterTypeInfo ptype = ParameterCatalogue.getInstance().getParameterTypeInfo(id);
+            ParameterTypeInfo ptype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
             Value v = toValue(ptype, newValue);
             ProcessorClient processor = YamcsPlugin.getProcessorClient();
             String parameterName = id.getName();

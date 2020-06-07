@@ -33,7 +33,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.gson.Gson;
 
@@ -96,7 +96,7 @@ public class ParameterTableEditor extends EditorPart {
 
             for (String parameter : model.getParameters()) {
                 NamedObjectId id = NamedObjectId.newBuilder().setName(parameter).build();
-                ParameterInfo meta = ParameterCatalogue.getInstance().getParameterInfo(id);
+                ParameterInfo meta = YamcsPlugin.getMissionDatabase().getParameterInfo(id);
                 if (meta != null) {
                     // tableViewer.attachParameterInfo(meta);
                 }

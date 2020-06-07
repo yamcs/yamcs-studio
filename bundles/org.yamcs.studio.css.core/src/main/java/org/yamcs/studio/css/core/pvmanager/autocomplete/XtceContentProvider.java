@@ -15,7 +15,7 @@ import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.protobuf.Mdb.MemberInfo;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
-import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * PV Name lookup for Yamcs Parameters
@@ -46,7 +46,7 @@ public class XtceContentProvider implements IAutoCompleteProvider {
 
         AutoCompleteResult result = new AutoCompleteResult();
         int matchCount = 0;
-        for (ParameterInfo para : ParameterCatalogue.getInstance().getMetaParameters()) {
+        for (ParameterInfo para : YamcsPlugin.getMissionDatabase().getParameters()) {
             List<String> pvCandidates = new ArrayList<>();
             pvCandidates.add(para.getQualifiedName());
             if (para.hasType()) {

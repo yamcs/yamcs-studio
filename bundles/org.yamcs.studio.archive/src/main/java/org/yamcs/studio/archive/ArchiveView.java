@@ -42,14 +42,13 @@ import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.model.TimeListener;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.processor.ProcessorStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class ArchiveView extends ViewPart
-        implements YamcsConnectionListener, InstanceListener, TimeListener, ISourceProviderListener {
+        implements YamcsConnectionListener, InstanceListener, YamcsAware, ISourceProviderListener {
 
     ArchiveIndexReceiver indexReceiver;
     public ArchivePanel archivePanel;
@@ -216,8 +215,6 @@ public class ArchiveView extends ViewPart
         connectionState.addSourceProviderListener(this);
 
         indexReceiver.setIndexListener(this);
-        TimeCatalogue.getInstance().addTimeListener(this);
-        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
 
         updateState();
     }
@@ -242,10 +239,8 @@ public class ArchiveView extends ViewPart
         super.dispose();
         archivePanel.dispose();
 
-        TimeCatalogue.getInstance().removeTimeListener(this);
         processorState.removeSourceProviderListener(this);
         connectionState.removeSourceProviderListener(this);
-        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
 
         if (frame != null) {
             SwingUtilities.invokeLater(() -> {
@@ -290,12 +285,12 @@ public class ArchiveView extends ViewPart
     }
 
     @Override
-    public void processTime(Instant missionTime) {
+    public void updateTime(Instant time) {
         SwingUtilities.invokeLater(() -> {
-            if (missionTime == null) {
+            if (time == null) {
                 archivePanel.getDataViewer().getDataView().setCurrentLocator(-1);
             } else {
-                archivePanel.getDataViewer().getDataView().setCurrentLocator(missionTime.toEpochMilli());
+                archivePanel.getDataViewer().getDataView().setCurrentLocator(time.toEpochMilli());
             }
         });
     }
@@ -307,7 +302,7 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                    Instant instant = YamcsPlugin.getMissionTime(true)
                             .minus(1, ChronoUnit.DAYS)
                             .truncatedTo(ChronoUnit.DAYS);
                     doFilter(TimeInterval.starting(instant));
@@ -318,7 +313,7 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                    Instant instant = YamcsPlugin.getMissionTime(true)
                             .minus(7, ChronoUnit.DAYS)
                             .truncatedTo(ChronoUnit.DAYS);
                     doFilter(TimeInterval.starting(instant));
@@ -329,7 +324,7 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                    Instant instant = YamcsPlugin.getMissionTime(true)
                             .minus(1, ChronoUnit.MONTHS)
                             .truncatedTo(ChronoUnit.DAYS);
                     doFilter(TimeInterval.starting(instant));
@@ -340,7 +335,7 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                    Instant instant = YamcsPlugin.getMissionTime(true)
                             .minus(3, ChronoUnit.MONTHS)
                             .truncatedTo(ChronoUnit.DAYS);
                     doFilter(TimeInterval.starting(instant));
@@ -351,7 +346,7 @@ public class ArchiveView extends ViewPart
             @Override
             public void run() {
                 if (isChecked()) {
-                    Instant instant = TimeCatalogue.getInstance().getMissionTime(true)
+                    Instant instant = YamcsPlugin.getMissionTime(true)
                             .minus(1, ChronoUnit.YEARS)
                             .truncatedTo(ChronoUnit.DAYS);
                     doFilter(TimeInterval.starting(instant));

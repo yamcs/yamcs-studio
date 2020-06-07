@@ -11,7 +11,7 @@ import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
-import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 
 public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
@@ -40,7 +40,6 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
 
     @Override
     public List<String> getLabels() {
-        ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
 
         // TODO Get an id matching the qualified name from the info object
         // (not e.g. the opsname)
@@ -49,7 +48,7 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
                 .setName(pval.getId().getName())
                 .build();
 
-        ParameterTypeInfo specificPtype = catalogue.getParameterTypeInfo(id);
+        ParameterTypeInfo specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
         return EnumeratedVType.getLabelsForType(specificPtype);
     }
 

@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class ImportCommandStackHandler extends AbstractHandler {
 
@@ -73,7 +73,7 @@ public class ImportCommandStackHandler extends AbstractHandler {
                     Element commandElement = (Element) node;
                     String qname = commandElement.getAttribute("qualifiedName");
 
-                    CommandInfo mdbInfo = CommandingCatalogue.getInstance().getCommandInfo(qname);
+                    CommandInfo mdbInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(qname);
                     if (mdbInfo == null) {
                         MessageDialog.openError(shell, "Import Command Stack",
                                 "Command " + qname + " does not exist in MDB.");

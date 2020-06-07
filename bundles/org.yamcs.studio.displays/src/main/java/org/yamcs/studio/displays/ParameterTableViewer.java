@@ -25,13 +25,11 @@ import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.core.StringConverter;
-import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 
 import com.google.protobuf.Timestamp;
 
-public class ParameterTableViewer extends TableViewer implements ParameterListener {
+public class ParameterTableViewer extends TableViewer {
 
     public static final String COL_NAME = "Parameter";
     public static final String COL_ENG = "Eng";
@@ -164,8 +162,6 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
                 return YamcsUIPlugin.getDefault().formatInstant(receptionTime);
             }
         });
-
-        ParameterCatalogue.getInstance().addParameterListener(this);
     }
 
     private ImageDescriptor getImageDescriptor(String path) {
@@ -203,11 +199,6 @@ public class ParameterTableViewer extends TableViewer implements ParameterListen
         return contentProvider.hasChanged();
     }
 
-    @Override
-    public void mdbUpdated() {
-    }
-
-    @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue value : pdata.getParameterList()) {
             if (values.keySet().contains(value.getId().getNamespace() + "/" + value.getId().getName())) {

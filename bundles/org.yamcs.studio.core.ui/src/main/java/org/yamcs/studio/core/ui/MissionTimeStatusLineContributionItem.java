@@ -3,11 +3,11 @@ package org.yamcs.studio.core.ui;
 import java.time.Instant;
 
 import org.eclipse.swt.widgets.Display;
-import org.yamcs.studio.core.model.TimeCatalogue;
-import org.yamcs.studio.core.model.TimeListener;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
-public class MissionTimeStatusLineContributionItem extends StatusLineContributionItem implements TimeListener {
+public class MissionTimeStatusLineContributionItem extends StatusLineContributionItem implements YamcsAware {
 
     private static final String DEFAULT_TEXT = "---";
 
@@ -23,19 +23,11 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
         super(id, charWidth, addTrailingSeparator);
         setText(DEFAULT_TEXT);
         setToolTipText("Mission Time");
-        TimeCatalogue.getInstance().addTimeListener(this);
+        YamcsPlugin.addListener(this);
     }
 
     @Override
-    public void dispose() {
-        TimeCatalogue catalogue = TimeCatalogue.getInstance();
-        if (catalogue != null) {
-            catalogue.removeTimeListener(this);
-        }
-    }
-
-    @Override
-    public void processTime(Instant missionTime) {
+    public void updateTime(Instant missionTime) {
         if (isDisposed()) {
             return;
         }
@@ -46,5 +38,10 @@ public class MissionTimeStatusLineContributionItem extends StatusLineContributio
                 setText(YamcsUIPlugin.getDefault().formatInstant(missionTime, true));
             }
         });
+    }
+
+    @Override
+    public void dispose() {
+        YamcsPlugin.removeListener(this);
     }
 }

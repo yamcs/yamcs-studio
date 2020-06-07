@@ -1,7 +1,5 @@
 package org.yamcs.studio.commanding.stack;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,14 +14,12 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
-import org.yamcs.protobuf.IssueCommandRequest;
-import org.yamcs.protobuf.IssueCommandRequest.Assignment;
 import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.commanding.PTVInfo;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Keep track of the lifecycle of a stacked command.
@@ -143,23 +139,6 @@ public class StackedCommand {
 
     public boolean isArmed() {
         return state == StackedState.ARMED;
-    }
-
-    /**
-     * Generates a REST-representation. The sequence number is increased everytime this method is called, and therefore
-     * represents an 'issue attempt'.
-     */
-    public IssueCommandRequest.Builder toIssueCommandRequest() {
-        IssueCommandRequest.Builder req = IssueCommandRequest.newBuilder();
-        req.setSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
-        if (comment != null) {
-            req.setComment(comment);
-        }
-        assignments.forEach((k, v) -> {
-            req.addAssignment(Assignment.newBuilder().setName(k.getName()).setValue(v));
-        });
-
-        return req;
     }
 
     public void setCommandId(String commandId) {
@@ -325,10 +304,6 @@ public class StackedCommand {
 
     }
 
-    public String getSelectedAliasEncoded() throws UnsupportedEncodingException {
-        return "/" + URLEncoder.encode(selectedAlias, "UTF-8");
-    }
-
     public static StackedCommand buildCommandFromSource(String commandSource) throws Exception {
         StackedCommand result = new StackedCommand();
 
@@ -352,7 +327,7 @@ public class StackedCommand {
         // Retrieve meta command and selected namespace
         CommandInfo commandInfo = null;
         String selectedAlias = "";
-        for (CommandInfo ci : CommandingCatalogue.getInstance().getMetaCommands()) {
+        for (CommandInfo ci : YamcsPlugin.getMissionDatabase().getCommands()) {
 
             for (NamedObjectId noi : ci.getAliasList()) {
                 String alias = noi.getNamespace() + "/" + noi.getName();

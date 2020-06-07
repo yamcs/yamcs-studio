@@ -12,7 +12,7 @@ import org.csstudio.autocomplete.proposals.Proposal;
 import org.csstudio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * PV Name lookup for Yamcs Parameters
@@ -42,7 +42,7 @@ public class OpsContentProvider implements IAutoCompleteProvider {
 
         AutoCompleteResult pvs = new AutoCompleteResult();
         int matchCount = 0;
-        for (ParameterInfo para : ParameterCatalogue.getInstance().getMetaParameters()) {
+        for (ParameterInfo para : YamcsPlugin.getMissionDatabase().getParameters()) {
             String opsname = findOpsname(para);
             if (opsname != null) {
                 String proposalValue = OpsContentParser.OPS_SOURCE + opsname;

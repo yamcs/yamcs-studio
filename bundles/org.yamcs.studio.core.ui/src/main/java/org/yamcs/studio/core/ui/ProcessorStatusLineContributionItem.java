@@ -2,16 +2,9 @@ package org.yamcs.studio.core.ui;
 
 import java.util.logging.Logger;
 
-import org.eclipse.swt.widgets.Display;
-import org.yamcs.protobuf.ClientInfo;
-import org.yamcs.protobuf.ConnectionInfo;
 import org.yamcs.protobuf.ProcessorInfo;
-import org.yamcs.protobuf.Statistics;
-import org.yamcs.protobuf.YamcsInstance;
-import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.ManagementCatalogue;
-import org.yamcs.studio.core.model.ManagementListener;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
@@ -20,7 +13,7 @@ import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
  * longer need to implement the studioconnectionlistener
  */
 public class ProcessorStatusLineContributionItem extends StatusLineContributionItem
-        implements ManagementListener, YamcsConnectionListener {
+        implements YamcsAware {
 
     private static final Logger log = Logger.getLogger(ProcessorStatusLineContributionItem.class.getName());
 
@@ -40,32 +33,13 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
                 RCPUtils.runCommand("org.yamcs.studio.core.ui.processor.infoCommand");
             }
         });
-        ManagementCatalogue.getInstance().addManagementListener(this);
-        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
     }
 
     @Override
     public void dispose() {
-        ManagementCatalogue catalogue = ManagementCatalogue.getInstance();
-        if (catalogue != null) {
-            catalogue.removeManagementListener(this);
-        }
-        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
     }
 
-    @Override
-    public void clientUpdated(ClientInfo updatedInfo) {
-    }
-
-    @Override
-    public void clientDisconnected(ClientInfo updatedInfo) {
-    }
-
-    @Override
-    public void processorUpdated(ProcessorInfo updatedInfo) {
-    }
-
-    @Override
+    /*@Override
     public void instanceUpdated(ConnectionInfo connectionInfo) {
         Display.getDefault().asyncExec(() -> {
             if (connectionInfo.hasProcessor()) {
@@ -73,7 +47,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
             } else {
                 updateText(null);
             }
-
+    
             if (connectionInfo.hasInstance()) {
                 YamcsInstance instance = connectionInfo.getInstance();
                 String baseText = instance.getName(); // TODO don't get processor??
@@ -102,7 +76,7 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
                 }
             }
         });
-    }
+    }*/
 
     private void updateText(ProcessorInfo processorInfo) {
         if (processorInfo == null) {
@@ -112,23 +86,11 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
         }
     }
 
-    @Override
-    public void statisticsUpdated(Statistics stats) {
-    }
-
-    @Override
-    public void clearAllManagementData() {
-    }
-
-    @Override
-    public void onYamcsConnected() {
-    }
-
-    @Override
+    /*@Override
     public void onYamcsDisconnected() {
         if (isDisposed()) {
             return;
         }
         Display.getDefault().asyncExec(() -> updateText(null));
-    }
+    }*/
 }

@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class CreateReplayHandler extends AbstractHandler {
 
@@ -30,7 +30,7 @@ public class CreateReplayHandler extends AbstractHandler {
                 Instant stop = Instant.ofEpochMilli(sel.getStopInstant());
                 interval = new TimeInterval(start, stop);
             } else {
-                Instant missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+                Instant missionTime = YamcsPlugin.getMissionTime(true);
                 interval = TimeInterval.starting(missionTime.minus(30, ChronoUnit.SECONDS));
             }
 

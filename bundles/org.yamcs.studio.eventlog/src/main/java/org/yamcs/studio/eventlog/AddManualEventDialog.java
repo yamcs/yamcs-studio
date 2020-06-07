@@ -26,7 +26,6 @@ import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.CreateEventRequest;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class AddManualEventDialog extends TitleAreaDialog {
@@ -44,7 +43,7 @@ public class AddManualEventDialog extends TitleAreaDialog {
 
     protected AddManualEventDialog(Shell shell, Instant generationTime) {
         super(shell);
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(generationTime, TimeCatalogue.getInstance().getZoneId());
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(generationTime, YamcsPlugin.getZoneId());
         generationTimeValue = GregorianCalendar.from(zdt);
     }
 

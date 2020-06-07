@@ -1,6 +1,5 @@
 package org.yamcs.studio.commanding.stack;
 
-import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -15,7 +14,6 @@ import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.CommandingCatalogue;
 
 public class IssueCommandHandler extends AbstractHandler {
 
@@ -33,16 +31,11 @@ public class IssueCommandHandler extends AbstractHandler {
 
     private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command)
             throws ExecutionException {
-        String qname;
-        try {
-            qname = command.getSelectedAliasEncoded();
-        } catch (UnsupportedEncodingException e1) {
-            throw new ExecutionException(e1.getMessage());
-        }
+        String qname = command.getSelectedAlias();
 
         ProcessorClient processor = YamcsPlugin.getProcessorClient();
         CommandBuilder builder = processor.prepareCommand(qname)
-                .withSequenceNumber(CommandingCatalogue.getInstance().getNextCommandClientId());
+                .withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
 
         if (command.getComment() != null) {
             builder.withComment(command.getComment());

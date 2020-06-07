@@ -3,7 +3,6 @@ package org.yamcs.studio.core.ui;
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsConfiguration;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.StatusLineContributionItem;
 
@@ -48,12 +47,12 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
 
     @Override
     public void onYamcsConnected() {
-        YamcsConfiguration yprops = YamcsPlugin.getYamcsClient().getYamcsConfiguration();
+        /*YamcsConfiguration yprops = YamcsPlugin.getYamcsClient().getYamcsConfiguration();
         Display.getDefault().asyncExec(() -> {
             setErrorText(null, null);
             setImage(null);
             setText(yprops.getPrimaryHost());
-        });
+        });*/
     }
 
     @Override

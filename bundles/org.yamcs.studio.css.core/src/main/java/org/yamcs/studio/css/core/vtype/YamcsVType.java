@@ -15,7 +15,7 @@ import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.Value;
-import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
@@ -186,8 +186,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public String getUnits() {
-        ParameterCatalogue catalogue = ParameterCatalogue.getInstance();
-        String unit = catalogue.getCombinedUnit(pval.getId());
+        String unit = YamcsPlugin.getMissionDatabase().getCombinedUnit(pval.getId());
         return (unit == null) ? "" : unit;
     }
 

@@ -34,15 +34,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.client.CommandSubscription;
+import org.yamcs.client.YamcsClient;
 import org.yamcs.client.archive.ArchiveClient;
 import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.CommandingPlugin;
-import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.CommandHistoryListener;
-import org.yamcs.studio.core.model.CommandingCatalogue;
-import org.yamcs.studio.core.model.InstanceListener;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.ui.YamcsUIPlugin;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.ColumnData;
@@ -50,7 +50,7 @@ import org.yamcs.studio.core.ui.utils.ColumnDef;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.studio.core.ui.utils.ViewerColumnsDialog;
 
-public class CommandHistoryView extends ViewPart implements YamcsConnectionListener, InstanceListener {
+public class CommandHistoryView extends ViewPart implements YamcsAware {
 
     private static final Logger log = Logger.getLogger(CommandHistoryView.class.getName());
     public static final String ID = "org.yamcs.studio.commanding.cmdhist.CommandHistoryView";
@@ -93,6 +93,8 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
             CommandHistoryRecordContentProvider.ATTR_COMMENT,
             "CommandComplete");
 
+    private CommandSubscription subscription;
+
     private LocalResourceManager resourceManager;
 
     Image greenBubble;
@@ -115,7 +117,6 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         }
     };
 
-    private CommandHistoryListener commandHistoryListener;
     private CommandHistoryRecordContentProvider tableContentProvider;
 
     private ColumnData columnData;
@@ -167,34 +168,29 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
         });
 
         getViewSite().setSelectionProvider(tableViewer);
-
-        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
-
-        commandHistoryListener = cmdhistEntry -> {
-            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry, true));
-        };
-        CommandingCatalogue.getInstance().addCommandHistoryListener(commandHistoryListener);
     }
 
     @Override
-    public void onYamcsConnected() {
-        Display.getDefault().asyncExec(() -> {
-            clear();
+    public void changeProcessor(String instance, String processor) {
+        if (subscription != null) {
+            subscription.cancel(true);
+        }
+        clear();
+
+        if (instance != null) {
             fetchLatestEntries();
-        });
-    }
-
-    @Override
-    public void instanceChanged(String oldInstance, String newInstance) {
-        Display.getDefault().asyncExec(() -> {
-            clear();
-            fetchLatestEntries();
-        });
-    }
-
-    @Override
-    public void onYamcsDisconnected() {
-        Display.getDefault().asyncExec(() -> clear());
+        }
+        if (processor != null) {
+            YamcsClient client = YamcsPlugin.getYamcsClient();
+            subscription = client.createCommandSubscription();
+            subscription.addMessageListener(entry -> {
+                Display.getDefault().asyncExec(() -> processCommandHistoryEntry(entry, true));
+            });
+            subscription.sendMessage(SubscribeCommandsRequest.newBuilder()
+                    .setInstance(instance)
+                    .setProcessor(processor)
+                    .build());
+        }
     }
 
     public ColumnData createDefaultColumnData() {
@@ -291,8 +287,9 @@ public class CommandHistoryView extends ViewPart implements YamcsConnectionListe
 
     @Override
     public void dispose() {
-        YamcsPlugin.getDefault().removeYamcsConnectionListener(this);
-        CommandingCatalogue.getInstance().removeCommandHistoryListener(commandHistoryListener);
+        if (subscription != null) {
+            subscription.cancel(true);
+        }
         super.dispose();
     }
 

@@ -1,6 +1,5 @@
 package org.yamcs.studio.commanding.stack;
 
-import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -13,10 +12,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.protobuf.IssueCommandRequest;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class ArmCommandHandler extends AbstractHandler {
 
@@ -38,17 +38,23 @@ public class ArmCommandHandler extends AbstractHandler {
 
     private void armCommand(Shell activeShell, CommandStackView view, StackedCommand command)
             throws ExecutionException {
-        IssueCommandRequest req = command.toIssueCommandRequest().setDryRun(true).build();
 
-        CommandingCatalogue catalogue = CommandingCatalogue.getInstance();
-        String qname;
-        try {
-            qname = command.getSelectedAliasEncoded();
-        } catch (UnsupportedEncodingException e1) {
-            throw new ExecutionException(e1.getMessage());
+        ProcessorClient processorClient = YamcsPlugin.getProcessorClient();
+        String qname = command.getSelectedAlias();
+
+        CommandBuilder builder = processorClient.prepareCommand(qname)
+                .withDryRun(true)
+                .withSequenceNumber(YamcsPlugin.nextCommandSequenceNumber());
+
+        if (command.getComment() != null) {
+            builder.withComment(command.getComment());
         }
 
-        catalogue.sendCommand("realtime", qname, req).whenComplete((data, exc) -> {
+        command.getAssignments().forEach((arg, value) -> {
+            builder.withArgument(arg.getName(), value);
+        });
+
+        builder.issue().whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     boolean doArm = false;

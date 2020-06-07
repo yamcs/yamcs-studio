@@ -9,12 +9,10 @@ import org.eclipse.ui.commands.ICommandService;
 import org.yamcs.protobuf.Pvalue.MonitoringResult;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.ParameterListener;
 import org.yamcs.studio.core.ui.SoundSystem;
 import org.yamcs.studio.css.core.prefs.SoundCommandHandler;
 
-public class SeverityHandlerSound implements ParameterListener {
+public class SeverityHandlerSound {
 
     static String triggerCondition = "NONE";
     static int beepLevel = 0;
@@ -22,7 +20,6 @@ public class SeverityHandlerSound implements ParameterListener {
 
     public SeverityHandlerSound() {
         updatePrefence();
-        ParameterCatalogue.getInstance().addParameterListener(this);
     }
 
     public static void updatePrefence() {
@@ -49,12 +46,12 @@ public class SeverityHandlerSound implements ParameterListener {
         }
     }
 
-    @Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
             // Do not beep
-            if ("NONE".equals(triggerCondition))
+            if ("NONE".equals(triggerCondition)) {
                 return;
+            }
 
             // Beep only at the first occurrence of the parameter out-of-limit
             boolean shouldBeep = pval.getMonitoringResult() != null
@@ -66,8 +63,9 @@ public class SeverityHandlerSound implements ParameterListener {
                     if (previousPval.getMonitoringResult() != null
                             && pval.getMonitoringResult() != null
                             && previousPval.getMonitoringResult().getNumber() >= pval
-                                    .getMonitoringResult().getNumber())
+                                    .getMonitoringResult().getNumber()) {
                         shouldBeep = false;
+                    }
                 }
                 pvals.put(pval.getId().getName(), pval);
             }
@@ -81,8 +79,8 @@ public class SeverityHandlerSound implements ParameterListener {
         }
     }
 
-    @Override
+    /*@Override
     public void mdbUpdated() {
         pvals.clear();
-    }
+    }*/
 }

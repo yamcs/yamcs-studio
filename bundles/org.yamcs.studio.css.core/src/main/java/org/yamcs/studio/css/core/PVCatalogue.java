@@ -6,21 +6,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.client.ParameterSubscription;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.protobuf.Pvalue.ParameterData;
-import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.NamedObjectList;
-import org.yamcs.studio.core.StringConverter;
-import org.yamcs.studio.core.YamcsConnectionListener;
+import org.yamcs.studio.core.MissionDatabase;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.InstanceListener;
-import org.yamcs.studio.core.model.ParameterCatalogue;
-import org.yamcs.studio.core.model.ParameterListener;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 import org.yamcs.studio.css.core.pvmanager.ParameterChannelHandler;
 
-public class PVCatalogue implements YamcsConnectionListener, InstanceListener, ParameterListener {
+public class PVCatalogue implements YamcsAware {
 
     private static final Logger log = Logger.getLogger(PVCatalogue.class.getName());
 
@@ -28,51 +24,50 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
     // Assumes that all names for all yamcs schemes are sharing a same namespace (which they should be)
     private Map<NamedObjectId, ParameterChannelHandler> channelHandlersById = new LinkedHashMap<>();
 
+    private ParameterSubscription subscription;
+
     public static PVCatalogue getInstance() {
         return Activator.getDefault().getPVCatalogue();
     }
 
-    public PVCatalogue() {
-        YamcsPlugin.getDefault().addYamcsConnectionListener(this);
-        ParameterCatalogue.getInstance().addParameterListener(this);
-    }
-
     @Override
-    public void onYamcsConnected() {
-        reportConnectionState();
-    }
-
-    @Override
-    public void instanceChanged(String oldInstance, String newInstance) {
-        // TODO verify behaviour. Maybe we should have a beforeInstanceChange
-        // and an after to get the correct pv connection state
+    public void changeProcessor(String instance, String processor) {
+        if (subscription != null) {
+            subscription.cancel(true);
+        }
         Display.getDefault().asyncExec(() -> {
             OPIUtils.resetDisplays();
         });
-        reportConnectionState();
-    }
 
-    @Override
-    public void onYamcsDisconnected() {
-        reportConnectionState();
+        if (processor == null) {
+            channelHandlersById.forEach((id, channelHandler) -> {
+                channelHandler.processConnectionInfo(new PVConnectionInfo(false, null));
+            });
+        } else {
+            boolean connected = true;
+            channelHandlersById.forEach((id, channelHandler) -> {
+                // Only the processor has changed. Previously fetched MDB is still applicable
+                // And if not, then the changeMissionDatabase will re-update all channels.
+                ParameterInfo parameter = YamcsPlugin.getMissionDatabase().getParameterInfo(id);
+                channelHandler.processConnectionInfo(new PVConnectionInfo(connected, parameter));
+            });
+        }
     }
 
     public synchronized void register(ParameterChannelHandler channelHandler) {
         channelHandlersById.put(channelHandler.getId(), channelHandler);
         // Report current connection state
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
-        ParameterInfo parameter = ParameterCatalogue.getInstance().getParameterInfo(channelHandler.getId());
+        ParameterInfo parameter = YamcsPlugin.getMissionDatabase().getParameterInfo(channelHandler.getId());
         channelHandler.processConnectionInfo(new PVConnectionInfo(connected, parameter));
         // Register (pending) websocket request
         NamedObjectList idList = toNamedObjectList(channelHandler.getId());
-        ParameterCatalogue.getInstance().subscribeParameters(idList);
     }
 
     public synchronized void unregister(ParameterChannelHandler channelHandler) {
         channelHandlersById.remove(channelHandler.getId());
         if (channelHandler.isConnected()) {
             NamedObjectList idList = toNamedObjectList(channelHandler.getId());
-            ParameterCatalogue.getInstance().unsubscribeParameters(idList);
         }
     }
 
@@ -81,9 +76,9 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
     }
 
     @Override
-    public void mdbUpdated() {
+    public void changeMissionDatabase(MissionDatabase missionDatabase) {
         channelHandlersById.forEach((id, channelHandler) -> {
-            ParameterInfo parameter = ParameterCatalogue.getInstance().getParameterInfo(id);
+            ParameterInfo parameter = missionDatabase.getParameterInfo(id);
             if (log.isLoggable(Level.FINER)) {
                 log.finer(String.format("Signaling %s --> %s", id, parameter));
             }
@@ -91,7 +86,7 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
         });
     }
 
-    @Override
+    /*@Override
     public void onParameterData(ParameterData pdata) {
         for (ParameterValue pval : pdata.getParameterList()) {
             ParameterChannelHandler channelHandler = channelHandlersById.get(pval.getId());
@@ -103,12 +98,12 @@ public class PVCatalogue implements YamcsConnectionListener, InstanceListener, P
                 channelHandler.processParameterValue(pval);
             }
         }
-    }
+    }*/
 
     private void reportConnectionState() {
         boolean connected = YamcsPlugin.getYamcsClient().isConnected();
         channelHandlersById.forEach((id, channelHandler) -> {
-            ParameterInfo parameter = ParameterCatalogue.getInstance().getParameterInfo(id);
+            ParameterInfo parameter = YamcsPlugin.getMissionDatabase().getParameterInfo(id);
             channelHandler.processConnectionInfo(new PVConnectionInfo(connected, parameter));
         });
     }

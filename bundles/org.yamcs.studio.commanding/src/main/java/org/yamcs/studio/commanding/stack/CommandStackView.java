@@ -44,20 +44,26 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
+import org.yamcs.client.CommandSubscription;
+import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackMode;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.security.YamcsAuthorizations;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
-public class CommandStackView extends ViewPart {
+public class CommandStackView extends ViewPart implements YamcsAware {
 
     public static final String ID = "org.yamcs.studio.commanding.stack.CommandStackView";
     private static final Logger log = Logger.getLogger(CommandStackView.class.getName());
+
+    private CommandSubscription subscription;
 
     private CommandStackTableViewer commandTableViewer;
     private ConnectionStateProvider connectionStateProvider;
@@ -447,11 +453,7 @@ public class CommandStackView extends ViewPart {
         // Set initial state
         refreshState();
 
-        CommandingCatalogue.getInstance().addCommandHistoryListener(cmdhistEntry -> {
-            Display.getDefault().asyncExec(() -> processCommandHistoryEntry(cmdhistEntry));
-        });
-
-        CommandingCatalogue.getInstance().addClearanceListener((enabled, clearance) -> {
+        /*CommandingCatalogue.getInstance().addClearanceListener((enabled, clearance) -> {
             Display.getDefault().asyncExec(() -> {
                 if (!enabled) {
                     clearanceLabel.setText("");
@@ -493,7 +495,26 @@ public class CommandStackView extends ViewPart {
                 }
                 bottomLeft.layout(true);
             });
-        });
+        });*/
+    }
+
+    @Override
+    public void changeProcessor(String instance, String processor) {
+        if (subscription != null) {
+            subscription.cancel(true);
+        }
+
+        if (processor != null) {
+            YamcsClient client = YamcsPlugin.getYamcsClient();
+            subscription = client.createCommandSubscription();
+            subscription.addMessageListener(entry -> {
+                Display.getDefault().asyncExec(() -> processCommandHistoryEntry(entry));
+            });
+            subscription.sendMessage(SubscribeCommandsRequest.newBuilder()
+                    .setInstance(instance)
+                    .setProcessor(processor)
+                    .build());
+        }
     }
 
     public void selectFirst() {
@@ -863,6 +884,9 @@ public class CommandStackView extends ViewPart {
     public void dispose() {
         if (resourceManager != null) {
             resourceManager.dispose();
+        }
+        if (subscription != null) {
+            subscription.cancel(true);
         }
         super.dispose();
     }

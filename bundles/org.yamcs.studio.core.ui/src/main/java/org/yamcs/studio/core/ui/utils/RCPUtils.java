@@ -28,7 +28,7 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Various 'improvements' to RCP code to shorten our code a bit
@@ -99,7 +99,7 @@ public class RCPUtils {
     }
 
     public static Instant toInstant(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(TimeCatalogue.getInstance().getTimeZone());
+        Calendar cal = Calendar.getInstance(YamcsPlugin.getTimeZone());
         cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
         cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
         cal.set(Calendar.MINUTE, timeWidget.getMinutes());

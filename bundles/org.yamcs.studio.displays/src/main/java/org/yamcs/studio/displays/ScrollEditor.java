@@ -31,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
-import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -89,7 +89,7 @@ public class ScrollEditor extends EditorPart {
                 fileInput = new ParameterTable();
             }
 
-            for (ParameterInfo meta : ParameterCatalogue.getInstance().getMetaParameters()) {
+            for (ParameterInfo meta : YamcsPlugin.getMissionDatabase().getParameters()) {
                 for (String parameter : fileInput.getParameters()) {
                     if (parameter.contains(meta.getQualifiedName())) {
                         info.add(meta);

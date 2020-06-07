@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.prefs.Preferences;
 
 import org.yamcs.studio.core.TimeInterval;
-import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * TODO use gson for better migrations, or use eclipse prefs
@@ -32,7 +32,7 @@ public class Prefs {
                           // to gson. TimeInterval was moved multiple times.
         }
         if (range == null) {
-            Instant missionTime = TimeCatalogue.getInstance().getMissionTime(true);
+            Instant missionTime = YamcsPlugin.getMissionTime(true);
             range = TimeInterval.starting(missionTime.minus(1, ChronoUnit.MONTHS));
         }
         return range;

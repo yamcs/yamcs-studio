@@ -10,13 +10,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.connect.ConnectionPreferences;
 import org.yamcs.studio.connect.ConnectionsDialog;
 import org.yamcs.studio.connect.YamcsConfiguration;
-import org.yamcs.studio.connect.YamcsConfiguration.AuthType;
-import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.ui.ConnectionUIHelper;
 
 /**
  * Does a connection on the last-used configuration, with potential UI interactions if a password is required and this
@@ -55,12 +51,11 @@ public class AutoConnectHandler extends AbstractHandler {
         ConnectionPreferences.setLastUsedConfiguration(conf);
 
         // Check if authentication is needed
-        YamcsConnectionProperties yprops = conf.getConnectionProperties();
-        if (conf.isAnonymous()) {
-            log.fine("Will connect anonymously to " + yprops);
+        /*if (conf.isAnonymous()) {
+            log.fine("Will connect anonymously to " + conf);
             YamcsPlugin.getYamcsClient().connect(yprops);
         } else if (conf.getAuthType() == AuthType.KERBEROS) {
-            log.fine("Will connect with Kerberos to " + yprops);
+            log.fine("Will connect with Kerberos to " + conf);
             YamcsPlugin.getYamcsClient().connect(yprops);
         } else if (conf.isSavePassword() || noPasswordPopup) {
             log.fine("Will connect as user '" + conf.getUser() + "' to " + yprops);
@@ -74,6 +69,6 @@ public class AutoConnectHandler extends AbstractHandler {
                 conf.setPassword(dialog.getPassword());
                 ConnectionUIHelper.connectWithProgressDialog(shell, yprops);
             }
-        }
+        }*/
     }
 }

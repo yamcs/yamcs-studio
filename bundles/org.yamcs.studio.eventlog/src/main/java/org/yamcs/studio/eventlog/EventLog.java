@@ -38,11 +38,11 @@ import org.yamcs.protobuf.SubscribeEventsRequest;
 import org.yamcs.protobuf.Yamcs.Event;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.model.ContextAware;
+import org.yamcs.studio.core.model.YamcsAware;
 import org.yamcs.studio.core.ui.utils.Debouncer;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
-public class EventLog extends Composite implements ContextAware {
+public class EventLog extends Composite implements YamcsAware {
 
     public static final String CMD_SCROLL_LOCK = "org.yamcs.studio.eventlog.scrollLockCommand";
     public static final String CMD_EVENT_PROPERTIES = "org.yamcs.studio.eventlog.showDetailsCommand";

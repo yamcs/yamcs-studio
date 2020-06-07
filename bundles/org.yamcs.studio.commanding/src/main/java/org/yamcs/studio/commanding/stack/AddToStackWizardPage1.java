@@ -32,7 +32,7 @@ import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.model.CommandingCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.XtceSubSystemNode;
 import org.yamcs.studio.core.ui.utils.CenteredImageLabelProvider;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
@@ -278,7 +278,7 @@ public class AddToStackWizardPage1 extends WizardPage {
         commandsTreeTable.setContentProvider(commandTreeContentProvider);
         commandsTreeTable.setInput(commandTreeContentProvider);
 
-        CommandingCatalogue.getInstance().getMetaCommands().forEach(cmd -> {
+        YamcsPlugin.getMissionDatabase().getCommands().forEach(cmd -> {
             if (!cmd.hasAbstract() || !cmd.getAbstract()) {
                 // add aliases columns
                 for (NamedObjectId alias : cmd.getAliasList()) {

@@ -12,10 +12,9 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.yamcs.studio.connect.YamcsConfiguration;
 import org.yamcs.studio.core.YamcsConnectionListener;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.client.YamcsConfiguration;
-import org.yamcs.studio.core.client.YamcsStudioClient;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 
 public class ConnectionUIHelper implements YamcsConnectionListener {
@@ -65,19 +64,18 @@ public class ConnectionUIHelper implements YamcsConnectionListener {
     private static class YamcsUIConnector implements IRunnableWithProgress {
 
         private Shell shell;
-        private YamcsConfiguration yprops;
+        private YamcsConfiguration conf;
 
         YamcsUIConnector(Shell shell, YamcsConfiguration yprops) {
             this.shell = shell;
-            this.yprops = yprops;
+            this.conf = yprops;
         }
 
         @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-            monitor.beginTask("Connecting to " + yprops, IProgressMonitor.UNKNOWN);
-            YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
+            monitor.beginTask("Connecting to " + conf, IProgressMonitor.UNKNOWN);
             try {
-                Future<Void> future = yamcsClient.connect(yprops);
+                Future<Void> future = YamcsPlugin.connect(conf);
                 RCPUtils.monitorCancellableFuture(monitor, future);
             } catch (ExecutionException e) {
                 Display.getDefault().asyncExec(() -> {

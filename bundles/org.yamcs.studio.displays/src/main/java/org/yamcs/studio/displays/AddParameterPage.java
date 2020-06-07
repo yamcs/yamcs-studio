@@ -25,7 +25,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.model.ParameterCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class AddParameterPage extends WizardPage {
 
@@ -146,7 +146,7 @@ public class AddParameterPage extends WizardPage {
         tableViewer.setContentProvider(contentProvider);
         tableViewer.setInput(contentProvider);
 
-        ParameterCatalogue.getInstance().getMetaParameters().forEach(pmtr -> {
+        YamcsPlugin.getMissionDatabase().getParameters().forEach(pmtr -> {
 
             for (NamedObjectId alias : pmtr.getAliasList()) {
                 String namespace = alias.getNamespace();

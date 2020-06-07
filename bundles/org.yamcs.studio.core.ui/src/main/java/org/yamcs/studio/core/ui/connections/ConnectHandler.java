@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.yamcs.api.YamcsConnectionProperties;
 import org.yamcs.studio.connect.ConnectionPreferences;
 import org.yamcs.studio.connect.ConnectionsDialog;
 import org.yamcs.studio.connect.YamcsConfiguration;
@@ -34,9 +33,6 @@ public class ConnectHandler extends AbstractHandler {
     private void doConnect(Shell shell, YamcsConfiguration conf) {
         // FIXME get the password out before doing this
         ConnectionPreferences.setLastUsedConfiguration(conf);
-
-        YamcsConnectionProperties yprops = conf.getConnectionProperties();
-
-        ConnectionUIHelper.connectWithProgressDialog(shell, yprops);
+        ConnectionUIHelper.connectWithProgressDialog(shell, conf);
     }
 }

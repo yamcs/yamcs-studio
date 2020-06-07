@@ -18,7 +18,7 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import org.yamcs.studio.core.model.TimeCatalogue;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class TMScale extends JSlider {
     private static final long serialVersionUID = 1L;
@@ -38,7 +38,7 @@ public class TMScale extends JSlider {
 
     static SimpleDateFormat sdfFactory(String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+        sdf.setTimeZone(YamcsPlugin.getTimeZone());
         return sdf;
     }
 
@@ -244,7 +244,7 @@ public class TMScale extends JSlider {
         cal.setTimeInMillis(instant);
 
         // Now switch to tz of UI representation
-        cal.setTimeZone(TimeCatalogue.getInstance().getTimeZone());
+        cal.setTimeZone(YamcsPlugin.getTimeZone());
         cal.set(Calendar.MILLISECOND, 0);
         cal.setFirstDayOfWeek(Calendar.MONDAY);
         return cal;

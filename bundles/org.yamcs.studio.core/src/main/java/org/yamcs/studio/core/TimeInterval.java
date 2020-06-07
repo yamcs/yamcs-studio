@@ -5,8 +5,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import org.yamcs.studio.core.model.TimeCatalogue;
-
 /**
  * Time interval where both ends can be open
  */
@@ -61,7 +59,7 @@ public class TimeInterval implements Serializable {
         if (start != null) {
             return start;
         } else {
-            return TimeCatalogue.getInstance().getMissionTime(true)
+            return YamcsPlugin.getMissionTime(true)
                     .truncatedTo(ChronoUnit.DAYS);
         }
     }
@@ -70,7 +68,7 @@ public class TimeInterval implements Serializable {
         if (stop != null) {
             return stop;
         } else {
-            return TimeCatalogue.getInstance().getMissionTime(true)
+            return YamcsPlugin.getMissionTime(true)
                     .plus(1, ChronoUnit.MONTHS)
                     .truncatedTo(ChronoUnit.DAYS);
         }
