@@ -8,4 +8,3 @@ Views
     event-log
     command-stack
     command-history
-    data-links

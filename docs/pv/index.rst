@@ -54,18 +54,6 @@ Or simply:
 In these examples ``YSS`` is the name of the root space system. ``SIMULATOR`` is the name of the space system directly below, which defines both measurements ``BatteryVoltage1`` and ``BatteryTemperature1``.
 
 
-Software Parameters
--------------------
-
-Same concept as a Parameter, but has additional support for writing values from the client to the server. In this regard they can be used as a means of communicating information from one client to another using Yamcs Server as the medium.
-
-Remark that software parameters are not currently archived by Yamcs Server, and will therefore be reset when Yamcs is restarted.
-
-Example PV Name:
-
-* ``sw:///YSS/SIMULATOR/some-software-param``
-
-
 Simulated Values
 ----------------
 
