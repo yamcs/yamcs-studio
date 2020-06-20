@@ -11,7 +11,7 @@ Widgets come in all different kinds, and are grouped in four different categorie
     graphic-widgets
     monitor-widgets
     control-widgets
-    other-widgets
+    misc/index
 
 
 Graphics
@@ -117,14 +117,14 @@ Others
 .. list-table::
     :widths: 33 33 33
 
-    * - |table| :ref:`table`
-      - |grouping-container| :ref:`grouping-container`
-      - |sash-container| :ref:`sash-container`
-    * - |web-browser| :ref:`web-browser`
-      - |linking-container| :ref:`linking-container`
-      - |grid-layout| :ref:`grid-layout`
-    * - |array| :ref:`array`
-      - |tabbed-container| :ref:`tabbed-container`
+    * - |table| :doc:`misc/table`
+      - |grouping-container| :doc:`misc/grouping-container`
+      - |sash-container| :doc:`misc/sash-container`
+    * - |web-browser| :doc:`misc/web-browser`
+      - |linking-container| :doc:`misc/linking-container`
+      - |grid-layout| :doc:`misc/grid-layout`
+    * - |array| :doc:`misc/array`
+      - |tabbed-container| :doc:`misc/tabbed-container`
       -
 
 .. |array| image:: ../widgets/_images/array.png

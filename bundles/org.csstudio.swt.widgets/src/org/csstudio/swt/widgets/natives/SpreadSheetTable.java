@@ -24,10 +24,9 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -48,14 +47,16 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-/**A table allow displaying and editing 2D text array as in spreadsheet.
- * The internal data operated by this table is a nested string list.
+/**
+ * A table allow displaying and editing 2D text array as in spreadsheet. The internal data operated by this table is a
+ * nested string list.
+ * 
  * @author Xihui Chen
  *
  */
 public class SpreadSheetTable extends Composite {
 
-    public enum CellEditorType{
+    public enum CellEditorType {
         TEXT,
         CHECKBOX,
         DROPDOWN,
@@ -64,19 +65,24 @@ public class SpreadSheetTable extends Composite {
 
     private static final String TEXT_EDITING_SUPPORT_KEY = "text_editing_support";
 
-    private static final String[] DEFAULT_BOOLEA_TEXTS = new String[]{"No", "Yes"};
-
+    private static final String[] DEFAULT_BOOLEA_TEXTS = new String[] { "No", "Yes" };
 
     /**
      * Listener on table cell editing events.
      *
      */
     public interface ITableCellEditingListener {
-        /**Called whenever the value in a cell has been edited.
-         * @param row index of the row
-         * @param col index of the column
-         * @param oldValue old value in the cell
-         * @param newValue new value in the cell.
+        /**
+         * Called whenever the value in a cell has been edited.
+         * 
+         * @param row
+         *            index of the row
+         * @param col
+         *            index of the column
+         * @param oldValue
+         *            old value in the cell
+         * @param newValue
+         *            new value in the cell.
          */
         public void cellValueChanged(int row, int col, String oldValue, String newValue);
     }
@@ -87,20 +93,26 @@ public class SpreadSheetTable extends Composite {
      */
     public interface ITableModifiedListener {
 
-        /**Called whenever the table content is modified.
-         * @param content of the table.
+        /**
+         * Called whenever the table content is modified.
+         * 
+         * @param content
+         *            of the table.
          */
         public void modified(String[][] content);
     }
 
     /**
-     *Listener on table selection changed events.
+     * Listener on table selection changed events.
      *
      */
     public interface ITableSelectionChangedListener {
 
-        /**Called when selection on the table changed.
-         * @param selection a 2D string array which represents the selected rows.
+        /**
+         * Called when selection on the table changed.
+         * 
+         * @param selection
+         *            a 2D string array which represents the selected rows.
          */
         public void selectionChanged(String[][] selection);
     }
@@ -109,7 +121,7 @@ public class SpreadSheetTable extends Composite {
 
         private CellEditor cellEditor;
         private Object cellEditorData;
-        private int cellEditorStyle=SWT.NONE;
+        private int cellEditorStyle = SWT.NONE;
         private String oldValue;
         private ViewerCell viewerCell;
         private boolean columnEditable = true;
@@ -121,8 +133,9 @@ public class SpreadSheetTable extends Composite {
 
         @Override
         protected boolean canEdit(Object element) {
-            if(!editable)
+            if (!editable) {
                 return false;
+            }
             return columnEditable;
         }
 
@@ -130,43 +143,48 @@ public class SpreadSheetTable extends Composite {
             return viewerCell.getColumnIndex();
         }
 
-        private int findRowIndex(){
+        private int findRowIndex() {
             Table table = tableViewer.getTable();
-            TableItem cellItem = (TableItem)viewerCell.getItem();
+            TableItem cellItem = (TableItem) viewerCell.getItem();
             return table.indexOf(cellItem);
         }
 
         @Override
         protected CellEditor getCellEditor(Object element) {
-            if (cellEditor == null){
+            if (cellEditor == null) {
                 switch (cellEditorType) {
                 case CHECKBOX:
-                    if(cellEditorData==null)
+                    if (cellEditorData == null) {
                         cellEditorData = DEFAULT_BOOLEA_TEXTS;
-                    cellEditor = new CheckboxCellEditor(tableViewer.getTable()){
+                    }
+                    cellEditor = new CheckboxCellEditor(tableViewer.getTable()) {
+                        @Override
                         protected Object doGetValue() {
-                            return ((Boolean) super.doGetValue())?((String[])cellEditorData)[1]:((String[])cellEditorData)[0];
+                            return ((Boolean) super.doGetValue()) ? ((String[]) cellEditorData)[1]
+                                    : ((String[]) cellEditorData)[0];
                         };
+
                         @Override
                         protected void doSetValue(Object value) {
-                            if(value.toString().toLowerCase().equals(((String[])cellEditorData)[1].toLowerCase()))
+                            if (value.toString().toLowerCase().equals(((String[]) cellEditorData)[1].toLowerCase())) {
                                 super.doSetValue(true);
-                            else
+                            } else {
                                 super.doSetValue(false);
+                            }
                         }
                     };
                     break;
                 case DROPDOWN:
                     cellEditor = new ComboBoxCellEditor(tableViewer.getTable(),
-                            (String[])cellEditorData,cellEditorStyle){
+                            (String[]) cellEditorData, cellEditorStyle) {
                         @Override
                         protected Object doGetValue() {
-                            return ((CCombo)getControl()).getText();
+                            return ((CCombo) getControl()).getText();
                         }
 
                         @Override
                         protected void doSetValue(Object value) {
-                            ((CCombo)getControl()).setText(value.toString());
+                            ((CCombo) getControl()).setText(value.toString());
                         }
                     };
                     break;
@@ -199,18 +217,18 @@ public class SpreadSheetTable extends Composite {
             int col = findColumnIndex();
             String oldValue = ((List<String>) element).get(col);
             ((List<String>) element).set(col, value.toString());
-            if(!value.equals(oldValue)){
-                if(tableEditingListeners != null && !tableEditingListeners.isEmpty()){
+            if (!value.equals(oldValue)) {
+                if (tableEditingListeners != null && !tableEditingListeners.isEmpty()) {
                     int row = findRowIndex();
-                    for(Object listener: tableEditingListeners.getListeners()){
-                        ((ITableCellEditingListener)listener).cellValueChanged(row, col, oldValue, value.toString());
+                    for (Object listener : tableEditingListeners.getListeners()) {
+                        ((ITableCellEditingListener) listener).cellValueChanged(row, col, oldValue, value.toString());
                     }
                 }
                 fireTableModified();
             }
-            TableItem tableItem = (TableItem)viewerCell.getItem();
+            TableItem tableItem = (TableItem) viewerCell.getItem();
             tableItem.setText(col, value.toString());
-            Image image = ((TextTableLableProvider)tableViewer.getLabelProvider()).getColumnImage(element, col);
+            Image image = ((TextTableLableProvider) tableViewer.getLabelProvider()).getColumnImage(element, col);
             tableItem.setImage(col, image);
         }
 
@@ -220,7 +238,7 @@ public class SpreadSheetTable extends Composite {
 
         public void setCellEditorType(CellEditorType cellEditorType) {
             this.cellEditorType = cellEditorType;
-            cellEditor=null;
+            cellEditor = null;
         }
 
         public boolean isColumnEditable() {
@@ -237,7 +255,7 @@ public class SpreadSheetTable extends Composite {
         }
 
         public void setCellEditorData(Object data) {
-            this.cellEditorData=data;
+            this.cellEditorData = data;
         }
 
         public void setCellEditorStyle(int cellEditorStyle) {
@@ -249,28 +267,33 @@ public class SpreadSheetTable extends Composite {
     private class TextTableLableProvider extends BaseLabelProvider implements
             ITableLabelProvider {
 
+        @Override
         public Image getColumnImage(Object element, int columnIndex) {
-            CellEditorType cellEditorType = ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                    getData(TEXT_EDITING_SUPPORT_KEY))).getCellEditorType();
+            CellEditorType cellEditorType = ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex)
+                    .getData(TEXT_EDITING_SUPPORT_KEY))).getCellEditorType();
             switch (cellEditorType) {
             case CHECKBOX:
-                if(!isColumnEditable(columnIndex))
+                if (!isColumnEditable(columnIndex)) {
                     return null;
-                String[] booleanTexts = (String[]) ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                        getData(TEXT_EDITING_SUPPORT_KEY))).cellEditorData;
-                if(booleanTexts==null)
+                }
+                String[] booleanTexts = (String[]) ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex)
+                        .getData(TEXT_EDITING_SUPPORT_KEY))).cellEditorData;
+                if (booleanTexts == null) {
                     booleanTexts = DEFAULT_BOOLEA_TEXTS;
-                if(getColumnText(element, columnIndex).trim().toLowerCase().equals(
-                        booleanTexts[1].toLowerCase()))
+                }
+                if (getColumnText(element, columnIndex).trim().toLowerCase().equals(
+                        booleanTexts[1].toLowerCase())) {
                     return getOnImage();
-                else
+                } else {
                     return getOffImage();
+                }
             default:
                 break;
             }
             return null;
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public String getColumnText(Object element, int columnIndex) {
             return ((List<String>) element).get(columnIndex);
@@ -291,9 +314,13 @@ public class SpreadSheetTable extends Composite {
     private ListenerList selectionChangedListeners;
     private ListenerList tableModifiedListeners;
 
-    /**Create a spreadsheet table.
-     * @param parent parent composite.
-     * @param style the style of widget to construct
+    /**
+     * Create a spreadsheet table.
+     * 
+     * @param parent
+     *            parent composite.
+     * @param style
+     *            the style of widget to construct
      */
     public SpreadSheetTable(Composite parent) {
         super(parent, SWT.NONE);
@@ -306,43 +333,50 @@ public class SpreadSheetTable extends Composite {
         setInput(new ArrayList<List<String>>());
     }
 
-    /**Add a table cell editing listener. Called whenever the value in a cell has been edited.
-     * @param listener the listener
+    /**
+     * Add a table cell editing listener. Called whenever the value in a cell has been edited.
+     * 
+     * @param listener
+     *            the listener
      */
-    public void addCellEditingListener(ITableCellEditingListener listener){
-        if(tableEditingListeners == null)
+    public void addCellEditingListener(ITableCellEditingListener listener) {
+        if (tableEditingListeners == null) {
             tableEditingListeners = new ListenerList();
+        }
         tableEditingListeners.add(listener);
     }
 
-    /**Add a table modified listener. Called whenever content of the table has been modified from the table.
-     * @param listener the listener
+    /**
+     * Add a table modified listener. Called whenever content of the table has been modified from the table.
+     * 
+     * @param listener
+     *            the listener
      */
-    public void addModifiedListener(ITableModifiedListener listener){
-        if(tableModifiedListeners == null)
+    public void addModifiedListener(ITableModifiedListener listener) {
+        if (tableModifiedListeners == null) {
             tableModifiedListeners = new ListenerList();
+        }
         tableModifiedListeners.add(listener);
     }
 
-    /**Add a selection changed listener. Call whenever selection of the table changes.
-     * @param listener the listener
+    /**
+     * Add a selection changed listener. Call whenever selection of the table changes.
+     * 
+     * @param listener
+     *            the listener
      */
-    public void addSelectionChangedListener(ITableSelectionChangedListener listener){
-        if(selectionChangedListeners == null){
+    public void addSelectionChangedListener(ITableSelectionChangedListener listener) {
+        if (selectionChangedListeners == null) {
             selectionChangedListeners = new ListenerList();
-            tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-                public void selectionChanged(SelectionChangedEvent event) {
-                    String[][] selection = getSelection();
-                    for(Object listener : selectionChangedListeners.getListeners()){
-                        ((ITableSelectionChangedListener)listener).selectionChanged(selection);
-                    }
+            tableViewer.addSelectionChangedListener(event -> {
+                String[][] selection = getSelection();
+                for (Object listener1 : selectionChangedListeners.getListeners()) {
+                    ((ITableSelectionChangedListener) listener1).selectionChanged(selection);
                 }
             });
         }
         selectionChangedListeners.add(listener);
     }
-
 
     /**
      * Auto size all columns.
@@ -357,7 +391,7 @@ public class SpreadSheetTable extends Composite {
      * @param col
      */
     private void checkColumnIndex(int col) {
-        if(col >= getColumnCount() || col <0){
+        if (col >= getColumnCount() || col < 0) {
             throw new IllegalArgumentException(
                     NLS.bind("column index {0} out of range [0, {1}].", col, getColumnCount()));
         }
@@ -367,7 +401,7 @@ public class SpreadSheetTable extends Composite {
      * @param row
      */
     private void checkRowIndex(int row) {
-        if(row <0 || row >= input.size()){
+        if (row < 0 || row >= input.size()) {
             throw new IllegalArgumentException(
                     NLS.bind("row index {0} out of range [0, {1}].", row, input.size()));
         }
@@ -380,13 +414,14 @@ public class SpreadSheetTable extends Composite {
      *            index of the column.
      */
     public void deleteColumn(int index) {
-        if(!isColumnEditable(index))
+        if (!isColumnEditable(index)) {
             throw new IllegalStateException(NLS.bind("column {0} is not editable", index));
+        }
         tableViewer.getTable().getColumn(index).dispose();
-        if(getColumnCount() == 0){
+        if (getColumnCount() == 0) {
             input.clear();
             refresh();
-        }else {
+        } else {
             for (int i = 0; i < getRowCount(); i++) {
                 input.get(i).remove(index);
             }
@@ -407,11 +442,11 @@ public class SpreadSheetTable extends Composite {
         fireTableModified();
     }
 
-    protected void fireTableModified(){
-        if(tableModifiedListeners != null){
+    protected void fireTableModified() {
+        if (tableModifiedListeners != null) {
             String[][] content = getContent();
-            for(Object o : tableModifiedListeners.getListeners()){
-                ((ITableModifiedListener)o).modified(content);
+            for (Object o : tableModifiedListeners.getListeners()) {
+                ((ITableModifiedListener) o).modified(content);
             }
         }
     }
@@ -438,13 +473,14 @@ public class SpreadSheetTable extends Composite {
         return tableViewer.getTable().getColumnCount();
     }
 
-
-    /**Get column headers.
+    /**
+     * Get column headers.
+     * 
      * @return the column headers.
      */
-    public String[] getColumnHeaders(){
+    public String[] getColumnHeaders() {
         String[] r = new String[getColumnCount()];
-        for(int i=0; i<r.length; i++){
+        for (int i = 0; i < r.length; i++) {
             r[i] = tableViewer.getTable().getColumn(i).getText();
         }
         return r;
@@ -466,9 +502,8 @@ public class SpreadSheetTable extends Composite {
     }
 
     /**
-     * Get input of the table by which the table is backed. To keep the table's
-     * content synchronized with the table, client should call
-     * {@link #refresh()} if the returned list has been modified outside.
+     * Get input of the table by which the table is backed. To keep the table's content synchronized with the table,
+     * client should call {@link #refresh()} if the returned list has been modified outside.
      *
      * @return the input of the table.
      */
@@ -476,19 +511,22 @@ public class SpreadSheetTable extends Composite {
         return input;
     }
 
-    /**Get row and column index under given point.
-     * @param point the widget-relative coordinates
-     * @return int[0] is row index, int[1] is column index.
-     * null if no cell was found under given point.
+    /**
+     * Get row and column index under given point.
+     * 
+     * @param point
+     *            the widget-relative coordinates
+     * @return int[0] is row index, int[1] is column index. null if no cell was found under given point.
      */
     public int[] getRowColumnIndex(Point point) {
         Table table = tableViewer.getTable();
         ViewerCell cell = tableViewer.getCell(point);
-        if(cell == null)
+        if (cell == null) {
             return null;
+        }
         int col = cell.getColumnIndex();
-//        int row = table.indexOf((TableItem) cell.getItem());
-//        return new int[]{row, col};
+        // int row = table.indexOf((TableItem) cell.getItem());
+        // return new int[]{row, col};
         int row = -1;
         // get row index
         Rectangle clientArea = table.getClientArea();
@@ -506,8 +544,9 @@ public class SpreadSheetTable extends Composite {
                 visible = true;
             }
 
-            if (!visible)
+            if (!visible) {
                 return new int[] { row, col };
+            }
             index++;
         }
         return new int[] { row, col };
@@ -567,7 +606,7 @@ public class SpreadSheetTable extends Composite {
 
     /**
      * Insert a row. Shifts the element currently at that position (if any) and any subsequent elements to the below
-     *  (adds one to their indices).Default values for the new row are empty strings.
+     * (adds one to their indices).Default values for the new row are empty strings.
      *
      * @param index
      *            index of the row.
@@ -575,9 +614,23 @@ public class SpreadSheetTable extends Composite {
     public void insertRow(int index) {
         String[] array = new String[getColumnCount()];
         Arrays.fill(array, "");
-        input.add(index, new ArrayList<String>(Arrays.asList(array)));
+        input.add(index, new ArrayList<>(Arrays.asList(array)));
         tableViewer.refresh(false);
         fireTableModified();
+    }
+
+    /**
+     * Appends a row to the bottom of the table.
+     * 
+     * @return row index
+     */
+    public int appendRow() {
+        String[] array = new String[getColumnCount()];
+        Arrays.fill(array, "");
+        input.add(new ArrayList<>(Arrays.asList(array)));
+        tableViewer.refresh(false);
+        fireTableModified();
+        return input.size() - 1;
     }
 
     /**
@@ -590,24 +643,35 @@ public class SpreadSheetTable extends Composite {
     /**
      * @return true if table content is empty.
      */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return input.isEmpty();
     }
 
+    public void revealRow(int index) {
+        if (input.size() < index) {
+            return;
+        }
+        List<String> row = input.get(index);
+        IStructuredSelection sel = new StructuredSelection(new Object[] { row });
+        tableViewer.setSelection(sel, true);
+    }
+
     /**
-     * @param columnIndex index of the column.
+     * @param columnIndex
+     *            index of the column.
      * @return true if the column is editable.
      */
-    public boolean isColumnEditable(int columnIndex){
+    public boolean isColumnEditable(int columnIndex) {
         checkColumnIndex(columnIndex);
-        return ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                getData(TEXT_EDITING_SUPPORT_KEY))).isColumnEditable();
+        return ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex).getData(TEXT_EDITING_SUPPORT_KEY)))
+                .isColumnEditable();
     }
 
     @Override
     public void pack() {
-        for (int i = 0; i < getColumnCount(); i++)
+        for (int i = 0; i < getColumnCount(); i++) {
             tableViewer.getTable().getColumn(i).pack();
+        }
         super.pack();
     }
 
@@ -618,24 +682,34 @@ public class SpreadSheetTable extends Composite {
         getTableViewer().refresh();
     }
 
-    /**Set background color of the cell.
-     * @param row row index of the cell.
-     * @param col column index of the cell.
-     * @param rgbColor color in RGB.
+    /**
+     * Set background color of the cell.
+     * 
+     * @param row
+     *            row index of the cell.
+     * @param col
+     *            column index of the cell.
+     * @param rgbColor
+     *            color in RGB.
      */
-    public void setCellBackground(int row, int col, RGB rgbColor){
+    public void setCellBackground(int row, int col, RGB rgbColor) {
         checkRowIndex(row);
         checkColumnIndex(col);
         tableViewer.getTable().getItem(row).setBackground(
                 col, CustomMediaFactory.getInstance().getColor(rgbColor));
     }
 
-    /**Set forground color of the cell.
-     * @param row row index of the cell.
-     * @param col column index of the cell.
-     * @param rgbColor color in RGB.
+    /**
+     * Set forground color of the cell.
+     * 
+     * @param row
+     *            row index of the cell.
+     * @param col
+     *            column index of the cell.
+     * @param rgbColor
+     *            color in RGB.
      */
-    public void setCellForeground(int row, int col, RGB rgbColor){
+    public void setCellForeground(int row, int col, RGB rgbColor) {
         checkRowIndex(row);
         checkColumnIndex(col);
         tableViewer.getTable().getItem(row).setForeground(
@@ -643,8 +717,8 @@ public class SpreadSheetTable extends Composite {
     }
 
     /**
-     * Set the text of a cell. If the row index is larger than current content,
-     *  it will extend the current content to have that row.
+     * Set the text of a cell. If the row index is larger than current content, it will extend the current content to
+     * have that row.
      *
      *
      * @param row
@@ -656,11 +730,11 @@ public class SpreadSheetTable extends Composite {
      */
     public void setCellText(int row, int col, String text) {
         checkColumnIndex(col);
-        if(row >= input.size()){
-            for(int i=input.size(); i<=row; i++){
+        if (row >= input.size()) {
+            for (int i = input.size(); i <= row; i++) {
                 String[] array = new String[getColumnCount()];
                 Arrays.fill(array, "");
-                input.add(new ArrayList<String>(Arrays.asList(array)));
+                input.add(new ArrayList<>(Arrays.asList(array)));
             }
             tableViewer.refresh();
         }
@@ -669,59 +743,75 @@ public class SpreadSheetTable extends Composite {
         fireTableModified();
     }
 
-    /**Set the cell editor type of a column
-     * @param columnIndex index of the column.
-     * @param cellEditorType the cell editor type.
+    /**
+     * Set the cell editor type of a column
+     * 
+     * @param columnIndex
+     *            index of the column.
+     * @param cellEditorType
+     *            the cell editor type.
      */
-    public void setColumnCellEditorType(int columnIndex, CellEditorType cellEditorType){
+    public void setColumnCellEditorType(int columnIndex, CellEditorType cellEditorType) {
         checkColumnIndex(columnIndex);
-        ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                getData(TEXT_EDITING_SUPPORT_KEY))).setCellEditorType(cellEditorType);
+        ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex).getData(TEXT_EDITING_SUPPORT_KEY)))
+                .setCellEditorType(cellEditorType);
     }
 
-    /**Set the needed data for the cell editor. For example, a String[] for dropdown cell editor.
-     * @param columnIndex index of the column.
-     * @param data data for the cell editor.
+    /**
+     * Set the needed data for the cell editor. For example, a String[] for dropdown cell editor.
+     * 
+     * @param columnIndex
+     *            index of the column.
+     * @param data
+     *            data for the cell editor.
      */
-    public void setColumnCellEditorData(int columnIndex, Object data){
+    public void setColumnCellEditorData(int columnIndex, Object data) {
         checkColumnIndex(columnIndex);
-        ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                getData(TEXT_EDITING_SUPPORT_KEY))).setCellEditorData(data);
+        ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex).getData(TEXT_EDITING_SUPPORT_KEY)))
+                .setCellEditorData(data);
     }
 
-    /**Set the cell editor style. For example, {@link SWT#READ_ONLY} for dropdown cell editor.
-     * @param columnIndex index of the column.
-     * @param style the style
+    /**
+     * Set the cell editor style. For example, {@link SWT#READ_ONLY} for dropdown cell editor.
+     * 
+     * @param columnIndex
+     *            index of the column.
+     * @param style
+     *            the style
      */
-    public void setColumnCellEditorStyle(int columnIndex, int style){
+    public void setColumnCellEditorStyle(int columnIndex, int style) {
         checkColumnIndex(columnIndex);
-        ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                getData(TEXT_EDITING_SUPPORT_KEY))).setCellEditorStyle(style);
+        ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex).getData(TEXT_EDITING_SUPPORT_KEY)))
+                .setCellEditorStyle(style);
     }
 
-
-    /**Set a customized cell editor for a column. The cell editor
-     * must generate or accept String type value.
-     * @param columnIndex index of the column.
-     * @param cellEditor the cell editor.
+    /**
+     * Set a customized cell editor for a column. The cell editor must generate or accept String type value.
+     * 
+     * @param columnIndex
+     *            index of the column.
+     * @param cellEditor
+     *            the cell editor.
      */
-    public void setColumnCellEditor(int columnIndex, CellEditor cellEditor){
+    public void setColumnCellEditor(int columnIndex, CellEditor cellEditor) {
         checkColumnIndex(columnIndex);
-        ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                getData(TEXT_EDITING_SUPPORT_KEY))).setCellEditor(cellEditor);
+        ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex).getData(TEXT_EDITING_SUPPORT_KEY)))
+                .setCellEditor(cellEditor);
     }
 
-    /**Set if a column is editable.
-     * @param columnIndex index of the column.
-     * @param editable editable if true.
+    /**
+     * Set if a column is editable.
+     * 
+     * @param columnIndex
+     *            index of the column.
+     * @param editable
+     *            editable if true.
      */
-    public void setColumnEditable(int columnIndex, boolean editable){
+    public void setColumnEditable(int columnIndex, boolean editable) {
         checkColumnIndex(columnIndex);
-        ((TextEditingSupport)(tableViewer.getTable().getColumn(columnIndex).
-                getData(TEXT_EDITING_SUPPORT_KEY))).setColumnEditable(editable);
+        ((TextEditingSupport) (tableViewer.getTable().getColumn(columnIndex).getData(TEXT_EDITING_SUPPORT_KEY)))
+                .setColumnEditable(editable);
     }
-
-
 
     /**
      * Set the header of a column.
@@ -736,10 +826,9 @@ public class SpreadSheetTable extends Composite {
         tableViewer.getTable().getColumn(columnIndex).setText(header);
     }
 
-
     /**
-     * Set column headers. If the size of the headers array is larger than the
-     * existing columns count. It will increase the columns count automatically.
+     * Set column headers. If the size of the headers array is larger than the existing columns count. It will increase
+     * the columns count automatically.
      *
      * @param headers
      *            headers text.
@@ -764,9 +853,8 @@ public class SpreadSheetTable extends Composite {
     }
 
     /**
-     * Set number of columns. If the new count is less than old count, columns
-     * from right will be deleted. If the new count is more than old count, new
-     * columns will be appended to the right.
+     * Set number of columns. If the new count is less than old count, columns from right will be deleted. If the new
+     * count is more than old count, new columns will be appended to the right.
      *
      * @param count
      *            number of columns.
@@ -774,8 +862,9 @@ public class SpreadSheetTable extends Composite {
     public void setColumnsCount(int count) {
         TableColumn[] columns = tableViewer.getTable().getColumns();
         int oldCount = getColumnCount();
-        if (count == oldCount)
+        if (count == oldCount) {
             return;
+        }
         if (count < oldCount) {
             for (int i = count; i < oldCount; i++) {
                 columns[i].dispose();
@@ -815,13 +904,13 @@ public class SpreadSheetTable extends Composite {
     }
 
     /**
-     * Set width of each column. If length of the sizes array is larger than the
-     * existing columns count. It will increase the columns count automatically.
+     * Set width of each column. If length of the sizes array is larger than the existing columns count. It will
+     * increase the columns count automatically.
      *
      * @param widthes
      *            column size in pixels.
      */
-    public void setColumnWidths(int[] widthes){
+    public void setColumnWidths(int[] widthes) {
         if (widthes.length > tableViewer.getTable().getColumnCount()) {
             setColumnsCount(widthes.length);
         }
@@ -831,8 +920,7 @@ public class SpreadSheetTable extends Composite {
     }
 
     /**
-     * Set content of the table.Old content in table will be replaced by the new
-     * content.
+     * Set content of the table.Old content in table will be replaced by the new content.
      *
      * @param content
      *            the new content.
@@ -846,7 +934,7 @@ public class SpreadSheetTable extends Composite {
         }
         setColumnsCount(content[0].length);
         for (int i = 0; i < content.length; i++) {
-            List<String> row = new ArrayList<String>(content[0].length);
+            List<String> row = new ArrayList<>(content[0].length);
             for (int j = 0; j < content[0].length; j++) {
                 row.add(content[i][j]);
             }
@@ -873,8 +961,8 @@ public class SpreadSheetTable extends Composite {
     }
 
     /**
-     * Set input of the table. The input is the back of the table, so content of
-     * the input is always synchronized with content of the table.
+     * Set input of the table. The input is the back of the table, so content of the input is always synchronized with
+     * content of the table.
      *
      * @param input
      *            input of the table.
@@ -891,21 +979,29 @@ public class SpreadSheetTable extends Composite {
         tableViewer.getTable().setMenu(menu);
     }
 
-    /**Set background color of the row.
-     * @param row row index of the cell.
-     * @param rgbColor color in RGB.
+    /**
+     * Set background color of the row.
+     * 
+     * @param row
+     *            row index of the cell.
+     * @param rgbColor
+     *            color in RGB.
      */
-    public void setRowBackground(int row, RGB rgbColor){
+    public void setRowBackground(int row, RGB rgbColor) {
         checkRowIndex(row);
         tableViewer.getTable().getItem(row).setBackground(
                 CustomMediaFactory.getInstance().getColor(rgbColor));
     }
 
-    /**Set foreground color of the row.
-     * @param row row index of the cell.
-     * @param rgbColor color in RGB.
+    /**
+     * Set foreground color of the row.
+     * 
+     * @param row
+     *            row index of the cell.
+     * @param rgbColor
+     *            color in RGB.
      */
-    public void setRowForeground(int row, RGB rgbColor){
+    public void setRowForeground(int row, RGB rgbColor) {
         checkRowIndex(row);
         tableViewer.getTable().getItem(row).setForeground(
                 CustomMediaFactory.getInstance().getColor(rgbColor));
