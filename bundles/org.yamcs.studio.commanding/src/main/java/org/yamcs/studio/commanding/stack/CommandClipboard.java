@@ -45,50 +45,40 @@ public class CommandClipboard {
         }
         textToClipboard(source, display);
     }
-    static class SortByGenerationTime implements Comparator<CommandHistoryRecord> 
-    { 
-        // Used for sorting in ascending order of 
-        // roll number 
-        public int compare(CommandHistoryRecord a, CommandHistoryRecord b) 
-        { 
-            long compare =a.getCommandId().getGenerationTime() - b.getCommandId().getGenerationTime();
-            int result = 0;
-            if (compare > 1)
-                result = 1;
-            else if (compare < 1)
-                result = -1;
-            return result;
+
+    static class SortByGenerationTime implements Comparator<CommandHistoryRecord> {
+        // Used for sorting in ascending order of roll number
+        @Override
+        public int compare(CommandHistoryRecord a, CommandHistoryRecord b) {
+            return a.getCommand().getGenerationTime().compareTo(b.getCommand().getGenerationTime());
         }
     }
-     
+
     public static List<StackedCommand> getCopiedCommands() throws Exception {
         List<StackedCommand> result = new ArrayList<>();
 
         // Convert CommandHistoryRecord to new Stacked Command
-        // first compute the stack delays from the cmd history generation times 
-        List <CommandHistoryRecord> sortedRecords = new ArrayList<>();
-        HashMap<CommandHistoryRecord, Integer> commandHistoryRecordDelays = new HashMap<CommandHistoryRecord, Integer>();
+        // first compute the stack delays from the cmd history generation times
+        List<CommandHistoryRecord> sortedRecords = new ArrayList<>();
+        HashMap<CommandHistoryRecord, Integer> commandHistoryRecordDelays = new HashMap<>();
         for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
             sortedRecords.add(chr);
         }
         Collections.sort(sortedRecords, new SortByGenerationTime());
         long lastTime = 0;
         for (CommandHistoryRecord chr : sortedRecords) {
-            long currentTime = chr.getCommandId().getGenerationTime();
-            if(lastTime == 0) {
+            long currentTime = chr.getCommand().getGenerationTime().toEpochMilli();
+            if (lastTime == 0) {
                 commandHistoryRecordDelays.put(chr, 0);
-            }
-            else {
+            } else {
                 int currentDelay = (int) (currentTime - lastTime);
-                commandHistoryRecordDelays.put(chr, currentDelay);                
+                commandHistoryRecordDelays.put(chr, currentDelay);
             }
             lastTime = currentTime;
-        }        
+        }
         // then add to the result
         for (CommandHistoryRecord chr : copiedCommandHistoryRecords) {
-            chr.getGenerationTime();
-            chr.getCommandId().getGenerationTime();
-            StackedCommand pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommandString());
+            StackedCommand pastedCommand = StackedCommand.buildCommandFromSource(chr.getCommand().getSource());
             pastedCommand.setComment(chr.getTextForColumn("Comment", false));
             pastedCommand.setDelayMs(commandHistoryRecordDelays.get(chr));
             result.add(pastedCommand);

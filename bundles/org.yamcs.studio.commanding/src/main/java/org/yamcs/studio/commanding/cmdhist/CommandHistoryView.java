@@ -34,11 +34,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
+import org.yamcs.client.Acknowledgment;
+import org.yamcs.client.Command;
 import org.yamcs.client.CommandSubscription;
 import org.yamcs.client.YamcsClient;
 import org.yamcs.client.archive.ArchiveClient;
-import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.CommandingPlugin;
 import org.yamcs.studio.core.YamcsAware;
@@ -58,7 +58,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     public static final String COL_ORIGIN_ID = "Ori.ID";
     public static final String COL_USER = "User";
     public static final String COL_ORIGIN = "Origin";
-    public static final String COL_SEQ_ID = "Seq.ID";
     public static final String COL_PTV = "PTV";
     public static final String COL_T = "T";
     public static final String COL_QUEUED = "Q";
@@ -66,31 +65,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     public static final String COL_SENT = "S";
 
     private static final int DYNAMIC_COLUMN_WIDTH = 90;
-
-    // Ignored for dynamic columns, most of these are actually considered fixed
-    // columns.
-    private static final List<String> IGNORED_ATTRIBUTES = Arrays.asList("cmdName",
-            CommandHistoryRecordContentProvider.ATTR_BINARY,
-            CommandHistoryRecordContentProvider.ATTR_USERNAME,
-            CommandHistoryRecordContentProvider.ATTR_SOURCE,
-            CommandHistoryRecordContentProvider.ATTR_FINAL_SEQUENCE_COUNT,
-            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS_STATUS,
-            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS_TIME,
-            CommandHistoryRecordContentProvider.ATTR_TRANSMISSION_CONSTRAINTS_MESSAGE,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_QUEUED_STATUS,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_QUEUED_TIME,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_QUEUED_MESSAGE,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_RELEASED_STATUS,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_RELEASED_TIME,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_RELEASED_MESSAGE,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_SENT_STATUS,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_SENT_TIME,
-            CommandHistoryRecordContentProvider.ATTR_ACKNOWLEDGE_SENT_MESSAGE,
-            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE_STATUS,
-            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE_TIME,
-            CommandHistoryRecordContentProvider.ATTR_COMMAND_COMPLETE_MESSAGE,
-            CommandHistoryRecordContentProvider.ATTR_COMMENT,
-            "CommandComplete");
 
     private CommandSubscription subscription;
 
@@ -179,13 +153,13 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         Display.getDefault().syncExec(this::clear);
 
         if (instance != null) {
-            Display.getDefault().asyncExec(this::fetchLatestEntries);
+            Display.getDefault().asyncExec(this::fetchLatestCommands);
         }
         if (processor != null) {
             YamcsClient client = YamcsPlugin.getYamcsClient();
             subscription = client.createCommandSubscription();
-            subscription.addMessageListener(entry -> {
-                Display.getDefault().asyncExec(() -> processCommandHistoryEntry(entry, true));
+            subscription.addListener(command -> {
+                Display.getDefault().asyncExec(() -> processCommand(command, true));
             });
             subscription.sendMessage(SubscribeCommandsRequest.newBuilder()
                     .setInstance(instance)
@@ -203,7 +177,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         data.addColumn(COL_ORIGIN, 200, false, true, true);
         data.addColumn(COL_ORIGIN_ID, 50, false, true, true);
         data.addColumn(COL_PTV, 50);
-        data.addColumn(COL_SEQ_ID, 50, false, true, true);
         data.addColumn(COL_QUEUED, 50);
         data.addColumn(COL_RELEASED, 50);
         data.addColumn(COL_SENT, 50);
@@ -322,25 +295,24 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 completionColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public Image getImage(Object element) {
-                        switch (((CommandHistoryRecord) element).getCommandState()) {
-                        case COMPLETED:
+                        Command command = ((CommandHistoryRecord) element).getCommand();
+                        if (command.isSuccess()) {
                             return checkmarkImage;
-                        case FAILED:
+                        } else if (command.isFailure()) {
                             return errorImage;
-                        default:
+                        } else {
                             return null;
                         }
                     }
 
                     @Override
                     public String getText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        switch (((CommandHistoryRecord) element).getCommandState()) {
-                        case COMPLETED:
+                        Command command = ((CommandHistoryRecord) element).getCommand();
+                        if (command.isSuccess()) {
                             return "Completed";
-                        case FAILED:
-                            return rec.getPTVInfo().getFailureMessage();
-                        default:
+                        } else if (command.isFailure()) {
+                            return command.getError();
+                        } else {
                             return null;
                         }
                     }
@@ -355,7 +327,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 gentimeColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        Instant generationTime = ((CommandHistoryRecord) element).getGenerationTime();
+                        Instant generationTime = ((CommandHistoryRecord) element).getCommand().getGenerationTime();
                         return YamcsPlugin.getDefault().formatInstant(generationTime);
                     }
                 });
@@ -376,7 +348,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        return rec.getCommandString();
+                        return rec.getCommand().getSource();
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -391,7 +363,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        return rec.getUsername();
+                        return rec.getCommand().getUsername();
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -406,7 +378,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        return rec.getOrigin();
+                        return rec.getCommand().getOrigin();
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -420,7 +392,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 seqIdColumn.setLabelProvider(new ColumnLabelProvider() {
                     @Override
                     public String getText(Object element) {
-                        return String.valueOf(((CommandHistoryRecord) element).getSequenceNumber());
+                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                        return String.valueOf(rec.getCommand().getSequenceNumber());
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -435,18 +408,12 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public Image getImage(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        switch (rec.getPTVInfo().getState()) {
-                        case UNDEF:
-                            return grayBubble;
-                        case NA:
-                        case OK:
+                        Command command = rec.getCommand();
+                        if (command.isSuccess()) {
                             return greenBubble;
-                        case PENDING:
-                            return waitingImage;
-                        case NOK:
+                        } else if (command.isFailure()) {
                             return redBubble;
-                        default:
-                            log.warning("Unexpected PTV state " + rec.getPTVInfo().getState());
+                        } else {
                             return grayBubble;
                         }
                     }
@@ -454,8 +421,9 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getToolTipText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        if (rec.getPTVInfo().getFailureMessage() != null) {
-                            return rec.getPTVInfo().getFailureMessage();
+                        Command command = rec.getCommand();
+                        if (command.getError() != null) {
+                            return command.getError();
                         } else {
                             return super.getToolTipText(element);
                         }
@@ -473,7 +441,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public Image getImage(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getQueuedAcknowledgment();
+                        Acknowledgment ack = rec.getCommand().getQueuedAcknowledgment();
                         if (ack == null) {
                             return grayBubble;
                         } else {
@@ -496,7 +464,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getToolTipText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getQueuedAcknowledgment();
+                        Acknowledgment ack = rec.getCommand().getQueuedAcknowledgment();
                         return (ack != null) ? ack.getMessage() : null;
                     }
                 });
@@ -512,7 +480,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public Image getImage(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getReleasedAcknowledgment();
+                        Acknowledgment ack = rec.getCommand().getReleasedAcknowledgment();
                         if (ack == null) {
                             return grayBubble;
                         } else {
@@ -535,7 +503,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getToolTipText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getReleasedAcknowledgment();
+                        Acknowledgment ack = rec.getCommand().getReleasedAcknowledgment();
                         return (ack != null) ? ack.getMessage() : null;
                     }
                 });
@@ -551,7 +519,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public Image getImage(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getSentAcknowledgment();
+                        Acknowledgment ack = rec.getCommand().getSentAcknowledgment();
                         if (ack == null) {
                             return grayBubble;
                         } else {
@@ -574,23 +542,8 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public String getToolTipText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getSentAcknowledgment();
+                        Acknowledgment ack = rec.getCommand().getSentAcknowledgment();
                         return (ack != null) ? ack.getMessage() : null;
-                    }
-                });
-                layout.addColumnData(new ColumnPixelData(def.width));
-            } else if (def.name.equals(COL_SEQ_ID)) {
-                TableViewerColumn finalSeqColumn = new TableViewerColumn(tableViewer, SWT.CENTER);
-                finalSeqColumn.getColumn().setText(COL_SEQ_ID);
-                finalSeqColumn.getColumn().addControlListener(columnResizeListener);
-                finalSeqColumn.getColumn().addSelectionListener(getSelectionAdapter(finalSeqColumn.getColumn()));
-                finalSeqColumn.getColumn().setToolTipText("Final Sequence Count");
-                finalSeqColumn.setLabelProvider(new ColumnLabelProvider() {
-                    @Override
-                    public String getText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        return (rec.getFinalSequenceCount() != null) ? String.valueOf(rec.getFinalSequenceCount())
-                                : "-";
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -717,48 +670,53 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         }
     }
 
-    private void fetchLatestEntries() {
+    private void fetchLatestCommands() {
         ArchiveClient archiveClient = YamcsPlugin.getArchiveClient();
         if (archiveClient != null) {
             archiveClient.listCommands().whenComplete((page, exc) -> {
-                List<CommandHistoryEntry> entryList = new ArrayList<>();
-                page.forEach(entryList::add);
+                List<Command> commands = new ArrayList<>();
+                page.forEach(commands::add);
 
                 Display.getDefault().asyncExec(() -> {
-                    addEntries(entryList);
+                    addCommands(commands);
                 });
             });
         }
     }
 
-    public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry, boolean update) {
+    public void processCommand(Command command, boolean update) {
         // Maybe we need to update structure
-        for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
-            if (!IGNORED_ATTRIBUTES.contains(attr.getName())) {
-                String shortName = CommandHistoryRecordContentProvider.toHumanReadableName(attr);
-                if (!dynamicColumns.contains(shortName)) {
-                    dynamicColumns.add(shortName);
-                    columnData.addColumn(shortName, 90);
-                    syncCurrentWidthsToModel();
-                    createColumns();
-                }
+        for (String acknowledgmentName : command.getAcknowledgments().keySet()) {
+            if (!dynamicColumns.contains(acknowledgmentName)) {
+                dynamicColumns.add(acknowledgmentName);
+                columnData.addColumn(acknowledgmentName, 90);
+                syncCurrentWidthsToModel();
+                createColumns();
+            }
+        }
+        for (String attributeName : command.getExtraAttributes().keySet()) {
+            if (!dynamicColumns.contains(attributeName)) {
+                dynamicColumns.add(attributeName);
+                columnData.addColumn(attributeName, 90);
+                syncCurrentWidthsToModel();
+                createColumns();
             }
         }
 
         // Now add content
         if (update) {
-            tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+            tableContentProvider.processCommand(command);
         }
     }
 
-    public void addEntries(List<CommandHistoryEntry> entries) {
+    public void addCommands(List<Command> commands) {
         if (tableViewer.getTable().isDisposed()) {
             return;
         }
-        for (CommandHistoryEntry entry : entries) {
-            processCommandHistoryEntry(entry, false);
+        for (Command command : commands) {
+            processCommand(command, false);
         }
-        tableContentProvider.addEntries(entries);
+        tableContentProvider.addCommands(commands);
     }
 
     private SelectionAdapter getSelectionAdapter(TableColumn column) {

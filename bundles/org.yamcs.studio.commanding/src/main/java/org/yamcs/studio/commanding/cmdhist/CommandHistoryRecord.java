@@ -5,30 +5,20 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
-import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.client.Command;
 import org.yamcs.protobuf.Yamcs.Value;
-import org.yamcs.studio.commanding.PTVInfo;
 import org.yamcs.studio.core.YamcsPlugin;
-
-import com.google.protobuf.ByteString;
 
 /**
  * Keeps an assembled state of multiple events related to one CommandId
  */
 public class CommandHistoryRecord {
-
-    public enum CommandState {
-        UNKNOWN, COMPLETED, FAILED
-    }
 
     private static final String KEY_RAW_VALUE = "RAW_VALUE";
     private static final String KEY_ACK_DURATION = "ACK_DURATION";
@@ -44,71 +34,11 @@ public class CommandHistoryRecord {
     private static final long ONE_HOUR = 60 * ONE_MINUTE;
     private static final long ONE_DAY = 24 * ONE_HOUR;
 
-    private CommandId id;
-    private Instant generationTime;
-    private CommandState commandState = CommandState.UNKNOWN;
-    private String commandString;
-    private ByteString binary;
-    private String username = "anonymous";
-    private String finalSequenceCount;
-    private PTVInfo ptvInfo;
-    private String comment;
+    private Command command;
     private Map<String, Map<String, Object>> cellPropsByColumn = new LinkedHashMap<>();
 
-    private Map<String, Acknowledgment> localAcksByName = new LinkedHashMap<>();
-    private Map<String, Acknowledgment> extraAcksByName = new LinkedHashMap<>();
-
-    public CommandHistoryRecord(CommandId id, Instant generationTime) {
-        this.id = id;
-        this.generationTime = generationTime;
-        ptvInfo = new PTVInfo();
-    }
-
-    public CommandId getCommandId() {
-        return id;
-    }
-
-    public void setFinalSequenceCount(Value finalSequenceCount) {
-        this.finalSequenceCount = valueToString(finalSequenceCount);
-    }
-
-    public void setCommandString(Value commandString) {
-        this.commandString = valueToString(commandString);
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void setUsername(Value username) {
-        this.username = valueToString(username);
-    }
-
-    public void setCommandState(CommandState commandState) {
-        this.commandState = commandState;
-    }
-
-    public void setBinary(ByteString binary) {
-        this.binary = binary;
-    }
-
-    public void addAcknowledgment(Acknowledgment ack) {
-        if (ack.isYamcsLocal()) {
-            localAcksByName.put(ack.getName(), ack);
-        } else {
-            extraAcksByName.put(ack.getName(), ack);
-        }
-    }
-
-    public void updateAcknowledgmentTime(String shortName, CommandHistoryAttribute timeAttribute) {
-        Acknowledgment ack = localAcksByName.get(shortName);
-        if (ack != null) {
-            ack.setTime(timeAttribute);
-        }
-        ack = extraAcksByName.get(shortName);
-        if (ack != null) {
-            ack.setTime(timeAttribute);
-        }
+    public CommandHistoryRecord(Command command) {
+        this.command = command;
     }
 
     public void addCellValue(String columnName, Value value) {
@@ -118,10 +48,12 @@ public class CommandHistoryRecord {
 
         cellPropsByColumn.get(columnName).put(KEY_RAW_VALUE, valueToRawValue(value));
         if (value.getType() == Value.Type.TIMESTAMP) {
-            cellPropsByColumn.get(columnName).put(KEY_ACK_DURATION, id.getGenerationTime() - value.getTimestampValue());
-            cellPropsByColumn.get(columnName).put(KEY_VALUE, Instant.parse(value.getStringValue()));
+            Instant valueTime = Instant.parse(value.getStringValue());
+            cellPropsByColumn.get(columnName).put(KEY_ACK_DURATION,
+                    command.getGenerationTime().toEpochMilli() - valueTime.toEpochMilli());
+            cellPropsByColumn.get(columnName).put(KEY_VALUE, valueTime);
             cellPropsByColumn.get(columnName).put(KEY_RELATIVE_VALUE,
-                    toHumanTimeDiff(Instant.parse(value.getStringValue()), generationTime));
+                    toHumanTimeDiff(valueTime, command.getGenerationTime()));
             cellPropsByColumn.get(columnName).put(KEY_TOOLTIP, Instant.parse(value.getStringValue()));
         } else {
             cellPropsByColumn.get(columnName).put(KEY_VALUE, valueToString(value));
@@ -158,70 +90,6 @@ public class CommandHistoryRecord {
             return null;
         }
         return (String) cellPropsByColumn.get(columnName).get(KEY_IMAGE);
-    }
-
-    public int getSequenceNumber() {
-        return id.getSequenceNumber();
-    }
-
-    public String getCommandName() {
-        return id.getCommandName();
-    }
-
-    public String getCommandString() {
-        return commandString;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public CommandState getCommandState() {
-        return commandState;
-    }
-
-    public Instant getGenerationTime() {
-        return generationTime;
-    }
-
-    public String getFinalSequenceCount() {
-        return finalSequenceCount;
-    }
-
-    public String getOrigin() {
-        return id.getOrigin();
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public ByteString getBinary() {
-        return binary;
-    }
-
-    public PTVInfo getPTVInfo() {
-        return ptvInfo;
-    }
-
-    public Acknowledgment getQueuedAcknowledgment() {
-        return localAcksByName.get("Queued");
-    }
-
-    public Acknowledgment getReleasedAcknowledgment() {
-        return localAcksByName.get("Released");
-    }
-
-    public Acknowledgment getSentAcknowledgment() {
-        return localAcksByName.get("Sent");
-    }
-
-    public List<Acknowledgment> getLocalAcknowledgments() {
-        return new ArrayList<>(localAcksByName.values());
-    }
-
-    public List<Acknowledgment> getExtraAcknowledgments() {
-        return new ArrayList<>(extraAcksByName.values());
     }
 
     public String getTextForColumn(String columnName, boolean showRelativeTime) {
@@ -321,5 +189,13 @@ public class CommandHistoryRecord {
             log.warning("Unexpected attribute of type " + value.getType());
             return "?";
         }
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public void merge(Command other) {
+        command.merge(other);
     }
 }

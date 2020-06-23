@@ -1,5 +1,8 @@
 package org.yamcs.studio.commanding.cmdhist;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
@@ -16,6 +19,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.yamcs.client.Command;
 import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -172,7 +176,6 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         Composite tableContainer = new Composite(parent, SWT.NONE);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
-
         localAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
     }
 
@@ -180,7 +183,6 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
         Composite tableContainer = new Composite(parent, SWT.NONE);
         tableContainer.setLayout(new FillLayout());
         tableContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
-
         extraAckTableViewer = new AckTableViewer(tableContainer, commandHistoryView);
     }
 
@@ -283,46 +285,55 @@ public class CommandHistoryEntryDetailsDialog extends TrayDialog {
     }
 
     private void updateProperties() {
-        dateLabel.setText(YamcsPlugin.getDefault().formatInstant(rec.getGenerationTime()));
-        commandStringText.setText(rec.getCommandString());
+        Command command = rec.getCommand();
+        dateLabel.setText(YamcsPlugin.getDefault().formatInstant(command.getGenerationTime()));
+        commandStringText.setText(command.getSource());
 
-        userLabel.setText(rec.getUsername());
+        userLabel.setText(command.getUsername());
 
-        if (rec.getOrigin() != null && !"".equals(rec.getOrigin())) {
-            originLabel.setText(rec.getOrigin());
+        if (command.getOrigin() != null && !"".equals(command.getOrigin())) {
+            originLabel.setText(command.getOrigin());
         } else {
             originLabel.setText("-");
         }
 
-        if (rec.getComment() != null) {
-            commentLabel.setText(rec.getComment());
+        if (command.getComment() != null) {
+            commentLabel.setText(command.getComment());
         } else {
             commentLabel.setText("-");
         }
 
-        switch (rec.getCommandState()) {
-        case COMPLETED:
+        if (command.isSuccess()) {
             completedImageLabel.setImage(commandHistoryView.checkmarkImage);
             completedLabel.setText("Completed");
-            break;
-        case FAILED:
+        } else if (command.isFailure()) {
             completedImageLabel.setImage(commandHistoryView.errorImage);
-            completedLabel.setText(rec.getPTVInfo().getFailureMessage());
-            break;
-        default:
+            completedLabel.setText(command.getError());
+        } else {
             completedImageLabel.setImage(null);
             completedLabel.setText("");
         }
 
-        if (rec.getBinary() != null) {
-            String hexString = StringConverter.arrayToHexString(rec.getBinary().toByteArray());
+        if (command.getBinary() != null) {
+            String hexString = StringConverter.arrayToHexString(command.getBinary());
             binaryLabel.setText(hexString);
         } else {
             binaryLabel.setText("");
         }
 
-        localAckTableViewer.setInput(rec.getLocalAcknowledgments().toArray());
-        extraAckTableViewer.setInput(rec.getExtraAcknowledgments().toArray());
+        List<AckTableRecord> localAcks = rec.getCommand().getAcknowledgments().values()
+                .stream()
+                .filter(ack -> ack.isLocal())
+                .map(ack -> new AckTableRecord(ack, rec))
+                .collect(Collectors.toList());
+        localAckTableViewer.setInput(localAcks.toArray());
+
+        List<AckTableRecord> extraAcks = rec.getCommand().getAcknowledgments().values()
+                .stream()
+                .filter(ack -> !ack.isLocal())
+                .map(ack -> new AckTableRecord(ack, rec))
+                .collect(Collectors.toList());
+        extraAckTableViewer.setInput(extraAcks.toArray());
     }
 
     private void updateButtonState() {

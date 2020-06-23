@@ -2,14 +2,13 @@ package org.yamcs.studio.commanding.cmdhist;
 
 import static org.yamcs.studio.core.utils.Comparators.INSTANT_COMPARATOR;
 import static org.yamcs.studio.core.utils.Comparators.INTEGER_COMPARATOR;
-import static org.yamcs.studio.core.utils.Comparators.LONG_COMPARATOR;
-import static org.yamcs.studio.core.utils.Comparators.OBJECT_COMPARATOR;
 import static org.yamcs.studio.core.utils.Comparators.STRING_COMPARATOR;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableColumn;
+import org.yamcs.client.Command;
 
 public class CommandHistorySorter extends ViewerComparator {
 
@@ -36,12 +35,12 @@ public class CommandHistorySorter extends ViewerComparator {
 
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
-        CommandHistoryRecord r1 = (CommandHistoryRecord) o1;
-        CommandHistoryRecord r2 = (CommandHistoryRecord) o2;
+        Command r1 = ((CommandHistoryRecord) o1).getCommand();
+        Command r2 = ((CommandHistoryRecord) o2).getCommand();
         int rc;
         switch (currentColumn) {
         case CommandHistoryView.COL_COMMAND:
-            rc = STRING_COMPARATOR.compare(r1.getCommandString(), r2.getCommandString());
+            rc = STRING_COMPARATOR.compare(r1.getSource(), r2.getSource());
             break;
         case CommandHistoryView.COL_ORIGIN_ID:
             rc = INTEGER_COMPARATOR.compare(r1.getSequenceNumber(), r2.getSequenceNumber());
@@ -58,19 +57,11 @@ public class CommandHistorySorter extends ViewerComparator {
                 rc = STRING_COMPARATOR.compare(r1.getUsername(), r2.getUsername());
             }
             break;
-        case CommandHistoryView.COL_SEQ_ID:
-            rc = STRING_COMPARATOR.compare(r1.getFinalSequenceCount(), r2.getFinalSequenceCount());
-            break;
         case CommandHistoryView.COL_T:
             rc = INSTANT_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
             break;
-        case CommandHistoryView.COL_PTV:
-            rc = OBJECT_COMPARATOR.compare(r1.getPTVInfo(), r2.getPTVInfo());
-            break;
         default: // dynamic column (TODO be more clever about non-timestamp dynamic columns)
-            long delta1 = r1.getAckDurationForColumn(currentColumn);
-            long delta2 = r2.getAckDurationForColumn(currentColumn);
-            rc = -LONG_COMPARATOR.compare(delta1, delta2);
+            rc = INSTANT_COMPARATOR.compare(r1.getGenerationTime(), r2.getGenerationTime());
         }
 
         return ascending ? rc : -rc;

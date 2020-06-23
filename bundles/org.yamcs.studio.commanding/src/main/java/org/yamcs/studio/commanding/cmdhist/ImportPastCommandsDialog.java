@@ -118,8 +118,8 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         Instant stop = RCPUtils.toInstant(stopDate, stopTime);
 
         ArchiveClient archive = YamcsPlugin.getArchiveClient();
-        archive.streamCommands(entry -> Display.getDefault().asyncExec(() -> {
-            cmdhistView.processCommandHistoryEntry(entry, true);
+        archive.streamCommands(command -> Display.getDefault().asyncExec(() -> {
+            cmdhistView.processCommand(command, true);
         }), start, stop).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {

@@ -18,8 +18,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.client.Command;
 import org.yamcs.client.processor.ProcessorClient;
-import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -78,20 +78,20 @@ public class AddCommentHandler extends AbstractHandler {
                 Iterator<?> it = selection.iterator();
                 while (it.hasNext()) {
                     CommandHistoryRecord rec = (CommandHistoryRecord) it.next();
+                    Command command = rec.getCommand();
                     ProcessorClient processor = YamcsPlugin.getProcessorClient();
-                    CommandId cmdId = rec.getCommandId();
-                    String id = cmdId.getGenerationTime() + "-" + cmdId.getSequenceNumber() + "-" + cmdId.getOrigin();
                     Value value = Value.newBuilder().setType(Type.STRING).setStringValue(newComment).build();
-                    processor.updateCommand(rec.getCommandName(), id, "Comment", value).exceptionally(t -> {
-                        Display.getDefault().asyncExec(() -> {
-                            MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-                            dialog.setText("Comment Update");
-                            dialog.setMessage("Comment has not been updated. Details: " + t.getMessage());
-                            // open dialog and await user selection
-                            dialog.open();
-                        });
-                        return null;
-                    });
+                    processor.updateCommand(command.getName(), command.getId(), "Comment", value)
+                            .exceptionally(t -> {
+                                Display.getDefault().asyncExec(() -> {
+                                    MessageBox dialog = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+                                    dialog.setText("Comment Update");
+                                    dialog.setMessage("Comment has not been updated. Details: " + t.getMessage());
+                                    // open dialog and await user selection
+                                    dialog.open();
+                                });
+                                return null;
+                            });
                 }
             }
         }

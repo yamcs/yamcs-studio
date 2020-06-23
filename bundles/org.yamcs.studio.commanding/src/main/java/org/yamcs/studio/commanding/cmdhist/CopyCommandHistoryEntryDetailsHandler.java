@@ -12,6 +12,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.client.Command;
 import org.yamcs.studio.core.StringConverter;
 
 public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
@@ -34,21 +35,22 @@ public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
             Iterator<?> it = selection.iterator();
             while (it.hasNext()) {
                 CommandHistoryRecord rec = (CommandHistoryRecord) it.next();
+                Command command = rec.getCommand();
                 switch (property) {
                 case PARAM_GENTIME:
-                    text.append(rec.getGenerationTime());
+                    text.append(command.getGenerationTime());
                     break;
                 case PARAM_COMMAND:
-                    text.append(rec.getCommandString());
+                    text.append(command.getSource());
                     break;
                 case PARAM_SOURCE:
-                    text.append(rec.getUsername() + "@" + rec.getOrigin());
+                    text.append(command.getUsername() + "@" + command.getOrigin());
                     break;
                 case PARAM_SEQNO:
-                    text.append(rec.getSequenceNumber());
+                    text.append(command.getSequenceNumber());
                     break;
                 case PARAM_BIN:
-                    String hexString = StringConverter.arrayToHexString(rec.getBinary().toByteArray());
+                    String hexString = StringConverter.arrayToHexString(command.getBinary());
                     text.append(hexString);
                     break;
                 default:

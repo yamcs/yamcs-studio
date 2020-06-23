@@ -14,6 +14,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.client.Command;
 import org.yamcs.studio.commanding.stack.CommandClipboard;
 
 public class CopyCommandHistoryEntryHandler extends AbstractHandler {
@@ -34,9 +35,10 @@ public class CopyCommandHistoryEntryHandler extends AbstractHandler {
                 CommandHistoryRecord rec = (CommandHistoryRecord) it.next();
                 recList.add(rec);
 
-                text.append(rec.getGenerationTime()).append("\t").append(rec.getCommandString())
-                        .append("\t").append(rec.getUsername() + "@" + rec.getOrigin())
-                        .append("\t").append(rec.getSequenceNumber())
+                Command command = rec.getCommand();
+                text.append(command.getGenerationTime()).append("\t").append(command.getSource())
+                        .append("\t").append(command.getUsername() + "@" + command.getOrigin())
+                        .append("\t").append(command.getSequenceNumber())
                         .append("\n");
             }
 
