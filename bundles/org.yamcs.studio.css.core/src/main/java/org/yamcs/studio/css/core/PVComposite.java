@@ -2,6 +2,7 @@ package org.yamcs.studio.css.core;
 
 import java.text.DecimalFormat;
 import java.time.Instant;
+import java.util.List;
 
 import org.csstudio.simplepv.IPV;
 import org.csstudio.simplepv.VTypeHelper;
@@ -12,17 +13,20 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.yamcs.client.ParameterSubscription;
 import org.yamcs.protobuf.Mdb.AlarmInfo;
 import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
 import org.yamcs.protobuf.Mdb.UnitInfo;
-import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.SubscribeParametersRequest;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.StringConverter;
+import org.yamcs.studio.core.YamcsAware;
+import org.yamcs.studio.core.YamcsPlugin;
 
-public class PVComposite extends Composite {
+public class PVComposite extends Composite implements YamcsAware, ParameterSubscription.Listener {
 
     private PVInfo pvInfo;
 
@@ -33,6 +37,8 @@ public class PVComposite extends Composite {
     private StyledText engTypeField;
     private StyledText rawValueField;
     private StyledText rawTypeField;
+
+    private ParameterSubscription subscription;
 
     public PVComposite(Composite parent, int style, PVInfo pvInfo) {
         super(parent, style);
@@ -50,6 +56,26 @@ public class PVComposite extends Composite {
             createKeyValueTextPair("PV Type", "PV");
             createSeparator();
             createPVProperties(pvInfo);
+        }
+
+        YamcsPlugin.addListener(this);
+    }
+
+    @Override
+    public void changeProcessor(String instance, String processor) {
+        if (subscription != null) {
+            subscription.cancel(true);
+            subscription = null;
+        }
+
+        if (processor != null && pvInfo.getParameterInfo() != null) {
+            subscription = YamcsPlugin.getYamcsClient().createParameterSubscription();
+            subscription.addListener(this);
+            subscription.sendMessage(SubscribeParametersRequest.newBuilder()
+                    .setInstance(instance)
+                    .setProcessor(processor)
+                    .addId(NamedObjectId.newBuilder().setName(pvInfo.getParameterInfo().getQualifiedName()))
+                    .build());
         }
     }
 
@@ -208,8 +234,8 @@ public class PVComposite extends Composite {
         return String.valueOf(chars);
     }
 
-    // TODO move this onto a digest thread. We shouldn't update GUI for _every_ value.
-    public void onParameterData(ParameterData pdata) {
+    @Override
+    public void onData(List<ParameterValue> values) {
         if (isDisposed()) {
             return;
         }
@@ -217,7 +243,7 @@ public class PVComposite extends Composite {
             if (isDisposed()) {
                 return;
             }
-            for (ParameterValue pval : pdata.getParameterList()) {
+            for (ParameterValue pval : values) {
                 if (pval.getId().getName().equals(pvInfo.getDisplayName())) {
                     gentimeField.setText(Instant
                             .ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos())
@@ -254,5 +280,14 @@ public class PVComposite extends Composite {
                 }
             }
         });
+    }
+
+    @Override
+    public void dispose() {
+        if (subscription != null) {
+            subscription.cancel(true);
+        }
+        YamcsPlugin.removeListener(this);
+        super.dispose();
     }
 }

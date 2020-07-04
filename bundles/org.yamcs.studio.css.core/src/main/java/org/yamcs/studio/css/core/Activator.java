@@ -11,7 +11,7 @@ public class Activator extends AbstractUIPlugin {
     @SuppressWarnings("unused")
     private SeverityHandlerSound severityHandler;
 
-    private PVCatalogue pvCatalogue;
+    private PVManagerSubscriptionHandler pvCatalogue;
 
     @Override
     public void start(BundleContext context) throws Exception {
@@ -19,12 +19,13 @@ public class Activator extends AbstractUIPlugin {
         bundleContext = context;
         plugin = this;
 
-        pvCatalogue = new PVCatalogue();
+        pvCatalogue = new PVManagerSubscriptionHandler();
         severityHandler = new SeverityHandlerSound();
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
+        pvCatalogue.stop();
         super.stop(context);
         plugin = null;
     }
@@ -37,7 +38,7 @@ public class Activator extends AbstractUIPlugin {
         return bundleContext;
     }
 
-    public PVCatalogue getPVCatalogue() {
+    public PVManagerSubscriptionHandler getPVCatalogue() {
         return pvCatalogue;
     }
 }

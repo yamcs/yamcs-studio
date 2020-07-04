@@ -17,13 +17,11 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.protobuf.Yamcs.Value.Type;
-import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.css.core.PVCatalogue;
+import org.yamcs.studio.css.core.PVManagerSubscriptionHandler;
 import org.yamcs.studio.css.core.vtype.YamcsVTypeAdapter;
 
-public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue>
-        implements YamcsAware {
+public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnectionInfo, ParameterValue> {
 
     private static final YamcsVTypeAdapter TYPE_ADAPTER = new YamcsVTypeAdapter();
     private static final Logger log = Logger.getLogger(ParameterChannelHandler.class.getName());
@@ -33,7 +31,6 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     public ParameterChannelHandler(NamedObjectId id) {
         super(id.getName());
         this.id = id;
-        YamcsPlugin.addListener(this);
     }
 
     public NamedObjectId getId() {
@@ -41,37 +38,17 @@ public class ParameterChannelHandler extends MultiplexedChannelHandler<PVConnect
     }
 
     @Override
-    public void onYamcsConnected() {
-        log.fine("onStudioConnect called on " + getChannelName());
-        connect();
-    }
-
-    public void instanceChanged(String oldInstance, String newInstance) {
-        // The server will normally transfer our parameter subscription,
-        // but don't necessarily trust that right now. So reconnect all pvs
-        // manually
-        // (probably handled by OPIUtils.refresh in org.yamcs.studio.css.core.Activator)
-        /// disconnect();
-        /// connect();
-    }
-
-    @Override
-    public void onYamcsDisconnected() {
-        disconnect(); // Unregister PV
-    }
-
-    @Override
     protected void connect() {
         log.fine("PV connect on " + getChannelName());
-        PVCatalogue.getInstance().register(this);
+        PVManagerSubscriptionHandler.getInstance().register(this);
     }
 
     @Override
     protected void disconnect() { // Interpret this as an unsubscribe
         log.fine("PV disconnect on " + getChannelName());
-        PVCatalogue catalogue = PVCatalogue.getInstance();
+        PVManagerSubscriptionHandler catalogue = PVManagerSubscriptionHandler.getInstance();
         if (catalogue != null) { // Conservative, could be null at shutdown
-            PVCatalogue.getInstance().unregister(this);
+            PVManagerSubscriptionHandler.getInstance().unregister(this);
         }
     }
 

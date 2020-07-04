@@ -23,7 +23,7 @@ public class YamcsVTypeAdapter implements DataSourceTypeAdapter<PVConnectionInfo
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public boolean updateCache(ValueCache cache, PVConnectionInfo info, ParameterValue pval) {
-        cache.writeValue(YamcsVType.fromYamcs(info, pval));
+        cache.writeValue(pval != null ? YamcsVType.fromYamcs(info, pval) : null);
         return true;
     }
 }

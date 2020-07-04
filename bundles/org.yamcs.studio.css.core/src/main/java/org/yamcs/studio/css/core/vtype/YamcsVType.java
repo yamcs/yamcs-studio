@@ -15,10 +15,14 @@ import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.studio.core.MissionDatabase;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
+
+    public static final YamcsVType NO_VALUE = new YamcsVType(null);
+
     protected ParameterValue pval;
 
     public YamcsVType(ParameterValue pval) {
@@ -27,6 +31,10 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public AlarmSeverity getAlarmSeverity() {
+        if (pval == null) {
+            return AlarmSeverity.NONE;
+        }
+
         if (pval.getAcquisitionStatus() == AcquisitionStatus.EXPIRED
                 || pval.getAcquisitionStatus() == AcquisitionStatus.NOT_RECEIVED
                 || pval.getAcquisitionStatus() == AcquisitionStatus.INVALID) {
@@ -61,7 +69,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public Instant getTimestamp() {
-        if (pval.hasGenerationTime()) {
+        if (pval != null && pval.hasGenerationTime()) {
             return Instant.ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos());
         } else {
             return null;
@@ -80,19 +88,20 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public Double getLowerWarningLimit() {
-        // Assumes ordered ranges
-        for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevelType.WATCH
-                    || range.getLevel() == AlarmLevelType.WARNING
-                    || range.getLevel() == AlarmLevelType.DISTRESS) {
-                if (range.hasMinInclusive()) {
-                    return range.getMinInclusive();
-                } else if (range.hasMinExclusive()) {
-                    return range.getMinExclusive();
+        if (pval != null) {
+            // Assumes ordered ranges
+            for (AlarmRange range : pval.getAlarmRangeList()) {
+                if (range.getLevel() == AlarmLevelType.WATCH
+                        || range.getLevel() == AlarmLevelType.WARNING
+                        || range.getLevel() == AlarmLevelType.DISTRESS) {
+                    if (range.hasMinInclusive()) {
+                        return range.getMinInclusive();
+                    } else if (range.hasMinExclusive()) {
+                        return range.getMinExclusive();
+                    }
                 }
             }
         }
-
         return Double.NaN;
     }
 
@@ -101,36 +110,38 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperWarningLimit() {
-        // Assumes ordered ranges
-        for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevelType.WATCH
-                    || range.getLevel() == AlarmLevelType.WARNING
-                    || range.getLevel() == AlarmLevelType.DISTRESS) {
-                if (range.hasMaxInclusive()) {
-                    return range.getMaxInclusive();
-                } else if (range.hasMaxExclusive()) {
-                    return range.getMaxExclusive();
+        if (pval != null) {
+            // Assumes ordered ranges
+            for (AlarmRange range : pval.getAlarmRangeList()) {
+                if (range.getLevel() == AlarmLevelType.WATCH
+                        || range.getLevel() == AlarmLevelType.WARNING
+                        || range.getLevel() == AlarmLevelType.DISTRESS) {
+                    if (range.hasMaxInclusive()) {
+                        return range.getMaxInclusive();
+                    } else if (range.hasMaxExclusive()) {
+                        return range.getMaxExclusive();
+                    }
                 }
             }
         }
-
         return Double.NaN;
     }
 
     @Override
     public Double getLowerAlarmLimit() {
-        // Assumes ordered ranges
-        for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevelType.CRITICAL
-                    || range.getLevel() == AlarmLevelType.SEVERE) {
-                if (range.hasMinInclusive()) {
-                    return range.getMinInclusive();
-                } else if (range.hasMinExclusive()) {
-                    return range.getMinExclusive();
+        if (pval != null) {
+            // Assumes ordered ranges
+            for (AlarmRange range : pval.getAlarmRangeList()) {
+                if (range.getLevel() == AlarmLevelType.CRITICAL
+                        || range.getLevel() == AlarmLevelType.SEVERE) {
+                    if (range.hasMinInclusive()) {
+                        return range.getMinInclusive();
+                    } else if (range.hasMinExclusive()) {
+                        return range.getMinExclusive();
+                    }
                 }
             }
         }
-
         return Double.NaN;
     }
 
@@ -139,18 +150,19 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperAlarmLimit() {
-        // Assumes ordered ranges
-        for (AlarmRange range : pval.getAlarmRangeList()) {
-            if (range.getLevel() == AlarmLevelType.CRITICAL
-                    || range.getLevel() == AlarmLevelType.SEVERE) {
-                if (range.hasMaxInclusive()) {
-                    return range.getMaxInclusive();
-                } else if (range.hasMaxExclusive()) {
-                    return range.getMaxExclusive();
+        if (pval != null) {
+            // Assumes ordered ranges
+            for (AlarmRange range : pval.getAlarmRangeList()) {
+                if (range.getLevel() == AlarmLevelType.CRITICAL
+                        || range.getLevel() == AlarmLevelType.SEVERE) {
+                    if (range.hasMaxInclusive()) {
+                        return range.getMaxInclusive();
+                    } else if (range.hasMaxExclusive()) {
+                        return range.getMaxExclusive();
+                    }
                 }
             }
         }
-
         return Double.NaN;
     }
 
@@ -186,8 +198,14 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public String getUnits() {
-        String unit = YamcsPlugin.getMissionDatabase().getCombinedUnit(pval.getId());
-        return (unit == null) ? "" : unit;
+        if (pval != null) {
+            MissionDatabase mdb = YamcsPlugin.getMissionDatabase();
+            if (mdb != null) {
+                String unit = mdb.getCombinedUnit(pval.getId());
+                return (unit == null) ? "" : unit;
+            }
+        }
+        return "";
     }
 
     @Override

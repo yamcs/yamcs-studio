@@ -10,34 +10,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Implements a {@link ChannelHandler} on top of a single subscription and
- * multiplexes all reads on top of it.
+ * Implements a {@link ChannelHandler} on top of a single subscription and multiplexes all reads on top of it.
  * <p>
- * This abstract handler takes care of forwarding the connection and message
- * events of a single connection to multiple readers and writers. One needs
- * to:
+ * This abstract handler takes care of forwarding the connection and message events of a single connection to multiple
+ * readers and writers. One needs to:
  * <ul>
- * <li>implement the {@link #connect() } and {@link #disconnect() } function
- * to add the protocol specific connection and disconnection logic; the resources
- * shared across multiple channels should be left in the datasource</li>
- * <li>every time the connection state changes, call {@link #processConnection(java.lang.Object) },
- * which will trigger the proper connection notification mechanism;
- * the type chosen as connection payload should be one that stores all the
+ * <li>implement the {@link #connect() } and {@link #disconnect() } function to add the protocol specific connection and
+ * disconnection logic; the resources shared across multiple channels should be left in the datasource</li>
+ * <li>every time the connection state changes, call {@link #processConnection(java.lang.Object) }, which will trigger
+ * the proper connection notification mechanism; the type chosen as connection payload should be one that stores all the
  * information about the channel of communications</li>
- * <li>every time an event is sent, call {@link #processMessage(java.lang.Object) }, which
- * will trigger the proper value notification mechanism</li>
- * <li>implement {@link #isConnected(java.lang.Object) } and {@link #isWriteConnected(java.lang.Object) }
- * with the logic to extract the connection information from the connection payload</li>
- * <li>use {@link #reportExceptionToAllReadersAndWriters(java.lang.Exception) }
- * to report errors</li>
- * <li>implement a set of {@link DataSourceTypeAdapter} that can convert
- * the payload to types for pvmanager consumption; the connection payload and
- * message payload never leave this handler, only value types created by the
- * type adapters</li>
+ * <li>every time an event is sent, call {@link #processMessage(java.lang.Object) }, which will trigger the proper value
+ * notification mechanism</li>
+ * <li>implement {@link #isConnected(java.lang.Object) } and {@link #isWriteConnected(java.lang.Object) } with the logic
+ * to extract the connection information from the connection payload</li>
+ * <li>use {@link #reportExceptionToAllReadersAndWriters(java.lang.Exception) } to report errors</li>
+ * <li>implement a set of {@link DataSourceTypeAdapter} that can convert the payload to types for pvmanager consumption;
+ * the connection payload and message payload never leave this handler, only value types created by the type
+ * adapters</li>
  * </ul>
  *
- * @param <ConnectionPayload> type of the payload for the connection
- * @param <MessagePayload> type of the payload for each message
+ * @param <ConnectionPayload>
+ *            type of the payload for the connection
+ * @param <MessagePayload>
+ *            type of the payload for each message
  * @author carcassi
  */
 public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayload> extends ChannelHandler {
@@ -84,8 +80,9 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
                 typeAdapter = null;
             } else {
                 try {
-                    typeAdapter = MultiplexedChannelHandler.this.findTypeAdapter(subscription.getValueCache(), getConnectionPayload());
-                } catch(RuntimeException ex) {
+                    typeAdapter = MultiplexedChannelHandler.this.findTypeAdapter(subscription.getValueCache(),
+                            getConnectionPayload());
+                } catch (RuntimeException ex) {
                     subscription.getExceptionWriteFunction().writeValue(ex);
                 }
             }
@@ -96,7 +93,8 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
     /**
      * Notifies all readers and writers of an error condition.
      *
-     * @param ex the exception to notify
+     * @param ex
+     *            the exception to notify
      */
     protected synchronized final void reportExceptionToAllReadersAndWriters(Exception ex) {
         for (MonitorHandler monitor : monitors.values()) {
@@ -110,7 +108,8 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
     /**
      * Notifies all writers of an error condition.
      *
-     * @param ex the exception to notify
+     * @param ex
+     *            the exception to notify
      */
     protected synchronized final void reportExceptionToAllWriters(Exception ex) {
         for (ChannelHandlerWriteSubscription subscription : writeSubscriptions.values()) {
@@ -149,14 +148,15 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
     }
 
     /**
-     * Process the next connection payload. This should be called whenever
-     * the connection state has changed.
+     * Process the next connection payload. This should be called whenever the connection state has changed.
      *
-     * @param connectionPayload connection payload; not null
+     * @param connectionPayload
+     *            connection payload; not null
      */
     protected synchronized final void processConnection(ConnectionPayload connectionPayload) {
         if (log.isLoggable(Level.FINEST)) {
-            log.log(Level.FINEST, "processConnection for channel {0} connectionPayload {1}", new Object[] {getChannelName(), connectionPayload});
+            log.log(Level.FINEST, "processConnection for channel {0} connectionPayload {1}",
+                    new Object[] { getChannelName(), connectionPayload });
         }
 
         this.connectionPayload = connectionPayload;
@@ -177,47 +177,49 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
 
     private static DataSourceTypeAdapter<?, ?> defaultTypeAdapter = new DataSourceTypeAdapter<Object, Object>() {
 
-            @Override
-            public int match(ValueCache<?> cache, Object connection) {
-                return 1;
-            }
+        @Override
+        public int match(ValueCache<?> cache, Object connection) {
+            return 1;
+        }
 
-            @Override
-            public Object getSubscriptionParameter(ValueCache<?> cache, Object connection) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
+        @Override
+        public Object getSubscriptionParameter(ValueCache<?> cache, Object connection) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
 
-            @Override
-            @SuppressWarnings("unchecked")
-            public boolean updateCache(ValueCache cache, Object connection, Object message) {
-                Object oldValue = cache.readValue();
-                cache.writeValue(message);
-                if ((message == oldValue) || (message != null && message.equals(oldValue)))
-                    return false;
-                return true;
-            }
-        };
+        @Override
+        @SuppressWarnings("unchecked")
+        public boolean updateCache(ValueCache cache, Object connection, Object message) {
+            Object oldValue = cache.readValue();
+            cache.writeValue(message);
+            if ((message == oldValue) || (message != null && message.equals(oldValue)))
+                return false;
+            return true;
+        }
+    };
 
     /**
-     * Finds the right adapter to use for the particular cache given the information
-     * of the channels in the connection payload. By overriding this method
-     * a datasource can implement their own matching logic. One
-     * can use the logic provided in {@link DataSourceTypeSupport} as
-     * a good first implementation.
+     * Finds the right adapter to use for the particular cache given the information of the channels in the connection
+     * payload. By overriding this method a datasource can implement their own matching logic. One can use the logic
+     * provided in {@link DataSourceTypeSupport} as a good first implementation.
      *
-     * @param cache the cache that will store the data
-     * @param connection the connection payload
+     * @param cache
+     *            the cache that will store the data
+     * @param connection
+     *            the connection payload
      * @return the matched type adapter
      */
     @SuppressWarnings("unchecked")
-    protected DataSourceTypeAdapter<ConnectionPayload, MessagePayload> findTypeAdapter(ValueCache<?> cache, ConnectionPayload connection) {
+    protected DataSourceTypeAdapter<ConnectionPayload, MessagePayload> findTypeAdapter(ValueCache<?> cache,
+            ConnectionPayload connection) {
         return (DataSourceTypeAdapter<ConnectionPayload, MessagePayload>) (DataSourceTypeAdapter) defaultTypeAdapter;
     }
 
     /**
      * Creates a new channel handler.
      *
-     * @param channelName the name of the channel this handler will be responsible of
+     * @param channelName
+     *            the name of the channel this handler will be responsible of
      */
     public MultiplexedChannelHandler(String channelName) {
         super(channelName);
@@ -280,25 +282,24 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
     }
 
     /**
-     * Resets the last message to null. This can be used to invalidate
-     * the last message without triggering a notification. It is useful
-     * when a reconnect should behave as the first connection.
+     * Resets the last message to null. This can be used to invalidate the last message without triggering a
+     * notification. It is useful when a reconnect should behave as the first connection.
      */
-    protected synchronized final void resetMessage() {
+    public synchronized final void resetMessage() {
         lastMessage = null;
     }
 
     /**
-     * Process the payload for this channel. This should be called whenever
-     * a new value needs to be processed. The handler will take care of
-     * using the correct {@link DataSourceTypeAdapter}
-     * for each read monitor that was setup.
+     * Process the payload for this channel. This should be called whenever a new value needs to be processed. The
+     * handler will take care of using the correct {@link DataSourceTypeAdapter} for each read monitor that was setup.
      *
-     * @param payload the payload of for this type of channel
+     * @param payload
+     *            the payload of for this type of channel
      */
     protected synchronized final void processMessage(MessagePayload payload) {
         if (log.isLoggable(Level.FINEST)) {
-            log.log(Level.FINEST, "processMessage for channel {0} messagePayload {1}", new Object[]{getChannelName(), payload});
+            log.log(Level.FINEST, "processMessage for channel {0} messagePayload {1}",
+                    new Object[] { getChannelName(), payload });
         }
 
         lastMessage = payload;
@@ -311,7 +312,7 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
         if (getUsageCounter() == 1) {
             try {
                 connect();
-            } catch(RuntimeException ex) {
+            } catch (RuntimeException ex) {
                 reportExceptionToAllReadersAndWriters(ex);
             }
         }
@@ -328,13 +329,13 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
             } catch (RuntimeException ex) {
                 reportExceptionToAllReadersAndWriters(ex);
                 log.log(Level.WARNING, "Couldn't disconnect channel " + getChannelName(), ex);
-           }
+            }
         }
     }
 
     /**
-     * Signals whether the last message received after the disconnect should
-     * be kept so that it is available at reconnect.
+     * Signals whether the last message received after the disconnect should be kept so that it is available at
+     * reconnect.
      * <p>
      * By default, the message is discarded so that no memory is kept allocated.
      *
@@ -345,14 +346,12 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
     }
 
     /**
-     * Used by the handler to open the connection. This is called whenever
-     * the first read or write request is made.
+     * Used by the handler to open the connection. This is called whenever the first read or write request is made.
      */
     protected abstract void connect();
 
     /**
-     * Used by the handler to close the connection. This is called whenever
-     * the last reader or writer is de-registered.
+     * Used by the handler to close the connection. This is called whenever the last reader or writer is de-registered.
      */
     protected abstract void disconnect();
 
@@ -372,25 +371,24 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
     /**
      * Determines from the payload whether the channel is connected or not.
      * <p>
-     * By default, this uses the usage counter to determine whether it's
-     * connected or not. One should override this to use the actual
-     * connection payload to check whether the actual protocol connection
-     * has been established.
+     * By default, this uses the usage counter to determine whether it's connected or not. One should override this to
+     * use the actual connection payload to check whether the actual protocol connection has been established.
      *
-     * @param payload the connection payload
+     * @param payload
+     *            the connection payload
      * @return true if connected
      */
-    protected boolean isConnected(ConnectionPayload  payload) {
+    protected boolean isConnected(ConnectionPayload payload) {
         return getUsageCounter() > 0;
     }
 
     /**
      * Determines from the payload whether the channel can be written to.
      * <p>
-     * By default, this always return false. One should override this
-     * if it's implementing a write-able data source.
+     * By default, this always return false. One should override this if it's implementing a write-able data source.
      *
-     * @param payload connection payload; not null
+     * @param payload
+     *            connection payload; not null
      * @return true if ready for writes
      */
     protected boolean isWriteConnected(ConnectionPayload payload) {
@@ -413,26 +411,27 @@ public abstract class MultiplexedChannelHandler<ConnectionPayload, MessagePayloa
     }
 
     /**
-     * Determines whether {@link #processConnection(java.lang.Object)} should
-     * trigger {@link #processMessage(java.lang.Object)} with the same (non-null)
-     * payload in case the channel has been disconnected. Default is true.
+     * Determines whether {@link #processConnection(java.lang.Object)} should trigger
+     * {@link #processMessage(java.lang.Object)} with the same (non-null) payload in case the channel has been
+     * disconnected. Default is true.
      *
-     * @param processMessageOnDisconnect whether to process the message on disconnect
+     * @param processMessageOnDisconnect
+     *            whether to process the message on disconnect
      */
     protected synchronized final void setProcessMessageOnDisconnect(boolean processMessageOnDisconnect) {
         this.processMessageOnDisconnect = processMessageOnDisconnect;
     }
 
     /**
-     * Determines whether {@link #processConnection(java.lang.Object)} should
-     * trigger {@link #processMessage(java.lang.Object)} with the same (non-null)
-     * payload in case the channel has reconnected. Default is true.
+     * Determines whether {@link #processConnection(java.lang.Object)} should trigger
+     * {@link #processMessage(java.lang.Object)} with the same (non-null) payload in case the channel has reconnected.
+     * Default is true.
      *
-     * @param processMessageOnReconnect whether to process the message on disconnect
+     * @param processMessageOnReconnect
+     *            whether to process the message on disconnect
      */
     protected synchronized final void setProcessMessageOnReconnect(boolean processMessageOnReconnect) {
         this.processMessageOnReconnect = processMessageOnReconnect;
     }
-
 
 }

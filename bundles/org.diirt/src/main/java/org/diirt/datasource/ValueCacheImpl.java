@@ -7,7 +7,8 @@ package org.diirt.datasource;
 /**
  * Represent a building block that can store a particular value
  *
- * @param <T> the type of the value held by the cache
+ * @param <T>
+ *            the type of the value held by the cache
  * @author carcassi
  */
 public class ValueCacheImpl<T> implements ValueCache<T> {
@@ -25,7 +26,8 @@ public class ValueCacheImpl<T> implements ValueCache<T> {
     /**
      * Creates a new cache for the given data type.
      *
-     * @param dataType class token for the data type
+     * @param dataType
+     *            class token for the data type
      */
     public ValueCacheImpl(Class<T> dataType) {
         this.value = null;
@@ -45,7 +47,8 @@ public class ValueCacheImpl<T> implements ValueCache<T> {
     /**
      * Changes the value in the cache.
      *
-     * @param newValue the new value
+     * @param newValue
+     *            the new value
      */
     @Override
     public void writeValue(Object newValue) {
