@@ -265,15 +265,13 @@ public class CommandStackTableViewer extends TableViewer {
                 if (cmd.getQueuedState() == null) {
                     return grayBubble;
                 }
-                switch (cmd.getQueuedState()) {
-                case UNDEF:
-                    return grayBubble;
-                case NA:
-                case OK:
+                switch (cmd.getQueuedState().getStatus()) {
+                case "NA":
+                case "OK":
                     return greenBubble;
-                case PENDING:
+                case "PENDING":
                     return waitingImage;
-                case NOK:
+                case "NOK":
                     return redBubble;
                 default:
                     log.warning("Unexpected state " + cmd.getQueuedState());
@@ -293,15 +291,13 @@ public class CommandStackTableViewer extends TableViewer {
                 if (cmd.getReleasedState() == null) {
                     return grayBubble;
                 }
-                switch (cmd.getReleasedState()) {
-                case UNDEF:
-                    return grayBubble;
-                case NA:
-                case OK:
+                switch (cmd.getReleasedState().getStatus()) {
+                case "NA":
+                case "OK":
                     return greenBubble;
-                case PENDING:
+                case "PENDING":
                     return waitingImage;
-                case NOK:
+                case "NOK":
                     return redBubble;
                 default:
                     log.warning("Unexpected state " + cmd.getReleasedState());
@@ -321,15 +317,13 @@ public class CommandStackTableViewer extends TableViewer {
                 if (cmd.getSentState() == null) {
                     return grayBubble;
                 }
-                switch (cmd.getSentState()) {
-                case UNDEF:
-                    return grayBubble;
-                case NA:
-                case OK:
+                switch (cmd.getSentState().getStatus()) {
+                case "NA":
+                case "OK":
                     return greenBubble;
-                case PENDING:
+                case "PENDING":
                     return waitingImage;
-                case NOK:
+                case "NOK":
                     return redBubble;
                 default:
                     log.warning("Unexpected state " + cmd.getSentState());

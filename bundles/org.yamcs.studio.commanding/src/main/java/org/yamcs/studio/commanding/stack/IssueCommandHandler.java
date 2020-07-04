@@ -9,9 +9,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.yamcs.client.Command;
 import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -46,13 +46,14 @@ public class IssueCommandHandler extends AbstractHandler {
 
         builder.issue().whenComplete((response, exc) -> {
             if (exc == null) {
-                String commandId = response.getId();
                 Display.getDefault().asyncExec(() -> {
                     log.info("Issued " + qname);
                     command.setStackedState(StackedState.ISSUED);
-                    command.setCommandId(commandId);
-                    for (CommandHistoryEntry entry : view.takeUnassignedCommandHistoryEntries(commandId)) {
-                        command.updateExecutionState(entry);
+                    command.updateExecutionState(response);
+
+                    Command alreadyReceivedUpdate = view.getCommandExecution(response.getId());
+                    if (alreadyReceivedUpdate != null) {
+                        command.updateExecutionState(alreadyReceivedUpdate);
                     }
 
                     view.selectActiveCommand();

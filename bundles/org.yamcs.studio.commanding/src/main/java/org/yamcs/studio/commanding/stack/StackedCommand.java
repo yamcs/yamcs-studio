@@ -11,14 +11,12 @@ import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
-import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.client.Acknowledgment;
+import org.yamcs.client.Command;
 import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.commanding.PTVInfo;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -55,36 +53,15 @@ public class StackedCommand {
     private String comment;
     private String selectedAlias;
 
-    private String commandId;
-
-    private PTVInfo.State queued;
-    private PTVInfo.State released;
-    private PTVInfo.State sent;
-
-    public boolean matches(CommandId commandId) {
-        String otherCommandId = commandId.getGenerationTime() + "-" + commandId.getOrigin() + "-"
-                + commandId.getSequenceNumber();
-        return otherCommandId.equals(this.commandId);
-    }
+    private Command execution;
 
     public void resetExecutionState() {
         state = StackedState.DISARMED;
-        commandId = null;
-        queued = null;
-        released = null;
-        sent = null;
+        execution = null;
     }
 
-    public void updateExecutionState(CommandHistoryEntry entry) {
-        for (CommandHistoryAttribute attr : entry.getAttrList()) {
-            if (attr.getName().equals("Acknowledge_Queued_Status")) {
-                queued = PTVInfo.State.fromYamcsValue(attr.getValue());
-            } else if (attr.getName().equals("Acknowledge_Released_Status")) {
-                released = PTVInfo.State.fromYamcsValue(attr.getValue());
-            } else if (attr.getName().equals("Acknowledge_Sent_Status")) {
-                sent = PTVInfo.State.fromYamcsValue(attr.getValue());
-            }
-        }
+    public void updateExecutionState(Command command) {
+        this.execution = command;
     }
 
     public StyledString toStyledString(CommandStackView styleProvider) {
@@ -141,8 +118,8 @@ public class StackedCommand {
         return state == StackedState.ARMED;
     }
 
-    public void setCommandId(String commandId) {
-        this.commandId = commandId;
+    public String getCommandId() {
+        return execution != null ? execution.getId() : null;
     }
 
     public void setDelayMs(int delayMs) {
@@ -169,16 +146,16 @@ public class StackedCommand {
         return state;
     }
 
-    public PTVInfo.State getQueuedState() {
-        return queued;
+    public Acknowledgment getQueuedState() {
+        return execution != null ? execution.getQueuedAcknowledgment() : null;
     }
 
-    public PTVInfo.State getReleasedState() {
-        return released;
+    public Acknowledgment getReleasedState() {
+        return execution != null ? execution.getReleasedAcknowledgment() : null;
     }
 
-    public PTVInfo.State getSentState() {
-        return sent;
+    public Acknowledgment getSentState() {
+        return execution != null ? execution.getSentAcknowledgment() : null;
     }
 
     public void addAssignment(ArgumentInfo arg, String value) {

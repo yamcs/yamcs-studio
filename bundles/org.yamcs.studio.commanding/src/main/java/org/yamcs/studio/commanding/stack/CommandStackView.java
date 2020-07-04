@@ -1,14 +1,12 @@
 package org.yamcs.studio.commanding.stack;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.resource.JFaceResources;
@@ -44,10 +42,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.services.IEvaluationService;
+import org.yamcs.client.Command;
 import org.yamcs.client.CommandSubscription;
 import org.yamcs.client.YamcsClient;
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
-import org.yamcs.protobuf.Commanding.CommandId;
 import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackMode;
@@ -94,8 +91,6 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     private Label clearanceSeparator;
 
     private Spinner fixDelaySpinner;
-
-    private Map<String, List<CommandHistoryEntry>> unassignedUpdates = new HashMap<>();
 
     @Override
     public void createPartControl(Composite parent) {
@@ -358,7 +353,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
                 if (stack.stackMode == StackMode.AUTOMATIC) {
                     // automatic stack, arm all commands
-                    Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.armAll");
+                    org.eclipse.core.commands.Command cmd = commandService
+                            .getCommand("org.yamcs.studio.commanding.stack.armAll");
                     try {
                         cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
                                 evaluationService.getCurrentState()));
@@ -367,7 +363,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                     }
                 } else {
                     // manual stack, individual arm
-                    Command cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.arm");
+                    org.eclipse.core.commands.Command cmd = commandService
+                            .getCommand("org.yamcs.studio.commanding.stack.arm");
                     try {
                         cmd.executeWithChecks(new ExecutionEvent(cmd, new HashMap<String, String>(), null,
                                 evaluationService.getCurrentState()));
@@ -395,7 +392,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             IEvaluationService evaluationService = (IEvaluationService) getViewSite()
                     .getService(IEvaluationService.class);
 
-            Command cmd = null;
+            org.eclipse.core.commands.Command cmd = null;
             if (stack.stackMode == StackMode.AUTOMATIC) {
                 // automatic stack - issue all commands
                 cmd = commandService.getCommand("org.yamcs.studio.commanding.stack.issueAll");
@@ -509,8 +506,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         if (processor != null) {
             YamcsClient client = YamcsPlugin.getYamcsClient();
             subscription = client.createCommandSubscription();
-            subscription.addMessageListener(entry -> {
-                Display.getDefault().asyncExec(() -> processCommandHistoryEntry(entry));
+            subscription.addListener(command -> {
+                Display.getDefault().asyncExec(() -> processCommand(command));
             });
             subscription.sendMessage(SubscribeCommandsRequest.newBuilder()
                     .setInstance(instance)
@@ -673,35 +670,17 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     }
 
     // On the GUI thread
-    private void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
-        boolean match = false;
+    private void processCommand(Command command) {
         for (StackedCommand cmd : CommandStack.getInstance().getCommands()) {
-            if (cmd.matches(cmdhistEntry.getCommandId())) {
-                log.fine(String.format("Processing update %s", cmdhistEntry));
-                cmd.updateExecutionState(cmdhistEntry);
-                match = true;
+            if (command.getId().equals(cmd.getCommandId())) {
+                cmd.updateExecutionState(command);
             }
-        }
-        if (!match) { // Put them aside. Possibly the REST response is slower than the websocket
-            String commandId = toCommandId(cmdhistEntry.getCommandId());
-            List<CommandHistoryEntry> entries = unassignedUpdates.get(commandId);
-            if (entries == null) {
-                entries = new ArrayList<>();
-                unassignedUpdates.put(commandId, entries);
-            }
-            entries.add(cmdhistEntry);
         }
         commandTableViewer.refresh();
     }
 
-    private static String toCommandId(CommandId commandId) {
-        return commandId.getGenerationTime() + "-" + commandId.getOrigin() + "-"
-                + commandId.getSequenceNumber();
-    }
-
-    public List<CommandHistoryEntry> takeUnassignedCommandHistoryEntries(String commandId) {
-        List<CommandHistoryEntry> result = unassignedUpdates.remove(commandId);
-        return result == null ? Collections.emptyList() : result;
+    public Command getCommandExecution(String id) {
+        return subscription.getCommand(id);
     }
 
     enum PastingType {
