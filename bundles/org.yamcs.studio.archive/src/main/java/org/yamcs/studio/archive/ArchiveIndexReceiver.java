@@ -81,11 +81,11 @@ public class ArchiveIndexReceiver {
         if (tag.hasDescription()) {
             requestb.setDescription(tag.getDescription());
         }
-        if (tag.hasStart()) {
+        if (tag.hasStartUTC()) {
             Instant start = Instant.ofEpochSecond(tag.getStartUTC().getSeconds(), tag.getStartUTC().getNanos());
             requestb.setStart(start.toString());
         }
-        if (tag.hasStop()) {
+        if (tag.hasStopUTC()) {
             Instant stop = Instant.ofEpochSecond(tag.getStopUTC().getSeconds(), tag.getStopUTC().getNanos());
             requestb.setStop(stop.toString());
         }
@@ -108,11 +108,11 @@ public class ArchiveIndexReceiver {
         if (newTag.hasDescription()) {
             requestb.setDescription(newTag.getDescription());
         }
-        if (newTag.hasStart()) {
+        if (newTag.hasStartUTC()) {
             Instant start = Instant.ofEpochSecond(newTag.getStartUTC().getSeconds(), newTag.getStartUTC().getNanos());
             requestb.setStart(start.toString());
         }
-        if (newTag.hasStop()) {
+        if (newTag.hasStopUTC()) {
             Instant stop = Instant.ofEpochSecond(newTag.getStopUTC().getSeconds(), newTag.getStopUTC().getNanos());
             requestb.setStop(stop.toString());
         }
