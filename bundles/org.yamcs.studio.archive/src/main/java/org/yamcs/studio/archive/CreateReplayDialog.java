@@ -231,8 +231,8 @@ public class CreateReplayDialog extends TitleAreaDialog {
 
     private CreateProcessorRequest toCreateProcessorRequest() {
         JsonObject spec = new JsonObject();
-        spec.addProperty("utcStart", RCPUtils.toInstant(startDate, startTime).toString());
-        spec.addProperty("utcStop", RCPUtils.toInstant(stopDate, stopTime).toString());
+        spec.addProperty("start", RCPUtils.toInstant(startDate, startTime).toString());
+        spec.addProperty("stop", RCPUtils.toInstant(stopDate, stopTime).toString());
 
         spec.add("packetRequest", new JsonObject());
 
@@ -260,6 +260,7 @@ public class CreateReplayDialog extends TitleAreaDialog {
                 .setInstance(YamcsPlugin.getInstance())
                 .setName(name.getText())
                 .setType("Archive")
+                .setPersistent(true) // TODO temp
                 .setConfig(specJson);
 
         return resultb.build();

@@ -12,11 +12,11 @@ import org.yamcs.protobuf.UserInfo;
 public class RemoteEntityHolder {
 
     // Required
-    YamcsClient yamcsClient;
-    UserInfo userInfo;
+    public YamcsClient yamcsClient;
+    public UserInfo userInfo;
 
     // Optional
-    String instance;
-    ProcessorInfo processor;
-    MissionDatabase missionDatabase;
+    public String instance;
+    public ProcessorInfo processor;
+    public MissionDatabase missionDatabase;
 }

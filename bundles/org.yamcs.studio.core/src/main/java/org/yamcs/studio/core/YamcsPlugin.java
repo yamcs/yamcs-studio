@@ -247,7 +247,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static Instant getMissionTime(boolean wallClockIfUnset) {
-        Instant t = plugin.timeSubscription.getCurrent();
+        Instant t = plugin.timeSubscription != null ? plugin.timeSubscription.getCurrent() : null;
         if (wallClockIfUnset && t == null) {
             t = Instant.now();
         }
@@ -280,7 +280,26 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return plugin.listeners.iterator();
     }
 
+    public static void switchProcessor(ProcessorInfo processor) {
+        if (plugin.processor != null && processor.getName().equals(plugin.processor.getName())) {
+            return;
+        }
+
+        System.out.println("SHOULD SWITCH TO " + processor);
+        plugin.processor = processor;
+    }
+
     public static void updateEntities(RemoteEntityHolder holder) {
+        if (plugin.timeSubscription != null) {
+            plugin.timeSubscription.cancel(true);
+        }
+        if (plugin.clearanceSubscription != null) {
+            plugin.clearanceSubscription.cancel(true);
+        }
+        if (plugin.processorSubscription != null) {
+            plugin.processorSubscription.cancel(true);
+        }
+
         // First update state
         plugin.yamcsClient = holder.yamcsClient;
         plugin.userInfo = holder.userInfo;

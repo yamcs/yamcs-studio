@@ -1,7 +1,6 @@
 package org.yamcs.studio.core.ui.processor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -48,8 +47,6 @@ public class SwitchProcessorCompoundContributionItem extends CompoundContributio
         try {
             YamcsClient client = YamcsPlugin.getYamcsClient();
             List<ProcessorInfo> processors = client.listProcessors(instance).get(3000, TimeUnit.MILLISECONDS);
-            Collections.sort(processors, (p1, p2) -> p1.getName().compareTo(p2.getName()));
-
             processors.stream().filter(p -> instance.equals(p.getInstance())).forEach(processor -> {
                 if (currentProcessor != null && !processor.getName().equals(currentProcessor)) {
                     CommandContributionItem item = createProcessorItem(processor.getName());
