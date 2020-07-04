@@ -496,6 +496,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 bottomLeft.layout(true);
             });
         });*/
+
+        YamcsPlugin.addListener(this);
     }
 
     @Override
@@ -888,6 +890,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         if (subscription != null) {
             subscription.cancel(true);
         }
+        YamcsPlugin.removeListener(this);
         super.dispose();
     }
 }
