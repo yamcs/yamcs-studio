@@ -17,6 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.yamcs.studio.core.StringConverter;
 
 public class ExportUtil {
 
@@ -48,6 +49,21 @@ public class ExportUtil {
                 attr.setValue(command.getComment());
                 commandElement.setAttributeNode(attr);
             }
+
+            Element extraEl = doc.createElement("extraOptions");
+            commandElement.appendChild(extraEl);
+
+            command.getExtra().forEach((option, value) -> {
+                Element optionEl = doc.createElement("extraOption");
+                extraEl.appendChild(optionEl);
+                Attr idAttr = doc.createAttribute("id");
+                idAttr.setValue(option);
+                optionEl.setAttributeNode(idAttr);
+
+                Attr valueAttr = doc.createAttribute("value");
+                valueAttr.setValue(StringConverter.toString(value));
+                optionEl.setAttributeNode(valueAttr);
+            });
 
             if (command.getDelayMs() > 0) {
                 attr = doc.createAttribute("delayMs");

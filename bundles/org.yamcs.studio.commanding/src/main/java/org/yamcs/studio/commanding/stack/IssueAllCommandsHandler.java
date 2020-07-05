@@ -39,7 +39,7 @@ public class IssueAllCommandsHandler extends AbstractHandler {
 
         // lock scroll during command stack execution, or this would slow down the UI
         // refresh too much
-        ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        ICommandService service = PlatformUI.getWorkbench().getService(ICommandService.class);
         Command command = service.getCommand("org.yamcs.studio.commanding.cmdhist.scrollLockCommand");
         boolean oldState = HandlerUtil.toggleCommandState(command);
         if (commandHistoryView != null) {
@@ -129,6 +129,9 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             if (command.getComment() != null) {
                 builder.withComment(command.getComment());
             }
+            command.getExtra().forEach((option, value) -> {
+                builder.withExtra(option, value);
+            });
             command.getAssignments().forEach((argument, value) -> {
                 builder.withArgument(argument.getName(), value);
             });

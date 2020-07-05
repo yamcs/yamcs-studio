@@ -17,6 +17,7 @@ import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.YamcsPlugin;
 
 /**
@@ -47,6 +48,7 @@ public class StackedCommand {
     private int delayMs = 0;
     private CommandInfo meta;
     private Map<ArgumentInfo, String> assignments = new HashMap<>();
+    private Map<String, Value> extra = new HashMap<>();
 
     private StackedState state = StackedState.DISARMED;
 
@@ -264,6 +266,18 @@ public class StackedCommand {
 
     public String getComment() {
         return comment;
+    }
+
+    public void setExtra(String option, Value value) {
+        if (value == null) {
+            extra.remove(option);
+        } else {
+            extra.put(option, value);
+        }
+    }
+
+    public Map<String, Value> getExtra() {
+        return extra;
     }
 
     @Override

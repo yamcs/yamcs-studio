@@ -40,6 +40,9 @@ public class IssueCommandHandler extends AbstractHandler {
         if (command.getComment() != null) {
             builder.withComment(command.getComment());
         }
+        command.getExtra().forEach((option, value) -> {
+            builder.withExtra(option, value);
+        });
         command.getAssignments().forEach((argument, value) -> {
             builder.withArgument(argument.getName(), value);
         });

@@ -49,7 +49,9 @@ public class ArmCommandHandler extends AbstractHandler {
         if (command.getComment() != null) {
             builder.withComment(command.getComment());
         }
-
+        command.getExtra().forEach((option, value) -> {
+            builder.withExtra(option, value);
+        });
         command.getAssignments().forEach((arg, value) -> {
             builder.withArgument(arg.getName(), value);
         });

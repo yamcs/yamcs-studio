@@ -91,6 +91,9 @@ public class CommandClipboard {
             if (sc.getComment() != null) {
                 copy.setComment(sc.getComment());
             }
+            sc.getExtra().forEach((option, value) -> {
+                copy.setExtra(option, value);
+            });
             if (sc.getSelectedAlias() != null) {
                 copy.setSelectedAliase(sc.getSelectedAlias());
             }

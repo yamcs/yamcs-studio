@@ -25,9 +25,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.yamcs.protobuf.GetServerInfoResponse.CommandOptionInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentTypeInfo;
 import org.yamcs.protobuf.Mdb.EnumValue;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.studio.core.YamcsPlugin;
 
 public class CommandOptionsComposite extends ScrolledComposite {
 
@@ -102,6 +105,59 @@ public class CommandOptionsComposite extends ScrolledComposite {
         optionsGroup.setText("Options");
         optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         optionsGroup.setLayout(new GridLayout(2, false));
+
+        if (YamcsPlugin.hasSystemPrivilege("CommandOptions")) {
+            for (CommandOptionInfo extra : YamcsPlugin.getServerInfo().getCommandOptionsList()) {
+                String text = extra.hasVerboseName() ? extra.getVerboseName() : extra.getId();
+                if ("BOOLEAN".equals(extra.getType())) {
+                    Label label = new Label(optionsGroup, SWT.NONE);
+                    label.setText(text);
+                    GridData gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
+                    label.setLayoutData(gridData);
+                    Button check = new Button(optionsGroup, SWT.CHECK);
+                    if (extra.hasHelp()) {
+                        label.setToolTipText(extra.getHelp());
+                    }
+                    gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+                    check.setLayoutData(gridData);
+                    Value initialValue = command.getExtra().get(extra.getId());
+                    if (initialValue != null) {
+                        check.setSelection(initialValue.getBooleanValue());
+                    }
+                    check.addListener(SWT.Selection, evt -> {
+                        command.setExtra(extra.getId(), Value.newBuilder()
+                                .setType(Value.Type.BOOLEAN)
+                                .setBooleanValue(check.getSelection())
+                                .build());
+                    });
+                } else {
+                    Label label = new Label(optionsGroup, SWT.NONE);
+                    label.setText(text);
+                    GridData gridData = new GridData(SWT.NONE, SWT.TOP, false, false);
+                    label.setLayoutData(gridData);
+                    Text input = new Text(optionsGroup, SWT.BORDER);
+                    if (extra.hasHelp()) {
+                        label.setToolTipText(extra.getHelp());
+                    }
+                    gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
+                    input.setLayoutData(gridData);
+                    Value initialValue = command.getExtra().get(extra.getId());
+                    if (initialValue != null) {
+                        input.setText(initialValue.getStringValue());
+                    }
+                    input.addModifyListener(evt -> {
+                        if (input.getText().isEmpty()) {
+                            command.setExtra(extra.getId(), null);
+                        } else {
+                            command.setExtra(extra.getId(), Value.newBuilder()
+                                    .setType(Value.Type.STRING)
+                                    .setStringValue(input.getText())
+                                    .build());
+                        }
+                    });
+                }
+            }
+        }
 
         // option for stack delay
         Label l0 = new Label(optionsGroup, SWT.NONE);

@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.yamcs.client.Acknowledgment;
 import org.yamcs.client.Command;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -109,8 +108,8 @@ public class AckTableViewer extends TableViewer {
         dateColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                Acknowledgment ack = (Acknowledgment) element;
-                Instant time = ack.getTime();
+                AckTableRecord rec = (AckTableRecord) element;
+                Instant time = rec.acknowledgment.getTime();
                 return time != null ? YamcsPlugin.getDefault().formatInstant(time) : null;
             }
         });
