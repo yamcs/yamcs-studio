@@ -44,13 +44,20 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
     private ParameterSubscription subscription;
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
+    private Beeper beeper;
+
     PVManagerSubscriptionHandler() {
+        beeper = new Beeper();
         executor.scheduleWithFixedDelay(this::modifySubscription, 500, 500, TimeUnit.MILLISECONDS);
         YamcsPlugin.addListener(this);
     }
 
     public static PVManagerSubscriptionHandler getInstance() {
         return Activator.getDefault().getPVCatalogue();
+    }
+
+    public Beeper getBeeper() {
+        return beeper;
     }
 
     // To be called on executor thread
@@ -164,5 +171,6 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
                 channelHandler.processParameterValue(pval);
             }
         }
+        beeper.processDelivery(values);
     }
 }

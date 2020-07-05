@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.yamcs.studio.css.core.Activator;
-import org.yamcs.studio.css.core.SeverityHandlerSound;
+import org.yamcs.studio.css.core.PVManagerSubscriptionHandler;
 
 public class SoundPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
@@ -34,19 +34,19 @@ public class SoundPreferencePage extends FieldEditorPreferencePage implements IW
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 3, 1));
 
         // beep fields
-        String[][] typeOfBeepTriggers = { { "Do Not Beep", "NONE" },
-                { "Parameter First Out-of-Limit Value", "FIRST" },
-                { "Parameter Each Out-of-Limit Value", "EACH" } };
+        String[][] typeOfBeepTriggers = { { "No beep", "NONE" },
+                { "Increasing severity", "FIRST" },
+                { "Each out-of-limit update", "EACH" } };
         triggerBeep = new ComboFieldEditor("triggerBeep", "Beep on event:",
                 typeOfBeepTriggers, getFieldEditorParent());
         addField(triggerBeep);
 
-        beepWarning = new BooleanFieldEditor("beepWarning", "Beep on Warning",
+        beepWarning = new BooleanFieldEditor("beepWarning", "Beep on warning",
                 getFieldEditorParent());
         addField(beepWarning);
 
         beepCritical = new BooleanFieldEditor("beepCritical",
-                "Beep on Critical", getFieldEditorParent());
+                "Beep on critical", getFieldEditorParent());
         addField(beepCritical);
     }
 
@@ -56,9 +56,8 @@ public class SoundPreferencePage extends FieldEditorPreferencePage implements IW
         boolean ret = super.performOk();
 
         // Apply preference in Severity Handler Sound class
-        SeverityHandlerSound.updatePrefence();
+        PVManagerSubscriptionHandler.getInstance().getBeeper().updatePreference();
 
         return ret;
     }
-
 }

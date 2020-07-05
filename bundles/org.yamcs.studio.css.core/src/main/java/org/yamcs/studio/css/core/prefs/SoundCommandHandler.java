@@ -14,7 +14,7 @@ import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.menus.UIElement;
 import org.osgi.framework.Bundle;
 import org.yamcs.studio.css.core.Activator;
-import org.yamcs.studio.css.core.SeverityHandlerSound;
+import org.yamcs.studio.css.core.PVManagerSubscriptionHandler;
 
 public class SoundCommandHandler extends AbstractHandler implements IElementUpdater {
 
@@ -55,9 +55,9 @@ public class SoundCommandHandler extends AbstractHandler implements IElementUpda
             newBeep = commandBeep;
         }
         preferenceStore.setValue("triggerBeep", newBeep);
-        this.beep = newBeep;
+        beep = newBeep;
 
-        SeverityHandlerSound.updatePrefence();
+        PVManagerSubscriptionHandler.getInstance().getBeeper().updatePreference();
 
         // IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
         // ICommandService commandService = (ICommandService) window.getService(ICommandService.class);

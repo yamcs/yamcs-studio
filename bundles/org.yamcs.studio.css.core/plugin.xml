@@ -61,9 +61,8 @@
          <command
                commandId="org.yamcs.studio.css.core.prefs.SoundCommandCommand"
                icon="icons/sound_mute_16px.png"
-               label="Do Not Beep"
-               style="pulldown"
-               tooltip="Do Not Beep">
+               label="No beep"
+               style="pulldown">
             <parameter
                   name="org.yamcs.studio.css.core.prefs.beep"
                   value="NONE">
@@ -72,9 +71,8 @@
          <command
                commandId="org.yamcs.studio.css.core.prefs.SoundCommandCommand"
                icon="icons/sound_low_16px.png"
-               label="Parameter Firt Out-of-Limit"
-               style="pulldown"
-               tooltip="Parameter Firt Out-of-Limit">
+               label="Beep on increasing severity"
+               style="pulldown">
             <parameter
                   name="org.yamcs.studio.css.core.prefs.beep"
                   value="FIRST">
@@ -83,7 +81,7 @@
          <command
                commandId="org.yamcs.studio.css.core.prefs.SoundCommandCommand"
                icon="icons/sound_on_16px.png"
-               label="Parameter Each Out-of-Limit"
+               label="Beep on each out-of-limit update"
                style="push">
             <parameter
                   name="org.yamcs.studio.css.core.prefs.beep"

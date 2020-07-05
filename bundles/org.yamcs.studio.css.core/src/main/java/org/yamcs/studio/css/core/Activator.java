@@ -8,9 +8,6 @@ public class Activator extends AbstractUIPlugin {
     private static BundleContext bundleContext;
     private static Activator plugin;
 
-    @SuppressWarnings("unused")
-    private SeverityHandlerSound severityHandler;
-
     private PVManagerSubscriptionHandler pvCatalogue;
 
     @Override
@@ -20,7 +17,6 @@ public class Activator extends AbstractUIPlugin {
         plugin = this;
 
         pvCatalogue = new PVManagerSubscriptionHandler();
-        severityHandler = new SeverityHandlerSound();
     }
 
     @Override

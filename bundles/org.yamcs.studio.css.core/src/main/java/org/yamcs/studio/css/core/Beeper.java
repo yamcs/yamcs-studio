@@ -1,0 +1,79 @@
+package org.yamcs.studio.css.core;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.studio.core.ui.SoundSystem;
+import org.yamcs.studio.css.core.prefs.SoundCommandHandler;
+
+public class Beeper {
+
+    private String triggerCondition = "NONE";
+    private int beepLevel = 0;
+    private Map<NamedObjectId, MonitoringResult> pastResults = new ConcurrentHashMap<>();
+
+    public Beeper() {
+        updatePreference();
+    }
+
+    public void updatePreference() {
+        Activator plugin = Activator.getDefault();
+
+        triggerCondition = plugin.getPreferenceStore().getString("triggerBeep");
+        if (plugin.getPreferenceStore().getBoolean("beepWarning")) {
+            beepLevel = MonitoringResult.WARNING.getNumber();
+        } else {
+            beepLevel = MonitoringResult.CRITICAL.getNumber();
+        }
+        pastResults.clear();
+
+        // update toolbar icon
+        try {
+            SoundCommandHandler.beep = triggerCondition;
+            IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            ICommandService commandService = window.getService(ICommandService.class);
+            if (commandService != null) {
+                commandService.refreshElements("dropdownSoundCommand", null);
+            }
+        } catch (Exception e) {
+            // might pass here at startup when the workbench is not created yet
+        }
+    }
+
+    void processDelivery(List<ParameterValue> values) {
+        if ("NONE".equals(triggerCondition)) {
+            return;
+        }
+
+        boolean beep = false;
+        for (ParameterValue pval : values) {
+            if (!pval.hasMonitoringResult()) {
+                continue;
+            }
+
+            if (pval.getMonitoringResult().getNumber() >= beepLevel) {
+                // Beep only at the first occurrence of the parameter out-of-limit
+                if ("FIRST".equals(triggerCondition)) {
+                    MonitoringResult prevResult = pastResults.get(pval.getId());
+                    if (prevResult == null || (prevResult.getNumber() < pval.getMonitoringResult().getNumber())) {
+                        beep = true;
+                    }
+                } else {
+                    beep = true;
+                }
+            }
+            pastResults.put(pval.getId(), pval.getMonitoringResult());
+        }
+
+        if (beep) {
+            SoundSystem.beep();
+        }
+    }
+}
