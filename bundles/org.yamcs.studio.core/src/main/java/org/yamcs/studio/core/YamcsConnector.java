@@ -100,7 +100,12 @@ public class YamcsConnector implements IRunnableWithProgress {
             } else if (conf.getUser() == null) {
                 yamcsClient.connectAnonymously();
             } else {
-                yamcsClient.connect(conf.getUser(), conf.getPassword().toCharArray());
+                String password = conf.getPassword();
+                if (password != null && !password.isEmpty()) {
+                    yamcsClient.connect(conf.getUser(), password.toCharArray());
+                } else {
+                    throw new ClientException("No password was provided");
+                }
             }
 
             return yamcsClient;

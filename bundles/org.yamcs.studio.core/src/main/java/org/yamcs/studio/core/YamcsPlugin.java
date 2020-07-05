@@ -125,14 +125,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static boolean isAuthorizationEnabled() {
-        return false;
-        /*YamcsStudioClient yamcsClient = YamcsPlugin.getYamcsClient();
-        // TODO we should probably control this from the server, rather than here. Just because
-        // the creds are null, does not really mean anything. We could also send creds to an
-        // unsecured yamcs server. It would just ignore it, and then our client state would
-        // be wrong
-        YamcsConnectionProperties yprops = yamcsClient.getYamcsConnectionProperties();
-        return (yprops == null) ? false : yprops.getPassword() != null;*/
+        UserInfo userInfo = getUser();
+        return userInfo != null ? !userInfo.getSuperuser() : false;
     }
 
     @Override
@@ -169,7 +163,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     /**
      * Formats a Yamcs instant. Must be called on SWT thread due to reuse of dateformatter.
-     * 
+     *
      * @param tzOffset
      *            whether timezone offset is added to the output string.
      */
