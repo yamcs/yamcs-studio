@@ -63,6 +63,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
 import org.yamcs.studio.core.utils.RCPUtils;
 import org.yamcs.studio.css.core.pvmanager.OpsDataSourceProvider;
+import org.yamcs.studio.css.core.pvmanager.StateDataSourceProvider;
 import org.yamcs.studio.css.core.pvmanager.XtceDataSourceProvider;
 
 /**
@@ -172,6 +173,7 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
     public void preStartup() {
         // Bootstrap DIIRT
         CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
+        defaultDs.putDataSource(new StateDataSourceProvider());
         defaultDs.putDataSource(new XtceDataSourceProvider());
         defaultDs.putDataSource(new OpsDataSourceProvider());
         defaultDs.setConfiguration(

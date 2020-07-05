@@ -1,6 +1,7 @@
 package org.yamcs.studio.core;
 
 import org.yamcs.client.YamcsClient;
+import org.yamcs.protobuf.GetServerInfoResponse;
 import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.UserInfo;
 
@@ -13,6 +14,7 @@ public class RemoteEntityHolder {
 
     // Required
     public YamcsClient yamcsClient;
+    public GetServerInfoResponse serverInfo;
     public UserInfo userInfo;
 
     // Optional

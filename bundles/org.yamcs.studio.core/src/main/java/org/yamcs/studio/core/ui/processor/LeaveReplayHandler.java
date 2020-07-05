@@ -26,6 +26,7 @@ public class LeaveReplayHandler extends AbstractHandler {
 
                 RemoteEntityHolder holder = new RemoteEntityHolder();
                 holder.yamcsClient = YamcsPlugin.getYamcsClient();
+                holder.serverInfo = YamcsPlugin.getServerInfo();
                 holder.userInfo = YamcsPlugin.getUser();
                 holder.missionDatabase = YamcsPlugin.getMissionDatabase();
                 holder.instance = YamcsPlugin.getInstance();

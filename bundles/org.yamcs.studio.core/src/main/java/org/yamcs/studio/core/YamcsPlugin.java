@@ -32,6 +32,7 @@ import org.yamcs.client.mdb.MissionDatabaseClient;
 import org.yamcs.client.processor.ProcessorClient;
 import org.yamcs.client.storage.StorageClient;
 import org.yamcs.protobuf.ClearanceInfo;
+import org.yamcs.protobuf.GetServerInfoResponse;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
 import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.SubscribeProcessorsRequest;
@@ -58,6 +59,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private String instance;
     private ProcessorInfo processor;
     private MissionDatabase missionDatabase;
+    private GetServerInfoResponse serverInfo;
     private UserInfo userInfo;
 
     private TimeSubscription timeSubscription;
@@ -100,6 +102,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public static UserInfo getUser() {
         return plugin.userInfo;
+    }
+
+    public static GetServerInfoResponse getServerInfo() {
+        return plugin.serverInfo;
     }
 
     private static boolean isSuperuser() {
@@ -280,15 +286,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         return plugin.listeners.iterator();
     }
 
-    public static void switchProcessor(ProcessorInfo processor) {
-        if (plugin.processor != null && processor.getName().equals(plugin.processor.getName())) {
-            return;
-        }
-
-        System.out.println("SHOULD SWITCH TO " + processor);
-        plugin.processor = processor;
-    }
-
     public static void updateEntities(RemoteEntityHolder holder) {
         if (plugin.timeSubscription != null) {
             plugin.timeSubscription.cancel(true);
@@ -302,6 +299,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
         // First update state
         plugin.yamcsClient = holder.yamcsClient;
+        plugin.serverInfo = holder.serverInfo;
         plugin.userInfo = holder.userInfo;
         plugin.missionDatabase = holder.missionDatabase;
         plugin.instance = holder.instance;
@@ -403,6 +401,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             plugin.yamcsClient.close();
             plugin.yamcsClient = null;
         }
+        plugin.serverInfo = null;
         plugin.userInfo = null;
         plugin.instance = null;
         plugin.processor = null;

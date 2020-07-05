@@ -16,6 +16,7 @@ import org.yamcs.client.Page;
 import org.yamcs.client.YamcsClient;
 import org.yamcs.client.mdb.MissionDatabaseClient;
 import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions;
+import org.yamcs.protobuf.GetServerInfoResponse;
 import org.yamcs.protobuf.Mdb.CommandInfo;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.UserInfo;
@@ -46,6 +47,7 @@ public class YamcsConnector implements IRunnableWithProgress {
         monitor.beginTask("Connecting to " + conf, IProgressMonitor.UNKNOWN);
         try {
             holder.yamcsClient = doConnect(monitor);
+            holder.serverInfo = fetchServerInfo(monitor, holder.yamcsClient);
             holder.userInfo = fetchUserInfo(monitor, holder.yamcsClient);
 
             if (conf.getInstance() == null || conf.getInstance().trim().isEmpty()) {
@@ -104,6 +106,16 @@ public class YamcsConnector implements IRunnableWithProgress {
             return yamcsClient;
         } catch (ClientException e) {
             throw new BootstrapException("Failed to connect", e);
+        }
+    }
+
+    private GetServerInfoResponse fetchServerInfo(IProgressMonitor monitor, YamcsClient client)
+            throws InterruptedException, BootstrapException {
+        monitor.subTask("Fetching server info");
+        try {
+            return client.getServerInfo().get();
+        } catch (ExecutionException e) {
+            throw new BootstrapException("Cannot fetch server info", e);
         }
     }
 

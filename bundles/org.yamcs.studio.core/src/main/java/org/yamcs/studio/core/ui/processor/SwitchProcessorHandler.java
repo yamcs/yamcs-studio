@@ -36,6 +36,7 @@ public class SwitchProcessorHandler extends AbstractHandler implements IElementU
                     if (err == null) {
                         RemoteEntityHolder holder = new RemoteEntityHolder();
                         holder.yamcsClient = YamcsPlugin.getYamcsClient();
+                        holder.serverInfo = YamcsPlugin.getServerInfo();
                         holder.userInfo = YamcsPlugin.getUser();
                         holder.missionDatabase = YamcsPlugin.getMissionDatabase();
                         holder.instance = YamcsPlugin.getInstance();
