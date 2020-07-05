@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-Activator: org.yamcs.studio.links.LinksPlugin
+Bundle-ActivationPolicy: lazy
+Bundle-Description: Yamcs Studio Links
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs Studio Links
+Bundle-SymbolicName: org.yamcs.studio.links;singleton:=true
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Version: 1.4.0.rc1
+Require-Bundle: org.yamcs.studio.core,
+ org.yamcs.p2.client,
+ org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
+Automatic-Module-Name: org.yamcs.studio.links

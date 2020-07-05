@@ -31,5 +31,6 @@
     <module>org.yamcs.studio.editor.base</module>
     <module>org.yamcs.studio.eventlog</module>
     <module>org.yamcs.studio.explorer</module>
+    <module>org.yamcs.studio.links</module>
   </modules>
 </project>

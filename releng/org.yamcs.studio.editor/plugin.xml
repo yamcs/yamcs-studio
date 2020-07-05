@@ -90,11 +90,18 @@
                relationship="stack"
                visible="false"
                closeable="true"
+               id="org.yamcs.studio.links.LinksView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
                id="org.yamcs.studio.editor.base.views.FunctionsView"/>
 
          <viewShortcut id="org.yamcs.studio.explorer.view"/>
          <viewShortcut id="org.yamcs.studio.archive.ArchiveView"/>
          <viewShortcut id="org.yamcs.studio.eventlog.EventLogView"/>
+         <viewShortcut id="org.yamcs.studio.links.LinksView"/>
          <viewShortcut id="org.yamcs.studio.commanding.stack.CommandStackView"/>
          <viewShortcut id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
       </perspectiveExtension>
@@ -128,6 +135,12 @@
                visible="false"
                closeable="true"
                id="org.yamcs.studio.commanding.cmdhist.CommandHistoryView"/>
+         <view
+               relative="org.eclipse.ui.console.ConsoleView"
+               relationship="stack"
+               visible="false"
+               closeable="true"
+               id="org.yamcs.studio.links.LinksView"/>
       </perspectiveExtension>
    </extension>
 </plugin>
