@@ -36,7 +36,7 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
 
     // Change events (PV handler register/unregister). Only relevant if a connection
     // is ongoing (to prevent bursts)
-    private Queue<ChannelEvent> channelHandlerEvents = new ConcurrentLinkedQueue<ChannelEvent>();
+    private Queue<ChannelEvent> channelHandlerEvents = new ConcurrentLinkedQueue<>();
 
     // All currently registered PV handlers (regardless of connection state to Yamcs)
     private Map<NamedObjectId, ParameterChannelHandler> channelHandlersById = new LinkedHashMap<>();
@@ -68,6 +68,7 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
         subscription.sendMessage(SubscribeParametersRequest.newBuilder()
                 .setInstance(instance)
                 .setProcessor(processor)
+                .setAbortOnInvalid(false)
                 .addAllId(channelHandlersById.keySet())
                 .build());
     }
