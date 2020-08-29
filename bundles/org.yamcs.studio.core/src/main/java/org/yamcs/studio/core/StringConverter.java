@@ -15,7 +15,7 @@ public class StringConverter {
     public static String toString(Value rv) {
         switch (rv.getType()) {
         case BINARY:
-            return byteBufferToHexString(rv.getBinaryValue().asReadOnlyByteBuffer());
+            return "0x" + arrayToHexString(rv.getBinaryValue().toByteArray());
         case DOUBLE:
             return Double.toString(rv.getDoubleValue());
         case FLOAT:

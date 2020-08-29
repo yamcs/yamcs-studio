@@ -195,10 +195,9 @@ public class IndexBox extends Box {
                     tmData.put(id.getName(), new TreeSet<IndexChunkSpec>());
                 }
                 TreeSet<IndexChunkSpec> al = tmData.get(id.getName());
-                String info = r.hasInfo() ? r.getInfo() : null;
                 long first = Instant.ofEpochSecond(r.getFirst().getSeconds()).toEpochMilli();
                 long last = Instant.ofEpochSecond(r.getLast().getSeconds()).toEpochMilli();
-                IndexChunkSpec tnew = new IndexChunkSpec(first, last, r.getNum(), info);
+                IndexChunkSpec tnew = new IndexChunkSpec(first, last, r.getNum(), null);
                 IndexChunkSpec told = al.floor(tnew);
                 if ((told == null) || (mergeTime == -1) || (!told.merge(tnew, mergeTime))) {
                     al.add(tnew);

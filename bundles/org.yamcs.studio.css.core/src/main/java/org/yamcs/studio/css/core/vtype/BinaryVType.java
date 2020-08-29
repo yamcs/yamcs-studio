@@ -1,43 +1,24 @@
 package org.yamcs.studio.css.core.vtype;
 
-import java.util.List;
-
-import org.diirt.util.array.ArrayByte;
-import org.diirt.util.array.ArrayInt;
-import org.diirt.util.array.ListByte;
-import org.diirt.util.array.ListInt;
-import org.diirt.vtype.ArrayDimensionDisplay;
-import org.diirt.vtype.VByteArray;
-import org.diirt.vtype.ValueUtil;
+import org.diirt.vtype.VString;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.studio.core.StringConverter;
 
-public class BinaryVType extends YamcsVType implements VByteArray {
+public class BinaryVType extends YamcsVType implements VString {
 
     public BinaryVType(ParameterValue pval) {
         super(pval);
     }
 
     @Override
-    public ListInt getSizes() {
-        return new ArrayInt(pval.getEngValue().getBinaryValue().size());
-    }
-
-    @Override
-    public ListByte getData() {
-        return new ArrayByte(pval.getEngValue().getBinaryValue().toByteArray());
-    }
-
-    @Override
-    public List<ArrayDimensionDisplay> getDimensionDisplay() {
-        return ValueUtil.defaultArrayDisplay(this);
+    public String getValue() {
+        byte[] barr = pval.getEngValue().getBinaryValue().toByteArray();
+        return "0x" + StringConverter.arrayToHexString(barr);
     }
 
     @Override
     public String toString() {
-        if (pval.getEngValue().getBinaryValue() == null) {
-            return "null";
-        } else {
-            return "<binary>";
-        }
+        byte[] barr = pval.getEngValue().getBinaryValue().toByteArray();
+        return "0x" + StringConverter.arrayToHexString(barr);
     }
 }
