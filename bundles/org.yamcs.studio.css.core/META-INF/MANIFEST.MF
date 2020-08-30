@@ -7,7 +7,7 @@ Bundle-Name: Yamcs Studio: CS-Studio Interfacing
 Bundle-SymbolicName: org.yamcs.studio.css.core;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.4.0.rc1
+Bundle-Version: 1.4.0
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.core.resources,
