@@ -22,6 +22,9 @@ Export-Package: org.yamcs.studio.core,
  org.yamcs.studio.core.ui.logging,
  org.yamcs.studio.core.ui.prefs,
  org.yamcs.studio.core.ui.processor,
- org.yamcs.studio.core.utils
+ org.yamcs.studio.core.utils,
+ org.yamcs.studio.data,
+ org.yamcs.studio.data.vtype,
+ org.yamcs.studio.data.yamcs
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.core

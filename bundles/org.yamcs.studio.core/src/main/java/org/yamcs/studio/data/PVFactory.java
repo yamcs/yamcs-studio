@@ -9,7 +9,7 @@ public class PVFactory {
     /**
      * The default background thread for PV change event notification. It will only be created on its first use.
      */
-    static ExecutorService SIMPLE_PV_THREAD = null;
+    public static ExecutorService SIMPLE_PV_THREAD = null;
 
     private static final PVFactory INSTANCE = new PVFactory();
 

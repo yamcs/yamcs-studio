@@ -24,7 +24,6 @@
     <module>org.yamcs.studio.core</module>
     <module>org.yamcs.studio.css.core</module>
     <module>org.yamcs.studio.css.script</module>
-    <module>org.yamcs.studio.data</module>
     <module>org.yamcs.studio.displays</module>
     <module>org.yamcs.studio.editor.base</module>
     <module>org.yamcs.studio.eventlog</module>

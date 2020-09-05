@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.yamcs.p2.client,
  org.yamcs.studio.core,
- org.yamcs.studio.data,
  org.csstudio.opibuilder
 Export-Package: org.yamcs.studio.css.core,
  org.yamcs.studio.css.core.prefs
