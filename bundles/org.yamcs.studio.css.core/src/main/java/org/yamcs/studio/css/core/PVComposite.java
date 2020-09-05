@@ -4,9 +4,6 @@ import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
 
-import org.csstudio.simplepv.IPV;
-import org.csstudio.simplepv.VTypeHelper;
-import org.diirt.vtype.Display;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -22,9 +19,12 @@ import org.yamcs.protobuf.Mdb.UnitInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.SubscribeParametersRequest;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.Display;
+import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class PVComposite extends Composite implements YamcsAware, ParameterSubscription.Listener {
 

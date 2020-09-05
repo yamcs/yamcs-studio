@@ -12,7 +12,7 @@ import org.csstudio.opibuilder.properties.ComboProperty;
 import org.csstudio.opibuilder.properties.DoubleProperty;
 import org.csstudio.opibuilder.properties.IntegerProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
-import org.csstudio.simplepv.FormatEnum;
+import org.yamcs.studio.data.FormatEnum;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.geometry.Point;
 

@@ -1,14 +1,6 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.preferences;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
-import org.csstudio.simplepv.SimplePVLayer;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -26,9 +18,6 @@ import org.jdom.Verifier;
 
 /**
  * The preference page for OPIBuilder
- * 
- * @author Xihui Chen
- *
  */
 public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
         implements IWorkbenchPreferencePage {
@@ -126,13 +115,6 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
                         "then what is the time period of the pulse with the PV is in MAJOR alarm severity");
         addField(pulsingMajorPeriodFieldEditor);
 
-        String[] allPVFactories = SimplePVLayer.getAllPVFactoryExtensions();
-        String[][] entries = new String[allPVFactories.length][2];
-        for (int i = 0; i < allPVFactories.length; i++) {
-            entries[i][0] = allPVFactories[i];
-            entries[i][1] = allPVFactories[i];
-        }
-
         StringFieldEditor pythonPathEditor = new StringFieldEditor(PreferencesHelper.PYTHON_PATH, "PYTHONPATH", parent);
         pythonPathEditor.getTextControl(parent).setToolTipText("The path to search python modules");
         addField(pythonPathEditor);
@@ -144,7 +126,6 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
 
     @Override
     public void init(IWorkbench workbench) {
-
     }
 
     @Override
@@ -171,5 +152,4 @@ public class OPIRuntimePreferencePage extends FieldEditorPreferencePage
         }
         return super.performOk();
     }
-
 }

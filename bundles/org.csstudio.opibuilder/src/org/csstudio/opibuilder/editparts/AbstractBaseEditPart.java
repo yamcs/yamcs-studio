@@ -52,7 +52,7 @@ import org.csstudio.opibuilder.visualparts.TooltipLabel;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
-import org.csstudio.simplepv.IPV;
+import org.yamcs.studio.data.IPV;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.IProgressMonitor;

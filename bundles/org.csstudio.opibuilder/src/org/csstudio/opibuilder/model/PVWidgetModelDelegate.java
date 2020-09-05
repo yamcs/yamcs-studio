@@ -1,10 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.model;
 
 import org.csstudio.opibuilder.properties.BooleanProperty;
@@ -16,11 +9,8 @@ import org.osgi.framework.Version;
 
 /**
  * The model delegate for widgets have PV Name property.
- * @author Xihui Chen
- *
  */
-public class PVWidgetModelDelegate implements IPVWidgetModel{
-
+public class PVWidgetModelDelegate implements IPVWidgetModel {
 
     AbstractWidgetModel model;
 
@@ -45,40 +35,44 @@ public class PVWidgetModelDelegate implements IPVWidgetModel{
     }
 
     @Override
-    public boolean isBorderAlarmSensitve(){
-        if(model.getProperty(PROP_BORDER_ALARMSENSITIVE) == null)
+    public boolean isBorderAlarmSensitve() {
+        if (model.getProperty(PROP_BORDER_ALARMSENSITIVE) == null) {
             return false;
-        return (Boolean)model.getCastedPropertyValue(PROP_BORDER_ALARMSENSITIVE);
+        }
+        return (Boolean) model.getCastedPropertyValue(PROP_BORDER_ALARMSENSITIVE);
     }
 
     @Override
-    public boolean isForeColorAlarmSensitve(){
-        if(model.getProperty(PROP_FORECOLOR_ALARMSENSITIVE) == null)
+    public boolean isForeColorAlarmSensitve() {
+        if (model.getProperty(PROP_FORECOLOR_ALARMSENSITIVE) == null) {
             return false;
-        return (Boolean)model.getCastedPropertyValue(PROP_FORECOLOR_ALARMSENSITIVE);
+        }
+        return (Boolean) model.getCastedPropertyValue(PROP_FORECOLOR_ALARMSENSITIVE);
     }
 
     @Override
-    public boolean isBackColorAlarmSensitve(){
-        if(model.getProperty(PROP_BACKCOLOR_ALARMSENSITIVE) == null)
+    public boolean isBackColorAlarmSensitve() {
+        if (model.getProperty(PROP_BACKCOLOR_ALARMSENSITIVE) == null) {
             return false;
-        return (Boolean)model.getCastedPropertyValue(PROP_BACKCOLOR_ALARMSENSITIVE);
+        }
+        return (Boolean) model.getCastedPropertyValue(PROP_BACKCOLOR_ALARMSENSITIVE);
     }
 
     @Override
-    public boolean isAlarmPulsing(){
-        if(model.getProperty(PROP_ALARM_PULSING) == null)
+    public boolean isAlarmPulsing() {
+        if (model.getProperty(PROP_ALARM_PULSING) == null) {
             return false;
-        return (Boolean)model.getCastedPropertyValue(PROP_ALARM_PULSING);
+        }
+        return (Boolean) model.getCastedPropertyValue(PROP_ALARM_PULSING);
     }
 
     @Override
-    public String getPVName(){
-        return (String)model.getCastedPropertyValue(PROP_PVNAME);
+    public String getPVName() {
+        return (String) model.getCastedPropertyValue(PROP_PVNAME);
     }
 
     public void processVersionDifference(Version boyVersionOnFile) {
-        if(UpgradeUtil.VERSION_WITH_PVMANAGER.compareTo(boyVersionOnFile)>0){
+        if (UpgradeUtil.VERSION_WITH_PVMANAGER.compareTo(boyVersionOnFile) > 0) {
             model.setPropertyValue(PROP_PVNAME,
                     UpgradeUtil.convertUtilityPVNameToPM(getPVName()));
 

@@ -13,7 +13,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.client.Command;
-import org.yamcs.studio.core.StringConverter;
+import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class CopyCommandHistoryEntryDetailsHandler extends AbstractHandler {
 

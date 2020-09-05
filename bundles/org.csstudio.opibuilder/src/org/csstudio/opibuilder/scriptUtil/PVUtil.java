@@ -1,10 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.scriptUtil;
 
 import java.time.Instant;
@@ -17,19 +10,18 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.util.BOYPVFactory;
 import org.csstudio.opibuilder.util.DisplayUtils;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
-import org.csstudio.simplepv.IPV;
-import org.csstudio.simplepv.VTypeHelper;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.AlarmSeverity;
+import org.yamcs.studio.data.vtype.ListInt;
+import org.yamcs.studio.data.vtype.ListNumber;
+import org.yamcs.studio.data.vtype.VDoubleArray;
+import org.yamcs.studio.data.vtype.VEnum;
+import org.yamcs.studio.data.vtype.VEnumArray;
+import org.yamcs.studio.data.vtype.VNumberArray;
+import org.yamcs.studio.data.vtype.VStringArray;
+import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.diirt.datasource.PV;
-import org.diirt.util.array.ListInt;
-import org.diirt.util.array.ListNumber;
-import org.diirt.vtype.AlarmSeverity;
-import org.diirt.vtype.VDoubleArray;
-import org.diirt.vtype.VEnum;
-import org.diirt.vtype.VEnumArray;
-import org.diirt.vtype.VNumberArray;
-import org.diirt.vtype.VStringArray;
-import org.diirt.vtype.VType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -171,14 +163,16 @@ public class PVUtil {
         } else if (value instanceof VDoubleArray) {
             final ListNumber list = ((VNumberArray) value).getData();
             final String[] text = new String[list.size()];
-            for (int i = 0; i < text.length; ++i)
+            for (int i = 0; i < text.length; ++i) {
                 text[i] = Double.toString(list.getDouble(i));
+            }
             return text;
         } else if (value instanceof VNumberArray) {
             final ListNumber list = ((VNumberArray) value).getData();
             final String[] text = new String[list.size()];
-            for (int i = 0; i < text.length; ++i)
+            for (int i = 0; i < text.length; ++i) {
                 text[i] = Long.toString(list.getLong(i));
+            }
             return text;
         } else if (value instanceof VEnumArray) {
             final List<String> labels = ((VEnumArray) value).getLabels();
@@ -186,10 +180,11 @@ public class PVUtil {
             final String[] text = new String[list.size()];
             for (int i = 0; i < text.length; ++i) {
                 final int index = list.getInt(i);
-                if (index >= 0 && index <= labels.size())
+                if (index >= 0 && index <= labels.size()) {
                     text[i] = labels.get(index);
-                else
+                } else {
                     text[i] = "<" + index + ">";
+                }
             }
             return text;
         }
@@ -209,8 +204,9 @@ public class PVUtil {
     public final static long[] getLongArray(IPV pv) {
         final VType value = checkPVValue(pv);
         Object wrappedArray = VTypeHelper.getWrappedArray(value);
-        if (wrappedArray != null && wrappedArray instanceof long[])
+        if (wrappedArray != null && wrappedArray instanceof long[]) {
             return (long[]) wrappedArray;
+        }
         double[] dblArray = VTypeHelper.getDoubleArray(value);
         long[] longArray = new long[dblArray.length];
         int i = 0;
@@ -268,8 +264,9 @@ public class PVUtil {
      */
     public final static String getTimeString(IPV pv) {
         Instant time = VTypeHelper.getTimestamp(checkPVValue(pv));
-        if (time != null)
+        if (time != null) {
             return timeFormat.format(time);
+        }
         return "";
     }
 
@@ -307,8 +304,9 @@ public class PVUtil {
      */
     public final static double getTimeInMilliseconds(IPV pv) {
         Instant time = VTypeHelper.getTimestamp(checkPVValue(pv));
-        if (time != null)
+        if (time != null) {
             return time.toEpochMilli();
+        }
         return 0;
     }
 
@@ -321,8 +319,9 @@ public class PVUtil {
      */
     public final static int getSeverity(IPV pv) {
         AlarmSeverity severity = VTypeHelper.getAlarmSeverity(checkPVValue(pv));
-        if (severity == null)
+        if (severity == null) {
             return -1;
+        }
         switch (severity) {
         case MAJOR:
             return 1;
@@ -346,8 +345,9 @@ public class PVUtil {
      */
     public final static String getSeverityString(IPV pv) {
         AlarmSeverity severity = VTypeHelper.getAlarmSeverity(checkPVValue(pv));
-        if (severity == null)
+        if (severity == null) {
             return "No Severity Info.";
+        }
         return severity.toString();
     }
 
@@ -383,19 +383,17 @@ public class PVUtil {
                     IPV pv = BOYPVFactory.createPV(pvName);
                     pv.start();
                     try {
-                        if (!pv.setValue(value, timeout * 1000))
+                        if (!pv.setValue(value, timeout * 1000)) {
                             throw new Exception("Write Failed!");
+                        }
                     } finally {
                         pv.stop();
                     }
                 } catch (final Exception e) {
-                    UIBundlingThread.getInstance().addRunnable(display, new Runnable() {
-                        @Override
-                        public void run() {
-                            String message = "Failed to write PV: " + pvName + "\n"
-                                    + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
-                            ErrorHandlerUtil.handleError(message, e, true, true);
-                        }
+                    UIBundlingThread.getInstance().addRunnable(display, () -> {
+                        String message = "Failed to write PV: " + pvName + "\n"
+                                + (e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
+                        ErrorHandlerUtil.handleError(message, e, true, true);
                     });
                     return Status.CANCEL_STATUS;
                 }

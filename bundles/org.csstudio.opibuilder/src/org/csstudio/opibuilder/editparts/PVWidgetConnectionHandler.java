@@ -7,7 +7,7 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
-import org.csstudio.simplepv.IPV;
+import org.yamcs.studio.data.IPV;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 
 /**

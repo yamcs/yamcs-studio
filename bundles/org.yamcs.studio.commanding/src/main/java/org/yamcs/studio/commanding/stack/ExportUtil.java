@@ -17,7 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.yamcs.studio.core.StringConverter;
+import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class ExportUtil {
 

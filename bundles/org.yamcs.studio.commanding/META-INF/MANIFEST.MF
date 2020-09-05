@@ -10,6 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Version: 1.4.0.rc1
 Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
+ org.yamcs.studio.data,
  org.eclipse.core.runtime,
  org.yamcs.p2.client,
  org.eclipse.core.expressions,

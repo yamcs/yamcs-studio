@@ -1,13 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2012 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,14 +21,18 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.widgets.model.ArrayModel;
 import org.csstudio.opibuilder.widgets.model.ArrayModel.ArrayDataType;
-import org.csstudio.simplepv.BasicDataType;
-import org.csstudio.simplepv.IPV;
-import org.csstudio.simplepv.IPVListener;
-import org.csstudio.simplepv.VTypeHelper;
+import org.yamcs.studio.data.BasicDataType;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VEnum;
+import org.yamcs.studio.data.vtype.VNumberArray;
+import org.yamcs.studio.data.vtype.VString;
+import org.yamcs.studio.data.vtype.VStringArray;
+import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.datadefinition.ByteArrayWrapper;
 import org.csstudio.swt.widgets.datadefinition.DoubleArrayWrapper;
 import org.csstudio.swt.widgets.datadefinition.FloatArrayWrapper;
-import org.csstudio.swt.widgets.datadefinition.IManualValueChangeListener;
 import org.csstudio.swt.widgets.datadefinition.IPrimaryArrayWrapper;
 import org.csstudio.swt.widgets.datadefinition.IntArrayWrapper;
 import org.csstudio.swt.widgets.datadefinition.LongArrayWrapper;
@@ -57,17 +53,9 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.MouseEvent;
-import org.diirt.vtype.VEnum;
-import org.diirt.vtype.VNumberArray;
-import org.diirt.vtype.VString;
-import org.diirt.vtype.VStringArray;
-import org.diirt.vtype.VType;
 
 /**
  * Editpart for array widget.
- *
- * @author Xihui Chen
- *
  */
 public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidgetEditpart {
 
@@ -99,14 +87,8 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
             IPVWidgetModel.PROP_ALARM_PULSING);
 
     private List<String> unSyncablePropIDsFromChild;
-    private PropertyChangeListener syncPropertiesListener = new PropertyChangeListener() {
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            syncAllChildrenProperties(evt.getPropertyName(), evt.getNewValue());
-
-        }
-    };
+    private PropertyChangeListener syncPropertiesListener = evt -> syncAllChildrenProperties(evt.getPropertyName(),
+            evt.getNewValue());
 
     public ArrayEditPart() {
         delegate = new PVWidgetEditpartDelegate(this);
@@ -133,7 +115,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
                     Object info = provider
                             .getInfo(ArrayModel.ARRAY_UNIQUEPROP_ID);
                     if (info != null && info instanceof List<?>) {
-                        unSyncablePropIDsFromChild = new ArrayList<String>(
+                        unSyncablePropIDsFromChild = new ArrayList<>(
                                 (List<String>) info);
                         unSyncablePropIDsFromChild
                                 .addAll(NONE_SYNCABLE_PROPIDS);
@@ -156,52 +138,60 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
         switch (getWidgetModel().getDataType()) {
         case STRING_ARRAY:
             if (valueArray != null && valueArray instanceof String[]
-                    && ((String[]) valueArray).length == length)
+                    && ((String[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new String[length];
             Arrays.fill((String[]) valueArray, EMPTY_STRING);
             break;
         case OBJECT_ARRAY:
             if (valueArray != null && valueArray instanceof Object[]
-                    && ((Object[]) valueArray).length == length)
+                    && ((Object[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new Object[length];
             Arrays.fill((Object[]) valueArray, elementDefaultValue);
             break;
         case BYTE_ARRAY:
             if (valueArray != null && valueArray instanceof byte[]
-                    && ((byte[]) valueArray).length == length)
+                    && ((byte[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new byte[length];
             break;
         case DOUBLE_ARRAY:
             if (valueArray != null && valueArray instanceof double[]
-                    && ((double[]) valueArray).length == length)
+                    && ((double[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new double[length];
             break;
         case FLOAT_ARRAY:
             if (valueArray != null && valueArray instanceof float[]
-                    && ((float[]) valueArray).length == length)
+                    && ((float[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new float[length];
             break;
         case INT_ARRAY:
             if (valueArray != null && valueArray instanceof int[]
-                    && ((int[]) valueArray).length == length)
+                    && ((int[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new int[length];
             break;
         case LONG_ARRAY:
             if (valueArray != null && valueArray instanceof long[]
-                    && ((long[]) valueArray).length == length)
+                    && ((long[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new long[length];
             break;
         case SHORT_ARRAY:
             if (valueArray != null && valueArray instanceof short[]
-                    && ((short[]) valueArray).length == length)
+                    && ((short[]) valueArray).length == length) {
                 break;
+            }
             valueArray = new short[length];
             break;
         default:
@@ -214,22 +204,22 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
             final ArrayModel model = getWidgetModel();
             IPV pv = getPV();
             if (pv != null) {
-                if (pvDataTypeListener == null)
+                if (pvDataTypeListener == null) {
                     pvDataTypeListener = new IPVListener.Stub() {
                         @Override
                         public void valueChanged(IPV pv) {
                             VType value = pv.getValue();
                             if (value != null) {
 
-                                        model.setArrayLength(VTypeHelper.getSize(value));
-                                        BasicDataType dataType = VTypeHelper.getBasicDataType(value);
-                                        model.setPropertyValue(ArrayModel.PROP_DATA_TYPE,
-                                                mapBasicDataTypeToArrayType(dataType));
-
+                                model.setArrayLength(VTypeHelper.getSize(value));
+                                BasicDataType dataType = VTypeHelper.getBasicDataType(value);
+                                model.setPropertyValue(ArrayModel.PROP_DATA_TYPE,
+                                        mapBasicDataTypeToArrayType(dataType));
 
                             }
                         }
                     };
+                }
                 pv.addListener(pvDataTypeListener);
             }
 
@@ -239,25 +229,22 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     @Override
     public Border calculateBorder() {
         Border border = delegate.calculateBorder();
-        if (border == null)
+        if (border == null) {
             return super.calculateBorder();
-        else
+        } else {
             return border;
+        }
     }
 
     @Override
     protected EditPart createChild(Object model) {
         final AbstractWidgetModel child = (AbstractWidgetModel) model;
-        for (String propId : child.getAllPropertyIDs())
+        for (String propId : child.getAllPropertyIDs()) {
             child.getProperty(propId).addPropertyChangeListener(syncPropertiesListener);
+        }
         final EditPart result = super.createChild(model);
-        UIBundlingThread.getInstance().addRunnable(getViewer().getControl().getDisplay(), new Runnable() {
-
-            @Override
-            public void run() {
-                hookChild(result, getChildren().indexOf(result), true);
-            }
-        });
+        UIBundlingThread.getInstance().addRunnable(getViewer().getControl().getDisplay(),
+                () -> hookChild(result, getChildren().indexOf(result), true));
 
         return result;
     }
@@ -265,34 +252,39 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     @Override
     protected void removeChild(EditPart child) {
         super.removeChild(child);
-        AbstractWidgetModel childModel = ((AbstractBaseEditPart)child).getWidgetModel();
-        //recover property visibility
+        AbstractWidgetModel childModel = ((AbstractBaseEditPart) child).getWidgetModel();
+        // recover property visibility
         if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
-            for (String propId : INVISIBLE_CHILD_PROPIDS)
+            for (String propId : INVISIBLE_CHILD_PROPIDS) {
                 try {
                     childModel.setPropertyVisibleAndSavable(propId, true, true);
                 } catch (NonExistPropertyException e) {
                 }
+            }
         }
     }
 
-    /**Hook child with array index
+    /**
+     * Hook child with array index
+     *
      * @param editPart
      */
     protected void hookChild(final EditPart editPart, final int indexOfArrayChild, boolean directChild) {
-        if(editPart instanceof AbstractContainerEditpart){
-            for(Object grandChild: ((AbstractContainerEditpart)editPart).getChildren())
+        if (editPart instanceof AbstractContainerEditpart) {
+            for (Object grandChild : ((AbstractContainerEditpart) editPart).getChildren()) {
                 hookChild((EditPart) grandChild, indexOfArrayChild, false);
+            }
         }
-        AbstractWidgetModel childModel = ((AbstractBaseEditPart)editPart).getWidgetModel();
-        if(directChild){
+        AbstractWidgetModel childModel = ((AbstractBaseEditPart) editPart).getWidgetModel();
+        if (directChild) {
             if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
-                for (String propId : INVISIBLE_CHILD_PROPIDS)
+                for (String propId : INVISIBLE_CHILD_PROPIDS) {
                     try {
                         childModel.setPropertyVisibleAndSavable(propId, false,
                                 true);
                     } catch (NonExistPropertyException e) {
                     }
+                }
             }
             try {
                 childModel.setScaleOptions(false, false, false);
@@ -302,98 +294,96 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
             }
         }
 
-
         if (getExecutionMode() == ExecutionMode.RUN_MODE && editPart instanceof IPVWidgetEditpart) {
-            ((IPVWidgetEditpart) editPart).addSetPVValueListener(new ISetPVValueListener() {
-                // Capture set PV value event on children and write to the PV on
-                // the array widget
-                @Override
-                public void beforeSetPVValue(String pvPropId, Object value) {
-                    int index = getArrayFigure().getIndex() + indexOfArrayChild;
-                    try {
-                        ArrayDataType dataType = getWidgetModel().getDataType();
-                        switch (dataType) {
-                        case OBJECT_ARRAY:
-                            ((Object[]) valueArray)[index] = value;
-                            break;
-                        case DOUBLE_ARRAY:
-                            double doubleValue;
-                            if (value instanceof Number)
-                                doubleValue = ((Number) value).doubleValue();
-                            else {
-                                doubleValue = Double.valueOf(value.toString());
-                            }
-                            ((double[]) valueArray)[index] = doubleValue;
-                            break;
-                        case BYTE_ARRAY:
-                            byte byteValue;
-                            if (value instanceof Number)
-                                byteValue = ((Number) value).byteValue();
-                            else {
-                                byteValue = Byte.valueOf(value.toString());
-                            }
-                            ((byte[]) valueArray)[index] = byteValue;
-                            break;
-                        case INT_ARRAY:
-                            int intValue;
-                            if (value instanceof Number)
-                                intValue = ((Number) value).intValue();
-                            else {
-                                intValue = Byte.valueOf(value.toString());
-                            }
-                            ((int[]) valueArray)[index] = intValue;
-                            break;
-                        case SHORT_ARRAY:
-                            short shortValue;
-                            if (value instanceof Number)
-                                shortValue = ((Number) value).shortValue();
-                            else {
-                                shortValue = Short.valueOf(value.toString());
-                            }
-                            ((short[]) valueArray)[index] = shortValue;
-                            break;
-                        case FLOAT_ARRAY:
-                            float floatValue;
-                            if (value instanceof Number)
-                                floatValue = ((Number) value).floatValue();
-                            else {
-                                floatValue = Float.valueOf(value.toString());
-                            }
-                            ((float[]) valueArray)[index] = floatValue;
-                            break;
-                        case LONG_ARRAY:
-                            long longValue;
-                            if (value instanceof Number)
-                                longValue = ((Number) value).longValue();
-                            else {
-                                longValue = Long.valueOf(value.toString());
-                            }
-                            ((long[]) valueArray)[index] = longValue;
-                            break;
-                        case STRING_ARRAY:
-                            ((String[]) valueArray)[index] = value.toString();
-                            break;
-                        default:
-                            break;
+            ((IPVWidgetEditpart) editPart).addSetPVValueListener((pvPropId, value) -> {
+                int index = getArrayFigure().getIndex() + indexOfArrayChild;
+                try {
+                    ArrayDataType dataType = getWidgetModel().getDataType();
+                    switch (dataType) {
+                    case OBJECT_ARRAY:
+                        ((Object[]) valueArray)[index] = value;
+                        break;
+                    case DOUBLE_ARRAY:
+                        double doubleValue;
+                        if (value instanceof Number) {
+                            doubleValue = ((Number) value).doubleValue();
+                        } else {
+                            doubleValue = Double.valueOf(value.toString());
                         }
-                        if(getPV() != null)
-                            //TODO this code is a patch for utility pv, because it will convert a int[] and short[] to long[],
-                            //but EPICS PV doesn't support write long[]. should be removed after switched to pv manager
-                            if(valueArray instanceof long[]){
-                                int[] temp = new int[((long[])valueArray).length];
-                                for(int i=0; i<((long[])valueArray).length; i++)
-                                    temp[i]=(int) ((long[])valueArray)[i];
-                                setPVValue(ArrayModel.PROP_PVNAME, temp);
-                            }else
-                                setPVValue(ArrayModel.PROP_PVNAME, valueArray);
-                    } catch (NumberFormatException e) {
-                        String msg = NLS
-                                .bind("Writing failed: The input data {0} is not compatible with array data type.",
-                                        value.toString());
-                        // recover the original data in children widgets.
-                        setValue(getValue());
-                        ErrorHandlerUtil.handleError(msg, e);
+                        ((double[]) valueArray)[index] = doubleValue;
+                        break;
+                    case BYTE_ARRAY:
+                        byte byteValue;
+                        if (value instanceof Number) {
+                            byteValue = ((Number) value).byteValue();
+                        } else {
+                            byteValue = Byte.valueOf(value.toString());
+                        }
+                        ((byte[]) valueArray)[index] = byteValue;
+                        break;
+                    case INT_ARRAY:
+                        int intValue;
+                        if (value instanceof Number) {
+                            intValue = ((Number) value).intValue();
+                        } else {
+                            intValue = Byte.valueOf(value.toString());
+                        }
+                        ((int[]) valueArray)[index] = intValue;
+                        break;
+                    case SHORT_ARRAY:
+                        short shortValue;
+                        if (value instanceof Number) {
+                            shortValue = ((Number) value).shortValue();
+                        } else {
+                            shortValue = Short.valueOf(value.toString());
+                        }
+                        ((short[]) valueArray)[index] = shortValue;
+                        break;
+                    case FLOAT_ARRAY:
+                        float floatValue;
+                        if (value instanceof Number) {
+                            floatValue = ((Number) value).floatValue();
+                        } else {
+                            floatValue = Float.valueOf(value.toString());
+                        }
+                        ((float[]) valueArray)[index] = floatValue;
+                        break;
+                    case LONG_ARRAY:
+                        long longValue;
+                        if (value instanceof Number) {
+                            longValue = ((Number) value).longValue();
+                        } else {
+                            longValue = Long.valueOf(value.toString());
+                        }
+                        ((long[]) valueArray)[index] = longValue;
+                        break;
+                    case STRING_ARRAY:
+                        ((String[]) valueArray)[index] = value.toString();
+                        break;
+                    default:
+                        break;
                     }
+                    if (getPV() != null) {
+                        // TODO this code is a patch for utility pv, because it will convert a int[] and short[] to
+                        // long[],
+                        // but EPICS PV doesn't support write long[]. should be removed after switched to pv manager
+                        if (valueArray instanceof long[]) {
+                            int[] temp = new int[((long[]) valueArray).length];
+                            for (int i = 0; i < ((long[]) valueArray).length; i++) {
+                                temp[i] = (int) ((long[]) valueArray)[i];
+                            }
+                            setPVValue(ArrayModel.PROP_PVNAME, temp);
+                        } else {
+                            setPVValue(ArrayModel.PROP_PVNAME, valueArray);
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    String msg = NLS
+                            .bind("Writing failed: The input data {0} is not compatible with array data type.",
+                                    value.toString());
+                    // recover the original data in children widgets.
+                    setValue(getValue());
+                    ErrorHandlerUtil.handleError(msg, e);
                 }
             });
         }
@@ -433,13 +423,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
         figure.setShowSpinner(model.isShowSpinner());
         figure.setShowScrollbar(model.isShowScrollbar());
         figure.setIndex(0);
-        figure.addIndexChangeListener(new IManualValueChangeListener() {
-
-            @Override
-            public void manualValueChanged(double newValue) {
-                setValue(getValue());
-            }
-        });
+        figure.addIndexChangeListener(newValue -> setValue(getValue()));
         updatePropSheet();
         return figure;
     }
@@ -455,8 +439,9 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     @Override
     public Object getAdapter(Class key) {
         // for direct edit manager
-        if (key == ITextFigure.class)
+        if (key == ITextFigure.class) {
             return getArrayFigure().getSpinner().getLabelFigure();
+        }
         if (key == ProcessVariable.class) {
             return new ProcessVariable(getPVName());
         }
@@ -466,6 +451,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     /**
      * @return A String array with all PV names from PV properties.
      */
+    @Override
     public String[] getAllPVNames() {
         return delegate.getAllPVNames();
     }
@@ -482,6 +468,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     /**
      * @return the control PV. null if no control PV on this widget.
      */
+    @Override
     public IPV getControlPV() {
         return delegate.getControlPV();
     }
@@ -501,20 +488,25 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
 
                 @Override
                 public void mouseDoubleClick(MouseEvent me, EditPartViewer viewer) {
-                    if (((GraphicalEditPart)getRoot()).getFigure().findFigureAt(me.x, me.y) == getArrayFigure().getSpinner()
-                            .getLabelFigure())
+                    if (((GraphicalEditPart) getRoot()).getFigure().findFigureAt(me.x, me.y) == getArrayFigure()
+                            .getSpinner()
+                            .getLabelFigure()) {
                         super.mouseDoubleClick(me, viewer);
+                    }
                 }
 
                 @Override
                 public void mouseUp(MouseEvent me, EditPartViewer viewer) {
-                    if (((GraphicalEditPart)getRoot()).getFigure().findFigureAt(me.x, me.y) == getArrayFigure().getSpinner()
-                            .getLabelFigure())
+                    if (((GraphicalEditPart) getRoot()).getFigure().findFigureAt(me.x, me.y) == getArrayFigure()
+                            .getSpinner()
+                            .getLabelFigure()) {
                         super.mouseUp(me, viewer);
+                    }
                 }
             };
-        } else
+        } else {
             return super.getDragTracker(request);
+        }
     }
 
     @Override
@@ -523,18 +515,19 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     }
 
     protected List<String> getUnSyncablePropIds() {
-        if (unSyncablePropIDsFromChild != null)
+        if (unSyncablePropIDsFromChild != null) {
             return unSyncablePropIDsFromChild;
-        else
+        } else {
             return NONE_SYNCABLE_PROPIDS;
+        }
     }
 
     /**
-     * Get the PV corresponding to the <code>PV Name</code> property. It is same
-     * as calling <code>getPV("pv_name")</code>.
+     * Get the PV corresponding to the <code>PV Name</code> property. It is same as calling
+     * <code>getPV("pv_name")</code>.
      *
-     * @return the PV corresponding to the <code>PV Name</code> property. null
-     *         if PV Name is not configured for this widget.
+     * @return the PV corresponding to the <code>PV Name</code> property. null if PV Name is not configured for this
+     *         widget.
      */
     @Override
     public IPV getPV() {
@@ -546,8 +539,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
      *
      * @param pvPropId
      *            the PV property id.
-     * @return the corresponding pv for the pvPropId. null if the pv doesn't
-     *         exist.
+     * @return the corresponding pv for the pvPropId. null if the pv doesn't exist.
      */
     @Override
     public IPV getPV(String pvPropId) {
@@ -579,12 +571,14 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
         return (ArrayModel) super.getWidgetModel();
     }
 
-    /**Get the array index on the child widget.
+    /**
+     * Get the array index on the child widget.
+     *
      * @param child
-     * @return the array index on the child widget. -1 if the
-     * child is not an array element or it is not a child of the array widget.
+     * @return the array index on the child widget. -1 if the child is not an array element or it is not a child of the
+     *         array widget.
      */
-    public int getIndex(AbstractBaseEditPart child){
+    public int getIndex(AbstractBaseEditPart child) {
         return getChildren().indexOf(child);
     }
 
@@ -601,9 +595,11 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
 
     @Override
     public void performRequest(Request request) {
-        if (((request.getType() == RequestConstants.REQ_DIRECT_EDIT && getExecutionMode() != ExecutionMode.RUN_MODE) || request
-                        .getType() == RequestConstants.REQ_OPEN))
+        if (((request.getType() == RequestConstants.REQ_DIRECT_EDIT && getExecutionMode() != ExecutionMode.RUN_MODE)
+                || request
+                        .getType() == RequestConstants.REQ_OPEN)) {
             performDirectEdit();
+        }
     }
 
     @Override
@@ -615,187 +611,139 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     @Override
     protected void registerPropertyChangeHandlers() {
 
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                for (AbstractWidgetModel child : getWidgetModel().getAllChildren()) {
-                    child.setEnabled((Boolean) newValue);
-                }
-                return true;
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+            for (AbstractWidgetModel child : getWidgetModel().getAllChildren()) {
+                child.setEnabled((Boolean) newValue);
             }
+            return true;
         };
 
         setPropertyChangeHandler(AbstractWidgetModel.PROP_ENABLED, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                VType value = (VType) newValue;
+        handler = (oldValue, newValue, figure) -> {
+            VType value = (VType) newValue;
 
-
-                        if (value instanceof VNumberArray) {
-                            Object wrappedArray = VTypeHelper.getWrappedArray(((VNumberArray)value));
-                            if(wrappedArray!=null)
-                                setValue(wrappedArray);
-                            else
-                                setValue(VTypeHelper.getDoubleArray(value));
-                        } else{
-                            if(value instanceof VEnum)
-                                setValue(new String[]{((VEnum)value).getValue()});
-                            else if(value instanceof VString)
-                                setValue(new String[]{((VString)value).getValue()});
-                            else if(value instanceof VStringArray)
-                                setValue(((VStringArray)value).getData().toArray());
-                            else
-                                setValue(VTypeHelper.getDoubleArray(value));
-
-
+            if (value instanceof VNumberArray) {
+                Object wrappedArray = VTypeHelper.getWrappedArray(((VNumberArray) value));
+                if (wrappedArray != null) {
+                    setValue(wrappedArray);
+                } else {
+                    setValue(VTypeHelper.getDoubleArray(value));
                 }
-                return false;
+            } else {
+                if (value instanceof VEnum) {
+                    setValue(new String[] { ((VEnum) value).getValue() });
+                } else if (value instanceof VString) {
+                    setValue(new String[] { ((VString) value).getValue() });
+                } else if (value instanceof VStringArray) {
+                    setValue(((VStringArray) value).getData().toArray());
+                } else {
+                    setValue(VTypeHelper.getDoubleArray(value));
+                }
+
             }
+            return false;
         };
 
         setPropertyChangeHandler(ArrayModel.PROP_PVVALUE, handler);
 
         getWidgetModel().getProperty(ArrayModel.PROP_PVNAME).addPropertyChangeListener(
-                new PropertyChangeListener() {
+                evt -> updatePropSheet());
 
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        updatePropSheet();
-                    }
-                });
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                registerLoadPVDataTypeListener();
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            registerLoadPVDataTypeListener();
+            return false;
         };
         setPropertyChangeHandler(ArrayModel.PROP_PVNAME, handler);
 
         getWidgetModel().getProperty(ArrayModel.PROP_DATA_TYPE).addPropertyChangeListener(
-                new PropertyChangeListener() {
+                evt -> initValueArray());
 
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        initValueArray();
-                    }
-                });
-
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                updateWidgetSize();
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            updateWidgetSize();
+            return false;
         };
         setPropertyChangeHandler(ArrayModel.PROP_BORDER_STYLE, handler);
         setPropertyChangeHandler(ArrayModel.PROP_BORDER_WIDTH, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getArrayFigure().setArrayLength((Integer) newValue);
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            getArrayFigure().setArrayLength((Integer) newValue);
+            return false;
         };
         setPropertyChangeHandler(ArrayModel.PROP_ARRAY_LENGTH, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((ArrayFigure) figure).setSpinnerWidth((Integer) newValue);
-                keepElementSize = true;
-                getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
-                keepElementSize = false;
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            ((ArrayFigure) figure).setSpinnerWidth((Integer) newValue);
+            keepElementSize = true;
+            getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
+            keepElementSize = false;
+            return false;
         };
         setPropertyChangeHandler(ArrayModel.PROP_SPINNER_WIDTH, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((ArrayFigure) figure).setHorizontal((Boolean) newValue);
-                keepElementSize = true;
-                getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
-                keepElementSize = false;
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            ((ArrayFigure) figure).setHorizontal((Boolean) newValue);
+            keepElementSize = true;
+            getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
+            keepElementSize = false;
+            return false;
         };
         setPropertyChangeHandler(ArrayModel.PROP_HORIZONTAL, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((ArrayFigure) figure).setShowScrollbar((Boolean) newValue);
-                keepElementSize = true;
-                getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
-                keepElementSize = false;
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            ((ArrayFigure) figure).setShowScrollbar((Boolean) newValue);
+            keepElementSize = true;
+            getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
+            keepElementSize = false;
+            return false;
         };
         setPropertyChangeHandler(ArrayModel.PROP_SHOW_SCROLLBAR, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((ArrayFigure) figure).setShowSpinner((Boolean) newValue);
-                keepElementSize = true;
-                getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
-                keepElementSize = false;
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            ((ArrayFigure) figure).setShowSpinner((Boolean) newValue);
+            keepElementSize = true;
+            getWidgetModel().setSize(((ArrayFigure) figure).getPreferredSize());
+            keepElementSize = false;
+            return false;
         };
         setPropertyChangeHandler(ArrayModel.PROP_SHOW_SPINNER, handler);
 
-        PropertyChangeListener sizePropertyChangeListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (getWidgetModel().getChildren().size() == 0 || inSync || keepElementSize)
-                    return;
-                Dimension elementSize = getArrayFigure().getElementSize();
-                int delta = (Integer) evt.getNewValue() - (Integer) evt.getOldValue();
-                int elementWH = elementSize.height;
-                String propID = evt.getPropertyName();
-                boolean elementCountDirection = false;
-                if (getWidgetModel().isHorizontal()
-                        && propID.equals(AbstractWidgetModel.PROP_WIDTH)) {
-                    elementWH = elementSize.width;
-                    elementCountDirection = true;
-                } else if (!getWidgetModel().isHorizontal()
-                        && propID.equals(AbstractWidgetModel.PROP_HEIGHT)) {
-                    elementWH = elementSize.height;
-                    elementCountDirection = true;
-                }
-                if (elementCountDirection) {
-                    int deltaElementsCount = Math.round((float) delta / elementWH);
-                    int idelta = (Math.round((float) delta / elementWH) * elementWH);
-                    setPropertyValue(propID, (Integer) evt.getOldValue() + idelta, false);
-                    int visibleElementsCount = getArrayFigure().getVisibleElementsCount()
-                            + deltaElementsCount;
-                    setPropertyValue(ArrayModel.PROP_VISIBLE_ELEMENTS_COUNT, visibleElementsCount);
-                    setValue(getValue());
-                } else {
-                    int wh;
-                    if (propID.equals(AbstractWidgetModel.PROP_WIDTH))
-                        wh = getArrayFigure().getElementSize().width;
-                    else
-                        wh = getArrayFigure().getElementSize().height;
-                    syncAllChildrenProperties(propID, wh + delta);
-                }
-
+        PropertyChangeListener sizePropertyChangeListener = evt -> {
+            if (getWidgetModel().getChildren().size() == 0 || inSync || keepElementSize) {
+                return;
             }
+            Dimension elementSize = getArrayFigure().getElementSize();
+            int delta = (Integer) evt.getNewValue() - (Integer) evt.getOldValue();
+            int elementWH = elementSize.height;
+            String propID = evt.getPropertyName();
+            boolean elementCountDirection = false;
+            if (getWidgetModel().isHorizontal()
+                    && propID.equals(AbstractWidgetModel.PROP_WIDTH)) {
+                elementWH = elementSize.width;
+                elementCountDirection = true;
+            } else if (!getWidgetModel().isHorizontal()
+                    && propID.equals(AbstractWidgetModel.PROP_HEIGHT)) {
+                elementWH = elementSize.height;
+                elementCountDirection = true;
+            }
+            if (elementCountDirection) {
+                int deltaElementsCount = Math.round((float) delta / elementWH);
+                int idelta = (Math.round((float) delta / elementWH) * elementWH);
+                setPropertyValue(propID, (Integer) evt.getOldValue() + idelta, false);
+                int visibleElementsCount = getArrayFigure().getVisibleElementsCount()
+                        + deltaElementsCount;
+                setPropertyValue(ArrayModel.PROP_VISIBLE_ELEMENTS_COUNT, visibleElementsCount);
+                setValue(getValue());
+            } else {
+                int wh;
+                if (propID.equals(AbstractWidgetModel.PROP_WIDTH)) {
+                    wh = getArrayFigure().getElementSize().width;
+                } else {
+                    wh = getArrayFigure().getElementSize().height;
+                }
+                syncAllChildrenProperties(propID, wh + delta);
+            }
+
         };
         getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(
                 sizePropertyChangeListener);
@@ -808,8 +756,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
     }
 
     /**
-     * Set PV to given value. Should accept Double, Double[], Integer, String,
-     * maybe more.
+     * Set PV to given value. Should accept Double, Double[], Integer, String, maybe more.
      *
      * @param pvPropId
      * @param value
@@ -826,29 +773,30 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
 
     @Override
     public void setValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return;
+        }
         if (value.getClass().isArray()) {
             int index = getArrayFigure().getIndex();
             this.valueArray = value;
             if (value instanceof String[]) {
-                String[] a = (String[])value;
+                String[] a = (String[]) value;
                 setChildrenValue(index, Arrays.asList(a), ArrayDataType.STRING_ARRAY);
             } else if (value instanceof Object[]) {
-                Object[] a = (Object[])value;
+                Object[] a = (Object[]) value;
                 setChildrenValue(index, Arrays.asList(a), ArrayDataType.OBJECT_ARRAY);
             } else if (value instanceof double[]) {
-                setChildrenValue(index, new DoubleArrayWrapper((double[])value), ArrayDataType.DOUBLE_ARRAY);
+                setChildrenValue(index, new DoubleArrayWrapper((double[]) value), ArrayDataType.DOUBLE_ARRAY);
             } else if (value instanceof long[]) {
-                setChildrenValue(index, new LongArrayWrapper((long[])value), ArrayDataType.LONG_ARRAY);
+                setChildrenValue(index, new LongArrayWrapper((long[]) value), ArrayDataType.LONG_ARRAY);
             } else if (value instanceof byte[]) {
-                setChildrenValue(index, new ByteArrayWrapper((byte[])value), ArrayDataType.BYTE_ARRAY);
+                setChildrenValue(index, new ByteArrayWrapper((byte[]) value), ArrayDataType.BYTE_ARRAY);
             } else if (value instanceof float[]) {
-                setChildrenValue(index, new FloatArrayWrapper((float[])value), ArrayDataType.FLOAT_ARRAY);
+                setChildrenValue(index, new FloatArrayWrapper((float[]) value), ArrayDataType.FLOAT_ARRAY);
             } else if (value instanceof short[]) {
-                setChildrenValue(index,new ShortArrayWrapper((short[])value), ArrayDataType.SHORT_ARRAY);
+                setChildrenValue(index, new ShortArrayWrapper((short[]) value), ArrayDataType.SHORT_ARRAY);
             } else if (value instanceof int[]) {
-                setChildrenValue(index, new IntArrayWrapper((int[])value), ArrayDataType.INT_ARRAY);
+                setChildrenValue(index, new IntArrayWrapper((int[]) value), ArrayDataType.INT_ARRAY);
             }
             return;
         }
@@ -857,29 +805,29 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
 
     /**
      * @param index
-     * @param dataList must be {@link IPrimaryArrayWrapper} or List
+     * @param dataList
+     *            must be {@link IPrimaryArrayWrapper} or List
      * @param arrayDataType
      */
     private void setChildrenValue(int index, Object dataList, ArrayDataType arrayDataType) {
         boolean w = false;
-        if(dataList instanceof IPrimaryArrayWrapper)
-            w= true;
+        if (dataList instanceof IPrimaryArrayWrapper) {
+            w = true;
+        }
 
-        int arrayLength = w?((IPrimaryArrayWrapper)dataList).getSize() : ((List<?>)dataList).size();
+        int arrayLength = w ? ((IPrimaryArrayWrapper) dataList).getSize() : ((List<?>) dataList).size();
         getWidgetModel().setArrayLength(arrayLength);
         getWidgetModel().setDataType(arrayDataType);
         for (Object child : getChildren()) {
-            if (index < arrayLength){
-                Object o =
-                            w?((IPrimaryArrayWrapper)dataList).get(index++) : ((List<?>)dataList).get(index++);
+            if (index < arrayLength) {
+                Object o = w ? ((IPrimaryArrayWrapper) dataList).get(index++) : ((List<?>) dataList).get(index++);
                 try {
                     ((AbstractBaseEditPart) child).setValue(o);
                     ((AbstractBaseEditPart) child).getWidgetModel().setTooltip(o.toString());
                 } catch (Exception e2) {
                     continue;
                 }
-            }
-            else
+            } else {
                 try {
                     ((AbstractBaseEditPart) child).getWidgetModel().setTooltip(EMPTY_STRING);
                     ((AbstractBaseEditPart) child).setValue(EMPTY_STRING);
@@ -893,12 +841,14 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
                         }
                     }
                 }
+            }
         }
     }
 
     private void syncAllChildrenProperties(String propId, Object newValue) {
-        if (inSync)
+        if (inSync) {
             return;
+        }
         inSync = true;
         if (!getUnSyncablePropIds().contains(propId)) {
             for (Object child : getWidgetModel().getAllChildren().toArray()) {
@@ -934,7 +884,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
         switch (dataType) {
         case DOUBLE:
         case DOUBLE_ARRAY:
-            r =ArrayDataType.DOUBLE_ARRAY.ordinal();
+            r = ArrayDataType.DOUBLE_ARRAY.ordinal();
             break;
         case BYTE:
         case BYTE_ARRAY:
@@ -944,7 +894,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
         case CHAR_ARRAY:
         case SHORT:
         case SHORT_ARRAY:
-            r= ArrayDataType.SHORT_ARRAY.ordinal();
+            r = ArrayDataType.SHORT_ARRAY.ordinal();
             break;
         case ENUM:
         case ENUM_ARRAY:
@@ -965,7 +915,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
             r = ArrayDataType.FLOAT_ARRAY.ordinal();
             break;
         default:
-            r= ArrayDataType.OBJECT_ARRAY.ordinal();
+            r = ArrayDataType.OBJECT_ARRAY.ordinal();
             break;
         }
         return r;

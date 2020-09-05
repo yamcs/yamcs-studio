@@ -40,9 +40,6 @@ import static org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_WIZBAN_
 
 import java.net.URL;
 
-import org.diirt.datasource.CompositeDataSource;
-import org.diirt.datasource.CompositeDataSourceConfiguration;
-import org.diirt.datasource.PVManager;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -62,9 +59,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
 import org.yamcs.studio.core.utils.RCPUtils;
-import org.yamcs.studio.css.core.pvmanager.OpsDataSourceProvider;
-import org.yamcs.studio.css.core.pvmanager.StateDataSourceProvider;
-import org.yamcs.studio.css.core.pvmanager.XtceDataSourceProvider;
 
 /**
  * Forked from org.csstudio.utility.product.ApplicationWorkbenchAdvisor to clear dependency on utility.product
@@ -167,18 +161,6 @@ public class YamcsStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         URL url = FileLocator.find(ideBundle, new Path(path), null);
         ImageDescriptor desc = ImageDescriptor.createFromURL(url);
         getWorkbenchConfigurer().declareImage(symbolicName, desc, shared);
-    }
-
-    @Override
-    public void preStartup() {
-        // Bootstrap DIIRT
-        CompositeDataSource defaultDs = (CompositeDataSource) PVManager.getDefaultDataSource();
-        defaultDs.putDataSource(new StateDataSourceProvider());
-        defaultDs.putDataSource(new XtceDataSourceProvider());
-        defaultDs.putDataSource(new OpsDataSourceProvider());
-        defaultDs.setConfiguration(
-                new CompositeDataSourceConfiguration().defaultDataSource("para").delimiter("://"));
-        PVManager.setDefaultDataSource(defaultDs);
     }
 
     @Override

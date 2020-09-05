@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.yamcs.protobuf.Pvalue.ParameterData;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.data.yamcs.StringConverter;
 
 import com.google.protobuf.Timestamp;
 

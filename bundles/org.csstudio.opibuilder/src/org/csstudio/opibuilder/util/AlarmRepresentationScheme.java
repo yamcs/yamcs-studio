@@ -9,7 +9,7 @@ package org.csstudio.opibuilder.util;
 
 import org.csstudio.opibuilder.visualparts.BorderFactory;
 import org.csstudio.opibuilder.visualparts.BorderStyle;
-import org.diirt.vtype.AlarmSeverity;
+import org.yamcs.studio.data.vtype.AlarmSeverity;
 import org.eclipse.draw2d.Border;
 import org.eclipse.swt.graphics.RGB;
 

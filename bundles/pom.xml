@@ -11,22 +11,20 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>org.csstudio.autocomplete</module>
     <module>org.csstudio.examples</module>
     <module>org.csstudio.opibuilder</module>
     <module>org.csstudio.opibuilder.editor</module>
     <module>org.csstudio.opibuilder.widgets</module>
-    <module>org.csstudio.simplepv</module>
     <module>org.csstudio.swt.widgets</module>
     <module>org.csstudio.ui.util</module>
     <module>org.csstudio.utility.batik</module>
-    <module>org.diirt</module>
     <module>org.yamcs.studio.archive</module>
     <module>org.yamcs.studio.commanding</module>
     <module>org.yamcs.studio.connect</module>
     <module>org.yamcs.studio.core</module>
     <module>org.yamcs.studio.css.core</module>
     <module>org.yamcs.studio.css.script</module>
+    <module>org.yamcs.studio.data</module>
     <module>org.yamcs.studio.displays</module>
     <module>org.yamcs.studio.editor.base</module>
     <module>org.yamcs.studio.eventlog</module>

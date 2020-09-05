@@ -1,10 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
@@ -17,28 +10,22 @@ import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.figures.NativeTextFigure;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.TextUpdateModel;
-import org.csstudio.simplepv.FormatEnum;
-import org.csstudio.simplepv.VTypeHelper;
+import org.yamcs.studio.data.FormatEnum;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
+import org.yamcs.studio.data.vtype.ValueFactory;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.csstudio.swt.widgets.figures.TextFigure;
 import org.csstudio.swt.widgets.figures.TextFigure.H_ALIGN;
 import org.csstudio.swt.widgets.figures.TextFigure.V_ALIGN;
 import org.csstudio.swt.widgets.figures.WrappableTextFigure;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.diirt.vtype.VType;
-import org.diirt.vtype.ValueFactory;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * The editor for text indicator widget.
- * 
- * @author Xihui Chen
- *
- */
 public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
 
     public static final String HEX_PREFIX = "0x";
@@ -82,16 +69,18 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
     }
 
     protected TextFigure createTextFigure() {
-        if (getWidgetModel().isWrapWords())
+        if (getWidgetModel().isWrapWords()) {
             return new WrappableTextFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
+        }
         return new TextFigure(getExecutionMode() == ExecutionMode.RUN_MODE);
     }
 
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE)
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
             installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new TextUpdateDirectEditPolicy());
+        }
     }
 
     @Override
@@ -108,191 +97,132 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
      * @param text
      */
     protected void setFigureText(String text) {
-        if (getFigure() instanceof NativeTextFigure)
+        if (getFigure() instanceof NativeTextFigure) {
             ((NativeTextFigure) getFigure()).getSWTWidget().setText(text);
-        else
+        } else {
             ((TextFigure) getFigure()).setText(text);
+        }
     }
 
     @Override
     protected void registerPropertyChangeHandlers() {
 
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                setFigureText((String) newValue);
+        IWidgetPropertyChangeHandler handler = (oldValue, newValue, figure) -> {
+            setFigureText((String) newValue);
 
-                if (isAutoSize) {
-                    Display.getCurrent().timerExec(10, new Runnable() {
-                        @Override
-                        public void run() {
-                            performAutoSize();
-                        }
-                    });
-                }
-                return true;
+            if (isAutoSize) {
+                Display.getCurrent().timerExec(10, () -> performAutoSize());
             }
+            return true;
         };
         setPropertyChangeHandler(TextUpdateModel.PROP_TEXT, handler);
 
-        IWidgetPropertyChangeHandler fontHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                figure.setFont(CustomMediaFactory.getInstance().getFont(
-                        ((OPIFont) newValue).getFontData()));
-                return true;
-            }
+        IWidgetPropertyChangeHandler fontHandler = (oldValue, newValue, figure) -> {
+            figure.setFont(CustomMediaFactory.getInstance().getFont(
+                    ((OPIFont) newValue).getFontData()));
+            return true;
         };
         setPropertyChangeHandler(LabelModel.PROP_FONT, fontHandler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                Display.getCurrent().timerExec(10, new Runnable() {
-                    @Override
-                    public void run() {
-                        if (getWidgetModel().isAutoSize()) {
-                            performAutoSize();
-                            figure.revalidate();
-                        }
-                    }
-                });
+        handler = (oldValue, newValue, figure) -> {
+            Display.getCurrent().timerExec(10, () -> {
+                if (getWidgetModel().isAutoSize()) {
+                    performAutoSize();
+                    figure.revalidate();
+                }
+            });
 
-                return true;
-            }
+            return true;
         };
         setPropertyChangeHandler(LabelModel.PROP_FONT, handler);
         setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_STYLE, handler);
         setPropertyChangeHandler(AbstractWidgetModel.PROP_BORDER_WIDTH, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                figure.setOpaque(!(Boolean) newValue);
-                return true;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            figure.setOpaque(!(Boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(LabelModel.PROP_TRANSPARENT, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                isAutoSize = (Boolean) newValue;
-                if ((Boolean) newValue) {
-                    performAutoSize();
-                    figure.revalidate();
-                }
-                return true;
+        handler = (oldValue, newValue, figure) -> {
+            isAutoSize = (Boolean) newValue;
+            if ((Boolean) newValue) {
+                performAutoSize();
+                figure.revalidate();
             }
+            return true;
         };
         setPropertyChangeHandler(LabelModel.PROP_AUTOSIZE, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                if (figure instanceof TextFigure)
-                    ((TextFigure) figure).setHorizontalAlignment(
-                            H_ALIGN.values()[(Integer) newValue]);
-                return true;
+        handler = (oldValue, newValue, figure) -> {
+            if (figure instanceof TextFigure) {
+                ((TextFigure) figure).setHorizontalAlignment(
+                        H_ALIGN.values()[(Integer) newValue]);
             }
+            return true;
         };
         setPropertyChangeHandler(LabelModel.PROP_ALIGN_H, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                if (figure instanceof TextFigure)
-                    ((TextFigure) figure).setVerticalAlignment(V_ALIGN.values()[(Integer) newValue]);
-                return true;
+        handler = (oldValue, newValue, figure) -> {
+            if (figure instanceof TextFigure) {
+                ((TextFigure) figure).setVerticalAlignment(V_ALIGN.values()[(Integer) newValue]);
             }
+            return true;
         };
         setPropertyChangeHandler(LabelModel.PROP_ALIGN_V, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                if (newValue == null)
-                    return false;
-                formatValue(newValue, AbstractPVWidgetModel.PROP_PVVALUE);
+        handler = (oldValue, newValue, figure) -> {
+            if (newValue == null) {
                 return false;
             }
+            formatValue(newValue, AbstractPVWidgetModel.PROP_PVVALUE);
+            return false;
         };
         setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVVALUE, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                format = FormatEnum.values()[(Integer) newValue];
-                formatValue(newValue, TextUpdateModel.PROP_FORMAT_TYPE);
-                return true;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            format = FormatEnum.values()[(Integer) newValue];
+            formatValue(newValue, TextUpdateModel.PROP_FORMAT_TYPE);
+            return true;
         };
         setPropertyChangeHandler(TextUpdateModel.PROP_FORMAT_TYPE, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                precision = (Integer) newValue;
-                formatValue(newValue, TextUpdateModel.PROP_PRECISION);
-                return true;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            precision = (Integer) newValue;
+            formatValue(newValue, TextUpdateModel.PROP_PRECISION);
+            return true;
         };
         setPropertyChangeHandler(TextUpdateModel.PROP_PRECISION, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                isPrecisionFromDB = (Boolean) newValue;
-                formatValue(newValue, TextUpdateModel.PROP_PRECISION_FROM_DB);
-                return true;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            isPrecisionFromDB = (Boolean) newValue;
+            formatValue(newValue, TextUpdateModel.PROP_PRECISION_FROM_DB);
+            return true;
         };
         setPropertyChangeHandler(TextUpdateModel.PROP_PRECISION_FROM_DB, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                isShowUnits = (Boolean) newValue;
-                formatValue(newValue, TextUpdateModel.PROP_SHOW_UNITS);
-                return true;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            isShowUnits = (Boolean) newValue;
+            formatValue(newValue, TextUpdateModel.PROP_SHOW_UNITS);
+            return true;
         };
         setPropertyChangeHandler(TextUpdateModel.PROP_SHOW_UNITS, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    final IFigure figure) {
-                if (figure instanceof TextFigure)
-                    ((TextFigure) figure).setRotate((Double) newValue);
-                return true;
+        handler = (oldValue, newValue, figure) -> {
+            if (figure instanceof TextFigure) {
+                ((TextFigure) figure).setRotate((Double) newValue);
             }
+            return true;
         };
         setPropertyChangeHandler(TextUpdateModel.PROP_ROTATION, handler);
 
-        handler = new IWidgetPropertyChangeHandler() {
-
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                AbstractWidgetModel model = getWidgetModel();
-                AbstractContainerModel parent = model.getParent();
-                parent.removeChild(model);
-                parent.addChild(model);
-                parent.selectWidget(model, true);
-                return false;
-            }
+        handler = (oldValue, newValue, figure) -> {
+            AbstractWidgetModel model = getWidgetModel();
+            AbstractContainerModel parent = model.getParent();
+            parent.removeChild(model);
+            parent.addChild(model);
+            parent.selectWidget(model, true);
+            return false;
         };
         setPropertyChangeHandler(TextUpdateModel.PROP_WRAP_WORDS, handler);
     }
@@ -309,18 +239,20 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
     @Override
     public void performRequest(Request request) {
         if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-                request.getType() == RequestConstants.REQ_OPEN))
+                request.getType() == RequestConstants.REQ_OPEN)) {
             performDirectEdit();
+        }
     }
 
     /**
      * @param figure
      */
     protected void performAutoSize() {
-        if (figure instanceof TextFigure)
+        if (figure instanceof TextFigure) {
             getWidgetModel().setSize(((TextFigure) getFigure()).getAutoSizeDimension());
-        else if (figure instanceof NativeTextFigure)
+        } else if (figure instanceof NativeTextFigure) {
             getWidgetModel().setSize(((NativeTextFigure) getFigure()).getAutoSizeDimension());
+        }
     }
 
     /**
@@ -329,26 +261,30 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
      */
     protected String formatValue(Object newValue, String propId) {
 
-        if (getExecutionMode() != ExecutionMode.RUN_MODE)
+        if (getExecutionMode() != ExecutionMode.RUN_MODE) {
             return null;
+        }
         VType value = null;
 
         int tempPrecision = precision;
-        if (isPrecisionFromDB)
+        if (isPrecisionFromDB) {
             tempPrecision = -1;
+        }
 
-        if (propId.equals(AbstractPVWidgetModel.PROP_PVVALUE))
+        if (propId.equals(AbstractPVWidgetModel.PROP_PVVALUE)) {
             value = (VType) newValue;
-        else
+        } else {
             value = getPVValue(AbstractPVWidgetModel.PROP_PVNAME);
+        }
 
         String text = VTypeHelper.formatValue(
                 format, value, tempPrecision);
 
         if (isShowUnits && VTypeHelper.getDisplayInfo(value) != null) {
             String units = VTypeHelper.getDisplayInfo(value).getUnits();
-            if (units != null && units.trim().length() > 0)
+            if (units != null && units.trim().length() > 0) {
                 text = text + " " + units;
+            }
         }
 
         // synchronize the property value without fire listeners.
@@ -356,35 +292,39 @@ public class TextUpdateEditPart extends AbstractPVWidgetEditPart {
                 TextUpdateModel.PROP_TEXT).setPropertyValue(text, false);
         setFigureText(text);
 
-        if (isAutoSize)
+        if (isAutoSize) {
             performAutoSize();
+        }
 
         return text;
     }
 
     @Override
     public String getValue() {
-        if (getFigure() instanceof NativeTextFigure)
+        if (getFigure() instanceof NativeTextFigure) {
             return ((NativeTextFigure) getFigure()).getText();
+        }
         return ((TextFigure) getFigure()).getText();
     }
 
     @Override
     public void setValue(Object value) {
         String text;
-        if (value instanceof Number)
+        if (value instanceof Number) {
             text = formatValue(ValueFactory.newVDouble(((Number) value).doubleValue()),
                     AbstractPVWidgetModel.PROP_PVVALUE);
-        else
+        } else {
             text = value.toString();
+        }
         setFigureText(text);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class key) {
-        if (key == ITextFigure.class)
+        if (key == ITextFigure.class) {
             return getFigure();
+        }
 
         return super.getAdapter(key);
     }

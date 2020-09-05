@@ -40,8 +40,9 @@
     <scripts>
       <path pathString="EmbeddedPy" checkConnect="true" sfe="false" seoe="false">
         <scriptName>CreatePVExample</scriptName>
-        <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
-from org.csstudio.simplepv import IPVListener
+        <scriptText>
+          <![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
+from org.yamcs.studio.data import IPVListener
 
 
 class MyPVListener(IPVListener):
@@ -51,7 +52,8 @@ class MyPVListener(IPVListener):
 pv = PVUtil.createPV("sim://noise", widget)
 pv.addListener(MyPVListener())
 
-]]></scriptText>
+]]>
+        </scriptText>
         <pv trig="true">=1</pv>
       </path>
     </scripts>
@@ -155,7 +157,7 @@ pv.addListener(MyPVListener())
     <widget_type>Label</widget_type>
     <enabled>true</enabled>
     <text>from org.csstudio.opibuilder.scriptUtil import PVUtil&#xD;
-from org.csstudio.simplepv import IPVListener&#xD;
+from org.yamcs.studio.data import IPVListener&#xD;
 &#xD;
 &#xD;
 class MyPVListener(IPVListener):&#xD;

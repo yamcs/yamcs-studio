@@ -1,11 +1,10 @@
 package org.csstudio.opibuilder.widgets.util;
 
+import org.yamcs.studio.data.vtype.ListNumber;
 import org.csstudio.swt.widgets.datadefinition.IPrimaryArrayWrapper;
-import org.diirt.util.array.ListNumber;
 
-/**An {@link IPrimaryArrayWrapper} for {@link ListNumber}
- * @author Xihui
- *
+/**
+ * An {@link IPrimaryArrayWrapper} for {@link ListNumber}
  */
 public class ListNumberWrapper implements IPrimaryArrayWrapper {
 
@@ -24,5 +23,4 @@ public class ListNumberWrapper implements IPrimaryArrayWrapper {
     public int getSize() {
         return listNumber.size();
     }
-
 }

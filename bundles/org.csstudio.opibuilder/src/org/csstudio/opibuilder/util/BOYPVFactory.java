@@ -4,18 +4,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
-import org.csstudio.simplepv.AbstractPVFactory;
-import org.csstudio.simplepv.ExceptionHandler;
-import org.csstudio.simplepv.IPV;
-import org.csstudio.simplepv.SimplePVLayer;
+import org.yamcs.studio.data.ExceptionHandler;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.PVFactory;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * The factory to create a PV for BOY. It will create either Utility PV or PVManager PV which depends on the preference
  * settings.
- * 
- * @author Xihui Chen
- *
  */
 public class BOYPVFactory {
 
@@ -39,7 +35,7 @@ public class BOYPVFactory {
      * @throws Exception
      * @see {@link #createPV(String, boolean, int)}
      */
-    public static IPV createPV(final String name) throws Exception {
+    public static IPV createPV(String name) throws Exception {
         return createPV(name, false);
     }
 
@@ -54,9 +50,8 @@ public class BOYPVFactory {
      * @throws Exception
      * @see {@link #createPV(String, boolean, int)}
      */
-    public static IPV createPV(final String name, final boolean bufferAllValues) throws Exception {
-        return createPV(name, bufferAllValues,
-                PreferencesHelper.getGUIRefreshCycle());
+    public static IPV createPV(String name, boolean bufferAllValues) throws Exception {
+        return createPV(name, bufferAllValues, PreferencesHelper.getGUIRefreshCycle());
     }
 
     /**
@@ -72,9 +67,8 @@ public class BOYPVFactory {
      * @throws Exception
      */
     public static IPV createPV(String name, boolean bufferAllValues, int updateDuration) throws Exception {
-        AbstractPVFactory pvFactory = SimplePVLayer.getPVFactory("pvmanager");
+        PVFactory pvFactory = PVFactory.getInstance();
         return pvFactory.createPV(
                 name, false, updateDuration, bufferAllValues, BOY_PV_THREAD, exceptionHandler);
     }
-
 }

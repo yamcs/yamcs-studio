@@ -76,13 +76,6 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.autocomplete"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.csstudio.examples"
          download-size="0"
          install-size="0"
@@ -111,7 +104,7 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          unpack="false"/>
 
    <plugin
-         id="org.csstudio.simplepv"
+         id="org.yamcs.studio.data"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -133,13 +126,6 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
 
    <plugin
          id="org.csstudio.utility.batik"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.diirt"
          download-size="0"
          install-size="0"
          version="0.0.0"

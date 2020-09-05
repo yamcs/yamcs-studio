@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Yamcs Studio Data Layer
+Bundle-SymbolicName: org.yamcs.studio.data;singleton:=true
+Bundle-Version: 1.4.0.rc1
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.core.runtime,
+ org.yamcs.p2.client,
+ org.yamcs.studio.core
+Export-Package: org.yamcs.studio.data,
+ org.yamcs.studio.data.vtype,
+ org.yamcs.studio.data.yamcs
+Bundle-Activator: org.yamcs.studio.data.SimplePVPlugin
+Automatic-Module-Name: org.yamcs.studio.data

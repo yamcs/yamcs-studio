@@ -1,43 +1,26 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
 import java.util.logging.Level;
 
-import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.AbstractPVWidgetEditPart;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.model.AbstractScaledWidgetModel;
-import org.csstudio.simplepv.VTypeHelper;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.AbstractScaledWidgetFigure;
 import org.csstudio.utility.batik.Activator;
-import org.diirt.vtype.VType;
 import org.eclipse.nebula.visualization.xygraph.linearscale.AbstractScale;
 
 /**
  * Base editPart controller for a widget based on {@link AbstractScaledWidgetModel}.
- *
- * @author Xihui Chen
- *
  */
 public abstract class AbstractScaledWidgetEditPart extends AbstractPVWidgetEditPart {
 
     /**
      * Sets those properties on the figure that are defined in the {@link AbstractScaledWidgetFigure} base class. This
      * method is provided for the convenience of subclasses, which can call this method in their implementation of
-     * {@link AbstractBaseEditPart#doCreateFigure()}.
-     *
-     * @param figure
-     *            the figure.
-     * @param model
-     *            the model.
      */
     protected void initializeCommonFigureProperties(
             final AbstractScaledWidgetFigure figure, final AbstractScaledWidgetModel model) {

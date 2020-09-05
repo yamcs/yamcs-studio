@@ -1,28 +1,5 @@
-/*
- * Copyright (c) 2008 Stiftung Deutsches Elektronen-Synchrotron,
- * Member of the Helmholtz Association, (DESY), HAMBURG, GERMANY.
- *
- * THIS SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN "../AS IS" BASIS.
- * WITHOUT WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED
- * TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- * THE USE OR OTHER DEALINGS IN THE SOFTWARE. SHOULD THE SOFTWARE PROVE DEFECTIVE
- * IN ANY RESPECT, THE USER ASSUMES THE COST OF ANY NECESSARY SERVICING, REPAIR OR
- * CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS LICENSE.
- * NO USE OF ANY SOFTWARE IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER.
- * DESY HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
- * OR MODIFICATIONS.
- * THE FULL LICENSE SPECIFYING FOR THE SOFTWARE THE REDISTRIBUTION, MODIFICATION,
- * USAGE AND OTHER RIGHTS AND OBLIGATIONS IS INCLUDED WITH THE DISTRIBUTION OF THIS
- * PROJECT IN THE FILE LICENSE.HTML. IF THE LICENSE IS NOT INCLUDED YOU MAY FIND A COPY
- * AT HTTP://WWW.DESY.DE/LEGAL/LICENSE.HTM
- */
 package org.csstudio.opibuilder.widgets.editparts;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.csstudio.opibuilder.actions.WidgetActionMenuAction;
@@ -36,15 +13,15 @@ import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.csstudio.opibuilder.widgetActions.WritePVAction;
 import org.csstudio.opibuilder.widgets.figures.MenuButtonFigure;
 import org.csstudio.opibuilder.widgets.model.MenuButtonModel;
-import org.csstudio.simplepv.IPV;
-import org.csstudio.simplepv.IPVListener;
-import org.csstudio.simplepv.VTypeHelper;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.Scalar;
+import org.yamcs.studio.data.vtype.VEnum;
+import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.diirt.vtype.Scalar;
-import org.diirt.vtype.VEnum;
-import org.diirt.vtype.VType;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
@@ -61,16 +38,11 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-/**
- *
- * @author Helge Rickens, Kai Meyer, Xihui Chen
- *
- */
 public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
     private IPVListener loadActionsFromPVListener;
 
-    private List<String>  meta = null;
+    private List<String> meta = null;
 
     @Override
     protected IFigure doCreateFigure() {
@@ -82,7 +54,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
         figure.setDownArrowVisible(model.showDownArrow());
 
-        if (getExecutionMode() == ExecutionMode.RUN_MODE)
+        if (getExecutionMode() == ExecutionMode.RUN_MODE) {
             figure.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseDoubleClicked(final MouseEvent me) {
@@ -90,18 +62,19 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
                 @Override
                 public void mousePressed(final MouseEvent me) {
-                    if (me.button == 1  &&
-                        figure.containsPoint(me.getLocation()))
+                    if (me.button == 1 &&
+                            figure.containsPoint(me.getLocation())) {
                         me.consume();
+                    }
                 }
 
                 @Override
                 public void mouseReleased(final MouseEvent me) {
                     // Check location to ignore bogus mouse clicks,
                     // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-                    if (me.button == 1  &&
-                        getExecutionMode().equals(ExecutionMode.RUN_MODE)  &&
-                        figure.containsPoint(me.getLocation())) {
+                    if (me.button == 1 &&
+                            getExecutionMode().equals(ExecutionMode.RUN_MODE) &&
+                            figure.containsPoint(me.getLocation())) {
                         final org.eclipse.swt.graphics.Point cursorLocation = Display
                                 .getCurrent().getCursorLocation();
                         showMenu(me.getLocation(), cursorLocation.x,
@@ -110,6 +83,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
                 }
 
             });
+        }
         figure.addMouseMotionListener(new MouseMotionListener.Stub() {
             @Override
             public void mouseEntered(MouseEvent me) {
@@ -139,18 +113,18 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        if(getExecutionMode() == ExecutionMode.EDIT_MODE)
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
             installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new TextDirectEditPolicy());
+        }
     }
 
-
     @Override
-    public void performRequest(Request request){
-        if (getExecutionMode() == ExecutionMode.EDIT_MODE &&(
-                request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
-                request.getType() == RequestConstants.REQ_OPEN))
+    public void performRequest(Request request) {
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE && (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
+                request.getType() == RequestConstants.REQ_OPEN)) {
             new TextEditManager(this,
                     new LabelCellEditorLocator(getFigure()), false).show();
+        }
     }
 
     @Override
@@ -208,7 +182,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
             if (getWidgetModel().isActionsFromPV()) {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
-                    if (loadActionsFromPVListener == null)
+                    if (loadActionsFromPVListener == null) {
                         loadActionsFromPVListener = new IPVListener.Stub() {
                             @Override
                             public void valueChanged(IPV pv) {
@@ -244,6 +218,7 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
                             }
 
                         };
+                    }
                     pv.addListener(loadActionsFromPVListener);
                 }
             }
@@ -264,86 +239,55 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler pvNameHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(Object oldValue, Object newValue,
-                    IFigure figure) {
-                registerLoadActionsListener();
-                return false;
-            }
+        IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {
+            registerLoadActionsListener();
+            return false;
         };
         setPropertyChangeHandler(AbstractPVWidgetModel.PROP_PVNAME,
                 pvNameHandler);
 
         // PV_Value
-        IWidgetPropertyChangeHandler pvhandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                if ((newValue != null) && (newValue instanceof Scalar))
-                    ((MenuButtonFigure) refreshableFigure).setText(VTypeHelper
-                            .getString((VType) newValue));
-                return true;
+        IWidgetPropertyChangeHandler pvhandler = (oldValue, newValue, refreshableFigure) -> {
+            if ((newValue != null) && (newValue instanceof Scalar)) {
+                ((MenuButtonFigure) refreshableFigure).setText(VTypeHelper
+                        .getString((VType) newValue));
             }
+            return true;
         };
         setPropertyChangeHandler(MenuButtonModel.PROP_PVVALUE, pvhandler);
 
         // label
-        IWidgetPropertyChangeHandler labelHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                ((MenuButtonFigure) refreshableFigure).setText(newValue.toString());
-                return true;
-            }
+        IWidgetPropertyChangeHandler labelHandler = (oldValue, newValue, refreshableFigure) -> {
+            ((MenuButtonFigure) refreshableFigure).setText(newValue.toString());
+            return true;
         };
         setPropertyChangeHandler(MenuButtonModel.PROP_LABEL, labelHandler);
 
         // Transparent
-        IWidgetPropertyChangeHandler transparentHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                ((MenuButtonFigure) refreshableFigure).setOpaque(!(Boolean) newValue);
-                return true;
-            }
+        IWidgetPropertyChangeHandler transparentHandler = (oldValue, newValue, refreshableFigure) -> {
+            ((MenuButtonFigure) refreshableFigure).setOpaque(!(Boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(MenuButtonModel.PROP_TRANSPARENT,
                 transparentHandler);
 
         // Show down arrow
-        IWidgetPropertyChangeHandler downArrowHandler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                ((MenuButtonFigure)refreshableFigure).setDownArrowVisible((boolean)newValue);
-                return true;
-            }
+        IWidgetPropertyChangeHandler downArrowHandler = (oldValue, newValue, refreshableFigure) -> {
+            ((MenuButtonFigure) refreshableFigure).setDownArrowVisible((boolean) newValue);
+            return true;
         };
         setPropertyChangeHandler(MenuButtonModel.PROP_SHOW_DOWN_ARROW,
                 downArrowHandler);
 
-        final IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue,
-                    final Object newValue, final IFigure refreshableFigure) {
-                updatePropSheet((Boolean) newValue);
-                return false;
-            }
+        final IWidgetPropertyChangeHandler handler = (oldValue, newValue, refreshableFigure) -> {
+            updatePropSheet((Boolean) newValue);
+            return false;
         };
         getWidgetModel().getProperty(MenuButtonModel.PROP_ACTIONS_FROM_PV)
-                .addPropertyChangeListener(new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        handler.handleChange(evt.getOldValue(),
-                                evt.getNewValue(), getFigure());
-                    }
-                });
+                .addPropertyChangeListener(evt -> handler.handleChange(evt.getOldValue(),
+                        evt.getNewValue(), getFigure()));
     }
 
-    /**
-     * @param actionsFromPV
-     */
     private void updatePropSheet(final boolean actionsFromPV) {
         getWidgetModel().setPropertyVisible(MenuButtonModel.PROP_ACTIONS,
                 !actionsFromPV);
@@ -366,10 +310,10 @@ public final class MenuButtonEditPart extends AbstractPVWidgetEditPart {
 
     @Override
     public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
-        if(key == ITextFigure.class)
+        if (key == ITextFigure.class) {
             return getFigure();
+        }
 
         return super.getAdapter(key);
     }
-
 }

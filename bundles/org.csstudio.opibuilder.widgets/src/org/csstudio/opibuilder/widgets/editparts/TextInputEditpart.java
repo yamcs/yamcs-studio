@@ -1,10 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
 import java.beans.PropertyChangeListener;
@@ -21,17 +14,17 @@ import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel.Style;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.TextInputModel;
-import org.csstudio.simplepv.FormatEnum;
-import org.csstudio.simplepv.IPV;
-import org.csstudio.simplepv.IPVListener;
-import org.csstudio.simplepv.VTypeHelper;
+import org.yamcs.studio.data.FormatEnum;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.Array;
+import org.yamcs.studio.data.vtype.Scalar;
+import org.yamcs.studio.data.vtype.VEnum;
+import org.yamcs.studio.data.vtype.VNumberArray;
+import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.TextFigure;
 import org.csstudio.swt.widgets.figures.TextInputFigure;
-import org.diirt.vtype.Array;
-import org.diirt.vtype.Scalar;
-import org.diirt.vtype.VEnum;
-import org.diirt.vtype.VNumberArray;
-import org.diirt.vtype.VType;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
@@ -40,18 +33,12 @@ import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 
-/**
- * The editpart for text input widget.)
- *
- * @author Xihui Chen
- *
- */
 public class TextInputEditpart extends TextUpdateEditPart {
 
     private static final char SPACE = ' ';
     private static DecimalFormat DECIMAL_FORMAT = new DecimalFormat();
     private IPVListener pvLoadLimitsListener;
-    private org.diirt.vtype.Display meta = null;
+    private org.yamcs.studio.data.vtype.Display meta = null;
 
     private ITextInputEditPartDelegate delegate;
 
@@ -132,7 +119,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                                 VType value = pv.getValue();
                                 if (value != null
                                         && VTypeHelper.getDisplayInfo(value) != null) {
-                                    org.diirt.vtype.Display new_meta = VTypeHelper.getDisplayInfo(value);
+                                    org.yamcs.studio.data.vtype.Display new_meta = VTypeHelper.getDisplayInfo(value);
                                     if (meta == null || !meta.equals(new_meta)) {
                                         meta = new_meta;
                                         // Update min/max from the control range of the PV

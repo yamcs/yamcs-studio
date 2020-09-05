@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.yamcs.client.Command;
-import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class CommandHistoryEntryDetailsDialog extends TrayDialog {
 

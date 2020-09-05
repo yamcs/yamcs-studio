@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.csstudio.simplepv.IPV;
+import org.yamcs.studio.data.IPV;
 import org.eclipse.core.runtime.IPath;
 import org.python.core.Py;
 import org.python.core.PyCode;

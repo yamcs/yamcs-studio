@@ -12,7 +12,7 @@ import javax.script.ScriptEngineManager;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
-import org.csstudio.simplepv.IPV;
+import org.yamcs.studio.data.IPV;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;

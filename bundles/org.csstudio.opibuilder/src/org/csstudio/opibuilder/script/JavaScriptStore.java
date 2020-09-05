@@ -14,7 +14,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.simplepv.IPV;
+import org.yamcs.studio.data.IPV;
 
 /**
  * This is the implementation of {@link AbstractScriptStore} for the default javascript script engine embedded in Java.

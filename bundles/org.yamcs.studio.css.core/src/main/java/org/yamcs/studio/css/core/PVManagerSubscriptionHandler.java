@@ -1,30 +1,16 @@
 package org.yamcs.studio.css.core;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.eclipse.swt.widgets.Display;
 import org.yamcs.client.ParameterSubscription;
-import org.yamcs.protobuf.Mdb.ParameterInfo;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
-import org.yamcs.protobuf.SubscribeParametersRequest;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.StringConverter;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.css.core.pvmanager.PVConnectionInfo;
-import org.yamcs.studio.css.core.pvmanager.ParameterChannelHandler;
 
 /**
  * Keeps track of {@link ParameterChannelHandler} registration state and takes care of establishing or re-establishing a
@@ -36,10 +22,10 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
 
     // Change events (PV handler register/unregister). Only relevant if a connection
     // is ongoing (to prevent bursts)
-    private Queue<ChannelEvent> channelHandlerEvents = new ConcurrentLinkedQueue<>();
+    /// private Queue<ChannelEvent> channelHandlerEvents = new ConcurrentLinkedQueue<>();
 
     // All currently registered PV handlers (regardless of connection state to Yamcs)
-    private Map<NamedObjectId, ParameterChannelHandler> channelHandlersById = new LinkedHashMap<>();
+    /// private Map<NamedObjectId, ParameterChannelHandler> channelHandlersById = new LinkedHashMap<>();
 
     private ParameterSubscription subscription;
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -62,30 +48,30 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
 
     // To be called on executor thread
     private void createSubscription(String instance, String processor) {
-        channelHandlerEvents.clear();
-        subscription = YamcsPlugin.getYamcsClient().createParameterSubscription();
+        /// channelHandlerEvents.clear();
+        /*subscription = YamcsPlugin.getYamcsClient().createParameterSubscription();
         subscription.addListener(this);
         subscription.sendMessage(SubscribeParametersRequest.newBuilder()
                 .setInstance(instance)
                 .setProcessor(processor)
                 .setAbortOnInvalid(false)
                 .addAllId(channelHandlersById.keySet())
-                .build());
+                .build());*/
     }
 
     // To be called on executor thread
     private void modifySubscription() {
-        if (subscription != null && channelHandlerEvents.peek() != null) {
+        /*if (subscription != null && channelHandlerEvents.peek() != null) {
             ChannelEvent firstEvent = channelHandlerEvents.poll();
             Set<ParameterChannelHandler> newHandlers = new HashSet<>();
             newHandlers.add(firstEvent.handler);
-
+        
             while (channelHandlerEvents.peek() != null
                     && channelHandlerEvents.peek().registered == firstEvent.registered) {
                 ChannelEvent event = channelHandlerEvents.poll();
                 newHandlers.add(event.handler);
             }
-
+        
             if (firstEvent.registered) {
                 newHandlers.forEach(handler -> {
                     ParameterInfo parameter = YamcsPlugin.getMissionDatabase().getParameterInfo(handler.getId());
@@ -95,7 +81,7 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
             } else {
                 subscription.remove(newHandlers.stream().map(handler -> handler.getId()).collect(Collectors.toList()));
             }
-        }
+        }*/
     }
 
     @Override
@@ -120,8 +106,9 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
             }
 
             // Clear internal state of channel handlers
-            channelHandlersById.forEach((id, channelHandler) -> channelHandler.resetMessage());
+            /// channelHandlersById.forEach((id, channelHandler) -> channelHandler.resetMessage());
 
+            /*
             if (processor == null) {
                 channelHandlersById.forEach((id, channelHandler) -> {
                     channelHandler.processConnectionInfo(new PVConnectionInfo(false, null));
@@ -132,29 +119,29 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
                     ParameterInfo parameter = YamcsPlugin.getMissionDatabase().getParameterInfo(id);
                     channelHandler.processConnectionInfo(new PVConnectionInfo(true, parameter));
                 });
-            }
+            }*/
         });
     }
 
-    public synchronized void register(ParameterChannelHandler channelHandler) {
+    /*public synchronized void register(ParameterChannelHandler channelHandler) {
         channelHandlersById.put(channelHandler.getId(), channelHandler);
         channelHandlerEvents.add(new ChannelEvent(channelHandler, true));
     }
-
+    
     public synchronized void unregister(ParameterChannelHandler channelHandler) {
         channelHandlersById.remove(channelHandler.getId());
         channelHandlerEvents.add(new ChannelEvent(channelHandler, false));
     }
-
+    
     private static class ChannelEvent {
         ParameterChannelHandler handler;
         boolean registered;
-
+    
         ChannelEvent(ParameterChannelHandler handler, boolean registered) {
             this.handler = handler;
             this.registered = registered;
         }
-    }
+    }*/
 
     public void stop() {
         executor.shutdown();
@@ -162,7 +149,7 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
 
     @Override
     public void onData(List<ParameterValue> values) {
-        for (ParameterValue pval : values) {
+        /*for (ParameterValue pval : values) {
             ParameterChannelHandler channelHandler = channelHandlersById.get(pval.getId());
             if (channelHandler != null) {
                 if (log.isLoggable(Level.FINER)) {
@@ -172,6 +159,6 @@ public class PVManagerSubscriptionHandler implements YamcsAware, ParameterSubscr
                 channelHandler.processParameterValue(pval);
             }
         }
-        beeper.processDelivery(values);
+        beeper.processDelivery(values);*/
     }
 }

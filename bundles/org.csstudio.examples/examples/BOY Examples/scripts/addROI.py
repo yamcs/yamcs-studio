@@ -1,6 +1,6 @@
 from org.csstudio.opibuilder.scriptUtil import PVUtil
 from org.csstudio.swt.widgets.figures.IntensityGraphFigure import IROIListener, IROIInfoProvider
-from org.csstudio.simplepv import IPVListener
+from org.yamcs.studio.data import IPVListener
 from java.lang import Thread, Runnable
 from org.eclipse.swt.widgets import Display
 

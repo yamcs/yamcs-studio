@@ -13,7 +13,7 @@ import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.csstudio.simplepv.IPV;
+import org.yamcs.studio.data.IPV;
 import org.eclipse.osgi.util.NLS;
 
 /**

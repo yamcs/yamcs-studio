@@ -16,15 +16,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.yamcs.p2.client,
  org.yamcs.studio.core,
- org.diirt,
- org.csstudio.autocomplete,
- org.csstudio.simplepv,
+ org.yamcs.studio.data,
  org.csstudio.opibuilder
 Export-Package: org.yamcs.studio.css.core,
- org.yamcs.studio.css.core.prefs,
- org.yamcs.studio.css.core.pvmanager,
- org.yamcs.studio.css.core.pvmanager.autocomplete,
- org.yamcs.studio.css.core.vtype
+ org.yamcs.studio.css.core.prefs
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Service-Component: OSGI-INF/autocomplete/para-parser.xml,
  OSGI-INF/autocomplete/para-provider.xml,

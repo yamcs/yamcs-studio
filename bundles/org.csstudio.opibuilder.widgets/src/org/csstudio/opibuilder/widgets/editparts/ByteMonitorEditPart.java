@@ -1,10 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
 import java.util.logging.Level;
@@ -16,18 +9,15 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.model.ByteMonitorModel;
-import org.csstudio.simplepv.VTypeHelper;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.ByteMonitorFigure;
-import org.diirt.vtype.VType;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.osgi.util.NLS;
 
 /**
  * This class implements the widget edit part for the Byte Monitor widget. This displays the bits in a value as s series
  * of LEDs
- * 
- * @author hammonds
- * @author Takashi Nakamoto - added labels property
  */
 public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
@@ -243,5 +233,4 @@ public class ByteMonitorEditPart extends AbstractPVWidgetEditPart {
 
         setPropertyChangeHandler(ByteMonitorModel.PROP_PACK_LEDS, packHandler);
     }
-
 }

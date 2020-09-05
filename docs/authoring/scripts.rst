@@ -216,56 +216,56 @@ The utility class to facilitate Javascript programming for PV operation.
 
     * - Type
       - Method and Description
-    * - ``org.csstudio.simplepv.IPV``
+    * - ``org.yamcs.studio.data.IPV``
       - | ``createPV(java.lang.String name, org.csstudio.opibuilder.editparts.AbstractBaseEditPart widget)``
         | Create a PV and start it.
     * - ``double``
-      - | ``getDouble(org.csstudio.simplepv.IPV pv)``
+      - | ``getDouble(org.yamcs.studio.data.IPV pv)``
         | Try to get a double number from the PV.
     * - ``double``
-      - | ``getDouble(org.csstudio.simplepv.IPV pv, int index)``
+      - | ``getDouble(org.yamcs.studio.data.IPV pv, int index)``
         | Try to get a double-typed array element from the Value.
     * - ``double[]``
-      - | ``getDoubleArray(org.csstudio.simplepv.IPV pv)``
+      - | ``getDoubleArray(org.yamcs.studio.data.IPV pv)``
         | Try to get a double-typed array from the pv.
     * - ``java.lang.String``
-      - | ``getFullString(org.csstudio.simplepv.IPV pv)``
+      - | ``getFullString(org.yamcs.studio.data.IPV pv)``
         | Get the full info from the pv in this format
     * - ``java.lang.String[]``
-      - | ``getLabels(org.csstudio.simplepv.IPV pv)``
+      - | ``getLabels(org.yamcs.studio.data.IPV pv)``
         | Get the list of Enum values
     * - ``java.lang.Long``
-      - | ``getLong(org.csstudio.simplepv.IPV pv)``
+      - | ``getLong(org.yamcs.studio.data.IPV pv)``
         | Try to get a long integer number from the PV.
     * - ``long[]``
-      - | ``getLongArray(org.csstudio.simplepv.IPV pv)``
+      - | ``getLongArray(org.yamcs.studio.data.IPV pv)``
         | Try to get an integer-typed array from the pv.
     * - ``int``
-      - | ``getSeverity(org.csstudio.simplepv.IPV pv)``
+      - | ``getSeverity(org.yamcs.studio.data.IPV pv)``
         | Get severity of the pv as an integer value.
     * - ``java.lang.String``
-      - | ``getSeverityString(org.csstudio.simplepv.IPV pv)``
+      - | ``getSeverityString(org.yamcs.studio.data.IPV pv)``
         | Get severity of the PV as a string.
     * - ``double``
-      - | ``getSize(org.csstudio.simplepv.IPV pv)``
+      - | ``getSize(org.yamcs.studio.data.IPV pv)``
         | Get the size of the pv's value
     * - ``java.lang.String``
-      - | ``getStatus(org.csstudio.simplepv.IPV pv)``
+      - | ``getStatus(org.yamcs.studio.data.IPV pv)``
         | Get the status text that might describe the severity.
     * - ``java.lang.String``
-      - | ``getString(org.csstudio.simplepv.IPV pv)``
+      - | ``getString(org.yamcs.studio.data.IPV pv)``
         | Converts the given pv's value into a string representation.
     * - ``java.lang.String[]``
-      - | ``getStringArray(org.csstudio.simplepv.IPV pv)``
+      - | ``getStringArray(org.yamcs.studio.data.IPV pv)``
         | Get string array from pv.
     * - ``double``
-      - | ``getTimeInMilliseconds(org.csstudio.simplepv.IPV pv)``
+      - | ``getTimeInMilliseconds(org.yamcs.studio.data.IPV pv)``
         | Get milliseconds since epoch.
     * - ``java.lang.String``
-      - | ``getTimeString(org.csstudio.simplepv.IPV pv)``
+      - | ``getTimeString(org.yamcs.studio.data.IPV pv)``
         | Get the timestamp string of the pv
     * - ``java.lang.String``
-      - | ``getTimeString(org.csstudio.simplepv.IPV pv, java.lang.String formatPattern)``
+      - | ``getTimeString(org.yamcs.studio.data.IPV pv, java.lang.String formatPattern)``
         | Get the timestamp string of the pv
     * - ``void``
       - | ``writePV(java.lang.String pvName, java.lang.Object value)``

@@ -18,7 +18,6 @@ Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.css.core,
  org.csstudio.ui.util,
  org.csstudio.opibuilder,
- org.diirt,
  org.eclipse.jface,
  org.csstudio.opibuilder.editor
 Export-Package: org.yamcs.studio.editor.base
