@@ -1,6 +1,5 @@
 package org.yamcs.studio.data;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -67,22 +66,6 @@ public class IPV {
         listeners.remove(listener);
     }
 
-    /**
-     * Get all values that were buffered in last update cycle that has values. If value is not buffered, it should
-     * return a single item list that wraps {@link #getValue()}
-     *
-     * @return all values buffered. Will be null if the PV is not started or connected. It can also be null even the PV
-     *         is connected. For example, the value is not a VType, not prepared yet or it has null as the initial
-     *         value.
-     */
-    public List<VType> getAllBufferedValues() {
-        VType obj = getValue();
-        if (obj != null) {
-            return Arrays.asList(obj);
-        }
-        return null;
-    }
-
     public String getName() {
         return name;
     }
@@ -100,13 +83,6 @@ public class IPV {
             return yamcsSubscription.getValue(this);
         }
         return null;
-    }
-
-    /**
-     * Return true if all values during an update period should be buffered.
-     */
-    public boolean isBufferingValues() {
-        return false;
     }
 
     /**
@@ -134,15 +110,6 @@ public class IPV {
     }
 
     /**
-     * If the pv is paused. When a pv is paused, it will stop sending notifications to listeners while keeps connected.
-     *
-     * @return true if the PV is paused or false if the pv is not started or not paused.
-     */
-    public boolean isPaused() {
-        return false;
-    }
-
-    /**
      * If the {@link #start()} has been called but {@link #stop()} has not been called. This method tells nothing if the
      * pv is connected. To see if the PV is connected use {@link #isConnected()}.
      *
@@ -157,16 +124,6 @@ public class IPV {
      */
     public boolean isWriteAllowed() {
         return false;
-    }
-
-    /**
-     * Pause notifications while keep the connection.
-     *
-     * @param paused
-     *            pause notifications if true or resume notifications if false. No effect if it is same as
-     *            {@link #isPaused()}.
-     */
-    public void setPaused(boolean paused) {
     }
 
     /**
@@ -220,10 +177,9 @@ public class IPV {
     }
 
     /**
-     * Close the connection while keeping all listeners, so when it is restarted, it will work as before, but it is
-     * recommended to use {@link #setPaused(boolean)} instead of calling stop and start again because
-     * {@link #setPaused(boolean)} will keep the connection. When the PV is no longer needed, one should stop it to
-     * release resources. To stop an already stopped PV or not started PV will do nothing but log a warning message.
+     * Close the connection while keeping all listeners, so when it is restarted, it will work as before. When the PV is
+     * no longer needed, one should stop it to release resources. To stop an already stopped PV or not started PV will
+     * do nothing but log a warning message.
      */
     public void stop() {
         log.fine(String.format("Stopping PV %s", this));

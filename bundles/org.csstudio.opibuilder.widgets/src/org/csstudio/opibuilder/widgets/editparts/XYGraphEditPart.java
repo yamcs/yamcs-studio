@@ -102,8 +102,6 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
                         xPVPropID, yPVPropID);
             }
         }
-        // all values should be buffered
-        getPVWidgetEditpartDelegate().setAllValuesBuffered(true);
 
         return xyGraphFigure;
     }
@@ -490,11 +488,9 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             if (dataProvider.isConcatenate_data()) {
                 IPV pv = getPV(xPVPropID);
                 if (pv != null) {
-                    List<VType> values = pv.getAllBufferedValues();
-                    if (values != null) {
-                        for (VType o : values) {
-                            setXValue(dataProvider, o);
-                        }
+                    VType value = pv.getValue();
+                    if (value != null) {
+                        setXValue(dataProvider, value);
                     }
                 }
             } else {
@@ -507,13 +503,10 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             }
             if (dataProvider.isConcatenate_data()) {
                 IPV pv = getPV(yPVPropID);
-                if (pv != null) { // values are set during figure construction time, when the pv might not even exist
-                                  // yet
-                    List<VType> values = pv.getAllBufferedValues();
-                    if (values != null) {
-                        for (VType o : values) {
-                            setYValue(trace, dataProvider, o);
-                        }
+                if (pv != null) {
+                    VType value = pv.getValue();
+                    if (value != null) {
+                        setYValue(trace, dataProvider, value);
                     }
                 }
             } else {

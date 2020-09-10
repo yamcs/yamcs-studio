@@ -10,6 +10,14 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.util.BOYPVFactory;
 import org.csstudio.opibuilder.util.DisplayUtils;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
+import org.csstudio.ui.util.thread.UIBundlingThread;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartListener;
+import org.eclipse.swt.widgets.Display;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.VTypeHelper;
 import org.yamcs.studio.data.vtype.AlarmSeverity;
@@ -21,14 +29,6 @@ import org.yamcs.studio.data.vtype.VEnumArray;
 import org.yamcs.studio.data.vtype.VNumberArray;
 import org.yamcs.studio.data.vtype.VStringArray;
 import org.yamcs.studio.data.vtype.VType;
-import org.csstudio.ui.util.thread.UIBundlingThread;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPartListener;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The utility class to facilitate Javascript programming for PV operation.
@@ -58,7 +58,7 @@ public class PVUtil {
      */
     public final static IPV createPV(String name, AbstractBaseEditPart widget) throws Exception {
 
-        final IPV pv = BOYPVFactory.createPV(name, false, 20);
+        final IPV pv = BOYPVFactory.createPV(name, 20);
         pv.start();
         widget.addEditPartListener(new EditPartListener.Stub() {
 

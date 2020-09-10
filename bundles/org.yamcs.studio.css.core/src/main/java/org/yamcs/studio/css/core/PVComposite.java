@@ -155,11 +155,6 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
             stateInfo.append("Not started");
         } else if (pv.isConnected()) {
             stateInfo.append("Connected");
-            if (pv.isPaused()) {
-                stateInfo.append(" Paused");
-            } else {
-                stateInfo.append(" Running");
-            }
         } else {
             stateInfo.append("Connecting");
         }

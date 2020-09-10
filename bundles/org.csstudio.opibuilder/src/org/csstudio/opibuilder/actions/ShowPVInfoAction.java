@@ -4,9 +4,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.Display;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -22,6 +19,9 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.Display;
 
 /**
  * Show details information of widget's primary PV.
@@ -94,11 +94,6 @@ public class ShowPVInfoAction implements IObjectActionDelegate {
             stateInfo.append("Not started");
         } else if (pv.isConnected()) {
             stateInfo.append("Connected");
-            if (pv.isPaused()) {
-                stateInfo.append(" Paused");
-            } else {
-                stateInfo.append(" Running");
-            }
         } else {
             stateInfo.append("Connecting");
         }

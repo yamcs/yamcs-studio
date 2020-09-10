@@ -27,11 +27,6 @@ import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.util.OPITimer;
 import org.csstudio.opibuilder.visualparts.BorderFactory;
 import org.csstudio.opibuilder.visualparts.BorderStyle;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.AlarmSeverity;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.ListenerList;
@@ -45,6 +40,11 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.RGB;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.AlarmSeverity;
+import org.yamcs.studio.data.vtype.VType;
 
 public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
     // private interface AlarmSeverity extends ISeverity{
@@ -141,7 +141,6 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
     // The update from PV will be suppressed for a brief time when writing was performed
     protected OPITimer updateSuppressTimer;
     private IPVWidgetModel widgetModel;
-    private boolean isAllValuesBuffered;
 
     private ListenerList<ISetPVValueListener> setPVValueListeners;
     private ListenerList<AlarmSeverityListener> alarmSeverityListeners;
@@ -180,8 +179,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                 }
 
                 try {
-                    IPV pv = BOYPVFactory.createPV((String) sp.getPropertyValue(),
-                            isAllValuesBuffered);
+                    IPV pv = BOYPVFactory.createPV((String) sp.getPropertyValue());
                     pvMap.put(sp.getPropertyID(), pv);
                     editpart.addToConnectionHandler((String) sp.getPropertyValue(), pv);
                     WidgetPVListener pvListener = new WidgetPVListener(sp.getPropertyID());
@@ -437,7 +435,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
                 }
                 try {
                     lastWriteAccess = null;
-                    IPV newPV = BOYPVFactory.createPV(newPVName, isAllValuesBuffered);
+                    IPV newPV = BOYPVFactory.createPV(newPVName);
                     WidgetPVListener pvListener = new WidgetPVListener(pvNamePropID);
                     newPV.addListener(pvListener);
                     pvMap.put(pvNamePropID, newPV);
@@ -711,15 +709,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
         }
     }
 
-    public boolean isAllValuesBuffered() {
-        return isAllValuesBuffered;
-    }
-
-    public void setAllValuesBuffered(boolean isAllValuesBuffered) {
-        this.isAllValuesBuffered = isAllValuesBuffered;
-    }
-
-    private void updateWritable(final AbstractWidgetModel widgetModel, IPV pv) {
+    private void updateWritable(AbstractWidgetModel widgetModel, IPV pv) {
         if (lastWriteAccess == null || lastWriteAccess.get() != pv.isWriteAllowed()) {
             if (lastWriteAccess == null) {
                 lastWriteAccess = new AtomicBoolean();
