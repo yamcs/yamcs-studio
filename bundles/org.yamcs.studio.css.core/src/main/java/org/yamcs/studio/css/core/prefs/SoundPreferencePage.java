@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.yamcs.studio.css.core.Activator;
-import org.yamcs.studio.css.core.PVManagerSubscriptionHandler;
 
 public class SoundPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
@@ -56,7 +55,7 @@ public class SoundPreferencePage extends FieldEditorPreferencePage implements IW
         boolean ret = super.performOk();
 
         // Apply preference in Severity Handler Sound class
-        PVManagerSubscriptionHandler.getInstance().getBeeper().updatePreference();
+        Activator.getDefault().getBeeper().updatePreference();
 
         return ret;
     }

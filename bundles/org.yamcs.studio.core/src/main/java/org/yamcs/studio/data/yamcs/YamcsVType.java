@@ -216,7 +216,12 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      * Converts a yamcs ParameterValue to a VType.
      */
     public static YamcsVType fromYamcs(ParameterValue pval) {
-        switch (pval.getEngValue().getType()) {
+        if (!pval.hasEngValue()) {
+            return null;
+        }
+
+        Value engValue = pval.getEngValue();
+        switch (engValue.getType()) {
         case UINT32:
             return new Uint32VType(pval);
         case SINT32:
@@ -242,7 +247,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         case AGGREGATE:
             return new AggregateVType(pval);
         case ARRAY:
-            List<Value> arrayValues = pval.getEngValue().getArrayValueList();
+            List<Value> arrayValues = engValue.getArrayValueList();
             if (arrayValues.isEmpty()) {
                 return null; // TODO
             } else {
@@ -276,7 +281,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
             }
         default:
             throw new IllegalStateException(
-                    "Unexpected type for parameter value. Got: " + pval.getEngValue().getType());
+                    "Unexpected type for parameter value. Got: " + engValue.getType());
         }
     }
 }

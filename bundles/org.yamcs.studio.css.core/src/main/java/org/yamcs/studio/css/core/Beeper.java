@@ -12,8 +12,9 @@ import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.studio.core.ui.SoundSystem;
 import org.yamcs.studio.css.core.prefs.SoundCommandHandler;
+import org.yamcs.studio.data.yamcs.YamcsSubscriptionService.ParameterValueListener;
 
-public class Beeper {
+public class Beeper implements ParameterValueListener {
 
     private String triggerCondition = "NONE";
     private int beepLevel = 0;
@@ -47,7 +48,8 @@ public class Beeper {
         }
     }
 
-    void processDelivery(List<ParameterValue> values) {
+    @Override
+    public void onData(List<ParameterValue> values) {
         if ("NONE".equals(triggerCondition)) {
             return;
         }

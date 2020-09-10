@@ -7,7 +7,6 @@ import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.yamcs.studio.data.ExceptionHandler;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.PVFactory;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The factory to create a PV for BOY. It will create either Utility PV or PVManager PV which depends on the preference
@@ -26,8 +25,7 @@ public class BOYPVFactory {
 
     /**
      * Create a PV. If it is using PV Manager, buffered all values is false and max update rate is determined by GUI
-     * Refresh cycle. In RAP, this method should be called in UI thread. If not, please give the display by calling
-     * {@link #createPV(String, boolean, Display)}.
+     * Refresh cycle.
      * 
      * @param name
      *            name of the PV.

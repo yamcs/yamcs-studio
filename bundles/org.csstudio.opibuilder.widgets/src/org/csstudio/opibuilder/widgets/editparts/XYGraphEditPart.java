@@ -15,9 +15,6 @@ import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.model.XYGraphModel;
 import org.csstudio.opibuilder.widgets.model.XYGraphModel.AxisProperty;
 import org.csstudio.opibuilder.widgets.model.XYGraphModel.TraceProperty;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.draw2d.IFigure;
@@ -30,6 +27,9 @@ import org.eclipse.nebula.visualization.xygraph.figures.ToolbarArmedXYGraph;
 import org.eclipse.nebula.visualization.xygraph.figures.Trace;
 import org.eclipse.nebula.visualization.xygraph.figures.Trace.PointStyle;
 import org.eclipse.nebula.visualization.xygraph.figures.Trace.TraceType;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
 
 public class XYGraphEditPart extends AbstractPVWidgetEditPart {
 
@@ -490,8 +490,11 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             if (dataProvider.isConcatenate_data()) {
                 IPV pv = getPV(xPVPropID);
                 if (pv != null) {
-                    for (VType o : pv.getAllBufferedValues()) {
-                        setXValue(dataProvider, o);
+                    List<VType> values = pv.getAllBufferedValues();
+                    if (values != null) {
+                        for (VType o : values) {
+                            setXValue(dataProvider, o);
+                        }
                     }
                 }
             } else {
@@ -504,10 +507,13 @@ public class XYGraphEditPart extends AbstractPVWidgetEditPart {
             }
             if (dataProvider.isConcatenate_data()) {
                 IPV pv = getPV(yPVPropID);
-                if (pv != null) {
-                    // values are set during figure construction time, when the pv might not even exist yet
-                    for (VType o : pv.getAllBufferedValues()) {
-                        setYValue(trace, dataProvider, o);
+                if (pv != null) { // values are set during figure construction time, when the pv might not even exist
+                                  // yet
+                    List<VType> values = pv.getAllBufferedValues();
+                    if (values != null) {
+                        for (VType o : values) {
+                            setYValue(trace, dataProvider, o);
+                        }
                     }
                 }
             } else {

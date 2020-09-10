@@ -7,9 +7,11 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,6 +41,8 @@ import org.yamcs.protobuf.SubscribeProcessorsRequest;
 import org.yamcs.protobuf.SubscribeTimeRequest;
 import org.yamcs.protobuf.UserInfo;
 import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
+import org.yamcs.studio.data.PVFactory;
+import org.yamcs.studio.data.yamcs.YamcsSubscriptionService;
 
 import com.google.protobuf.Empty;
 
@@ -70,12 +74,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
+    private List<PluginService> pluginServices = new CopyOnWriteArrayList<>();
+
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
         // Warning to future self: don't access preference store here. It triggers before workspace selection, causing
         // chaos.
+
+        pluginServices.add(new YamcsSubscriptionService());
     }
 
     public static void addListener(YamcsAware listener) {
@@ -98,6 +106,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     public static void removeListener(YamcsAware listener) {
         plugin.listeners.remove(listener);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends PluginService> T getService(Class<T> clazz) {
+        for (PluginService service : plugin.pluginServices) {
+            if (service.getClass().isAssignableFrom(clazz)) {
+                return (T) service;
+            }
+        }
+        return null;
     }
 
     public static UserInfo getUser() {
@@ -131,6 +149,13 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     @Override
     public void stop(BundleContext context) throws Exception {
+        for (PluginService pluginService : pluginServices) {
+            pluginService.dispose();
+        }
+
+        if (PVFactory.SIMPLE_PV_THREAD != null) {
+            PVFactory.SIMPLE_PV_THREAD.shutdown();
+        }
         try {
             plugin = null;
             if (yamcsClient != null) {

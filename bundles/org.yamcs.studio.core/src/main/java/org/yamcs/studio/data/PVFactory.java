@@ -47,7 +47,7 @@ public class PVFactory {
             boolean bufferAllValues,
             Executor notificationThread,
             ExceptionHandler exceptionHandler) throws Exception {
-        return new IPV(name);
+        return new IPV(name, notificationThread);
     }
 
     /**
@@ -67,7 +67,7 @@ public class PVFactory {
      * @throws Exception
      *             error on creating pv.
      */
-    public synchronized IPV createPV(final String name) throws Exception {
+    public synchronized IPV createPV(String name) throws Exception {
         if (SIMPLE_PV_THREAD == null) {
             SIMPLE_PV_THREAD = Executors.newSingleThreadExecutor();
         }

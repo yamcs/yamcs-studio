@@ -1,29 +1,70 @@
 package org.yamcs.studio.data;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.vtype.VType;
+import org.yamcs.studio.data.yamcs.YamcsSubscriptionService;
 
 public class IPV {
 
     private static final Logger log = Logger.getLogger(IPV.class.getName());
+    private static final AtomicLong SEQ = new AtomicLong();
 
-    private String name;
+    private final long id;
+    private final String name;
+    private final PVType type;
+    private final Executor notificationThread;
 
-    public IPV(String name) {
+    private AtomicBoolean started = new AtomicBoolean(false); // start() has been called (fully executed or not)
+    private AtomicBoolean starting = new AtomicBoolean(false); // PV is during start
+
+    // PV providers can use this to force a PV as disconnected
+    private boolean invalid = false;
+
+    private List<IPVListener> listeners = new CopyOnWriteArrayList<>();
+
+    private YamcsSubscriptionService yamcsSubscription = YamcsPlugin.getService(YamcsSubscriptionService.class);
+
+    public IPV(String name, Executor notificationThread) {
+        id = SEQ.getAndIncrement();
         this.name = Objects.requireNonNull(name);
-        System.out.println("A NEW PV " + name);
+        this.notificationThread = Objects.requireNonNull(notificationThread);
+
+        if (name.startsWith("loc://")) {
+            type = PVType.LOCAL;
+        } else {
+            type = PVType.YAMCS;
+        }
+
+        log.fine(String.format("Creating PV %s", this));
+
     }
 
     /**
      * Add a listener to the PV, which will be notified on events of the PV in the given notify thread.
-     *
-     * @param listener
-     *            the listener
      */
     public void addListener(IPVListener listener) {
+        listeners.add(listener);
+        if (type == PVType.YAMCS) {
+            if (yamcsSubscription.isSubscriptionAvailable()) {
+                notificationThread.execute(() -> {
+                    listener.connectionChanged(this);
+                    listener.valueChanged(this);
+                });
+            }
+        }
+    }
+
+    public void removeListener(IPVListener listener) {
+        listeners.remove(listener);
     }
 
     /**
@@ -35,6 +76,10 @@ public class IPV {
      *         value.
      */
     public List<VType> getAllBufferedValues() {
+        VType obj = getValue();
+        if (obj != null) {
+            return Arrays.asList(obj);
+        }
         return null;
     }
 
@@ -51,26 +96,41 @@ public class IPV {
      *         connected. For example, the value is not a VType, not prepared yet or it has null as the initial value.
      */
     public VType getValue() {
+        if (type == PVType.YAMCS) {
+            return yamcsSubscription.getValue(this);
+        }
         return null;
     }
 
     /**
      * Return true if all values during an update period should be buffered.
-     *
-     * @return true if all values should be buffered.
      */
     public boolean isBufferingValues() {
         return false;
     }
 
     /**
-     * If the PV is connected. If the PV is an aggregate of multiple PVs, the connection state should be determined by
-     * the aggregator. For example, the aggregator countConnected(�pv1�, �pv2�, �pv3�,�) should always return connected.
-     *
-     * @return true if the PV is connected.
+     * Returns the 'connection' state of an individual PV. If the PV is an aggregate of multiple PVs, the connection
+     * state should be determined by the aggregator. For example, the aggregator countConnected(pv1, pv2, pv3,) should
+     * always return connected.
      */
     public boolean isConnected() {
+        if (invalid) { // PV provider is not confirming this PV
+            return false;
+        } else if (type == PVType.YAMCS) {
+            if (yamcsSubscription.isSubscriptionAvailable()) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    public void notifyConnectionChange() {
+        listeners.forEach(l -> l.connectionChanged(this));
+    }
+
+    public void notifyValueChange() {
+        listeners.forEach(l -> l.valueChanged(this));
     }
 
     /**
@@ -89,15 +149,14 @@ public class IPV {
      * @return true if the pv is started but not stopped.
      */
     public boolean isStarted() {
-        return false;
+        return started.get();
     }
 
-    /** @return <code>true</code> if the PV is connected and allowed to write. */
+    /**
+     * @return <code>true</code> if the PV is connected and allowed to write.
+     */
     public boolean isWriteAllowed() {
         return false;
-    }
-
-    public void removeListener(IPVListener listener) {
     }
 
     /**
@@ -113,13 +172,13 @@ public class IPV {
     /**
      * Set PV to a given value asynchronously. It will return immediately. Should accept number, number array,
      * <code>String</code>, maybe more.
-     *
-     * @param value
-     *            Value to write to the PV
-     * @throws Exception
-     *             on error.
      */
-    public void setValue(Object value) throws Exception {
+    public void setValue(Object value) {
+    }
+
+    public void setInvalid() {
+        invalid = true;
+        listeners.forEach(l -> l.connectionChanged(this));
     }
 
     /**
@@ -135,8 +194,6 @@ public class IPV {
      *            timeout in millisecond for both pv connection and write operation, so in very rare case, it could take
      *            maximum 2*timeout ms for the timeout.
      * @return true if write successful or false otherwise.
-     * @throws Exception
-     *             on error such as connection failed.
      */
     public boolean setValue(Object value, int timeout) throws Exception {
         return false;
@@ -144,12 +201,22 @@ public class IPV {
 
     /**
      * Start to connect and listen on the PV. To start an already started PV will get an {@link IllegalStateException}.
-     *
-     * @throws Exception
-     *             on error.
-     *
      */
     public void start() throws Exception {
+        log.fine(String.format("Starting PV %s", this));
+        if (!started.getAndSet(true)) {
+            starting.set(true);
+            // On same thread as where updates are handled (avoid missing events)
+            notificationThread.execute(() -> {
+                if (type == PVType.YAMCS) {
+                    yamcsSubscription.register(this);
+                }
+                starting.set(false);
+                log.fine(String.format("Start finished for PV %s", this));
+            });
+        } else {
+            throw new IllegalStateException(String.format("PV %s has already been started.", this));
+        }
     }
 
     /**
@@ -159,11 +226,23 @@ public class IPV {
      * release resources. To stop an already stopped PV or not started PV will do nothing but log a warning message.
      */
     public void stop() {
-        System.out.println("PV " + name + " should stop");
+        log.fine(String.format("Stopping PV %s", this));
+        if (!started.get()) {
+            log.warning(String.format("PV %s has already been stopped or was not started yet", this));
+            return;
+        }
+        if (starting.get()) { // Start-up is on notification thread. Stop it there as soon as it finishes.
+            notificationThread.execute(() -> stop());
+            return;
+        }
+        started.set(false);
+        if (type == PVType.YAMCS) {
+            yamcsSubscription.unregister(this);
+        }
     }
 
     @Override
     public String toString() {
-        return name;
+        return name + " (#" + id + ")";
     }
 }

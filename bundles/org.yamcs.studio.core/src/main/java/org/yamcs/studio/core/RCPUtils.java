@@ -28,7 +28,6 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Various 'improvements' to RCP code to shorten our code a bit

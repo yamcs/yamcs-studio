@@ -2,26 +2,28 @@ package org.yamcs.studio.css.core;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.yamcs.studio.core.YamcsPlugin;
+import org.yamcs.studio.data.yamcs.YamcsSubscriptionService;
 
 public class Activator extends AbstractUIPlugin {
 
     private static BundleContext bundleContext;
     private static Activator plugin;
 
-    private PVManagerSubscriptionHandler pvCatalogue;
+    private Beeper beeper;
 
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         bundleContext = context;
         plugin = this;
-
-        pvCatalogue = new PVManagerSubscriptionHandler();
+        beeper = new Beeper();
+        YamcsSubscriptionService service = YamcsPlugin.getService(YamcsSubscriptionService.class);
+        service.addParameterValueListener(beeper);
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
-        pvCatalogue.stop();
         super.stop(context);
         plugin = null;
     }
@@ -34,7 +36,7 @@ public class Activator extends AbstractUIPlugin {
         return bundleContext;
     }
 
-    public PVManagerSubscriptionHandler getPVCatalogue() {
-        return pvCatalogue;
+    public Beeper getBeeper() {
+        return beeper;
     }
 }
