@@ -69,8 +69,8 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         return subscription != null;
     }
 
-    public VType getValue(IPV pv) {
-        NamedObjectId id = identityOf(pv);
+    public VType getValue(String pvName) {
+        NamedObjectId id = identityOf(pvName);
         if (subscription != null) {
             ParameterValue pval = subscription.get(id);
             if (pval != null) {
@@ -120,7 +120,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
      * Async adds a Yamcs PV for receiving updates.
      */
     public void register(IPV pv) {
-        NamedObjectId id = identityOf(pv);
+        NamedObjectId id = identityOf(pv.getName());
         executor.execute(() -> {
             Set<IPV> pvs = pvsById.computeIfAbsent(id, x -> new HashSet<>());
             pvs.add(pv);
@@ -132,7 +132,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
      * Async removes a Yamcs PV from receiving updates.
      */
     public void unregister(IPV pv) {
-        NamedObjectId id = identityOf(pv);
+        NamedObjectId id = identityOf(pv.getName());
         executor.execute(() -> {
             Set<IPV> pvs = pvsById.get(id);
             if (pvs != null) {
@@ -174,9 +174,9 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         }
     }
 
-    private static NamedObjectId identityOf(IPV pv) {
+    private static NamedObjectId identityOf(String pvName) {
         return NamedObjectId.newBuilder()
-                .setName(pv.getName())
+                .setName(pvName)
                 .build();
     }
 

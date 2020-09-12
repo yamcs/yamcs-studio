@@ -3,14 +3,15 @@ package org.yamcs.studio.data;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.vtype.VType;
-import org.yamcs.studio.data.yamcs.YamcsSubscriptionService;
 
 public class IPV {
 
@@ -19,32 +20,24 @@ public class IPV {
 
     private final long id;
     private final String name;
-    private final PVType type;
     private final Executor notificationThread;
 
     private AtomicBoolean started = new AtomicBoolean(false); // start() has been called (fully executed or not)
     private AtomicBoolean starting = new AtomicBoolean(false); // PV is during start
 
-    // PV providers can use this to force a PV as disconnected
+    // Datasources can use this to force a PV as disconnected
     private boolean invalid = false;
+
+    private Datasource datasource;
 
     private List<IPVListener> listeners = new CopyOnWriteArrayList<>();
 
-    private YamcsSubscriptionService yamcsSubscription = YamcsPlugin.getService(YamcsSubscriptionService.class);
-
-    public IPV(String name, Executor notificationThread) {
+    IPV(String name, Datasource datasource, Executor notificationThread) {
         id = SEQ.getAndIncrement();
         this.name = Objects.requireNonNull(name);
+        this.datasource = Objects.requireNonNull(datasource);
         this.notificationThread = Objects.requireNonNull(notificationThread);
-
-        if (name.startsWith("loc://")) {
-            type = PVType.LOCAL;
-        } else {
-            type = PVType.YAMCS;
-        }
-
         log.fine(String.format("Creating PV %s", this));
-
     }
 
     /**
@@ -52,14 +45,10 @@ public class IPV {
      */
     public void addListener(IPVListener listener) {
         listeners.add(listener);
-        if (type == PVType.YAMCS) {
-            if (yamcsSubscription.isSubscriptionAvailable()) {
-                notificationThread.execute(() -> {
-                    listener.connectionChanged(this);
-                    listener.valueChanged(this);
-                });
-            }
-        }
+        notificationThread.execute(() -> {
+            listener.connectionChanged(this);
+            listener.valueChanged(this);
+        });
     }
 
     public void removeListener(IPVListener listener) {
@@ -79,10 +68,7 @@ public class IPV {
      *         connected. For example, the value is not a VType, not prepared yet or it has null as the initial value.
      */
     public VType getValue() {
-        if (type == PVType.YAMCS) {
-            return yamcsSubscription.getValue(this);
-        }
-        return null;
+        return datasource.getValue(name);
     }
 
     /**
@@ -91,14 +77,7 @@ public class IPV {
      * always return connected.
      */
     public boolean isConnected() {
-        if (invalid) { // PV provider is not confirming this PV
-            return false;
-        } else if (type == PVType.YAMCS) {
-            if (yamcsSubscription.isSubscriptionAvailable()) {
-                return true;
-            }
-        }
-        return false;
+        return !invalid && datasource.isConnected(this);
     }
 
     public void notifyConnectionChange() {
@@ -107,6 +86,10 @@ public class IPV {
 
     public void notifyValueChange() {
         listeners.forEach(l -> l.valueChanged(this));
+    }
+
+    public void notifyWritePermissionChange() {
+        listeners.forEach(l -> l.writePermissionChanged(this));
     }
 
     /**
@@ -123,7 +106,7 @@ public class IPV {
      * @return <code>true</code> if the PV is connected and allowed to write.
      */
     public boolean isWriteAllowed() {
-        return false;
+        return datasource.isWriteAllowed(this);
     }
 
     /**
@@ -131,6 +114,13 @@ public class IPV {
      * <code>String</code>, maybe more.
      */
     public void setValue(Object value) {
+        System.out.println("VALUE BEING SET TO " + value);
+        datasource.writeValue(this, value, err -> {
+            if (err != null) {
+                log.log(Level.SEVERE, "Failed to update value", err);
+            }
+        });
+
     }
 
     public void setInvalid() {
@@ -153,7 +143,19 @@ public class IPV {
      * @return true if write successful or false otherwise.
      */
     public boolean setValue(Object value, int timeout) throws Exception {
-        return false;
+        AtomicBoolean result = new AtomicBoolean();
+        CountDownLatch latch = new CountDownLatch(1);
+        datasource.writeValue(this, value, err -> {
+            if (err != null) {
+                log.log(Level.SEVERE, "Failed to update value", err);
+            }
+            result.set(err == null);
+            latch.countDown();
+        });
+        if (!latch.await(timeout, TimeUnit.MILLISECONDS)) {
+            throw new Exception(String.format("Timeout while writing PV value", timeout));
+        }
+        return result.get();
     }
 
     /**
@@ -165,9 +167,7 @@ public class IPV {
             starting.set(true);
             // On same thread as where updates are handled (avoid missing events)
             notificationThread.execute(() -> {
-                if (type == PVType.YAMCS) {
-                    yamcsSubscription.register(this);
-                }
+                datasource.onStarted(this);
                 starting.set(false);
                 log.fine(String.format("Start finished for PV %s", this));
             });
@@ -188,13 +188,11 @@ public class IPV {
             return;
         }
         if (starting.get()) { // Start-up is on notification thread. Stop it there as soon as it finishes.
-            notificationThread.execute(() -> stop());
+            notificationThread.execute(this::stop);
             return;
         }
         started.set(false);
-        if (type == PVType.YAMCS) {
-            yamcsSubscription.unregister(this);
-        }
+        datasource.onStopped(this);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.yamcs.studio.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,11 +15,22 @@ public class PVFactory {
 
     private static final PVFactory INSTANCE = new PVFactory();
 
+    private List<Datasource> datasources = new ArrayList<>();
+
     private PVFactory() {
+        datasources.add(new LocalDatasource());
+        datasources.add(new ParameterDatasource()); // Keep last (it's the default)
     }
 
     public static PVFactory getInstance() {
         return INSTANCE;
+    }
+
+    public synchronized IPV createPV(String name) throws Exception {
+        if (SIMPLE_PV_THREAD == null) {
+            SIMPLE_PV_THREAD = Executors.newSingleThreadExecutor();
+        }
+        return createPV(name, false, 10, SIMPLE_PV_THREAD, null);
     }
 
     /**
@@ -35,39 +48,17 @@ public class PVFactory {
      * @param exceptionHandler
      *            the handler to handle all exceptions happened in pv connection layer. If this is null, pv read
      *            listener or pv write listener will be notified on read or write exceptions respectively.
-     *
-     * @return the PV.
-     * @throws Exception
-     *             error on creating pv.
      */
-    public IPV createPV(String name,
-            boolean readOnly, long minUpdatePeriodInMs,
-            Executor notificationThread,
+    public IPV createPV(String name, boolean readOnly, long minUpdatePeriodInMs, Executor notificationThread,
             ExceptionHandler exceptionHandler) throws Exception {
-        return new IPV(name, notificationThread);
-    }
-
-    /**
-     * Create a PV with most of the parameters in default value:
-     *
-     * <pre>
-     * readOnly = false;
-     * minUpdatePeriod = 10 ms;
-     * notificationThread = {@link #SIMPLE_PV_THREAD}
-     * exceptionHandler = null;
-     * </pre>
-     *
-     * @param name
-     *            name of the PV. Must not be null.
-     * @return the pv.
-     * @throws Exception
-     *             error on creating pv.
-     */
-    public synchronized IPV createPV(String name) throws Exception {
-        if (SIMPLE_PV_THREAD == null) {
-            SIMPLE_PV_THREAD = Executors.newSingleThreadExecutor();
+        Datasource datasource = null;
+        for (Datasource candidate : datasources) {
+            if (candidate.supportsPVName(name)) {
+                datasource = candidate;
+                break;
+            }
         }
-        return createPV(name, false, 10, SIMPLE_PV_THREAD, null);
+        return new IPV(name, datasource, notificationThread);
     }
 
     public static synchronized ExecutorService getDefaultPVNotificationThread() {

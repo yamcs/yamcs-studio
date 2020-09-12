@@ -373,7 +373,7 @@ public class PVUtil {
      * @param timeout
      *            maximum time to try connection.
      */
-    public final static void writePV(final String pvName, final Object value, final int timeout) {
+    public final static void writePV(String pvName, Object value, int timeout) {
         final Display display = DisplayUtils.getDisplay();
         Job job = new Job("Writing PV: " + pvName) {
             @Override
