@@ -247,15 +247,16 @@ public class YamcsPlugin extends AbstractUIPlugin {
     }
 
     public static String getInstance() {
-        return plugin.instance;
+        return plugin != null ? plugin.instance : null;
     }
 
     public static String getProcessor() {
-        return plugin.processor.getName();
+        ProcessorInfo info = getProcessorInfo();
+        return info != null ? info.getName() : null;
     }
 
     public static ProcessorInfo getProcessorInfo() {
-        return plugin.processor;
+        return plugin != null ? plugin.processor : null;
     }
 
     public static SignificanceLevelType getClearance() {

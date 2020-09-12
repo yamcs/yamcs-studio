@@ -43,8 +43,8 @@ public class LocalDatasource implements Datasource {
     }
 
     @Override
-    public VType getValue(String pvName) {
-        String localName = toLocalName(pvName);
+    public VType getValue(IPV pv) {
+        String localName = toLocalName(pv.getName());
         LocalData localData = name2data.get(localName);
         if (localData != null) {
             return localData.getValue();

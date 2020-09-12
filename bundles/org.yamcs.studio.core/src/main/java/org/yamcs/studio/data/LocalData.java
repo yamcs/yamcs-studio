@@ -35,15 +35,15 @@ public class LocalData {
 
     private Set<IPV> pvs = new HashSet<>();
 
-    public LocalData(String name) {
-        this.name = name;
-    }
-
-    public VType value;
+    private VType value;
 
     // Value may be initialized to null, so following field distinguishes between
     // null and undefined
-    public AtomicBoolean valueDefined = new AtomicBoolean(false);
+    private AtomicBoolean valueDefined = new AtomicBoolean(false);
+
+    public LocalData(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;

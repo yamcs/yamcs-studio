@@ -10,7 +10,7 @@ public interface Datasource {
 
     boolean isWriteAllowed(IPV pv);
 
-    VType getValue(String pvName);
+    VType getValue(IPV pv);
 
     void writeValue(IPV pv, Object value, WriteCallback callback);
 

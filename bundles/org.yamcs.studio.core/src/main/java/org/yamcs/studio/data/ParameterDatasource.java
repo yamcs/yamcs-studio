@@ -31,8 +31,8 @@ public class ParameterDatasource implements Datasource {
     }
 
     @Override
-    public VType getValue(String pvName) {
-        return yamcsSubscription.getValue(pvName);
+    public VType getValue(IPV pv) {
+        return yamcsSubscription.getValue(pv.getName());
     }
 
     @Override

@@ -18,7 +18,8 @@ public class PVFactory {
     private List<Datasource> datasources = new ArrayList<>();
 
     private PVFactory() {
-        datasources.add(new LocalDatasource());
+        datasources.add(new LocalDatasource()); // loc://
+        datasources.add(new StateDatasource()); // state://
         datasources.add(new ParameterDatasource()); // Keep last (it's the default)
     }
 

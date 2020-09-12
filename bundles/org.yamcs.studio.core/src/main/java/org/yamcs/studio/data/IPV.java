@@ -68,7 +68,7 @@ public class IPV {
      *         connected. For example, the value is not a VType, not prepared yet or it has null as the initial value.
      */
     public VType getValue() {
-        return datasource.getValue(name);
+        return datasource.getValue(this);
     }
 
     /**
@@ -114,13 +114,11 @@ public class IPV {
      * <code>String</code>, maybe more.
      */
     public void setValue(Object value) {
-        System.out.println("VALUE BEING SET TO " + value);
         datasource.writeValue(this, value, err -> {
             if (err != null) {
                 log.log(Level.SEVERE, "Failed to update value", err);
             }
         });
-
     }
 
     public void setInvalid() {
@@ -167,8 +165,11 @@ public class IPV {
             starting.set(true);
             // On same thread as where updates are handled (avoid missing events)
             notificationThread.execute(() -> {
-                datasource.onStarted(this);
-                starting.set(false);
+                try {
+                    datasource.onStarted(this);
+                } finally { // Protect against onStarted throwing an exception
+                    starting.set(false);
+                }
                 log.fine(String.format("Start finished for PV %s", this));
             });
         } else {
