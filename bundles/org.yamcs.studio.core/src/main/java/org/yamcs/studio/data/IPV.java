@@ -161,7 +161,7 @@ public class IPV {
     /**
      * Start to connect and listen on the PV. To start an already started PV will get an {@link IllegalStateException}.
      */
-    public void start() throws Exception {
+    public void start() {
         log.fine(String.format("Starting PV %s", this));
         if (!started.getAndSet(true)) {
             starting.set(true);

@@ -884,7 +884,7 @@ public class ValueFactory {
      *            the alarm for the value
      * @return the wrapped value
      * @deprecated use
-     *             {@link #toVType(java.lang.Object, org.diirt.vtype.Alarm, org.diirt.vtype.Time, org.diirt.vtype.Display) }
+     *             {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display) }
      */
     @Deprecated
     public static VType wrapValue(Object value, Alarm alarm) {
@@ -923,7 +923,7 @@ public class ValueFactory {
 
     /**
      * Converts a standard java type to VTypes. Returns null if no conversion is possible. Calls
-     * {@link #toVType(java.lang.Object, org.diirt.vtype.Alarm, org.diirt.vtype.Time, org.diirt.vtype.Display)} with no
+     * {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display)} with no
      * alarm, time now and no display.
      *
      * @param javaObject
@@ -1011,7 +1011,7 @@ public class ValueFactory {
     }
 
     /**
-     * As {@link #toVType(java.lang.Object, org.diirt.vtype.Alarm, org.diirt.vtype.Time, org.diirt.vtype.Display)} but
+     * As {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display)} but
      * throws an exception if conversion not possible.
      *
      * @param javaObject

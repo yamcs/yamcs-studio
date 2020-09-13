@@ -4,6 +4,10 @@ public class IVString extends IVMetadata implements VString {
 
     private final String value;
 
+    public IVString(String value) {
+        this(value, ValueFactory.alarmNone(), ValueFactory.timeNow());
+    }
+
     public IVString(String value, Alarm alarm, Time time) {
         super(alarm, time);
         this.value = value;

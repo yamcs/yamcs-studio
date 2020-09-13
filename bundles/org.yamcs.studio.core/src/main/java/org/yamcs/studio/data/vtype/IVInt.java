@@ -7,7 +7,11 @@ public class IVInt extends IVNumeric implements VInt {
 
     private final Integer value;
 
-    IVInt(Integer value, Alarm alarm, Time time, Display display) {
+    public IVInt(Integer value) {
+        this(value, ValueFactory.alarmNone(), ValueFactory.timeNow(), ValueFactory.displayNone());
+    }
+
+    public IVInt(Integer value, Alarm alarm, Time time, Display display) {
         super(alarm, time, display);
         this.value = value;
     }

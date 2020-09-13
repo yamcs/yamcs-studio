@@ -3,11 +3,15 @@ package org.yamcs.studio.data.vtype;
 /**
  * Immutable VDouble implementation.
  */
-class IVDouble extends IVNumeric implements VDouble {
+public class IVDouble extends IVNumeric implements VDouble {
 
     private final Double value;
 
-    IVDouble(Double value, Alarm alarm, Time time, Display display) {
+    public IVDouble(Double value) {
+        this(value, ValueFactory.alarmNone(), ValueFactory.timeNow(), ValueFactory.displayNone());
+    }
+
+    public IVDouble(Double value, Alarm alarm, Time time, Display display) {
         super(alarm, time, display);
         this.value = value;
     }

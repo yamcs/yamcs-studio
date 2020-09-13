@@ -38,7 +38,6 @@ public class BOYPVFactory {
      */
     public static IPV createPV(String name, int updateDuration) throws Exception {
         PVFactory pvFactory = PVFactory.getInstance();
-        return pvFactory.createPV(
-                name, false, updateDuration, BOY_PV_THREAD, exceptionHandler);
+        return pvFactory.createPV(name, false, BOY_PV_THREAD, exceptionHandler);
     }
 }

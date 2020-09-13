@@ -1,7 +1,7 @@
 package org.yamcs.studio.data.vtype;
 
 /**
- * Represent an image. Use {@link ValueUtil#toImage(org.diirt.vtype.VImage) } and
+ * Represent an image. Use {@link ValueUtil#toImage(org.yamcs.studio.data.vtype.VImage) } and
  * {@link ValueUtil#toVImage(java.awt.image.BufferedImage)} to convert objects of this class to and from awt images.
  * 
  *

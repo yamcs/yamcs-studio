@@ -52,13 +52,10 @@ public class SimDatasource implements Datasource {
     public void onStarted(IPV pv) {
         String basename = pv.getName().substring(SCHEME.length());
 
-        SimData simData = name2data.get(basename);
-        if (simData == null) {
+        SimData simData = name2data.computeIfAbsent(basename, x -> {
             SimFunction<?> function = (SimFunction<?>) NameParser.createFunction(basename);
-            simData = new SimulationSimData(function, exec);
-
-            name2data.put(basename, simData);
-        }
+            return new SimulationSimData(function, exec);
+        });
 
         pv2data.put(pv, simData);
         simData.register(pv);
