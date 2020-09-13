@@ -19,7 +19,9 @@ public class PVFactory {
 
     private PVFactory() {
         datasources.add(new LocalDatasource()); // loc://
+        datasources.add(new SimDatasource()); // sim://
         datasources.add(new StateDatasource()); // state://
+        datasources.add(new SysDatasource()); // sys://
         datasources.add(new ParameterDatasource()); // Keep last (it's the default)
     }
 

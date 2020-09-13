@@ -25,6 +25,7 @@ public class StateDatasource implements Datasource {
      */
     private static ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 
+    private Map<String, StateData> name2data = new HashMap<>();
     private Map<IPV, StateData> pv2data = new HashMap<>();
 
     @Override
@@ -59,30 +60,26 @@ public class StateDatasource implements Datasource {
 
     @Override
     public void onStarted(IPV pv) {
-        StateData stateData;
         String basename = pv.getName().substring(SCHEME.length());
-        switch (basename) {
-        case "yamcs.host":
-            stateData = new YamcsHostState(exec);
-            break;
-        case "yamcs.instance":
-            stateData = new YamcsInstanceState(exec);
-            break;
-        case "yamcs.processor":
-            stateData = new YamcsProcessorState(exec);
-            break;
-        case "yamcs.serverId":
-            stateData = new YamcsServerIdState(exec);
-            break;
-        case "yamcs.username":
-            stateData = new YamcsUsernameState(exec);
-            break;
-        case "yamcs.version":
-            stateData = new YamcsVersionState(exec);
-            break;
-        default:
-            throw new IllegalArgumentException("Channel " + basename + " does not exist");
-        }
+
+        StateData stateData = name2data.computeIfAbsent(basename, x -> {
+            switch (basename) {
+            case "yamcs.host":
+                return new YamcsHostState(exec);
+            case "yamcs.instance":
+                return new YamcsInstanceState(exec);
+            case "yamcs.processor":
+                return new YamcsProcessorState(exec);
+            case "yamcs.serverId":
+                return new YamcsServerIdState(exec);
+            case "yamcs.username":
+                return new YamcsUsernameState(exec);
+            case "yamcs.version":
+                return new YamcsVersionState(exec);
+            default:
+                throw new IllegalArgumentException("Channel " + basename + " does not exist");
+            }
+        });
 
         pv2data.put(pv, stateData);
         stateData.register(pv);

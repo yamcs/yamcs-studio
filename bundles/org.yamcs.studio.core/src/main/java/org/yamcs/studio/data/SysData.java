@@ -8,17 +8,37 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.yamcs.studio.data.vtype.Display;
+import org.yamcs.studio.data.vtype.DisplayBuilder;
+import org.yamcs.studio.data.vtype.NumberFormats;
 import org.yamcs.studio.data.vtype.VType;
 
-public abstract class StateData {
+public abstract class SysData {
 
-    private static Logger log = Logger.getLogger(StateData.class.getName());
+    private static Logger log = Logger.getLogger(SysData.class.getName());
+
+    protected static Display memoryDisplay = new DisplayBuilder().format(NumberFormats.format(3))
+            .units("MiB")
+            .lowerAlarmLimit(0.0).lowerCtrlLimit(0.0).lowerDisplayLimit(0.0).lowerWarningLimit(0.0)
+            .upperAlarmLimit(maxMemory())
+            .upperCtrlLimit(maxMemory())
+            .upperDisplayLimit(maxMemory())
+            .upperWarningLimit(maxMemory())
+            .build();
+
+    protected static double bytesToMebiByte(long bytes) {
+        return ((double) bytes) / (1024.0 * 1024.0);
+    }
+
+    private static double maxMemory() {
+        return bytesToMebiByte(Runtime.getRuntime().maxMemory());
+    }
 
     private final Runnable task = () -> {
         try {
             createAndSaveValue();
         } catch (Exception ex) {
-            log.log(Level.WARNING, "Data state problem", ex);
+            log.log(Level.WARNING, "Sys problem", ex);
         }
     };
 
@@ -28,7 +48,7 @@ public abstract class StateData {
     private ScheduledExecutorService executor;
     private ScheduledFuture<?> taskFuture;
 
-    public StateData(ScheduledExecutorService executor) {
+    public SysData(ScheduledExecutorService executor) {
         this.executor = executor;
     }
 
@@ -56,9 +76,7 @@ public abstract class StateData {
             taskFuture = executor.scheduleWithFixedDelay(task, 0, 1, TimeUnit.SECONDS);
         }
         pv.notifyConnectionChange();
-        if (value != null) {
-            pv.notifyValueChange();
-        }
+        pv.notifyValueChange();
     }
 
     void unregister(IPV pv) { // Note that we don't reset the value, it can stay around for a new connect

@@ -35,8 +35,7 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public void writeValue(IPV pv, Object value, WriteCallback callback) {
-        String localName = toLocalName(pv.getName());
-        LocalData localData = name2data.get(localName);
+        LocalData localData = pv2data.get(pv);
         if (localData != null) {
             localData.writeValue(value, callback);
         }
@@ -44,8 +43,7 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public VType getValue(IPV pv) {
-        String localName = toLocalName(pv.getName());
-        LocalData localData = name2data.get(localName);
+        LocalData localData = pv2data.get(pv);
         if (localData != null) {
             return localData.getValue();
         }
@@ -69,18 +67,10 @@ public class LocalDatasource implements Datasource {
 
     @Override
     public void onStopped(IPV pv) {
-        pv2data.remove(pv);
-
-        String localName = toLocalName(pv.getName());
-        LocalData localData = name2data.get(localName);
+        LocalData localData = pv2data.remove(pv);
         if (localData != null) {
             localData.unregister(pv);
         }
-    }
-
-    private static String toLocalName(String pvName) {
-        List<Object> parsedTokens = tokenize(pvName);
-        return parsedTokens.get(0).toString();
     }
 
     private static List<Object> tokenize(String pvName) {

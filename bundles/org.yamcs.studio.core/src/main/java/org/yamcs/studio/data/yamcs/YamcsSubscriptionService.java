@@ -31,6 +31,7 @@ import org.yamcs.studio.data.vtype.VType;
 public class YamcsSubscriptionService implements YamcsAware, ParameterSubscription.Listener, PluginService {
 
     private static final Logger log = Logger.getLogger(YamcsSubscriptionService.class.getName());
+
     private Map<NamedObjectId, Set<IPV>> pvsById = new LinkedHashMap<>();
 
     private ParameterSubscription subscription;
@@ -175,9 +176,20 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
     }
 
     private static NamedObjectId identityOf(String pvName) {
-        return NamedObjectId.newBuilder()
-                .setName(pvName)
-                .build();
+        if (pvName.startsWith("ops://")) {
+            return NamedObjectId.newBuilder()
+                    .setNamespace("MDB:OPS Name")
+                    .setName(pvName.substring("ops://".length()))
+                    .build();
+        } else if (pvName.startsWith("para://")) {
+            return NamedObjectId.newBuilder()
+                    .setName(pvName.substring("para://".length()))
+                    .build();
+        } else {
+            return NamedObjectId.newBuilder()
+                    .setName(pvName)
+                    .build();
+        }
     }
 
     @FunctionalInterface

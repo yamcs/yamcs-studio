@@ -21,14 +21,14 @@ import org.csstudio.opibuilder.model.AbstractLinkingContainerModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.DisplayModel;
 import org.csstudio.opibuilder.util.ResourceUtil;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
 
 /**
  * The script store help to store the compiled script for afterward executions. This is the abstract script store
@@ -157,6 +157,9 @@ public abstract class AbstractScriptStore implements IScriptStore {
             @Override
             public synchronized void valueChanged(IPV pv) {
                 if (triggerSuppressed && checkPVsConnected(scriptData, pvArray)) {
+                    if (pv.getValue() == null) {
+                        System.out.println("AAA " + pv.getValue());
+                    }
                     executeScriptInUIThread(pv);
                     triggerSuppressed = false;
                 }
@@ -184,6 +187,10 @@ public abstract class AbstractScriptStore implements IScriptStore {
                     }
                 }
 
+                if (pv.getValue() == null) {
+                    System.out.println("BBB " + pv.getValue());
+                    new IllegalStateException("BBBBB").printStackTrace();
+                }
                 executeScriptInUIThread(pv);
             }
 

@@ -178,7 +178,9 @@ public class LocalData {
     void register(IPV pv) {
         pvs.add(pv);
         pv.notifyConnectionChange();
-        pv.notifyValueChange();
+        if (value != null) {
+            pv.notifyValueChange();
+        }
         pv.notifyWritePermissionChange();
     }
 

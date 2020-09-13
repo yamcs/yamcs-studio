@@ -46,8 +46,10 @@ public class IPV {
     public void addListener(IPVListener listener) {
         listeners.add(listener);
         notificationThread.execute(() -> {
-            listener.connectionChanged(this);
-            listener.valueChanged(this);
+            if (isConnected()) {
+                listener.connectionChanged(this);
+                listener.valueChanged(this);
+            }
         });
     }
 
