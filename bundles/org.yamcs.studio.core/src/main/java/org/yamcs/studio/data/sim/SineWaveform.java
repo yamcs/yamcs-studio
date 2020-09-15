@@ -62,7 +62,7 @@ public class SineWaveform extends SimFunction<VDoubleArray> {
      */
     public SineWaveform(Double periodInSeconds, Double wavelengthInSamples, Double nSamples,
             Double updateRateInSeconds) {
-        super(updateRateInSeconds, VDoubleArray.class);
+        super(updateRateInSeconds);
         this.periodInSeconds = periodInSeconds;
         this.wavelengthInSamples = wavelengthInSamples;
         this.nSamples = nSamples.intValue();

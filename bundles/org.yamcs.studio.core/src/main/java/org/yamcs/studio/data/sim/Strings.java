@@ -27,7 +27,7 @@ public class Strings extends SimFunction<VString> {
      *            interval between samples in seconds
      */
     public Strings(Double interval) {
-        super(interval, VString.class);
+        super(interval);
         if (interval <= 0.0) {
             throw new IllegalArgumentException("Interval must be greater than zero (was " + interval + ")");
         }

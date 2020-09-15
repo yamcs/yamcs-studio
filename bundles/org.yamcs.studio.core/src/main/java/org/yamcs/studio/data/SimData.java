@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.yamcs.studio.data.sim.SimFunction;
-import org.yamcs.studio.data.sim.Simulation;
 import org.yamcs.studio.data.sim.TimeInterval;
 import org.yamcs.studio.data.vtype.VType;
 
@@ -19,17 +18,17 @@ public class SimData {
 
     private static final Logger log = Logger.getLogger(SimData.class.getName());
 
-    private Simulation<?> simulation;
+    private SimFunction<?> function;
     private Set<IPV> pvs = new HashSet<>();
     private VType value;
 
     private final Runnable task = () -> {
         try {
-            if (simulation.lastTime == null) {
-                simulation.lastTime = Instant.now();
+            if (function.lastTime == null) {
+                function.lastTime = Instant.now();
             }
-            List<VType> newValues = simulation
-                    .createValues(TimeInterval.between(simulation.lastTime, Instant.now()));
+            List<VType> newValues = function
+                    .createValues(TimeInterval.between(function.lastTime, Instant.now()));
 
             for (VType newValue : newValues) {
                 if (newValue != null) {
@@ -45,8 +44,12 @@ public class SimData {
     private ScheduledExecutorService executor;
     private ScheduledFuture<?> taskFuture;
 
-    public SimData(Simulation<?> simulation, ScheduledExecutorService executor) {
-        this.simulation = simulation;
+    public SimData(VType constantValue) {
+        value = constantValue;
+    }
+
+    public SimData(SimFunction<?> function, ScheduledExecutorService executor) {
+        this.function = function;
         this.executor = executor;
     }
 
@@ -60,11 +63,9 @@ public class SimData {
 
     void register(IPV pv) {
         pvs.add(pv);
-        if (taskFuture == null) {
-            simulation.lastTime = Instant.now();
-            if (simulation instanceof SimFunction) {
-                simulation.lastTime = simulation.lastTime.minus(((SimFunction<?>) simulation).getTimeBetweenSamples());
-            }
+        if (function != null && taskFuture == null) {
+            function.lastTime = Instant.now();
+            function.lastTime = function.lastTime.minus(function.getTimeBetweenSamples());
             taskFuture = executor.scheduleWithFixedDelay(task, 0, 10, TimeUnit.MILLISECONDS);
         }
         pv.notifyConnectionChange();
@@ -75,9 +76,13 @@ public class SimData {
 
     void unregister(IPV pv) { // Note that we don't reset the value, it can stay around for a new connect
         pvs.remove(pv);
+
+        // Clean up
         if (pvs.isEmpty()) {
-            taskFuture.cancel(true);
-            taskFuture = null;
+            if (taskFuture != null) {
+                taskFuture.cancel(true);
+                taskFuture = null;
+            }
             pv.notifyConnectionChange();
         }
     }

@@ -88,7 +88,7 @@ public class NameParser {
      *            the function call
      * @return the function
      */
-    public static Simulation<?> createFunction(String string) {
+    public static SimFunction<?> createFunction(String string) {
         List<Object> parameters = parseFunction(string);
         StringBuilder className = new StringBuilder("org.yamcs.studio.data.sim.");
         int firstCharPosition = className.length();

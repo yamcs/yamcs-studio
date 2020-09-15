@@ -44,7 +44,7 @@ public class Noise extends SimFunction<VDouble> {
      *            interval between samples in seconds
      */
     public Noise(Double min, Double max, Double interval) {
-        super(interval, VDouble.class);
+        super(interval);
         if (interval <= 0.0) {
             throw new IllegalArgumentException("Interval must be greater than zero (was " + interval + ")");
         }

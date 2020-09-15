@@ -36,11 +36,11 @@ public class Sine extends SimFunction<VDouble> {
      *            maximum value
      * @param samplesPerCycle
      *            number of samples for each full cycle (each 2 Pi)
-     * @param secondsBeetwenSamples
+     * @param secondsBetweenSamples
      *            interval between samples in seconds
      */
-    public Sine(Double min, Double max, Double samplesPerCycle, Double secondsBeetwenSamples) {
-        super(secondsBeetwenSamples, VDouble.class);
+    public Sine(Double min, Double max, Double samplesPerCycle, Double secondsBetweenSamples) {
+        super(secondsBetweenSamples);
         this.min = min;
         this.max = max;
         this.currentValue = 0;

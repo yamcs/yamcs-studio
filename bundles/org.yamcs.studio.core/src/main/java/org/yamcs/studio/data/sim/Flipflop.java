@@ -27,7 +27,7 @@ public class Flipflop extends SimFunction<VBoolean> {
      *            interval between samples in seconds
      */
     public Flipflop(Double interval) {
-        super(interval, VBoolean.class);
+        super(interval);
         if (interval <= 0.0) {
             throw new IllegalArgumentException("Interval must be greater than zero (was " + interval + ")");
         }

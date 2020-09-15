@@ -63,7 +63,7 @@ public class TriangleWaveform extends SimFunction<VDoubleArray> {
      */
     public TriangleWaveform(Double periodInSeconds, Double wavelengthInSamples, Double nSamples,
             Double updateRateInSeconds) {
-        super(updateRateInSeconds, VDoubleArray.class);
+        super(updateRateInSeconds);
         this.periodInSeconds = periodInSeconds;
         this.wavelengthInSamples = wavelengthInSamples;
         this.nSamples = nSamples.intValue();

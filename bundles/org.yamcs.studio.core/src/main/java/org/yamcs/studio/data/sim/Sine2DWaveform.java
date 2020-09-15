@@ -88,7 +88,7 @@ public class Sine2DWaveform extends SimFunction<VDoubleArray> {
      */
     public Sine2DWaveform(Double periodInSeconds, Double wavelengthInSamples, Double angle, Double xSamples,
             Double ySamples, Double updateRateInSeconds) {
-        super(updateRateInSeconds, VDoubleArray.class);
+        super(updateRateInSeconds);
         this.periodInSeconds = periodInSeconds;
         this.wavelengthInSamples = wavelengthInSamples;
         this.xSamples = xSamples.intValue();

@@ -24,7 +24,7 @@ public class Table extends SimFunction<VTable> {
     }
 
     public Table(Double interval) {
-        super(interval, VTable.class);
+        super(interval);
         if (interval <= 0.0) {
             throw new IllegalArgumentException("Interval must be greater than zero (was " + interval + ")");
         }

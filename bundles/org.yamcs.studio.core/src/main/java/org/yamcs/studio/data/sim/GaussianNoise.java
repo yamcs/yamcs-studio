@@ -44,7 +44,7 @@ public class GaussianNoise extends SimFunction<VDouble> {
      *            time between samples in seconds
      */
     public GaussianNoise(Double average, Double stdDev, Double interval) {
-        super(interval, VDouble.class);
+        super(interval);
         if (interval <= 0.0) {
             throw new IllegalArgumentException("Interval must be greater than zero (was " + interval + ")");
         }

@@ -48,7 +48,7 @@ public class GaussianWaveform extends SimFunction<VDoubleArray> {
      *            time between samples in seconds
      */
     public GaussianWaveform(Double periodInSeconds, Double stdDev, Double nSamples, Double updateRateInSeconds) {
-        super(updateRateInSeconds, VDoubleArray.class);
+        super(updateRateInSeconds);
         int size = nSamples.intValue();
         this.periodInSeconds = periodInSeconds;
         buffer = new double[size];

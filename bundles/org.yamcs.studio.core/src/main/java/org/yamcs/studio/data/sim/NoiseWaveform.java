@@ -61,7 +61,7 @@ public class NoiseWaveform extends SimFunction<VDoubleArray> {
      *            time between samples in seconds
      */
     public NoiseWaveform(Double min, Double max, Double nSamples, Double interval) {
-        super(interval, VDoubleArray.class);
+        super(interval);
         this.min = min;
         this.max = max;
         range = this.max - this.min;

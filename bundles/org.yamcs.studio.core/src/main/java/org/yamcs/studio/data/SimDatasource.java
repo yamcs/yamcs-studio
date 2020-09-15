@@ -1,14 +1,15 @@
 package org.yamcs.studio.data;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import org.yamcs.studio.data.sim.NameParser;
 import org.yamcs.studio.data.sim.SimFunction;
-import org.yamcs.studio.data.sim.Simulation;
 import org.yamcs.studio.data.vtype.VType;
+import org.yamcs.studio.data.vtype.ValueFactory;
 
 public class SimDatasource implements Datasource {
 
@@ -53,8 +54,15 @@ public class SimDatasource implements Datasource {
         String basename = pv.getName().substring(SCHEME.length());
 
         SimData simData = name2data.computeIfAbsent(basename, x -> {
-            SimFunction<?> function = (SimFunction<?>) NameParser.createFunction(basename);
-            return new SimulationSimData(function, exec);
+            if (basename.startsWith("const(")) {
+                List<Object> tokens = FunctionParser.parseFunctionWithScalarOrArrayArguments(basename,
+                        "Wrong syntax. Correct examples: const(3.14), const(\"Bob\"), const(\"ON\", \"OFF\"))");
+                VType constantValue = ValueFactory.toVTypeChecked(tokens.get(1));
+                return new SimData(constantValue);
+            } else {
+                SimFunction<?> function = (SimFunction<?>) NameParser.createFunction(basename);
+                return new SimData(function, exec);
+            }
         });
 
         pv2data.put(pv, simData);
@@ -66,12 +74,6 @@ public class SimDatasource implements Datasource {
         SimData simData = pv2data.remove(pv);
         if (simData != null) {
             simData.unregister(pv);
-        }
-    }
-
-    private static final class SimulationSimData extends SimData {
-        SimulationSimData(Simulation<?> simulation, ScheduledExecutorService exec) {
-            super(simulation, exec);
         }
     }
 }
