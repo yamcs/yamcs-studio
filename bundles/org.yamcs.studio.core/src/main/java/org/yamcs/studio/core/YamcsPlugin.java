@@ -89,6 +89,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public static void addListener(YamcsAware listener) {
         plugin.listeners.add(listener);
 
+        if (plugin.yamcsClient != null) {
+            listener.onYamcsConnected();
+        }
+
         if (plugin.instance != null) {
             listener.changeInstance(plugin.instance);
         }
@@ -160,6 +164,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             plugin = null;
             if (yamcsClient != null) {
                 yamcsClient.close();
+                yamcsClient = null;
             }
             if (executor != null) {
                 executor.shutdownNow();

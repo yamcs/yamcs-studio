@@ -23,11 +23,12 @@ public class ProcessorStatusLineContributionItem extends StatusLineContributionI
 
     @Override
     public void changeProcessorInfo(ProcessorInfo processor) {
-        if (isDisposed()) {
+        Display display = Display.getDefault();
+        if (display.isDisposed()) {
             return;
         }
 
-        Display.getDefault().asyncExec(() -> {
+        display.asyncExec(() -> {
             if (processor == null) {
                 setText(DEFAULT_TEXT);
             } else {
