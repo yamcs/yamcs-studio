@@ -49,6 +49,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                 log.fine(String.format("Modifying subscription to %s", pvsById.keySet()));
                 subscription.sendMessage(SubscribeParametersRequest.newBuilder()
                         .setAction(Action.REPLACE)
+                        .setSendFromCache(true)
                         .setAbortOnInvalid(false)
                         .setUpdateOnExpiration(true)
                         .addAllId(getRequestedIdentifiers())
@@ -100,7 +101,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                 pvsById.forEach((id, pvs) -> {
                     pvs.forEach(pv -> {
                         pv.notifyConnectionChange();
-                        pv.setValue(null);
+                        pv.notifyValueChange();
                     });
                 });
 
@@ -109,6 +110,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                 subscription.sendMessage(SubscribeParametersRequest.newBuilder()
                         .setInstance(instance)
                         .setProcessor(processor)
+                        .setSendFromCache(true)
                         .setAbortOnInvalid(false)
                         .setUpdateOnExpiration(true)
                         .addAllId(getRequestedIdentifiers())
@@ -156,6 +158,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
             Set<IPV> pvs = pvsById.get(pval.getId());
             if (pvs != null) {
                 pvs.forEach(pv -> pv.notifyValueChange());
+                pvs.forEach(pv -> pv.notifyWritePermissionChange());
             }
         }
         parameterValueListeners.forEach(l -> l.onData(values));
@@ -175,7 +178,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         }
     }
 
-    private static NamedObjectId identityOf(String pvName) {
+    public static NamedObjectId identityOf(String pvName) {
         if (pvName.startsWith("ops://")) {
             return NamedObjectId.newBuilder()
                     .setNamespace("MDB:OPS Name")
