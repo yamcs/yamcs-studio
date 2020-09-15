@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Yamcs Opsname">
+   <implementation class="org.yamcs.studio.autocomplete.ops.OpsContentProvider" />
+   <service>
+      <provide interface="org.yamcs.studio.autocomplete.IAutoCompleteProvider" />
+   </service>
+   <property name="highLevelProvider" value="true" />
+</scr:component>

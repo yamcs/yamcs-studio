@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="State DataSource">
+   <implementation class="org.yamcs.studio.autocomplete.state.StateContentProvider" />
+   <service>
+      <provide interface="org.yamcs.studio.autocomplete.IAutoCompleteProvider" />
+   </service>
+   <property name="highLevelProvider" value="true" />
+</scr:component>

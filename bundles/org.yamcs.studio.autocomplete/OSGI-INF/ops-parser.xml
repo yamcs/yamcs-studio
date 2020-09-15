@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Yamcs Opsname Parser">
-   <implementation class="org.yamcs.studio.css.core.pvmanager.autocomplete.OpsContentParser"/>
+   <implementation class="org.yamcs.studio.autocomplete.ops.OpsContentParser" />
    <service>
-      <provide interface="org.csstudio.autocomplete.parser.IContentParser"/>
+      <provide interface="org.yamcs.studio.autocomplete.parser.IContentParser" />
    </service>
 </scr:component>

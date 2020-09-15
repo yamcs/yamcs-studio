@@ -20,8 +20,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Export-Package: org.yamcs.studio.css.core,
  org.yamcs.studio.css.core.prefs
 Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
-Service-Component: OSGI-INF/autocomplete/para-parser.xml,
- OSGI-INF/autocomplete/para-provider.xml,
- OSGI-INF/autocomplete/ops-parser.xml,
- OSGI-INF/autocomplete/ops-provider.xml
 Automatic-Module-Name: org.yamcs.studio.css.core

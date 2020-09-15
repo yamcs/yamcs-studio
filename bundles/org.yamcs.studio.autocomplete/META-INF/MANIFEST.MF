@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PV Autocompletion
+Bundle-SymbolicName: org.yamcs.studio.autocomplete;singleton:=true
+Bundle-Version: 1.4.0.rc1
+Bundle-Activator: org.yamcs.studio.autocomplete.AutoCompletePlugin
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.yamcs.studio.core,
+ org.yamcs.p2.client
+Bundle-Vendor: Space Applications Services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.yamcs.studio.autocomplete,
+ org.yamcs.studio.autocomplete.parser,
+ org.yamcs.studio.autocomplete.parser.engine,
+ org.yamcs.studio.autocomplete.parser.engine.expr,
+ org.yamcs.studio.autocomplete.preferences,
+ org.yamcs.studio.autocomplete.proposals,
+ org.yamcs.studio.autocomplete.tooltips,
+ org.yamcs.studio.autocomplete.formula,
+ org.yamcs.studio.autocomplete.loc,
+ org.yamcs.studio.autocomplete.sim,
+ org.yamcs.studio.autocomplete.sys,
+ org.yamcs.studio.autocomplete.ui,
+ org.yamcs.studio.autocomplete.ui.content,
+ org.yamcs.studio.autocomplete.ui.history,
+ org.yamcs.studio.autocomplete.ui.util
+Service-Component: OSGI-INF/*.xml
+Automatic-Module-Name: org.yamcs.studio.autocomplete
