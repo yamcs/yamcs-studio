@@ -37,8 +37,8 @@ public class ImportYSSLandingWizard extends Wizard implements IImportWizard {
                 label.setLayoutData(gd);
 
                 label.setText("The 'YSS Landing' project will be imported to your workspace. This project " +
-                        "is useful for demo purposes and runs against the sample YSS simulator included " +
-                        "in the yamcs-simulation package.\n\n" +
+                        "is useful for demo purposes and runs against the simulation example included " +
+                        "in the Yamcs repository.\n\n" +
                         "If there is already a project named \"" + InstallYSSLandingAction.PROJECT_NAME
                         + "\" in your workspace, the import will fail. " +
                         "Please rename or delete it and import again.");

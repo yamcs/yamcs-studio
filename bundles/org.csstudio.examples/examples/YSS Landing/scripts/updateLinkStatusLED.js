@@ -1,12 +1,14 @@
-importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-
-var v = PVUtil.getString(pvs[0]);
-if(v == "DISABLED") {
-    widget.setValue(1.0)
-} else if(v=="OK") {
-    widget.setValue(2.0)
+if (pvs[0].getValue() == null) {
+    widget.setValue(1.0);
+    widget.setPropertyValue("tooltip", "no value");
 } else {
-    widget.setValue(3.0)
+    var v = PVUtil.getString(pvs[0]);
+    if (v === "DISABLED") {
+        widget.setValue(1.0);
+    } else if (v === "OK") {
+        widget.setValue(2.0);
+    } else {
+        widget.setValue(3.0);
+    }
+    widget.setPropertyValue("tooltip", v);
 }
-
-widget.setPropertyValue("tooltip", v)
