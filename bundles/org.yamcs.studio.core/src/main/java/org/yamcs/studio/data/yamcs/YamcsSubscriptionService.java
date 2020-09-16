@@ -160,14 +160,15 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
 
     @Override
     public void onData(List<ParameterValue> values) {
-        for (ParameterValue pval : values) {
-            Set<IPV> pvs = pvsById.get(pval.getId());
-            if (pvs != null) {
-                pvs.forEach(pv -> pv.notifyValueChange());
-                pvs.forEach(pv -> pv.notifyWritePermissionChange());
+        executor.execute(() -> {
+            for (ParameterValue pval : values) {
+                Set<IPV> pvs = pvsById.get(pval.getId());
+                if (pvs != null) {
+                    pvs.forEach(pv -> pv.notifyValueChange());
+                }
             }
-        }
-        parameterValueListeners.forEach(l -> l.onData(values));
+            parameterValueListeners.forEach(l -> l.onData(values));
+        });
     }
 
     public void addParameterValueListener(ParameterValueListener listener) {
@@ -176,12 +177,14 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
 
     @Override
     public void onInvalidIdentification(NamedObjectId id) {
-        // We keep the id in pvsById, we want to again receive the invalid
-        // identification when the subscription is updated.
-        Set<IPV> pvs = pvsById.get(id);
-        if (pvs != null) {
-            pvs.forEach(IPV::setInvalid);
-        }
+        executor.execute(() -> {
+            // We keep the id in pvsById, we want to again receive the invalid
+            // identification when the subscription is updated.
+            Set<IPV> pvs = pvsById.get(id);
+            if (pvs != null) {
+                pvs.forEach(IPV::setInvalid);
+            }
+        });
     }
 
     public static NamedObjectId identityOf(String pvName) {
