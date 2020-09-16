@@ -16,15 +16,15 @@ public class AggregateArrayVType extends YamcsVType implements VStringArray {
 
     private List<String> data;
 
-    public AggregateArrayVType(ParameterValue pval) {
-        super(pval);
+    public AggregateArrayVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
 
-        int size = pval.getEngValue().getArrayValueCount();
+        int size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
         data = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            Value aggregateValue = pval.getEngValue().getArrayValue(i);
+            Value aggregateValue = value.getArrayValue(i);
             data.add(StringConverter.toString(aggregateValue));
         }
     }

@@ -2,13 +2,13 @@ package org.yamcs.studio.data.yamcs;
 
 import java.util.List;
 
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.data.vtype.ArrayDimensionDisplay;
 import org.yamcs.studio.data.vtype.ArrayInt;
 import org.yamcs.studio.data.vtype.ListInt;
 import org.yamcs.studio.data.vtype.VIntArray;
 import org.yamcs.studio.data.vtype.VTypeToString;
 import org.yamcs.studio.data.vtype.ValueUtil;
-import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class Sint32ArrayVType extends YamcsVType implements VIntArray {
 
@@ -17,16 +17,16 @@ public class Sint32ArrayVType extends YamcsVType implements VIntArray {
 
     private ArrayInt data;
 
-    public Sint32ArrayVType(ParameterValue pval) {
-        super(pval);
+    public Sint32ArrayVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
 
-        int size = pval.getEngValue().getArrayValueCount();
+        int size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
         dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
 
         int[] intValues = new int[size];
         for (int i = 0; i < intValues.length; i++) {
-            intValues[i] = pval.getEngValue().getArrayValue(i).getSint32Value();
+            intValues[i] = value.getArrayValue(i).getSint32Value();
         }
         data = new ArrayInt(intValues);
     }

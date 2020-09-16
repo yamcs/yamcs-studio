@@ -8,6 +8,7 @@ import org.yamcs.protobuf.Mdb.AlarmLevelType;
 import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.MissionDatabase;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -20,12 +21,16 @@ import org.yamcs.studio.data.vtype.VType;
 
 public class YamcsVType implements VType, Alarm, Time, Display {
 
-    public static final YamcsVType NO_VALUE = new YamcsVType(null);
+    private ParameterValue pval;
+    protected Value value;
 
-    protected ParameterValue pval;
-
-    public YamcsVType(ParameterValue pval) {
+    public YamcsVType(ParameterValue pval, boolean raw) {
         this.pval = pval;
+        value = raw ? pval.getRawValue() : pval.getEngValue();
+    }
+
+    public NamedObjectId getId() {
+        return pval.getId();
     }
 
     @Override
@@ -215,65 +220,73 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     /**
      * Converts a yamcs ParameterValue to a VType.
      */
-    public static YamcsVType fromYamcs(ParameterValue pval) {
-        if (!pval.hasEngValue()) {
-            return null;
+    public static YamcsVType fromYamcs(ParameterValue pval, boolean raw) {
+        Value value;
+        if (raw) {
+            if (!pval.hasRawValue()) {
+                return null;
+            }
+            value = pval.getRawValue();
+        } else {
+            if (!pval.hasEngValue()) {
+                return null;
+            }
+            value = pval.getEngValue();
         }
 
-        Value engValue = pval.getEngValue();
-        switch (engValue.getType()) {
+        switch (value.getType()) {
         case UINT32:
-            return new Uint32VType(pval);
+            return new Uint32VType(pval, raw);
         case SINT32:
-            return new Sint32VType(pval);
+            return new Sint32VType(pval, raw);
         case UINT64:
-            return new Uint64VType(pval);
+            return new Uint64VType(pval, raw);
         case SINT64:
-            return new Sint64VType(pval);
+            return new Sint64VType(pval, raw);
         case FLOAT:
-            return new FloatVType(pval);
+            return new FloatVType(pval, raw);
         case DOUBLE:
-            return new DoubleVType(pval);
+            return new DoubleVType(pval, raw);
         case BOOLEAN:
-            return new BooleanVType(pval);
+            return new BooleanVType(pval, raw);
         case STRING:
-            return new StringVType(pval);
+            return new StringVType(pval, raw);
         case BINARY:
-            return new BinaryVType(pval);
+            return new BinaryVType(pval, raw);
         case TIMESTAMP:
-            return new TimestampVType(pval);
+            return new TimestampVType(pval, raw);
         case ENUMERATED:
-            return new EnumeratedVType(pval);
+            return new EnumeratedVType(pval, raw);
         case AGGREGATE:
-            return new AggregateVType(pval);
+            return new AggregateVType(pval, raw);
         case ARRAY:
-            List<Value> arrayValues = engValue.getArrayValueList();
+            List<Value> arrayValues = value.getArrayValueList();
             if (arrayValues.isEmpty()) {
                 return null; // TODO
             } else {
                 switch (arrayValues.get(0).getType()) {
                 case UINT32:
-                    return new Uint32ArrayVType(pval);
+                    return new Uint32ArrayVType(pval, raw);
                 case SINT32:
-                    return new Sint32ArrayVType(pval);
+                    return new Sint32ArrayVType(pval, raw);
                 case UINT64:
-                    return new Uint64ArrayVType(pval);
+                    return new Uint64ArrayVType(pval, raw);
                 case SINT64:
-                    return new Sint64ArrayVType(pval);
+                    return new Sint64ArrayVType(pval, raw);
                 case FLOAT:
-                    return new FloatArrayVType(pval);
+                    return new FloatArrayVType(pval, raw);
                 case DOUBLE:
-                    return new DoubleArrayVType(pval);
+                    return new DoubleArrayVType(pval, raw);
                 case BOOLEAN:
-                    return new BooleanArrayVType(pval);
+                    return new BooleanArrayVType(pval, raw);
                 case STRING:
-                    return new StringArrayVType(pval);
+                    return new StringArrayVType(pval, raw);
                 case ENUMERATED:
-                    return new EnumeratedArrayVType(pval);
+                    return new EnumeratedArrayVType(pval, raw);
                 case AGGREGATE:
-                    return new AggregateArrayVType(pval);
+                    return new AggregateArrayVType(pval, raw);
                 case ARRAY:
-                    return new ArrayArrayVType(pval);
+                    return new ArrayArrayVType(pval, raw);
                 default:
                     throw new IllegalStateException(
                             "Unexpected type for parameter array value. Got: " + arrayValues.get(0).getType());
@@ -281,7 +294,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
             }
         default:
             throw new IllegalStateException(
-                    "Unexpected type for parameter value. Got: " + engValue.getType());
+                    "Unexpected type for parameter value. Got: " + value.getType());
         }
     }
 }

@@ -75,6 +75,8 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                     .setInstance(instance)
                     .setProcessor(processor)
                     .setAbortOnInvalid(false)
+                    .setUpdateOnExpiration(true)
+                    .setSendFromCache(true)
                     .addId(NamedObjectId.newBuilder().setName(pvInfo.getParameterInfo().getQualifiedName()))
                     .build());
         }
@@ -240,39 +242,37 @@ public class PVComposite extends Composite implements YamcsAware, ParameterSubsc
                 return;
             }
             for (ParameterValue pval : values) {
-                if (pval.getId().getName().equals(pvInfo.getDisplayName())) {
-                    gentimeField.setText(Instant
-                            .ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos())
-                            .toString());
-                    rectimeField.setText(Instant
-                            .ofEpochSecond(pval.getAcquisitionTime().getSeconds(), pval.getAcquisitionTime().getNanos())
-                            .toString());
+                gentimeField.setText(Instant
+                        .ofEpochSecond(pval.getGenerationTime().getSeconds(), pval.getGenerationTime().getNanos())
+                        .toString());
+                rectimeField.setText(Instant
+                        .ofEpochSecond(pval.getAcquisitionTime().getSeconds(), pval.getAcquisitionTime().getNanos())
+                        .toString());
 
-                    String engValue = StringConverter.toString(pval.getEngValue());
-                    if (pvInfo.getParameterInfo().hasType()) {
-                        ParameterTypeInfo ptype = pvInfo.getParameterInfo().getType();
-                        if (ptype.getUnitSetCount() > 0) {
-                            for (UnitInfo unitInfo : ptype.getUnitSetList()) {
-                                engValue += " " + unitInfo.getUnit();
-                            }
+                String engValue = StringConverter.toString(pval.getEngValue());
+                if (pvInfo.getParameterInfo().hasType()) {
+                    ParameterTypeInfo ptype = pvInfo.getParameterInfo().getType();
+                    if (ptype.getUnitSetCount() > 0) {
+                        for (UnitInfo unitInfo : ptype.getUnitSetList()) {
+                            engValue += " " + unitInfo.getUnit();
                         }
                     }
-                    engValueField.setText(engValue);
-                    engTypeField.setText(capitalize(pval.getEngValue().getType().toString()));
+                }
+                engValueField.setText(engValue);
+                engTypeField.setText(capitalize(pval.getEngValue().getType().toString()));
 
-                    if (pval.hasAcquisitionStatus()) {
-                        statusField.setText(pval.getAcquisitionStatus().toString());
-                    } else {
-                        statusField.setText("---");
-                    }
+                if (pval.hasAcquisitionStatus()) {
+                    statusField.setText(pval.getAcquisitionStatus().toString());
+                } else {
+                    statusField.setText("---");
+                }
 
-                    if (pval.hasRawValue()) {
-                        rawValueField.setText(StringConverter.toString(pval.getRawValue()));
-                        rawTypeField.setText(capitalize(pval.getRawValue().getType().toString()));
-                    } else {
-                        rawValueField.setText("---");
-                        rawTypeField.setText("---");
-                    }
+                if (pval.hasRawValue()) {
+                    rawValueField.setText(StringConverter.toString(pval.getRawValue()));
+                    rawTypeField.setText(capitalize(pval.getRawValue().getType().toString()));
+                } else {
+                    rawValueField.setText("---");
+                    rawTypeField.setText("---");
                 }
             }
         });

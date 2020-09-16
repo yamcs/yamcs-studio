@@ -2,6 +2,7 @@ package org.yamcs.studio.data.yamcs;
 
 import java.util.List;
 
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.data.vtype.ArrayDimensionDisplay;
 import org.yamcs.studio.data.vtype.ArrayInt;
 import org.yamcs.studio.data.vtype.ArrayLong;
@@ -10,7 +11,6 @@ import org.yamcs.studio.data.vtype.ListLong;
 import org.yamcs.studio.data.vtype.VLongArray;
 import org.yamcs.studio.data.vtype.VTypeToString;
 import org.yamcs.studio.data.vtype.ValueUtil;
-import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class Uint32ArrayVType extends YamcsVType implements VLongArray {
 
@@ -19,16 +19,16 @@ public class Uint32ArrayVType extends YamcsVType implements VLongArray {
 
     private ListLong data;
 
-    public Uint32ArrayVType(ParameterValue pval) {
-        super(pval);
+    public Uint32ArrayVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
 
-        int size = pval.getEngValue().getArrayValueCount();
+        int size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
         dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
 
         long[] longValues = new long[size];
         for (int i = 0; i < longValues.length; i++) {
-            longValues[i] = pval.getEngValue().getArrayValue(i).getUint32Value() & 0xFFFFFFFFL;
+            longValues[i] = value.getArrayValue(i).getUint32Value() & 0xFFFFFFFFL;
         }
         data = new ArrayLong(longValues);
     }

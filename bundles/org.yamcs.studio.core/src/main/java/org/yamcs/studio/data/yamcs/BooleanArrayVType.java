@@ -1,12 +1,12 @@
 package org.yamcs.studio.data.yamcs;
 
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.data.vtype.ArrayBoolean;
 import org.yamcs.studio.data.vtype.ArrayInt;
 import org.yamcs.studio.data.vtype.ListBoolean;
 import org.yamcs.studio.data.vtype.ListInt;
 import org.yamcs.studio.data.vtype.VBooleanArray;
 import org.yamcs.studio.data.vtype.VTypeToString;
-import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class BooleanArrayVType extends YamcsVType implements VBooleanArray {
 
@@ -14,15 +14,15 @@ public class BooleanArrayVType extends YamcsVType implements VBooleanArray {
 
     private ArrayBoolean data;
 
-    public BooleanArrayVType(ParameterValue pval) {
-        super(pval);
+    public BooleanArrayVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
 
-        int size = pval.getEngValue().getArrayValueCount();
+        int size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
         boolean[] booleanValues = new boolean[size];
         for (int i = 0; i < booleanValues.length; i++) {
-            booleanValues[i] = pval.getEngValue().getArrayValue(i).getBooleanValue();
+            booleanValues[i] = value.getArrayValue(i).getBooleanValue();
         }
         data = new ArrayBoolean(booleanValues);
     }

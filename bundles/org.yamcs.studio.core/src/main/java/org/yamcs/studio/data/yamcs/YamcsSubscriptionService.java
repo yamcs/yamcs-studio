@@ -76,7 +76,8 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         if (subscription != null) {
             ParameterValue pval = subscription.get(id);
             if (pval != null) {
-                return YamcsVType.fromYamcs(pval);
+                boolean raw = pvName.startsWith("raw://");
+                return YamcsVType.fromYamcs(pval, raw);
             }
         }
         return null;
@@ -196,6 +197,10 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         } else if (pvName.startsWith("para://")) {
             return NamedObjectId.newBuilder()
                     .setName(pvName.substring("para://".length()))
+                    .build();
+        } else if (pvName.startsWith("raw://")) {
+            return NamedObjectId.newBuilder()
+                    .setName(pvName.substring("raw://".length()))
                     .build();
         } else {
             return NamedObjectId.newBuilder()

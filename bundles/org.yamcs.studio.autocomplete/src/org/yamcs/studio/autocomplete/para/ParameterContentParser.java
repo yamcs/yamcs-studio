@@ -8,18 +8,18 @@ import org.yamcs.studio.autocomplete.parser.IContentParser;
 /**
  * Yamcs Parameter DataSource content parser.
  */
-public class XtceContentParser implements IContentParser {
+public class ParameterContentParser implements IContentParser {
 
-    public static final String XTCE_SOURCE = "para://";
+    public static final String PARA_SOURCE = "para://";
 
     @Override
     public boolean accept(ContentDescriptor desc) {
         if (desc.getValue().startsWith(AutoCompleteConstants.FORMULA_PREFIX)) {
             return false;
         }
-        if (desc.getValue().startsWith(XTCE_SOURCE)
+        if (desc.getValue().startsWith(PARA_SOURCE)
                 || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                        && XTCE_SOURCE.equals(desc.getDefaultDataSource()))) {
+                        && PARA_SOURCE.equals(desc.getDefaultDataSource()))) {
             return true;
         }
         return false;
@@ -29,9 +29,8 @@ public class XtceContentParser implements IContentParser {
     public ContentDescriptor parse(ContentDescriptor desc) {
         int startIndex = 0;
         String contentToParse = desc.getValue();
-        if (contentToParse.startsWith(XTCE_SOURCE)) {
-            contentToParse = contentToParse.substring(XTCE_SOURCE.length());
-            // startIndex = XTCE_SOURCE.length();
+        if (contentToParse.startsWith(PARA_SOURCE)) {
+            contentToParse = contentToParse.substring(PARA_SOURCE.length());
         }
         ContentDescriptor currentDesc = new ContentDescriptor();
         currentDesc.setContentType(ContentType.PVName);

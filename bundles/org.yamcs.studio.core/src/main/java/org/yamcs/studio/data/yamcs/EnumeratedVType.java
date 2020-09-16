@@ -13,18 +13,18 @@ import org.yamcs.studio.data.vtype.VEnum;
 
 public class EnumeratedVType extends YamcsVType implements VEnum {
 
-    public EnumeratedVType(ParameterValue pval) {
-        super(pval);
+    public EnumeratedVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
     }
 
     @Override
     public int getIndex() {
-        return (int) pval.getEngValue().getSint64Value();
+        return (int) value.getSint64Value();
     }
 
     @Override
     public String getValue() {
-        return pval.getEngValue().getStringValue();
+        return value.getStringValue();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class EnumeratedVType extends YamcsVType implements VEnum {
         // (not e.g. the opsname)
         // But be careful that any suffixes ('[]' or '.') are kept
         NamedObjectId id = NamedObjectId.newBuilder()
-                .setName(pval.getId().getName())
+                .setName(getId().getName())
                 .build();
 
         ParameterTypeInfo specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);
@@ -61,6 +61,6 @@ public class EnumeratedVType extends YamcsVType implements VEnum {
     public String toString() {
         // Use String.valueOf, because it formats a nice "null" string
         // in case it is null
-        return String.valueOf(pval.getEngValue().getStringValue());
+        return String.valueOf(value.getStringValue());
     }
 }

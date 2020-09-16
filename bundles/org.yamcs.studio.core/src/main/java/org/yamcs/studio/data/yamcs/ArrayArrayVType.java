@@ -17,15 +17,15 @@ public class ArrayArrayVType extends YamcsVType implements VStringArray {
 
     private List<String> data;
 
-    public ArrayArrayVType(ParameterValue pval) {
-        super(pval);
+    public ArrayArrayVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
 
-        int size = pval.getEngValue().getArrayValueCount();
+        int size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
         data = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            Value arrayValue = pval.getEngValue().getArrayValue(i);
+            Value arrayValue = value.getArrayValue(i);
             data.add(StringConverter.toString(arrayValue));
         }
     }

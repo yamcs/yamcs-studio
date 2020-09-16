@@ -5,19 +5,19 @@ import org.yamcs.studio.data.vtype.VString;
 
 public class BinaryVType extends YamcsVType implements VString {
 
-    public BinaryVType(ParameterValue pval) {
-        super(pval);
+    public BinaryVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
     }
 
     @Override
     public String getValue() {
-        byte[] barr = pval.getEngValue().getBinaryValue().toByteArray();
+        byte[] barr = value.getBinaryValue().toByteArray();
         return "0x" + arrayToHexString(barr, 0, barr.length, false);
     }
 
     @Override
     public String toString() {
-        byte[] barr = pval.getEngValue().getBinaryValue().toByteArray();
+        byte[] barr = value.getBinaryValue().toByteArray();
         return "0x" + arrayToHexString(barr, 0, barr.length, false);
     }
 

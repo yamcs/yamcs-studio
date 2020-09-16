@@ -26,18 +26,28 @@ import org.yamcs.studio.core.YamcsPlugin;
  * <code>cancel()</code> is invoked. This means there are never multiple concurrent lookups started on purpose, but a
  * previously started lookup may still continue in its thread in case <code>cancel()</code> has no immediate effect.
  */
-public class XtceContentProvider implements IAutoCompleteProvider {
+public class ParameterContentProvider implements IAutoCompleteProvider {
 
     @Override
     public boolean accept(ContentType type) {
         return type == ContentType.PVName;
     }
 
+    public String getPrefix() {
+        return ParameterContentParser.PARA_SOURCE;
+    }
+
+    public boolean requirePrefix() {
+        return false;
+    }
+
     @Override
     public AutoCompleteResult listResult(ContentDescriptor desc, int limit) {
         String content = desc.getValue();
-        if (content.startsWith(XtceContentParser.XTCE_SOURCE)) {
-            content = content.substring(XtceContentParser.XTCE_SOURCE.length());
+        if (content.startsWith(getPrefix())) {
+            content = content.substring(getPrefix().length());
+        } else if (requirePrefix()) {
+            return new AutoCompleteResult();
         }
 
         content = AutoCompleteHelper.trimWildcards(content);
@@ -57,9 +67,10 @@ public class XtceContentProvider implements IAutoCompleteProvider {
                 }
 
                 for (String pvCandidate : pvCandidates) {
-                    Matcher m = namePattern.matcher(pvCandidate);
+                    String proposalValue = requirePrefix() ? getPrefix() + pvCandidate : pvCandidate;
+                    Matcher m = namePattern.matcher(proposalValue);
                     if (m.find()) {
-                        Proposal p = new Proposal(pvCandidate, false);
+                        Proposal p = new Proposal(proposalValue, false);
                         p.addStyle(ProposalStyle.getDefault(m.start(), m.end() - 1));
                         result.addProposal(p);
                         matchCount++;

@@ -2,6 +2,7 @@ package org.yamcs.studio.data.yamcs;
 
 import java.util.List;
 
+import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.studio.data.vtype.ArrayDimensionDisplay;
 import org.yamcs.studio.data.vtype.ArrayDouble;
 import org.yamcs.studio.data.vtype.ArrayInt;
@@ -10,7 +11,6 @@ import org.yamcs.studio.data.vtype.ListInt;
 import org.yamcs.studio.data.vtype.VDoubleArray;
 import org.yamcs.studio.data.vtype.VTypeToString;
 import org.yamcs.studio.data.vtype.ValueUtil;
-import org.yamcs.protobuf.Pvalue.ParameterValue;
 
 public class DoubleArrayVType extends YamcsVType implements VDoubleArray {
 
@@ -19,16 +19,16 @@ public class DoubleArrayVType extends YamcsVType implements VDoubleArray {
 
     private ArrayDouble data;
 
-    public DoubleArrayVType(ParameterValue pval) {
-        super(pval);
+    public DoubleArrayVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
 
-        int size = pval.getEngValue().getArrayValueCount();
+        int size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
         dimensionDisplay = ValueUtil.defaultArrayDisplay(sizes);
 
         double[] doubleValues = new double[size];
         for (int i = 0; i < doubleValues.length; i++) {
-            doubleValues[i] = pval.getEngValue().getArrayValue(i).getDoubleValue();
+            doubleValues[i] = value.getArrayValue(i).getDoubleValue();
         }
         data = new ArrayDouble(doubleValues);
     }

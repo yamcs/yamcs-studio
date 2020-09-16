@@ -1,7 +1,7 @@
 package org.yamcs.studio.css.core;
 
-import org.yamcs.studio.data.IPV;
 import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.studio.data.IPV;
 
 public class PVInfo implements Comparable<PVInfo> {
 
@@ -22,7 +22,7 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public String getPVType() {
-        if (displayName.startsWith("para://") || displayName.startsWith("ops://")) {
+        if (displayName.startsWith("para://") || displayName.startsWith("raw://") || displayName.startsWith("ops://")) {
             return "Yamcs Parameter";
         } else if (displayName.startsWith("loc://")) {
             return "Local PV";
@@ -60,7 +60,7 @@ public class PVInfo implements Comparable<PVInfo> {
     }
 
     public boolean isYamcsParameter() {
-        if (displayName.startsWith("para://")) {
+        if (displayName.startsWith("para://") || displayName.startsWith("raw://")) {
             return true;
         } else if (displayName.startsWith("=")) {
             return false;
@@ -81,6 +81,8 @@ public class PVInfo implements Comparable<PVInfo> {
 
         if (displayName.startsWith("para://")) {
             return displayName.substring(7);
+        } else if (displayName.startsWith("raw://")) {
+            return displayName.substring(6);
         } else {
             return displayName;
         }

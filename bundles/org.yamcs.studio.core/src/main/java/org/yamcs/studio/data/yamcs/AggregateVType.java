@@ -5,18 +5,18 @@ import org.yamcs.studio.data.vtype.VString;
 
 public class AggregateVType extends YamcsVType implements VString {
 
-    public AggregateVType(ParameterValue pval) {
-        super(pval);
+    public AggregateVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
     }
 
     @Override
     public String getValue() {
-        return StringConverter.toString(pval.getEngValue());
+        return StringConverter.toString(value);
     }
 
     @Override
     public String toString() {
-        if (pval.getEngValue().hasAggregateValue() || pval.getEngValue().getAggregateValue() == null) {
+        if (value.hasAggregateValue() || value.getAggregateValue() == null) {
             return "null";
         } else {
             return getValue();

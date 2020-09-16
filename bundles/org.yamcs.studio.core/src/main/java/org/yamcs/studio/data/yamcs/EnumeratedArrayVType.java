@@ -20,19 +20,19 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
     private ListInt indexes;
     private List<String> data;
 
-    public EnumeratedArrayVType(ParameterValue pval) {
-        super(pval);
+    public EnumeratedArrayVType(ParameterValue pval, boolean raw) {
+        super(pval, raw);
 
-        int size = pval.getEngValue().getArrayValueCount();
+        int size = value.getArrayValueCount();
         sizes = new ArrayInt(size);
 
         List<Integer> indexes = new ArrayList<>();
         data = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            Value value = pval.getEngValue().getArrayValue(i);
-            int index = (int) value.getSint64Value();
+            Value enumValue = value.getArrayValue(i);
+            int index = (int) enumValue.getSint64Value();
             indexes.add(index);
-            data.add(value.getStringValue());
+            data.add(enumValue.getStringValue());
         }
         this.indexes = new ArrayInt(indexes.stream().mapToInt(Integer::intValue).toArray());
     }
@@ -44,7 +44,7 @@ public class EnumeratedArrayVType extends YamcsVType implements VEnumArray {
         // (not e.g. the opsname)
         // But be careful that any suffixes ('[]' or '.') are kept
         NamedObjectId id = NamedObjectId.newBuilder()
-                .setName(pval.getId().getName())
+                .setName(getId().getName())
                 .build();
 
         ParameterTypeInfo specificPtype = YamcsPlugin.getMissionDatabase().getParameterTypeInfo(id);

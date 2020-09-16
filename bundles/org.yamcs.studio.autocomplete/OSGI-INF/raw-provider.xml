@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Yamcs Parameter">
-   <implementation class="org.yamcs.studio.autocomplete.para.ParameterContentProvider" />
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Yamcs raw">
+   <implementation class="org.yamcs.studio.autocomplete.raw.RawContentProvider" />
    <service>
       <provide interface="org.yamcs.studio.autocomplete.IAutoCompleteProvider" />
    </service>
