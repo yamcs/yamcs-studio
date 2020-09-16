@@ -89,7 +89,10 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                 subscription.cancel(true);
                 subscription = null;
                 pvsById.forEach((id, pvs) -> {
-                    pvs.forEach(pv -> pv.notifyConnectionChange());
+                    pvs.forEach(pv -> {
+                        pv.notifyConnectionChange();
+                        pv.notifyValueChange();
+                    });
                 });
             }
 
@@ -149,6 +152,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
 
     @Override
     public void dispose() {
+        YamcsPlugin.removeListener(this);
         executor.shutdown();
     }
 

@@ -22,8 +22,6 @@
 
 package org.csstudio.opibuilder.model;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,14 +75,6 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.osgi.framework.Version;
 
-/**The abstract base model for display and all widgets .
- *@author Alexander Will, Sven Wende, Stefan Hofer (similar class of SDS)
- * @author Xihui Chen
- */
-/**
- * @author Xihui Chen
- *
- */
 public abstract class AbstractWidgetModel implements IAdaptable,
         IPropertySource {
 
@@ -146,22 +136,19 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     public static final String PROP_VISIBLE = "visible";
 
     /**
-     * Enable status. Only effective for control widgets which will make control widget
-     * uncontrollable if this is false.
+     * Enable status. Only effective for control widgets which will make control widget uncontrollable if this is false.
      */
     public static final String PROP_ENABLED = "enabled";
 
     /**
-     * Actions attached to the widget, which can be accessed on runtime
-     * via context menu <code>Actions</code>.
+     * Actions attached to the widget, which can be accessed on runtime via context menu <code>Actions</code>.
      */
     public static final String PROP_ACTIONS = "actions";
 
     /**
-     * Tooltip of the widget, which will show up when mouse hover on the widget.
-     * Macros are allowed and can be updated.
-     * The property macro $(pv_value) could be used to show the PV value which
-     * has timestamp, value, severity and status.
+     * Tooltip of the widget, which will show up when mouse hover on the widget. Macros are allowed and can be updated.
+     * The property macro $(pv_value) could be used to show the PV value which has timestamp, value, severity and
+     * status.
      */
     public static final String PROP_TOOLTIP = "tooltip";
 
@@ -180,10 +167,10 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     public static final String PROP_BORDER_STYLE = "border_style";
 
     /**
-     *The type of the widget. This is the only property that cannot be edited.
-     *The name and type of the selected widget will also be displayed on the status bar.
+     * The type of the widget. This is the only property that cannot be edited. The name and type of the selected widget
+     * will also be displayed on the status bar.
      */
-    public static final String PROP_WIDGET_TYPE= "widget_type";
+    public static final String PROP_WIDGET_TYPE = "widget_type";
 
     /**
      * Unique ID of the widget, it should not be changed after generated.
@@ -200,13 +187,10 @@ public abstract class AbstractWidgetModel implements IAdaptable,
      */
     public static final String PROP_TGT_CONNECTIONS = "tgt_connections";
 
-
     /**
-     *The options for its scale behavior.
+     * The options for its scale behavior.
      */
     public static final String PROP_SCALE_OPTIONS = "scale_options";
-
-
 
     private Map<String, AbstractWidgetProperty> propertyMap;
 
@@ -234,13 +218,14 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 
     private Version versionOnFile;
 
-    //If the model was parsed from the file, then this would be the line number in the file at which this widget is located
+    // If the model was parsed from the file, then this would be the line number in the file at which this widget is
+    // located
     private int lineNumber = -1;
 
     public AbstractWidgetModel() {
-        propertyMap = new HashMap<String, AbstractWidgetProperty>();
-        propertyDescriptors = new HashMap<String, IPropertyDescriptor>();
-        pvMap = new LinkedHashMap<StringProperty, PVValueProperty>();
+        propertyMap = new HashMap<>();
+        propertyDescriptors = new HashMap<>();
+        pvMap = new LinkedHashMap<>();
         configureBaseProperties();
         configureProperties();
     }
@@ -249,9 +234,9 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         if (conn == null || conn.getSource() == conn.getTarget()) {
             throw new IllegalArgumentException();
         }
-        if(sourceConnections == Collections.EMPTY_LIST || targetConnections == Collections.EMPTY_LIST){
-            sourceConnections = new ArrayList<ConnectionModel>(1);
-            targetConnections = new ArrayList<ConnectionModel>(1);
+        if (sourceConnections == Collections.EMPTY_LIST || targetConnections == Collections.EMPTY_LIST) {
+            sourceConnections = new ArrayList<>(1);
+            targetConnections = new ArrayList<>(1);
         }
         if (conn.getSource() == this) {
             sourceConnections.add(conn);
@@ -264,8 +249,11 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 
     /**
      * Remove an incoming or outgoing connection from this widget.
-     * @param conn a non-null connection instance
-     * @throws IllegalArgumentException if the parameter is null
+     *
+     * @param conn
+     *            a non-null connection instance
+     * @throws IllegalArgumentException
+     *             if the parameter is null
      */
     void removeConnection(ConnectionModel conn) {
         if (conn == null) {
@@ -280,26 +268,35 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         }
     }
 
-    /**Add a property to the widget.
-     * @param property the property to be added.
+    /**
+     * Add a property to the widget.
+     *
+     * @param property
+     *            the property to be added.
      */
-    public void addProperty(final AbstractWidgetProperty property){
+    public void addProperty(final AbstractWidgetProperty property) {
         Assert.isNotNull(property);
         property.setWidgetModel(this);
         propertyMap.put(property.getPropertyID(), property);
-        if(property.isVisibleInPropSheet())
+        if (property.isVisibleInPropSheet()) {
             propertyDescriptors.put(property.getPropertyID(), property.getPropertyDescriptor());
+        }
     }
 
-    /**Add a property to the widget with the option to set it running changeable.
-     * @param property the property to be added.
-     * @param runtimeChangeable true if this property is changeable during running. false otherwise.
+    /**
+     * Add a property to the widget with the option to set it running changeable.
+     *
+     * @param property
+     *            the property to be added.
+     * @param runtimeChangeable
+     *            true if this property is changeable during running. false otherwise.
      */
-    public void addProperty(final AbstractWidgetProperty property, final boolean runtimeChangeable){
+    public void addProperty(final AbstractWidgetProperty property, final boolean runtimeChangeable) {
         addProperty(property);
-        if(runtimeChangeable){
-            if(runtimePropertyList == null)
-                runtimePropertyList = new ArrayList<AbstractWidgetProperty>();
+        if (runtimeChangeable) {
+            if (runtimePropertyList == null) {
+                runtimePropertyList = new ArrayList<>();
+            }
             runtimePropertyList.add(property);
         }
     }
@@ -308,20 +305,23 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         return runtimePropertyList;
     }
 
-    /**Add a PVNameProperty and its value property correspondingly.
+    /**
+     * Add a PVNameProperty and its value property correspondingly.
+     *
      * @param pvNameProperty
      * @param pvValueProperty
      */
     public void addPVProperty(final PVNameProperty pvNameProperty,
-            final PVValueProperty pvValueProperty){
+            final PVValueProperty pvValueProperty) {
         addProperty(pvNameProperty);
         addProperty(pvValueProperty);
         pvMap.put(pvNameProperty, pvValueProperty);
     }
 
     private void checkPropertyExist(Object propID) {
-        if(!propertyMap.containsKey(propID))
+        if (!propertyMap.containsKey(propID)) {
             throw new NonExistPropertyException(getName(), propID.toString());
+        }
     }
 
     protected void configureBaseProperties() {
@@ -341,7 +341,7 @@ public abstract class AbstractWidgetModel implements IAdaptable,
                 WidgetPropertyCategory.Display, MediaService.DEFAULT_FONT));
         addProperty(new ColorProperty(PROP_BORDER_COLOR, "Border Color",
                 WidgetPropertyCategory.Border, new RGB(0, 128, 255)));
-        addProperty(new ComboProperty(PROP_BORDER_STYLE,"Border Style",
+        addProperty(new ComboProperty(PROP_BORDER_STYLE, "Border Style",
                 WidgetPropertyCategory.Border, BorderStyle.stringValues(), 0));
         addProperty(new IntegerProperty(PROP_BORDER_WIDTH, "Border Width",
                 WidgetPropertyCategory.Border, 1, 0, 1000));
@@ -356,20 +356,17 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         addProperty(new StringProperty(PROP_TOOLTIP, "Tooltip", WidgetPropertyCategory.Display, "", true));
         addProperty(new RulesProperty(PROP_RULES, "Rules", WidgetPropertyCategory.Behavior));
         addProperty(new ComplexDataProperty(PROP_SCALE_OPTIONS,
-                "Scale Options", WidgetPropertyCategory.Position, new WidgetScaleData(this, true, true, false), "Set Scale Options"));
+                "Scale Options", WidgetPropertyCategory.Position, new WidgetScaleData(this, true, true, false),
+                "Set Scale Options"));
         addProperty(new StringProperty(PROP_WIDGET_UID, "Widget UID", WidgetPropertyCategory.Basic,
                 new UID().toString()));
-        //update the WUID saved in connections without triggering anything
-        getProperty(PROP_WIDGET_UID).addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                for(ConnectionModel connection : sourceConnections){
-                    connection.setPropertyValue(ConnectionModel.PROP_SRC_WUID, evt.getNewValue(), false);
-                }
-                for(ConnectionModel connection : targetConnections){
-                    connection.setPropertyValue(ConnectionModel.PROP_TGT_WUID, evt.getNewValue(), false);
-                }
+        // update the WUID saved in connections without triggering anything
+        getProperty(PROP_WIDGET_UID).addPropertyChangeListener(evt -> {
+            for (ConnectionModel connection1 : sourceConnections) {
+                connection1.setPropertyValue(ConnectionModel.PROP_SRC_WUID, evt.getNewValue(), false);
+            }
+            for (ConnectionModel connection2 : targetConnections) {
+                connection2.setPropertyValue(ConnectionModel.PROP_TGT_WUID, evt.getNewValue(), false);
             }
         });
 
@@ -377,8 +374,7 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 
         WidgetDescriptor descriptor = WidgetsService.getInstance().getWidgetDescriptor(getTypeID());
         String name;
-        name = descriptor == null? getTypeID().substring(getTypeID().lastIndexOf(".")+1) :
-            descriptor.getName();
+        name = descriptor == null ? getTypeID().substring(getTypeID().lastIndexOf(".") + 1) : descriptor.getName();
         addProperty(new StringProperty(PROP_NAME, "Name",
                 WidgetPropertyCategory.Basic, name));
         addProperty(new UnchangableStringProperty(PROP_WIDGET_TYPE, "Widget Type",
@@ -392,12 +388,10 @@ public abstract class AbstractWidgetModel implements IAdaptable,
                 PROP_TGT_CONNECTIONS, "Target Connections", WidgetPropertyCategory.Display, targetConnections));
         setPropertyVisible(PROP_TGT_CONNECTIONS, false);
 
-
     }
 
     /**
-     * Configure the properties of the widget. Subclass should add
-     * new properties in this method.
+     * Configure the properties of the widget. Subclass should add new properties in this method.
      */
     protected abstract void configureProperties();
 
@@ -406,34 +400,35 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         return null;
     }
 
-    public Set<String> getAllPropertyIDs(){
-        return new HashSet<String>(propertyMap.keySet());
+    public Set<String> getAllPropertyIDs() {
+        return new HashSet<>(propertyMap.keySet());
     }
 
-    public RGB getBackgroundColor(){
+    public RGB getBackgroundColor() {
         return getRGBFromColorProperty(PROP_COLOR_BACKGROUND);
     }
 
-    public RGB getBorderColor(){
+    public RGB getBorderColor() {
         return getRGBFromColorProperty(PROP_BORDER_COLOR);
     }
 
-    public BorderStyle getBorderStyle(){
-        Integer i = (Integer)getCastedPropertyValue(PROP_BORDER_STYLE);
+    public BorderStyle getBorderStyle() {
+        Integer i = (Integer) getCastedPropertyValue(PROP_BORDER_STYLE);
         return BorderStyle.values()[i];
     }
 
-    public int getBorderWidth(){
-        return (Integer)getCastedPropertyValue(PROP_BORDER_WIDTH);
+    public int getBorderWidth() {
+        return (Integer) getCastedPropertyValue(PROP_BORDER_WIDTH);
     }
 
-    public RGB getRGBFromColorProperty(String propID){
-        return ((OPIColor)getCastedPropertyValue(propID)).getRGBValue();
+    public RGB getRGBFromColorProperty(String propID) {
+        return ((OPIColor) getCastedPropertyValue(propID)).getRGBValue();
     }
 
-    public Color getSWTColorFromColorProperty(String propID){
-        return ((OPIColor)getCastedPropertyValue(propID)).getSWTColor();
+    public Color getSWTColorFromColorProperty(String propID) {
+        return ((OPIColor) getCastedPropertyValue(propID)).getSWTColor();
     }
+
     /**
      * Return the casted value of a property of this widget model.
      *
@@ -449,61 +444,59 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         return (TYPE) getProperty(propertyName).getPropertyValue();
     }
 
-
-
     @Override
     public Object getEditableValue() {
         return this;
     }
 
-
-
-
-    public ActionsInput getActionsInput(){
-        return (ActionsInput)getCastedPropertyValue(PROP_ACTIONS);
+    public ActionsInput getActionsInput() {
+        return (ActionsInput) getCastedPropertyValue(PROP_ACTIONS);
     }
 
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return new Rectangle(getLocation(), getSize());
     }
 
-    public OPIFont getFont(){
-        return (OPIFont)getPropertyValue(PROP_FONT);
+    public OPIFont getFont() {
+        return (OPIFont) getPropertyValue(PROP_FONT);
     }
 
-    public RGB getForegroundColor(){
+    public RGB getForegroundColor() {
         return getRGBFromColorProperty(PROP_COLOR_FOREGROUND);
     }
 
-    public Point getLocation(){
+    public Point getLocation() {
         return new Point(
-                ((Integer)getCastedPropertyValue(PROP_XPOS)).intValue(),
-                ((Integer)getCastedPropertyValue(PROP_YPOS)).intValue());
+                ((Integer) getCastedPropertyValue(PROP_XPOS)).intValue(),
+                ((Integer) getCastedPropertyValue(PROP_YPOS)).intValue());
     }
 
-    public int getX(){
-        return ((Integer)getCastedPropertyValue(PROP_XPOS)).intValue();
-    }
-    public int getY(){
-        return ((Integer)getCastedPropertyValue(PROP_YPOS)).intValue();
+    public int getX() {
+        return ((Integer) getCastedPropertyValue(PROP_XPOS)).intValue();
     }
 
-    public String getName(){
-        return (String)getCastedPropertyValue(PROP_NAME);
+    public int getY() {
+        return ((Integer) getCastedPropertyValue(PROP_YPOS)).intValue();
     }
 
-    public AbstractWidgetProperty getProperty(String prop_id){
-        if((prop_id != null && propertyMap.containsKey(prop_id)))
+    public String getName() {
+        return (String) getCastedPropertyValue(PROP_NAME);
+    }
+
+    public AbstractWidgetProperty getProperty(String prop_id) {
+        if ((prop_id != null && propertyMap.containsKey(prop_id))) {
             return propertyMap.get(prop_id);
+        }
         return null;
     }
 
     @Override
     public IPropertyDescriptor[] getPropertyDescriptors() {
         IPropertyDescriptor[] propArray = new IPropertyDescriptor[propertyDescriptors.size()];
-        int i=0;
-        for(IPropertyDescriptor p : propertyDescriptors.values())
+        int i = 0;
+        for (IPropertyDescriptor p : propertyDescriptors.values()) {
             propArray[i++] = p;
+        }
 
         return propArray;
     }
@@ -519,43 +512,43 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         return propertyMap.get(id).getRawPropertyValue();
     }
 
-    public LinkedHashMap<StringProperty, PVValueProperty> getPVMap(){
+    public LinkedHashMap<StringProperty, PVValueProperty> getPVMap() {
         return pvMap;
     }
 
     public RulesInput getRulesInput() {
-        return (RulesInput)getPropertyValue(PROP_RULES);
+        return (RulesInput) getPropertyValue(PROP_RULES);
     }
 
-    public ScriptsInput getScriptsInput(){
-        return (ScriptsInput)getCastedPropertyValue(PROP_SCRIPTS);
+    public ScriptsInput getScriptsInput() {
+        return (ScriptsInput) getCastedPropertyValue(PROP_SCRIPTS);
     }
-    public Dimension getSize(){
+
+    public Dimension getSize() {
         return new Dimension(
-                ((Integer)getCastedPropertyValue(PROP_WIDTH)).intValue(),
-                ((Integer)getCastedPropertyValue(PROP_HEIGHT)).intValue());
+                ((Integer) getCastedPropertyValue(PROP_WIDTH)).intValue(),
+                ((Integer) getCastedPropertyValue(PROP_HEIGHT)).intValue());
     }
 
-    public int getWidth(){
-        return ((Integer)getCastedPropertyValue(PROP_WIDTH)).intValue();
+    public int getWidth() {
+        return ((Integer) getCastedPropertyValue(PROP_WIDTH)).intValue();
     }
 
-    public int getHeight(){
-        return ((Integer)getCastedPropertyValue(PROP_HEIGHT)).intValue();
+    public int getHeight() {
+        return ((Integer) getCastedPropertyValue(PROP_HEIGHT)).intValue();
     }
 
-    public String getTooltip(){
-        return (String)getCastedPropertyValue(PROP_TOOLTIP);
+    public String getTooltip() {
+        return (String) getCastedPropertyValue(PROP_TOOLTIP);
     }
 
-    public String getRawTooltip(){
-        return (String)getRawPropertyValue(PROP_TOOLTIP);
+    public String getRawTooltip() {
+        return (String) getRawPropertyValue(PROP_TOOLTIP);
     }
 
-    public String getType(){
-        return (String)getCastedPropertyValue(PROP_WIDGET_TYPE);
+    public String getType() {
+        return (String) getCastedPropertyValue(PROP_WIDGET_TYPE);
     }
-
 
     /**
      * @return the unique typeID of the model.
@@ -572,18 +565,19 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     /**
      * @return version read from opi file.
      */
-    public Version getVersionOnFile(){
-        if(versionOnFile == null)
+    public Version getVersionOnFile() {
+        if (versionOnFile == null) {
             return Version.emptyVersion;
+        }
         return versionOnFile;
     }
 
-    public String getWidgetType(){
-        return (String)getCastedPropertyValue(PROP_WIDGET_TYPE);
+    public String getWidgetType() {
+        return (String) getCastedPropertyValue(PROP_WIDGET_TYPE);
     }
 
-    public Boolean isEnabled(){
-        return (Boolean)getCastedPropertyValue(PROP_ENABLED);
+    public Boolean isEnabled() {
+        return (Boolean) getCastedPropertyValue(PROP_ENABLED);
     }
 
     @Override
@@ -591,30 +585,34 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         return !getProperty((String) id).isDefaultValue();
     }
 
-
-    public Boolean isVisible(){
-        return (Boolean)getCastedPropertyValue(PROP_VISIBLE);
+    public Boolean isVisible() {
+        return (Boolean) getCastedPropertyValue(PROP_VISIBLE);
     }
 
-    /**Remove a property from the model.
+    /**
+     * Remove a property from the model.
+     *
      * @param prop_id
      */
-    public synchronized void removeProperty(final String prop_id){
-        if(!propertyMap.containsKey(prop_id))
+    public synchronized void removeProperty(final String prop_id) {
+        if (!propertyMap.containsKey(prop_id)) {
             return;
+        }
         AbstractWidgetProperty property = propertyMap.get(prop_id);
         property.removeAllPropertyChangeListeners();
-        if(property.isVisibleInPropSheet())
+        if (property.isVisibleInPropSheet()) {
             propertyDescriptors.remove(prop_id);
+        }
         propertyMap.remove(prop_id);
     }
 
-
-    /**Remove a PV p
+    /**
+     * Remove a PV p
+     *
      * @param pvNamePropId
      * @param pvValuePropId
      */
-    public void removePVProperty(final String pvNamePropId, final String pvValuePropId){
+    public void removePVProperty(final String pvNamePropId, final String pvValuePropId) {
         removeProperty(pvNamePropId);
         removeProperty(pvValuePropId);
         pvMap.remove(getProperty(pvNamePropId));
@@ -625,29 +623,37 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         setPropertyValue(id, getProperty((String) id).getDefaultValue());
     }
 
-    /**Scale location and size of the widget.
-     * If the widget needs to change its scale behavior,
-     * it should override {@link #doScale(double, double)} instead of this method.
-     * @param widthRatio Ratio of width change.
-     * @param heightRatio Ratio of height change.
+    /**
+     * Scale location and size of the widget. If the widget needs to change its scale behavior, it should override
+     * {@link #doScale(double, double)} instead of this method.
+     *
+     * @param widthRatio
+     *            Ratio of width change.
+     * @param heightRatio
+     *            Ratio of height change.
      */
-    public void scale(double widthRatio, double heightRatio){
-        if(originSize == null)
+    public void scale(double widthRatio, double heightRatio) {
+        if (originSize == null) {
             originSize = getSize();
-        if(originLocation == null)
+        }
+        if (originLocation == null) {
             originLocation = getLocation();
+        }
         doScale(widthRatio, heightRatio);
         scaleConnections(widthRatio, heightRatio);
     }
 
-    /**The actual code that scaling the widget.
+    /**
+     * The actual code that scaling the widget.
+     *
      * @param widthRatio
      * @param heightRatio
      */
     protected void doScale(double widthRatio, double heightRatio) {
-        setLocation((int)Math.round(originLocation.x*widthRatio),(int)Math.round(originLocation.y * heightRatio));
-        if(getScaleOptions().isHeightScalable() || getScaleOptions().isWidthScalable())
+        setLocation((int) Math.round(originLocation.x * widthRatio), (int) Math.round(originLocation.y * heightRatio));
+        if (getScaleOptions().isHeightScalable() || getScaleOptions().isWidthScalable()) {
             setSize(getScaledSize(widthRatio, heightRatio));
+        }
     }
 
     /**
@@ -655,13 +661,13 @@ public abstract class AbstractWidgetModel implements IAdaptable,
      * @param heightRatio
      */
     protected void scaleConnections(double widthRatio, double heightRatio) {
-        for(ConnectionModel conn: getSourceConnections()){
+        for (ConnectionModel conn : getSourceConnections()) {
 
-            if(conn.getPoints() != null && conn.getPoints().size() > 0){
+            if (conn.getPoints() != null && conn.getPoints().size() > 0) {
                 PointList pl = conn.getOriginPoints().getCopy();
-                for(int i=0; i<pl.size(); i++){
-                    pl.setPoint(new Point((int)Math.round((pl.getPoint(i).x*widthRatio)),
-                            (int)Math.round(pl.getPoint(i).y*heightRatio)), i);
+                for (int i = 0; i < pl.size(); i++) {
+                    pl.setPoint(new Point((int) Math.round((pl.getPoint(i).x * widthRatio)),
+                            (int) Math.round(pl.getPoint(i).y * heightRatio)), i);
                 }
                 conn.setPoints(pl);
             }
@@ -673,7 +679,7 @@ public abstract class AbstractWidgetModel implements IAdaptable,
      * @return the original size before scaling
      */
     public Dimension getOriginSize() {
-        if(originSize == null){
+        if (originSize == null) {
             originSize = getSize();
         }
         return originSize;
@@ -683,7 +689,7 @@ public abstract class AbstractWidgetModel implements IAdaptable,
      * @return the original location before scaling
      */
     public Point getOriginLocation() {
-        if(originLocation == null){
+        if (originLocation == null) {
             originLocation = getLocation();
         }
         return originLocation;
@@ -692,23 +698,23 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     /**
      * Make necessary adjustment for widget compatibility between different versions.
      */
-    public void processVersionDifference(Version boyVersionOnFile){
-        //update pv name
-        if(UpgradeUtil.VERSION_WITH_PVMANAGER.compareTo(boyVersionOnFile)>0){
-            if(propertyMap.containsKey(PROP_SCRIPTS)){
+    public void processVersionDifference(Version boyVersionOnFile) {
+        // update pv name
+        if (UpgradeUtil.VERSION_WITH_PVMANAGER.compareTo(boyVersionOnFile) > 0) {
+            if (propertyMap.containsKey(PROP_SCRIPTS)) {
                 ScriptsInput scriptsInput = getScriptsInput();
-                for(ScriptData sd : scriptsInput.getScriptList()){
-                    for(PVTuple tuple : sd.getPVList()){
-                        tuple.pvName=UpgradeUtil.convertUtilityPVNameToPM(tuple.pvName);
+                for (ScriptData sd : scriptsInput.getScriptList()) {
+                    for (PVTuple tuple : sd.getPVList()) {
+                        tuple.pvName = UpgradeUtil.convertUtilityPVNameToPM(tuple.pvName);
                     }
                 }
                 setPropertyValue(PROP_SCRIPTS, scriptsInput);
             }
-            if(propertyMap.containsKey(PROP_RULES)){
+            if (propertyMap.containsKey(PROP_RULES)) {
                 RulesInput rulesInput = getRulesInput();
-                for(RuleData rd : rulesInput.getRuleDataList()){
-                    for(PVTuple tuple: rd.getPVList()){
-                        tuple.pvName=UpgradeUtil.convertUtilityPVNameToPM(tuple.pvName);
+                for (RuleData rd : rulesInput.getRuleDataList()) {
+                    for (PVTuple tuple : rd.getPVList()) {
+                        tuple.pvName = UpgradeUtil.convertUtilityPVNameToPM(tuple.pvName);
                     }
                 }
                 setPropertyValue(PROP_RULES, rulesInput);
@@ -717,61 +723,64 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 
     }
 
-    public WidgetScaleData getScaleOptions(){
-        return (WidgetScaleData)getPropertyValue(PROP_SCALE_OPTIONS);
+    public WidgetScaleData getScaleOptions() {
+        return (WidgetScaleData) getPropertyValue(PROP_SCALE_OPTIONS);
     }
 
-    public void setScaleOptions(boolean isWidthScalable, boolean isHeightScalable, boolean keepWHRatio){
+    public void setScaleOptions(boolean isWidthScalable, boolean isHeightScalable, boolean keepWHRatio) {
         setPropertyValue(PROP_SCALE_OPTIONS,
                 new WidgetScaleData(this, isWidthScalable, isHeightScalable, keepWHRatio));
     }
 
-
-    /**Get the widget size after scaled.
-     * @param widthRatio Ratio of width change.
-     * @param heightRatio Ratio of height change.
+    /**
+     * Get the widget size after scaled.
+     *
+     * @param widthRatio
+     *            Ratio of width change.
+     * @param heightRatio
+     *            Ratio of height change.
      * @return the new size.
      */
-    protected Dimension getScaledSize(double widthRatio, double heightRatio){
+    protected Dimension getScaledSize(double widthRatio, double heightRatio) {
         WidgetScaleData scaleOptions = getScaleOptions();
         int newW = originSize.width, newH = originSize.height;
-        if(scaleOptions.isKeepWHRatio()&&
-                scaleOptions.isHeightScalable() && scaleOptions.isWidthScalable()){
-            if(widthRatio <= heightRatio){
-                newW=(int)Math.round(originSize.width*widthRatio);
-                newH=originSize.height*newW/originSize.width;
-            }else{
-                newH=(int)Math.round(originSize.height*heightRatio);
-                newW=originSize.width*newH/originSize.height;
+        if (scaleOptions.isKeepWHRatio() &&
+                scaleOptions.isHeightScalable() && scaleOptions.isWidthScalable()) {
+            if (widthRatio <= heightRatio) {
+                newW = (int) Math.round(originSize.width * widthRatio);
+                newH = originSize.height * newW / originSize.width;
+            } else {
+                newH = (int) Math.round(originSize.height * heightRatio);
+                newW = originSize.width * newH / originSize.height;
             }
-        }else{
-            if(scaleOptions.isHeightScalable()){
-                newH=(int)Math.round(originSize.height*heightRatio);
+        } else {
+            if (scaleOptions.isHeightScalable()) {
+                newH = (int) Math.round(originSize.height * heightRatio);
             }
-            if(scaleOptions.isWidthScalable()){
-                newW=(int)Math.round(originSize.width*widthRatio);
+            if (scaleOptions.isWidthScalable()) {
+                newW = (int) Math.round(originSize.width * widthRatio);
             }
         }
         return new Dimension(newW, newH);
 
     }
 
-    public void setBackgroundColor(RGB color){
+    public void setBackgroundColor(RGB color) {
         setPropertyValue(PROP_COLOR_BACKGROUND, color);
     }
 
-    public void setEnabled(boolean enable){
+    public void setEnabled(boolean enable) {
         setPropertyValue(PROP_ENABLED, enable);
     }
 
-    public void setBorderColor(RGB color){
+    public void setBorderColor(RGB color) {
         setPropertyValue(PROP_BORDER_COLOR, color);
     }
 
-    public void setBorderStyle(BorderStyle borderStyle){
-        int i=0;
-        for(BorderStyle bs : BorderStyle.values()){
-            if(borderStyle == bs){
+    public void setBorderStyle(BorderStyle borderStyle) {
+        int i = 0;
+        for (BorderStyle bs : BorderStyle.values()) {
+            if (borderStyle == bs) {
                 break;
             }
             i++;
@@ -779,45 +788,45 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         setPropertyValue(PROP_BORDER_STYLE, i);
     }
 
-    public void setBorderWidth(int width){
+    public void setBorderWidth(int width) {
         setPropertyValue(PROP_BORDER_WIDTH, width);
     }
 
-    public void setBounds(Rectangle bounds){
+    public void setBounds(Rectangle bounds) {
         setLocation(bounds.getLocation());
         setSize(bounds.getSize());
     }
 
-    public void setBounds(int x, int y, int width, int height){
+    public void setBounds(int x, int y, int width, int height) {
         setLocation(x, y);
         setSize(width, height);
     }
 
-    public void setForegroundColor(RGB color){
+    public void setForegroundColor(RGB color) {
         setPropertyValue(PROP_COLOR_FOREGROUND, color);
     }
 
-
-
-    public void setLocation(int x, int y){
+    public void setLocation(int x, int y) {
         setPropertyValue(PROP_XPOS, x);
         setPropertyValue(PROP_YPOS, y);
     }
 
-    public void setLocation(Point point){
+    public void setLocation(Point point) {
         setLocation(point.x, point.y);
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         setPropertyValue(PROP_NAME, name);
     }
 
-    public void setPropertyDescription(String prop_id, String description){
-        if(getProperty(prop_id) == null)
+    public void setPropertyDescription(String prop_id, String description) {
+        if (getProperty(prop_id) == null) {
             return;
+        }
         getProperty(prop_id).setDescription(description);
-        if(propertyDescriptors.containsKey(prop_id))
+        if (propertyDescriptors.containsKey(prop_id)) {
             propertyDescriptors.put(prop_id, getProperty(prop_id).getPropertyDescriptor());
+        }
     }
 
     @Override
@@ -832,76 +841,89 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         propertyMap.get(id).setPropertyValue(value, forceFire);
     }
 
-    /**Set if property should be visible in property sheet.
-     * Note: this method will also make the invisible property not savable to xml file.
-     * If the invisible property still needs to be saved, please use
+    /**
+     * Set if property should be visible in property sheet. Note: this method will also make the invisible property not
+     * savable to xml file. If the invisible property still needs to be saved, please use
      * {@link #setPropertyVisibleAndSavable(String, boolean, boolean)}.
-     * @param prop_id id of the property.
-     * @param visible true if visible in
+     *
+     * @param prop_id
+     *            id of the property.
+     * @param visible
+     *            true if visible in
      */
     public void setPropertyVisible(final String prop_id,
-            final boolean visible){
-        if(visible)
+            final boolean visible) {
+        if (visible) {
             setPropertyVisibleAndSavable(prop_id, visible, true);
-        else
+        } else {
             setPropertyVisibleAndSavable(prop_id, visible, false);
+        }
     }
 
-    /**Set if property should be visible in property sheet and if savable to xml file.
-     * @param prop_id id of the property
-     * @param visible true if visible in property sheet.
-     * @param isSavable true if this property should be saved to xml file.
+    /**
+     * Set if property should be visible in property sheet and if savable to xml file.
+     *
+     * @param prop_id
+     *            id of the property
+     * @param visible
+     *            true if visible in property sheet.
+     * @param isSavable
+     *            true if this property should be saved to xml file.
      */
     public void setPropertyVisibleAndSavable(final String prop_id,
-            final boolean visible, final boolean isSavable){
+            final boolean visible, final boolean isSavable) {
         checkPropertyExist(prop_id);
         AbstractWidgetProperty property = propertyMap.get(prop_id);
-        if(property.setVisibleInPropSheet(visible)){
-            if(visible)
+        if (property.setVisibleInPropSheet(visible)) {
+            if (visible) {
                 propertyDescriptors.put(prop_id, property.getPropertyDescriptor());
-            else
+            } else {
                 propertyDescriptors.remove(prop_id);
+            }
         }
         property.setSavable(isSavable);
     }
 
-    public void setSize(Dimension dimension){
+    public void setSize(Dimension dimension) {
         setSize(dimension.width, dimension.height);
     }
 
-    public void setSize(int width, int height){
+    public void setSize(int width, int height) {
         setPropertyValue(PROP_WIDTH, width);
         setPropertyValue(PROP_HEIGHT, height);
     }
 
-    public void setWidth(int width){
+    public void setWidth(int width) {
         setPropertyValue(PROP_WIDTH, width);
     }
 
-    public void setHeight(int height){
+    public void setHeight(int height) {
         setPropertyValue(PROP_HEIGHT, height);
     }
 
-    public void setX(int x){
+    public void setX(int x) {
         setPropertyValue(PROP_XPOS, x);
     }
 
-    public void setY(int y){
+    public void setY(int y) {
         setPropertyValue(PROP_YPOS, y);
     }
 
-    public void setTooltip(String tooltip){
+    public void setTooltip(String tooltip) {
         setPropertyValue(PROP_TOOLTIP, tooltip);
     }
 
     /**
-     * @param parent the parent to set
+     * @param parent
+     *            the parent to set
      */
     public void setParent(AbstractContainerModel parent) {
         this.parent = parent;
     }
 
-    /**Set the widget version read from opi file.
+    /**
+     * Set the widget version read from opi file.
+     *
      * @param versionOnFile
      */
     public void setVersionOnFile(Version versionOnFile) {
@@ -923,26 +945,28 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     }
 
     /**
-     * @param useLinkingContainersDisplayModel if one of the parents of this widget is
-     *          a linking container use its display model
+     * @param useLinkingContainersDisplayModel
+     *            if one of the parents of this widget is a linking container use its display model
      * @return the root display model for this widget. null if its parent is not set yet.
      */
-    public DisplayModel getRootDisplayModel(boolean useLinkingContainersDisplayModel){
+    public DisplayModel getRootDisplayModel(boolean useLinkingContainersDisplayModel) {
         AbstractContainerModel parent = getParent();
-        if(parent == null){
-            if(this instanceof DisplayModel)
-                return (DisplayModel)this;
-            else
+        if (parent == null) {
+            if (this instanceof DisplayModel) {
+                return (DisplayModel) this;
+            } else {
                 return null;
+            }
         }
 
-        while(!(parent instanceof DisplayModel))
-        {
+        while (!(parent instanceof DisplayModel)) {
             // If parent is a linking container,
             // use the display model of that
             if (useLinkingContainersDisplayModel && parent instanceof AbstractLinkingContainerModel) {
-                DisplayModel m = ((AbstractLinkingContainerModel)parent).getDisplayModel();
-                if (m != null) return m;
+                DisplayModel m = ((AbstractLinkingContainerModel) parent).getDisplayModel();
+                if (m != null) {
+                    return m;
+                }
             }
             // Otherwise follow links up the parent chain
             parent = parent.getParent();
@@ -950,17 +974,17 @@ public abstract class AbstractWidgetModel implements IAdaptable,
         return (DisplayModel) parent;
     }
 
-
     /**
      * @return the nested depth of the widget in the model tree.
      */
-    public int getNestedDepth(){
-        //display model
-        if(getParent() == null)
+    public int getNestedDepth() {
+        // display model
+        if (getParent() == null) {
             return 0;
-        int i=1;
+        }
+        int i = 1;
         AbstractContainerModel parent = getParent();
-        while(!(parent instanceof DisplayModel)){
+        while (!(parent instanceof DisplayModel)) {
             i++;
             parent = parent.getParent();
         }
@@ -970,14 +994,16 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     /**
      * @return the index of the widget in its parent's children list
      */
-    public int getIndex(){
-        if(getParent() == null)
+    public int getIndex() {
+        if (getParent() == null) {
             return 0;
+        }
         return getParent().getChildren().indexOf(this);
     }
 
     /**
-     * @param executionMode the executionMode to set
+     * @param executionMode
+     *            the executionMode to set
      */
     public void setExecutionMode(ExecutionMode executionMode) {
         this.executionMode = executionMode;
@@ -993,36 +1019,42 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     /**
      * Flip the widget figure horizontally.
      */
-    public void flipHorizontally(){
+    public void flipHorizontally() {
     }
 
     /**
      * Flip the widget figure horizontally.
-     * @param centerX the center X coordinate
+     *
+     * @param centerX
+     *            the center X coordinate
      */
-    public void flipHorizontally(int centerX){
-        setX(2*centerX-getX()-getWidth());
+    public void flipHorizontally(int centerX) {
+        setX(2 * centerX - getX() - getWidth());
     }
 
     /**
      * Flip the widget figure vertically.
      */
-    public void flipVertically(){
+    public void flipVertically() {
     }
 
     /**
      * Flip the widget figure horizontally.
-     * @param centerY the center Y coordinate
+     *
+     * @param centerY
+     *            the center Y coordinate
      */
-    public void flipVertically(int centerY){
-        setY(2*centerY - getY() - getHeight());
+    public void flipVertically(int centerY) {
+        setY(2 * centerY - getY() - getHeight());
     }
 
     /**
      * Rotate the widget figure 90 degree.
-     * @param clockwise true if rotate clockwise. false if counterclockwise.
+     *
+     * @param clockwise
+     *            true if rotate clockwise. false if counterclockwise.
      */
-    public void rotate90(boolean clockwise){
+    public void rotate90(boolean clockwise) {
         int x = getX();
         int y = getY();
         int h = getHeight();
@@ -1030,8 +1062,8 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 
         int newX, newY, newH, newW;
 
-        newX = x+w/2-h/2;
-        newY = y+h/2-w/2;
+        newX = x + w / 2 - h / 2;
+        newY = y + h / 2 - w / 2;
         newH = w;
         newW = h;
 
@@ -1042,24 +1074,26 @@ public abstract class AbstractWidgetModel implements IAdaptable,
 
     /**
      * Rotate the widget figure 90 degree.
-     * @param clockwise true if rotate clockwise. false if counterclockwise.
+     *
+     * @param clockwise
+     *            true if rotate clockwise. false if counterclockwise.
      */
-    public void rotate90(boolean clockwise, Point center){
-        //Point shiftedPoint = moveCoordinateToCenter(getLocation(), center);
+    public void rotate90(boolean clockwise, Point center) {
+        // Point shiftedPoint = moveCoordinateToCenter(getLocation(), center);
         int x = getX() - center.x;
         int y = center.y - getY();
         int h = getHeight();
         int w = getWidth();
 
         int newX, newY, newH, newW;
-        if(clockwise){
-            newX = y-h;
+        if (clockwise) {
+            newX = y - h;
             newY = -x;
-        }else{
-            newX = -y ;
-            newY = x+w;
+        } else {
+            newX = -y;
+            newY = x + w;
         }
-    //    Point rotatedPoint = recoverFromCenterCoordinate(new Point(newX, newY), center);
+        // Point rotatedPoint = recoverFromCenterCoordinate(new Point(newX, newY), center);
         newX = newX + center.x;
         newY = center.y - newY;
         newH = w;
@@ -1073,31 +1107,32 @@ public abstract class AbstractWidgetModel implements IAdaptable,
      * @return a copy list of source connections.
      */
     public List<ConnectionModel> getSourceConnections() {
-        return new ArrayList<ConnectionModel>(sourceConnections);
+        return new ArrayList<>(sourceConnections);
     }
 
     /**
      * @return a copy list of target connections.
      */
     public List<ConnectionModel> getTargetConnections() {
-        return new ArrayList<ConnectionModel>(targetConnections);
+        return new ArrayList<>(targetConnections);
     }
 
     public String getWUID() {
-        return (String)getPropertyValue(PROP_WIDGET_UID);
+        return (String) getPropertyValue(PROP_WIDGET_UID);
     }
 
     /**
      * Generate a new WUID for this widget.
      */
-    public void generateNewWUID(){
+    public void generateNewWUID() {
         setPropertyValue(PROP_WIDGET_UID, new UID().toString());
     }
 
     /**
      * Sets the line number at which this model is stored in the opi file. The line number can only be set once.
      *
-     * @param lineNumber the line number
+     * @param lineNumber
+     *            the line number
      */
     public void setLineNumber(int lineNumber) {
         if (this.lineNumber == -1) {
@@ -1106,9 +1141,9 @@ public abstract class AbstractWidgetModel implements IAdaptable,
     }
 
     /**
-     * Returns the line number at which this widget model is stored in the opi file. Be aware that this number might
-     * not be accurate - if the widget was changed after it has been loaded or if it is new than there is no guarantee
-     * that the line number represents the actual state.
+     * Returns the line number at which this widget model is stored in the opi file. Be aware that this number might not
+     * be accurate - if the widget was changed after it has been loaded or if it is new than there is no guarantee that
+     * the line number represents the actual state.
      *
      * @return the line number in the opi file
      */

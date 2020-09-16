@@ -186,11 +186,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
                     }
                 }
-
-                if (pv.getValue() == null) {
-                    System.out.println("BBB " + pv.getValue());
-                    new IllegalStateException("BBBBB").printStackTrace();
-                }
                 executeScriptInUIThread(pv);
             }
 

@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.util.AlarmRepresentationScheme;
 import org.csstudio.opibuilder.visualparts.BorderStyle;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
 
 /**
  * The handler help a widget to handle the pv connection event such as PVs' disconnection, connection recovered. It will

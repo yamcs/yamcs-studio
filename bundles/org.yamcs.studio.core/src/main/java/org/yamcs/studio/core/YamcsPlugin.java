@@ -84,6 +84,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // chaos.
 
         pluginServices.add(new YamcsSubscriptionService());
+        pluginServices.add(new DisplayService());
     }
 
     public static void addListener(YamcsAware listener) {

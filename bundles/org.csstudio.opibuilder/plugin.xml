@@ -40,6 +40,12 @@
             id="org.csstudio.opibuilder.openProbeOPI"
             name="OPI Probe">
       </command>
+      <command
+            categoryId="org.eclipse.ui.category.views"
+            defaultHandler="org.csstudio.opibuilder.actions.RefreshAllDisplaysHandler"
+            id="org.csstudio.opibuilder.refreshAllDisplays"
+            name="Refresh All Displays">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
