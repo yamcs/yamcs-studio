@@ -92,6 +92,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                     pvs.forEach(pv -> {
                         pv.notifyConnectionChange();
                         pv.notifyValueChange();
+                        pv.notifyWritePermissionChange();
                     });
                 });
             }
@@ -105,6 +106,7 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                     pvs.forEach(pv -> {
                         pv.notifyConnectionChange();
                         pv.notifyValueChange();
+                        pv.notifyWritePermissionChange();
                     });
                 });
 
