@@ -10,6 +10,7 @@ package org.csstudio.opibuilder.widgets.editparts;
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.editparts.IPVWidgetEditpart;
+import org.csstudio.swt.widgets.figures.ActionButtonFigure;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.eclipse.draw2d.AbstractBackground;
 import org.eclipse.gef.editparts.ZoomListener;
@@ -18,7 +19,6 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -47,12 +47,7 @@ public class TextEditManager extends DirectEditManager {
     private Font scaledFont;
     private boolean multiLine = true;
     private AbstractBaseEditPart editPart;
-    private ZoomListener zoomListener = new ZoomListener() {
-        @Override
-        public void zoomChanged(double newZoom) {
-            updateScaledFont(newZoom);
-        }
-    };
+    private ZoomListener zoomListener = newZoom -> updateScaledFont(newZoom);
 
     public TextEditManager(AbstractBaseEditPart source, CellEditorLocator locator, boolean multiline) {
         super(source, null, locator);
@@ -71,8 +66,9 @@ public class TextEditManager extends DirectEditManager {
     protected void bringDown() {
         ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
                 .getProperty(ZoomManager.class.toString());
-        if (zoomMgr != null)
+        if (zoomMgr != null) {
             zoomMgr.removeZoomListener(zoomListener);
+        }
 
         if (actionHandler != null) {
             actionHandler.dispose();
@@ -91,7 +87,9 @@ public class TextEditManager extends DirectEditManager {
 
     @Override
     protected CellEditor createCellEditorOn(Composite composite) {
-        CellEditor editor = new TextCellEditor(composite, (multiLine ? SWT.MULTI : SWT.SINGLE) | SWT.WRAP) {
+        CloseableTextCellEditor editor = new CloseableTextCellEditor(composite,
+                (multiLine ? SWT.MULTI : SWT.SINGLE) | SWT.WRAP) {
+
             @Override
             protected void focusLost() {
                 // in run mode, if the widget has a PV attached,
@@ -104,8 +102,9 @@ public class TextEditManager extends DirectEditManager {
                         deactivate();
                     }
                     editPart.getFigure().requestFocus();
-                } else
+                } else {
                     super.focusLost();
+                }
             }
 
             @Override
@@ -132,6 +131,9 @@ public class TextEditManager extends DirectEditManager {
                 super.keyReleaseOccured(keyEvent);
             }
         };
+
+        Runnable acceptDirectEdit = editor::acceptValue;
+        editor.getControl().setData(ActionButtonFigure.SWT_KEY_BEFORE_ACTION_RUNNABLE, acceptDirectEdit);
         editor.getControl().moveAbove(null);
         return editor;
     }
@@ -166,8 +168,9 @@ public class TextEditManager extends DirectEditManager {
             cachedZoom = -1.0;
             updateScaledFont(zoomMgr.getZoom());
             zoomMgr.addZoomListener(zoomListener);
-        } else
+        } else {
             getCellEditor().getControl().setFont(textFigure.getFont());
+        }
 
         // Hook the cell editor's copy/paste actions to the actionBars so that they can
         // be invoked via keyboard shortcuts.
@@ -205,17 +208,18 @@ public class TextEditManager extends DirectEditManager {
     }
 
     private void updateScaledFont(double zoom) {
-        if (cachedZoom == zoom)
+        if (cachedZoom == zoom) {
             return;
+        }
 
         Text text = (Text) getCellEditor().getControl();
         Font font = getEditPart().getFigure().getFont();
 
         disposeScaledFont();
         cachedZoom = zoom;
-        if (zoom == 1.0)
+        if (zoom == 1.0) {
             text.setFont(font);
-        else {
+        } else {
             FontData fd = font.getFontData()[0];
             fd.setHeight((int) (fd.getHeight() * zoom));
             text.setFont(scaledFont = new Font(null, fd));

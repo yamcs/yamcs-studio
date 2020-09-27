@@ -21,7 +21,6 @@ import org.csstudio.swt.widgets.introspection.ActionButtonIntrospector;
 import org.csstudio.swt.widgets.introspection.Introspectable;
 import org.csstudio.swt.widgets.util.AbstractInputStreamRunnable;
 import org.csstudio.swt.widgets.util.GraphicsUtil;
-import org.csstudio.swt.widgets.util.IJobErrorHandler;
 import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
@@ -51,6 +50,7 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -60,6 +60,10 @@ import org.eclipse.swt.widgets.Display;
  *
  */
 public class ActionButtonFigure extends Figure implements Introspectable, ITextFigure {
+
+    // Key of an SWT control's data which may contain a Runnable called before executing
+    // an action.
+    public static final String SWT_KEY_BEFORE_ACTION_RUNNABLE = "before-action-runnable";
 
     /**
      * When it was set as armed, action will be fired when mouse released.
@@ -160,8 +164,9 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      *            The {@link ButtonActionListener} to add
      */
     public void addActionListener(ButtonActionListener listener) {
-        if (listener == null)
+        if (listener == null) {
             throw new IllegalArgumentException();
+        }
         listeners.add(listener);
     }
 
@@ -185,8 +190,9 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      *
      */
     protected void fireActionPerformed(int i) {
-        for (ButtonActionListener listener : listeners)
+        for (ButtonActionListener listener : listeners) {
             listener.actionPerformed(i);
+        }
     }
 
     /**
@@ -212,8 +218,9 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * @since 2.0
      */
     protected void hookEventHandler(ButtonEventHandler handler) {
-        if (handler == null)
+        if (handler == null) {
             return;
+        }
         addMouseListener(handler);
         addMouseMotionListener(handler);
         addKeyListener(handler);
@@ -274,13 +281,15 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             super.paintClientArea(graphics);
             graphics.popState();
             graphics.translate(-1, -1);
-        } else
+        } else {
             super.paintClientArea(graphics);
+        }
     }
 
     public void removeActionListener(ButtonActionListener listener) {
-        if (listener != null && listeners.contains(listener))
+        if (listener != null && listeners.contains(listener)) {
             listeners.remove(listener);
+        }
     }
 
     /**
@@ -304,17 +313,19 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             label.setEnabled(value);
             // update the icon
             if (image != null) {
-                if (value)
+                if (value) {
                     label.setIcon(image);
-                else {
-                    if (grayImage == null)
+                } else {
+                    if (grayImage == null) {
                         grayImage = new Image(null, image, SWT.IMAGE_GRAY);
+                    }
                     label.setIcon(grayImage);
                 }
             }
         }
-        if (runMode)
+        if (runMode) {
             super.setEnabled(value);
+        }
         repaint();
     }
 
@@ -336,11 +347,12 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
                     stream.close();
                 } catch (IOException e) {
                 }
-                if (label.isEnabled())
+                if (label.isEnabled()) {
                     label.setIcon(image);
-                else {
-                    if (grayImage == null && image != null)
+                } else {
+                    if (grayImage == null && image != null) {
                         grayImage = new Image(null, image, SWT.IMAGE_GRAY);
+                    }
                     label.setIcon(grayImage);
                 }
                 calculateTextPosition();
@@ -348,22 +360,19 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         };
         if (path != null && !path.isEmpty()) {
             this.imagePath = path;
-            ResourceUtil.pathToInputStreamInJob(path, uiTask, "Load Action Button Icon...", new IJobErrorHandler() {
-
-                @Override
-                public void handleError(Exception exception) {
-                    image = null;
-                    Activator.getLogger().log(Level.WARNING,
-                            "Failed to load image from path" + path, exception);
-                }
+            ResourceUtil.pathToInputStreamInJob(path, uiTask, "Load Action Button Icon...", exception -> {
+                image = null;
+                Activator.getLogger().log(Level.WARNING,
+                        "Failed to load image from path" + path, exception);
             });
         }
 
-        if (label.isEnabled())
+        if (label.isEnabled()) {
             label.setIcon(image);
-        else {
-            if (grayImage == null && image != null)
+        } else {
+            if (grayImage == null && image != null) {
                 grayImage = new Image(null, image, SWT.IMAGE_GRAY);
+            }
             label.setIcon(grayImage);
         }
         calculateTextPosition();
@@ -382,8 +391,9 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     }
 
     public void setSelected(boolean selected) {
-        if (this.selected == selected)
+        if (this.selected == selected) {
             return;
+        }
         this.selected = selected;
         repaint();
     }
@@ -570,20 +580,27 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
              */
             @Override
             protected boolean calculateOpaque() {
-                if (!super.calculateOpaque())
+                if (!super.calculateOpaque()) {
                     return false;
-                if (getHighlight().length != getShadowPressed().length)
+                }
+                if (getHighlight().length != getShadowPressed().length) {
                     return false;
-                if (getShadow().length != getHighlightPressed().length)
+                }
+                if (getShadow().length != getHighlightPressed().length) {
                     return false;
+                }
                 Color[] colors = getHighlightPressed();
-                for (int i = 0; i < colors.length; i++)
-                    if (colors[i] == null)
+                for (int i = 0; i < colors.length; i++) {
+                    if (colors[i] == null) {
                         return false;
+                    }
+                }
                 colors = getShadowPressed();
-                for (int i = 0; i < colors.length; i++)
-                    if (colors[i] == null)
+                for (int i = 0; i < colors.length; i++) {
+                    if (colors[i] == null) {
                         return false;
+                    }
+                }
                 return true;
             }
 
@@ -692,10 +709,11 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             repaint();
             setArmed(false);
             setMousePressed(false);
-            if (isToggleStyle())
+            if (isToggleStyle()) {
                 setSelected(isToggled());
-            else
+            } else {
                 setSelected(false);
+            }
         }
 
         @Override
@@ -710,10 +728,11 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         public void keyReleased(KeyEvent ke) {
             if (ke.character == ' ' || ke.character == '\r') {
                 if (isArmed()) {
-                    if (isToggleStyle())
+                    if (isToggleStyle()) {
                         setToggled(!isToggled());
-                    else
+                    } else {
                         setSelected(false);
+                    }
                     fireActionPerformed(0);
                 }
                 setArmed(false);
@@ -730,8 +749,9 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
             if (isArmed()) {
                 if (!containsPoint(me.getLocation())) {
                     setArmed(false);
-                    if (!isToggled())
+                    if (!isToggled()) {
                         setSelected(false);
+                    }
                 }
             } else if (containsPoint(me.getLocation())) {
                 setArmed(true);
@@ -741,14 +761,31 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
         @Override
         public void mousePressed(MouseEvent me) {
-            if (me.button != 1)
+            if (me.button != 1) {
                 return;
+            }
             // Ignore bogus mouse clicks,
             // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-            if (!containsPoint(me.getLocation()))
+            if (!containsPoint(me.getLocation())) {
                 return;
+            }
             mouseState = me.getState();
+
+            Display display = Display.getCurrent();
+            if (display != null) {
+                Control control = display.getFocusControl();
+                if (control != null) {
+                    Runnable beforeAction = (Runnable) control.getData(SWT_KEY_BEFORE_ACTION_RUNNABLE);
+                    if (beforeAction != null) {
+                        beforeAction.run();
+                    }
+                }
+            }
+
+            // FDI: this currently doesn't do anything, focus is disabled
+            // in AbstractBaseEditPart, presumable to avoid issues between draw2d and swt.
             requestFocus();
+
             setArmed(true);
             setMousePressed(true);
             setSelected(true);
@@ -757,17 +794,20 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
         @Override
         public void mouseReleased(MouseEvent me) {
-            if (me.button != 1)
+            if (me.button != 1) {
                 return;
+            }
             // Ignore bogus mouse clicks,
             // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-            if (!containsPoint(me.getLocation()))
+            if (!containsPoint(me.getLocation())) {
                 return;
+            }
             if (isArmed()) {
                 if (isToggleStyle()) {
                     setToggled(!isToggled());
-                } else
+                } else {
                     setSelected(false);
+                }
                 fireActionPerformed(mouseState);
             }
             setArmed(false);
@@ -788,7 +828,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         @Override
         public void mouseExited(MouseEvent me) {
             label.setBackgroundColor(getBackgroundColor());
-
         }
     }
 }
