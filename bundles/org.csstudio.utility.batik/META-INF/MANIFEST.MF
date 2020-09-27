@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CS-Studio Batik Util
 Bundle-SymbolicName: org.csstudio.utility.batik;singleton:=true
-Bundle-Version: 1.4.1.qualifier
+Bundle-Version: 1.5.0
 Bundle-Vendor: CS-Studio <cs-studio-core@lists.sourceforge.net>
 Bundle-Activator: org.csstudio.utility.batik.Activator
 Require-Bundle: org.yamcs.p2.batik,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feature id="org.yamcs.studio.core.feature" label="Yamcs Studio Components" version="1.4.1.qualifier" provider-name="Space Applications Services" plugin="org.yamcs.studio.core">
+<feature id="org.yamcs.studio.core.feature" label="Yamcs Studio Components" version="1.5.0" provider-name="Space Applications Services" plugin="org.yamcs.studio.core">
 
       <copyright>
       Copyright (c) 2015 Space Applications Services
