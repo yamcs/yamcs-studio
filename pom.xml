@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.yamcs.studio</groupId>
@@ -15,7 +13,7 @@
   </organization>
 
   <properties>
-    <tycho.version>1.7.0</tycho.version>
+    <tycho.version>2.0.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Disable default deploy. Only p2 output repo gets deployed -->
     <maven.deploy.skip>true</maven.deploy.skip>
@@ -168,6 +166,13 @@
               <version>${project.version}</version>
             </artifact>
           </target>
+          <!-- 
+            This is temporary to support JustJ JREs in Tycho. Hopefully
+            later versions of Tycho allow a different approach.
+            Instructions were here:
+            https://www.eclipse.org/justj/?page=documentation#products
+           -->
+          <resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
           <environments>
             <environment>
               <os>linux</os>

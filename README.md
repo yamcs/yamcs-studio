@@ -10,12 +10,7 @@ https://github.com/yamcs/yamcs-studio/releases/
 https://yamcs.org/docs/yamcs-studio/
 
 
-## Source Builds
-
-### Prerequisites
-* JDK 8 or 11
-* Maven
-
+## Building from Source
 
 ### Headless Build
 
