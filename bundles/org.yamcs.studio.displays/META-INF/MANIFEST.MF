@@ -6,7 +6,7 @@ Bundle-Name: Yamcs Studio Displays
 Bundle-SymbolicName: org.yamcs.studio.displays;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-Version: 1.5.0
+Bundle-Version: 1.5.1.qualifier
 Require-Bundle: org.eclipse.ui,
  org.yamcs.studio.core,
  org.yamcs.studio.css.core,
