@@ -120,8 +120,10 @@ public class ArchiveIndexReceiver {
         requestb.setTagTime(oldTag.hasStart() ? oldTag.getStart() : 0);
         requestb.setTagId(oldTag.getId());
         ArchiveClient archive = YamcsPlugin.getArchiveClient();
-        archive.updateTag(requestb.build()).thenRun(() -> {
-            archiveView.tagChanged(oldTag, newTag);
+        archive.updateTag(requestb.build()).whenComplete((response, exc) -> {
+            if (exc == null) {
+                archiveView.tagChanged(oldTag, response);
+            }
         });
     }
 
@@ -129,8 +131,10 @@ public class ArchiveIndexReceiver {
         long tagTime = tag.hasStart() ? tag.getStart() : 0;
         int tagId = tag.getId();
         ArchiveClient archive = YamcsPlugin.getArchiveClient();
-        archive.deleteTag(tagTime, tagId).thenRun(() -> {
-            archiveView.tagRemoved(tag);
+        archive.deleteTag(tagTime, tagId).whenComplete((response, exc) -> {
+            if (exc == null) {
+                archiveView.tagRemoved(response);
+            }
         });
     }
 }

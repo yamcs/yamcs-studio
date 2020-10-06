@@ -113,7 +113,6 @@ public class TagBox extends Box implements MouseListener {
                 dialog.fillFrom(selectedTag);
                 if (dialog.open() == Window.OK) {
                     SwingUtilities.invokeLater(() -> {
-                        System.out.println("signal update to " + dialog.buildArchiveTag());
                         dataView.emitActionEvent(
                                 new TagEvent(this, "update-tag", selectedTag, dialog.buildArchiveTag()));
                     });
