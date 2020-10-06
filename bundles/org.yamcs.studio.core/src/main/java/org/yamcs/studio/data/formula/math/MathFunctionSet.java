@@ -89,6 +89,12 @@ public class MathFunctionSet extends FormulaFunctionSet {
                         return Math.log10(arg);
                     }
                 })
+                .addFormulaFunction(new AbstractVNumberToVNumberFormulaFunction("round", "Round", "arg") {
+                    @Override
+                    public double calculate(double arg) {
+                        return Math.round(arg);
+                    }
+                })
                 .addFormulaFunction(new AbstractVNumberToVNumberFormulaFunction("signum", "Sign function", "arg") {
                     @Override
                     public double calculate(double arg) {
