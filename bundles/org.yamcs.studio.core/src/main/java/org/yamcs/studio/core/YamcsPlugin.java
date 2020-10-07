@@ -1,5 +1,6 @@
 package org.yamcs.studio.core;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -69,6 +70,33 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private TimeSubscription timeSubscription;
     private ClearanceSubscription clearanceSubscription;
     private ProcessorSubscription processorSubscription;
+
+    private static final ConnectionListener DISCONNECT_NOTIFIER = new ConnectionListener() {
+        @Override
+        public void connected() {
+            // Already handled by YamcsConnector
+        }
+
+        @Override
+        public void connecting() {
+            // Already handled by YamcsConnector
+        }
+
+        @Override
+        public void connectionFailed(ClientException exception) {
+            // Already handled by YamcsConnector
+        }
+
+        @Override
+        public void disconnected() {
+            if (plugin == null) {
+                // Plugin is shutting down
+                // Prevent downstream exceptions
+                return;
+            }
+            disconnect();
+        }
+    };
 
     private Set<YamcsAware> listeners = new CopyOnWriteArraySet<>();
 
@@ -344,40 +372,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         setupGlobalClearanceSubscription();
         setupGlobalProcessorSubscription();
 
-        plugin.yamcsClient.addConnectionListener(new ConnectionListener() {
-            @Override
-            public void connected() {
-                // Already handled by YamcsConnector
-            }
-
-            @Override
-            public void connecting() {
-                // Already handled by YamcsConnector
-            }
-
-            @Override
-            public void connectionFailed(ClientException exception) {
-                // Already handled by YamcsConnector
-            }
-
-            @Override
-            public void disconnected() {
-                if (plugin == null) {
-                    // Plugin is shutting down
-                    // Prevent downstream exceptions
-                    return;
-                }
-
-                log.fine("Notify downstream components of Studio disconnect");
-                for (YamcsAware l : plugin.listeners) {
-                    log.fine(String.format(" -> Inform %s", l.getClass().getSimpleName()));
-                    l.onYamcsDisconnected();
-                }
-
-                // Clean UI state
-                disconnect();
-            }
-        });
+        plugin.yamcsClient.addConnectionListener(DISCONNECT_NOTIFIER);
     }
 
     private static void setupGlobalTimeSubscription() {
@@ -424,9 +419,30 @@ public class YamcsPlugin extends AbstractUIPlugin {
     public static void disconnect() {
         if (plugin.yamcsClient != null) {
             log.info("Disconnecting from " + plugin.yamcsClient.getHost() + ":" + plugin.yamcsClient.getPort());
+
+            // We control this notification from here, instead of from
+            // the websocket disconnect callback, because we don't want
+            // the external roundtrip dependency, when disconnecting
+            // and another connection is immediately tried.
+            //
+            // Probably YamcsClient this complication would be better
+            // relocated directly in YamcsClient (locally call disconnect,
+            // when the client is manually closed).
+            log.fine("Notify downstream components of Studio disconnect");
+            for (YamcsAware l : plugin.listeners) {
+                log.fine(String.format(" -> Inform %s", l.getClass().getSimpleName()));
+                l.onYamcsDisconnected();
+            }
+
+            // Ensure we don't get an async callback when closing the client.
+            // It could mess up a shortly scheduled connection attempt.
+            // (use case: connecting to another configuration while already connected)
+            forceRemoveDisconnectNotifier(plugin.yamcsClient);
+
             plugin.yamcsClient.close();
             plugin.yamcsClient = null;
         }
+
         plugin.serverInfo = null;
         plugin.userInfo = null;
         plugin.instance = null;
@@ -443,5 +459,19 @@ public class YamcsPlugin extends AbstractUIPlugin {
             listener.changeProcessorInfo(null);
             listener.updateTime(null);
         });
+    }
+
+    // TODO when we have access to more recent YamcsClient, just use its
+    // removeConnectionListener()
+    @SuppressWarnings("unchecked")
+    private static void forceRemoveDisconnectNotifier(YamcsClient yamcsClient) {
+        try {
+            Field f = YamcsClient.class.getDeclaredField("connectionListeners");
+            f.setAccessible(true);
+            List<ConnectionListener> connectionListeners = (List<ConnectionListener>) f.get(yamcsClient);
+            connectionListeners.remove(DISCONNECT_NOTIFIER);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
