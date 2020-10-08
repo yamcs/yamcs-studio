@@ -420,6 +420,14 @@ public class YamcsPlugin extends AbstractUIPlugin {
         if (plugin.yamcsClient != null) {
             log.info("Disconnecting from " + plugin.yamcsClient.getHost() + ":" + plugin.yamcsClient.getPort());
 
+            // Ensure we don't get an async callback when closing the client.
+            // It could mess up a shortly scheduled connection attempt.
+            // (use case: connecting to another configuration while already connected)
+            forceRemoveDisconnectNotifier(plugin.yamcsClient);
+
+            plugin.yamcsClient.close();
+            plugin.yamcsClient = null;
+
             // We control this notification from here, instead of from
             // the websocket disconnect callback, because we don't want
             // the external roundtrip dependency, when disconnecting
@@ -433,14 +441,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 log.fine(String.format(" -> Inform %s", l.getClass().getSimpleName()));
                 l.onYamcsDisconnected();
             }
-
-            // Ensure we don't get an async callback when closing the client.
-            // It could mess up a shortly scheduled connection attempt.
-            // (use case: connecting to another configuration while already connected)
-            forceRemoveDisconnectNotifier(plugin.yamcsClient);
-
-            plugin.yamcsClient.close();
-            plugin.yamcsClient = null;
         }
 
         plugin.serverInfo = null;

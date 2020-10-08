@@ -157,9 +157,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
             @Override
             public synchronized void valueChanged(IPV pv) {
                 if (triggerSuppressed && checkPVsConnected(scriptData, pvArray)) {
-                    if (pv.getValue() == null) {
-                        System.out.println("AAA " + pv.getValue());
-                    }
                     executeScriptInUIThread(pv);
                     triggerSuppressed = false;
                 }
@@ -186,6 +183,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
                     }
                 }
+
                 executeScriptInUIThread(pv);
             }
 
@@ -210,27 +208,12 @@ public abstract class AbstractScriptStore implements IScriptStore {
         }
     }
 
-    /**
-     * Initialize the script engine.
-     * 
-     * @param editpart
-     * @param pvArray
-     */
     protected abstract void initScriptEngine() throws Exception;
 
-    /**
-     * Compile string with script engine.
-     * 
-     * @param string
-     * @throws Exception
-     */
     protected abstract void compileString(String string) throws Exception;
 
     /**
      * Compile InputStream with script engine. The stream will be closed by this method.
-     * 
-     * @param reader
-     * @throws Exception
      */
     protected abstract void compileInputStream(InputStream s) throws Exception;
 
@@ -240,11 +223,17 @@ public abstract class AbstractScriptStore implements IScriptStore {
      * @param triggerPV
      *            the PV that triggers this execution.
      */
-    protected abstract void execScript(final IPV triggerPV) throws Exception;
+    protected abstract void execScript(IPV triggerPV) throws Exception;
 
-    private void executeScriptInUIThread(final IPV triggerPV) {
+    private void executeScriptInUIThread(IPV triggerPV) {
         Display display = editPart.getRoot().getViewer().getControl().getDisplay();
         UIBundlingThread.getInstance().addRunnable(display, () -> {
+            // Avoid running a execution that was pending just before a Yamcs disconnect was done.
+            // It can still go wrong later on, but with much reduced likelihood.
+            if (!triggerPV.isConnected()) {
+                return;
+            }
+
             if ((!scriptData.isStopExecuteOnError() || !errorInScript) && !unRegistered) {
                 try {
                     execScript(triggerPV);
@@ -252,11 +241,11 @@ public abstract class AbstractScriptStore implements IScriptStore {
                     errorInScript = true;
                     final String notExecuteWarning = "\nThe script or rule will not be executed afterwards. " +
                             "You can change this setting in script dialog.";
-                    final String message = NLS
-                            .bind("Error in {0}.{1}\n{2}",
-                                    new String[] { errorSource,
-                                            !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning,
-                                            e.toString() });
+                    String message = NLS.bind("Error in {0}.{1}\n{2}", new String[] {
+                            errorSource,
+                            !scriptData.isStopExecuteOnError() ? "" : notExecuteWarning,
+                            e.toString()
+                    });
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             }
