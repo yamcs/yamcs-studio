@@ -17,16 +17,17 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -94,7 +95,11 @@ public class PVTupleTableEditor extends Composite {
 
         toolbarManager.update(true);
 
-        pvTupleListTableViewer = createPVTupleListTableViewer(this);
+        Composite tableWrapper = new Composite(this, SWT.NONE);
+        tableWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
+        TableColumnLayout tcl = new TableColumnLayout();
+        tableWrapper.setLayout(tcl);
+        pvTupleListTableViewer = createPVTupleListTableViewer(tableWrapper, tcl);
         pvTupleListTableViewer.setInput(pvTupleList);
 
         // Context menu
@@ -125,37 +130,31 @@ public class PVTupleTableEditor extends Composite {
      *            The parent for the table
      * @return The {@link TableViewer}
      */
-    private TableViewer createPVTupleListTableViewer(final Composite parent) {
-        final TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER
+    private TableViewer createPVTupleListTableViewer(Composite parent, TableColumnLayout tcl) {
+        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER
                 | SWT.FULL_SELECTION | SWT.MULTI);
+
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(true);
 
-        final TableViewerColumn numColumn = new TableViewerColumn(viewer, SWT.NONE);
+        TableViewerColumn numColumn = new TableViewerColumn(viewer, SWT.NONE);
         numColumn.getColumn().setText("#");
-        numColumn.getColumn().setMoveable(false);
-        numColumn.getColumn().setWidth(50);
+        tcl.setColumnData(numColumn.getColumn(), new ColumnPixelData(50));
 
-        final TableViewerColumn pvColumn = new TableViewerColumn(viewer, SWT.NONE);
+        TableViewerColumn pvColumn = new TableViewerColumn(viewer, SWT.NONE);
         pvColumn.getColumn().setText("PV Name");
-        pvColumn.getColumn().setMoveable(false);
-        pvColumn.getColumn().setWidth(220);
+        tcl.setColumnData(pvColumn.getColumn(), new ColumnWeightData(50));
         pvColumn.setEditingSupport(new PVColumnEditingSupport(viewer, viewer.getTable()));
 
-        final TableViewerColumn TrigColumn = new TableViewerColumn(viewer, SWT.NONE);
-        TrigColumn.getColumn().setText("Trigger");
-        TrigColumn.getColumn().setMoveable(false);
-        TrigColumn.getColumn().pack();
-        TrigColumn.setEditingSupport(new TriggerColumnEditingSupport(viewer, viewer.getTable()));
+        TableViewerColumn trigColumn = new TableViewerColumn(viewer, SWT.NONE);
+        trigColumn.getColumn().setText("Trigger");
+        tcl.setColumnData(trigColumn.getColumn(), new ColumnPixelData(50));
+        trigColumn.setEditingSupport(new TriggerColumnEditingSupport(viewer, viewer.getTable()));
 
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new PVTupleLabelProvider(pvTupleList));
 
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            public void selectionChanged(final SelectionChangedEvent event) {
-                refreshToolbarOnSelection();
-            }
-        });
+        viewer.addSelectionChangedListener(event -> refreshToolbarOnSelection());
         viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         DropTarget target = new DropTarget(viewer.getControl(), DND.DROP_MOVE | DND.DROP_COPY);
@@ -179,8 +178,9 @@ public class PVTupleTableEditor extends Composite {
 
             @Override
             public void drop(DropTargetEvent event) {
-                if (event == null || !(event.data instanceof String))
+                if (event == null || !(event.data instanceof String)) {
                     return;
+                }
 
                 String txt = (String) event.data;
                 String[] names = txt.split("[\r\n]+");
@@ -213,8 +213,9 @@ public class PVTupleTableEditor extends Composite {
 
         int num_tuple = 0;
         for (Object obj : selection.toArray()) {
-            if (obj instanceof PVTuple)
+            if (obj instanceof PVTuple) {
                 num_tuple++;
+            }
         }
 
         if (num_tuple == 0) {
@@ -347,7 +348,7 @@ public class PVTupleTableEditor extends Composite {
                 if (!selection.isEmpty()) {
                     @SuppressWarnings("rawtypes")
                     Iterator iter = selection.iterator();
-                    ArrayList<PVTuple> tuples = new ArrayList<PVTuple>();
+                    ArrayList<PVTuple> tuples = new ArrayList<>();
                     while (iter.hasNext()) {
                         Object item = iter.next();
                         if (item instanceof PVTuple) {
@@ -373,7 +374,7 @@ public class PVTupleTableEditor extends Composite {
                 if (!selection.isEmpty()) {
                     @SuppressWarnings("rawtypes")
                     Iterator iter = selection.iterator();
-                    ArrayList<PVTuple> tuples = new ArrayList<PVTuple>();
+                    ArrayList<PVTuple> tuples = new ArrayList<>();
                     while (iter.hasNext()) {
                         Object item = iter.next();
                         if (item instanceof PVTuple) {
@@ -401,10 +402,6 @@ public class PVTupleTableEditor extends Composite {
             this.pvTupleList = pvTupleList;
         }
 
-        public void setPVTupleList(List<PVTuple> pvTupleList) {
-            this.pvTupleList = pvTupleList;
-        }
-
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
             if (columnIndex == 2 && element instanceof PVTuple) {
@@ -420,13 +417,17 @@ public class PVTupleTableEditor extends Composite {
             }
         }
 
+        @Override
         public String getColumnText(Object element, int columnIndex) {
-            if (columnIndex == 0)
+            if (columnIndex == 0) {
                 return String.valueOf(pvTupleList.indexOf(element));
-            if (columnIndex == 1 && element instanceof PVTuple)
+            }
+            if (columnIndex == 1 && element instanceof PVTuple) {
                 return ((PVTuple) element).pvName;
-            if (columnIndex == 2 && element instanceof PVTuple)
+            }
+            if (columnIndex == 2 && element instanceof PVTuple) {
                 return ((PVTuple) element).trigger ? "yes" : "no";
+            }
             return null;
         }
 
@@ -506,7 +507,5 @@ public class PVTupleTableEditor extends Composite {
         }
 
     }
-
-
 
 }
