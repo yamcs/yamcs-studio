@@ -9,7 +9,7 @@ public class DisconnectHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        YamcsPlugin.disconnect();
+        YamcsPlugin.disconnect(false /* lost */);
         return null;
     }
 }

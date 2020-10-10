@@ -94,7 +94,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
                 // Prevent downstream exceptions
                 return;
             }
-            disconnect();
+            disconnect(true /* lost */);
         }
     };
 
@@ -416,9 +416,11 @@ public class YamcsPlugin extends AbstractUIPlugin {
         }
     }
 
-    public static void disconnect() {
+    public static void disconnect(boolean lost) {
         if (plugin.yamcsClient != null) {
-            log.info("Disconnecting from " + plugin.yamcsClient.getHost() + ":" + plugin.yamcsClient.getPort());
+            if (!lost) {
+                log.info("Disconnecting from " + plugin.yamcsClient.getHost() + ":" + plugin.yamcsClient.getPort());
+            }
 
             // Ensure we don't get an async callback when closing the client.
             // It could mess up a shortly scheduled connection attempt.
