@@ -48,7 +48,9 @@ public class IPV {
         notificationThread.execute(() -> {
             if (isConnected()) {
                 listener.connectionChanged(this);
-                listener.valueChanged(this);
+                if (getValue() != null) {
+                    listener.valueChanged(this);
+                }
             }
         });
     }
@@ -87,7 +89,9 @@ public class IPV {
     }
 
     public void notifyValueChange() {
-        listeners.forEach(l -> l.valueChanged(this));
+        if (getValue() != null) {
+            listeners.forEach(l -> l.valueChanged(this));
+        }
     }
 
     public void notifyWritePermissionChange() {
