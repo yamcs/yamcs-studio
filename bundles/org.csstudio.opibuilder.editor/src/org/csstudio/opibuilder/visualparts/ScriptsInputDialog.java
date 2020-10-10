@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -54,7 +55,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Xihui Chen
  *
  */
-public class ScriptsInputDialog extends HelpTrayDialog {
+public class ScriptsInputDialog extends TrayDialog {
 
     private Action addAction;
     private Action editAction;
@@ -101,11 +102,6 @@ public class ScriptsInputDialog extends HelpTrayDialog {
             }
         }
         super.okPressed();
-    }
-
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Script.html";
     }
 
     public final List<ScriptData> getScriptDataList() {

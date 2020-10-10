@@ -7,11 +7,11 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.script.ScriptData;
 import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Xihui Chen
  *
  */
-public class EmbeddedScriptEditDialog extends HelpTrayDialog {
+public class EmbeddedScriptEditDialog extends TrayDialog {
 
     private ScriptData scriptData;
 
@@ -68,11 +68,6 @@ public class EmbeddedScriptEditDialog extends HelpTrayDialog {
         scriptData.setScriptText(scriptText.getText());
         scriptData.setScriptType(ScriptType.values()[scriptTypeCombo.getSelectionIndex()]);
         super.okPressed();
-    }
-
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Script.html";
     }
 
     public ScriptData getResult() {

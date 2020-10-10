@@ -7,11 +7,11 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -39,7 +39,7 @@ import org.eclipse.ui.model.BaseWorkbenchContentProvider;
  * @author chenxh
  *
  */
-public class OPIFontDialog extends HelpTrayDialog {
+public class OPIFontDialog extends TrayDialog {
 
     /**
      * Private class to encapsulate logic for the pixel or points radio button group.
@@ -103,11 +103,6 @@ public class OPIFontDialog extends HelpTrayDialog {
         if (title != null) {
             shell.setText(title);
         }
-    }
-
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html";
     }
 
     @Override

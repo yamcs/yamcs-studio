@@ -7,11 +7,11 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -41,7 +41,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Xihui Chen
  *
  */
-public class OPIColorDialog extends HelpTrayDialog {
+public class OPIColorDialog extends TrayDialog {
 
     private OPIColor opiColor;
     private TableViewer preDefinedColorsViewer;
@@ -73,11 +73,6 @@ public class OPIColorDialog extends HelpTrayDialog {
         if (title != null) {
             shell.setText(title);
         }
-    }
-
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/ColorFont.html";
     }
 
     @Override

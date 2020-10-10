@@ -38,6 +38,7 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,7 +66,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Xihui Chen, Kai Meyer (part of the code is copied from SDS)
  *
  */
-public class ActionsInputDialog extends HelpTrayDialog {
+public class ActionsInputDialog extends TrayDialog {
 
     private Action addAction;
     private Action copyAction;
@@ -109,11 +110,6 @@ public class ActionsInputDialog extends HelpTrayDialog {
     protected void okPressed() {
         propertiesViewer.getTable().forceFocus();
         super.okPressed();
-    }
-
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Actions.html";
     }
 
     /**

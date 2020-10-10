@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.util.OPIColor;
-import org.csstudio.opibuilder.visualparts.HelpTrayDialog;
 import org.csstudio.opibuilder.visualparts.RGBColorCellEditor;
 import org.csstudio.swt.widgets.datadefinition.ColorMap;
 import org.csstudio.swt.widgets.datadefinition.ColorMap.PredefinedColorMap;
@@ -23,6 +22,7 @@ import org.csstudio.swt.widgets.datadefinition.ColorTuple;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author Xihui Chen
  *
  */
-public class ColorMapEditDialog extends HelpTrayDialog {
+public class ColorMapEditDialog extends TrayDialog {
 
     private Action addAction;
     private Action copyAction;
@@ -139,11 +139,6 @@ public class ColorMapEditDialog extends HelpTrayDialog {
         label.setText(text);
         label.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false,
                 false, 2, 1));
-    }
-
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Widgets/IntensityGraph.html#colorMap";
     }
 
     @Override

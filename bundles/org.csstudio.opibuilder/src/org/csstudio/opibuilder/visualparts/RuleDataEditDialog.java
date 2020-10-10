@@ -23,6 +23,7 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -55,7 +56,7 @@ import org.eclipse.swt.widgets.ToolBar;
  * @author Xihui Chen
  *
  */
-public class RuleDataEditDialog extends HelpTrayDialog {
+public class RuleDataEditDialog extends TrayDialog {
 
     private Action addAction;
     private Action copyAction;
@@ -106,11 +107,6 @@ public class RuleDataEditDialog extends HelpTrayDialog {
         Arrays.sort(propArray);
         propIDList = Arrays.asList(propArray);
 
-    }
-
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html";
     }
 
     @Override

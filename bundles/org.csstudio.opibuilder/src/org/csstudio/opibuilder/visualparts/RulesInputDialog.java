@@ -18,6 +18,7 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -40,7 +41,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Xihui Chen
  *
  */
-public class RulesInputDialog extends HelpTrayDialog {
+public class RulesInputDialog extends TrayDialog {
 
     private Action addAction;
     private Action editAction;
@@ -81,11 +82,6 @@ public class RulesInputDialog extends HelpTrayDialog {
         super.okPressed();
     }
 
-    @Override
-    protected String getHelpResourcePath() {
-        return "/" + OPIBuilderPlugin.PLUGIN_ID + "/html/Rules.html";
-    }
-
     /**
      * @return the ruleData List
      */
@@ -93,9 +89,6 @@ public class RulesInputDialog extends HelpTrayDialog {
         return ruleDataList;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
