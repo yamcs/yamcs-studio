@@ -65,7 +65,6 @@ public class ScriptsInputDialog extends HelpTrayDialog {
 
     private TableViewer scriptsViewer;
     private PVTupleTableEditor pvsEditor;
-    private Button skipFirstExecutionButton;
     private Button checkConnectivityButton;
     private Button stopExecuteOnErrorButton;
 
@@ -212,28 +211,6 @@ public class ScriptsInputDialog extends HelpTrayDialog {
         final Composite optionTabComposite = new Composite(tabFolder, SWT.None);
         optionTabComposite.setLayout(new GridLayout(1, false));
         optionTab.setControl(optionTabComposite);
-        skipFirstExecutionButton = new Button(optionTabComposite, SWT.CHECK | SWT.WRAP);
-        skipFirstExecutionButton.setText("Skip executions triggered by PVs' first value.");
-        skipFirstExecutionButton.setToolTipText(
-                "Skip the script executions triggered by PVs' first connections during OPI startup.\n" +
-                        "This is useful if you want to trigger a script from user inputs only.");
-        skipFirstExecutionButton.setSelection(false);
-        skipFirstExecutionButton.setEnabled(false);
-        skipFirstExecutionButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer.getSelection();
-                if (!selection.isEmpty()) {
-                    ((ScriptData) selection.getFirstElement()).setSkipPVsFirstConnection(
-                            skipFirstExecutionButton.getSelection());
-                }
-            }
-        });
-        gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-        Point preferredSize = skipFirstExecutionButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        gd.widthHint = preferredSize.x;
-        gd.minimumHeight = preferredSize.y;
-        skipFirstExecutionButton.setLayoutData(gd);
 
         checkConnectivityButton = new Button(optionTabComposite, SWT.CHECK | SWT.WRAP);
         checkConnectivityButton.setSelection(false);
@@ -262,7 +239,7 @@ public class ScriptsInputDialog extends HelpTrayDialog {
             }
         });
         gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-        preferredSize = checkConnectivityButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        Point preferredSize = checkConnectivityButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
         gd.widthHint = preferredSize.x;
         gd.minimumHeight = preferredSize.y;
         checkConnectivityButton.setLayoutData(gd);
@@ -295,8 +272,6 @@ public class ScriptsInputDialog extends HelpTrayDialog {
             setScriptsViewerSelection(scriptDataList.get(0));
             checkConnectivityButton.setSelection(
                     !scriptDataList.get(0).isCheckConnectivity());
-            skipFirstExecutionButton.setSelection(
-                    scriptDataList.get(0).isSkipPVsFirstConnection());
             stopExecuteOnErrorButton.setSelection(
                     scriptDataList.get(0).isStopExecuteOnError());
 
@@ -326,13 +301,9 @@ public class ScriptsInputDialog extends HelpTrayDialog {
             checkConnectivityButton.setSelection(!((ScriptData) selection
                     .getFirstElement()).isCheckConnectivity());
             checkConnectivityButton.setEnabled(true);
-            skipFirstExecutionButton.setSelection(((ScriptData) selection
-                    .getFirstElement()).isSkipPVsFirstConnection());
-            skipFirstExecutionButton.setEnabled(true);
             stopExecuteOnErrorButton.setSelection(((ScriptData) selection
                     .getFirstElement()).isStopExecuteOnError());
             stopExecuteOnErrorButton.setEnabled(true);
-
         } else {
             removeAction.setEnabled(false);
             moveUpAction.setEnabled(false);
@@ -341,7 +312,6 @@ public class ScriptsInputDialog extends HelpTrayDialog {
             pvsEditor.setEnabled(false);
             editAction.setEnabled(false);
             checkConnectivityButton.setEnabled(false);
-            skipFirstExecutionButton.setEnabled(false);
             stopExecuteOnErrorButton.setEnabled(false);
         }
     }

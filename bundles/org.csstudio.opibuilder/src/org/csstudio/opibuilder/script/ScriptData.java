@@ -43,11 +43,6 @@ public class ScriptData implements IAdaptable {
     private boolean checkConnectivity = true;
 
     /**
-     * Skip the executions triggered by PVs first connection.
-     */
-    private boolean skipPVsFirstConnection = false;
-
-    /**
      * Stop to execute the script if error is detected in script.
      */
     private boolean stopExecuteOnError = false;
@@ -125,7 +120,6 @@ public class ScriptData implements IAdaptable {
         ScriptData copy = new ScriptData();
         copy.setPath(path);
         copy.setCheckConnectivity(checkConnectivity);
-        copy.setSkipPVsFirstConnection(skipPVsFirstConnection);
         copy.setStopExecuteOnError(stopExecuteOnError);
         copy.setEmbedded(isEmbedded);
         copy.setScriptName(scriptName);
@@ -139,7 +133,7 @@ public class ScriptData implements IAdaptable {
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if (adapter == IWorkbenchAdapter.class)
+        if (adapter == IWorkbenchAdapter.class) {
             return adapter.cast(new IWorkbenchAdapter() {
 
                 @Override
@@ -149,8 +143,9 @@ public class ScriptData implements IAdaptable {
 
                 @Override
                 public String getLabel(Object o) {
-                    if (isEmbedded)
+                    if (isEmbedded) {
                         return getScriptName();
+                    }
                     return path.toString();
                 }
 
@@ -158,15 +153,17 @@ public class ScriptData implements IAdaptable {
                 public ImageDescriptor getImageDescriptor(Object object) {
                     String icon;
                     if (isEmbedded) {
-                        if (getScriptType() == ScriptType.PYTHON)
+                        if (getScriptType() == ScriptType.PYTHON) {
                             icon = "icons/pyEmbedded.gif";
-                        else
+                        } else {
                             icon = "icons/jsEmbedded.gif";
+                        }
                     } else if (path != null && !path.isEmpty()
                             && path.getFileExtension().equals(ScriptService.PY)) {
                         icon = "icons/python_file.gif";
-                    } else
+                    } else {
                         icon = "icons/js.gif";
+                    }
                     return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
                             OPIBuilderPlugin.PLUGIN_ID, icon);
                 }
@@ -176,23 +173,9 @@ public class ScriptData implements IAdaptable {
                     return new Object[0];
                 }
             });
+        }
 
         return null;
-    }
-
-    /**
-     * @param skipPVsFirstConnection
-     *            Skip the executions triggered by PVs first connection.
-     */
-    public void setSkipPVsFirstConnection(boolean skipPVsFirstConnection) {
-        this.skipPVsFirstConnection = skipPVsFirstConnection;
-    }
-
-    /**
-     * @return Skip the executions triggered by PVs first connection if it is true.
-     */
-    public boolean isSkipPVsFirstConnection() {
-        return skipPVsFirstConnection;
     }
 
     /**

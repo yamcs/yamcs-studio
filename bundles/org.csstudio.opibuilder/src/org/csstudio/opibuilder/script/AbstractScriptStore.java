@@ -50,11 +50,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
     volatile boolean unRegistered = false;
 
-    /**
-     * A map to see if a PV was triggered before, this is used to skip the first trigger.
-     */
-    private Map<IPV, Boolean> pvTriggeredMap;
-
     private boolean triggerSuppressed = false;
 
     private ScriptData scriptData;
@@ -150,7 +145,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
         }
 
         pvListenerMap = new HashMap<>();
-        pvTriggeredMap = new HashMap<>();
 
         IPVListener suppressPVListener = new IPVListener.Stub() {
 
@@ -167,13 +161,6 @@ public abstract class AbstractScriptStore implements IScriptStore {
         IPVListener triggerPVListener = new IPVListener.Stub() {
             @Override
             public synchronized void valueChanged(IPV pv) {
-
-                // skip the first trigger if it is needed.
-                if (scriptData.isSkipPVsFirstConnection()
-                        && !pvTriggeredMap.get(pv)) {
-                    pvTriggeredMap.put(pv, true);
-                    return;
-                }
 
                 // execute script only if all input pvs are connected
                 if (pvArray.length > 1) {
@@ -200,11 +187,8 @@ public abstract class AbstractScriptStore implements IScriptStore {
                 pvListenerMap.put(pv, suppressPVListener);
                 continue;
             }
-            ;
-            pvTriggeredMap.put(pv, false);
             pv.addListener(triggerPVListener);
             pvListenerMap.put(pv, triggerPVListener);
-
         }
     }
 
@@ -257,12 +241,12 @@ public abstract class AbstractScriptStore implements IScriptStore {
             return true;
         }
         for (IPV pv : pvArray) {
-            if (!pv.isConnected()) {
+            if (!pv.isConnected() || pv.getValue() == null) {
                 return false;
             }
         }
-        return true;
 
+        return true;
     }
 
     @Override

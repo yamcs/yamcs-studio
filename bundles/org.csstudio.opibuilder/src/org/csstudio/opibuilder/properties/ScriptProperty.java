@@ -39,7 +39,6 @@ public class ScriptProperty extends AbstractWidgetProperty {
 
     public static final String XML_ATTRIBUTE_CHECKCONNECT = "checkConnect";
 
-    public static final String XML_ATTRIBUTE_SKIP_FIRST_EXECUTION = "sfe";
     public static final String XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR = "seoe";
 
     public static final String EMBEDDEDJS = "EmbeddedJs";
@@ -74,8 +73,9 @@ public class ScriptProperty extends AbstractWidgetProperty {
 
     @Override
     public Object checkValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         ScriptsInput acceptableValue = null;
         if (value instanceof ScriptsInput) {
             acceptableValue = (ScriptsInput) value;
@@ -100,14 +100,16 @@ public class ScriptProperty extends AbstractWidgetProperty {
                 }
             }
             return value;
-        } else
+        } else {
             return super.getPropertyValue();
+        }
     }
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if (PropertySSHelper.getIMPL() == null)
+        if (PropertySSHelper.getIMPL() == null) {
             return null;
+        }
         return PropertySSHelper.getIMPL().getScriptPropertyDescriptor(prop_id, widgetModel, description);
     }
 
@@ -127,22 +129,23 @@ public class ScriptProperty extends AbstractWidgetProperty {
                 sd.setScriptType(ScriptType.PYTHON);
                 sd.setScriptText(se.getChildText(XML_ELEMENT_SCRIPT_TEXT));
                 sd.setScriptName(se.getChildText(XML_ELEMENT_SCRIPT_NAME));
-            } else
+            } else {
                 sd = new ScriptData(new Path(se.getAttributeValue(XML_ATTRIBUTE_PATHSTRING)));
-            if (se.getAttributeValue(XML_ATTRIBUTE_CHECKCONNECT) != null)
+            }
+            if (se.getAttributeValue(XML_ATTRIBUTE_CHECKCONNECT) != null) {
                 sd.setCheckConnectivity(
                         Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_CHECKCONNECT)));
-            if (se.getAttributeValue(XML_ATTRIBUTE_SKIP_FIRST_EXECUTION) != null)
-                sd.setSkipPVsFirstConnection(
-                        Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_SKIP_FIRST_EXECUTION)));
-            if (se.getAttributeValue(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR) != null)
+            }
+            if (se.getAttributeValue(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR) != null) {
                 sd.setStopExecuteOnError(
                         Boolean.parseBoolean(se.getAttributeValue(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR)));
+            }
             for (Object o : se.getChildren(XML_ELEMENT_PV)) {
                 Element pve = (Element) o;
                 boolean trig = true;
-                if (pve.getAttribute(XML_ATTRIBUTE_TRIGGER) != null)
+                if (pve.getAttribute(XML_ATTRIBUTE_TRIGGER) != null) {
                     trig = Boolean.parseBoolean(pve.getAttributeValue(XML_ATTRIBUTE_TRIGGER));
+                }
                 sd.addPV(new PVTuple(pve.getText(), trig));
             }
             result.getScriptList().add(sd);
@@ -156,24 +159,24 @@ public class ScriptProperty extends AbstractWidgetProperty {
             Element pathElement = new Element(XML_ELEMENT_PATH);
             String pathString = null;
             if (scriptData.isEmbedded()) {
-                if (scriptData.getScriptType() == ScriptType.JAVASCRIPT)
+                if (scriptData.getScriptType() == ScriptType.JAVASCRIPT) {
                     pathString = EMBEDDEDJS;
-                else if (scriptData.getScriptType() == ScriptType.PYTHON)
+                } else if (scriptData.getScriptType() == ScriptType.PYTHON) {
                     pathString = EMBEDDEDPY;
+                }
                 Element scriptNameElement = new Element(XML_ELEMENT_SCRIPT_NAME);
                 scriptNameElement.setText(scriptData.getScriptName());
                 pathElement.addContent(scriptNameElement);
                 Element scriptTextElement = new Element(XML_ELEMENT_SCRIPT_TEXT);
                 scriptTextElement.setContent(new CDATA(scriptData.getScriptText()));
                 pathElement.addContent(scriptTextElement);
-            } else
+            } else {
                 pathString = scriptData.getPath().toPortableString();
+            }
             pathElement.setAttribute(XML_ATTRIBUTE_PATHSTRING,
                     pathString);
             pathElement.setAttribute(XML_ATTRIBUTE_CHECKCONNECT,
                     Boolean.toString(scriptData.isCheckConnectivity()));
-            pathElement.setAttribute(XML_ATTRIBUTE_SKIP_FIRST_EXECUTION,
-                    Boolean.toString(scriptData.isSkipPVsFirstConnection()));
             pathElement.setAttribute(XML_ATTRIBUTE_STOP_EXECUTE_ON_ERROR,
                     Boolean.toString(scriptData.isStopExecuteOnError()));
             for (PVTuple pv : scriptData.getPVList()) {
