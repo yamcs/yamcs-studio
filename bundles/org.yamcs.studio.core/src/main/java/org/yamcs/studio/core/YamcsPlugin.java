@@ -1,6 +1,5 @@
 package org.yamcs.studio.core;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -425,7 +424,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
             // Ensure we don't get an async callback when closing the client.
             // It could mess up a shortly scheduled connection attempt.
             // (use case: connecting to another configuration while already connected)
-            forceRemoveDisconnectNotifier(plugin.yamcsClient);
+            plugin.yamcsClient.removeConnectionListener(DISCONNECT_NOTIFIER);
 
             plugin.yamcsClient.close();
             plugin.yamcsClient = null;
@@ -461,19 +460,5 @@ public class YamcsPlugin extends AbstractUIPlugin {
             listener.changeProcessorInfo(null);
             listener.updateTime(null);
         });
-    }
-
-    // TODO when we have access to more recent YamcsClient, just use its
-    // removeConnectionListener()
-    @SuppressWarnings("unchecked")
-    private static void forceRemoveDisconnectNotifier(YamcsClient yamcsClient) {
-        try {
-            Field f = YamcsClient.class.getDeclaredField("connectionListeners");
-            f.setAccessible(true);
-            List<ConnectionListener> connectionListeners = (List<ConnectionListener>) f.get(yamcsClient);
-            connectionListeners.remove(DISCONNECT_NOTIFIER);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -20,7 +20,7 @@ public class ConnectionStringStatusLineContributionItem extends StatusLineContri
         setToolTipText("Yamcs Connection Status");
 
         addClickListener(evt -> {
-            if (YamcsPlugin.getYamcsClient().isConnected()) {
+            if (YamcsPlugin.getYamcsClient().getWebSocketClient().isConnected()) {
                 // TODO show server info (version string etc)
             } else {
                 RCPUtils.runCommand(YamcsPlugin.CMD_CONNECT);
