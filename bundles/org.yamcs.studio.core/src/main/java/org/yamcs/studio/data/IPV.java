@@ -86,6 +86,7 @@ public class IPV {
     }
 
     public void notifyConnectionChange() {
+        invalid = false; // Reset state
         listeners.forEach(l -> l.connectionChanged(this));
     }
 

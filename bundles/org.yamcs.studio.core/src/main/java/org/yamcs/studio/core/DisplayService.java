@@ -25,7 +25,7 @@ public class DisplayService implements YamcsAware, PluginService {
         previousInstance = instance;
         previousProcessor = processor;
 
-        if (processor == null && realChange) {
+        if (realChange) {
             // What we really want is that all the widgets lose their values, so
             // that they wouldn't get restored on another processor or connection.
 
