@@ -46,13 +46,14 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
         // (PVs send individual events, so this bundles them)
         executor.scheduleWithFixedDelay(() -> {
             if (subscriptionDirty.getAndSet(false) && subscription != null) {
-                log.fine(String.format("Modifying subscription to %s", pvsById.keySet()));
+                Set<NamedObjectId> ids = getRequestedIdentifiers();
+                log.fine(String.format("Modifying subscription to %s", ids));
                 subscription.sendMessage(SubscribeParametersRequest.newBuilder()
                         .setAction(Action.REPLACE)
                         .setSendFromCache(true)
                         .setAbortOnInvalid(false)
                         .setUpdateOnExpiration(true)
-                        .addAllId(getRequestedIdentifiers())
+                        .addAllId(ids)
                         .build());
             }
         }, 500, 500, TimeUnit.MILLISECONDS);
@@ -112,14 +113,15 @@ public class YamcsSubscriptionService implements YamcsAware, ParameterSubscripti
                 });
 
                 // Ready to receive some data
-                log.fine(String.format("Subscribing to %s [%s/%s]", pvsById.keySet(), instance, processor));
+                Set<NamedObjectId> ids = getRequestedIdentifiers();
+                log.fine(String.format("Subscribing to %s [%s/%s]", ids, instance, processor));
                 subscription.sendMessage(SubscribeParametersRequest.newBuilder()
                         .setInstance(instance)
                         .setProcessor(processor)
                         .setSendFromCache(true)
                         .setAbortOnInvalid(false)
                         .setUpdateOnExpiration(true)
-                        .addAllId(getRequestedIdentifiers())
+                        .addAllId(ids)
                         .build());
             }
         });
