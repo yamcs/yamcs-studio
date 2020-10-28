@@ -48,6 +48,7 @@ public class IPV {
         notificationThread.execute(() -> {
             if (isConnected()) {
                 listener.connectionChanged(this);
+                listener.writePermissionChanged(this);
                 if (getValue() != null) {
                     listener.valueChanged(this);
                 }
