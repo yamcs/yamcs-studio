@@ -156,6 +156,13 @@ public class TagBox extends Box implements MouseListener {
         }
     }
 
+    // On windows, the popup trigger comes from the release event
+    public void doMouseReleased(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            showPopup(e);
+        }
+    }
+
     void showPopup(final MouseEvent e) {
         if (selectedIndex != -1) {
             ArchiveTag selectedTag = tags.get(selectedRow).get(selectedIndex);
@@ -200,6 +207,7 @@ public class TagBox extends Box implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        doMouseReleased(e);
     }
 
     @Override
