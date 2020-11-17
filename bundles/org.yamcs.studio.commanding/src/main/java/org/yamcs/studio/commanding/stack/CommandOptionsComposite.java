@@ -214,6 +214,9 @@ public class CommandOptionsComposite extends ScrolledComposite {
         for (TelecommandArgument argument : arguments) {
             Label argumentLabel = new Label(composite, SWT.NONE);
             argumentLabel.setText(argument.getName());
+            if (argument.getArgumentInfo().hasDescription()) {
+                argumentLabel.setToolTipText(argument.getArgumentInfo().getDescription());
+            }
 
             if ("enumeration".equals(argument.getType())) {
                 Combo argumentCombo = new Combo(composite, SWT.READ_ONLY);
