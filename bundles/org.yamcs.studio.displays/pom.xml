@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.yamcs.studio</groupId>
     <artifactId>org.yamcs.studio.bundles</artifactId>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.5.3.rc1</version>
   </parent>
 
   <artifactId>org.yamcs.studio.displays</artifactId>
