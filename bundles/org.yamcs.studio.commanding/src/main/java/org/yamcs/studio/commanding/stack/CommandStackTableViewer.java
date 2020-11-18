@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
-import org.yamcs.protobuf.Mdb.ComparisonInfo;
 import org.yamcs.protobuf.Mdb.TransmissionConstraintInfo;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
 import org.yamcs.studio.core.utils.CenteredImageLabelProvider;
@@ -179,12 +178,7 @@ public class CommandStackTableViewer extends TableViewer {
                         buf.append(" and ");
                     }
                     TransmissionConstraintInfo constraint = cmd.getMetaCommand().getConstraint(i);
-                    for (int j = 0; j < constraint.getComparisonCount(); j++) {
-                        if (j != 0) {
-                            buf.append(", ");
-                        }
-                        appendConstraint(constraint.getComparison(j), buf);
-                    }
+                    buf.append(constraint.getExpression());
                 }
                 return buf.length() != 0 ? buf.toString() : "-";
             }
@@ -373,33 +367,6 @@ public class CommandStackTableViewer extends TableViewer {
                 }
             });
         }
-    }
-
-    public void appendConstraint(ComparisonInfo comparison, StringBuilder buf) {
-        buf.append(comparison.getParameter().getQualifiedName());
-        switch (comparison.getOperator()) {
-        case EQUAL_TO:
-            buf.append("=");
-            break;
-        case NOT_EQUAL_TO:
-            buf.append("!=");
-            break;
-        case GREATER_THAN:
-            buf.append(">");
-            break;
-        case GREATER_THAN_OR_EQUAL_TO:
-            buf.append(">=");
-            break;
-        case SMALLER_THAN:
-            buf.append("<");
-            break;
-        case SMALLER_THAN_OR_EQUAL_TO:
-            buf.append("<=");
-            break;
-        default:
-            throw new IllegalStateException("Unexpected operator " + comparison.getOperator());
-        }
-        buf.append(comparison.getValue());
     }
 
     public int getIndex(StackedCommand command) {
