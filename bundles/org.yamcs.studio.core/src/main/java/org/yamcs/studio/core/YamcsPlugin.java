@@ -120,7 +120,6 @@ public class YamcsPlugin extends AbstractUIPlugin {
         if (plugin.yamcsClient != null) {
             listener.onYamcsConnected();
         }
-
         if (plugin.instance != null) {
             listener.changeInstance(plugin.instance);
         }
@@ -133,6 +132,8 @@ public class YamcsPlugin extends AbstractUIPlugin {
             ClearanceInfo clearanceInfo = plugin.clearanceSubscription.getCurrent();
             if (clearanceInfo != null && clearanceInfo.hasLevel()) {
                 listener.updateClearance(enabled, clearanceInfo.getLevel());
+            } else {
+                listener.updateClearance(enabled, null);
             }
         }
     }
