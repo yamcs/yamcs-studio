@@ -66,6 +66,19 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     private CommandStackTableViewer commandTableViewer;
     private ConnectionStateProvider connectionStateProvider;
 
+    private ISourceProviderListener sourceProviderListener = new ISourceProviderListener() {
+        @Override
+        public void sourceChanged(int sourcePriority, String sourceName, Object sourceValue) {
+            refreshState();
+        }
+
+        @Override
+        @SuppressWarnings("rawtypes")
+        public void sourceChanged(int sourcePriority, Map sourceValuesByName) {
+            refreshState();
+        }
+    };
+
     private Color errorBackgroundColor;
     private Styler bracketStyler;
     private Styler argNameStyler;
@@ -432,18 +445,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         connectionStateProvider = RCPUtils.findSourceProvider(getViewSite(),
                 ConnectionStateProvider.STATE_KEY_CONNECTED,
                 ConnectionStateProvider.class);
-        connectionStateProvider.addSourceProviderListener(new ISourceProviderListener() {
-            @Override
-            public void sourceChanged(int sourcePriority, String sourceName, Object sourceValue) {
-                refreshState();
-            }
-
-            @Override
-            @SuppressWarnings("rawtypes")
-            public void sourceChanged(int sourcePriority, Map sourceValuesByName) {
-                refreshState();
-            }
-        });
+        connectionStateProvider.addSourceProviderListener(sourceProviderListener);
 
         // Add the popup menu for pasting commands
         addPopupMenu();
@@ -871,6 +873,7 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         if (subscription != null) {
             subscription.cancel(true);
         }
+        connectionStateProvider.removeSourceProviderListener(sourceProviderListener);
         YamcsPlugin.removeListener(this);
         super.dispose();
     }
