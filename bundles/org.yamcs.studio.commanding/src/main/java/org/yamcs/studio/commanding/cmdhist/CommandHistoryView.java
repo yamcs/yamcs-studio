@@ -48,6 +48,7 @@ import org.yamcs.studio.core.utils.ColumnData;
 import org.yamcs.studio.core.utils.ColumnDef;
 import org.yamcs.studio.core.utils.RCPUtils;
 import org.yamcs.studio.core.utils.ViewerColumnsDialog;
+import org.yamcs.studio.data.yamcs.StringConverter;
 
 public class CommandHistoryView extends ViewPart implements YamcsAware {
 
@@ -557,33 +558,54 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     public String getText(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
 
-                        // Avoid showing delta if ack status is "PENDING".
-                        // should refactor this...
-                        if (rec.getAckDurationForColumn(def.name) != 0) {
-                            String imgLoc = rec.getImageForColumn(def.name);
-                            if (!CommandHistoryRecordContentProvider.GREEN.equals(imgLoc)
-                                    && !CommandHistoryRecordContentProvider.RED.equals(imgLoc)) {
-                                return null;
-                            }
+                        if (def.name.startsWith("Verifier_") || def.name.startsWith("Acknowledge_")) {
+                            return null;
                         }
-                        return rec.getTextForColumn(def.name, showRelativeTime);
+
+                        Object value = rec.getCommand().getAttribute(def.name);
+                        if (value == null) {
+                            return null;
+                        } else if (value instanceof byte[]) {
+                            return StringConverter.arrayToHexString((byte[]) value);
+                        } else {
+                            return String.valueOf(value);
+                        }
                     }
 
                     @Override
                     public String getToolTipText(Object element) {
-                        return ((CommandHistoryRecord) element).getTooltipForColumn(def.name);
+                        if (def.name.startsWith("Acknowledge_") || def.name.startsWith("Verifier_")) {
+                            CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                            Acknowledgment ack = rec.getCommand().getAcknowledgment(def.name);
+                            return (ack != null) ? ack.getMessage() : null;
+                        }
+                        return null;
                     }
 
                     @Override
                     public Image getImage(Object element) {
-                        String imgLoc = ((CommandHistoryRecord) element).getImageForColumn(def.name);
-                        if (CommandHistoryRecordContentProvider.GREEN.equals(imgLoc)) {
-                            return greenBubble;
-                        } else if (CommandHistoryRecordContentProvider.RED.equals(imgLoc)) {
-                            return redBubble;
-                        } else {
-                            return null;
+                        if (def.name.startsWith("Acknowledge_") || def.name.startsWith("Verifier_")) {
+                            CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                            Acknowledgment ack = rec.getCommand().getAcknowledgment(def.name);
+                            if (ack == null) {
+                                return grayBubble;
+                            } else {
+                                switch (ack.getStatus()) {
+                                case "NEW":
+                                    return grayBubble;
+                                case "OK":
+                                    return greenBubble;
+                                case "PENDING":
+                                    return waitingImage;
+                                case "NOK":
+                                    return redBubble;
+                                default:
+                                    log.warning("Unexpected ack state " + ack.getStatus());
+                                    return grayBubble;
+                                }
+                            }
                         }
+                        return null;
                     }
                 });
                 layout.addColumnData(new ColumnPixelData(def.width));
@@ -635,6 +657,9 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
             // Add visible columns we still remember from a previous session
             for (int i = 0; i < oldVisibleNames.length; i++) {
+                if (oldVisibleNames[i].endsWith("_Status")) { // TEMP to work around a client bug
+                    continue;
+                }
                 ColumnDef def = columnData.getColumn(oldVisibleNames[i]);
                 if (def != null) {
                     restoredData.addColumn(def.name, oldVisibleWidths[i], true, def.resizable, def.moveable);
@@ -648,6 +673,9 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
 
             // Add hidden columns we still remember from a previous session
             for (int i = 0; i < oldHiddenNames.length; i++) {
+                if (oldHiddenNames[i].endsWith("_Status")) { // TEMP to work around a bug
+                    continue;
+                }
                 ColumnDef def = columnData.getColumn(oldHiddenNames[i]);
                 if (def != null) {
                     restoredData.addColumn(def.name, def.width, false, def.resizable, def.moveable);
@@ -687,11 +715,21 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
     public void processCommand(Command command, boolean update) {
         // Maybe we need to update structure
         for (String acknowledgmentName : command.getAcknowledgments().keySet()) {
-            if (!dynamicColumns.contains(acknowledgmentName)) {
-                dynamicColumns.add(acknowledgmentName);
-                columnData.addColumn(acknowledgmentName, 90);
-                syncCurrentWidthsToModel();
-                createColumns();
+            if (acknowledgmentName.endsWith("_Status")) { // TODO remove once fixed on client
+                acknowledgmentName = acknowledgmentName.substring(0, acknowledgmentName.length() - 7);
+            }
+            switch (acknowledgmentName) {
+            case "Acknowledge_Queued":
+            case "Acknowledge_Release":
+            case "Acknowledge_Sent":
+                continue;
+            default:
+                if (!dynamicColumns.contains(acknowledgmentName)) {
+                    dynamicColumns.add(acknowledgmentName);
+                    columnData.addColumn(acknowledgmentName, 90);
+                    syncCurrentWidthsToModel();
+                    createColumns();
+                }
             }
         }
         for (String attributeName : command.getExtraAttributes().keySet()) {

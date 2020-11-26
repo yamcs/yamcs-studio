@@ -117,7 +117,7 @@ public class AckTableViewer extends TableViewer {
     }
 
     private String toHumanTimeDiff(Instant refTime, Instant time) {
-        long millis = refTime.toEpochMilli() - time.toEpochMilli();
+        long millis = time.toEpochMilli() - refTime.toEpochMilli();
         String sign = (millis >= 0) ? "+" : "-";
         if (millis >= ONE_DAY) {
             return YamcsPlugin.getDefault().formatInstant(time);
