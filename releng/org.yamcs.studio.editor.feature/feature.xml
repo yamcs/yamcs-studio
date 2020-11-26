@@ -2,7 +2,7 @@
 <feature
       id="org.yamcs.studio.editor.feature"
       label="Yamcs Studio Product"
-      version="1.5.3.rc3"
+      version="1.5.3"
       provider-name="Space Applications Services">
 
    <plugin
