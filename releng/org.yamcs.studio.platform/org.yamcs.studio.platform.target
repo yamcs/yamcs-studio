@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8" ?>
-<target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="194">
+<target includeMode="feature" name="Yamcs Studio Target Platform" sequenceNumber="195">
     <locations>
         <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-            <repository location="https://dl.yamcs.org/p2/platform/202011221937/" />
-            <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="14.0.2.v20200815-0932" />
+            <repository location="https://dl.yamcs.org/p2/platform/202011271343/" />
+            <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="11.0.2.v20200815-0835" />
             <unit id="com.google.gson" version="2.8.2.v20180104-1110" />
             <unit id="com.google.guava" version="27.1.0.v20190517-1946" />
             <unit id="javax.xml" version="1.3.4.v201005080400" />
@@ -31,8 +31,8 @@
             <unit id="org.python.jython" version="2.7.1" />
             <unit id="org.yaml.snakeyaml" version="1.14.0.v201604211500" />
             <unit id="org.yamcs.p2.batik" version="1.11.0" />
-            <unit id="org.yamcs.p2.client" version="5.2.1.20201122183935" />
-            <unit id="org.yamcs.p2.jcodec" version="0.2.6.20201122183935" />
+            <unit id="org.yamcs.p2.client" version="5.3.1.20201127124533" />
+            <unit id="org.yamcs.p2.jcodec" version="0.2.6.20201127124533" />
         </location>
     </locations>
 </target>

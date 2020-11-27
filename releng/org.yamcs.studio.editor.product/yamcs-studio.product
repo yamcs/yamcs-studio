@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.5" ?>
+<?pde version="3.5"?>
 
 <product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.editor.product" application="org.yamcs.studio.editor.application" version="1.5.3" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.yamcs.studio.editor/icons/aboutSide.png" />
+      <image path="/org.yamcs.studio.editor/icons/aboutSide.png"/>
       <text>
          Desktop client for Yamcs Mission Control
 
@@ -12,7 +12,8 @@ See https://yamcs.org
       </text>
    </aboutInfo>
 
-   <configIni use="default"></configIni>
+   <configIni use="default">
+   </configIni>
 
    <launcherArgs>
       <vmArgs>-Xmx2048m
@@ -27,25 +28,30 @@ See https://yamcs.org
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/org.yamcs.studio.editor/icons/logo16.png" i32="/org.yamcs.studio.editor/icons/logo32.png" i48="/org.yamcs.studio.editor/icons/logo48.png" i64="/org.yamcs.studio.editor/icons/logo64.png" i128="/org.yamcs.studio.editor/icons/logo128.png" i256="/org.yamcs.studio.editor/icons/logo256.png" />
+   <windowImages i16="/org.yamcs.studio.editor/icons/logo16.png" i32="/org.yamcs.studio.editor/icons/logo32.png" i48="/org.yamcs.studio.editor/icons/logo48.png" i64="/org.yamcs.studio.editor/icons/logo64.png" i128="/org.yamcs.studio.editor/icons/logo128.png" i256="/org.yamcs.studio.editor/icons/logo256.png"/>
 
-   <splash location="org.yamcs.studio.editor" startupProgressRect="20,215,560,15" startupMessageRect="20,195,560,20" startupForegroundColor="2F376D" />
+   <splash
+      location="org.yamcs.studio.editor"
+      startupProgressRect="20,215,560,15"
+      startupMessageRect="20,195,560,20"
+      startupForegroundColor="2F376D" />
    <launcher name="Yamcs Studio">
-      <linux icon="/launcher/yamcs.xpm" />
-      <macosx icon="/launcher/yamcs.icns" />
+      <linux icon="/launcher/yamcs.xpm"/>
+      <macosx icon="/launcher/yamcs.icns"/>
       <win useIco="true">
-         <ico path="/launcher/yamcs.ico" />
-         <bmp />
+         <ico path="/launcher/yamcs.ico"/>
+         <bmp/>
       </win>
    </launcher>
 
-   <intro introId="org.eclipse.ui.intro.universal" />
+   <intro introId="org.eclipse.ui.intro.universal"/>
 
-   <vm></vm>
+   <vm>
+   </vm>
 
    <license>
-      <url>http://www.eclipse.org/legal/epl-v10.html</url>
-      <text>
+        <url>http://www.eclipse.org/legal/epl-v10.html</url>
+        <text>
    You must accept this license agreement in order to install and
 use this software.
 THIS SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN &quot;../AS IS&quot;
@@ -57,12 +63,13 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          </text>
    </license>
 
-   <plugins></plugins>
+   <plugins>
+   </plugins>
 
    <features>
-      <feature id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped" installMode="root" />
-      <feature id="org.yamcs.studio.core.feature" version="1.5.3" />
-      <feature id="org.yamcs.studio.editor.feature" version="1.5.3" />
+      <feature id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped" installMode="root"/>
+      <feature id="org.yamcs.studio.core.feature" version="1.5.3"/>
+      <feature id="org.yamcs.studio.editor.feature" version="1.5.3"/>
    </features>
 
    <configurations>
@@ -77,9 +84,10 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
    </configurations>
 
    <preferencesInfo>
-      <targetfile overwrite="false" />
+      <targetfile overwrite="false"/>
    </preferencesInfo>
 
-   <cssInfo></cssInfo>
+   <cssInfo>
+   </cssInfo>
 
 </product>
