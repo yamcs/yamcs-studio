@@ -7,7 +7,7 @@ https://github.com/yamcs/yamcs-studio/releases/
 
 ## End-User Documentation
 
-https://yamcs.org/docs/yamcs-studio/
+https://docs.yamcs.org/yamcs-studio/
 
 
 ## Building from Source

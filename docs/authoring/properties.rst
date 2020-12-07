@@ -30,7 +30,7 @@ X, Y, Width, Height
     | ``Width`` and ``Height`` indicate the size of the bounding box. Many widgets support automatic scaling within the available bounding box.
 
 PV Name
-    | The unique name of a `PV <../pv/index>`_ that will be backing this widget. At runtime the value of this PV will be used to control the intrinsic value of the widget, or to decorate it in case of off-nominal state.
+    | The unique name of a :doc:`PV <../pv/index>` that will be backing this widget. At runtime the value of this PV will be used to control the intrinsic value of the widget, or to decorate it in case of off-nominal state.
     | If the PV concerns a Yamcs parameter, and Yamcs Studio is connected to Yamcs, you will get autocompletion support on parameter names based on the contents of the Mission Database.
 
 Alarm Sensitive
