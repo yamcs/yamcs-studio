@@ -16,7 +16,7 @@ import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -61,8 +61,7 @@ public class ConnectionsDialog extends Dialog {
     private YamcsConfiguration selectedConfiguration;
 
     private Text yamcsInstanceText;
-    private Text yamcsHostText;
-    private Text yamcsPortText;
+    private Text yamcsURLText;
     private Text nameText;
 
     private Label yamcsUserLabel;
@@ -70,7 +69,6 @@ public class ConnectionsDialog extends Dialog {
     private Label yamcsPasswordLabel;
     private Text yamcsPasswordText;
 
-    private Button sslCheckbox;
     private Button savePasswordButton;
     private Text caCertFileText;
     private Combo authTypeCombo;
@@ -80,12 +78,22 @@ public class ConnectionsDialog extends Dialog {
 
     public ConnectionsDialog(Shell parentShell) {
         super(parentShell);
+
+        // Allow resize
+        setShellStyle(getShellStyle() | SWT.RESIZE);
+    }
+
+    @Override
+    public void create() {
+        super.create();
+        getShell().setSize(800, 500);
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
         parent.getShell().setText("Yamcs Server Connections");
-        Composite contentArea = new Composite(parent, SWT.NONE);
+
+        Composite contentArea = (Composite) super.createDialogArea(parent);
         GridLayout gl = new GridLayout();
         gl.marginHeight = 0;
         gl.verticalSpacing = 0;
@@ -127,10 +135,10 @@ public class ConnectionsDialog extends Dialog {
         detailPanelWrapper.setLayout(gl);
         createDetailPanel(detailPanelWrapper, resourceManager);
         GridData gd = new GridData(GridData.FILL_BOTH);
-        gd.widthHint = 250;
+        gd.widthHint = 200;
         detailPanel.setLayoutData(gd);
 
-        sash.setWeights(new int[] { 55, 45 });
+        sash.setWeights(new int[] { 70, 30 });
 
         ConnectionPreferences.getConfigurations().forEach(conf -> {
             connViewer.add(conf);
@@ -178,7 +186,6 @@ public class ConnectionsDialog extends Dialog {
     @Override
     protected void okPressed() {
         // TODO maybe only save changes when "save" button is used (and only for the active detail pane)
-        // Then connection naming is an optional feature.
         saveChanges();
         super.okPressed();
     }
@@ -239,12 +246,11 @@ public class ConnectionsDialog extends Dialog {
 
     private void addServer() {
         YamcsConfiguration conf = new YamcsConfiguration();
-        conf.setName("Untitled");
-        conf.setPrimaryPort(8090);
+        conf.setURL("http://localhost:8090");
         conf.setAuthType(AuthType.STANDARD);
         connViewer.add(conf);
         connViewer.setSelection(new StructuredSelection(conf), true);
-        yamcsHostText.setFocus();
+        yamcsURLText.setFocus();
     }
 
     private void removeSelectedServer() {
@@ -272,9 +278,9 @@ public class ConnectionsDialog extends Dialog {
         connViewer.getTable().setHeaderVisible(true);
         connViewer.getTable().setLinesVisible(false);
 
-        TableViewerColumn nameColumn = new TableViewerColumn(connViewer, SWT.NONE);
-        nameColumn.getColumn().setText("Connection Name");
-        nameColumn.setLabelProvider(new ColumnLabelProvider() {
+        TableViewerColumn urlColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        urlColumn.getColumn().setText("Server URL");
+        urlColumn.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public Image getImage(Object element) {
                 return serverImage;
@@ -283,21 +289,57 @@ public class ConnectionsDialog extends Dialog {
             @Override
             public String getText(Object element) {
                 YamcsConfiguration conf = (YamcsConfiguration) element;
+                return conf.getURL();
+            }
+        });
+        tcl.setColumnData(urlColumn.getColumn(), new ColumnPixelData(200));
+
+        TableViewerColumn instanceColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        instanceColumn.getColumn().setText("Instance");
+        instanceColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                YamcsConfiguration conf = (YamcsConfiguration) element;
+                return conf.getInstance();
+            }
+        });
+        tcl.setColumnData(instanceColumn.getColumn(), new ColumnPixelData(90));
+
+        TableViewerColumn userColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        userColumn.getColumn().setText("User");
+        userColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                YamcsConfiguration conf = (YamcsConfiguration) element;
+                if (conf.getAuthType() != AuthType.KERBEROS) {
+                    return conf.getUser();
+                } else {
+                    return null;
+                }
+            }
+        });
+        tcl.setColumnData(userColumn.getColumn(), new ColumnPixelData(90));
+
+        TableViewerColumn nameColumn = new TableViewerColumn(connViewer, SWT.NONE);
+        nameColumn.getColumn().setText("Comment");
+        nameColumn.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                YamcsConfiguration conf = (YamcsConfiguration) element;
                 return conf.getName();
             }
         });
-        tcl.setColumnData(nameColumn.getColumn(), new ColumnWeightData(400));
+        tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(200));
 
         connViewer.setContentProvider(new ArrayContentProvider());
         connViewer.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
                 YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
+
                 yamcsInstanceText.setText(forceString(conf.getInstance()));
-                sslCheckbox.setSelection(conf.isSsl());
+                yamcsURLText.setText(forceString(conf.getURL()));
                 /// caCertFileText.setText(forceString(conf.getCaCertFile()));
-                yamcsHostText.setText(forceString(conf.getPrimaryHost()));
-                yamcsPortText.setText(forceString(conf.getPrimaryPort()));
                 nameText.setText(forceString(conf.getName()));
 
                 AuthType authType = (conf.getAuthType() == null) ? AuthType.STANDARD : conf.getAuthType();
@@ -324,8 +366,8 @@ public class ConnectionsDialog extends Dialog {
             public int compare(Viewer viewer, Object o1, Object o2) {
                 YamcsConfiguration c1 = (YamcsConfiguration) o1;
                 YamcsConfiguration c2 = (YamcsConfiguration) o2;
-                if (c1.getName() != null && c2.getName() != null) {
-                    return c1.getName().compareTo(c2.getName());
+                if (c1.getURL() != null && c2.getURL() != null) {
+                    return c1.getURL().compareTo(c2.getURL());
                 } else {
                     return 0;
                 }
@@ -343,52 +385,30 @@ public class ConnectionsDialog extends Dialog {
         detailPanel.setLayout(gl);
 
         Label lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Host:");
-        yamcsHostText = new Text(detailPanel, SWT.BORDER);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        yamcsHostText.setLayoutData(gd);
-        yamcsHostText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsHostText.getText()) && selectedConfiguration != null) {
-                selectedConfiguration.setPrimaryHost(yamcsHostText.getText());
+        lbl.setText("Server URL:");
+        GridData gd = new GridData();
+        gd.horizontalSpan = 3;
+        lbl.setLayoutData(gd);
+        yamcsURLText = new Text(detailPanel, SWT.BORDER);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 3;
+        yamcsURLText.setLayoutData(gd);
+        yamcsURLText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(yamcsURLText.getText()) && selectedConfiguration != null) {
+                selectedConfiguration.setURL(yamcsURLText.getText());
             } else if (selectedConfiguration != null) {
-                selectedConfiguration.setPrimaryHost(null);
+                selectedConfiguration.setURL(null);
             }
         });
 
         lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Port:");
-        yamcsPortText = new Text(detailPanel, SWT.BORDER);
+        lbl.setText("Instance:");
         gd = new GridData();
-        gd.widthHint = 50;
-        yamcsPortText.setLayoutData(gd);
-        yamcsPortText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsPortText.getText()) && selectedConfiguration != null) {
-                try {
-                    int d = Integer.parseInt(yamcsPortText.getText());
-                    selectedConfiguration.setPrimaryPort(d);
-                } catch (NumberFormatException e) {
-                    log.warning("Ignoring invalid number for primary port " + yamcsPortText.getText());
-                    selectedConfiguration.setPrimaryPort(null);
-                }
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setPrimaryPort(null);
-            }
-        });
-
-        sslCheckbox = new Button(detailPanel, SWT.CHECK);
-        gd = new GridData();
-        sslCheckbox.setLayoutData(gd);
-        sslCheckbox.setText("Use SSL");
-        sslCheckbox.addListener(SWT.Selection, evt -> {
-            selectedConfiguration.setSsl(sslCheckbox.getSelection());
-        });
-
-        lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Yamcs Instance:");
+        gd.horizontalSpan = 3;
+        lbl.setLayoutData(gd);
         yamcsInstanceText = new Text(detailPanel, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
+        gd.horizontalSpan = 3;
         yamcsInstanceText.setLayoutData(gd);
         yamcsInstanceText.addListener(SWT.KeyUp, evt -> {
             if (!isBlank(yamcsInstanceText.getText()) && selectedConfiguration != null) {
@@ -483,7 +503,7 @@ public class ConnectionsDialog extends Dialog {
         lbl.setLayoutData(gd);
 
         lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Saved Connection Name:");
+        lbl.setText("Comment:");
         gd = new GridData();
         gd.horizontalSpan = 3;
         lbl.setLayoutData(gd);

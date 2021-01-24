@@ -84,8 +84,7 @@ public class YamcsConnector implements IRunnableWithProgress {
     private YamcsClient doConnect(IProgressMonitor monitor) throws InterruptedException, BootstrapException {
         try {
             YamcsClient.Builder clientBuilder = YamcsClient
-                    .newBuilder(conf.getPrimaryHost(), conf.getPrimaryPort())
-                    .withTls(conf.isSsl())
+                    .newBuilder(conf.getURL())
                     .withVerifyTls(false)
                     .withUserAgent(YamcsPlugin.getProductString());
 

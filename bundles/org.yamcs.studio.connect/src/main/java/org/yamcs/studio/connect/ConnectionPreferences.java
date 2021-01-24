@@ -41,6 +41,9 @@ public class ConnectionPreferences {
             Type type = new TypeToken<List<YamcsConfiguration>>() {
             }.getType();
             List<YamcsConfiguration> confs = new Gson().fromJson(confsString, type);
+            for (YamcsConfiguration conf : confs) {
+                conf.upgrade();
+            }
             return confs;
         } else {
             return Collections.emptyList();

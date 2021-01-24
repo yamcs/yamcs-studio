@@ -1,5 +1,7 @@
 package org.yamcs.studio.connect;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 /**
@@ -17,11 +19,16 @@ public class YamcsConfiguration {
     private String user;
     private String password;
 
+    private String url;
+
+    @Deprecated
     private String primaryHost;
+    @Deprecated
     private Integer primaryPort;
+    @Deprecated
+    private boolean ssl;
 
     private boolean savePassword;
-    private boolean ssl;
     private String caCertFile;
 
     private AuthType authType;
@@ -78,18 +85,44 @@ public class YamcsConfiguration {
         return password;
     }
 
+    public String getURL() {
+        return url;
+    }
+
+    public void setURL(String url) {
+        this.url = url;
+
+        // Temp to avoid migration issues with
+        // Different clients making use of same connection settings
+        try {
+            URI uri = new URI(url);
+            primaryHost = uri.getHost();
+            primaryPort = uri.getPort();
+            ssl = uri.getScheme().equals("https");
+            if (primaryPort == -1) {
+                primaryPort = ssl ? 443 : 80;
+            }
+        } catch (URISyntaxException e) {
+            // Ignore
+        }
+    }
+
+    @Deprecated
     public String getPrimaryHost() {
         return primaryHost;
     }
 
+    @Deprecated
     public void setPrimaryHost(String primaryHost) {
         this.primaryHost = primaryHost;
     }
 
+    @Deprecated
     public Integer getPrimaryPort() {
         return primaryPort;
     }
 
+    @Deprecated
     public void setPrimaryPort(Integer primaryPort) {
         this.primaryPort = primaryPort;
     }
@@ -102,20 +135,14 @@ public class YamcsConfiguration {
         this.savePassword = savePassword;
     }
 
+    @Deprecated
     public boolean isSsl() {
         return ssl;
     }
 
+    @Deprecated
     public void setSsl(boolean ssl) {
         this.ssl = ssl;
-    }
-
-    public String getConnectionString() {
-        if (instance == null || "".equals(instance)) {
-            return "yamcs://" + primaryHost + ":" + primaryPort;
-        } else {
-            return "yamcs://" + primaryHost + ":" + primaryPort + "/" + instance;
-        }
     }
 
     @Override
@@ -134,6 +161,24 @@ public class YamcsConfiguration {
 
     @Override
     public String toString() {
-        return primaryHost + ":" + primaryPort;
+        return getURL();
+    }
+
+    public void upgrade() {
+        if (url == null) {
+            if (ssl) {
+                if (primaryPort == 443) {
+                    url = "https://" + primaryHost;
+                } else {
+                    url = "https://" + primaryHost + ":" + primaryPort;
+                }
+            } else {
+                if (primaryPort == 80) {
+                    url = "http://" + primaryHost;
+                } else {
+                    url = "http://" + primaryHost + ":" + primaryPort;
+                }
+            }
+        }
     }
 }
