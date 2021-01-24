@@ -11,14 +11,12 @@ import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.Ellipse;
-import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale;
 import org.eclipse.nebula.visualization.xygraph.linearscale.LinearScale.Orientation;
@@ -46,7 +44,8 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
     public enum TemperatureUnit {
         CELSIUS("Celsius", "\u2103"),
         FAHRENHEIT("Fahrenheit", "\u2109"),
-        KELVIN("Kelvin", "K"), NONE("None", "");
+        KELVIN("Kelvin", "K"),
+        NONE("None", "");
 
         public static String[] stringValues() {
             String[] result = new String[values().length];
@@ -83,6 +82,7 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
     private Pipe pipe;
 
     private Bulb bulb;
+    private Label bulbLabel;
 
     private Label unit;
 
@@ -106,6 +106,7 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         scale.setScaleLineVisible(false);
         pipe = new Pipe();
         bulb = new Bulb();
+        bulbLabel = new Label();
         unit = new Label();
 
         setLayoutManager(new ThermoLayout());
@@ -115,9 +116,9 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         add(pipe, ThermoLayout.PIPE);
         add(unit, ThermoLayout.UNIT);
         add(bulb, ThermoLayout.BULB);
+        add(bulbLabel, ThermoLayout.BULB_LABEL);
         setFillColor(RED_COLOR);
         setTemperatureUnit(TemperatureUnit.CELSIUS);
-
     }
 
     /**
@@ -158,8 +159,9 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
      *            the effect3D to set
      */
     public void setEffect3D(boolean effect3D) {
-        if (this.effect3D == effect3D)
+        if (this.effect3D == effect3D) {
             return;
+        }
         this.effect3D = effect3D;
         repaint();
     }
@@ -169,8 +171,9 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
      *            the fillBackgroundColor to set
      */
     public void setFillBackgroundColor(Color fillBackgroundColor) {
-        if (this.fillBackgroundColor != null && this.fillBackgroundColor.equals(fillBackgroundColor))
+        if (this.fillBackgroundColor != null && this.fillBackgroundColor.equals(fillBackgroundColor)) {
             return;
+        }
         this.fillBackgroundColor = fillBackgroundColor;
         repaint();
     }
@@ -180,8 +183,9 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
      *            the fillColor to set
      */
     public void setFillColor(Color fillColor) {
-        if (this.fillColor != null && this.fillColor.equals(fillColor))
+        if (this.fillColor != null && this.fillColor.equals(fillColor)) {
             return;
+        }
         this.fillColor = fillColor;
         int blue = 255 - fillColor.getBlue();
         int green = 255 - fillColor.getGreen();
@@ -196,25 +200,17 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         super.setForegroundColor(fg);
     }
 
-    /**
-     * @param showBulb
-     *            the showBulb to set
-     */
     public void setShowBulb(boolean showBulb) {
         bulb.setVisible(showBulb);
         revalidate();
     }
 
-    /**
-     * @param temperatureUnit
-     *            the unit to set.
-     */
     public void setTemperatureUnit(TemperatureUnit temperatureUnit) {
-        if (this.temperatureUnit == temperatureUnit)
+        if (this.temperatureUnit == temperatureUnit) {
             return;
+        }
         this.temperatureUnit = temperatureUnit;
         unit.setText(temperatureUnit.getUnitString());
-
     }
 
     @Override
@@ -237,8 +233,9 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         protected void fillShape(Graphics graphics) {
             graphics.setAntialias(SWT.ON);
             boolean support3D = false;
-            if (effect3D)
+            if (effect3D) {
                 support3D = GraphicsUtil.testPatternSupported(graphics);
+            }
 
             if (effect3D && support3D) {
                 graphics.setBackgroundColor(fillColor);
@@ -259,26 +256,23 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
                 super.fillShape(graphics);
             }
 
-            String valueString = getValueText();
-            Dimension valueSize = FigureUtilities.getTextExtents(valueString, getFont());
-            if (valueSize.width < bounds.width) {
-                graphics.setForegroundColor(contrastFillColor);
-                graphics.drawText(valueString, new Point(
-                        bounds.x + bounds.width / 2 - valueSize.width / 2,
-                        bounds.y + bounds.height / 2 - valueSize.height / 2));
-            }
+            bulbLabel.setFont(getFont());
+            bulbLabel.setText(getValueText());
+            bulbLabel.setForegroundColor(contrastFillColor);
         }
 
         @Override
         protected void outlineShape(Graphics graphics) {
             boolean support3D = false;
-            if (effect3D)
+            if (effect3D) {
                 support3D = GraphicsUtil.testPatternSupported(graphics);
+            }
 
-            if (effect3D && support3D)
+            if (effect3D && support3D) {
                 graphics.setForegroundColor(EFFECT3D_BULB_COLOR);
-            else
+            } else {
                 graphics.setForegroundColor(BLACK_COLOR);
+            }
             super.outlineShape(graphics);
             // draw a small rectangle to hide the joint
 
@@ -306,7 +300,6 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
                         Pipe.PIPE_WIDTH - pipe.getLineWidth() * 2, ((LinearScale) scale).getMargin()),
                         Pipe.FILL_CORNER, Pipe.FILL_CORNER);
             }
-
         }
     }
 
@@ -330,19 +323,22 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
 
             int valuePosition = ((LinearScale) scale).getValuePosition(getCoercedValue(), false);
             if (maximum > minimum) {
-                if (value > maximum)
+                if (value > maximum) {
                     valuePosition -= 10;
-                else if (value < minimum)
+                } else if (value < minimum) {
                     valuePosition += 10;
+                }
             } else {
-                if (value > minimum)
+                if (value > minimum) {
                     valuePosition += 10;
-                else if (value < maximum)
+                } else if (value < maximum) {
                     valuePosition -= 10;
+                }
             }
             boolean support3D = false;
-            if (effect3D)
+            if (effect3D) {
                 support3D = GraphicsUtil.testPatternSupported(graphics);
+            }
 
             if (effect3D && support3D) {
                 graphics.setForegroundColor(EFFECT3D_PIPE_COLOR);
@@ -405,16 +401,18 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         public static final String MARKERS = "markers";
         /** Used as a constraint for the bulb in the below of pipe. */
         public static final String BULB = "bulb";
+        public static final String BULB_LABEL = "bulbLabel";
         /** Used as a constraint for the unit label */
         public static final String UNIT = "unit";
         private LinearScale scale;
         private LinearScaledMarker marker;
         private Pipe pipe;
-        private IFigure bulb, unit;
+        private IFigure bulb;
+        private IFigure bulbLabel;
+        private IFigure unit;
 
         @Override
-        protected Dimension calculatePreferredSize(IFigure container, int w,
-                int h) {
+        protected Dimension calculatePreferredSize(IFigure container, int w, int h) {
             Insets insets = container.getInsets();
             Dimension d = new Dimension(64, 4 * 64);
             d.expand(insets.getWidth(), insets.getHeight());
@@ -424,14 +422,17 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         @Override
         public void layout(IFigure container) {
             Rectangle area = container.getClientArea();
+            Rectangle bulbArea = null;
             if (bulb != null && bulb.isVisible()) {
                 int diameter = area.width / 2;
-                if (diameter > Bulb.MAX_DIAMETER)
+                if (diameter > Bulb.MAX_DIAMETER) {
                     diameter = Bulb.MAX_DIAMETER;
+                }
                 int x = area.x + area.width / 2 - diameter / 2;
                 int spareHeight = (area.height < diameter) ? 0 : (area.height - diameter);
                 int y = area.y + spareHeight;
-                bulb.setBounds(new Rectangle(x, y, diameter, diameter));
+                bulbArea = new Rectangle(x, y, diameter, diameter);
+                bulb.setBounds(bulbArea);
                 area.height = spareHeight + scale.getMargin();
             }
             Dimension unitSize = new Dimension(0, 0);
@@ -466,20 +467,30 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
                         pipeSize.width,
                         pipeSize.height));
             }
+            if (bulbArea != null && bulb.isVisible()) {
+                Dimension labelSize = bulbLabel.getPreferredSize();
+                bulbLabel.setBounds(new Rectangle(
+                        bulbArea.x + bulbArea.width / 2 - labelSize.width / 2,
+                        bulbArea.y + bulbArea.height / 2 - labelSize.height / 2,
+                        labelSize.width, labelSize.height));
+            }
         }
 
         @Override
         public void setConstraint(IFigure child, Object constraint) {
-            if (constraint.equals(SCALE))
+            if (constraint.equals(SCALE)) {
                 scale = (LinearScale) child;
-            else if (constraint.equals(MARKERS))
+            } else if (constraint.equals(MARKERS)) {
                 marker = (LinearScaledMarker) child;
-            else if (constraint.equals(PIPE))
+            } else if (constraint.equals(PIPE)) {
                 pipe = (Pipe) child;
-            else if (constraint.equals(BULB))
+            } else if (constraint.equals(BULB)) {
                 bulb = child;
-            else if (constraint.equals(UNIT))
+            } else if (constraint.equals(UNIT)) {
                 unit = child;
+            } else if (constraint.equals(BULB_LABEL)) {
+                bulbLabel = child;
+            }
         }
 
     }
