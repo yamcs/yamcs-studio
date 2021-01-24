@@ -44,7 +44,6 @@ public class UserPreferences {
     }
 
     public static void updateWorkspaceHistory(String mostRecentWorkspace) {
-        System.out.println("Updating workspace history with " + mostRecentWorkspace);
         String normalized = Paths.get(mostRecentWorkspace).normalize().toAbsolutePath().toString();
 
         List<String> history = readWorkspaceHistory();
@@ -64,7 +63,5 @@ public class UserPreferences {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("updated... " + readWorkspaceHistory());
     }
 }

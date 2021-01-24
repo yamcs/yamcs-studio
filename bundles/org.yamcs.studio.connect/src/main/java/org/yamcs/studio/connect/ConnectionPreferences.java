@@ -22,8 +22,12 @@ public class ConnectionPreferences {
     public static YamcsConfiguration getLastUsedConfiguration() {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);
         String confString = prefs.get(KEY_LAST_USED_CONFIGURATION, null);
-        if (confString != null) {
-            return new Gson().fromJson(confString, YamcsConfiguration.class);
+        if (confString != null && !confString.isEmpty()) {
+            YamcsConfiguration conf = new Gson().fromJson(confString, YamcsConfiguration.class);
+            if (conf != null) {
+                conf.init();
+            }
+            return conf;
         } else {
             return null;
         }
@@ -31,7 +35,11 @@ public class ConnectionPreferences {
 
     public static void setLastUsedConfiguration(YamcsConfiguration conf) {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);
-        prefs.put(KEY_LAST_USED_CONFIGURATION, new Gson().toJson(conf));
+        if (conf == null) {
+            prefs.remove(KEY_LAST_USED_CONFIGURATION);
+        } else {
+            prefs.put(KEY_LAST_USED_CONFIGURATION, new Gson().toJson(conf));
+        }
     }
 
     public static List<YamcsConfiguration> getConfigurations() {
@@ -42,7 +50,7 @@ public class ConnectionPreferences {
             }.getType();
             List<YamcsConfiguration> confs = new Gson().fromJson(confsString, type);
             for (YamcsConfiguration conf : confs) {
-                conf.upgrade();
+                conf.init();
             }
             return confs;
         } else {

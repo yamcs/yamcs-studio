@@ -99,7 +99,7 @@ public class YamcsConnector implements IRunnableWithProgress {
             } else if (conf.getUser() == null) {
                 yamcsClient.connectAnonymously();
             } else {
-                String password = conf.getPassword();
+                String password = conf.getTransientPassword();
                 if (password != null && !password.isEmpty()) {
                     yamcsClient.connect(conf.getUser(), password.toCharArray());
                 } else {
