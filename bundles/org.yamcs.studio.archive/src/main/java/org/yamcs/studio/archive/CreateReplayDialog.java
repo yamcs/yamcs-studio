@@ -61,6 +61,8 @@ public class CreateReplayDialog extends TitleAreaDialog {
     private TableViewer ppTable;
     private List<String> ppValue;
 
+    private CreateProcessorRequest request;
+
     public CreateReplayDialog(Shell parentShell) {
         super(parentShell);
     }
@@ -201,9 +203,9 @@ public class CreateReplayDialog extends TitleAreaDialog {
     protected void okPressed() {
         getButton(IDialogConstants.OK_ID).setEnabled(false);
 
-        CreateProcessorRequest req = toCreateProcessorRequest();
+        request = toCreateProcessorRequest();
         YamcsClient client = YamcsPlugin.getYamcsClient();
-        client.createProcessor(req).whenComplete((processorClient, exc) -> {
+        client.createProcessor(request).whenComplete((processorClient, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> {
                     CreateReplayDialog.super.okPressed();
@@ -219,8 +221,8 @@ public class CreateReplayDialog extends TitleAreaDialog {
         });
     }
 
-    public String getName() {
-        return nameValue;
+    public CreateProcessorRequest getRequest() {
+        return request;
     }
 
     public void initialize(TimeInterval interval, List<String> pps) {
