@@ -16,39 +16,37 @@ import com.google.gson.reflect.TypeToken;
 @SuppressWarnings("deprecation")
 public class ConnectionPreferences {
 
-    private static final String KEY_LAST_USED_CONFIGURATION = "lastUsedConf";
-    private static final String KEY_CONFIGURATIONS = "confs";
+    private static final String KEY_LAST_USED_CONNECTION = "lastUsedConnection";
+    private static final String KEY_CONNECTIONS = "confs";
 
-    public static YamcsConfiguration getLastUsedConfiguration() {
+    public static String getLastUsedConnection() {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);
-        String confString = prefs.get(KEY_LAST_USED_CONFIGURATION, null);
-        if (confString != null && !confString.isEmpty()) {
-            YamcsConfiguration conf = new Gson().fromJson(confString, YamcsConfiguration.class);
-            if (conf != null) {
-                conf.init();
-            }
-            return conf;
+        String id = prefs.get(KEY_LAST_USED_CONNECTION, null);
+        if (id != null && !id.isEmpty()) {
+            return id;
         } else {
             return null;
         }
     }
 
-    public static void setLastUsedConfiguration(YamcsConfiguration conf) {
+    public static void setLastUsedConnection(String id) {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);
-        if (conf == null) {
-            prefs.remove(KEY_LAST_USED_CONFIGURATION);
+        prefs.remove("lastUsedConf"); // TEMP (clean-up legacy entry)
+
+        if (id == null) {
+            prefs.remove(KEY_LAST_USED_CONNECTION);
         } else {
-            prefs.put(KEY_LAST_USED_CONFIGURATION, new Gson().toJson(conf));
+            prefs.put(KEY_LAST_USED_CONNECTION, id);
         }
     }
 
-    public static List<YamcsConfiguration> getConfigurations() {
+    public static List<YamcsConfiguration> getConnections() {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);
-        String confsString = prefs.get(KEY_CONFIGURATIONS, null);
-        if (confsString != null) {
+        String json = prefs.get(KEY_CONNECTIONS, null);
+        if (json != null) {
             Type type = new TypeToken<List<YamcsConfiguration>>() {
             }.getType();
-            List<YamcsConfiguration> confs = new Gson().fromJson(confsString, type);
+            List<YamcsConfiguration> confs = new Gson().fromJson(json, type);
             for (YamcsConfiguration conf : confs) {
                 conf.init();
             }
@@ -58,9 +56,9 @@ public class ConnectionPreferences {
         }
     }
 
-    public static void setConfigurations(List<YamcsConfiguration> confs) {
+    public static void setConnections(List<YamcsConfiguration> confs) {
         Preferences prefs = Preferences.userNodeForPackage(Stub.class);
-        String confsString = new Gson().toJson(confs);
-        prefs.put(KEY_CONFIGURATIONS, confsString);
+        String json = new Gson().toJson(confs);
+        prefs.put(KEY_CONNECTIONS, json);
     }
 }

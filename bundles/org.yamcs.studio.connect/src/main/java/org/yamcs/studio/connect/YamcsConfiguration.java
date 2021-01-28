@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.eclipse.equinox.security.storage.ISecurePreferences;
@@ -195,17 +194,6 @@ public class YamcsConfiguration {
 
     public void setSavePassword(boolean savePassword) {
         this.savePassword = savePassword;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        // Equals-method is used to compare the last-used configuration
-        // with the list of all configurations.
-        if (obj == null) {
-            return false;
-        }
-        YamcsConfiguration other = (YamcsConfiguration) obj;
-        return Objects.equals(id, other.id);
     }
 
     @Override

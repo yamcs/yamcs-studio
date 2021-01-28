@@ -42,8 +42,7 @@ public class ConnectHandler extends AbstractHandler {
     private void doConnect(Shell shell, YamcsConfiguration conf) {
         YamcsPlugin.disconnect(false /* lost */);
 
-        // FIXME get the password out before doing this
-        ConnectionPreferences.setLastUsedConfiguration(conf);
+        ConnectionPreferences.setLastUsedConnection(conf.getId());
         try {
             YamcsConnector connector = new YamcsConnector(shell, conf);
             new ProgressMonitorDialog(shell).run(true, true, connector);

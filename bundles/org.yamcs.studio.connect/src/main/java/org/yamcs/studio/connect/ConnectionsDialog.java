@@ -139,15 +139,15 @@ public class ConnectionsDialog extends Dialog {
 
         sash.setWeights(new int[] { 70, 30 });
 
-        ConnectionPreferences.getConfigurations().forEach(conf -> {
+        ConnectionPreferences.getConnections().forEach(conf -> {
             connViewer.add(conf);
         });
 
-        YamcsConfiguration lastConf = ConnectionPreferences.getLastUsedConfiguration();
-        if (lastConf != null) {
-            selectServer(lastConf);
+        String lastId = ConnectionPreferences.getLastUsedConnection();
+        if (lastId != null) {
+            selectConnection(lastId);
         } else {
-            selectFirstServer();
+            selectFirstConnection();
         }
         updateState();
 
@@ -203,7 +203,7 @@ public class ConnectionsDialog extends Dialog {
             }
             confs.add(conf);
         }
-        ConnectionPreferences.setConfigurations(confs);
+        ConnectionPreferences.setConnections(confs);
     }
 
     @Override
@@ -232,11 +232,17 @@ public class ConnectionsDialog extends Dialog {
         setButtonLayoutData(ok);
     }
 
-    private void selectServer(YamcsConfiguration conf) {
-        connViewer.setSelection(new StructuredSelection(conf), true);
+    private void selectConnection(String id) {
+        for (int i = 0; i < connViewer.getTable().getItemCount(); i++) {
+            YamcsConfiguration configuration = (YamcsConfiguration) connViewer.getElementAt(i);
+            if (configuration.getId().equals(id)) {
+                connViewer.setSelection(new StructuredSelection(configuration), true);
+                return;
+            }
+        }
     }
 
-    private void selectFirstServer() {
+    private void selectFirstConnection() {
         if (connViewer.getTable().getItemCount() > 0) {
             connViewer.setSelection(new StructuredSelection(connViewer.getElementAt(0)), true);
         }
@@ -258,7 +264,7 @@ public class ConnectionsDialog extends Dialog {
                 "Do you really want to remove the server configuration '" + conf + "'?");
         if (confirmed) {
             connViewer.remove(conf);
-            selectFirstServer();
+            selectFirstConnection();
         }
     }
 
