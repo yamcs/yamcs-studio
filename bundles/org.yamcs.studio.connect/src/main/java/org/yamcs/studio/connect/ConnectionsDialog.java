@@ -1,5 +1,6 @@
 package org.yamcs.studio.connect;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -33,6 +34,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -40,6 +42,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.YamcsClient;
 import org.yamcs.studio.connect.YamcsConfiguration.AuthType;
 
 /**
@@ -57,6 +61,7 @@ public class ConnectionsDialog extends Dialog {
 
     private ToolItem addServerButton;
     private ToolItem removeServerButton;
+    private Button testButton;
 
     private YamcsConfiguration selectedConfiguration;
 
@@ -160,10 +165,16 @@ public class ConnectionsDialog extends Dialog {
             selectedConfiguration = null;
             detailPanel.setVisible(false);
             removeServerButton.setEnabled(false);
+            if (testButton != null) {
+                testButton.setEnabled(false);
+            }
         } else {
             selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
             removeServerButton.setEnabled(true);
+            if (testButton != null) {
+                testButton.setEnabled(true);
+            }
 
             if (selectedConfiguration.getAuthType() == null
                     || selectedConfiguration.getAuthType() == AuthType.STANDARD) {
@@ -220,16 +231,58 @@ public class ConnectionsDialog extends Dialog {
         Button saveButton = createButton(parent, 123, "Save", false);
         saveButton.addListener(SWT.Selection, evt -> saveChanges());
 
-        /*Button testButton = createButton(parent, 124, "Test", false);
+        testButton = createButton(parent, 124, "Test", false);
         testButton.addListener(SWT.Selection, evt -> {
-            System.out.println("Test connection");
-        });*/
+            if (selectedConfiguration != null) {
+                testConnection(selectedConfiguration);
+            }
+        });
+        testButton.setEnabled(!connViewer.getSelection().isEmpty());
 
         super.createButtonsForButtonBar(parent);
 
         Button ok = getButton(IDialogConstants.OK_ID);
         ok.setText("Connect");
         setButtonLayoutData(ok);
+    }
+
+    private void testConnection(YamcsConfiguration conf) {
+        YamcsClient yamcsClient = null;
+        try {
+            YamcsClient.Builder clientBuilder = YamcsClient
+                    .newBuilder(conf.getURL())
+                    .withVerifyTls(false);
+
+            if (conf.getCaCertFile() != null) {
+                clientBuilder.withCaCertFile(Paths.get(conf.getCaCertFile()));
+            }
+            yamcsClient = clientBuilder.build();
+
+            if (conf.getAuthType() == AuthType.KERBEROS) {
+                yamcsClient.connectWithKerberos();
+            } else if (conf.getUser() == null) {
+                yamcsClient.connectAnonymously();
+            } else {
+                String password = conf.getTransientPassword();
+                if (password != null && !password.isEmpty()) {
+                    yamcsClient.connect(conf.getUser(), password.toCharArray());
+                } else {
+                    throw new ClientException("No password was provided");
+                }
+            }
+
+            Display.getDefault().asyncExec(() -> {
+                MessageDialog.openInformation(getShell(), "Connection OK", "Connection OK");
+            });
+        } catch (ClientException e) {
+            Display.getDefault().asyncExec(() -> {
+                MessageDialog.openError(getShell(), "Failed to connect", e.getMessage());
+            });
+        } finally {
+            if (yamcsClient != null) {
+                yamcsClient.close();
+            }
+        }
     }
 
     private void selectConnection(String id) {
