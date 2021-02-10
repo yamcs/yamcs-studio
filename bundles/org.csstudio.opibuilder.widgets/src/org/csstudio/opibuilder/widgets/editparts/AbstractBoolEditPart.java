@@ -13,13 +13,12 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.AbstractBoolWidgetModel;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VEnum;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.AbstractBoolFigure;
 import org.csstudio.swt.widgets.figures.AbstractBoolFigure.BoolLabelPosition;
 import org.csstudio.swt.widgets.figures.AbstractBoolFigure.TotalBits;
 import org.csstudio.ui.util.CustomMediaFactory;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VType;
 
 /**
  * Base editPart controller for a widget based on {@link AbstractBoolWidgetModel}.
@@ -196,7 +195,7 @@ public abstract class AbstractBoolEditPart extends AbstractPVWidgetEditPart {
         if (newValue == null) {
             return;
         }
-        if (getWidgetModel().getDataType() == 1 /* Enum */ && newValue instanceof VEnum) {
+        if (getWidgetModel().getDataType() == 1 /* Enum */) {
             String stringValue = VTypeHelper.getString(newValue);
             if (stringValue.equals(getWidgetModel().getOnState())) {
                 figure.setValue(1);
