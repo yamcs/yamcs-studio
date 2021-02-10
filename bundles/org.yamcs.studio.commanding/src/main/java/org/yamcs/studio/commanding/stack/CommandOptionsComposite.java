@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -264,7 +265,7 @@ public class CommandOptionsComposite extends ScrolledComposite {
                     argumentText.setText(argument.getValue());
                 }
 
-                if ("integer".equals(argument.getType())) {
+                if ("integer".equals(argument.getType()) || "float".equals(argument.getType())) {
                     argumentText.addListener(SWT.Modify, evt -> updateValidity());
                 }
 
@@ -277,14 +278,15 @@ public class CommandOptionsComposite extends ScrolledComposite {
 
             ArgumentTypeInfo argumentType = argument.getArgumentInfo().getType();
             if (argumentType.hasRangeMin() || argumentType.hasRangeMax()) {
-                String format = "integer".equals(argumentType.getEngType()) ? "%.0f" : "%f";
+                // For floats, %s has the advantage of stripping unnecessary zeroes after the decimal
+                String format = "integer".equals(argumentType.getEngType()) ? "%.0f" : "%s";
                 if (argumentType.hasRangeMin() && argumentType.hasRangeMax()) {
-                    hint += "Value must be in range [" + String.format(format, argumentType.getRangeMin());
-                    hint += ", " + String.format(format, argumentType.getRangeMax()) + "]";
+                    hint += "Value must be in range [" + String.format(Locale.US, format, argumentType.getRangeMin());
+                    hint += ", " + String.format(Locale.US, format, argumentType.getRangeMax()) + "]";
                 } else if (argumentType.hasRangeMax()) {
-                    hint += "Value must be <= " + String.format(format, argumentType.getRangeMax());
+                    hint += "Value must be <= " + String.format(Locale.US, format, argumentType.getRangeMax());
                 } else if (argumentType.hasRangeMin()) {
-                    hint += "Value must be >= " + String.format(format, argumentType.getRangeMin());
+                    hint += "Value must be >= " + String.format(Locale.US, format, argumentType.getRangeMin());
                 }
             }
             hintLabel.setText(hint);
