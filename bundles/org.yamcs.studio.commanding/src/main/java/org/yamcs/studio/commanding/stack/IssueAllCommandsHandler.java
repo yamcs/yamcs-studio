@@ -140,6 +140,7 @@ public class IssueAllCommandsHandler extends AbstractHandler {
                 if (exc == null) {
                     try {
                         command.setStackedState(StackedState.ISSUED);
+                        command.updateExecutionState(response);
                         monitor.worked(1);
 
                         if (commandIndex + 1 < CommandStack.getInstance().getCommands().size()) {
