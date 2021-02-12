@@ -37,7 +37,14 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 
 - Open one of the `*.product` files found under `org.yamcs.studio.releng`.
 
-- Click `Synchronize` followed by `Launch an Eclipse Application`.
+- Click `Synchronize` followed by `Launch an Eclipse Application`. **NOTE**: Eclipse might complain about line 45 of yamcs-studio/releng/org.yamcs.studio.editor/plugin.xml.
+
+If it does, comment it out as such:
+
+```<!--property
+        name="preferenceCustomization">
+  </property-->
+```
 
 
 ### Compile it from source(Tested on Ubuntu 18.04.5 LTS)
@@ -79,4 +86,9 @@ tar -xzf yamcs-studio-1.5.4-SNAPSHOT-linux.gtk.x86_64.tar.gz --strip-components=
 
 That's it! YAMCS Studio is installed in `/opt/yamcs-studio`.
 
+**NOTE**: If, for some reason you messing with dependencies and maven starts failing, build with the following command:
+
+```
+mvn   dependency:purge-local-repository  package -DskipTests -DreResolve=false
+```
 
