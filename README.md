@@ -86,7 +86,7 @@ tar -xzf yamcs-studio-1.5.4-SNAPSHOT-linux.gtk.x86_64.tar.gz --strip-components=
 
 That's it! YAMCS Studio is installed in `/opt/yamcs-studio`.
 
-**NOTE**: If, for some reason you messing with dependencies and maven starts failing, build with the following command:
+**NOTE**: If, for some reason you are messing with dependencies and maven starts failing, build with the following command:
 
 ```
 mvn   dependency:purge-local-repository  package -DskipTests -DreResolve=false
