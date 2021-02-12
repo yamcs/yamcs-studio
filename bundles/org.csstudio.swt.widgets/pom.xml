@@ -10,4 +10,11 @@
   
   <artifactId>org.csstudio.swt.widgets</artifactId>
   <packaging>eclipse-plugin</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.yaml</groupId>
+  		<artifactId>snakeyaml</artifactId>
+  		<version>1.27</version>
+  	</dependency>
+  </dependencies>
 </project>

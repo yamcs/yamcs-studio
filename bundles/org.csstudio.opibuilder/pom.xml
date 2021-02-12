@@ -9,4 +9,11 @@
   </parent>
   <artifactId>org.csstudio.opibuilder</artifactId>
   <packaging>eclipse-plugin</packaging>
+  <dependencies>
+	<dependency>
+    <groupId>org.yaml</groupId>
+    <artifactId>snakeyaml</artifactId>
+    <version>1.27</version>
+</dependency>
+  </dependencies>
 </project>

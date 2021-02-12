@@ -41,6 +41,9 @@
                name="preferenceCustomization"
                value="plugin_customization.ini">
          </property>
+         <!--property
+               name="preferenceCustomization">
+         </property-->
       </product>
    </extension>
    

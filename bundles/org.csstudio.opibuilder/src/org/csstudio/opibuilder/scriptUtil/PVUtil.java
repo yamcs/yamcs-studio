@@ -30,6 +30,7 @@ import org.yamcs.studio.data.vtype.VNumberArray;
 import org.yamcs.studio.data.vtype.VStringArray;
 import org.yamcs.studio.data.vtype.VType;
 
+
 /**
  * The utility class to facilitate Javascript programming for PV operation.
  *
