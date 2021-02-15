@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,9 +24,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -89,7 +91,7 @@ public class ConnectionsDialog extends Dialog {
     private Text caCertFileText;
     private Combo authTypeCombo;
 
-    private YamcsConfiguration chosenConfiguration;
+    private Set<YamcsConfiguration> connections = new HashSet<>();
 
     public ConnectionsDialog(Shell parentShell) {
         super(parentShell);
@@ -124,6 +126,7 @@ public class ConnectionsDialog extends Dialog {
         addServerButton.addListener(SWT.Selection, evt -> {
             addServer();
             updateState();
+            saveChanges();
         });
 
         removeServerButton = new ToolItem(editBar, SWT.NONE);
@@ -133,6 +136,7 @@ public class ConnectionsDialog extends Dialog {
         removeServerButton.addListener(SWT.Selection, evt -> {
             removeSelectedServer();
             updateState();
+            saveChanges();
         });
         editBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -155,9 +159,8 @@ public class ConnectionsDialog extends Dialog {
 
         sash.setWeights(new int[] { 70, 30 });
 
-        ConnectionPreferences.getConnections().forEach(conf -> {
-            connViewer.add(conf);
-        });
+        connections.addAll(ConnectionPreferences.getConnections());
+        updateState();
 
         String lastId = ConnectionPreferences.getLastUsedConnection();
         if (lastId != null) {
@@ -165,12 +168,12 @@ public class ConnectionsDialog extends Dialog {
         } else {
             selectFirstConnection();
         }
-        updateState();
 
         return contentArea;
     }
 
     private void updateState() {
+        connViewer.refresh();
         IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
         if (sel.isEmpty()) {
             selectedConfiguration = null;
@@ -183,6 +186,7 @@ public class ConnectionsDialog extends Dialog {
             selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
             removeServerButton.setEnabled(true);
+            clearPasswordButton.setEnabled(selectedConfiguration.isSecureHint());
             if (testButton != null) {
                 testButton.setEnabled(true);
             }
@@ -202,25 +206,8 @@ public class ConnectionsDialog extends Dialog {
         }
     }
 
-    @Override
-    protected void okPressed() {
-        // TODO maybe only save changes when "save" button is used (and only for the active detail pane)
-        saveChanges();
-        super.okPressed();
-    }
-
     private void saveChanges() {
-        if (selectedConfiguration != null) {
-            chosenConfiguration = selectedConfiguration;
-        }
-        List<YamcsConfiguration> confs = new ArrayList<>();
-        Object el;
-        int i = 0;
-        while ((el = connViewer.getElementAt(i++)) != null) {
-            YamcsConfiguration conf = (YamcsConfiguration) el;
-            confs.add(conf);
-        }
-        ConnectionPreferences.setConnections(confs);
+        ConnectionPreferences.setConnections(new ArrayList<>(connections));
     }
 
     @Override
@@ -234,10 +221,7 @@ public class ConnectionsDialog extends Dialog {
         layout.numColumns++;
         layout.makeColumnsEqualWidth = false;
 
-        Button saveButton = createButton(parent, 123, "Save", false);
-        saveButton.addListener(SWT.Selection, evt -> saveChanges());
-
-        testButton = createButton(parent, 124, "Test", false);
+        testButton = createButton(parent, 124, "Test Connection", false);
         testButton.addListener(SWT.Selection, evt -> {
             if (selectedConfiguration != null) {
                 testConnection(selectedConfiguration);
@@ -250,6 +234,10 @@ public class ConnectionsDialog extends Dialog {
         Button ok = getButton(IDialogConstants.OK_ID);
         ok.setText("Connect");
         setButtonLayoutData(ok);
+
+        Button cancel = getButton(IDialogConstants.CANCEL_ID);
+        cancel.setText("Close"); // Because of autosave, 'Close' is more appropriate than 'Cancel'
+        setButtonLayoutData(cancel);
     }
 
     private void testConnection(YamcsConfiguration conf) {
@@ -344,7 +332,8 @@ public class ConnectionsDialog extends Dialog {
         YamcsConfiguration conf = new YamcsConfiguration();
         conf.setURL("http://localhost:8090");
         conf.setAuthType(AuthType.STANDARD);
-        connViewer.add(conf);
+        connections.add(conf);
+        connViewer.refresh();
         connViewer.setSelection(new StructuredSelection(conf), true);
         yamcsURLText.setFocus();
     }
@@ -355,7 +344,8 @@ public class ConnectionsDialog extends Dialog {
         boolean confirmed = MessageDialog.openConfirm(connViewer.getTable().getShell(), "",
                 "Do you really want to remove the server configuration '" + conf + "'?");
         if (confirmed) {
-            connViewer.remove(conf);
+            connections.remove(conf);
+            connViewer.refresh();
             selectFirstConnection();
         }
     }
@@ -427,7 +417,9 @@ public class ConnectionsDialog extends Dialog {
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(200));
 
-        connViewer.setContentProvider(new ArrayContentProvider());
+        IContentProvider contentProvider = (IStructuredContentProvider) inputElement -> connections.toArray();
+        connViewer.setContentProvider(contentProvider);
+        connViewer.setInput(contentProvider);
         connViewer.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
@@ -473,7 +465,6 @@ public class ConnectionsDialog extends Dialog {
         detailPanel = new Composite(parent, SWT.NONE);
         GridLayout gl = new GridLayout(2, false);
         gl.marginWidth = 0;
-        gl.horizontalSpacing = 0;
         detailPanel.setLayout(gl);
 
         Label lbl = new Label(detailPanel, SWT.NONE);
@@ -491,6 +482,8 @@ public class ConnectionsDialog extends Dialog {
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setURL(null);
             }
+            updateState();
+            saveChanges();
         });
 
         lbl = new Label(detailPanel, SWT.NONE);
@@ -508,6 +501,8 @@ public class ConnectionsDialog extends Dialog {
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setInstance(null);
             }
+            updateState();
+            saveChanges();
         });
 
         /*lbl = new Label(detailPanel, SWT.NONE);
@@ -537,17 +532,14 @@ public class ConnectionsDialog extends Dialog {
         commentText.setLayoutData(gd);
         // Update the label in the left panel too
         commentText.addListener(SWT.KeyUp, evt -> {
-            IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
-            YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
-            conf.setComment(commentText.getText());
-            connViewer.update(conf, null);
-
             if (!isBlank(commentText.getText()) && selectedConfiguration != null) {
-                log.fine("Storing name " + commentText.getText());
                 selectedConfiguration.setComment(commentText.getText());
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setComment(null);
             }
+
+            updateState();
+            saveChanges();
         });
 
         // Spacer
@@ -573,13 +565,11 @@ public class ConnectionsDialog extends Dialog {
                 selectedConfiguration.setAuthType(AuthType.STANDARD);
             } else if (authTypeCombo.getSelectionIndex() == 1) {
                 selectedConfiguration.setAuthType(AuthType.KERBEROS);
-                selectedConfiguration.setUser(null);
-                yamcsUserText.setText("");
-                selectedConfiguration.setTransientPassword(null);
             } else {
                 throw new IllegalArgumentException("Unexpected auth type " + authTypeCombo.getSelectionIndex());
             }
             updateState();
+            saveChanges();
         });
 
         yamcsUserLabel = new Label(detailPanel, SWT.NONE);
@@ -593,6 +583,8 @@ public class ConnectionsDialog extends Dialog {
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setUser(null);
             }
+            updateState();
+            saveChanges();
         });
 
         yamcsPasswordLabel = new Label(detailPanel, SWT.NONE);
@@ -601,7 +593,6 @@ public class ConnectionsDialog extends Dialog {
         passwordButtons = new Composite(detailPanel, SWT.NONE);
         detailPanel.setLayoutData(new GridData());
         gl = new GridLayout(3, false);
-        gl.horizontalSpacing = 0;
         gl.marginWidth = 0;
         gl.marginHeight = 0;
         passwordButtons.setLayout(gl);
@@ -622,6 +613,8 @@ public class ConnectionsDialog extends Dialog {
                         node.put(selectedConfiguration.getId(), password, true);
                         node.flush();
                         selectedConfiguration.setSecureHint(true);
+                        updateState();
+                        saveChanges();
                     } catch (StorageException | IOException e) {
                         log.log(Level.SEVERE, "Error while saving password", e);
                         MessageDialog.openError(getShell(), "Error while saving password", e.getMessage());
@@ -640,6 +633,8 @@ public class ConnectionsDialog extends Dialog {
                 node.remove(selectedConfiguration.getId());
                 node.flush();
                 selectedConfiguration.setSecureHint(false);
+                updateState();
+                saveChanges();
             } catch (IOException e) {
                 log.log(Level.SEVERE, "Error while clearing password", e);
                 MessageDialog.openError(getShell(), "Error while clearing password", e.getMessage());
@@ -653,8 +648,39 @@ public class ConnectionsDialog extends Dialog {
         return detailPanel;
     }
 
-    public YamcsConfiguration getChosenConfiguration() {
-        return chosenConfiguration;
+    @Override
+    protected void okPressed() {
+        if (selectedConfiguration.getUser() != null) {
+            String password = null;
+            if (selectedConfiguration.isSecureHint()) { // Avoid unnecessary prompts
+                try {
+                    ISecurePreferences node = getSecureNode();
+                    password = node.get(selectedConfiguration.getId(), null);
+                } catch (StorageException e) {
+                    log.log(Level.SEVERE, "Cannot read password from secure storage", e);
+                }
+            }
+            if (password != null && !password.isEmpty()) {
+                selectedConfiguration.setTransientPassword(password);
+            } else {
+                LoginDialog loginDialog = new LoginDialog(getShell(), selectedConfiguration.getURL(),
+                        selectedConfiguration.getUser());
+                if (loginDialog.open() == Window.OK) {
+                    yamcsUserText.setText(loginDialog.getUser());
+                    selectedConfiguration.setUser(loginDialog.getUser());
+                    selectedConfiguration.setTransientPassword(loginDialog.getPassword());
+                    updateState();
+                    saveChanges();
+                } else {
+                    return;
+                }
+            }
+        }
+        super.okPressed();
+    }
+
+    public YamcsConfiguration getSelectedConfiguration() {
+        return selectedConfiguration;
     }
 
     public static ImageDescriptor getImageDescriptor(Class<?> classFromBundle, String path) {

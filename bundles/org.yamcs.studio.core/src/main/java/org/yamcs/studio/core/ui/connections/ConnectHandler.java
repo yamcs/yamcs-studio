@@ -32,7 +32,7 @@ public class ConnectHandler extends AbstractHandler {
         IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         ConnectionsDialog dialog = new ConnectionsDialog(window.getShell());
         if (dialog.open() == Dialog.OK) {
-            YamcsConfiguration conf = dialog.getChosenConfiguration();
+            YamcsConfiguration conf = dialog.getSelectedConfiguration();
             doConnect(HandlerUtil.getActiveShell(event), conf);
         }
 
