@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PV Autocompletion
 Bundle-SymbolicName: org.yamcs.studio.autocomplete;singleton:=true
-Bundle-Version: 1.5.4.qualifier
+Bundle-Version: 1.5.4
 Bundle-Activator: org.yamcs.studio.autocomplete.AutoCompletePlugin
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
