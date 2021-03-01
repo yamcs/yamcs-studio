@@ -1,12 +1,21 @@
 package org.yamcs.studio.connect;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
+import org.eclipse.equinox.security.storage.provider.IProviderHints;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -15,15 +24,17 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
@@ -72,13 +83,15 @@ public class ConnectionsDialog extends Dialog {
     private Label yamcsUserLabel;
     private Text yamcsUserText;
     private Label yamcsPasswordLabel;
-    private Text yamcsPasswordText;
 
-    private Button savePasswordButton;
+    private Composite passwordButtons;
+    private Button storePasswordButton;
+    private Button clearPasswordButton;
+
     private Text caCertFileText;
     private Combo authTypeCombo;
 
-    private YamcsConfiguration chosenConfiguration;
+    private Set<YamcsConfiguration> connections = new HashSet<>();
 
     public ConnectionsDialog(Shell parentShell) {
         super(parentShell);
@@ -90,7 +103,7 @@ public class ConnectionsDialog extends Dialog {
     @Override
     public void create() {
         super.create();
-        getShell().setSize(800, 500);
+        getShell().setSize(800, 600);
     }
 
     @Override
@@ -113,6 +126,7 @@ public class ConnectionsDialog extends Dialog {
         addServerButton.addListener(SWT.Selection, evt -> {
             addServer();
             updateState();
+            saveChanges();
         });
 
         removeServerButton = new ToolItem(editBar, SWT.NONE);
@@ -122,6 +136,7 @@ public class ConnectionsDialog extends Dialog {
         removeServerButton.addListener(SWT.Selection, evt -> {
             removeSelectedServer();
             updateState();
+            saveChanges();
         });
         editBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -144,9 +159,8 @@ public class ConnectionsDialog extends Dialog {
 
         sash.setWeights(new int[] { 70, 30 });
 
-        ConnectionPreferences.getConnections().forEach(conf -> {
-            connViewer.add(conf);
-        });
+        connections.addAll(ConnectionPreferences.getConnections());
+        updateState();
 
         String lastId = ConnectionPreferences.getLastUsedConnection();
         if (lastId != null) {
@@ -154,12 +168,12 @@ public class ConnectionsDialog extends Dialog {
         } else {
             selectFirstConnection();
         }
-        updateState();
 
         return contentArea;
     }
 
     private void updateState() {
+        connViewer.refresh();
         IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
         if (sel.isEmpty()) {
             selectedConfiguration = null;
@@ -172,6 +186,7 @@ public class ConnectionsDialog extends Dialog {
             selectedConfiguration = (YamcsConfiguration) sel.getFirstElement();
             detailPanel.setVisible(true);
             removeServerButton.setEnabled(true);
+            clearPasswordButton.setEnabled(selectedConfiguration.isSecureHint());
             if (testButton != null) {
                 testButton.setEnabled(true);
             }
@@ -181,40 +196,18 @@ public class ConnectionsDialog extends Dialog {
                 yamcsUserLabel.setVisible(true);
                 yamcsUserText.setVisible(true);
                 yamcsPasswordLabel.setVisible(true);
-                yamcsPasswordText.setVisible(true);
-                savePasswordButton.setVisible(true);
+                passwordButtons.setVisible(true);
             } else {
                 yamcsUserLabel.setVisible(false);
                 yamcsUserText.setVisible(false);
                 yamcsPasswordLabel.setVisible(false);
-                yamcsPasswordText.setVisible(false);
-                savePasswordButton.setVisible(false);
+                passwordButtons.setVisible(false);
             }
         }
-    }
-
-    @Override
-    protected void okPressed() {
-        // TODO maybe only save changes when "save" button is used (and only for the active detail pane)
-        saveChanges();
-        super.okPressed();
     }
 
     private void saveChanges() {
-        if (selectedConfiguration != null) {
-            chosenConfiguration = selectedConfiguration;
-        }
-        List<YamcsConfiguration> confs = new ArrayList<>();
-        Object el;
-        int i = 0;
-        while ((el = connViewer.getElementAt(i++)) != null) {
-            YamcsConfiguration conf = (YamcsConfiguration) el;
-            if (conf.isSavePassword()) {
-                conf.savePassword();
-            }
-            confs.add(conf);
-        }
-        ConnectionPreferences.setConnections(confs);
+        ConnectionPreferences.setConnections(new ArrayList<>(connections));
     }
 
     @Override
@@ -228,10 +221,7 @@ public class ConnectionsDialog extends Dialog {
         layout.numColumns++;
         layout.makeColumnsEqualWidth = false;
 
-        Button saveButton = createButton(parent, 123, "Save", false);
-        saveButton.addListener(SWT.Selection, evt -> saveChanges());
-
-        testButton = createButton(parent, 124, "Test", false);
+        testButton = createButton(parent, 124, "Test Connection", false);
         testButton.addListener(SWT.Selection, evt -> {
             if (selectedConfiguration != null) {
                 testConnection(selectedConfiguration);
@@ -244,6 +234,10 @@ public class ConnectionsDialog extends Dialog {
         Button ok = getButton(IDialogConstants.OK_ID);
         ok.setText("Connect");
         setButtonLayoutData(ok);
+
+        Button cancel = getButton(IDialogConstants.CANCEL_ID);
+        cancel.setText("Close"); // Because of autosave, 'Close' is more appropriate than 'Cancel'
+        setButtonLayoutData(cancel);
     }
 
     private void testConnection(YamcsConfiguration conf) {
@@ -263,11 +257,26 @@ public class ConnectionsDialog extends Dialog {
             } else if (conf.getUser() == null) {
                 yamcsClient.connectAnonymously();
             } else {
-                String password = conf.getTransientPassword();
+                String password = null;
+                if (conf.isSecureHint()) { // Avoid unnecessary prompts
+                    try {
+                        ISecurePreferences node = getSecureNode();
+                        password = node.get(conf.getId(), null);
+                    } catch (StorageException e) {
+                        log.log(Level.SEVERE, "Cannot read password from secure storage", e);
+                    }
+                }
                 if (password != null && !password.isEmpty()) {
                     yamcsClient.connect(conf.getUser(), password.toCharArray());
                 } else {
-                    throw new ClientException("No password was provided");
+                    LoginDialog loginDialog = new LoginDialog(getShell(), conf.getURL(), conf.getUser());
+                    if (loginDialog.open() == Window.OK) {
+                        String username = loginDialog.getUser();
+                        password = loginDialog.getPassword();
+                        yamcsClient.connect(username, password.toCharArray());
+                    } else {
+                        return;
+                    }
                 }
             }
 
@@ -282,6 +291,24 @@ public class ConnectionsDialog extends Dialog {
             if (yamcsClient != null) {
                 yamcsClient.close();
             }
+        }
+    }
+
+    private ISecurePreferences getSecureNode() {
+        // Disable the default behaviour of showing an
+        // (annoying) dialog inviting the user to set up
+        // a master password recovery hint.
+        Map<String, Object> options = new HashMap<>();
+        options.put(IProviderHints.PROMPT_USER, false);
+
+        // Use Eclipse default location, then it also shows in preference dialog:
+        // ~/.eclipse/org.eclipse.equinox.security/secure_storage
+        try {
+            ISecurePreferences preferences = SecurePreferencesFactory.open(null, options);
+            return preferences.node("org.yamcs.connect/passwords");
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Cannot access keyring", e);
+            return null;
         }
     }
 
@@ -305,7 +332,8 @@ public class ConnectionsDialog extends Dialog {
         YamcsConfiguration conf = new YamcsConfiguration();
         conf.setURL("http://localhost:8090");
         conf.setAuthType(AuthType.STANDARD);
-        connViewer.add(conf);
+        connections.add(conf);
+        connViewer.refresh();
         connViewer.setSelection(new StructuredSelection(conf), true);
         yamcsURLText.setFocus();
     }
@@ -316,7 +344,8 @@ public class ConnectionsDialog extends Dialog {
         boolean confirmed = MessageDialog.openConfirm(connViewer.getTable().getShell(), "",
                 "Do you really want to remove the server configuration '" + conf + "'?");
         if (confirmed) {
-            connViewer.remove(conf);
+            connections.remove(conf);
+            connViewer.refresh();
             selectFirstConnection();
         }
     }
@@ -388,7 +417,9 @@ public class ConnectionsDialog extends Dialog {
         });
         tcl.setColumnData(nameColumn.getColumn(), new ColumnPixelData(200));
 
-        connViewer.setContentProvider(new ArrayContentProvider());
+        IContentProvider contentProvider = (IStructuredContentProvider) inputElement -> connections.toArray();
+        connViewer.setContentProvider(contentProvider);
+        connViewer.setInput(contentProvider);
         connViewer.addSelectionChangedListener(evt -> {
             IStructuredSelection sel = (IStructuredSelection) evt.getSelection();
             if (sel.getFirstElement() != null) {
@@ -403,13 +434,9 @@ public class ConnectionsDialog extends Dialog {
                 if (authType == AuthType.STANDARD) {
                     authTypeCombo.select(0);
                     yamcsUserText.setText(forceString(conf.getUser()));
-                    yamcsPasswordText.setText(forceString(conf.getTransientPassword()));
-                    savePasswordButton.setSelection(conf.isSavePassword());
                 } else if (authType == AuthType.KERBEROS) {
                     authTypeCombo.select(1);
                     yamcsUserText.setText("");
-                    yamcsPasswordText.setText("");
-                    savePasswordButton.setSelection(false);
                 } else {
                     throw new IllegalArgumentException("Unexpected auth type " + authType);
                 }
@@ -436,19 +463,18 @@ public class ConnectionsDialog extends Dialog {
 
     private Composite createDetailPanel(Composite parent, ResourceManager resourceManager) {
         detailPanel = new Composite(parent, SWT.NONE);
-        GridLayout gl = new GridLayout(3, false);
+        GridLayout gl = new GridLayout(2, false);
         gl.marginWidth = 0;
-        gl.horizontalSpacing = 0;
         detailPanel.setLayout(gl);
 
         Label lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Server URL:");
         GridData gd = new GridData();
-        gd.horizontalSpan = 3;
+        gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
         yamcsURLText = new Text(detailPanel, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 3;
+        gd.horizontalSpan = 2;
         yamcsURLText.setLayoutData(gd);
         yamcsURLText.addListener(SWT.KeyUp, evt -> {
             if (!isBlank(yamcsURLText.getText()) && selectedConfiguration != null) {
@@ -456,16 +482,18 @@ public class ConnectionsDialog extends Dialog {
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setURL(null);
             }
+            updateState();
+            saveChanges();
         });
 
         lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Instance:");
         gd = new GridData();
-        gd.horizontalSpan = 3;
+        gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
         yamcsInstanceText = new Text(detailPanel, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 3;
+        gd.horizontalSpan = 2;
         yamcsInstanceText.setLayoutData(gd);
         yamcsInstanceText.addListener(SWT.KeyUp, evt -> {
             if (!isBlank(yamcsInstanceText.getText()) && selectedConfiguration != null) {
@@ -473,6 +501,8 @@ public class ConnectionsDialog extends Dialog {
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setInstance(null);
             }
+            updateState();
+            saveChanges();
         });
 
         /*lbl = new Label(detailPanel, SWT.NONE);
@@ -489,16 +519,39 @@ public class ConnectionsDialog extends Dialog {
             }
         });*/
 
+        lbl = new Label(detailPanel, SWT.NONE);
+        lbl.setText("Comment:");
+        gd = new GridData();
+        gd.horizontalSpan = 2;
+        lbl.setLayoutData(gd);
+
+        commentText = new Text(detailPanel, SWT.BORDER | SWT.MULTI);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        gd.heightHint = 32;
+        commentText.setLayoutData(gd);
+        // Update the label in the left panel too
+        commentText.addListener(SWT.KeyUp, evt -> {
+            if (!isBlank(commentText.getText()) && selectedConfiguration != null) {
+                selectedConfiguration.setComment(commentText.getText());
+            } else if (selectedConfiguration != null) {
+                selectedConfiguration.setComment(null);
+            }
+
+            updateState();
+            saveChanges();
+        });
+
         // Spacer
         lbl = new Label(detailPanel, SWT.NONE);
         gd = new GridData();
-        gd.horizontalSpan = 3;
+        gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
 
         lbl = new Label(detailPanel, SWT.NONE);
         lbl.setText("Authentication:");
         gd = new GridData();
-        gd.horizontalSpan = 3;
+        gd.horizontalSpan = 2;
         lbl.setLayoutData(gd);
 
         lbl = new Label(detailPanel, SWT.NONE);
@@ -506,30 +559,23 @@ public class ConnectionsDialog extends Dialog {
         authTypeCombo = new Combo(detailPanel, SWT.READ_ONLY);
         authTypeCombo.setItems(ITEM_STANDARD, ITEM_KERBEROS);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
         authTypeCombo.setLayoutData(gd);
         authTypeCombo.addListener(SWT.Selection, evt -> {
             if (authTypeCombo.getSelectionIndex() == 0) {
                 selectedConfiguration.setAuthType(AuthType.STANDARD);
             } else if (authTypeCombo.getSelectionIndex() == 1) {
                 selectedConfiguration.setAuthType(AuthType.KERBEROS);
-                selectedConfiguration.setUser(null);
-                yamcsUserText.setText("");
-                selectedConfiguration.setTransientPassword(null);
-                yamcsPasswordText.setText("");
-                selectedConfiguration.setSavePassword(false);
-                savePasswordButton.setSelection(false);
             } else {
                 throw new IllegalArgumentException("Unexpected auth type " + authTypeCombo.getSelectionIndex());
             }
             updateState();
+            saveChanges();
         });
 
         yamcsUserLabel = new Label(detailPanel, SWT.NONE);
         yamcsUserLabel.setText("User:");
         yamcsUserText = new Text(detailPanel, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
         yamcsUserText.setLayoutData(gd);
         yamcsUserText.addListener(SWT.KeyUp, evt -> {
             if (!isBlank(yamcsUserText.getText()) && selectedConfiguration != null) {
@@ -537,69 +583,104 @@ public class ConnectionsDialog extends Dialog {
             } else if (selectedConfiguration != null) {
                 selectedConfiguration.setUser(null);
             }
+            updateState();
+            saveChanges();
         });
 
         yamcsPasswordLabel = new Label(detailPanel, SWT.NONE);
         yamcsPasswordLabel.setText("Password:");
-        yamcsPasswordText = new Text(detailPanel, SWT.BORDER | SWT.PASSWORD);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        yamcsPasswordText.setLayoutData(gd);
-        yamcsPasswordText.addListener(SWT.KeyUp, evt -> {
-            if (!isBlank(yamcsPasswordText.getText()) && selectedConfiguration != null) {
-                selectedConfiguration.setTransientPassword(yamcsPasswordText.getText());
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setTransientPassword(null);
+
+        passwordButtons = new Composite(detailPanel, SWT.NONE);
+        detailPanel.setLayoutData(new GridData());
+        gl = new GridLayout(3, false);
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;
+        passwordButtons.setLayout(gl);
+
+        storePasswordButton = new Button(passwordButtons, SWT.PUSH);
+        storePasswordButton.setText("Store ...");
+        gd = new GridData();
+        storePasswordButton.setLayoutData(gd);
+        storePasswordButton.addListener(SWT.Selection, evt -> {
+            if (isBlank(yamcsUserText.getText())) {
+                MessageDialog.openError(getShell(), "Cannot set password", "Please fill the user first");
+            } else {
+                StorePasswordDialog dialog = new StorePasswordDialog(getShell(), selectedConfiguration);
+                if (dialog.open() == Window.OK) {
+                    String password = dialog.getPassword();
+                    try {
+                        ISecurePreferences node = getSecureNode();
+                        node.put(selectedConfiguration.getId(), password, true);
+                        node.flush();
+                        selectedConfiguration.setSecureHint(true);
+                        updateState();
+                        saveChanges();
+                    } catch (StorageException | IOException e) {
+                        log.log(Level.SEVERE, "Error while saving password", e);
+                        MessageDialog.openError(getShell(), "Error while saving password", e.getMessage());
+                    }
+                }
             }
         });
 
-        lbl = new Label(detailPanel, SWT.NONE);
-        savePasswordButton = new Button(detailPanel, SWT.CHECK);
-        savePasswordButton.setText("Save Password");
+        clearPasswordButton = new Button(passwordButtons, SWT.PUSH);
+        clearPasswordButton.setText("Clear");
         gd = new GridData();
-        gd.horizontalSpan = 2;
-        savePasswordButton.setLayoutData(gd);
-        savePasswordButton.addListener(SWT.Selection, evt -> {
-            selectedConfiguration.setSavePassword(savePasswordButton.getSelection());
-        });
-
-        // Spacer
-        lbl = new Label(detailPanel, SWT.NONE);
-        gd = new GridData();
-        gd.horizontalSpan = 3;
-        lbl.setLayoutData(gd);
-
-        lbl = new Label(detailPanel, SWT.NONE);
-        lbl.setText("Comment:");
-        gd = new GridData();
-        gd.horizontalSpan = 3;
-        lbl.setLayoutData(gd);
-
-        commentText = new Text(detailPanel, SWT.BORDER | SWT.MULTI);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        gd.heightHint = 64;
-        commentText.setLayoutData(gd);
-        // Update the label in the left panel too
-        commentText.addListener(SWT.KeyUp, evt -> {
-            IStructuredSelection sel = (IStructuredSelection) connViewer.getSelection();
-            YamcsConfiguration conf = (YamcsConfiguration) sel.getFirstElement();
-            conf.setComment(commentText.getText());
-            connViewer.update(conf, null);
-
-            if (!isBlank(commentText.getText()) && selectedConfiguration != null) {
-                log.fine("Storing name " + commentText.getText());
-                selectedConfiguration.setComment(commentText.getText());
-            } else if (selectedConfiguration != null) {
-                selectedConfiguration.setComment(null);
+        clearPasswordButton.setLayoutData(gd);
+        clearPasswordButton.addListener(SWT.Selection, evt -> {
+            try {
+                ISecurePreferences node = getSecureNode();
+                node.remove(selectedConfiguration.getId());
+                node.flush();
+                selectedConfiguration.setSecureHint(false);
+                updateState();
+                saveChanges();
+            } catch (IOException e) {
+                log.log(Level.SEVERE, "Error while clearing password", e);
+                MessageDialog.openError(getShell(), "Error while clearing password", e.getMessage());
             }
         });
+
+        Label stretch = new Label(passwordButtons, SWT.NONE);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        stretch.setLayoutData(gd);
 
         return detailPanel;
     }
 
-    public YamcsConfiguration getChosenConfiguration() {
-        return chosenConfiguration;
+    @Override
+    protected void okPressed() {
+        if (selectedConfiguration.getUser() != null) {
+            String password = null;
+            if (selectedConfiguration.isSecureHint()) { // Avoid unnecessary prompts
+                try {
+                    ISecurePreferences node = getSecureNode();
+                    password = node.get(selectedConfiguration.getId(), null);
+                } catch (StorageException e) {
+                    log.log(Level.SEVERE, "Cannot read password from secure storage", e);
+                }
+            }
+            if (password != null && !password.isEmpty()) {
+                selectedConfiguration.setTransientPassword(password);
+            } else {
+                LoginDialog loginDialog = new LoginDialog(getShell(), selectedConfiguration.getURL(),
+                        selectedConfiguration.getUser());
+                if (loginDialog.open() == Window.OK) {
+                    yamcsUserText.setText(loginDialog.getUser());
+                    selectedConfiguration.setUser(loginDialog.getUser());
+                    selectedConfiguration.setTransientPassword(loginDialog.getPassword());
+                    updateState();
+                    saveChanges();
+                } else {
+                    return;
+                }
+            }
+        }
+        super.okPressed();
+    }
+
+    public YamcsConfiguration getSelectedConfiguration() {
+        return selectedConfiguration;
     }
 
     public static ImageDescriptor getImageDescriptor(Class<?> classFromBundle, String path) {

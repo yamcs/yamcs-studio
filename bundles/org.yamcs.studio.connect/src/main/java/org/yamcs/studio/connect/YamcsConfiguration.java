@@ -1,16 +1,8 @@
 package org.yamcs.studio.connect;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
-import org.eclipse.equinox.security.storage.provider.IProviderHints;
 
 /**
  * UI class. Used to maintain state of a server in the connection manager dialog
@@ -22,7 +14,8 @@ public class YamcsConfiguration {
         KERBEROS;
     }
 
-    private String id = UUID.randomUUID().toString(); // Used for linking a password from secure storage
+    // Used for linking a password from secure storage
+    private String id = UUID.randomUUID().toString();
 
     private String url;
     private String instance;
@@ -31,10 +24,13 @@ public class YamcsConfiguration {
 
     private transient String transientPassword;
 
-    private boolean savePassword;
     private String caCertFile;
 
     private AuthType authType;
+
+    // If false, don't even attempt to access secure storage
+    // Thereby avoiding unnecessary prompts.
+    private boolean secureHint;
 
     // Deprecated options are kept around for a long time to allow most users the time
     // to upgrade any local state (this object is mapped via gson).
@@ -42,6 +38,7 @@ public class YamcsConfiguration {
     private @Deprecated String primaryHost;
     private @Deprecated Integer primaryPort;
     private @Deprecated boolean ssl;
+    private @Deprecated @SuppressWarnings("unused") boolean savePassword;
 
     public void init() {
         // Temporary migration: host/port/ssl was moved into a single URL setting
@@ -61,21 +58,10 @@ public class YamcsConfiguration {
             }
         }
 
-        // Temporary migration: move password to secure storage
+        // Temporary migration: remove unsecure passwords
         if (password != null) {
-            try {
-                ISecurePreferences node = getSecureNode();
-                node.put(id, password, true);
-                node.flush();
-            } catch (StorageException | IOException e) {
-                throw new RuntimeException(e);
-            }
             password = null;
         }
-
-        // Our application will use the transient password. It is transient
-        // so that gson ignores it when serializing to disk.
-        transientPassword = getPasswordFromSecureStorage();
     }
 
     public String getId() {
@@ -106,6 +92,14 @@ public class YamcsConfiguration {
         return user;
     }
 
+    public boolean isSecureHint() {
+        return secureHint;
+    }
+
+    public void setSecureHint(boolean secureHint) {
+        this.secureHint = secureHint;
+    }
+
     public void setCaCertFile(String caCertFile) {
         this.caCertFile = caCertFile;
     }
@@ -134,38 +128,6 @@ public class YamcsConfiguration {
         return transientPassword;
     }
 
-    private String getPasswordFromSecureStorage() {
-        try {
-            ISecurePreferences node = getSecureNode();
-            return node.get(id, null);
-        } catch (StorageException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void savePassword() {
-        try {
-            ISecurePreferences node = getSecureNode();
-            node.put(id, transientPassword, true);
-            node.flush();
-        } catch (StorageException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ISecurePreferences getSecureNode() throws IOException {
-        // Disable the default behaviour of showing an
-        // (annoying) dialog inviting the user to set up
-        // a master password recovery hint.
-        Map<String, Object> options = new HashMap<>();
-        options.put(IProviderHints.PROMPT_USER, false);
-
-        // Use Eclipse default location, then it also shows in preference dialog:
-        // ~/.eclipse/org.eclipse.equinox.security/secure_storage
-        ISecurePreferences preferences = SecurePreferencesFactory.open(null, options);
-        return preferences.node("org.yamcs.connect/passwords");
-    }
-
     public String getURL() {
         return url;
     }
@@ -186,14 +148,6 @@ public class YamcsConfiguration {
         } catch (URISyntaxException e) {
             // Ignore
         }
-    }
-
-    public boolean isSavePassword() {
-        return savePassword;
-    }
-
-    public void setSavePassword(boolean savePassword) {
-        this.savePassword = savePassword;
     }
 
     @Override
