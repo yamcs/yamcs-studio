@@ -445,7 +445,8 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"/>
+         fragment="true"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.security.ui"
@@ -536,7 +537,8 @@ For details, see http://www.eclipse.org/legal/epl-v10.html
          id="org.eclipse.platform"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.search"
