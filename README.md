@@ -50,7 +50,7 @@ If it does, comment it out as such:
 ### Compile it from source(Tested on Ubuntu 18.04.5 LTS)
 
 1. `maven` _must_ be set to __JAVA 11__:
-    `export export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/`
+    `export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/`
 
 __NOTE__: Configuring JAVA_HOME export will only make the setting active for the _current_ shell session. If you open
            a new shell, this setting _will_ be discarded. You may add this command to your  `.bashrc` script to  enforce
