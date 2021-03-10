@@ -1,3 +1,5 @@
+
+![CI](https://github.com/WindhoverLabs/yamcs-studio/blob/master/.github/workflows/ci.yml/badge.svg)
 # Yamcs Studio
 
 ## Binary Releases
