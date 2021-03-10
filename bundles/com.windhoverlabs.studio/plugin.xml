@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="com.windhoverlabs.studio.properties.CFSPropertiesPage"
+            id="com.windhoverlabs.studio.properties.samplePropertyPage"
+            name="CFSPropertiesPage"
+            nameFilter="*.*">
+      </page>
+   </extension>
+</plugin>

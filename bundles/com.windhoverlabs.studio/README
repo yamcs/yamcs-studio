@@ -1,0 +1,36 @@
+You have successfully created a Yamcs project!
+
+Here are some commands to get things started:
+
+mvn versions:use-latest-releases
+
+    Update all dependencies (incl. Yamcs) to the latest release.
+
+mvn yamcs:run
+
+    Compiles this project and starts Yamcs on localhost.
+
+mvn yamcs:debug
+
+    Same as yamcs:run, but allows a debugger to attach at port 7896.
+
+mvn yamcs:bundle
+
+    Generates a Yamcs distribution for your project.
+
+mvn clean
+
+    Delete all generated outputs and start over.
+
+    This will also delete Yamcs data. Change the dataDir property in yamcs.yaml
+    to another location on your file system if you don't want that.
+
+
+Full documentation of the Yamcs Maven Plugin is available at:
+
+https://yamcs.github.io/yamcs-maven/yamcs-maven-plugin
+
+
+For more on Yamcs, visit:
+
+https://yamcs.org

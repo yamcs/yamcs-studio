@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Studio
+Bundle-SymbolicName: com.windhoverlabs.studio.registry;singleton:=true
+Bundle-Version: 1.5.5.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: com.windhoverlabs.studio
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.core.variables;bundle-version="3.4.800"
+Bundle-Activator: com.windhoverlabs.studio.properties.Activator
+Export-Package: com.windhoverlabs.studio.properties
