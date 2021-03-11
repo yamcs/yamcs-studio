@@ -1,5 +1,5 @@
 
-![CI](https://github.com/WindhoverLabs/yamcs-studio/blob/master/.github/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/WindhoverLabs/yamcs-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/WindhoverLabs/yamcs-studio/actions/workflows/ci.yml)
 # Yamcs Studio
 
 ## Binary Releases
