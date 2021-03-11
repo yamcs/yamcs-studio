@@ -181,10 +181,5 @@ import java.util.logging.Logger;
 		
 		return updatedString;
   	}
-    public static String getData() 
-    {
-		return "Hello World from plugin API!";
-  	  
-    }
   }
 
