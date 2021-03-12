@@ -5,26 +5,31 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.eclipse.core.resources.ResourcesPlugin;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
   /**
    * 
    * GUI Interface for Airliner section in project properties.
    * 
-   * @author vagrant
+   * @author lgomez
    *
    */
   public class CFSPropertiesPage extends PropertyPage implements IWorkbenchPropertyPage {
@@ -61,17 +66,17 @@ import java.util.logging.Logger;
   	
   	/**
       * 
-      * Finds the project properties in the preference store and links it to the GUI interfaces on the Airliner property page.
+      * Finds the project properties in the preference store and links it to the GUI interfaces on the CFS property page.
       * 
       */
   	private void prepareProperties() {
   		// Retrieve the currently selected project.
   		IAdaptable adaptable = getElement();
   		currentProject = (IProject) adaptable.getAdapter(IProject.class);
-          context = new ProjectScope(currentProject);
-          // Retrieve the current project's preference store, and associate the property page with it.
-          preferenceStore = new ScopedPreferenceStore(context, "com.windhoverlabs.studio.registryDB");
-          setPreferenceStore(preferenceStore);
+        context = new ProjectScope(currentProject);
+        // Retrieve the current project's preference store, and associate the property page with it.
+        preferenceStore = new ScopedPreferenceStore(context, "com.windhoverlabs.studio.registryDB");
+        setPreferenceStore(preferenceStore);
   	}
   	
   	/**
@@ -90,26 +95,38 @@ import java.util.logging.Logger;
   	}
   	
   	/**
+     * 
+     * Returns the default path of the configuration file. This could be YAML, XML, SQLite, etc.
+     * 
+     * @return defaultPath
+     * 
+     */
+ 	private static String getDefaultPath() {
+// 		TODO:Quick and dirty fix for now. Still thinking about this.
+ 		String defaultPath = "${project_loc:Displays}/Resources/definitions.yaml";
+ 		
+ 		return defaultPath;
+ 	}
+ 	
+  	/**
       * 
       * Creates the path editor composite and sets the contents.
       * 
       */
   	private void createPathChooser() {
   		// Retrieve the current properties from the associated preference store.
-  		// Retrieve the preferenceStore string representation of path, and convert it into an array of paths.
+  		// Retrieve the preferenceStore string representation of path
   		String defaultPath = getDefaultPath();
-  		preferenceStore.setDefault(PropertiesConstants.DEF_CONFIG_PATHS, defaultPath);  		
-  		/**
-  		 *@note These extensions are platform-specific. These were tested on Ubuntu 18.04 LTS.
-  		 *We should also save these in some type of constant. The ones in FileDialog are not accessible for some reason.
-  		 */
-  		String[] supportedExtensions = new String[]{"*.yml;*.yaml"};
-  		
-  		
+  		preferenceStore.setDefault(PropertiesConstants.DEF_CONFIG_PATHS, defaultPath);  
+  		  		
   		// Create the file field editor, and assign it with the preference variable 'path', set it to the associated preference store.
   		fileEditor = new FileFieldEditor(PropertiesConstants.DEF_CONFIG_PATHS, "Path to Registry", pathEditorHolder);
-  		fileEditor.setPreferenceStore(preferenceStore);
-  		fileEditor.setFileExtensions(supportedExtensions);
+  		fileEditor.setPreferenceStore(preferenceStore);  		
+  		/**
+  		 *@note These extensions are platform-specific. These were tested on Ubuntu 18.04 LTS.
+  		 *The ones in FileDialog are not accessible for some reason.
+  		 */
+  		fileEditor.setFileExtensions(PropertiesConstants.SUPPORTED_EXTENSIONS);
   		fileEditor.load();
   		
   	}
@@ -134,19 +151,6 @@ import java.util.logging.Logger;
   	public boolean performOk() {
   		preferenceStore.setValue(PropertiesConstants.DEF_CONFIG_PATHS, fileEditor.getStringValue());
   		return true;
-  	}
-  	
-  	/**
-      * 
-      * Returns the default path of the configuration file. This could be YAML, XML, SQLite, etc.
-      * 
-      * @return defaultPath
-      * 
-      */
-  	private String getDefaultPath() {
-  		String defaultPath = "${project_loc}/Resources/definitions.yaml";
-  		
-  		return defaultPath;
   	}
   	
   	/**
@@ -180,6 +184,39 @@ import java.util.logging.Logger;
 		}
 		
 		return updatedString;
+  	}
+  	
+  	/**
+  	 *@author lgomez
+  	 *
+  	 *Gets the current registry path stored on the property page.
+  	 * @return
+  	 * @throws URISyntaxException 
+  	 * @throws CoreException 
+  	 */
+  	public static String getCurrentPath(String projectName) throws URISyntaxException, CoreException 
+  	{
+  		IProject currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+  		
+  		
+  		IScopeContext context = new ProjectScope(currentProject);
+  		IPreferenceStore pStore = new ScopedPreferenceStore(context, "com.windhoverlabs.studio.registryDB");
+  		
+  		String defaultPath = getDefaultPath();
+  		pStore.setDefault(PropertiesConstants.DEF_CONFIG_PATHS, defaultPath); 
+
+  		
+  		String path = pStore.getString(PropertiesConstants.DEF_CONFIG_PATHS);
+				
+		path = convertVarString(path);
+  		
+  		if(path == null) 
+  		{
+  			//If there are no variable inside the string, just get the raw string.
+  			path = pStore.getString(PropertiesConstants.DEF_CONFIG_PATHS);
+  		}
+  		
+  		return path;
   	}
   }
 
