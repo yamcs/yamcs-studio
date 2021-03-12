@@ -75,7 +75,7 @@ import java.util.logging.Logger;
   		currentProject = (IProject) adaptable.getAdapter(IProject.class);
         context = new ProjectScope(currentProject);
         // Retrieve the current project's preference store, and associate the property page with it.
-        preferenceStore = new ScopedPreferenceStore(context, "com.windhoverlabs.studio.registryDB");
+        preferenceStore = new ScopedPreferenceStore(context, PropertiesConstants.REGISTRY_DB);
         setPreferenceStore(preferenceStore);
   	}
   	
@@ -198,9 +198,8 @@ import java.util.logging.Logger;
   	{
   		IProject currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
   		
-  		
   		IScopeContext context = new ProjectScope(currentProject);
-  		IPreferenceStore pStore = new ScopedPreferenceStore(context, "com.windhoverlabs.studio.registryDB");
+  		IPreferenceStore pStore = new ScopedPreferenceStore(context,PropertiesConstants.REGISTRY_DB);
   		
   		String defaultPath = getDefaultPath();
   		pStore.setDefault(PropertiesConstants.DEF_CONFIG_PATHS, defaultPath); 

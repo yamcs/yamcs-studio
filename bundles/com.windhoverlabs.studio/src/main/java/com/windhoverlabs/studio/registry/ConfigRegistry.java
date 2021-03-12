@@ -1,7 +1,12 @@
 package com.windhoverlabs.studio.registry;
 
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
+
+import org.eclipse.core.runtime.CoreException;
+
+import com.windhoverlabs.studio.properties.CFSPropertiesPage;
 
 /**
  * @author lgomez
@@ -11,18 +16,35 @@ import java.util.LinkedHashMap;
  *data as a dictionary, or a LinkedHashMap concretely speaking.
  */
 public abstract class ConfigRegistry {
-	public final String PATH_SEPARATOR = "."; 
+	public final String PATH_SEPARATOR = "/"; 
 	protected LinkedHashMap<?, ?> registry;
 	
-//	private getPartial
 	/**
-	 * @param registryPath The path to the location of inside the configuration registry. The path is expected to be in the ".A.C.D" format.
+	 * Helper function for subclasses to get the current registry path that is currently set by the user.
+	 * @param projectName
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws CoreException
+	 */
+	protected String getCurrentPath(String projectName) throws URISyntaxException, CoreException 
+	{
+		return CFSPropertiesPage.getCurrentPath(projectName);
+	}
+	
+	/**
+	 * @param registryPath The path to the location of inside the configuration registry. The path is expected to be in the "/A/C/D" format.
+	 * A "/" means root, which returns the entire registry.
 	 * @return A LinkedHashMap containing the data at registryPath.
 	 * @throws Exception
 	 * TODO Not sure if having this function return an object is the best design. Perhaps a String?
 	 */
 	public Object get(String registryPath) throws Exception
 	{
+		if(registry == null) 
+		{
+			throw new Exception("The registry has not been loaded. Make sure you call loadRegistry before accessing anything.");
+		}
+		
 		if(registryPath.charAt(0) != PATH_SEPARATOR.charAt(0)) 
 		{
 			throw new Exception("The path to a registry node must start with " + PATH_SEPARATOR);
@@ -36,8 +58,9 @@ public abstract class ConfigRegistry {
 		String[] node_keys = registryPath.split(PATH_SEPARATOR);
 		
 		LinkedHashMap<?, ?> registryPartition  = (LinkedHashMap<?, ?>) registry.clone();
-				
-		for(int i = 0;i<node_keys.length;i++) 
+		
+		//Start at second node to avoid the first node which has empty("") string
+		for(int i = 1;i<node_keys.length;i++) 
 		{
 			if(registryPartition.containsKey(node_keys[i])) 
 			{
@@ -47,7 +70,7 @@ public abstract class ConfigRegistry {
 				}
 				else 
 				{
-					if(node_keys.length == i-1) 
+					if(node_keys.length-1 == i) 
 					{
 						return registryPartition.get(node_keys[i]);
 					}
@@ -67,5 +90,12 @@ public abstract class ConfigRegistry {
 		
 	}
 	
-	public abstract void loadRegistry(String filePath) throws FileNotFoundException;
+	/**
+	 * Subclasses should load the registry(YAML, SQLite, etc) and store it in registry.
+	 * @param projectName
+	 * @throws FileNotFoundException
+	 * @throws URISyntaxException
+	 * @throws CoreException
+	 */
+	public abstract void loadRegistry(String projectName) throws FileNotFoundException, URISyntaxException, CoreException;
 }

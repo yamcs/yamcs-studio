@@ -3,8 +3,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
-
+import org.eclipse.core.runtime.CoreException;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -15,11 +16,10 @@ import org.yaml.snakeyaml.Yaml;
 public class YAMLRegistry extends ConfigRegistry {
 
 	@Override
-	public void loadRegistry(String filePath) throws FileNotFoundException {
+	public void loadRegistry(String projectName) throws FileNotFoundException, URISyntaxException, CoreException {
 		Yaml yaml = new Yaml();
-		InputStream input = new FileInputStream(new File(filePath));
-		registry =  (LinkedHashMap<String, ?>) yaml.load(input);
-		
+		InputStream input = new FileInputStream(new File(getCurrentPath(projectName)));
+		registry = (LinkedHashMap<?, ?>) yaml.load(input);
 	}
 
 }
