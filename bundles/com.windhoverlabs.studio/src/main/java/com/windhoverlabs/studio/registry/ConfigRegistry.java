@@ -20,6 +20,18 @@ public abstract class ConfigRegistry {
 	protected LinkedHashMap<?, ?> registry;
 	
 	/**
+	 * Subclasses should load the registry(YAML, SQLite, etc) and store it in registry on the constructor.
+	 * @param projectName
+	 * @throws FileNotFoundException
+	 * @throws URISyntaxException
+	 * @throws CoreException
+	 */
+	protected ConfigRegistry(String projectName) 
+	{
+		
+	}
+	
+	/**
 	 * Helper function for subclasses to get the current registry path that is currently set by the user.
 	 * @param projectName
 	 * @return
@@ -42,7 +54,7 @@ public abstract class ConfigRegistry {
 	{
 		if(registry == null) 
 		{
-			throw new Exception("The registry has not been loaded. Make sure you call loadRegistry before accessing anything.");
+			throw new Exception("The registry has not been loaded. Make sure this implementation is loading the registry in the constructor.");
 		}
 		
 		if(registryPath.charAt(0) != PATH_SEPARATOR.charAt(0)) 
@@ -89,13 +101,4 @@ public abstract class ConfigRegistry {
 		return registryPartition;
 		
 	}
-	
-	/**
-	 * Subclasses should load the registry(YAML, SQLite, etc) and store it in registry.
-	 * @param projectName
-	 * @throws FileNotFoundException
-	 * @throws URISyntaxException
-	 * @throws CoreException
-	 */
-	public abstract void loadRegistry(String projectName) throws FileNotFoundException, URISyntaxException, CoreException;
 }

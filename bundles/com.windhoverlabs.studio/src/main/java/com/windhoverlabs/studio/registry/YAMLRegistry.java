@@ -15,8 +15,8 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class YAMLRegistry extends ConfigRegistry {
 
-	@Override
-	public void loadRegistry(String projectName) throws FileNotFoundException, URISyntaxException, CoreException {
+	public YAMLRegistry(String projectName) throws FileNotFoundException, URISyntaxException, CoreException {
+		super(projectName);
 		Yaml yaml = new Yaml();
 		InputStream input = new FileInputStream(new File(getCurrentPath(projectName)));
 		registry = (LinkedHashMap<?, ?>) yaml.load(input);
