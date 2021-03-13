@@ -10,4 +10,12 @@
             nameFilter="*.*">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage"
+            id="com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage"
+            name="Registry">
+      </page>
+   </extension>
 </plugin>

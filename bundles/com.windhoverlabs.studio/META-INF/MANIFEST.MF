@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.core.resources,
 Bundle-Activator: com.windhoverlabs.studio.properties.Activator
 Export-Package: com.windhoverlabs.studio.properties,
  com.windhoverlabs.studio.registry
+Import-Package: javax.inject;version="1.0.0"
