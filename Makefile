@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	mvn clean install
+	mvn clean install -Dtycho.localArtifacts=ignore
 
 .PHONY: clean
 clean:
