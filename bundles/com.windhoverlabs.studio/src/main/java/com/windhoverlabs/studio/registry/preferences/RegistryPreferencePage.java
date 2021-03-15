@@ -150,6 +150,7 @@ public class RegistryPreferencePage
   	}
  	
   	protected void performDefaults() {
+ 		preferenceStore.setValue(PreferenceConstants.REGISTRY_DB, fileEditor.getStringValue());	
   		fileEditor.load();
   		super.performDefaults();
   	}
