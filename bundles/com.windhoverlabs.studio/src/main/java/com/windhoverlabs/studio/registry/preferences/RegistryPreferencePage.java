@@ -69,6 +69,8 @@ public class RegistryPreferencePage
         setPreferenceStore(preferenceStore);
   		  		
   		// Create the file field editor, and assign it with the preference variable 'path', set it to the associated preference store.
+        
+        preferenceStore.setDefault(PreferenceConstants.REGISTRY_DB, getDefaultPath());
   		fileEditor = new FileFieldEditor(PreferenceConstants.REGISTRY_DB, "Path to Registry", parent);
   		/**
   		 *@note These extensions are platform-specific. These were tested on Ubuntu 18.04 LTS.
@@ -91,7 +93,6 @@ public class RegistryPreferencePage
      */
  	public boolean performOk() {
  		preferenceStore.setValue(PreferenceConstants.REGISTRY_DB, fileEditor.getStringValue());	
- 		fileEditor.load();
  		return super.performOk();
  	}
  	
@@ -149,9 +150,6 @@ public class RegistryPreferencePage
   	}
  	
   	protected void performDefaults() {
-  		preferenceStore.setDefault(PreferenceConstants.REGISTRY_DB, getDefaultPath());
-  		fileEditor.setPreferenceName(PreferenceConstants.REGISTRY_DB);
-  		fileEditor.setPreferenceStore(preferenceStore);
   		fileEditor.load();
   		super.performDefaults();
   	}
