@@ -2,15 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            class="com.windhoverlabs.studio.properties.CFSPropertiesPage"
-            id="com.windhoverlabs.studio.properties.samplePropertyPage"
-            name="CFSPropertiesPage"
-            nameFilter="*.*">
-      </page>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage"
