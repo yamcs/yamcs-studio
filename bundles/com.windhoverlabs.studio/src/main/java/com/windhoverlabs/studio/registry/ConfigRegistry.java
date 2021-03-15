@@ -16,7 +16,7 @@ import com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage;
  *data as a dictionary, or a LinkedHashMap concretely speaking.
  */
 public abstract class ConfigRegistry {
-	public final String PATH_SEPARATOR = "/"; 
+	public final static String PATH_SEPARATOR = "/"; 
 	protected LinkedHashMap<?, ?> registry;
 	
 	/**
@@ -98,5 +98,65 @@ public abstract class ConfigRegistry {
 
 		return registryPartition;
 		
+	}
+	
+	public static boolean isPathValid(String path) 
+	{
+		boolean isValid = true;
+		
+		if(path.isEmpty()) 
+		{
+			isValid= false;
+		}
+		
+		else if(path.charAt(0) != PATH_SEPARATOR.charAt(0)) 
+		{
+			isValid = false;
+		}
+		
+		
+		return isValid;
+	}
+	
+	/**
+	 * Convenience function to append more nodes to path. For example; the call appendPath("/root/path", "new/node") will return
+	 * "/root/path/new/node".
+	 * @param rootPath
+	 * @param newNodes
+	 * @return
+	 * @throws Exception 
+	 */
+	
+	public static String appendPath(String rootPath, String newNodes) throws Exception 
+	{
+		
+		if(newNodes.isEmpty()) 
+		{
+			throw new Exception("The new path must NOT be empty.");
+		}
+		
+		if(isPathValid(rootPath) == false) 
+		{
+			throw new Exception(String.format("Root path %s is not valid.",rootPath));
+		}
+		
+		//Cleanup the paths
+		if (rootPath.charAt(rootPath.length()-1)== PATH_SEPARATOR.charAt(0)) 
+		{
+			rootPath = rootPath.substring(0, rootPath.length()-1);
+		}
+		
+		if (newNodes.charAt(newNodes.length()-1)== PATH_SEPARATOR.charAt(0)) 
+		{
+			newNodes = newNodes.substring(0, newNodes.length()-1);
+		}
+		
+		if (newNodes.charAt(0)== PATH_SEPARATOR.charAt(0)) 
+		{
+			newNodes = newNodes.substring(1);
+		}
+		
+		String newPath = rootPath + PATH_SEPARATOR + newNodes;
+		return newPath;
 	}
 }
