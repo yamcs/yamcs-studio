@@ -3,7 +3,7 @@ package com.windhoverlabs.studio.registry.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import com.windhoverlabs.studio.properties.Activator;
+import com.windhoverlabs.studio.registry.Activator;
 
 /**
  * Class used to initialize default preference values.

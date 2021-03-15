@@ -15,10 +15,11 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class YAMLRegistry extends ConfigRegistry {
 
-	public YAMLRegistry(String projectName) throws FileNotFoundException, URISyntaxException, CoreException {
-		super(projectName);
+	public YAMLRegistry() throws FileNotFoundException, URISyntaxException, CoreException {
+		super();
+		System.out.println("YAMLRegistry");
 		Yaml yaml = new Yaml();
-		InputStream input = new FileInputStream(new File(getCurrentPath(projectName)));
+		InputStream input = new FileInputStream(new File(getCurrentPath("Displays")));
 		registry = (LinkedHashMap<?, ?>) yaml.load(input);
 	}
 

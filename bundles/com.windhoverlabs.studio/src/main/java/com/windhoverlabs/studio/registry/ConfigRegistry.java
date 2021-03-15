@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 
 import org.eclipse.core.runtime.CoreException;
 
-import com.windhoverlabs.studio.properties.CFSPropertiesPage;
+import com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage;
 
 /**
  * @author lgomez
@@ -21,12 +21,11 @@ public abstract class ConfigRegistry {
 	
 	/**
 	 * Subclasses should load the registry(YAML, SQLite, etc) and store it in registry on the constructor.
-	 * @param projectName
 	 * @throws FileNotFoundException
 	 * @throws URISyntaxException
 	 * @throws CoreException
 	 */
-	protected ConfigRegistry(String projectName) 
+	protected ConfigRegistry() 
 	{
 		
 	}
@@ -40,7 +39,7 @@ public abstract class ConfigRegistry {
 	 */
 	protected String getCurrentPath(String projectName) throws URISyntaxException, CoreException 
 	{
-		return CFSPropertiesPage.getCurrentPath(projectName);
+		return RegistryPreferencePage.getCurrentPath(projectName);
 	}
 	
 	/**
@@ -48,7 +47,6 @@ public abstract class ConfigRegistry {
 	 * A "/" means root, which returns the entire registry.
 	 * @return A LinkedHashMap containing the data at registryPath.
 	 * @throws Exception
-	 * TODO Not sure if having this function return an object is the best design. Perhaps a String?
 	 */
 	public Object get(String registryPath) throws Exception
 	{
