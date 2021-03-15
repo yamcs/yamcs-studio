@@ -1,4 +1,4 @@
-package com.windhoverlabs.studio.properties;
+package com.windhoverlabs.studio.registry;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
