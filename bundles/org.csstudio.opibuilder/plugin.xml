@@ -83,6 +83,11 @@
             id="org.csstudio.opibuilder.preferences.probe"
             name="Probe">
       </page>
+      <page
+            class="com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage"
+            id="com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage"
+            name="Registry">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">
@@ -330,13 +335,5 @@
             </visibleWhen>
          </command>
       </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            class="com.windhoverlabs.studio.properties.CFSPropertiesPage"
-            id="com.windhoverlabs.studio.properties.CFSPropertiesPage"
-            name="Configuration Registry">
-      </page>
    </extension>
 </plugin>
