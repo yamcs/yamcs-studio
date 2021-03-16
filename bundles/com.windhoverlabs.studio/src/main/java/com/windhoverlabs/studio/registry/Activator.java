@@ -4,6 +4,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.windhoverlabs.studio.registry.preferences.PreferenceConstants;
+import com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -26,7 +29,8 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);		
+		super.start(context);
+		this.getPreferenceStore().setDefault(PreferenceConstants.REGISTRY_DB, RegistryPreferencePage.getDefaultPath());
 		plugin = this;
 	}
 

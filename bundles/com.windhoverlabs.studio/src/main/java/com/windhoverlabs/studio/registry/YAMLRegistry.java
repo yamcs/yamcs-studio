@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import org.eclipse.core.runtime.CoreException;
 import org.yaml.snakeyaml.Yaml;
 
+import com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage;
+
 /**
  * 
  * @author lgomez
@@ -15,12 +17,37 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class YAMLRegistry extends ConfigRegistry {
 
+	/**
+	 * Initializes the YAML registry.
+	 * @throws FileNotFoundException
+	 * @throws URISyntaxException
+	 * @throws CoreException
+	 * @note Should we have a constructor with side-effects? Side-effects in the sense that this constructor will
+	 * load the configuration registry from a file on disk.	
+	 */
 	public YAMLRegistry() throws FileNotFoundException, URISyntaxException, CoreException {
 		super();
-		System.out.println("YAMLRegistry");
-		Yaml yaml = new Yaml();
-		InputStream input = new FileInputStream(new File(getCurrentPath("Displays")));
-		registry = (LinkedHashMap<?, ?>) yaml.load(input);
+		String yamlPath = getCurrentPath();
+		if(yamlPath.isEmpty()) 
+		{
+			RegistryPreferencePage.LOGGER.warning("Registry load failed. Path provided is empty. Please check you configuration registry.");
+		}
+		
+		else 
+		{
+			File yamlFile = new File(yamlPath);
+			if(yamlFile.exists() == false) 
+			{
+				RegistryPreferencePage.LOGGER.warning("Registry load failed. File provided does not exist. "
+													 +"Please check you configuration registry.");
+			}
+			else 
+			{
+				Yaml yaml = new Yaml();
+				InputStream input = new FileInputStream(yamlFile);
+				registry = (LinkedHashMap<?, ?>) yaml.load(input);
+			}
+		}
 	}
 
 }

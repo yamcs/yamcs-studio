@@ -37,9 +37,9 @@ public abstract class ConfigRegistry {
 	 * @throws URISyntaxException
 	 * @throws CoreException
 	 */
-	protected String getCurrentPath(String projectName) throws URISyntaxException, CoreException 
+	protected String getCurrentPath() throws URISyntaxException, CoreException 
 	{
-		return RegistryPreferencePage.getCurrentPath(projectName);
+		return RegistryPreferencePage.getCurrentPath();
 	}
 	
 	/**

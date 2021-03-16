@@ -11,7 +11,9 @@ import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.windhoverlabs.studio.registry.Activator;
 
@@ -37,7 +39,7 @@ public class RegistryPreferencePage
 	private IPreferenceStore preferenceStore;
 	
 	
-	private static final Logger LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName() );
+	public static final Logger LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName() );
 	
 	public RegistryPreferencePage() {
 		super(GRID);
@@ -70,7 +72,6 @@ public class RegistryPreferencePage
   		  		
   		// Create the file field editor, and assign it with the preference variable 'path', set it to the associated preference store.
         
-        preferenceStore.setDefault(PreferenceConstants.REGISTRY_DB, getDefaultPath());
   		fileEditor = new FileFieldEditor(PreferenceConstants.REGISTRY_DB, "Path to Registry", parent);
   		/**
   		 *@note These extensions are platform-specific. These were tested on Ubuntu 18.04 LTS.
@@ -92,7 +93,8 @@ public class RegistryPreferencePage
      * 
      */
  	public boolean performOk() {
- 		preferenceStore.setValue(PreferenceConstants.REGISTRY_DB, fileEditor.getStringValue());	
+ 		preferenceStore.setValue(PreferenceConstants.REGISTRY_DB, fileEditor.getStringValue());
+ 		fileEditor.store();
  		return super.performOk();
  	}
  	
@@ -123,14 +125,14 @@ public class RegistryPreferencePage
 			updatedString = manager.performStringSubstitution(varString);
 		} catch (CoreException e) {
 			
-//			LOGGER.info(String.format("String variable \"%s\" could not converted.", varString));
+			LOGGER.info(String.format("String variable \"%s\" could not converted.", varString));
 			e.printStackTrace();
 		}
 		
 		return updatedString;
   	}
   	
-  	private static String getDefaultPath() 
+  	public static String getDefaultPath() 
   	{
   		String defaultPath = "";
   		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -150,9 +152,9 @@ public class RegistryPreferencePage
   	}
  	
   	protected void performDefaults() {
- 		preferenceStore.setValue(PreferenceConstants.REGISTRY_DB, fileEditor.getStringValue());	
+  		preferenceStore.setToDefault(PreferenceConstants.REGISTRY_DB);
   		fileEditor.load();
-  		super.performDefaults();
+  		fileEditor.store();
   	}
   	
   	/**
@@ -160,8 +162,18 @@ public class RegistryPreferencePage
   	 * @param projectName
   	 * @return
   	 */
-  	public static String  getCurrentPath(String projectName) 
+  	public static String  getCurrentPath() 
   	{
+  		//If the registry path has not been saved to the preference store, notify the user
+  		if(Activator.getDefault().getPreferenceStore().contains(PreferenceConstants.REGISTRY_DB) ==  false) 
+  		{
+  	  		MessageDialog message  = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Missing Registry",
+					    null, "Set Registry path on Window->Preferences->Registry", 
+					    MessageDialog.INFORMATION, 0);
+  	  		message.open();
+  	  		
+  		}
+  		
   		return  Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REGISTRY_DB);
   	}
 
