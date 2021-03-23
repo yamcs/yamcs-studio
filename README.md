@@ -4,6 +4,10 @@
 
 https://github.com/yamcs/yamcs-studio/releases/
 
+**Note to macOS users:** Binaries are not signed, nor notarized. Bypass Gatekeeper checks using:
+```
+sudo xattr -rds com.apple.quarantine ~/Downloads/Yamcs\ Studio.app
+```
 
 ## End-User Documentation
 
