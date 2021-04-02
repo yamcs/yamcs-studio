@@ -1,0 +1,87 @@
+package com.windhoverlabs.studio.time;
+
+import java.time.Instant; 
+
+public class CFETime {
+
+	/*
+	/* Refer to airliner/core/base/cfe/fsw/src/time/cfe_time_api.c                                                                      
+	/* CFE_TIME_Sub2MicroSecs() -- convert sub-seconds to micro-seconds        
+	/*                                                                         
+	*/
+
+	 public static int  CFE_TIME_Sub2MicroSecs(int SubSeconds)
+	{
+	    int MicroSeconds;
+		
+	    /* 0xffffdf00 subseconds = 999999 microseconds, so anything greater 
+	     * than that we set to 999999 microseconds, so it doesn't get to
+	     * a million microseconds */
+	    
+		if (SubSeconds > 0xffffdf00)
+		{
+				MicroSeconds = 999999;
+		}
+	    else
+	    {
+	        /*
+	        **  Convert a 1/2^32 clock tick count to a microseconds count
+	        **
+	        **  Conversion factor is  ( ( 2 ** -32 ) / ( 10 ** -6 ) ).
+	        **
+	        **  Logic is as follows:
+	        **    x * ( ( 2 ** -32 ) / ( 10 ** -6 ) )
+	        **  = x * ( ( 10 ** 6  ) / (  2 ** 32 ) )
+	        **  = x * ( ( 5 ** 6 ) ( 2 ** 6 ) / ( 2 ** 26 ) ( 2 ** 6) )
+	        **  = x * ( ( 5 ** 6 ) / ( 2 ** 26 ) )
+	        **  = x * ( ( 5 ** 3 ) ( 5 ** 3 ) / ( 2 ** 7 ) ( 2 ** 7 ) (2 ** 12) )
+	        **
+	        **  C code equivalent:
+	        **  = ( ( ( ( ( x >> 7) * 125) >> 7) * 125) >> 12 )
+	        */   
+
+	    	MicroSeconds = (((((SubSeconds >> 7) * 125) >> 7) * 125) >> 12);
+	    
+
+	        /* if the Subseconds % 0x4000000 != 0 then we will need to
+	         * add 1 to the result. the & is a faster way of doing the % */  
+		    if ((SubSeconds & 0x3ffffff) != 0)
+	    	{
+		    	MicroSeconds++;
+	    	}
+	    
+	        /* In the Micro2SubSecs conversion, we added an extra anomaly
+	         * to get the subseconds to bump up against the end point,
+	         * 0xFFFFF000. This must be accounted for here. Since we bumped
+	         * at the half way mark, we must "unbump" at the same mark 
+	         */
+	        if (MicroSeconds > 500000)
+	        {
+	            MicroSeconds --;
+	        }
+	        
+	    } /* end else */
+	    
+	    return(MicroSeconds);
+
+	} /* End of CFE_TIME_Sub2MicroSecs() */
+	
+/**
+ * Return relative since the Epoch. In java this is the Unix Epoch: 1970-01-01T00:00:00Z. Very useful
+ * for representing CFE relative time such as MET time.
+ * @param seconds
+ * @param subSeconds
+ * @return
+ */
+ public static Instant getRelativeTime(int seconds, int subSeconds) 
+{
+	int subMicroSecs = CFE_TIME_Sub2MicroSecs(subSeconds);
+		
+	//Convert time to milliseconds since that is what the Time API supports
+	int secondsMilliseconds = seconds * 1000;
+	int subMilliSecs = subMicroSecs / 1000;
+	
+	return Instant.ofEpochMilli(secondsMilliseconds + subMilliSecs);
+}
+
+}
