@@ -10,9 +10,9 @@ public class CFETime {
 	/*                                                                         
 	*/
 
-	 public static int  CFE_TIME_Sub2MicroSecs(int SubSeconds)
+	 public static long  CFE_TIME_Sub2MicroSecs(long SubSeconds)
 	{
-	    int MicroSeconds;
+	    long MicroSeconds;
 		
 	    /* 0xffffdf00 subseconds = 999999 microseconds, so anything greater 
 	     * than that we set to 999999 microseconds, so it doesn't get to
@@ -73,13 +73,13 @@ public class CFETime {
  * @param subSeconds
  * @return
  */
- public static Instant getRelativeTime(int seconds, int subSeconds) 
+ public static Instant getRelativeTime( long seconds, long subSeconds) 
 {
-	int subMicroSecs = CFE_TIME_Sub2MicroSecs(subSeconds);
+	long subMicroSecs = CFE_TIME_Sub2MicroSecs(subSeconds);
 		
 	//Convert time to milliseconds since that is what the Time API supports
-	int secondsMilliseconds = seconds * 1000;
-	int subMilliSecs = subMicroSecs / 1000;
+	long secondsMilliseconds = seconds * 1000;
+	long subMilliSecs = subMicroSecs / 1000;
 	
 	return Instant.ofEpochMilli(secondsMilliseconds + subMilliSecs);
 }
