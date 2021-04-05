@@ -82,7 +82,7 @@ This _will_ take a while.
 ```
 cd releng/org.yamcs.studio.editor.product/target/products/
 mkdir  /opt/yamcs-studio
-tar -xzf yamcs-studio-1.5.5-SNAPSHOT-linux.gtk.x86_64.tar.gz --strip-components=1 -C "/opt/yamcs-studio/"
+tar -xzf yamcs-studio-1.6.0-SNAPSHOT-linux.gtk.x86_64.tar.gz --strip-components=1 -C "/opt/yamcs-studio/"
 
 ```
 
