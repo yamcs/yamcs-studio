@@ -11,6 +11,13 @@ https://github.com/yamcs/yamcs-studio/releases/
 sudo xattr -rds com.apple.quarantine ~/Downloads/Yamcs\ Studio.app
 ```
 
+# Build Documentation
+```
+cd docs/
+make html
+```
+After building, users may access documentation at `docs/_build/html/index.html`
+
 ## End-User Documentation
 
 https://docs.yamcs.org/yamcs-studio/
