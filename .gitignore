@@ -4,3 +4,4 @@
 .metadata/
 bin/
 target/
+*venv*
