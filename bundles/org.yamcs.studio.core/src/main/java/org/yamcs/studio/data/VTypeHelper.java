@@ -41,6 +41,7 @@ import org.yamcs.studio.data.vtype.VStringArray;
 import org.yamcs.studio.data.vtype.VTimestamp;
 import org.yamcs.studio.data.vtype.VType;
 import org.yamcs.studio.data.vtype.ValueUtil;
+import org.yamcs.studio.data.yamcs.Uint64VType;
 
 /**
  * A center place for VType related operations.
@@ -73,7 +74,12 @@ public class VTypeHelper {
      * @return the formated string
      */
     public static String formatValue(FormatEnum formatEnum, VType vValue, int precision) {
-        if (vValue instanceof Scalar) {
+        
+    	if(vValue instanceof Uint64VType) {
+    		long unsignedValue = ((Uint64VType) vValue).getValue();
+    		return Long.toUnsignedString(unsignedValue);
+    	}
+    	if (vValue instanceof Scalar) {
             Object value = ((Scalar) vValue).getValue();
             if (value instanceof Number) {
                 return formatScalarNumber(formatEnum, vValue, (Number) value, precision);
@@ -571,8 +577,7 @@ public class VTypeHelper {
                 // Also check for positive and negative infinity.
                 if (Double.isInfinite(numValue.doubleValue())) {
                     return Double.toString(numValue.doubleValue());
-                }
-
+                }                
                 numberFormat = getDecimalFormat(precision);
                 return numberFormat.format(numValue.doubleValue());
             }
