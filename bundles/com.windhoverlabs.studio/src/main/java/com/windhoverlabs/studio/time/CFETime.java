@@ -7,13 +7,20 @@ import java.util.concurrent.TimeUnit;
 
 public class CFETime {
 
+	private static long MILLIS_IN_DAY = 86400000;
+	
+	private static long CFE_TIME_EPOCH_YEAR = 1980;
+	private static long CFE_TIME_EPOCH_DAY = 1;
+	private static long CFE_TIME_EPOCH_HOUR = 0;
+	private static long CFE_TIME_EPOCH_MINUTE = 0;
+	private static long CFE_TIME_EPOCH_SECOND = 0;
+
+	
 	/*
 	/* Refer to airliner/core/base/cfe/fsw/src/time/cfe_time_api.c                                                                      
 	/* CFE_TIME_Sub2MicroSecs() -- convert sub-seconds to micro-seconds        
 	/*                                                                         
 	*/
-	private static long MILLIS_IN_DAY = 86400000;
-	
 	 public static long  CFE_TIME_Sub2MicroSecs(long SubSeconds)
 	{
 	    long MicroSeconds;
@@ -156,5 +163,24 @@ public class CFETime {
 		
 	 	return newEpoch;
 	}
+	  
+	 /**
+	  * Return relative since the CFS EPOCH. At the time of writing the CFS Epoch
+	  * is described as the following:
+	  *  CFE_TIME_EPOCH_YEAR: 1980
+         CFE_TIME_EPOCH_DAY: 1
+         CFE_TIME_EPOCH_HOUR 0
+         CFE_TIME_EPOCH_MINUTE:0
+         CFE_TIME_EPOCH_SECOND: 0
+	  * @param seconds
+	  * @param subSeconds
+	  * @return
+	  * @note Please note the use of Java.Instant here. This the modern approach of handling time
+	  * in the JVM. 
+	  */
+	  public static Instant getTimeSinceCFSEpoch(long seconds, long subSeconds) 
+	  {
+		return  getTimeSinceEpoch(seconds, subSeconds, CFE_TIME_EPOCH_YEAR, CFE_TIME_EPOCH_DAY, CFE_TIME_EPOCH_HOUR, CFE_TIME_EPOCH_MINUTE, CFE_TIME_EPOCH_SECOND);
+	  }
 
 }
