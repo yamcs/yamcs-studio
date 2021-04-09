@@ -117,7 +117,7 @@ public class CFETime {
 	  * @param seconds
 	  * @param subSeconds
 	  * @return
-	  * @note Please note the use of Java.Instant here. This the modern approach of handling time
+	  * @note Please note the use of Java.Instant here. This is the modern approach of handling time
 	  * in the JVM. 
 	  */
 	  public static Instant getTimeSinceEpoch(long seconds, long subSeconds, long epochYear, long epochDay, long epochHour, long epochMinute, long epochSecond) 
@@ -175,7 +175,7 @@ public class CFETime {
 	  * @param seconds
 	  * @param subSeconds
 	  * @return
-	  * @note Please note the use of Java.Instant here. This the modern approach of handling time
+	  * @note Please note the use of Java.Instant here. This is the modern approach of handling time
 	  * in the JVM. 
 	  */
 	  public static Instant getTimeSinceCFSEpoch(long seconds, long subSeconds) 
