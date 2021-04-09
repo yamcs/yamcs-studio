@@ -1,7 +1,8 @@
 package com.windhoverlabs.studio.time;
 
 import java.time.Instant;
-import java.util.Calendar;
+import java.time.Year;
+import java.time.ZoneOffset;
 import java.util.concurrent.TimeUnit; 
 
 public class CFETime {
@@ -11,7 +12,8 @@ public class CFETime {
 	/* CFE_TIME_Sub2MicroSecs() -- convert sub-seconds to micro-seconds        
 	/*                                                                         
 	*/
-
+	private static long MILLIS_IN_DAY = 86400000;
+	
 	 public static long  CFE_TIME_Sub2MicroSecs(long SubSeconds)
 	{
 	    long MicroSeconds;
@@ -78,10 +80,11 @@ public class CFETime {
 		return microSeconds / 1000;
 	}
 	
-	public static long yearToMilliseconds(long years) 
+	public static long daysToMilliseconds(long years) 
 	{
-		return years * 31557600000L;
+		return  years * MILLIS_IN_DAY;
 	}
+	
 	
 	/**
 	 * Return relative since the Epoch. In java this is the Unix Epoch: 1970-01-01T00:00:00Z. Very useful
@@ -97,16 +100,18 @@ public class CFETime {
 		//Convert time to milliseconds since that is what the Time API supports
 		long secondsMilliseconds = secondsToMilliseconds(seconds);
 		long subMilliSecs = microSecondsToMilliseconds(subMicroSecs);
-		
+				
 		return Instant.ofEpochMilli(secondsMilliseconds + subMilliSecs);
 	}
  
 	 /**
-	  * Return relative since the Epoch. In java this is the Unix Epoch: 1970-01-01T00:00:00Z. Very useful
-	  * for representing CFE relative time such as MET time.
+	  * Return relative since the Epoch provided. Very useful
+	  * for representing times like GPS time.
 	  * @param seconds
 	  * @param subSeconds
 	  * @return
+	  * @note Please note the use of Java.Instant here. This the modern approach of handling time
+	  * in the JVM. 
 	  */
 	  public static Instant getTimeSinceEpoch(long seconds, long subSeconds, long epochYear, long epochDay, long epochHour, long epochMinute, long epochSecond) 
 	{
@@ -116,39 +121,40 @@ public class CFETime {
 	 	long secondsMilliseconds = secondsToMilliseconds(seconds);
 	 	long subMilliSecs = microSecondsToMilliseconds(subMicroSecs);
 
-//		long timestamp = bornDate.getTime();
-		Calendar javaEpochCalendar = Calendar.getInstance();
-		javaEpochCalendar.setTimeInMillis(0);
-//return cal.get(Calendar.YEAR);
+	 	// Start an epoch that has the UNIX epoch as a value
+		Instant javaEpoch = Instant.EPOCH;
+				
+		long epochYearDeltaInMilliseconds = 0;
 		
-		System.out.println("cal-->" + javaEpochCalendar.get(Calendar.DAY_OF_YEAR));
-		
-		long epochYearDelta =  epochYear -  javaEpochCalendar.get(Calendar.YEAR);
-		long epochYearDeltaInMilliseconds = javaEpochCalendar.get(Calendar.YEAR);
-		
-		if (epochYearDelta>0) 
+		//Have to count for leap years
+		for(int i = javaEpoch.atZone(ZoneOffset.UTC).getYear() ;i<epochYear;i++) 
 		{
-			
-			epochYearDeltaInMilliseconds = yearToMilliseconds(epochYearDelta);
+			epochYearDeltaInMilliseconds += daysToMilliseconds(Year.of(i).length()) ;
 		}
 		
-		long epochDayDeltaInMilliseconds = (int)TimeUnit.DAYS.toMillis(javaEpochCalendar.get(Calendar.DAY_OF_YEAR - 1) -  (epochDay-1));
-		long epochHourDeltaInMilliseconds = (int)TimeUnit.HOURS.toMillis(javaEpochCalendar.get(Calendar.HOUR_OF_DAY) -  (epochHour));
-		long epochMinuteDeltaInMilliseconds = (int)TimeUnit.MINUTES.toMillis(javaEpochCalendar.get(Calendar.MINUTE) -  (epochMinute));
+		//Get the rest of the deltas relative to our UNIX Epoch 
+		long dayDelta = javaEpoch.atZone(ZoneOffset.UTC).getDayOfYear() - (epochDay);
+		long hourDelta = javaEpoch.atZone(ZoneOffset.UTC).getHour() -  (epochHour);
+		long minuteDelta = javaEpoch.atZone(ZoneOffset.UTC).getMinute() -  (epochMinute);
+		long secondDelta = javaEpoch.atZone(ZoneOffset.UTC).getSecond() -  (epochSecond);
 
+		//Convert our deltas to milliseconds
+		long epochDayDeltaInMilliseconds = TimeUnit.DAYS.toMillis(dayDelta);
+		long epochHourDeltaInMilliseconds = TimeUnit.HOURS.toMillis(hourDelta);
+		long epochMinuteDeltaInMilliseconds = TimeUnit.MINUTES.toMillis(minuteDelta);
+		long epochSecondDeltaInMilliseconds = TimeUnit.SECONDS.toMillis(secondDelta);
+			
 		
-		Instant javaEpoch = Instant.ofEpochMilli(0);
-	 	Instant newEpoch = Instant.ofEpochMilli(epochYearDeltaInMilliseconds 
-	 											+ epochDayDeltaInMilliseconds
-	 											+ epochHourDeltaInMilliseconds
-	 											+ epochMinuteDeltaInMilliseconds);
-	 	//TODO:Test in Studio.
-	 	System.out.println("newEpoch-->" + newEpoch);
-//	 	javaEpoch.until(javaEpoch, null)
-	 	
-//	 	epochYearSeconds =   31557600
-	 	
-	 	return Instant.ofEpochMilli(secondsMilliseconds + subMilliSecs);
+		//Get our new time with our own custom awesome EPOCH
+		Instant newEpoch  = Instant.ofEpochMilli(epochYearDeltaInMilliseconds 
+												+ epochDayDeltaInMilliseconds
+												+ epochHourDeltaInMilliseconds
+												+ epochMinuteDeltaInMilliseconds
+												+ epochSecondDeltaInMilliseconds
+												+ secondsMilliseconds
+												+ subMilliSecs);
+		
+	 	return newEpoch;
 	}
 
 }
