@@ -2,6 +2,7 @@ package org.yamcs.studio.data;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
@@ -24,6 +25,8 @@ public class IPV {
 
     private AtomicBoolean started = new AtomicBoolean(false); // start() has been called (fully executed or not)
     private AtomicBoolean starting = new AtomicBoolean(false); // PV is during start
+    private CompletableFuture<Void> startFinished = new CompletableFuture<>(); // start() has been called, as well
+                                                                               // as onStarted
 
     // Datasources can use this to force a PV as disconnected
     private boolean invalid = false;
@@ -151,6 +154,8 @@ public class IPV {
     public boolean setValue(Object value, int timeout) throws Exception {
         AtomicBoolean result = new AtomicBoolean();
         CountDownLatch latch = new CountDownLatch(1);
+        // Ensure PV is fully started (including execution of onStarted)
+        startFinished.get(timeout, TimeUnit.MILLISECONDS);
         datasource.writeValue(this, value, err -> {
             if (err != null) {
                 log.log(Level.SEVERE, "Failed to update value", err);
@@ -175,7 +180,11 @@ public class IPV {
             notificationThread.execute(() -> {
                 try {
                     datasource.onStarted(this);
+                    startFinished.complete(null);
                 } finally { // Protect against onStarted throwing an exception
+                    if (!startFinished.isDone()) {
+                        startFinished.completeExceptionally(new RuntimeException("Error while starting PV"));
+                    }
                     starting.set(false);
                 }
                 log.fine(String.format("Start finished for PV %s", this));
@@ -201,6 +210,7 @@ public class IPV {
             return;
         }
         started.set(false);
+        startFinished.cancel(true);
         datasource.onStopped(this);
     }
 
