@@ -9,5 +9,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Export-Package: org.csstudio.examples
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.csstudio.examples
