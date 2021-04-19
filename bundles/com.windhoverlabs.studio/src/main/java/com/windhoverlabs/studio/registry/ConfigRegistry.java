@@ -2,7 +2,9 @@ package com.windhoverlabs.studio.registry;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 
@@ -158,5 +160,69 @@ public abstract class ConfigRegistry {
 		
 		String newPath = rootPath + PATH_SEPARATOR + newNodes;
 		return newPath;
+	}
+	
+	
+
+	private void getAllTelmetry(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outMsgIds) 
+	{
+		  for (Map.Entry<?, ?> set : modules.entrySet()) 
+		  { 
+			  LinkedHashMap<?,?> module = ((LinkedHashMap<?,?>) modules.get(set.getKey() ));
+			  
+				if (module.get("modules") != null) 
+				{
+					getAllTelmetry((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
+				}
+				if(module.get("telemetry") != null) 
+				{
+					outMsgIds.put((Object) module.values().toArray()[0], module.get("telemetry"));
+				}
+	        }
+		
+	}
+	
+	private void getAllTeleCommands(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outMsgIds) 
+	{
+		  for (Map.Entry<?, ?> set : modules.entrySet()) 
+		  { 
+			  LinkedHashMap<?,?> module = ((LinkedHashMap<?,?>) modules.get(set.getKey() ));
+			  
+				if (module.get("modules") != null) 
+				{
+					getAllTeleCommands((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
+				}
+				if(module.get("commands") != null) 
+				{
+					outMsgIds.put((Object) module.values().toArray()[0], module.get("commands"));
+				}
+	        }
+		
+	}
+	
+	public LinkedHashMap<Object, Object> getAllMsgIDs() throws Exception 
+	{
+		LinkedHashMap<Object, Object> outMsgMap = new  LinkedHashMap<Object, Object>();
+		
+		//Access the registry through the get method for error-checking
+		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
+		getAllTelmetry(wholeRegistry, outMsgMap);
+		
+		
+		return outMsgMap;
+		
+	}
+	
+	public LinkedHashMap<Object, Object> getAllCommands() throws Exception 
+	{
+		LinkedHashMap<Object, Object> outCmdMap = new  LinkedHashMap<Object, Object>();
+		
+		//Access the registry through the get method for error-checking
+		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
+		getAllTeleCommands(wholeRegistry, outCmdMap);
+		
+		
+		return outCmdMap;
+		
 	}
 }
