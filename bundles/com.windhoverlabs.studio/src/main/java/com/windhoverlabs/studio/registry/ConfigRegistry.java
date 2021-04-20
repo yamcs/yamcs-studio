@@ -167,9 +167,7 @@ public abstract class ConfigRegistry {
 		String newPath = rootPath + PATH_SEPARATOR + newNodes;
 		return newPath;
 	}
-	
-	
-
+		
 	private void getAllTelmetry(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outMsgIds) 
 	{
 		  for (Map.Entry<?, ?> moduleSet : modules.entrySet()) 
@@ -220,15 +218,17 @@ public abstract class ConfigRegistry {
 					for(Map.Entry<?, ?> cmdSet: cmds.entrySet()) 
 					{
 						LinkedHashMap<Object,Object> cmd = (LinkedHashMap<Object, Object>) cmds.get(cmdSet.getKey());
-						cmd.put("type", MSGType.COMMAND);
-						cmd.put("macro", cmdSet.getKey());
-						
-						cmd.put("app", moduleSet.getKey() );
-						
+
 						LinkedHashMap<Object,Object> subCommands = (LinkedHashMap<Object, Object>) cmd.get("commands");
 						
 						if (subCommands!= null)
 						{
+							cmd.put("type", MSGType.COMMAND);
+							cmd.put("macro", cmdSet.getKey());
+							
+							cmd.put("app", moduleSet.getKey());
+							
+							
 							for(Map.Entry<?, ?> subCommandSet: subCommands.entrySet()) 
 							{
 								LinkedHashMap<Object,Object> subCommand = (LinkedHashMap<Object, Object>) subCommands.get(subCommandSet.getKey());
@@ -239,9 +239,9 @@ public abstract class ConfigRegistry {
 									subCommand.remove("struct");
 								}
 							}	
+							outCmdMsgIds.put(cmdSet.getKey(), cmdSet.getValue());
 						}
 					}
-					outCmdMsgIds.putAll(cmds);
 				}
 	        }
 		
