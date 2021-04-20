@@ -21,6 +21,12 @@ public abstract class ConfigRegistry {
 	public final static String PATH_SEPARATOR = "/"; 
 	protected LinkedHashMap<?, ?> registry;
 	
+	enum MSGType
+	{
+		COMMAND,
+		TELEMETRY
+	}
+	
 	/**
 	 * Subclasses should load the registry(YAML, SQLite, etc) and store it in registry on the constructor.
 	 * @throws FileNotFoundException
@@ -166,9 +172,9 @@ public abstract class ConfigRegistry {
 
 	private void getAllTelmetry(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outMsgIds) 
 	{
-		  for (Map.Entry<?, ?> set : modules.entrySet()) 
+		  for (Map.Entry<?, ?> moduleSet : modules.entrySet()) 
 		  { 
-			  LinkedHashMap<?,?> module = ((LinkedHashMap<?,?>) modules.get(set.getKey() ));
+			  LinkedHashMap<?,?> module = ((LinkedHashMap<?,?>) modules.get(moduleSet.getKey() ));
 			  
 				if (module.get("modules") != null) 
 				{
@@ -176,31 +182,88 @@ public abstract class ConfigRegistry {
 				}
 				if(module.get("telemetry") != null) 
 				{
-					outMsgIds.put((Object) module.values().toArray()[0], module.get("telemetry"));
+					LinkedHashMap<?,?> Alltlm = (LinkedHashMap<?, ?>) module.get("telemetry");
+					
+					for(Map.Entry<?, ?> tlmSet: Alltlm.entrySet()) 
+					{
+						LinkedHashMap<Object,Object> tlm = (LinkedHashMap<Object, Object>) Alltlm.get(tlmSet.getKey());
+						tlm.put("type", MSGType.TELEMETRY);
+						tlm.put("macro", tlmSet.getKey());
+						tlm.put("app", moduleSet.getKey() );
+						
+						if(tlm.get("struct") != null) 
+						{
+							tlm.remove("struct");
+						}
+					}
+					
+					outMsgIds.putAll(Alltlm);
 				}
 	        }
-		
+
 	}
 	
-	private void getAllTeleCommands(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outMsgIds) 
+	private void getAllTeleCommands(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outCmdMsgIds) 
 	{
-		  for (Map.Entry<?, ?> set : modules.entrySet()) 
+		  for (Map.Entry<?, ?> moduleSet : modules.entrySet()) 
 		  { 
-			  LinkedHashMap<?,?> module = ((LinkedHashMap<?,?>) modules.get(set.getKey() ));
+			  LinkedHashMap<?,?> module = ((LinkedHashMap<?,?>) modules.get(moduleSet.getKey() ));
 			  
 				if (module.get("modules") != null) 
 				{
-					getAllTeleCommands((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
+					getAllTeleCommands((LinkedHashMap<?, ?>) module.get("modules"), outCmdMsgIds);
 				}
 				if(module.get("commands") != null) 
 				{
-					outMsgIds.put((Object) module.values().toArray()[0], module.get("commands"));
+					LinkedHashMap<?,?> cmds = (LinkedHashMap<?, ?>) module.get("commands");
+					
+					for(Map.Entry<?, ?> cmdSet: cmds.entrySet()) 
+					{
+						LinkedHashMap<Object,Object> cmd = (LinkedHashMap<Object, Object>) cmds.get(cmdSet.getKey());
+						cmd.put("type", MSGType.COMMAND);
+						cmd.put("macro", cmdSet.getKey());
+						
+						cmd.put("app", moduleSet.getKey() );
+						
+						LinkedHashMap<Object,Object> subCommands = (LinkedHashMap<Object, Object>) cmd.get("commands");
+						
+						if (subCommands!= null)
+						{
+							for(Map.Entry<?, ?> subCommandSet: subCommands.entrySet()) 
+							{
+								LinkedHashMap<Object,Object> subCommand = (LinkedHashMap<Object, Object>) subCommands.get(subCommandSet.getKey());
+	
+								// Remove the struct node
+								if(subCommand.get("struct") != null) 
+								{
+									subCommand.remove("struct");
+								}
+							}	
+						}
+					}
+					outCmdMsgIds.putAll(cmds);
 				}
 	        }
 		
 	}
 	
-	public LinkedHashMap<Object, Object> getAllMsgIDs() throws Exception 
+	
+	/**
+	 * Get all messages from the registry. This includes only telemetry.
+	 * 
+	 * @return A map of messages in the following format:
+	 *  {
+	 *   HK_HK_TLM_MID: 
+	 *   {
+	 *   	msgID: 2158, 
+	 *   	type: TELEMETRY, 
+	 *   	macro: HK_HK_TLM_MID, 
+	 *   	app: hk
+	 *   }
+	 *  }
+	 * @throws Exception
+	 */
+	public LinkedHashMap<Object, Object> getAllTelemetry() throws Exception 
 	{
 		LinkedHashMap<Object, Object> outMsgMap = new  LinkedHashMap<Object, Object>();
 		
@@ -208,11 +271,26 @@ public abstract class ConfigRegistry {
 		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
 		getAllTelmetry(wholeRegistry, outMsgMap);
 		
-		
 		return outMsgMap;
 		
 	}
 	
+	/**
+	 * Get all messages from the registry. This includes only commands.
+	 * 
+	 * @return A map of messages in the following format:
+	 *  {
+	 *   HK_SEND_COMBINED_PKT_MID: 
+	 *   {
+	 *   	msgID: 6256, 
+	 * 	 	commands: {SendCombinedPkt={cc=0}}, 
+	 *   	type: COMMAND, 
+	 *   	macro: HK_SEND_COMBINED_PKT_MID, 
+	 *   	app: hk
+	 *   } 
+	 *  }
+	 * @throws Exception
+	 */
 	public LinkedHashMap<Object, Object> getAllCommands() throws Exception 
 	{
 		LinkedHashMap<Object, Object> outCmdMap = new  LinkedHashMap<Object, Object>();
@@ -221,7 +299,42 @@ public abstract class ConfigRegistry {
 		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
 		getAllTeleCommands(wholeRegistry, outCmdMap);
 		
+		return outCmdMap;
 		
+	}
+	
+	/**
+	 * Get all messages from the registry. This includes commands and telemetry messages.
+	 * 
+	 * @return A map of messages in the following format:
+	 *  {
+	 *   HK_HK_TLM_MID: 
+	 *   {
+	 *   	msgID: 2158, 
+	 *   	type: TELEMETRY, 
+	 *   	macro: HK_HK_TLM_MID, 
+	 *   	app: hk
+	 *   },
+	 *   HK_SEND_COMBINED_PKT_MID: 
+	 *   {
+	 *   	msgID: 6256, 
+	 * 	 	commands: {SendCombinedPkt={cc=0}}, 
+	 *   	type: COMMAND, 
+	 *   	macro: HK_SEND_COMBINED_PKT_MID, 
+	 *   	app: hk
+	 *   } 
+	 *  }
+	 * @throws Exception
+	 */
+	public LinkedHashMap<Object, Object> getAllMessages() throws Exception 
+	{
+		LinkedHashMap<Object, Object> outCmdMap = new  LinkedHashMap<Object, Object>();
+		
+		//Access the registry through the get method for error-checking
+		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
+		getAllTeleCommands(wholeRegistry, outCmdMap);
+		getAllTelmetry(wholeRegistry, outCmdMap);
+
 		return outCmdMap;
 		
 	}
