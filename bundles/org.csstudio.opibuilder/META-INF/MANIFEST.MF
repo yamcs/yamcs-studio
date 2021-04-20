@@ -50,7 +50,7 @@ Export-Package: org.csstudio.opibuilder,
  org.csstudio.opibuilder.util,
  org.csstudio.opibuilder.visualparts,
  org.csstudio.opibuilder.widgetActions
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.csstudio.opibuilder
 Import-Package: com.windhoverlabs.studio.registry,
  com.windhoverlabs.studio.registry.preferences

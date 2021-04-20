@@ -29,7 +29,7 @@ Import-Package: org.eclipse.draw2d,
  org.eclipse.draw2d.geometry,
  org.eclipse.gef,
  org.w3c.dom.svg
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.csstudio.opibuilder.widgets,
  org.csstudio.opibuilder.widgets.actions,

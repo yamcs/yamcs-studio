@@ -253,9 +253,10 @@ public class ConnectionsDialog extends Dialog {
             yamcsClient = clientBuilder.build();
 
             if (conf.getAuthType() == AuthType.KERBEROS) {
-                yamcsClient.connectWithKerberos();
+                yamcsClient.loginWithKerberos();
+                yamcsClient.connectWebSocket();
             } else if (conf.getUser() == null) {
-                yamcsClient.connectAnonymously();
+                yamcsClient.connectWebSocket();
             } else {
                 String password = null;
                 if (conf.isSecureHint()) { // Avoid unnecessary prompts
@@ -267,13 +268,15 @@ public class ConnectionsDialog extends Dialog {
                     }
                 }
                 if (password != null && !password.isEmpty()) {
-                    yamcsClient.connect(conf.getUser(), password.toCharArray());
+                    yamcsClient.login(conf.getUser(), password.toCharArray());
+                    yamcsClient.connectWebSocket();
                 } else {
                     LoginDialog loginDialog = new LoginDialog(getShell(), conf.getURL(), conf.getUser());
                     if (loginDialog.open() == Window.OK) {
                         String username = loginDialog.getUser();
                         password = loginDialog.getPassword();
-                        yamcsClient.connect(username, password.toCharArray());
+                        yamcsClient.login(username, password.toCharArray());
+                        yamcsClient.connectWebSocket();
                     } else {
                         return;
                     }

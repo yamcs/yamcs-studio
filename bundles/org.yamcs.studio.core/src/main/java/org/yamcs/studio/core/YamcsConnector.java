@@ -95,13 +95,15 @@ public class YamcsConnector implements IRunnableWithProgress {
 
             log.info("Connecting to " + conf);
             if (conf.getAuthType() == AuthType.KERBEROS) {
-                yamcsClient.connectWithKerberos();
+                yamcsClient.loginWithKerberos();
+                yamcsClient.connectWebSocket();
             } else if (conf.getUser() == null) {
-                yamcsClient.connectAnonymously();
+                yamcsClient.connectWebSocket();
             } else {
                 String password = conf.getTransientPassword();
                 if (password != null && !password.isEmpty()) {
-                    yamcsClient.connect(conf.getUser(), password.toCharArray());
+                    yamcsClient.login(conf.getUser(), password.toCharArray());
+                    yamcsClient.connectWebSocket();
                 } else {
                     throw new ClientException("No password was provided");
                 }
