@@ -169,7 +169,7 @@ public abstract class ConfigRegistry {
 		return newPath;
 	}
 		
-	private void getAllTelmetry(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outMsgIds) 
+	private void getAllTelemetry(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outMsgIds) 
 	{
 		  for (Map.Entry<?, ?> moduleSet : modules.entrySet()) 
 		  { 
@@ -177,7 +177,7 @@ public abstract class ConfigRegistry {
 			  
 				if (module.get("modules") != null) 
 				{
-					getAllTelmetry((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
+					getAllTelemetry((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
 				}
 				if(module.get("telemetry") != null) 
 				{
@@ -188,7 +188,7 @@ public abstract class ConfigRegistry {
 						LinkedHashMap<Object,Object> tlm = (LinkedHashMap<Object, Object>) Alltlm.get(tlmSet.getKey());
 						tlm.put("type", MSGType.TELEMETRY);
 						tlm.put("macro", tlmSet.getKey());
-						tlm.put("app", moduleSet.getKey() );
+						tlm.put("app", moduleSet.getKey());
 						
 						if(tlm.get("struct") != null) 
 						{
@@ -270,7 +270,7 @@ public abstract class ConfigRegistry {
 		
 		//Access the registry through the get method for error-checking
 		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
-		getAllTelmetry(wholeRegistry, outMsgMap);
+		getAllTelemetry(wholeRegistry, outMsgMap);
 		
 		return outMsgMap;
 		
@@ -334,7 +334,7 @@ public abstract class ConfigRegistry {
 		//Access the registry through the get method for error-checking
 		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
 		getAllTeleCommands(wholeRegistry, outCmdMap);
-		getAllTelmetry(wholeRegistry, outCmdMap);
+		getAllTelemetry(wholeRegistry, outCmdMap);
 
 		return outCmdMap;
 		
