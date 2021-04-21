@@ -15,7 +15,8 @@ import com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage;
  *Abstract class configuration registry that behaves like a dictionary.
  *This is meant to make loading CFS configuration format-agnostic. Meaning it does not matter
  *if the configuration is stored in a YAML file, SQLite or even XML file; this class enforces implementors to treat the
- *data as a dictionary, or a LinkedHashMap concretely speaking.
+ *data as a dictionary, or a LinkedHashMap concretely speaking. The only prerequisite for the ConfigRegistry is that the
+ *file storing(SQLite, YAML, etc) the registry follows the modules schema. Read docs for details about the schema.
  */
 public abstract class ConfigRegistry {
 	public final static String PATH_SEPARATOR = "/"; 
@@ -193,9 +194,9 @@ public abstract class ConfigRegistry {
 						{
 							tlm.remove("struct");
 						}
+						outMsgIds.put(tlmSet.getKey(), tlmSet.getValue());
 					}
 					
-					outMsgIds.putAll(Alltlm);
 				}
 	        }
 
