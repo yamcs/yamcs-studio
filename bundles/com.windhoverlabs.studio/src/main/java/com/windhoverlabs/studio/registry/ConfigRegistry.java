@@ -202,6 +202,32 @@ public abstract class ConfigRegistry {
 
 	}
 	
+	/**
+	 * 
+	 * @param modules
+	 * @param outConfiguration
+	 */
+	private void getAllConfiguration(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outConfiguration) 
+	{
+		  for (Map.Entry<?, ?> moduleSet : modules.entrySet()) 
+		  { 
+			  LinkedHashMap<?,?> module = ((LinkedHashMap<?,?>) modules.get(moduleSet.getKey() ));
+			  
+				if (module.get("modules") != null) 
+				{
+					getAllConfiguration((LinkedHashMap<?, ?>) module.get("modules"), outConfiguration);
+				}
+				if(module.get("config") != null) 
+				{
+					LinkedHashMap<?,?> AllConfig = (LinkedHashMap<?, ?>) module.get("config");
+					
+					outConfiguration.put(moduleSet.getKey(), AllConfig);
+					
+				}
+	        }
+
+	}
+	
 	private void getAllTeleCommands(LinkedHashMap<?,?>  modules, LinkedHashMap<Object, Object>  outCmdMsgIds) 
 	{
 		  for (Map.Entry<?, ?> moduleSet : modules.entrySet()) 
@@ -337,6 +363,36 @@ public abstract class ConfigRegistry {
 		getAllTelemetry(wholeRegistry, outCmdMap);
 
 		return outCmdMap;
+		
+	}
+	
+	/**
+	 * 
+	 * @return All of the configuration from all of the apps/modules stored in the registry in the following format:
+	 * 
+	 * {
+	 * cfe_es: 
+	 * 	{
+	 * 	   CFE_ES_CDS_MAX_NAME_LENGTH={name=CFE_ES_CDS_MAX_NAME_LENGTH, value=16}
+	 * },
+	 * to: 
+	 * 	 {
+	 * 		TO_MAX_MESSAGE_FLOWS={name=TO_MAX_MESSAGE_FLOWS, value=200}
+	 * 	  }
+	 * }
+	 * 
+	 * 
+	 * @throws Exception
+	 */
+	public LinkedHashMap<Object, Object> getAllConfig() throws Exception 
+	{
+		LinkedHashMap<Object, Object> outConfigMap = new  LinkedHashMap<Object, Object>();
+		
+		//Access the registry through the get method for error-checking
+		LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
+		getAllConfiguration(wholeRegistry, outConfigMap);
+
+		return outConfigMap;
 		
 	}
 }
