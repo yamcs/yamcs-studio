@@ -2,10 +2,10 @@ package com.windhoverlabs.studio.registry;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+import org.yamcs.client.YamcsClient;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 import com.windhoverlabs.studio.registry.preferences.RegistryPreferencePage;
@@ -58,7 +58,7 @@ public abstract class ConfigRegistry {
 	 * @throws Exception
 	 */
 	public Object get(String registryPath) throws Exception
-	{
+	{        
 		if(registry == null) 
 		{
 			throw new Exception("The registry has not been loaded. Make sure this implementation is loading the registry in the constructor.");
