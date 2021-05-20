@@ -9,6 +9,7 @@ import java.util.Scanner;
 import org.yamcs.client.YamcsClient;
 import org.yamcs.studio.core.YamcsPlugin;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -17,6 +18,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.logging.Logger;
 
 /**
  * Collection of utilities to talk to YAMCS Server.
@@ -25,9 +27,11 @@ import java.net.http.HttpResponse.BodyHandlers;
  *
  */
 public class ServerUtil {
-    private static JsonObject request(String address, String method, String body) {
+    static final Logger log = Logger.getLogger(ServerUtil.class.getName());
 
+    private static LinkedHashMap<Object, Object> request(String address, String method, String body) {
         JsonObject rootObject = null;
+        LinkedHashMap<Object, Object> outMap = new LinkedHashMap<Object, Object>();
         try {
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -41,44 +45,25 @@ public class ServerUtil {
 
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
-            System.out.println("reposne: %s" + response.body());
-
-            //
-            // client.sendAsync(request, BodyHandlers.ofString())
-            // .thenApply(HttpResponse::body)
-            // .thenAccept(System.out::println)
-            // .join();
-
-            // request.
-            // Getting the response code
             int responsecode = 200;
 
             if (responsecode != 200) {
                 throw new RuntimeException("HttpResponseCode: " + responsecode);
             } else {
 
-                String inline = "{}";
-                // Scanner scanner = new Scanner(url.openStream());
-                //
-                // //Write all the JSON data into a string using a scanner
-                // while (scanner.hasNext()) {
-                // inline += scanner.nextLine();
-                // }
-                //
-                // //Close the scanner
-                // scanner.close();
+                String inline = response.body();
 
                 // Using the JSON simple library parse the string into a json object
-                JsonParser parser = new JsonParser();
-                JsonElement jsonElement = parser.parse(inline);
-                rootObject = jsonElement.getAsJsonObject();
+                Gson gson = new Gson();
+
+                outMap = gson.fromJson(inline, LinkedHashMap.class);
 
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return rootObject;
+        return outMap;
     }
 
     public static void configureUpdTcDataLink(int linkPort, String ipAddress, String linkName) {
@@ -95,29 +80,35 @@ public class ServerUtil {
     }
 
     /**
-     * response = requests.get(f'http://localhost:8090/api/{INSTANCE}/cfs/sch/table', json={'paramPath':
-     * '/cfs//sch/SCH_DiagPacket_t', 'processor': 'realtime','app': 'none'})
+     * Request Sch Table entries specific to an app from the server.
      * 
      * @param paramPath
+     *            The XTCE parameter path such as "/cfs//sch/SCH_DiagPacket_t" that the entries will be extracted from.
      * @param processorName
      * @param appName
-     * @return
+     * @return A map in the format of "{schEntries: [{minor=225, activityNumber=11, messageMacro=SC_1HZ_WAKEUP_MID,
+     *         state=ENABLED}, {minor=230, activityNumber=11, messageMacro=SC_SEND_HK_MID, state=ENABLED}]}"
+     * 
      */
-
-    public static LinkedHashMap<Object, Object> getSchTableForApp(String paramPath, String processorName,
+    public static LinkedHashMap<Object, Object> getSchTableForApp(String paramPath,
             String appName) {
         String activeInstance = YamcsPlugin.getInstance();
-
-        int port = YamcsPlugin.getYamcsClient().getPort();
-        String host = YamcsPlugin.getYamcsClient().getHost();
-
-        LinkedHashMap<Object, Object> schTable = new LinkedHashMap<Object, Object>();
-
+        LinkedHashMap<Object, Object> schTable = null;
         if (activeInstance != null) {
-            String route = String.format("http://%s:%d/api/%s/cfs/sch/table", host, port,
-                    activeInstance);
-            request(route, "GET", "{'paramPath':'/cfs//sch/SCH_DiagPacket_t', 'processor': 'realtime','app': 'ds'}");
+            int port = YamcsPlugin.getYamcsClient().getPort();
+            String host = YamcsPlugin.getYamcsClient().getHost();
 
+            schTable = new LinkedHashMap<Object, Object>();
+
+            //TODO In the future yamcs-cfs should have a client API that wraps around the http calls
+            String route = String.format("http://%s:%d/api/%s/cfs/sch/table", host, port, activeInstance);
+            System.out.println("processor:" + YamcsPlugin.getProcessor());
+            schTable = request(route, "GET", String.format(
+                    "{'paramPath':'%s', 'processor': '%s','app': '%s'}", paramPath, YamcsPlugin.getProcessor(),
+                    appName));
+
+        } else {
+            log.warning("No active instance at the moment.");
         }
 
         return schTable;

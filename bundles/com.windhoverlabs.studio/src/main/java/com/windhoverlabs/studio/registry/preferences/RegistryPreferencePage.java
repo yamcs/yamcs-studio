@@ -16,6 +16,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.windhoverlabs.studio.registry.Activator;
+import com.windhoverlabs.studio.registry.preferences.PreferenceConstants;
 
 /**
  * This class represents a preference page that
@@ -140,7 +141,7 @@ public class RegistryPreferencePage
   		if(projects.length > 0) 
   		{
   			IPath projectPath = projects[0].getLocation();
-  			IPath defaultRegistryPath = projectPath.append("Resources/definitions.yaml"); 
+  			IPath defaultRegistryPath = projectPath.append(PreferenceConstants.REGISTRY_DEFAULT_PATH); 
   	  		defaultPath = defaultRegistryPath.toString() ;
   		}
   		else 
@@ -158,8 +159,6 @@ public class RegistryPreferencePage
   	}
   	
   	/**
-  	 * @note Leaving the projectName as an argument for now until we decide what to do about path conventions
-  	 * @param projectName
   	 * @return
   	 */
   	public static String  getCurrentPath() 
