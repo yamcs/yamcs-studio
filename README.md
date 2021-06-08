@@ -19,7 +19,7 @@ https://docs.yamcs.org/yamcs-studio/
 ### Headless Build
 
 ```
-mvn clean package -DskipTests
+mvn clean package -Dtycho.localArtifacts=ignore
 ```
 
 
@@ -39,6 +39,6 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 
 - All error signs should now be resolved. If not, try right-clicking the yamcs-studio project and choose `Maven > Update Project Configuration`.
 
-- Open one of the `*.product` files found under `org.yamcs.studio.releng`.
+- Open the `org.yamcs.studio.editor.product/yamcs-studio.product` file.
 
 - Click `Synchronize` followed by `Launch an Eclipse Application`.
