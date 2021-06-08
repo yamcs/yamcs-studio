@@ -44,7 +44,6 @@
     <module>org.yamcs.studio.editor</module>
     <module>org.yamcs.studio.editor.feature</module>
     <module>org.yamcs.studio.editor.product</module>
-    <module>org.yamcs.studio.platform</module>
   </modules>
 
   <scm>
@@ -150,11 +149,7 @@
         <configuration>
           <targetDefinitionIncludeSource>honor</targetDefinitionIncludeSource>
           <target>
-            <artifact>
-              <groupId>org.yamcs.studio</groupId>
-              <artifactId>org.yamcs.studio.platform</artifactId>
-              <version>${project.version}</version>
-            </artifact>
+            <file>../platform.target</file>
           </target>
           <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-15</executionEnvironment>
           <environments>
