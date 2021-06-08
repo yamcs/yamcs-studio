@@ -13,5 +13,4 @@ Require-Bundle: org.yamcs.p2.client,
  com.google.gson,
  org.eclipse.equinox.security
 Export-Package: org.yamcs.studio.connect
-Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.connect

@@ -19,5 +19,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.csstudio.opibuilder
 Export-Package: org.yamcs.studio.css.core,
  org.yamcs.studio.css.core.prefs
-Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.css.core

@@ -12,5 +12,4 @@ Require-Bundle: org.yamcs.studio.core,
  org.yamcs.p2.client,
  org.eclipse.ui,
  org.eclipse.core.runtime
-Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.links

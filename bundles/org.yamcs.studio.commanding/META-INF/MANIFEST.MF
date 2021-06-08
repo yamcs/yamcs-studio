@@ -17,5 +17,4 @@ Require-Bundle: org.eclipse.ui,
  com.google.gson,
  org.apache.velocity
 Export-Package: org.yamcs.studio.commanding
-Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.commanding
