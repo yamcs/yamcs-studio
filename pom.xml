@@ -13,7 +13,7 @@
   </organization>
 
   <properties>
-    <tycho.version>2.2.0</tycho.version>
+    <tycho.version>2.3.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Disable default deploy. Only p2 output repo gets deployed -->
     <maven.deploy.skip>true</maven.deploy.skip>
@@ -133,13 +133,14 @@
               <version>${project.version}</version>
             </artifact>
           </target>
+          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-11</executionEnvironment>
           <!-- 
             This is temporary to support JustJ JREs in Tycho. Hopefully
             later versions of Tycho allow a different approach.
             Instructions were here:
             https://www.eclipse.org/justj/?page=documentation#products
            -->
-          <resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
+          <!--resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints-->
           <environments>
             <environment>
               <os>linux</os>
