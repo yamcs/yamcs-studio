@@ -7,19 +7,19 @@ import java.util.Optional;
 import java.util.Properties;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.preferences.PreferencesHelper;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
-import org.yamcs.studio.data.IPV;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.osgi.framework.Bundle;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
+import org.yamcs.studio.data.IPV;
 
 /**
  * The factory to return the corresponding script store according to the script type.
@@ -84,7 +84,8 @@ public class ScriptStoreFactory {
      * @throws Exception
      */
     private static void initJdkJSEngine() throws Exception {
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("javascript");
+        NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+        ScriptEngine engine = factory.getScriptEngine();
         final Display display = Display.getCurrent();
         displayScriptEngineMap.put(display, engine);
     }

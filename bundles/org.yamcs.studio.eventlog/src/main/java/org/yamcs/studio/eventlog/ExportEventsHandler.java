@@ -3,6 +3,7 @@ package org.yamcs.studio.eventlog;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.Yamcs.Event;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.utils.CsvWriter;
 
 public class ExportEventsHandler extends AbstractHandler {
@@ -55,14 +57,28 @@ public class ExportEventsHandler extends AbstractHandler {
             writer.writeHeader(new String[] {
                     "Severity", "Message", "Type", "Source", "Generation", "Reception", "Sequence Number"
             });
+
             for (Event event : events) {
+                String formattedGenerationTime = "";
+                if (event.hasGenerationTime()) {
+                    Instant generationTime = Instant.ofEpochSecond(event.getGenerationTime().getSeconds(),
+                            event.getGenerationTime().getNanos());
+                    formattedGenerationTime = YamcsPlugin.getDefault().formatInstant(generationTime);
+                }
+                String formattedReceptionTime = "";
+                if (event.hasReceptionTime()) {
+                    Instant receptionTime = Instant.ofEpochSecond(event.getReceptionTime().getSeconds(),
+                            event.getReceptionTime().getNanos());
+                    formattedReceptionTime = YamcsPlugin.getDefault().formatInstant(receptionTime);
+                }
+
                 writer.writeRecord(new String[] {
                         event.hasSeverity() ? "" + event.getSeverity() : "",
                         event.hasMessage() ? event.getMessage() : "",
                         event.hasType() ? event.getType() : "",
                         event.hasSource() ? event.getSource() : "",
-                        event.hasGenerationTimeUTC() ? event.getGenerationTimeUTC() : "",
-                        event.hasReceptionTimeUTC() ? event.getReceptionTimeUTC() : "",
+                        formattedGenerationTime,
+                        formattedReceptionTime,
                         event.hasSeqNumber() ? "" + event.getSeqNumber() : ""
                 });
             }

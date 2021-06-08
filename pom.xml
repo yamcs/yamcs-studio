@@ -133,14 +133,7 @@
               <version>${project.version}</version>
             </artifact>
           </target>
-          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-11</executionEnvironment>
-          <!-- 
-            This is temporary to support JustJ JREs in Tycho. Hopefully
-            later versions of Tycho allow a different approach.
-            Instructions were here:
-            https://www.eclipse.org/justj/?page=documentation#products
-           -->
-          <!--resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints-->
+          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-15</executionEnvironment>
           <environments>
             <environment>
               <os>linux</os>
