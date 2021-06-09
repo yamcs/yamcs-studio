@@ -33,7 +33,7 @@ $nl
 #set($delay = $stackedCommand.getDelayMs() / 1000)
 WaitFor($delay*SECOND)$nl
 #{end}
-Send(command= BuildTC('$stackedCommand.getMetaCommand().getQualifiedName()'
+Send(command= BuildTC("$stackedCommand.getMetaCommand().getQualifiedName()"
 #if( $stackedCommand.getAssignments().entrySet().size() > 0 )
 #{set} ($first = "true")
 ,$nl                       args=[
@@ -43,12 +43,12 @@ Send(command= BuildTC('$stackedCommand.getMetaCommand().getQualifiedName()'
 #{else}
 ,$nl					         
 #{end}
-[$argumentEntry.getKey().getName(), $argumentEntry.getValue()]
+["$argumentEntry.getKey().getName()", $argumentEntry.getValue()]
 #{end}
 ]
 #{end}
 #{if}( "$!stackedCommand.getComment()" != "" )
-,$nl					   addInfo={'comment': """$stackedCommand.getComment()"""}
+,$nl					   addInfo={"comment": """$stackedCommand.getComment()"""}
 #{end}
 ))$nl
 $nl

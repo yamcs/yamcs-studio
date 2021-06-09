@@ -23,17 +23,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.studio.core.YamcsPlugin;
 
 public class ExportCommandStackHandlerSpell extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-
-        // Get current command stack
         Collection<StackedCommand> commands = CommandStack.getInstance().getCommands();
         if (commands == null || commands.isEmpty()) {
-            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Export Command Stack",
+            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Export as SPELL Procedure",
                     "Current command stack is empty. No command to export.");
             return null;
         }
@@ -43,34 +40,26 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
         FileDialog dialog = new FileDialog(shell, SWT.SAVE);
         dialog.setFilterExtensions(new String[] { "*.py" });
         String exportFile = dialog.open();
-        System.out.println("SPELL procedure file name choosen: " + exportFile);
         if (exportFile == null) {
-            // cancelled
-            return null;
-        }
-        Path p = Paths.get(exportFile);
-        String filename = p.getFileName().toString();
-        String filenameNoExt = filename;
-        try {
-            filenameNoExt = filename.substring(0, filename.lastIndexOf('.'));
-        } catch (Exception e) {
+            return null; // cancelled
         }
 
-        // get options
+        Path p = Paths.get(exportFile);
+        String filename = p.getFileName().toString();
+        String filenameWithoutExtension = filename;
+        if (filename.endsWith(".py")) {
+            filenameWithoutExtension.substring(0, filename.length() - 3);
+        }
+
         ExportCommandStackSpellDialog spellOptionsDialog = new ExportCommandStackSpellDialog(
-                shell, commands, filenameNoExt);
+                shell, commands, filenameWithoutExtension);
         int result = spellOptionsDialog.open();
         if (result != Window.OK) {
-            // cancelled
-            return null;
+            return null; // cancelled
         }
-        System.out.println("SPELL procedure export options: " + spellOptionsDialog.exportDelays + ", "
-                + spellOptionsDialog.spaceCraftName + "," + spellOptionsDialog.procedureName);
 
         // Write model to a SPELL procedure, using a velocity template
         try {
-            System.out.println("Working Directory = " + System.getProperty("user.dir"));
-
             File file = new File(exportFile);
 
             // Initializes the velocity engine
@@ -89,11 +78,10 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
                     buf.append(line);
                 }
             }
+
             String template = buf.toString();
 
             // create a context and add data
-            String author = YamcsPlugin.getUser().getName();
-
             DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
             Date date = new Date();
             String dateString = dateFormat.format(date);
@@ -105,7 +93,7 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
             context.put("filename", filename);
             context.put("procedureName", spellOptionsDialog.procedureName);
             context.put("spacecraft", spellOptionsDialog.spaceCraftName);
-            context.put("author", author);
+            context.put("author", System.getProperty("user.name"));
             context.put("date", dateString);
             context.put("nl", "\n");
             context.put("h", "#");

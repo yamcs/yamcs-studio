@@ -40,7 +40,7 @@ public class ExportCommandStackSpellDialog extends TitleAreaDialog {
     @Override
     public void create() {
         super.create();
-        setTitle("SPELL Procedure Export Options");
+        setTitle("Export as SPELL Procedure");
         getButton(IDialogConstants.OK_ID).setFocus();
     }
 
@@ -98,18 +98,20 @@ public class ExportCommandStackSpellDialog extends TitleAreaDialog {
         textContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Label label = new Label(textContainer, SWT.NONE);
-        label.setText("Export Stack Delays:");
+        label.setText("Export stack delays:");
         delaysButton = new Button(textContainer, SWT.CHECK);
 
         label = new Label(textContainer, SWT.NONE);
-        label.setText("Spacecraft Name:");
-        spacecraftNameText = new Text(textContainer, SWT.NONE);
+        label.setText("Spacecraft name:");
+        spacecraftNameText = new Text(textContainer, SWT.BORDER);
         spacecraftNameText.setText("spacecraft");
+        spacecraftNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         label = new Label(textContainer, SWT.NONE);
-        label.setText("Procedure Name:");
-        procedureNameText = new Text(textContainer, SWT.NONE);
+        label.setText("Procedure name:");
+        procedureNameText = new Text(textContainer, SWT.BORDER);
         String defaultName = this.filename;
         procedureNameText.setText(defaultName);
+        procedureNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     }
 }
