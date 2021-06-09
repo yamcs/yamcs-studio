@@ -7,7 +7,7 @@ Bundle-Name: Yamcs Studio Core
 Bundle-SymbolicName: org.yamcs.studio.core;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Bundle-Version: 1.5.6.qualifier
+Bundle-Version: 1.5.6
 Require-Bundle: org.eclipse.core.runtime,
  org.yamcs.p2.client,
  org.yamcs.studio.connect,

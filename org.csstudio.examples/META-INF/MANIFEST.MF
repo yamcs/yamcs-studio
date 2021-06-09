@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CS-Studio Examples
 Bundle-SymbolicName: org.csstudio.examples;singleton:=true
 Bundle-Vendor: Space Applications Services
-Bundle-Version: 1.5.6.qualifier
+Bundle-Version: 1.5.6
 Bundle-Activator: org.csstudio.examples.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
