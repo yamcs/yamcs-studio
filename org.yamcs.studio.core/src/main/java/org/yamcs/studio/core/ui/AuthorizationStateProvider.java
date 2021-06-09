@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
-import org.yamcs.studio.core.Privileges;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -19,8 +18,14 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
 
     private static final Logger log = Logger.getLogger(AuthorizationStateProvider.class.getName());
 
-    public static final String STATE_KEY_MAY_COMMAND_PAYLOAD = "org.yamcs.studio.ui.authorization.mayCommandPayload";
-    private static final String[] SOURCE_NAMES = { STATE_KEY_MAY_COMMAND_PAYLOAD };
+    public static final String STATE_KEY_MAY_COMMAND = "org.yamcs.studio.ui.authorization.mayCommand";
+    public static final String STATE_KEY_MAY_READ_STACKS = "org.yamcs.studio.ui.authorization.mayReadStacks";
+    public static final String STATE_KEY_MAY_WRITE_STACKS = "org.yamcs.studio.ui.authorization.mayWriteStacks";
+    private static final String[] SOURCE_NAMES = {
+            STATE_KEY_MAY_COMMAND,
+            STATE_KEY_MAY_READ_STACKS,
+            STATE_KEY_MAY_WRITE_STACKS,
+    };
 
     public AuthorizationStateProvider() {
         YamcsPlugin.addListener(this);
@@ -28,9 +33,11 @@ public class AuthorizationStateProvider extends AbstractSourceProvider implement
 
     @Override
     public Map getCurrentState() {
-        Map map = new HashMap(1);
-        map.put(STATE_KEY_MAY_COMMAND_PAYLOAD,
-                YamcsPlugin.hasSystemPrivilege(Privileges.Command));
+        Map map = new HashMap(3);
+        map.put(STATE_KEY_MAY_COMMAND, YamcsPlugin.hasAnyObjectPrivilege("Command"));
+        map.put(STATE_KEY_MAY_READ_STACKS, YamcsPlugin.hasObjectPrivilege("ReadBucket", "stacks"));
+        map.put(STATE_KEY_MAY_WRITE_STACKS, YamcsPlugin.hasObjectPrivilege("ManageBucket", "stacks")
+                || YamcsPlugin.hasSystemPrivilege("ManageAnyBucket"));
         return map;
     }
 

@@ -22,7 +22,7 @@
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.issue" name="Issue Command"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.issueAll" name="Issue All Commands"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.export" name="Export Stack"></command>
-      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.exportSpell" name="Export Stack to SPELL procedure..."></command>
+      <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.exportSpell" name="Export Stack as SPELL Procedure"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.import" name="Import a Stack"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.stack.saveToYamcs" name="Save to Yamcs"></command>
       <command categoryId="org.yamcs.studio" id="org.yamcs.studio.commanding.cmdhist.clearCommand" name="Clear View"></command>
@@ -49,7 +49,7 @@
                <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true" />
                </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
                   <equals value="true" />
                </with>
             </and>
@@ -57,34 +57,62 @@
       </handler>
       <handler class="org.yamcs.studio.commanding.stack.DeleteHandler" commandId="org.yamcs.studio.commanding.stack.delete">
          <enabledWhen>
-            <with variable="selection">
-               <and>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
+                  <equals value="true" />
+               </with>
+               <with variable="selection">
                   <iterate ifEmpty="false">
                      <instanceof value="org.yamcs.studio.commanding.stack.StackedCommand" />
                   </iterate>
-               </and>
-            </with>
+               </with>
+            </and>
          </enabledWhen>
       </handler>
       <handler class="org.yamcs.studio.commanding.stack.DeleteAllHandler" commandId="org.yamcs.studio.commanding.stack.deleteAll">
          <enabledWhen>
-            <with variable="org.yamcs.studio.commanding.stack.state.empty">
-               <not>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true" />
-               </not>
-            </with>
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.empty">
+                  <not>
+                     <equals value="true" />
+                  </not>
+               </with>
+            </and>
          </enabledWhen>
       </handler>
       <handler class="org.yamcs.studio.commanding.stack.RestartHandler" commandId="org.yamcs.studio.commanding.stack.restart">
          <enabledWhen>
-            <with variable="org.yamcs.studio.commanding.stack.state.executionStarted">
-               <equals value="true" />
-            </with>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.commanding.stack.state.executionStarted">
+                  <equals value="true" />
+               </with>
+            </and>
          </enabledWhen>
       </handler>
       <handler class="org.yamcs.studio.commanding.stack.SkipHandler" commandId="org.yamcs.studio.commanding.stack.skip">
          <enabledWhen>
             <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
+                  <equals value="true" />
+               </with>
                <with variable="org.yamcs.studio.commanding.stack.state.remaining">
                   <equals value="true" />
                </with>
@@ -101,58 +129,81 @@
             </and>
          </enabledWhen>
       </handler>
-      <handler class="org.yamcs.studio.commanding.stack.ArmCommandHandler" commandId="org.yamcs.studio.commanding.stack.arm"></handler>
-      <handler class="org.yamcs.studio.commanding.stack.ArmAllCommandHandler" commandId="org.yamcs.studio.commanding.stack.armAll"></handler>
-      <handler class="org.yamcs.studio.commanding.stack.IssueCommandHandler" commandId="org.yamcs.studio.commanding.stack.issue"></handler>
-      <handler class="org.yamcs.studio.commanding.stack.IssueAllCommandsHandler" commandId="org.yamcs.studio.commanding.stack.issueAll"></handler>
-      <handler class="org.yamcs.studio.commanding.stack.ExportCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.export">
-         <activeWhen>
+      <handler class="org.yamcs.studio.commanding.stack.ArmCommandHandler" commandId="org.yamcs.studio.commanding.stack.arm">
+         <enabledWhen>
             <and>
-               <with variable="org.yamcs.studio.commanding.stack.state.remaining">
+               <with variable="org.yamcs.studio.ui.state.connected">
                   <equals value="true" />
                </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
                   <equals value="true" />
                </with>
             </and>
-         </activeWhen>
+         </enabledWhen>
+      </handler>
+      <handler class="org.yamcs.studio.commanding.stack.ArmAllCommandHandler" commandId="org.yamcs.studio.commanding.stack.armAll">
+         <enabledWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
+                  <equals value="true" />
+               </with>
+            </and>
+         </enabledWhen>
+      </handler>
+      <handler class="org.yamcs.studio.commanding.stack.IssueCommandHandler" commandId="org.yamcs.studio.commanding.stack.issue">
+         <enabledWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
+                  <equals value="true" />
+               </with>
+            </and>
+         </enabledWhen>
+      </handler>
+      <handler class="org.yamcs.studio.commanding.stack.IssueAllCommandsHandler" commandId="org.yamcs.studio.commanding.stack.issueAll">
+         <enabledWhen>
+            <and>
+               <with variable="org.yamcs.studio.ui.state.connected">
+                  <equals value="true" />
+               </with>
+               <with variable="org.yamcs.studio.ui.authorization.mayCommand">
+                  <equals value="true" />
+               </with>
+            </and>
+         </enabledWhen>
+      </handler>
+      <handler class="org.yamcs.studio.commanding.stack.ExportCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.export">
+         <enabledWhen>
+            <with variable="org.yamcs.studio.commanding.stack.state.empty">
+               <equals value="false" />
+            </with>
+         </enabledWhen>
       </handler>
       <handler class="org.yamcs.studio.commanding.stack.ExportCommandStackHandlerSpell" commandId="org.yamcs.studio.commanding.stack.exportSpell">
          <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.commanding.stack.state.remaining">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
-                  <equals value="true" />
-               </with>
-            </and>
+            <with variable="org.yamcs.studio.commanding.stack.state.empty">
+               <equals value="false" />
+            </with>
          </activeWhen>
       </handler>
       <handler class="org.yamcs.studio.commanding.stack.SaveStackToYamcsHandler" commandId="org.yamcs.studio.commanding.stack.saveToYamcs">
          <activeWhen>
             <and>
-               <with variable="org.yamcs.studio.commanding.stack.state.remaining">
-                  <equals value="true" />
+               <with variable="org.yamcs.studio.commanding.stack.state.empty">
+                  <equals value="false" />
                </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
-                  <equals value="true" />
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler class="org.yamcs.studio.commanding.stack.ImportCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.import">
-         <activeWhen>
-            <and>
-               <with variable="org.yamcs.studio.ui.state.connected">
-                  <equals value="true" />
-               </with>
-               <with variable="org.yamcs.studio.ui.authorization.mayCommandPayload">
+               <with variable="org.yamcs.studio.ui.authorization.mayWriteStacks">
                   <equals value="true" />
                </with>
             </and>
          </activeWhen>
       </handler>
+      <handler class="org.yamcs.studio.commanding.stack.ImportCommandStackHandler" commandId="org.yamcs.studio.commanding.stack.import"></handler>
       <handler class="org.yamcs.studio.commanding.cmdhist.ClearCommandHistoryHandler" commandId="org.yamcs.studio.commanding.cmdhist.clearCommand"></handler>
       <handler class="org.yamcs.studio.commanding.cmdhist.ScrollLockHandler" commandId="org.yamcs.studio.commanding.cmdhist.scrollLockCommand"></handler>
       <handler class="org.yamcs.studio.commanding.cmdhist.ExportCommandsHandler" commandId="org.yamcs.studio.commanding.cmdhist.exportCommand"></handler>

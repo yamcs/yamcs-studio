@@ -42,7 +42,7 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
 
         Collection<StackedCommand> commands = stack.getCommands();
         if (commands == null || commands.isEmpty()) {
-            MessageDialog.openError(shell, "Export Command Stack",
+            MessageDialog.openError(shell, "Save Command Stack",
                     "Current command stack is empty. No command to export.");
             return null;
         }
@@ -70,7 +70,7 @@ public class SaveStackToYamcsHandler extends AbstractHandler {
             StorageClient storage = YamcsPlugin.getStorageClient();
             ObjectId id = ObjectId.of("stacks", objectName);
             storage.uploadObject(id, xml.getBytes(StandardCharsets.UTF_8)).exceptionally(err -> {
-                MessageDialog.openError(shell, "Export Command Stack",
+                MessageDialog.openError(shell, "Save Command Stack",
                         "Unable to save stack.\nDetails:" + err.getMessage());
                 return null;
             });

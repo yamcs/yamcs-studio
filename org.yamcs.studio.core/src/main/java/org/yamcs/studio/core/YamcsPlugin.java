@@ -36,6 +36,7 @@ import org.yamcs.client.storage.StorageClient;
 import org.yamcs.protobuf.ClearanceInfo;
 import org.yamcs.protobuf.GetServerInfoResponse;
 import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
+import org.yamcs.protobuf.ObjectPrivilegeInfo;
 import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.SubscribeProcessorsRequest;
 import org.yamcs.protobuf.SubscribeTimeRequest;
@@ -163,6 +164,34 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private static boolean isSuperuser() {
         UserInfo userInfo = getUser();
         return userInfo != null && (userInfo.hasSuperuser() && userInfo.getSuperuser());
+    }
+
+    public static boolean hasAnyObjectPrivilege(String objectPrivilegeType) {
+        if (!isAuthorizationEnabled()) {
+            return true;
+        }
+        if (getUser() == null) {
+            return false;
+        }
+
+        return isSuperuser() || getUser().getObjectPrivilegeList()
+                .stream()
+                .map(ObjectPrivilegeInfo::getType)
+                .anyMatch(type -> type.equals(objectPrivilegeType));
+    }
+
+    public static boolean hasObjectPrivilege(String objectPrivilegeType, String object) {
+        if (!isAuthorizationEnabled()) {
+            return true;
+        }
+        if (getUser() == null) {
+            return false;
+        }
+
+        return isSuperuser() || getUser().getObjectPrivilegeList()
+                .stream()
+                .anyMatch(privilege -> privilege.getType().equals(objectPrivilegeType)
+                        && privilege.getObjectList().stream().anyMatch(regex -> object.matches(regex)));
     }
 
     public static boolean hasSystemPrivilege(String systemPrivilege) {

@@ -50,7 +50,6 @@ import org.yamcs.protobuf.SubscribeCommandsRequest;
 import org.yamcs.studio.commanding.stack.CommandStack.AutoMode;
 import org.yamcs.studio.commanding.stack.CommandStack.StackMode;
 import org.yamcs.studio.commanding.stack.StackedCommand.StackedState;
-import org.yamcs.studio.core.Privileges;
 import org.yamcs.studio.core.YamcsAware;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.ui.connections.ConnectionStateProvider;
@@ -88,6 +87,9 @@ public class CommandStackView extends ViewPart implements YamcsAware {
     private Styler skippedStyler;
 
     private Label messageLabel;
+    private Label stackModeLabel;
+    private Combo advanceModeCombo;
+    private Combo autoOptionsCombo;
     private Button armButton;
     private Button issueButton;
 
@@ -253,19 +255,19 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         stackParameters.setLayout(gl);
         // Group stackTypeGroup = new Group(stackParameters, SWT.NONE);
         // stackTypeGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
-        Label label = new Label(stackParameters, SWT.NONE);
-        label.setText("Stack mode: ");
+        stackModeLabel = new Label(stackParameters, SWT.NONE);
+        stackModeLabel.setText("Stack mode: ");
 
-        final Combo comboStackType = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
+        advanceModeCombo = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
         String[] items = new String[] { "Manual", "Automatic" };
-        comboStackType.setItems(items);
-        comboStackType.select(0);
+        advanceModeCombo.setItems(items);
+        advanceModeCombo.select(0);
 
-        Combo comboAutoParameters = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
-        String[] items2 = new String[] { "AFAP (no delays)", "Fix Delays", "Stack Delays" };
-        comboAutoParameters.setItems(items2);
-        comboAutoParameters.select(0);
-        comboAutoParameters.setVisible(false);
+        autoOptionsCombo = new Combo(stackParameters, SWT.DROP_DOWN | SWT.READ_ONLY);
+        String[] items2 = new String[] { "AFAP (no delay)", "Fixed Delay", "Stack Delay" };
+        autoOptionsCombo.setItems(items2);
+        autoOptionsCombo.select(0);
+        autoOptionsCombo.setVisible(false);
 
         fixDelaySpinner = new Spinner(stackParameters, SWT.BORDER);
         fixDelaySpinner.setMinimum(0);
@@ -282,26 +284,26 @@ public class CommandStackView extends ViewPart implements YamcsAware {
         Label labelUnit = new Label(stackParameters, SWT.NONE);
         labelUnit.setText("ms");
         labelUnit.setVisible(false);
-        comboStackType.addListener(SWT.Selection, evt -> {
+        advanceModeCombo.addListener(SWT.Selection, evt -> {
             CommandStack stack = CommandStack.getInstance();
-            int index = comboStackType.getSelectionIndex();
+            int index = advanceModeCombo.getSelectionIndex();
             if (index == StackMode.MANUAL.index()) {
                 // Manual
                 stack.stackMode = StackMode.MANUAL;
-                comboAutoParameters.setVisible(false);
+                autoOptionsCombo.setVisible(false);
                 fixDelaySpinner.setVisible(false);
                 labelUnit.setVisible(false);
                 commandTableViewer.hideDelayColumn();
             } else {
                 // Automatic
                 stack.stackMode = StackMode.AUTOMATIC;
-                comboAutoParameters.setVisible(true);
-                if (comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
+                autoOptionsCombo.setVisible(true);
+                if (autoOptionsCombo.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                     // fix delay
                     fixDelaySpinner.setVisible(true);
                     labelUnit.setVisible(true);
                     commandTableViewer.hideDelayColumn();
-                } else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
+                } else if (autoOptionsCombo.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
                     // stack delays
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
@@ -314,26 +316,26 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 }
             }
             // disarm the stack
-            setButtonEnable(issueButton, false);
+            issueButton.setEnabled(false);
             armButton.setSelection(false);
             stack.disarmArmed();
             refreshState();
 
         });
-        comboAutoParameters.addListener(SWT.Selection, evt -> {
+        autoOptionsCombo.addListener(SWT.Selection, evt -> {
             CommandStack stack = CommandStack.getInstance();
             if (stack.stackMode == StackMode.AUTOMATIC) {
-                if (comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
+                if (autoOptionsCombo.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                     // fix delay
                     fixDelaySpinner.setVisible(true);
                     labelUnit.setVisible(true);
                     commandTableViewer.hideDelayColumn();
-                } else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
+                } else if (autoOptionsCombo.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
                     // stack delay
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
                     commandTableViewer.showDelayColumn();
-                } else if (comboAutoParameters.getSelectionIndex() == AutoMode.AFAP.index()) {
+                } else if (autoOptionsCombo.getSelectionIndex() == AutoMode.AFAP.index()) {
                     // fix delay
                     fixDelaySpinner.setVisible(false);
                     labelUnit.setVisible(false);
@@ -345,9 +347,9 @@ public class CommandStackView extends ViewPart implements YamcsAware {
                 labelUnit.setVisible(false);
                 commandTableViewer.hideDelayColumn();
             }
-            if (comboAutoParameters.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
+            if (autoOptionsCombo.getSelectionIndex() == AutoMode.FIX_DELAY.index()) {
                 stack.autoMode = AutoMode.FIX_DELAY;
-            } else if (comboAutoParameters.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
+            } else if (autoOptionsCombo.getSelectionIndex() == AutoMode.STACK_DELAYS.index()) {
                 stack.autoMode = AutoMode.STACK_DELAYS;
             } else {
                 stack.autoMode = AutoMode.AFAP;
@@ -432,8 +434,8 @@ public class CommandStackView extends ViewPart implements YamcsAware {
             if (sel.isEmpty() || !stack.isValid() || !sel.getFirstElement().equals(stack.getActiveCommand())) {
                 armButton.setEnabled(false);
                 issueButton.setEnabled(false);
-            } else if (stack.hasRemaining()) {
-                setButtonEnable(armButton, true);
+            } else if (stack.hasRemaining() && YamcsPlugin.hasAnyObjectPrivilege("Command")) {
+                armButton.setEnabled(true);
             }
 
             refreshState();
@@ -626,46 +628,40 @@ public class CommandStackView extends ViewPart implements YamcsAware {
 
         IStructuredSelection sel = (IStructuredSelection) commandTableViewer.getSelection();
         updateMessagePanel(sel);
+        boolean mayCommand = YamcsPlugin.hasAnyObjectPrivilege("Command");
         if (connectionStateProvider.isConnected() && !sel.isEmpty()) {
             StackedCommand selectedCommand = (StackedCommand) sel.getFirstElement();
-            if (selectedCommand == stack.getActiveCommand()) {
+            if (mayCommand && selectedCommand == stack.getActiveCommand()) {
                 if (stack.stackMode == StackMode.MANUAL && selectedCommand.isArmed()
                         || stack.stackMode == StackMode.AUTOMATIC && stack.areAllCommandsArmed()) {
-                    setButtonEnable(armButton, true);
-                    setButtonEnable(issueButton, armButton.getSelection());
+                    armButton.setEnabled(true);
+                    issueButton.setEnabled(armButton.getSelection());
                 } else if (stack.isValid()) {
-                    setButtonEnable(armButton, true);
-                    setButtonEnable(issueButton, false);
+                    armButton.setEnabled(true);
+                    issueButton.setEnabled(false);
                 } else {
-                    setButtonEnable(armButton, false);
-                    setButtonEnable(issueButton, false);
+                    armButton.setEnabled(false);
+                    issueButton.setEnabled(false);
                 }
             } else {
                 stack.disarmArmed();
-                setButtonEnable(armButton, false);
-                setButtonEnable(armButton, false);
-                setButtonEnable(issueButton, false);
+                armButton.setEnabled(false);
+                issueButton.setEnabled(false);
             }
         } else {
             stack.disarmArmed();
-            setButtonEnable(armButton, false);
-            setButtonEnable(armButton, false);
-            setButtonEnable(issueButton, false);
+            armButton.setEnabled(false);
+            issueButton.setEnabled(false);
         }
+
+        stackModeLabel.setEnabled(mayCommand && connectionStateProvider.isConnected());
+        advanceModeCombo.setEnabled(mayCommand && connectionStateProvider.isConnected());
+        autoOptionsCombo.setEnabled(mayCommand && connectionStateProvider.isConnected());
 
         // State for plugin.xml handlers
         CommandStackStateProvider executionStateProvider = RCPUtils.findSourceProvider(
                 getSite(), CommandStackStateProvider.STATE_KEY_ARMED, CommandStackStateProvider.class);
         executionStateProvider.refreshState(CommandStack.getInstance());
-    }
-
-    // Enable the buttons if user is authorized to command payload
-    private void setButtonEnable(Button button, boolean isEnabled) {
-        if (YamcsPlugin.hasSystemPrivilege(Privileges.Command)) {
-            button.setEnabled(isEnabled);
-        } else {
-            button.setEnabled(false);
-        }
     }
 
     @Override
