@@ -564,6 +564,9 @@ public class VTypeHelper {
                     if (numValue instanceof Float) {
                         // Use boxed float, to avoid the upcast to double
                         return ((Display) pmValue).getFormat().format((Float) numValue);
+                    } else if (numValue instanceof Byte || numValue instanceof Short || numValue instanceof Integer
+                            || numValue instanceof Long) {
+                        return ((Display) pmValue).getFormat().format(numValue);
                     } else {
                         return ((Display) pmValue).getFormat().format(((Number) numValue).doubleValue());
                     }
@@ -571,7 +574,11 @@ public class VTypeHelper {
                     return formatScalarNumber(FormatEnum.COMPACT, numValue, displayPrecision);
                 }
             } else {
-                if (numValue instanceof Float) {
+                if (numValue instanceof Byte || numValue instanceof Short || numValue instanceof Integer
+                        || numValue instanceof Long) {
+                    numberFormat = getDecimalFormat(precision);
+                    return numberFormat.format(numValue);
+                } else if (numValue instanceof Float) {
                     // Sun's implementation of the JDK returns the Unicode replacement
                     // character, U+FFFD, when asked to parse a NaN. This is more
                     // consistent with the rest of CSS.
