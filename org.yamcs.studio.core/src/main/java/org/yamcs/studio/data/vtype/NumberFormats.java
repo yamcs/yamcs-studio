@@ -49,7 +49,22 @@ public final class NumberFormats {
         return precisionFormat.get(precision);
     }
 
+    @SuppressWarnings("serial")
     private static NumberFormat toStringFormat = new NumberFormat() {
+
+        // This override was added as per issue #109.
+        // Java's NumberFormat floats using Float.doubleValue() instead of Float.floatValue(),
+        // which can lead to undesired rounding issues.
+        // For example we want 838.12f to print as 838.12, not 838.11999951171875
+        @Override
+        public StringBuffer format(Object number, StringBuffer toAppendTo, FieldPosition pos) {
+            if (number instanceof Float) {
+                toAppendTo.append(number);
+                return toAppendTo;
+            } else {
+                return super.format(number, toAppendTo, pos);
+            }
+        }
 
         @Override
         public StringBuffer format(double number, StringBuffer toAppendTo, FieldPosition pos) {

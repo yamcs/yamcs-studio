@@ -74,12 +74,12 @@ public class VTypeHelper {
      * @return the formated string
      */
     public static String formatValue(FormatEnum formatEnum, VType vValue, int precision) {
-        
-    	if(vValue instanceof Uint64VType) {
-    		long unsignedValue = ((Uint64VType) vValue).getValue();
-    		return Long.toUnsignedString(unsignedValue);
-    	}
-    	if (vValue instanceof Scalar) {
+
+        if (vValue instanceof Uint64VType) {
+            long unsignedValue = ((Uint64VType) vValue).getValue();
+            return Long.toUnsignedString(unsignedValue);
+        }
+        if (vValue instanceof Scalar) {
             Object value = ((Scalar) vValue).getValue();
             if (value instanceof Number) {
                 return formatScalarNumber(formatEnum, vValue, (Number) value, precision);
@@ -561,25 +561,45 @@ public class VTypeHelper {
         default:
             if (precision == UNSET_PRECISION) {
                 if (pmValue instanceof Display && ((Display) pmValue).getFormat() != null) {
-                    return ((Display) pmValue).getFormat().format(((Number) numValue).doubleValue());
+                    if (numValue instanceof Float) {
+                        // Use boxed float, to avoid the upcast to double
+                        return ((Display) pmValue).getFormat().format((Float) numValue);
+                    } else {
+                        return ((Display) pmValue).getFormat().format(((Number) numValue).doubleValue());
+                    }
                 } else {
                     return formatScalarNumber(FormatEnum.COMPACT, numValue, displayPrecision);
                 }
-
             } else {
-                // Sun's implementation of the JDK returns the Unicode replacement
-                // character, U+FFFD, when asked to parse a NaN. This is more
-                // consistent with the rest of CSS.
-                if (Double.isNaN(numValue.doubleValue())) {
-                    return Double.toString(Double.NaN);
-                }
+                if (numValue instanceof Float) {
+                    // Sun's implementation of the JDK returns the Unicode replacement
+                    // character, U+FFFD, when asked to parse a NaN. This is more
+                    // consistent with the rest of CSS.
+                    if (Float.isNaN(numValue.floatValue())) {
+                        return Float.toString(Float.NaN);
+                    }
 
-                // Also check for positive and negative infinity.
-                if (Double.isInfinite(numValue.doubleValue())) {
-                    return Double.toString(numValue.doubleValue());
-                }                
-                numberFormat = getDecimalFormat(precision);
-                return numberFormat.format(numValue.doubleValue());
+                    // Also check for positive and negative infinity.
+                    if (Float.isInfinite(numValue.floatValue())) {
+                        return Float.toString(numValue.floatValue());
+                    }
+                    numberFormat = getDecimalFormat(precision);
+                    return numberFormat.format((Float) numValue); // Use boxed Float, to avoid the upcast to double
+                } else {
+                    // Sun's implementation of the JDK returns the Unicode replacement
+                    // character, U+FFFD, when asked to parse a NaN. This is more
+                    // consistent with the rest of CSS.
+                    if (Double.isNaN(numValue.doubleValue())) {
+                        return Double.toString(Double.NaN);
+                    }
+
+                    // Also check for positive and negative infinity.
+                    if (Double.isInfinite(numValue.doubleValue())) {
+                        return Double.toString(numValue.doubleValue());
+                    }
+                    numberFormat = getDecimalFormat(precision);
+                    return numberFormat.format(numValue.doubleValue());
+                }
             }
 
         case COMPACT:
