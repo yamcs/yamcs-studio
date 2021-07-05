@@ -30,7 +30,6 @@ public class ServerUtil {
     static final Logger log = Logger.getLogger(ServerUtil.class.getName());
 
     private static LinkedHashMap<Object, Object> request(String address, String method, String body) {
-        JsonObject rootObject = null;
         LinkedHashMap<Object, Object> outMap = new LinkedHashMap<Object, Object>();
         try {
 
@@ -100,7 +99,7 @@ public class ServerUtil {
 
             schTable = new LinkedHashMap<Object, Object>();
 
-            //TODO In the future yamcs-cfs should have a client API that wraps around the http calls
+            // TODO In the future yamcs-cfs should have a client API that wraps around the http calls
             String route = String.format("http://%s:%d/api/%s/cfs/sch/table", host, port, activeInstance);
             System.out.println("processor:" + YamcsPlugin.getProcessor());
             schTable = request(route, "GET", String.format(
@@ -112,5 +111,33 @@ public class ServerUtil {
         }
 
         return schTable;
+    }
+
+    /**
+     * Request counters such as fatFrameCount and rcvdCaduCount to zero.
+     * 
+     * @param linkName
+     * @return A map in with the request's response.
+     * 
+     */
+    public static LinkedHashMap<Object, Object> resetSdlpPacketInputStreamCounters(String linkName) {
+        String activeInstance = YamcsPlugin.getInstance();
+        LinkedHashMap<Object, Object> response = null;
+        if (activeInstance != null) {
+            int port = YamcsPlugin.getYamcsClient().getPort();
+            String host = YamcsPlugin.getYamcsClient().getHost();
+
+            response = new LinkedHashMap<Object, Object>();
+
+            // TODO In the future yamcs-cfs should have a client API that wraps around the http calls
+            String route = String.format("http://%s:%d/api/%s/links/%s/streams/SdlpPacketInputStream:reset", host, port,
+                    activeInstance, linkName);
+            response = request(route, "GET", "{}");
+
+        } else {
+            log.warning("No active instance at the moment.");
+        }
+
+        return response;
     }
 }
