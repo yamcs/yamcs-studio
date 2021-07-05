@@ -41,9 +41,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-win32.win32.x86_64.zip
+          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-win32.win32.x86_64.zip
           asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-win32.win32.x86_64.zip
           asset_content_type: application/zip
+
+      - name: Upload Linux aarch64 asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.aarch64.tar.gz
+          asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.aarch64.tar.gz
+          asset_content_type: application/gzip
 
       - name: Upload Linux x64 asset
         uses: actions/upload-release-asset@v1.0.1
@@ -51,7 +61,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.x86_64.tar.gz
+          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.x86_64.tar.gz
           asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-linux.gtk.x86_64.tar.gz
           asset_content_type: application/gzip
 
@@ -61,6 +71,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: releng/org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.zip
+          asset_path: org.yamcs.studio.editor.product/target/products/yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.zip
           asset_name: yamcs-studio-${{ steps.set-version.outputs.version }}-macosx.cocoa.x86_64.zip
           asset_content_type: application/zip

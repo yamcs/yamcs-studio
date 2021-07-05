@@ -13,15 +13,37 @@
   </organization>
 
   <properties>
-    <tycho.version>2.2.0</tycho.version>
+    <tycho.version>2.3.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Disable default deploy. Only p2 output repo gets deployed -->
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
 
   <modules>
-    <module>bundles</module>
-    <module>releng</module>
+    <module>org.csstudio.examples</module>
+    <module>org.csstudio.opibuilder</module>
+    <module>org.csstudio.opibuilder.editor</module>
+    <module>org.csstudio.opibuilder.widgets</module>
+    <module>org.csstudio.swt.widgets</module>
+    <module>org.csstudio.ui.util</module>
+    <module>org.csstudio.utility.batik</module>
+    <module>org.yamcs.studio.archive</module>
+    <module>org.yamcs.studio.autocomplete</module>
+    <module>org.yamcs.studio.commanding</module>
+    <module>org.yamcs.studio.connect</module>
+    <module>org.yamcs.studio.core</module>
+    <module>org.yamcs.studio.css.core</module>
+    <module>org.yamcs.studio.css.script</module>
+    <module>org.yamcs.studio.displays</module>
+    <module>org.yamcs.studio.editor.base</module>
+    <module>org.yamcs.studio.eventlog</module>
+    <module>org.yamcs.studio.explorer</module>
+    <module>org.yamcs.studio.links</module>
+
+    <module>org.yamcs.studio.core.feature</module>
+    <module>org.yamcs.studio.editor</module>
+    <module>org.yamcs.studio.editor.feature</module>
+    <module>org.yamcs.studio.editor.product</module>
   </modules>
 
   <scm>
@@ -127,20 +149,15 @@
         <configuration>
           <targetDefinitionIncludeSource>honor</targetDefinitionIncludeSource>
           <target>
-            <artifact>
-              <groupId>org.yamcs.studio</groupId>
-              <artifactId>org.yamcs.studio.platform</artifactId>
-              <version>${project.version}</version>
-            </artifact>
+            <file>../platform.target</file>
           </target>
-          <!-- 
-            This is temporary to support JustJ JREs in Tycho. Hopefully
-            later versions of Tycho allow a different approach.
-            Instructions were here:
-            https://www.eclipse.org/justj/?page=documentation#products
-           -->
-          <resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
+          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-15</executionEnvironment>
           <environments>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>aarch64</arch>
+            </environment>
             <environment>
               <os>linux</os>
               <ws>gtk</ws>

@@ -28,7 +28,7 @@ https://docs.yamcs.org/yamcs-studio/
 ### Headless Build
 
 ```
-mvn clean package -DskipTests
+mvn clean package -Dtycho.localArtifacts=ignore
 ```
 
 
@@ -44,11 +44,11 @@ Yamcs Studio is developed via 'Eclipse for RCP and RAP developers'. The advantag
 
 - Import the Yamcs Studio maven projects into the workspace by right clicking in the navigator and choosing `Import > Maven > Existing Maven Projects`. Follow the on-screen instructions.
 
-- Open the `*.platform` file found in the project `org.yamcs.studio.platform`. Click the upper right link `Set as target platform`. This operation may take a while, as it will attempt to resolve and download third-party dependencies.
+- Open the `platform.target` file found in repository root. Click the upper right link `Set as target platform`. This operation may take a while, as it will attempt to resolve and download third-party dependencies.
 
 - All error signs should now be resolved. If not, try right-clicking the yamcs-studio project and choose `Maven > Update Project Configuration`.
 
-- Open one of the `*.product` files found under `org.yamcs.studio.releng`.
+- Open the `org.yamcs.studio.editor.product/yamcs-studio.product` file.
 
 - Click `Synchronize` followed by `Launch an Eclipse Application`. **NOTE**: Eclipse might complain about line 45 of yamcs-studio/releng/org.yamcs.studio.editor/plugin.xml.
 

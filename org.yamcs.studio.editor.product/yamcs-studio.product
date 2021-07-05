@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Yamcs Studio" uid="yamcs-studio" id="org.yamcs.studio.editor.product" application="org.yamcs.studio.editor.application" version="1.6.7.qualifier" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/org.yamcs.studio.editor/icons/aboutSide.png"/>
+      <text>
+         Desktop client for Yamcs Mission Control
+
+See https://yamcs.org
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Xmx2048m
+-Declipse.p2.unsignedPolicy=allow
+-Duser.timezone=GMT
+-Dosgi.requiredJavaVersion=11
+-Dorg.eclipse.update.reconcile=false
+--add-modules=ALL-SYSTEM
+      </vmArgs>
+      <vmArgsMac>-Dorg.eclipse.swt.internal.carbon.smallFonts
+-XstartOnFirstThread
+      </vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/org.yamcs.studio.editor/icons/logo16.png" i32="/org.yamcs.studio.editor/icons/logo32.png" i48="/org.yamcs.studio.editor/icons/logo48.png" i64="/org.yamcs.studio.editor/icons/logo64.png" i128="/org.yamcs.studio.editor/icons/logo128.png" i256="/org.yamcs.studio.editor/icons/logo256.png"/>
+
+   <splash
+      location="org.yamcs.studio.editor"
+      startupProgressRect="20,215,560,15"
+      startupMessageRect="20,195,560,20"
+      startupForegroundColor="2F376D" />
+   <launcher name="Yamcs Studio">
+      <linux icon="/launcher/yamcs.xpm"/>
+      <macosx icon="/launcher/yamcs.icns"/>
+      <win useIco="true">
+         <ico path="/launcher/yamcs.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <intro introId="org.eclipse.ui.intro.universal"/>
+
+   <vm>
+   </vm>
+
+   <license>
+        <url>http://www.eclipse.org/legal/epl-v10.html</url>
+        <text>
+   You must accept this license agreement in order to install and
+use this software.
+THIS SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN &quot;../AS IS&quot;
+BASIS.
+WITHOUT WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+For details, see http://www.eclipse.org/legal/epl-v10.html
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped" installMode="root"/>
+      <feature id="org.yamcs.studio.core.feature" version="1.6.7.qualifier"/>
+      <feature id="org.yamcs.studio.editor.feature" version="1.6.7.qualifier"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="org.eclipse.update.reconcile" value="false" />
+   </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
+
+</product>
