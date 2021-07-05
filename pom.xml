@@ -44,6 +44,7 @@
     <module>org.yamcs.studio.editor</module>
     <module>org.yamcs.studio.editor.feature</module>
     <module>org.yamcs.studio.editor.product</module>
+    <module>com.windhoverlabs.studio</module>
   </modules>
 
   <scm>
