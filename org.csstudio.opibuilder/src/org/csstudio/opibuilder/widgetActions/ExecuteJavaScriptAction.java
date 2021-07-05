@@ -118,7 +118,7 @@ class ExecuteJavaScriptAction extends AbstractExecuteScriptAction {
                 try {
                     script.eval(scriptScope);
                 } catch (Exception e) {
-                    final String message = "Error exists in script " + getAbsolutePath();
+                    final String message = "Error in script " + getAbsolutePath();
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             });

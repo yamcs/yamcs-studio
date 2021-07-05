@@ -50,7 +50,7 @@ public class ExecuteCommandAction extends AbstractWidgetAction {
 
     @Override
     public void run() {
-        OPIBuilderPlugin.getLogger().info("Execute Command: " + getCommand());
+        OPIBuilderPlugin.getLogger().info("Executing command: " + getCommand());
         new CommandExecutor(getCommand(), getDirectory(), getWaitTime());
 
     }

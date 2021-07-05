@@ -80,7 +80,7 @@ public final class CommandExecutor {
         } catch (Throwable ex) {
             OPIBuilderPlugin.getLogger().log(Level.SEVERE, ex.getMessage());
             OPIBuilderPlugin.getLogger().log(Level.INFO, NLS.bind(
-                    "Command \"{0}\" executing finished with exit code: FAILED", command));
+                    "Command \"{0}\" finished with exit code: FAILED", command));
 
             return;
         }
@@ -94,24 +94,25 @@ public final class CommandExecutor {
                     OPIBuilderPlugin.getLogger().log(Level.SEVERE, command + " error: " + line);
                 }
             } catch (IOException e1) {
-                ErrorHandlerUtil.handleError("Command Executing error", e1);
+                ErrorHandlerUtil.handleError("Command error", e1);
                 return;
             }
         });
         errorThread.start();
 
         // write output to console
-        try {
-            int c = 0;
-            while (c != -1) {
-                c = process.getInputStream().read();
-                if (c != -1) {
-                    OPIBuilderPlugin.getLogger().log(Level.INFO, "" + (char) c);
+        Thread inputThread = new Thread(() -> {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    OPIBuilderPlugin.getLogger().log(Level.INFO, line);
                 }
+            } catch (IOException e1) {
+                ErrorHandlerUtil.handleError("Command error", e1);
+                return;
             }
-        } catch (IOException e1) {
-            ErrorHandlerUtil.handleError("Command Executing error", e1);
-        }
+        });
+        inputThread.start();
 
         // Poll exit code during 'wait' time
         Integer exit_code = null;
@@ -129,7 +130,7 @@ public final class CommandExecutor {
         }
 
         OPIBuilderPlugin.getLogger().log(Level.INFO, NLS.bind(
-                "Command \"{0}\" executing finished with exit code: ", command)
+                "Command \"{0}\" finished with exit code: ", command)
                 + (exit_code == null ? "NULL" : (exit_code == 0 ? "OK" : "FAILED")));
         // Process runs so long that we no longer care
         if (exit_code == null) {

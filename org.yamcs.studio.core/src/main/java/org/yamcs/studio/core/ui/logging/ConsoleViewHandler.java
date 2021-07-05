@@ -61,16 +61,19 @@ public class ConsoleViewHandler extends Handler {
      * @return
      */
     public static synchronized ConsoleViewHandler install() {
-        if (have_console)
+        if (have_console) {
             return null;
+        }
 
         try {
             final Display display = Display.getCurrent();
-            if (display == null)
+            if (display == null) {
                 throw new Exception("No display");
+            }
 
             final ConsoleViewHandler handler = new ConsoleViewHandler(display);
             Logger.getLogger("").addHandler(handler);
+            Logger.getLogger("").setLevel(Level.INFO);
             have_console = true;
             return handler;
         } catch (Throwable ex) {
@@ -143,13 +146,12 @@ public class ConsoleViewHandler extends Handler {
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public void publish(final LogRecord record) {
-        if (!isLoggable(record))
+        if (!isLoggable(record)) {
             return;
+        }
 
-        // Format message
         final String msg;
         try {
             msg = getFormatter().format(record);
@@ -159,24 +161,24 @@ public class ConsoleViewHandler extends Handler {
         }
 
         // Print in UI thread to avoid lockups
-        if (display.isDisposed())
+        if (display.isDisposed()) {
             return;
-        display.asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Console might already be closed/detached
-                    if (console == null)
-                        return;
-                    final MessageConsoleStream stream = getStream(record.getLevel());
-                    if (stream.isClosed())
-                        return;
-                    // During shutdown, error is possible because 'document' of console view
-                    // was already closed. Unclear how to check for that.
-                    stream.print(msg);
-                } catch (Exception ex) {
-                    reportError(null, ex, ErrorManager.WRITE_FAILURE);
+        }
+        display.asyncExec(() -> {
+            try {
+                // Console might already be closed/detached
+                if (console == null) {
+                    return;
                 }
+                final MessageConsoleStream stream = getStream(record.getLevel());
+                if (stream.isClosed()) {
+                    return;
+                }
+                // During shutdown, error is possible because 'document' of console view
+                // was already closed. Unclear how to check for that.
+                stream.print(msg);
+            } catch (Exception ex) {
+                reportError(null, ex, ErrorManager.WRITE_FAILURE);
             }
         });
     }
@@ -187,31 +189,29 @@ public class ConsoleViewHandler extends Handler {
      * @return Suggested stream for that Level or <code>null</code>
      */
     private MessageConsoleStream getStream(final Level level) {
-        if (level.intValue() >= Level.SEVERE.intValue())
+        if (level.intValue() >= Level.SEVERE.intValue()) {
             return severe_stream;
-        else if (level.intValue() >= Level.WARNING.intValue())
+        } else if (level.intValue() >= Level.WARNING.intValue()) {
             return warning_stream;
-        else if (level.intValue() >= Level.INFO.intValue())
+        } else if (level.intValue() >= Level.INFO.intValue()) {
             return info_stream;
-        else
+        } else {
             return basic_stream;
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void flush() {
         // Flush in UI thread to avoid lockups
-        display.asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    severe_stream.flush();
-                    warning_stream.flush();
-                    info_stream.flush();
-                    basic_stream.flush();
-                } catch (Exception ex) {
-                    reportError(null, ex, ErrorManager.FLUSH_FAILURE);
-                }
+        display.asyncExec(() -> {
+            try {
+                severe_stream.flush();
+                warning_stream.flush();
+                info_stream.flush();
+                basic_stream.flush();
+            } catch (Exception ex) {
+                reportError(null, ex, ErrorManager.FLUSH_FAILURE);
             }
         });
     }
@@ -224,8 +224,9 @@ public class ConsoleViewHandler extends Handler {
     public void close() throws SecurityException {
         // Mark as detached from console
         final MessageConsole console_copy = console;
-        if (console_copy == null)
+        if (console_copy == null) {
             return;
+        }
         console = null;
         // Remove from 'Console' view
         console_copy.clearConsole();

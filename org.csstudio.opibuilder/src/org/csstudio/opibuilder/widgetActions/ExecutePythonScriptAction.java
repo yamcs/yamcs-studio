@@ -129,7 +129,7 @@ public class ExecutePythonScriptAction extends AbstractExecuteScriptAction {
                     interpreter.set(ScriptService.DISPLAY, displayEditpart);
                     interpreter.exec(code);
                 } catch (Exception e) {
-                    final String message = "Error exists in script " + getPath();
+                    final String message = "Error in script " + getPath();
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, message, e);
                 }
             });
