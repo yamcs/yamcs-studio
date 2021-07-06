@@ -37,7 +37,6 @@ public class ServerUtil {
                     .uri(URI.create(address))
                     .method(method, HttpRequest.BodyPublishers.ofString(body))
                     .header("Content-Type", "text/xml")
-
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
