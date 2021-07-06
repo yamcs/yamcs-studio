@@ -116,7 +116,7 @@ public class ServerUtil {
      * Request counters such as fatFrameCount and rcvdCaduCount to zero.
      * 
      * @param linkName
-     * @return A map in with the request's response.
+     * @return A map with the request's response.
      * 
      */
     public static LinkedHashMap<Object, Object> resetSdlpPacketInputStreamCounters(String linkName) {
