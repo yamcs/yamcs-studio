@@ -6,7 +6,7 @@ Bundle-Name: Yamcs Studio Editor
 Bundle-SymbolicName: org.yamcs.studio.editor;singleton:=true
 Bundle-Vendor: Space Applications Services
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Bundle-Version: 1.5.7.qualifier
+Bundle-Version: 1.5.7
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.yamcs.studio.editor.base
