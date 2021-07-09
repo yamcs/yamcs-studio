@@ -10,7 +10,7 @@ import org.yamcs.protobuf.Yamcs.Event;
 
 /**
  * Allows the user to select the source for the events managed by EventLogTableViewer from a dropdown Combo box.
- * Scoped to the package as this should only be used in the org.yamcs.studio.eventlog package. 
+ * Scoped to the package as this should only be used in the org.yamcs.studio.eventlog package.
  * @author lgomez
  *
  */
@@ -20,11 +20,11 @@ class EventLogSourceFilter extends ViewerFilter {
     private final String ANY_SOURCE = "Any ";
 
     /**
-     * 
+     *
      * @param sourceCombo The combo box which will be populated with the items(such as event sources)
      * in the select filter.
      * @apiNote The sourceCombo's items are set to the string ANY_SOURCE. Meaning that items previously set
-     * in this combo box will be overwritten. 
+     * in this combo box will be overwritten.
      */
     public EventLogSourceFilter(Combo sourceCombo) {
         this.sourceCombo = sourceCombo;
