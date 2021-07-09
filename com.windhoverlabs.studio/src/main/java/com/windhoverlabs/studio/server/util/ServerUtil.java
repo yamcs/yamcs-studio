@@ -115,6 +115,7 @@ public class ServerUtil {
     /**
      * Request counters such as fatFrameCount and rcvdCaduCount to zero.
      * 
+     * 
      * @param linkName
      * @return A map with the request's response.
      * 
@@ -130,6 +131,34 @@ public class ServerUtil {
 
             // TODO In the future yamcs-cfs should have a client API that wraps around the http calls
             String route = String.format("http://%s:%d/api/%s/links/%s/streams/SdlpPacketInputStream:reset", host, port,
+                    activeInstance, linkName);
+            response = request(route, "GET", "{}");
+
+        } else {
+            log.warning("No active instance at the moment.");
+        }
+
+        return response;
+    }
+    
+    /**
+     * Sets the expected length of a frame.
+     * 
+     * @param linkName
+     * @return A map with the request's response.
+     * 
+     */
+    public static LinkedHashMap<Object, Object> setFixedLength(String linkName) {
+        String activeInstance = YamcsPlugin.getInstance();
+        LinkedHashMap<Object, Object> response = null;
+        if (activeInstance != null) {
+            int port = YamcsPlugin.getYamcsClient().getPort();
+            String host = YamcsPlugin.getYamcsClient().getHost();
+
+            response = new LinkedHashMap<Object, Object>();
+
+            // TODO In the future yamcs-cfs should have a client API that wraps around the http calls
+            String route = String.format("http://%s:%d/api/%s/links/%s/streams/SdlpPacketInputStream:reconfigure", host, port,
                     activeInstance, linkName);
             response = request(route, "GET", "{}");
 
