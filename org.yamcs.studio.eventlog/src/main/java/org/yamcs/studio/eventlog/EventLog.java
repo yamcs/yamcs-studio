@@ -72,7 +72,7 @@ public class EventLog extends Composite implements YamcsAware {
 
         Composite filterBar = new Composite(this, SWT.NONE);
         filterBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        gl = new GridLayout(4, false);
+        gl = new GridLayout(6, false);
         gl.marginHeight = 0;
         gl.verticalSpacing = 0;
         filterBar.setLayout(gl);
@@ -91,6 +91,10 @@ public class EventLog extends Composite implements YamcsAware {
         Combo severityCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
         severityCombo.setItems("INFO", "WATCH", "WARNING", "DISTRESS", "CRITICAL", "SEVERE");
         severityCombo.select(0);
+        
+        Label sourceLabel = new Label(filterBar, SWT.NONE);
+        sourceLabel.setText("Source:");
+        Combo sourceCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
 
         Composite tableViewerWrapper = new Composite(this, SWT.NONE);
         tableViewerWrapper.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -170,6 +174,12 @@ public class EventLog extends Composite implements YamcsAware {
         severityCombo.addListener(SWT.Selection, evt -> {
             EventSeverity severity = EventSeverity.valueOf(severityCombo.getText());
             severityFilter.setMinimumSeverity(severity);
+            tableViewer.refresh();
+        });
+        
+        EventLogSourceFilter sourceFilter = new EventLogSourceFilter(sourceCombo);
+        tableViewer.addFilter(sourceFilter);
+        sourceCombo.addListener(SWT.Selection, evt -> {
             tableViewer.refresh();
         });
 
