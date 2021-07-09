@@ -54,6 +54,6 @@ class EventLogSourceFilter extends ViewerFilter {
                 }
             }
         }
-        return true;
+        return false;
     }
 }
