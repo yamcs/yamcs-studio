@@ -23,8 +23,8 @@ class EventLogSourceFilter extends ViewerFilter {
      * 
      * @param sourceCombo The combo box which will be populated with the items(such as event sources)
      * in the select filter.
-     * @apiNote The sourceCombo's items are set to the string ANY_SOURCE. Meaning that items previously set by users
-     * in this combo box will be overwrittden. 
+     * @apiNote The sourceCombo's items are set to the string ANY_SOURCE. Meaning that items previously set
+     * in this combo box will be overwritten. 
      */
     public EventLogSourceFilter(Combo sourceCombo) {
         this.sourceCombo = sourceCombo;
