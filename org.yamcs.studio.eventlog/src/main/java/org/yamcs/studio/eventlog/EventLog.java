@@ -53,6 +53,7 @@ public class EventLog extends Composite implements YamcsAware {
 
     private EventLogTableViewer tableViewer;
     private EventLogContentProvider tableContentProvider;
+    private EventLogSourceFilter sourceFilter;
     private MenuManager menuManager;
     private IPropertyChangeListener prefListener;
 
@@ -91,7 +92,7 @@ public class EventLog extends Composite implements YamcsAware {
         Combo severityCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
         severityCombo.setItems("INFO", "WATCH", "WARNING", "DISTRESS", "CRITICAL", "SEVERE");
         severityCombo.select(0);
-        
+
         Label sourceLabel = new Label(filterBar, SWT.NONE);
         sourceLabel.setText("Source:");
         Combo sourceCombo = new Combo(filterBar, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -176,8 +177,8 @@ public class EventLog extends Composite implements YamcsAware {
             severityFilter.setMinimumSeverity(severity);
             tableViewer.refresh();
         });
-        
-        EventLogSourceFilter sourceFilter = new EventLogSourceFilter(sourceCombo);
+
+        sourceFilter = new EventLogSourceFilter(sourceCombo);
         tableViewer.addFilter(sourceFilter);
         sourceCombo.addListener(SWT.Selection, evt -> {
             tableViewer.refresh();
@@ -304,6 +305,7 @@ public class EventLog extends Composite implements YamcsAware {
     }
 
     public void clear() {
+        sourceFilter.clear();
         tableContentProvider.clearAll();
         tableViewer.setInput(null);
         tableViewer.setSelection(null);
