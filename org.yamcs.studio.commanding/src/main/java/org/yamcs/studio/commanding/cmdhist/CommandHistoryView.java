@@ -524,7 +524,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public Image getImage(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getSentAcknowledgment();
+                        Acknowledgment ack = rec.getCommand().getAcknowledgment(def.name);
                         if (ack == null) {
                             return grayBubble;
                         } else {
@@ -557,61 +557,48 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                 column.getColumn().setText(def.name);
                 column.getColumn().addControlListener(columnResizeListener);
                 column.getColumn().addSelectionListener(getSelectionAdapter(column.getColumn()));
-                column.setLabelProvider(new ColumnLabelProvider() {
-                    @Override
-                    public String getText(Object element) {
-                        CommandHistoryRecord rec = (CommandHistoryRecord) element;
 
-                        if (def.name.startsWith("Verifier_") || def.name.startsWith("Acknowledge_")) {
-                            return null;
+                if (def.name.startsWith("Verifier_") || def.name.startsWith("Acknowledge_")) {
+                    column.setLabelProvider(new CenteredImageLabelProvider() {
+
+                        @Override
+                        public Image getImage(Object element) {
+                            CommandHistoryRecord rec = (CommandHistoryRecord) element;
+                            Command command = rec.getCommand();
+                            if (command.isSuccess()) {
+                                return greenBubble;
+                            } else if (command.isFailure()) {
+                                return redBubble;
+                            } else {
+                                return grayBubble;
+                            }
                         }
 
-                        Object value = rec.getCommand().getAttribute(def.name);
-                        if (value == null) {
-                            return null;
-                        } else if (value instanceof byte[]) {
-                            return StringConverter.arrayToHexString((byte[]) value);
-                        } else {
-                            return String.valueOf(value);
-                        }
-                    }
-
-                    @Override
-                    public String getToolTipText(Object element) {
-                        if (def.name.startsWith("Acknowledge_") || def.name.startsWith("Verifier_")) {
+                        @Override
+                        public String getToolTipText(Object element) {
                             CommandHistoryRecord rec = (CommandHistoryRecord) element;
                             Acknowledgment ack = rec.getCommand().getAcknowledgment(def.name);
                             return (ack != null) ? ack.getMessage() : null;
                         }
-                        return null;
-                    }
-
-                    @Override
-                    public Image getImage(Object element) {
-                        if (def.name.startsWith("Acknowledge_") || def.name.startsWith("Verifier_")) {
+                    });
+                    layout.addColumnData(new ColumnPixelData(def.width));
+                } else {
+                    column.setLabelProvider(new ColumnLabelProvider() {
+                        @Override
+                        public String getText(Object element) {
                             CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                            Acknowledgment ack = rec.getCommand().getAcknowledgment(def.name);
-                            if (ack == null) {
-                                return grayBubble;
+
+                            Object value = rec.getCommand().getAttribute(def.name);
+                            if (value == null) {
+                                return null;
+                            } else if (value instanceof byte[]) {
+                                return StringConverter.arrayToHexString((byte[]) value);
                             } else {
-                                switch (ack.getStatus()) {
-                                case "NEW":
-                                    return grayBubble;
-                                case "OK":
-                                    return greenBubble;
-                                case "PENDING":
-                                    return waitingImage;
-                                case "NOK":
-                                    return redBubble;
-                                default:
-                                    log.warning("Unexpected ack state " + ack.getStatus());
-                                    return grayBubble;
-                                }
+                                return String.valueOf(value);
                             }
                         }
-                        return null;
-                    }
-                });
+                    });
+                }
                 layout.addColumnData(new ColumnPixelData(def.width));
             }
         }
