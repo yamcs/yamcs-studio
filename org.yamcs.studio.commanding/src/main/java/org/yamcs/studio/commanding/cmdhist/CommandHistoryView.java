@@ -183,6 +183,10 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         data.addColumn(COL_SENT, 50);
 
         for (String dynamicColumn : dynamicColumns) {
+            // Temporary. This column was erroneously added in past versions of studio.
+            if (dynamicColumn.equals("Acknowledge_Released")) {
+                continue;
+            }
             ColumnDef def = columnData.getColumn(dynamicColumn);
             data.addColumn(def.name, DYNAMIC_COLUMN_WIDTH);
         }
@@ -720,7 +724,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
             }
             switch (acknowledgmentName) {
             case "Acknowledge_Queued":
-            case "Acknowledge_Release":
+            case "Acknowledge_Released":
             case "Acknowledge_Sent":
                 continue;
             default:
