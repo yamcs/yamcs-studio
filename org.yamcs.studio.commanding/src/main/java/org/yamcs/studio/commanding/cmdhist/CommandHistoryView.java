@@ -177,7 +177,6 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
         data.addColumn(COL_USER, 100);
         data.addColumn(COL_ORIGIN, 200, false, true, true);
         data.addColumn(COL_ORIGIN_ID, 50, false, true, true);
-        data.addColumn(COL_PTV, 50);
         data.addColumn(COL_QUEUED, 50);
         data.addColumn(COL_RELEASED, 50);
         data.addColumn(COL_SENT, 50);
