@@ -11,7 +11,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.yamcs.protobuf.Yamcs.Event;
 
 public class EventLogContentProvider implements IStructuredContentProvider {
@@ -104,12 +103,8 @@ public class EventLogContentProvider implements IStructuredContentProvider {
     }
 
     public void clearAll() {
-        // TODO not sure if this is the recommended way to delete all. Need to verify
-        BusyIndicator.showWhile(tableViewer.getTable().getDisplay(), () -> {
-            tableViewer.getTable().setRedraw(false);
-            tableViewer.remove(items.toArray());
-            items.clear();
-            tableViewer.getTable().setRedraw(true);
-        });
+        items.clear();
+        tableViewer.setInput("anything-except-null");
+        tableViewer.refresh();
     }
 }
