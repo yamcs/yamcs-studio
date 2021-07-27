@@ -150,6 +150,53 @@ public abstract class ConfigRegistry {
 
     private void getAllTelemetry(LinkedHashMap<?, ?> modules, LinkedHashMap<Object, Object> outMsgIds) {
         for (Map.Entry<?, ?> moduleSet : modules.entrySet()) {
+            System.out.println("moduleSet.getKey()-->" + moduleSet.getKey());
+            
+            //Avoid any nodes that are not Maps
+            if (!(modules.get(moduleSet.getKey()) instanceof LinkedHashMap<?, ?>)) {
+                System.out.println("module inside if-->" + modules.get(moduleSet.getKey()));
+                System.out.println("module inside if2-->" + moduleSet.getKey());
+
+                continue;
+            }
+            
+            System.out.println("after if");
+
+            LinkedHashMap<?, ?> module = ((LinkedHashMap<?, ?>) modules.get(moduleSet.getKey()));
+            
+            System.out.println("after if1.5");
+            
+            System.out.println("module-->" + module);
+
+            if (module.get("modules") != null) {
+                System.out.println("after if2");
+
+                getAllTelemetry((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
+            }
+            if (module.get("telemetry") != null) {
+                System.out.println("after if3");
+
+                LinkedHashMap<?, ?> Alltlm = (LinkedHashMap<?, ?>) module.get("telemetry");
+
+                for (Map.Entry<?, ?> tlmSet : Alltlm.entrySet()) {
+                    LinkedHashMap<Object, Object> tlm = (LinkedHashMap<Object, Object>) Alltlm.get(tlmSet.getKey());
+                    tlm.put("type", MSGType.TELEMETRY);
+                    tlm.put("macro", tlmSet.getKey());
+                    tlm.put("app", moduleSet.getKey());
+
+                    if (tlm.get("struct") != null) {
+                        tlm.remove("struct");
+                    }
+                    outMsgIds.put(tlmSet.getKey(), tlmSet.getValue());
+                }
+
+            }
+        }
+
+    }
+
+    private void getAllTelemetry(LinkedHashMap<?, ?> modules, LinkedHashMap<Object, Object> outMsgIds, String parent) {
+        for (Map.Entry<?, ?> moduleSet : modules.entrySet()) {
             LinkedHashMap<?, ?> module = ((LinkedHashMap<?, ?>) modules.get(moduleSet.getKey()));
 
             if (module.get("modules") != null) {
@@ -254,6 +301,30 @@ public abstract class ConfigRegistry {
     }
 
     /**
+     * Get all messages from the registry under parent. This includes only telemetry that belong to parent.
+     * 
+     * @param The
+     *            parent key to the module that owns the telemetry.This might be useful when the concept of domain
+     *            exists in flight software such as CPD and PPD.
+     * @return A map of messages in the following format: {parent: { HK_HK_TLM_MID: { msgID: 2158, type: TELEMETRY,
+     *         macro: HK_HK_TLM_MID, app: hk } } }
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public LinkedHashMap<Object, Object> getAllTelemetry(String parent) throws Exception {
+        LinkedHashMap<Object, Object> outMsgMap = new LinkedHashMap<Object, Object>();
+
+        outMsgMap.put(parent, new LinkedHashMap<Object, Object>());
+        // Access the registry through the get method for error-checking
+        LinkedHashMap<?, ?> parentRegistry = (LinkedHashMap<?, ?>) this.get("/modules/" + parent + "/modules");
+
+        getAllTelemetry(parentRegistry, (LinkedHashMap<Object, Object>) outMsgMap.get(parent));
+
+        return outMsgMap;
+
+    }
+
+    /**
      * Get all messages from the registry. This includes only commands.
      * 
      * @return A map of messages in the following format: { HK_SEND_COMBINED_PKT_MID: { msgID: 6256, commands:
@@ -264,8 +335,29 @@ public abstract class ConfigRegistry {
         LinkedHashMap<Object, Object> outCmdMap = new LinkedHashMap<Object, Object>();
 
         // Access the registry through the get method for error-checking
-        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
+        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules" );
         getAllTeleCommands(wholeRegistry, outCmdMap);
+
+        return outCmdMap;
+
+    }
+    
+    
+    /**
+     * Get all messages from the registry. This includes only commands.
+     * 
+     * @return A map of messages in the following format: { HK_SEND_COMBINED_PKT_MID: { msgID: 6256, commands:
+     *         {SendCombinedPkt={cc=0}}, type: COMMAND, macro: HK_SEND_COMBINED_PKT_MID, app: hk } }
+     * @throws Exception
+     */
+    public LinkedHashMap<Object, Object> getAllCommands(String parent) throws Exception {
+        LinkedHashMap<Object, Object> outCmdMap = new LinkedHashMap<Object, Object>();
+        
+        outCmdMap.put(parent, new LinkedHashMap<Object, Object>());
+
+        // Access the registry through the get method for error-checking
+        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules/"+ parent + "/modules");
+        getAllTeleCommands(wholeRegistry, (LinkedHashMap<Object, Object>) outCmdMap.get(parent));
 
         return outCmdMap;
 
