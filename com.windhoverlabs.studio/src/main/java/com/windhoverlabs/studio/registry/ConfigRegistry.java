@@ -350,6 +350,7 @@ public abstract class ConfigRegistry {
      *         {SendCombinedPkt={cc=0}}, type: COMMAND, macro: HK_SEND_COMBINED_PKT_MID, app: hk } }
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public LinkedHashMap<Object, Object> getAllCommands(String parent) throws Exception {
         LinkedHashMap<Object, Object> outCmdMap = new LinkedHashMap<Object, Object>();
         
