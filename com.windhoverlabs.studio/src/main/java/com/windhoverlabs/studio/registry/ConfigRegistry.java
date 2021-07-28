@@ -2,6 +2,7 @@ package com.windhoverlabs.studio.registry;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.yamcs.client.YamcsClient;
@@ -148,61 +149,29 @@ public abstract class ConfigRegistry {
         return newPath;
     }
 
+    /**
+     * This functions expects a modules dictionary that follows our registry schema.
+     * 
+     * @param modules
+     * @param outMsgIds
+     */
     private void getAllTelemetry(LinkedHashMap<?, ?> modules, LinkedHashMap<Object, Object> outMsgIds) {
         for (Map.Entry<?, ?> moduleSet : modules.entrySet()) {
-            System.out.println("moduleSet.getKey()-->" + moduleSet.getKey());
-            
-            //Avoid any nodes that are not Maps
+
+            // Avoid any nodes that are not Maps
             if (!(modules.get(moduleSet.getKey()) instanceof LinkedHashMap<?, ?>)) {
-                System.out.println("module inside if-->" + modules.get(moduleSet.getKey()));
-                System.out.println("module inside if2-->" + moduleSet.getKey());
 
                 continue;
             }
-            
-            System.out.println("after if");
 
             LinkedHashMap<?, ?> module = ((LinkedHashMap<?, ?>) modules.get(moduleSet.getKey()));
-            
-            System.out.println("after if1.5");
-            
-            System.out.println("module-->" + module);
 
             if (module.get("modules") != null) {
-                System.out.println("after if2");
 
                 getAllTelemetry((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
             }
             if (module.get("telemetry") != null) {
-                System.out.println("after if3");
 
-                LinkedHashMap<?, ?> Alltlm = (LinkedHashMap<?, ?>) module.get("telemetry");
-
-                for (Map.Entry<?, ?> tlmSet : Alltlm.entrySet()) {
-                    LinkedHashMap<Object, Object> tlm = (LinkedHashMap<Object, Object>) Alltlm.get(tlmSet.getKey());
-                    tlm.put("type", MSGType.TELEMETRY);
-                    tlm.put("macro", tlmSet.getKey());
-                    tlm.put("app", moduleSet.getKey());
-
-                    if (tlm.get("struct") != null) {
-                        tlm.remove("struct");
-                    }
-                    outMsgIds.put(tlmSet.getKey(), tlmSet.getValue());
-                }
-
-            }
-        }
-
-    }
-
-    private void getAllTelemetry(LinkedHashMap<?, ?> modules, LinkedHashMap<Object, Object> outMsgIds, String parent) {
-        for (Map.Entry<?, ?> moduleSet : modules.entrySet()) {
-            LinkedHashMap<?, ?> module = ((LinkedHashMap<?, ?>) modules.get(moduleSet.getKey()));
-
-            if (module.get("modules") != null) {
-                getAllTelemetry((LinkedHashMap<?, ?>) module.get("modules"), outMsgIds);
-            }
-            if (module.get("telemetry") != null) {
                 LinkedHashMap<?, ?> Alltlm = (LinkedHashMap<?, ?>) module.get("telemetry");
 
                 for (Map.Entry<?, ?> tlmSet : Alltlm.entrySet()) {
@@ -288,6 +257,10 @@ public abstract class ConfigRegistry {
      * @return A map of messages in the following format: { HK_HK_TLM_MID: { msgID: 2158, type: TELEMETRY, macro:
      *         HK_HK_TLM_MID, app: hk } }
      * @throws Exception
+     *             If this function fails to parse the registry.
+     * 
+     * @note Do not use this function when there there are multiple instances of flight software, such as CPD and PPD.
+     *       Use the {@link #getAllTelemetry(String) getComponentAt} method. instead.
      */
     public LinkedHashMap<Object, Object> getAllTelemetry() throws Exception {
         LinkedHashMap<Object, Object> outMsgMap = new LinkedHashMap<Object, Object>();
@@ -309,16 +282,17 @@ public abstract class ConfigRegistry {
      * @return A map of messages in the following format: {parent: { HK_HK_TLM_MID: { msgID: 2158, type: TELEMETRY,
      *         macro: HK_HK_TLM_MID, app: hk } } }
      * @throws Exception
+     * 
+     * 
      */
     @SuppressWarnings("unchecked")
-    public LinkedHashMap<Object, Object> getAllTelemetry(String parent) throws Exception {
+    public LinkedHashMap<Object, Object> getAllTelemetry(String modulesPath) throws Exception {
         LinkedHashMap<Object, Object> outMsgMap = new LinkedHashMap<Object, Object>();
 
-        outMsgMap.put(parent, new LinkedHashMap<Object, Object>());
         // Access the registry through the get method for error-checking
-        LinkedHashMap<?, ?> parentRegistry = (LinkedHashMap<?, ?>) this.get("/modules/" + parent + "/modules");
+        LinkedHashMap<?, ?> parentRegistry = (LinkedHashMap<?, ?>) this.get(modulesPath);
 
-        getAllTelemetry(parentRegistry, (LinkedHashMap<Object, Object>) outMsgMap.get(parent));
+        getAllTelemetry(parentRegistry, (LinkedHashMap<Object, Object>) outMsgMap);
 
         return outMsgMap;
 
@@ -330,19 +304,21 @@ public abstract class ConfigRegistry {
      * @return A map of messages in the following format: { HK_SEND_COMBINED_PKT_MID: { msgID: 6256, commands:
      *         {SendCombinedPkt={cc=0}}, type: COMMAND, macro: HK_SEND_COMBINED_PKT_MID, app: hk } }
      * @throws Exception
+     * 
+     * @note Do not use this function when there are multiple instances of flight software, such as CPD and PPD. Use the
+     *       {@link #getAllCommands(String) getComponentAt} method. instead.
      */
     public LinkedHashMap<Object, Object> getAllCommands() throws Exception {
         LinkedHashMap<Object, Object> outCmdMap = new LinkedHashMap<Object, Object>();
 
         // Access the registry through the get method for error-checking
-        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules" );
+        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
         getAllTeleCommands(wholeRegistry, outCmdMap);
 
         return outCmdMap;
 
     }
-    
-    
+
     /**
      * Get all messages from the registry. This includes only commands.
      * 
@@ -351,14 +327,12 @@ public abstract class ConfigRegistry {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public LinkedHashMap<Object, Object> getAllCommands(String parent) throws Exception {
+    public LinkedHashMap<Object, Object> getAllCommands(String modulesPath) throws Exception {
         LinkedHashMap<Object, Object> outCmdMap = new LinkedHashMap<Object, Object>();
-        
-        outCmdMap.put(parent, new LinkedHashMap<Object, Object>());
 
         // Access the registry through the get method for error-checking
-        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules/"+ parent + "/modules");
-        getAllTeleCommands(wholeRegistry, (LinkedHashMap<Object, Object>) outCmdMap.get(parent));
+        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get(modulesPath);
+        getAllTeleCommands(wholeRegistry, outCmdMap);
 
         return outCmdMap;
 
@@ -371,6 +345,12 @@ public abstract class ConfigRegistry {
      *         HK_HK_TLM_MID, app: hk }, HK_SEND_COMBINED_PKT_MID: { msgID: 6256, commands: {SendCombinedPkt={cc=0}},
      *         type: COMMAND, macro: HK_SEND_COMBINED_PKT_MID, app: hk } }
      * @throws Exception
+     * 
+     * @note Beware that when running multiple instances of CFS, commands and telemetry that is shared across the
+     *       instances will not be captured in this function as a message's macro(used as a key in the dictionary this )
+     *       will shadow/overwrite the value of any other instance that uses the same commands/telemetry macro. When
+     *       running multiple instances of CFS, {@link #getAllCommands(String) getComponentAt} and
+     *       {@link #getAllTelemetry(String) getComponentAt} might be useful.
      */
     public LinkedHashMap<Object, Object> getAllMessages() throws Exception {
         LinkedHashMap<Object, Object> outCmdMap = new LinkedHashMap<Object, Object>();
@@ -399,6 +379,28 @@ public abstract class ConfigRegistry {
 
         // Access the registry through the get method for error-checking
         LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get("/modules");
+        getAllConfiguration(wholeRegistry, outConfigMap);
+
+        return outConfigMap;
+
+    }
+
+    /**
+     * 
+     * @return All of the configuration from all of the apps/modules stored in the registry in the following format:
+     * 
+     *         { cfe_es: { CFE_ES_CDS_MAX_NAME_LENGTH={name=CFE_ES_CDS_MAX_NAME_LENGTH, value=16} }, to: {
+     *         TO_MAX_MESSAGE_FLOWS={name=TO_MAX_MESSAGE_FLOWS, value=200} } }
+     * 
+     * 
+     * @throws Exception
+     */
+    public LinkedHashMap<Object, Object> getAllConfig(String modulesPath) throws Exception {
+        LinkedHashMap<Object, Object> outConfigMap = new LinkedHashMap<Object, Object>();
+
+        // Access the registry through the get method for error-checking
+        LinkedHashMap<?, ?> wholeRegistry = (LinkedHashMap<?, ?>) this.get(modulesPath);
+
         getAllConfiguration(wholeRegistry, outConfigMap);
 
         return outConfigMap;
