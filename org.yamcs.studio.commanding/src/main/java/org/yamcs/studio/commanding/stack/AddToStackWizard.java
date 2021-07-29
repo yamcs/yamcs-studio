@@ -2,11 +2,12 @@ package org.yamcs.studio.commanding.stack;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 public class AddToStackWizard extends Wizard {
 
     private StackedCommand command;
-    AddToStackWizardPage2 page2;
+    private AddToStackWizardPage2 page2;
 
     @Override
     public String getWindowTitle() {
@@ -36,5 +37,11 @@ public class AddToStackWizard extends Wizard {
 
     public StackedCommand getTelecommand() {
         return command;
+    }
+
+    @Override
+    public boolean canFinish() {
+        Control page2Control = page2.getControl();
+        return page2Control != null && page2Control.isVisible() && page2.isPageComplete();
     }
 }
