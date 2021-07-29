@@ -523,7 +523,7 @@ public class CommandHistoryView extends ViewPart implements YamcsAware {
                     @Override
                     public Image getImage(Object element) {
                         CommandHistoryRecord rec = (CommandHistoryRecord) element;
-                        Acknowledgment ack = rec.getCommand().getAcknowledgment(def.name);
+                        Acknowledgment ack = rec.getCommand().getSentAcknowledgment();
                         if (ack == null) {
                             return grayBubble;
                         } else {
