@@ -235,23 +235,25 @@ public class CommandOptionsComposite extends ScrolledComposite {
                 }
                 controls.add(argumentCombo);
             } else if ("boolean".equals(argument.getType())) {
+                String oneStringValue = argument.getArgumentInfo().getType().getOneStringValue();
+                String zeroStringValue = argument.getArgumentInfo().getType().getZeroStringValue();
                 Composite radios = new Composite(composite, SWT.NONE);
                 radios.setData(argument);
                 gl = new GridLayout(2, false);
                 gl.marginHeight = 0;
                 gl.marginWidth = 0;
                 Button trueButton = new Button(radios, SWT.RADIO);
-                trueButton.setText("true");
+                trueButton.setText(oneStringValue);
                 Button falseButton = new Button(radios, SWT.RADIO);
-                falseButton.setText("false");
+                falseButton.setText(zeroStringValue);
                 radios.setLayout(gl);
                 if (command.isAssigned(argument.getArgumentInfo())) {
                     String stringValue = command.getAssignedStringValue(argument.getArgumentInfo());
-                    trueButton.setSelection("true".equalsIgnoreCase(stringValue));
-                    falseButton.setSelection("false".equalsIgnoreCase(stringValue));
+                    trueButton.setSelection(oneStringValue.equalsIgnoreCase(stringValue));
+                    falseButton.setSelection(zeroStringValue.equalsIgnoreCase(stringValue));
                 } else if (argument.getValue() != null) {
-                    trueButton.setSelection("true".equalsIgnoreCase(argument.getValue()));
-                    falseButton.setSelection("false".equalsIgnoreCase(argument.getValue()));
+                    trueButton.setSelection(oneStringValue.equalsIgnoreCase(argument.getValue()));
+                    falseButton.setSelection(zeroStringValue.equalsIgnoreCase(argument.getValue()));
                 }
                 controls.add(radios);
             } else {
@@ -368,9 +370,11 @@ public class CommandOptionsComposite extends ScrolledComposite {
                 Button trueButton = (Button) ((Composite) control).getChildren()[0];
                 Button falseButton = (Button) ((Composite) control).getChildren()[1];
                 if (trueButton.getSelection()) {
-                    assignments.put(argument.getArgumentInfo(), "true");
+                    String oneStringValue = argument.getArgumentInfo().getType().getOneStringValue();
+                    assignments.put(argument.getArgumentInfo(), oneStringValue);
                 } else if (falseButton.getSelection()) {
-                    assignments.put(argument.getArgumentInfo(), "false");
+                    String zeroStringValue = argument.getArgumentInfo().getType().getZeroStringValue();
+                    assignments.put(argument.getArgumentInfo(), zeroStringValue);
                 }
             } else {
                 throw new UnsupportedOperationException("Unexpected control of type " + control.getClass());
