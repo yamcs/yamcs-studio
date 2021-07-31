@@ -1,7 +1,5 @@
 package org.yamcs.studio.archive;
 
-import javax.swing.SwingUtilities;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -16,10 +14,9 @@ public class ZoomInHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
-        SwingUtilities.invokeLater(() -> {
-            ArchiveView view = (ArchiveView) part;
-            view.archivePanel.getDataViewer().zoomIn();
-        });
+
+        ArchiveView view = (ArchiveView) part;
+        view.getTimeline().zoomIn();
 
         return null;
     }

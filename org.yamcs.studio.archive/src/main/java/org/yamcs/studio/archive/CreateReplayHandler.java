@@ -1,9 +1,9 @@
 package org.yamcs.studio.archive;
 
 import java.lang.reflect.InvocationTargetException;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,9 +17,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.yamcs.protobuf.CreateProcessorRequest;
+import org.yamcs.studio.archive.Histogram.HistogramKind;
 import org.yamcs.studio.core.ContextSwitcher;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
@@ -30,23 +30,29 @@ public class CreateReplayHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Shell shell = HandlerUtil.getActiveShellChecked(event);
-        IWorkbenchPart part = HandlerUtil.getActivePartChecked(event);
+        var shell = HandlerUtil.getActiveShellChecked(event);
+        var part = HandlerUtil.getActivePartChecked(event);
         SwingUtilities.invokeLater(() -> {
             ArchiveView view = (ArchiveView) part;
 
             TimeInterval interval;
-            Selection sel = view.archivePanel.getSelection();
-            if (sel != null) {
-                Instant start = Instant.ofEpochMilli(sel.getStartInstant());
-                Instant stop = Instant.ofEpochMilli(sel.getStopInstant());
+            var selectionStart = view.getTimeline().getSelectionStart();
+            var selectionStop = view.getTimeline().getSelectionStop();
+            if (selectionStart != null) {
+                var start = selectionStart.toInstant();
+                var stop = selectionStop.toInstant();
                 interval = new TimeInterval(start, stop);
             } else {
-                Instant missionTime = YamcsPlugin.getMissionTime(true);
+                var missionTime = YamcsPlugin.getMissionTime(true);
                 interval = TimeInterval.starting(missionTime.minus(30, ChronoUnit.SECONDS));
             }
 
-            List<String> pps = view.archivePanel.getSelectedPackets("pp");
+            var pps = new ArrayList<String>();
+            view.getTimeline().getHistograms(HistogramKind.PP).forEach(histogram -> {
+                pps.add(histogram.getLabel());
+            });
+            Collections.sort(pps);
+
             Display.getDefault().asyncExec(() -> {
                 CreateReplayDialog dialog = new CreateReplayDialog(Display.getCurrent().getActiveShell());
                 dialog.initialize(interval, pps);
