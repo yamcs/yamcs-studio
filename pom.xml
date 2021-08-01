@@ -151,14 +151,13 @@
           <target>
             <file>../platform.target</file>
           </target>
-          <resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
-          <!--executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-11</executionEnvironment-->
+          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-15</executionEnvironment>
           <environments>
-            <!--environment>
+            <environment>
               <os>linux</os>
               <ws>gtk</ws>
               <arch>aarch64</arch>
-            </environment-->
+            </environment>
             <environment>
               <os>linux</os>
               <ws>gtk</ws>
