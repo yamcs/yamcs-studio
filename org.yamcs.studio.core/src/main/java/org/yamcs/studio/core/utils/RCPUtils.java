@@ -1,7 +1,5 @@
 package org.yamcs.studio.core.utils;
 
-import java.time.Instant;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -17,7 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -28,7 +25,6 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
-import org.yamcs.studio.core.YamcsPlugin;
 
 /**
  * Various 'improvements' to RCP code to shorten our code a bit
@@ -99,16 +95,6 @@ public class RCPUtils {
     public static ImageDescriptor getImageDescriptor(Class<?> classFromBundle, String path) {
         Bundle bundle = FrameworkUtil.getBundle(classFromBundle);
         return ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(path), null));
-    }
-
-    public static Instant toInstant(DateTime dateWidget, DateTime timeWidget) {
-        Calendar cal = Calendar.getInstance(YamcsPlugin.getTimeZone());
-        cal.set(dateWidget.getYear(), dateWidget.getMonth(), dateWidget.getDay());
-        cal.set(Calendar.HOUR_OF_DAY, timeWidget.getHours());
-        cal.set(Calendar.MINUTE, timeWidget.getMinutes());
-        cal.set(Calendar.SECOND, timeWidget.getSeconds());
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.toInstant();
     }
 
     public static void monitorCancellableFuture(IProgressMonitor monitor, Future<?> future)

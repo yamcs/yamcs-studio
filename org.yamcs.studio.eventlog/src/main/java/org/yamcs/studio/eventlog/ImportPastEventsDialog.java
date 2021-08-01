@@ -2,28 +2,26 @@ package org.yamcs.studio.eventlog;
 
 import java.time.Instant;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.studio.core.utils.RCPUtils;
 
 public class ImportPastEventsDialog extends TitleAreaDialog {
 
-    private DateTime startDate;
-    private DateTime startTime;
+    private CDateTime startDate;
     private Calendar startTimeValue;
 
-    private DateTime stopDate;
-    private DateTime stopTime;
+    private CDateTime stopDate;
     private Calendar stopTimeValue;
 
     private Instant start;
@@ -41,9 +39,9 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     private void validate() {
         String errorMessage = null;
-        Instant start = RCPUtils.toInstant(startDate, startTime);
-        Instant stop = RCPUtils.toInstant(stopDate, stopTime);
-        if (start.isAfter(stop)) {
+        Date start = startDate.getSelection();
+        Date stop = stopDate.getSelection();
+        if (start != null && stop != null && start.after(stop)) {
             errorMessage = "Stop has to be greater than start";
         }
 
@@ -65,47 +63,28 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
         Label lbl = new Label(container, SWT.NONE);
         lbl.setText("Start:");
-        Composite startComposite = new Composite(container, SWT.NONE);
-        RowLayout rl = new RowLayout();
-        rl.marginLeft = 0;
-        rl.marginTop = 0;
-        rl.marginBottom = 0;
-        rl.center = true;
-        startComposite.setLayout(rl);
-        startDate = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
+        startDate = new CDateTime(container,
+                CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TIME_MEDIUM | CDT.CLOCK_24_HOUR);
         startDate.addListener(SWT.Selection, e -> validate());
         startDate.addListener(SWT.FocusOut, e -> validate());
-        startTime = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
-        startTime.addListener(SWT.Selection, e -> validate());
-        startTime.addListener(SWT.FocusOut, e -> validate());
+        var gd = new GridData();
+        gd.widthHint = 200;
+        startDate.setLayoutData(gd);
         if (startTimeValue != null) {
-            startDate.setDate(startTimeValue.get(Calendar.YEAR), startTimeValue.get(Calendar.MONTH),
-                    startTimeValue.get(Calendar.DAY_OF_MONTH));
-            startTime.setTime(startTimeValue.get(Calendar.HOUR_OF_DAY), startTimeValue.get(Calendar.MINUTE),
-                    startTimeValue.get(Calendar.SECOND));
+            startDate.setSelection(startTimeValue.getTime());
         }
 
         lbl = new Label(container, SWT.NONE);
         lbl.setText("Stop:");
-        Composite stopComposite = new Composite(container, SWT.NONE);
-        rl = new RowLayout();
-        rl.marginLeft = 0;
-        rl.marginTop = 0;
-        rl.marginBottom = 0;
-        rl.center = true;
-        rl.fill = true;
-        stopComposite.setLayout(rl);
-        stopDate = new DateTime(stopComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
+        stopDate = new CDateTime(container,
+                CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TIME_MEDIUM | CDT.CLOCK_24_HOUR);
         stopDate.addListener(SWT.Selection, e -> validate());
         stopDate.addListener(SWT.FocusOut, e -> validate());
-        stopTime = new DateTime(stopComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
-        stopTime.addListener(SWT.Selection, e -> validate());
-        stopTime.addListener(SWT.FocusOut, e -> validate());
+        gd = new GridData();
+        gd.widthHint = 200;
+        stopDate.setLayoutData(gd);
         if (stopTimeValue != null) {
-            stopDate.setDate(stopTimeValue.get(Calendar.YEAR), stopTimeValue.get(Calendar.MONTH),
-                    stopTimeValue.get(Calendar.DAY_OF_MONTH));
-            stopTime.setTime(stopTimeValue.get(Calendar.HOUR_OF_DAY), stopTimeValue.get(Calendar.MINUTE),
-                    stopTimeValue.get(Calendar.SECOND));
+            stopDate.setSelection(stopTimeValue.getTime());
         }
 
         return container;
@@ -113,8 +92,12 @@ public class ImportPastEventsDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        start = RCPUtils.toInstant(startDate, startTime);
-        stop = RCPUtils.toInstant(stopDate, stopTime);
+        if (startDate.hasSelection()) {
+            start = startDate.getSelection().toInstant();
+        }
+        if (stopDate.hasSelection()) {
+            stop = stopDate.getSelection().toInstant();
+        }
         super.okPressed();
     }
 

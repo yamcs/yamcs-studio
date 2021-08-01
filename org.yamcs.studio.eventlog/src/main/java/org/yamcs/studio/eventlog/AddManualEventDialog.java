@@ -8,16 +8,16 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.nebula.widgets.cdatetime.CDT;
+import org.eclipse.nebula.widgets.cdatetime.CDateTime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
@@ -27,7 +27,6 @@ import org.yamcs.client.YamcsClient;
 import org.yamcs.protobuf.CreateEventRequest;
 import org.yamcs.protobuf.Yamcs.Event.EventSeverity;
 import org.yamcs.studio.core.YamcsPlugin;
-import org.yamcs.studio.core.utils.RCPUtils;
 
 import com.google.protobuf.Timestamp;
 
@@ -36,8 +35,7 @@ public class AddManualEventDialog extends TitleAreaDialog {
     private Calendar generationTimeValue = null;
 
     private Text messageText;
-    private DateTime generationDatePicker;
-    private DateTime generationTimePicker;
+    private CDateTime generationDatePicker;
     private Combo severityCombo;
 
     protected AddManualEventDialog(Shell shell) {
@@ -92,20 +90,10 @@ public class AddManualEventDialog extends TitleAreaDialog {
 
         lbl = new Label(container, SWT.NONE);
         lbl.setText("Event Time");
-        Composite startComposite = new Composite(container, SWT.NONE);
-        RowLayout rl = new RowLayout();
-        rl.marginLeft = 0;
-        rl.marginTop = 0;
-        rl.marginBottom = 0;
-        rl.center = true;
-        startComposite.setLayout(rl);
-        generationDatePicker = new DateTime(startComposite, SWT.DATE | SWT.LONG | SWT.DROP_DOWN | SWT.BORDER);
-        generationTimePicker = new DateTime(startComposite, SWT.TIME | SWT.LONG | SWT.BORDER);
+        generationDatePicker = new CDateTime(container,
+                CDT.BORDER | CDT.DROP_DOWN | CDT.DATE_MEDIUM | CDT.TIME_MEDIUM | CDT.CLOCK_24_HOUR);
         if (generationTimeValue != null) {
-            generationDatePicker.setDate(generationTimeValue.get(Calendar.YEAR),
-                    generationTimeValue.get(Calendar.MONTH), generationTimeValue.get(Calendar.DAY_OF_MONTH));
-            generationTimePicker.setTime(generationTimeValue.get(Calendar.HOUR_OF_DAY),
-                    generationTimeValue.get(Calendar.MINUTE), generationTimeValue.get(Calendar.SECOND));
+            generationDatePicker.setSelection(generationTimeValue.getTime());
         }
 
         lbl = new Label(container, SWT.NONE);
@@ -125,7 +113,10 @@ public class AddManualEventDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         String message = messageText.getText();
-        Instant time = RCPUtils.toInstant(generationDatePicker, generationTimePicker);
+        Instant time = null;
+        if (generationDatePicker.hasSelection()) {
+            time = generationDatePicker.getSelection().toInstant();
+        }
         String severityString = severityCombo.getItem(severityCombo.getSelectionIndex());
         EventSeverity severity = EventSeverity.valueOf(severityString);
 
@@ -135,8 +126,12 @@ public class AddManualEventDialog extends TitleAreaDialog {
         requestb.setInstance(YamcsPlugin.getInstance());
         requestb.setMessage(message);
         requestb.setSeverity(severity.toString());
-        OffsetDateTime t = time.atOffset(ZoneOffset.UTC);
-        requestb.setTime(Timestamp.newBuilder().setSeconds(t.toEpochSecond()).setNanos(t.getNano()));
+
+        if (time != null) {
+            OffsetDateTime t = time.atOffset(ZoneOffset.UTC);
+            requestb.setTime(Timestamp.newBuilder().setSeconds(t.toEpochSecond()).setNanos(t.getNano()));
+        }
+
         client.createEvent(requestb.build()).whenComplete((data, exc) -> {
             if (exc == null) {
                 Display.getDefault().asyncExec(() -> close());

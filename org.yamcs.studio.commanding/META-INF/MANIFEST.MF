@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.eclipse.ui.forms,
  com.google.gson,
- org.apache.velocity
+ org.apache.velocity,
+ org.eclipse.nebula.widgets.cdatetime
 Export-Package: org.yamcs.studio.commanding
 Automatic-Module-Name: org.yamcs.studio.commanding
