@@ -180,8 +180,8 @@ public class Timeline extends Composite {
         var prevRange = (double) MILLIS.between(start, stop);
         var nextRange = prevRange * factor;
 
-        var start = relto.minus((int) (reltoRatio * nextRange), MILLIS);
-        var stop = relto.plus((int) ((1 - reltoRatio) * nextRange), MILLIS);
+        var start = relto.minus((long) (reltoRatio * nextRange), MILLIS);
+        var stop = relto.plus((long) ((1 - reltoRatio) * nextRange), MILLIS);
         setBounds(start, stop);
     }
 

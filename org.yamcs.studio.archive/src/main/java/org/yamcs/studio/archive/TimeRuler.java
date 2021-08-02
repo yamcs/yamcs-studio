@@ -7,8 +7,20 @@ public class TimeRuler extends Line {
 
     public static final int LINE_HEIGHT = 20;
 
+    private Scale[] orderedScales;
+
     public TimeRuler(Timeline timeline) {
         super(timeline);
+
+        orderedScales = new Scale[] {
+                new DecadeScale(timeline), // Macro
+                new YearScale(timeline),
+                new MonthScale(timeline),
+                new WeekScale(timeline),
+                new WeekDayScale(timeline),
+                new QuarterDayScale(timeline),
+                new HourScale(timeline), // Micro
+        };
     }
 
     @Override
@@ -28,7 +40,17 @@ public class TimeRuler extends Line {
         return LINE_HEIGHT;
     }
 
-    private HourScale determineScale() {
-        return new HourScale(timeline);
+    private Scale determineScale() {
+        var bestCandidate = orderedScales[0];
+        for (var i = 1; i < orderedScales.length; i++) {
+            var candidate = orderedScales[i];
+            var unitWidth = candidate.measureUnitWidth();
+            if (unitWidth >= candidate.getPreferredUnitWidth()) {
+                bestCandidate = candidate;
+            } else {
+                break;
+            }
+        }
+        return bestCandidate;
     }
 }
