@@ -291,7 +291,6 @@ public abstract class ConfigRegistry {
 
         // Access the registry through the get method for error-checking
         LinkedHashMap<?, ?> parentRegistry = (LinkedHashMap<?, ?>) this.get(modulesPath);
-
         getAllTelemetry(parentRegistry, (LinkedHashMap<Object, Object>) outMsgMap);
 
         return outMsgMap;
