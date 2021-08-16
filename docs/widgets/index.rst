@@ -163,7 +163,27 @@ Major Alarm
     Solid red border around the widget
 
 
-Note that the color information for alarms is currently not as rich as it could be. Yamcs parameters support five different levels of alarms, as well as a range of special monitoring values. This information is transformed using the following mapping:
+Yamcs parameters support five different levels of alarms, as well as a range of special monitoring values. This information is transformed using the following mapping:
 
 * WATCH, WARNING, DISTRESS → MINOR
 * CRITICAL, SEVERE → MAJOR
+
+.. toctree::
+    :maxdepth: 1
+
+    arc
+    ellipse
+    gauge
+    image
+    image_boolean_indicator
+    label
+    led
+    meter
+    polygon
+    polyline
+    progress_bar
+    rectangle
+    rounded_rectangle
+    tank
+    text_update
+    thermometer
