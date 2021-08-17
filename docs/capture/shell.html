@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+    <body>
+        <div id="mydisplay" style="display: inline-block"></div>
+        <script type="module">
+            import { Display } from "/node_modules/@yamcs/opi/dist/opi.js";
+            const targetEl = document.getElementById("mydisplay");
+            const display = new Display(targetEl);
+            const params = new URLSearchParams(window.location.search);
+            display.setSource(params.get("f"));
+            display.transparent = true;
+        </script>
+    </body>
+</html>

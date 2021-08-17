@@ -1,0 +1,34 @@
+.opi {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.opi img {
+    display: block;
+    margin: 0 auto;
+}
+
+.opi table {
+    font-size: smaller;
+    margin: 0;
+    padding: 0;
+    margin-top: 20px;
+    box-shadow: none;
+    border: none;
+    width: 100%;
+}
+
+.opi table td, .opi table th {
+    border: none;
+    white-space: nowrap;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.opi table th {
+    border-top: 1px solid #eee;
+    min-width: 120px;
+}
+
+.opi table .row-odd {
+    background: #fafafa;
+}
