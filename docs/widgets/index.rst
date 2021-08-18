@@ -9,23 +9,21 @@ Most widgets are backed by a PV. Some widgets (e.g. widgets used for layout) are
 Catalogue of Widgets
 --------------------
 
-The default widgets in Yamcs Studio are listed below. Their runtime behaviour should be fairly straightforward.
+The default widgets in Yamcs Studio are listed below.
 
 
-Graphics
-^^^^^^^^
-
+.. rubric:: Graphics
 .. list-table::
     :widths: 33 33 33
 
-    * - |arc| Arc
-      - |rectangle| Rectangle
-      - |label| Label
-    * - |polyline| Polyline
-      - |rounded-rectangle| Rounded Rectangle
-      - |image| Image
-    * - |polygon| Polygon
-      - |ellipse| Ellipse
+    * - |arc| :doc:`arc`
+      - |rectangle| :doc:`rectangle`
+      - |label| :doc:`label`
+    * - |polyline| :doc:`polyline`
+      - |rounded-rectangle| :doc:`rounded-rectangle`
+      - |image| :doc:`image`
+    * - |polygon| :doc:`polygon`
+      - |ellipse| :doc:`ellipse`
       -
 
 .. |arc| image:: _images/arc.png
@@ -38,23 +36,21 @@ Graphics
 .. |rounded-rectangle| image:: _images/roundedRectangle.png
 
 
-Monitors
-^^^^^^^^
-
+.. rubric:: Monitors
 .. list-table::
     :widths: 33 33 33
 
-    * - |led| LED
-      - |progress-bar| Progress Bar
+    * - |led| :doc:`led`
+      - |progress-bar| :doc:`progress-bar`
       - |xygraph| XY Graph :sup:`*`
-    * - |image-boolean-indicator| Image Boolean Indicator
-      - |gauge| Gauge
+    * - |image-boolean-indicator| :doc:`image-boolean-indicator`
+      - |gauge| :doc:`gauge`
       - |intensity-graph| Intensity Graph
-    * - |text-update| Text Update
-      - |thermometer| Thermometer
+    * - |text-update| :doc:`text-update`
+      - |thermometer| :doc:`thermometer`
       - |byte-monitor| Byte Monitor
-    * - |meter| Meter
-      - |tank| Tank
+    * - |meter| :doc:`meter`
+      - |tank| :doc:`tank`
       -
 
 .. |byte-monitor| image:: _images/ByteMonitor.png
@@ -72,9 +68,7 @@ Monitors
 :sup:`*` Clear the view on this widget by right-clicking on it and selecting **Clear Graph**. If you want advanced controls, like zooming, activate the toolbar by right-clicking on your widget and selecting **Show/Hide Graph Toolbar**.
 
 
-Controls
-^^^^^^^^
-
+.. rubric:: Controls
 .. list-table::
     :widths: 33 33 33
 
@@ -113,9 +107,7 @@ Controls
 :sup:`*` Action Buttons are often used to open other displays. Whether this opens in a new tab or in the same tab depends on how the display author constructed the display. Override the default by right-clicking the Action Button.
 
 
-Others
-^^^^^^
-
+.. rubric:: Others
 .. list-table::
     :widths: 33 33 33
 
@@ -170,20 +162,21 @@ Yamcs parameters support five different levels of alarms, as well as a range of 
 
 .. toctree::
     :maxdepth: 1
+    :hidden:
 
     arc
     ellipse
     gauge
     image
-    image_boolean_indicator
+    image-boolean-indicator
     label
     led
     meter
     polygon
     polyline
-    progress_bar
+    progress-bar
     rectangle
-    rounded_rectangle
+    rounded-rectangle
     tank
-    text_update
+    text-update
     thermometer

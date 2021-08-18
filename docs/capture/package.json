@@ -1,10 +1,11 @@
 {
     "private": true,
     "scripts": {
-        "capture": "node capture.mjs"
+        "capture": "node capture.mjs",
+        "start": "npx http-server -p 8080"
     },
     "devDependencies": {
         "@yamcs/opi": "^1.2.0",
-        "capture-website": "^2.0.2"
+        "puppeteer": "^10.2.0"
     }
 }
