@@ -1,11 +1,53 @@
 <!doctype html>
 <html>
+    <head>
+        <link rel="stylesheet" href="/node_modules/@yamcs/opi/dist/fonts/stylesheet.css">
+    </head>
     <body>
         <div id="mydisplay" style="display: inline-block"></div>
         <script type="module">
             import { Display } from "/node_modules/@yamcs/opi/dist/opi.js";
             const targetEl = document.getElementById("mydisplay");
             const display = new Display(targetEl);
+            
+            /**
+             * Generate some fake PV values for the purpose
+             * of some intended screenshots.
+             */
+            const prefix = "fake://";
+            display.addProvider({
+                canProvide: pvName => {
+                    return pvName.startsWith(prefix);
+                },
+                startProviding: pvs => {
+                    const values = new Map();
+                    for (const pv of pvs) {
+                        const pvName = pv.name;
+                        const name = pvName.substr(0, prefix.length);
+                        switch (pvName) {
+                        case "fake://minor_alarm":
+                            values.set(pvName, {
+                                time: new Date(),
+                                value: 123,
+                                severity: 1, // MINOR
+                            });
+                            break;
+                        case "fake://major_alarm":
+                            values.set(pvName, {
+                                time: new Date(),
+                                value: 123,
+                                severity: 2, // MAJOR
+                            });
+                            break;
+                        }
+                    }
+                    display.setValues(values);
+                },
+                stopProviding: pvs => null,
+                isNavigable: () => false,
+                shutdown: () => null,
+            });
+
             const params = new URLSearchParams(window.location.search);
             display.setSource(params.get("f"));
             display.transparent = true;
