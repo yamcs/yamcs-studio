@@ -3,6 +3,79 @@ Rectangle
 
 Widget that draws a rectangle shape.
 
+.. container:: opi
+
+    .. image:: ../capture/widgets/rectangle/rectangle.opi.png
+
+Example of shape fill:
+
+.. container:: opi
+
+    .. image:: ../capture/widgets/rectangle/fill.opi.png
+    .. list-table::
+        :header-rows: 1
+        :widths: 1 99
+
+        * - Property
+          - Value
+        * - Foreground Color
+          - rgb(255, 0, 0)
+        * - Fill Level
+          - 40.0
+        * - Horizontal Fill
+          - no
+        * - Transparent
+          - yes
+        * - Line Color
+          - rgb(255, 0, 0)
+        * - Line Width
+          - 1
+
+
+Example of gradient effect:
+
+.. container:: opi
+
+    .. image:: ../capture/widgets/rectangle/gradient.opi.png
+    .. list-table::
+        :header-rows: 1
+        :widths: 1 99
+
+        * - Property
+          - Value
+        * - Background Color
+          - rgb(191, 191, 191)
+        * - Fill Level
+          - 40.0
+        * - Foreground Color
+          - rgb(114, 250, 120)
+        * - Horizontal Fill
+          - no
+        * - Gradient
+          - yes
+        * - Line Color
+          - rgb(161, 161, 161)
+        * - Line Width
+          - 1
+
+
+The shape background and foreground colors can be made alarm-aware by attaching a PV.
+Note that the PV value is otherwise ignored. In particular: it does not impact fill level (use
+a :doc:`tank` for this use case).
+
+.. container:: opi
+
+    .. image:: ../capture/widgets/rectangle/alarm.opi.png
+    .. list-table::
+        :header-rows: 1
+        :widths: 1 99
+
+        * - Property
+          - Value
+        * - ForeColor Alarm Sensitive
+          - yes
+
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties
@@ -42,12 +115,18 @@ Widget that draws a rectangle shape.
 .. include:: _props/alpha.rst
 .. include:: _props/anti_alias.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
-.. include:: _props/background_color.rst
+
+Background Color (``background_color``)
+    The color of the rectangle shape.
+
 .. include:: _props/bg_gradient_color.rst
 .. include:: _props/fill_level.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
-.. include:: _props/foreground_color.rst
+
+Foreground Color (``foreground_color``)
+    The color of the shape fill.
+
 .. include:: _props/fg_gradient_color.rst
 .. include:: _props/gradient.rst
 .. include:: _props/horizontal_fill.rst

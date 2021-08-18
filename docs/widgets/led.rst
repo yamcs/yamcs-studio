@@ -5,14 +5,14 @@ Boolean widget that displays a value as an ON/OFF LED.
 
 .. container:: opi
 
-    .. image:: ../capture/widgets/led/led.png
+    .. image:: ../capture/widgets/led/led.opi.png
 
 
 The LED can be made square.
 
 .. container:: opi
 
-    .. image:: ../capture/widgets/led/square.png
+    .. image:: ../capture/widgets/led/square.opi.png
     .. list-table::
         :header-rows: 1
         :widths: 1 99
@@ -33,7 +33,7 @@ This widget further supports multistate whereby it can assume multiple different
 
 .. container:: opi
 
-    .. image:: ../capture/widgets/led/multistate.png
+    .. image:: ../capture/widgets/led/multistate.opi.png
     .. list-table::
         :header-rows: 1
         :widths: 1 99

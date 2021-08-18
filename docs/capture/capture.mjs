@@ -16,7 +16,7 @@ async function* walkDisplays(dir) {
 
 for await (const file of walkDisplays('widgets')) {
     console.log(`Capturing ${file}`);
-    const dest = path.join(path.dirname(file), path.basename(file).replace('.opi', '.png'));
+    const dest = path.join(path.dirname(file), path.basename(file).replace('.opi', '.opi.png'));
     await captureWebsite.file(`http://localhost:8000/shell.html?f=${file}`, dest, {
         scaleFactor: 1,
         overwrite: true,

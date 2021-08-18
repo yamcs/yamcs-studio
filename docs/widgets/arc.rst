@@ -3,6 +3,52 @@ Arc
 
 Widget that draws an arc shape.
 
+.. container:: opi
+
+    .. image:: ../capture/widgets/arc/arc.opi.png
+
+Example of shape fill:
+
+.. container:: opi
+
+    .. image:: ../capture/widgets/arc/fill.opi.png
+    .. list-table::
+        :header-rows: 1
+        :widths: 1 99
+
+        * - Property
+          - Value
+        * - Background Color
+          - rgb(51, 255, 0)
+        * - Fill
+          - yes
+        * - Foreground Color
+          - rgb(0, 0, 255)
+        * - Line Style
+          - Dot
+        * - Line Width
+          - 2
+        * - Start Angle
+          - 30
+        * - Total Angle
+          - 120
+
+The shape background and foreground colors can be made alarm-aware by attaching a PV.
+Note that the PV value is otherwise ignored.
+
+.. container:: opi
+
+    .. image:: ../capture/widgets/arc/alarm.opi.png
+    .. list-table::
+        :header-rows: 1
+        :widths: 1 99
+
+        * - Property
+          - Value
+        * - BackColor Alarm Sensitive
+          - yes
+
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties
@@ -42,11 +88,17 @@ Widget that draws an arc shape.
 .. include:: _props/alpha.rst
 .. include:: _props/anti_alias.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
-.. include:: _props/background_color.rst
+
+Background Color (``background_color``)
+    The color of the wedge when **Fill** is enabled.
+
 .. include:: _props/fill.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
-.. include:: _props/foreground_color.rst
+
+Foreground Color (``foreground_color``)
+    The color of the arc stroke.
+
 .. include:: _props/line_style.rst
 .. include:: _props/line_width.rst
 .. include:: _props/start_angle.rst
