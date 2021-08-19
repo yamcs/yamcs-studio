@@ -3,45 +3,29 @@ Polygon
 
 Widget that draws a polygon shape.
 
-.. container:: opi
-
-    .. image:: ../capture/widgets/polygon/polygon.opi.png
+.. opi:: ../capture/widgets/polygon/polygon.opi.png
 
 Example of shape fill:
 
-.. container:: opi
+.. opi:: ../capture/widgets/polygon/fill.opi.png
 
-    .. image:: ../capture/widgets/polygon/fill.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - Fill Level
-          - 20.0
-        * - Horizontal Fill
-          - yes
-        * - Transparent
-          - yes
-        * - Line Width
-          - 1
+    * - Fill Level
+      - 20.0
+    * - Horizontal Fill
+      - yes
+    * - Transparent
+      - yes
+    * - Line Width
+      - 1
 
 
 The shape background and foreground colors can be made alarm-aware by attaching a PV.
 Note that the PV value is otherwise ignored.
 
-.. container:: opi
+.. opi:: ../capture/widgets/polygon/alarm.opi.png
 
-    .. image:: ../capture/widgets/polygon/alarm.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - ForeColor Alarm Sensitive
-          - yes
+    * - ForeColor Alarm Sensitive
+      - yes
 
 
 ..

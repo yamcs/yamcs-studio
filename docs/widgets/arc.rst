@@ -3,50 +3,35 @@ Arc
 
 Widget that draws an arc shape.
 
-.. container:: opi
-
-    .. image:: ../capture/widgets/arc/arc.opi.png
+.. image:: ../capture/widgets/arc/arc.opi.png
+    :align: center
 
 Example of shape fill:
 
-.. container:: opi
+.. opi:: ../capture/widgets/arc/fill.opi.png
 
-    .. image:: ../capture/widgets/arc/fill.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - Background Color
-          - rgb(51, 255, 0)
-        * - Fill
-          - yes
-        * - Foreground Color
-          - rgb(0, 0, 255)
-        * - Line Style
-          - Dot
-        * - Line Width
-          - 2
-        * - Start Angle
-          - 30
-        * - Total Angle
-          - 120
+      * - Background Color
+        - rgb(51, 255, 0)
+      * - Fill
+        - yes
+      * - Foreground Color
+        - rgb(0, 0, 255)
+      * - Line Style
+        - Dot
+      * - Line Width
+        - 2
+      * - Start Angle
+        - 30
+      * - Total Angle
+        - 120
 
 The shape background and foreground colors can be made alarm-aware by attaching a PV.
 Note that the PV value is otherwise ignored.
 
-.. container:: opi
+.. opi:: ../capture/widgets/arc/alarm.opi.png
 
-    .. image:: ../capture/widgets/arc/alarm.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - BackColor Alarm Sensitive
-          - yes
+    * - BackColor Alarm Sensitive
+      - yes
 
 
 ..

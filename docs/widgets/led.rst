@@ -3,47 +3,32 @@ LED
 
 Boolean widget that displays a value as an ON/OFF LED.
 
-.. container:: opi
-
-    .. image:: ../capture/widgets/led/led.opi.png
+.. image:: ../capture/widgets/led/led.opi.png
+    :align: center
 
 
 The LED can be made square.
 
-.. container:: opi
+.. opi:: ../capture/widgets/led/square.opi.png
 
-    .. image:: ../capture/widgets/led/square.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - Square LED
-          - yes
-        * - Show Boolean Label
-          - yes
-        * - Width
-          - 40
-        * - Height
-          - 30
+    * - Square LED
+      - yes
+    * - Show Boolean Label
+      - yes
+    * - Width
+      - 40
+    * - Height
+      - 30
 
 
 This widget further supports multistate whereby it can assume multiple different color states.
 
-.. container:: opi
+.. opi:: ../capture/widgets/led/multistate.opi.png
 
-    .. image:: ../capture/widgets/led/multistate.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - State Count
-          - 3
-        * - 3D Effect
-          - no
+    * - State Count
+      - 3
+    * - 3D Effect
+      - no
 
 
 ..

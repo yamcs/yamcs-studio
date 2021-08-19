@@ -1,20 +1,31 @@
 .opi {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    display: inline-block;
+    min-width: 800px;
+    margin-bottom: 2em;
 }
 
-.opi img {
-    display: block;
-    margin: 0 auto;
+.opi .content {
+    display: flex;
+}
+
+.opi .display {
+    flex-grow: 1;
+    align-self: center;
+    text-align: center;
+}
+
+.opi .properties {
+    flex-grow: 0;
+    border-left: 1px solid #eee;
 }
 
 .opi table {
     font-size: smaller;
     margin: 0;
     padding: 0;
-    margin-top: 20px;
     box-shadow: none;
     border: none;
-    width: 100%;
 }
 
 .opi table td, .opi table th {
@@ -25,7 +36,6 @@
 }
 
 .opi table th {
-    border-top: 1px solid #eee;
     min-width: 120px;
 }
 

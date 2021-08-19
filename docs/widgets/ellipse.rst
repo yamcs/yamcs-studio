@@ -3,77 +3,56 @@ Ellipse
 
 Widget that draws an ellipse shape.
 
-.. container:: opi
-
-    .. image:: ../capture/widgets/ellipse/ellipse.opi.png
+.. image:: ../capture/widgets/ellipse/ellipse.opi.png
+    :align: center
 
 
 Example of shape fill:
 
-.. container:: opi
+.. opi:: ../capture/widgets/ellipse/fill.opi.png
 
-    .. image:: ../capture/widgets/ellipse/fill.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - Foreground Color
-          - rgb(255, 0, 0)
-        * - Fill Level
-          - 40.0
-        * - Horizontal Fill
-          - no
-        * - Transparent
-          - yes
-        * - Line Color
-          - rgb(255, 0, 0)
-        * - Line Width
-          - 1
+    * - Foreground Color
+      - rgb(255, 0, 0)
+    * - Fill Level
+      - 40.0
+    * - Horizontal Fill
+      - no
+    * - Transparent
+      - yes
+    * - Line Color
+      - rgb(255, 0, 0)
+    * - Line Width
+      - 1
 
 Example of gradient effect:
 
-.. container:: opi
 
-    .. image:: ../capture/widgets/ellipse/gradient.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
+.. opi:: ../capture/widgets/ellipse/gradient.opi.png
 
-        * - Property
-          - Value
-        * - Background Color
-          - rgb(191, 191, 191)
-        * - Fill Level
-          - 40.0
-        * - Foreground Color
-          - rgb(30, 144, 255)
-        * - Horizontal Fill
-          - no
-        * - Gradient
-          - yes
-        * - Line Color
-          - rgb(161, 161, 161)
-        * - Line Width
-          - 1
+    * - Background Color
+      - rgb(191, 191, 191)
+    * - Fill Level
+      - 40.0
+    * - Foreground Color
+      - rgb(30, 144, 255)
+    * - Horizontal Fill
+      - no
+    * - Gradient
+      - yes
+    * - Line Color
+      - rgb(161, 161, 161)
+    * - Line Width
+      - 1
 
 
 The shape background and foreground colors can be made alarm-aware by attaching a PV.
 Note that the PV value is otherwise ignored. In particular: it does not impact fill level (use
 a :doc:`tank` for this use case).
 
-.. container:: opi
+.. opi:: ../capture/widgets/ellipse/alarm.opi.png
 
-    .. image:: ../capture/widgets/ellipse/alarm.opi.png
-    .. list-table::
-        :header-rows: 1
-        :widths: 1 99
-
-        * - Property
-          - Value
-        * - ForeColor Alarm Sensitive
-          - yes
+    * - ForeColor Alarm Sensitive
+      - yes
 
 
 ..
