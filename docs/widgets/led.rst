@@ -43,7 +43,7 @@ This widget further supports multistate whereby it can assume multiple different
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit.rst
+.. include:: _props/bit1.rst
 .. include:: _props/data_type.rst
 .. include:: _props/off_state.rst
 .. include:: _props/on_state.rst

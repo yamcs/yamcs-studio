@@ -1,2 +1,2 @@
 Minimum (``minimum``)
-    The lower limit on the scale.
+    The lower limit of the widget.

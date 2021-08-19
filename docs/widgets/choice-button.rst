@@ -1,7 +1,8 @@
-Image Boolean Indicator
-=======================
+Choice Button
+=============
 
-Boolean widget that alternates images based on its value.
+Widget for writing one of a list of available values to a PV.
+
 
 ..
     ---------------------------------------------------------------------------
@@ -17,15 +18,12 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
-.. include:: _props/data_type.rst
-.. include:: _props/off_state.rst
-.. include:: _props/on_state.rst
+.. include:: _props/enabled.rst
+.. include:: _props/items.rst
+.. include:: _props/items_from_pv.rst
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
 .. include:: _props/visible.rst
-..
-    .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?
 
 
 ..
@@ -45,26 +43,17 @@ Boolean widget that alternates images based on its value.
 .. include:: _props/alarm_pulsing.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
-.. include:: _props/boolean_label_position.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
-.. include:: _props/on_label.rst
-.. include:: _props/show_boolean_label.rst
+
+Horizontal (``horizontal``)
+    Direction in which to arrange the items.
+
+Selected Color (``selected_color``)
+    The color of the dot when selected.
+
 .. include:: _props/tooltip.rst
-.. include:: _props/transparency.rst
-
-
-..
-    ---------------------------------------------------------------------------
-.. rubric:: Image Properties
-
-.. include:: _props/align_to_nearest_second.rst
-.. include:: _props/auto_size1.rst
-.. include:: _props/no_animation.rst
-.. include:: _props/off_image.rst
-.. include:: _props/on_image.rst
-.. include:: _props/stretch_to_fit.rst
 
 
 ..

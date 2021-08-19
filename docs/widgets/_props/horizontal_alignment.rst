@@ -3,12 +3,12 @@ Horizontal Alignment (``horizontal_alignment``)
 
     .. list-table::
         :widths: 25 75
-        
+
         * - Code
           - Value
         * - 0
-          - Top
+          - Left
         * - 1
-          - Middle
+          - Center
         * - 2
-          - Bottom
+          - Right

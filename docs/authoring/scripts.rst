@@ -275,6 +275,8 @@ The utility class to facilitate Javascript programming for PV operation.
         | Write a PV in a background job.
 
 
+.. _ColorFontUtil:
+
 ColorFontUtil
 ^^^^^^^^^^^^^
 

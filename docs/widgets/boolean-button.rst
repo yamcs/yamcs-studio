@@ -1,7 +1,8 @@
-Image Boolean Indicator
-=======================
+Boolean Button
+==============
 
-Boolean widget that alternates images based on its value.
+Widget for writing 0 or 1 to the attached PV. This widget can also be used to flip a single bit of the attached PV.
+
 
 ..
     ---------------------------------------------------------------------------
@@ -17,15 +18,27 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
+.. include:: _props/bit2.rst
+.. include:: _props/confirm_message.rst
 .. include:: _props/data_type.rst
+.. include:: _props/enabled.rst
 .. include:: _props/off_state.rst
 .. include:: _props/on_state.rst
+.. include:: _props/password.rst
+
+Push Action Index (``push_action_index``)
+    Index in the list of associated actions of the action that must
+    be executed when the control is pushed.
+
+Release Action Index (``release_action_index``)
+    Index in the list of associated actions of the action that must
+    be executed when the control is released.
+
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
+.. include:: _props/show_confirm_dialog.rst
+.. include:: _props/toggle_button.rst
 .. include:: _props/visible.rst
-..
-    .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?
 
 
 ..
@@ -42,29 +55,28 @@ Boolean widget that alternates images based on its value.
     ---------------------------------------------------------------------------
 .. rubric:: Display Properties
 
+.. include:: _props/effect_3d.rst
 .. include:: _props/alarm_pulsing.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
-.. include:: _props/boolean_label_position.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
+.. include:: _props/labels_from_pv.rst
+
+Off Color (``off_color``)
+    Color of the LED when it is off.
+
+.. include:: _props/off_label.rst
+
+On Color (``on_color``)
+    Color of the LED when it is on.
+
 .. include:: _props/on_label.rst
 .. include:: _props/show_boolean_label.rst
+.. include:: _props/show_led.rst
+.. include:: _props/square_button.rst
 .. include:: _props/tooltip.rst
-.. include:: _props/transparency.rst
-
-
-..
-    ---------------------------------------------------------------------------
-.. rubric:: Image Properties
-
-.. include:: _props/align_to_nearest_second.rst
-.. include:: _props/auto_size1.rst
-.. include:: _props/no_animation.rst
-.. include:: _props/off_image.rst
-.. include:: _props/on_image.rst
-.. include:: _props/stretch_to_fit.rst
 
 
 ..

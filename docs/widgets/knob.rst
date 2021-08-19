@@ -1,7 +1,7 @@
-Image Boolean Indicator
-=======================
+Knob
+====
 
-Boolean widget that alternates images based on its value.
+Widget for reading and writing a numeric value.
 
 ..
     ---------------------------------------------------------------------------
@@ -17,15 +17,21 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
-.. include:: _props/data_type.rst
-.. include:: _props/off_state.rst
-.. include:: _props/on_state.rst
+.. include:: _props/enabled.rst
+
+Increment (``increment``)
+    Value added/subtracted when dragging the thumb.
+
+.. include:: _props/level_hi.rst
+.. include:: _props/level_hihi.rst
+.. include:: _props/level_lo.rst
+.. include:: _props/level_lolo.rst
+.. include:: _props/limits_from_pv.rst
+.. include:: _props/maximum.rst
+.. include:: _props/minimum.rst
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
 .. include:: _props/visible.rst
-..
-    .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?
 
 
 ..
@@ -42,29 +48,41 @@ Boolean widget that alternates images based on its value.
     ---------------------------------------------------------------------------
 .. rubric:: Display Properties
 
+.. include:: _props/effect_3d.rst
 .. include:: _props/alarm_pulsing.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
-.. include:: _props/boolean_label_position.rst
+.. include:: _props/color_hi.rst
+.. include:: _props/color_hihi.rst
+.. include:: _props/color_lo.rst
+.. include:: _props/color_lolo.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
-.. include:: _props/on_label.rst
-.. include:: _props/show_boolean_label.rst
+
+Knob Color (``knob_color``)
+    Color of the knob.
+
+.. include:: _props/log_scale.rst
+.. include:: _props/major_tick_step_hint.rst
+.. include:: _props/ramp_gradient.rst
+.. include:: _props/scale_font.rst
+.. include:: _props/scale_format.rst
+.. include:: _props/show_hi.rst
+.. include:: _props/show_hihi.rst
+.. include:: _props/show_lo.rst
+.. include:: _props/show_lolo.rst
+.. include:: _props/show_minor_ticks.rst
+.. include:: _props/show_markers2.rst
+.. include:: _props/show_scale.rst
+.. include:: _props/show_value_label.rst
+
+Thumb Color (``thumb_color``)
+    Color of the thumb.
+
 .. include:: _props/tooltip.rst
-.. include:: _props/transparency.rst
-
-
-..
-    ---------------------------------------------------------------------------
-.. rubric:: Image Properties
-
-.. include:: _props/align_to_nearest_second.rst
-.. include:: _props/auto_size1.rst
-.. include:: _props/no_animation.rst
-.. include:: _props/off_image.rst
-.. include:: _props/on_image.rst
-.. include:: _props/stretch_to_fit.rst
+.. include:: _props/transparent_background.rst
+.. include:: _props/value_label_format.rst
 
 
 ..

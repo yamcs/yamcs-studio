@@ -1,7 +1,10 @@
-Image Boolean Indicator
-=======================
+Image Boolean Button
+====================
 
-Boolean widget that alternates images based on its value.
+Widget for writing 0 or 1 to the attached PV. This widget can also be used to flip a single bit of the attached PV.
+
+The widget shows the current state by switching between two configurable images.
+
 
 ..
     ---------------------------------------------------------------------------
@@ -17,15 +20,27 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
+.. include:: _props/bit2.rst
+.. include:: _props/confirm_message.rst
 .. include:: _props/data_type.rst
+.. include:: _props/enabled.rst
 .. include:: _props/off_state.rst
 .. include:: _props/on_state.rst
+.. include:: _props/password.rst
+
+Push Action Index (``push_action_index``)
+    Index in the list of associated actions of the action that must
+    be executed when the control is pushed.
+
+Release Action Index (``release_action_index``)
+    Index in the list of associated actions of the action that must
+    be executed when the control is released.
+
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
+.. include:: _props/show_confirm_dialog.rst
+.. include:: _props/toggle_button.rst
 .. include:: _props/visible.rst
-..
-    .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?
 
 
 ..
@@ -49,6 +64,7 @@ Boolean widget that alternates images based on its value.
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
+.. include:: _props/off_label.rst
 .. include:: _props/on_label.rst
 .. include:: _props/show_boolean_label.rst
 .. include:: _props/tooltip.rst
@@ -57,7 +73,7 @@ Boolean widget that alternates images based on its value.
 
 ..
     ---------------------------------------------------------------------------
-.. rubric:: Image Properties
+    .. rubric:: Image Properties
 
 .. include:: _props/align_to_nearest_second.rst
 .. include:: _props/auto_size1.rst

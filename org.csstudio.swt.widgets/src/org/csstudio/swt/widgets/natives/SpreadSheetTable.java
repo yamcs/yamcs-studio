@@ -757,6 +757,12 @@ public class SpreadSheetTable extends Composite {
                 .setCellEditorType(cellEditorType);
     }
 
+    // String-based for easier use within scripting.
+    public void setColumnCellEditorType(int columnIndex, String cellEditorType) {
+        CellEditorType type = CellEditorType.valueOf(cellEditorType);
+        setColumnCellEditorType(columnIndex, cellEditorType);
+    }
+
     /**
      * Set the needed data for the cell editor. For example, a String[] for dropdown cell editor.
      * 

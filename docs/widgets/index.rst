@@ -42,13 +42,13 @@ The default widgets in Yamcs Studio are listed below.
 
     * - |led| :doc:`led`
       - |progress-bar| :doc:`progress-bar`
-      - |xygraph| XY Graph :sup:`*`
+      - |xygraph| :doc:`xy-graph` :sup:`*`
     * - |image-boolean-indicator| :doc:`image-boolean-indicator`
       - |gauge| :doc:`gauge`
-      - |intensity-graph| Intensity Graph
+      - |intensity-graph| :doc:`intensity-graph`
     * - |text-update| :doc:`text-update`
       - |thermometer| :doc:`thermometer`
-      - |byte-monitor| Byte Monitor
+      - |byte-monitor| :doc:`byte-monitor`
     * - |meter| :doc:`meter`
       - |tank| :doc:`tank`
       -
@@ -72,21 +72,21 @@ The default widgets in Yamcs Studio are listed below.
 .. list-table::
     :widths: 33 33 33
 
-    * - |action-button| Action Button :sup:`*`
-      - |knob| Knob
-      - |image-boolean-button| Image Boolean Button
-    * - |menu-button| Menu Button
-      - |scrollbar| Scrollbar
-      - |check-box| Check Box
-    * - |text-input| Text Input
-      - |thumb-wheel| Thumb Wheel
-      - |radio-box| Radio Box
-    * - |spinner| Spinner
-      - |boolean-switch| Boolean Switch
-      - |choice-button| Choice Button
-    * - |scaled-slider| Scaled Slider
-      - |boolean-button| Boolean Button
-      - |combo| Combo
+    * - |action-button| :doc:`action-button`
+      - |knob| :doc:`knob`
+      - |image-boolean-button| :doc:`image-boolean-button`
+    * - |menu-button| :doc:`menu-button`
+      - |scrollbar| :doc:`scrollbar`
+      - |check-box| :doc:`check-box`
+    * - |text-input| :doc:`text-input`
+      - |thumb-wheel| :doc:`thumb-wheel`
+      - |radio-box| :doc:`radio-box`
+    * - |spinner| :doc:`spinner`
+      - |boolean-switch| :doc:`boolean-switch`
+      - |choice-button| :doc:`choice-button`
+    * - |scaled-slider| :doc:`scaled-slider`
+      - |boolean-button| :doc:`boolean-button`
+      - |combo| :doc:`combo`
 
 .. |action-button| image:: _images/actionbutton.png
 .. |boolean-button| image:: _images/BoolButton.png
@@ -104,21 +104,19 @@ The default widgets in Yamcs Studio are listed below.
 .. |text-input| image:: _images/textInput.png
 .. |thumb-wheel| image:: _images/thumbwheel.png
 
-:sup:`*` Action Buttons are often used to open other displays. Whether this opens in a new tab or in the same tab depends on how the display author constructed the display. Override the default by right-clicking the Action Button.
-
 
 .. rubric:: Others
 .. list-table::
     :widths: 33 33 33
 
-    * - |table| Table
-      - |grouping-container| Grouping Container
-      - |sash-container| Sash Container
-    * - |web-browser| Web Browser
-      - |linking-container| Linking Container
-      - |grid-layout| Grid Layout
-    * - |array| Array
-      - |tabbed-container| Tabbed Container
+    * - |table| :doc:`table`
+      - |grouping-container| :doc:`grouping-container`
+      - |sash-container| :doc:`sash-container`
+    * - |web-browser| :doc:`web-browser`
+      - |linking-container| :doc:`linking-container`
+      - |grid-layout| :doc:`grid-layout`
+    * - |array| :doc:`array`
+      - |tabbed-container| :doc:`tabbed-container`
       -
 
 .. |array| image:: _images/array.png
@@ -164,19 +162,45 @@ Yamcs parameters support five different levels of alarms, as well as a range of 
     :maxdepth: 1
     :hidden:
 
+    action-button
     arc
+    array
+    boolean-button
+    boolean-switch
+    byte-monitor
+    check-box
+    choice-button
+    combo
     ellipse
     gauge
+    grid-layout
+    grouping-container
     image
+    image-boolean-button
     image-boolean-indicator
+    intensity-graph
+    knob
     label
     led
+    linking-container
+    menu-button
     meter
     polygon
     polyline
     progress-bar
+    radio-box
     rectangle
     rounded-rectangle
+    sash-container
+    scaled-slider
+    scrollbar
+    spinner
+    tabbed-container
+    table
     tank
+    text-input
     text-update
     thermometer
+    thumb-wheel
+    xy-graph
+    web-browser

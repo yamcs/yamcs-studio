@@ -1,7 +1,8 @@
-Image Boolean Indicator
-=======================
+Byte Monitor
+============
 
-Boolean widget that alternates images based on its value.
+Widget that displays the bits of a numeric value as a series of LEDs.
+
 
 ..
     ---------------------------------------------------------------------------
@@ -17,10 +18,6 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
-.. include:: _props/data_type.rst
-.. include:: _props/off_state.rst
-.. include:: _props/on_state.rst
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
 .. include:: _props/visible.rst
@@ -42,29 +39,49 @@ Boolean widget that alternates images based on its value.
     ---------------------------------------------------------------------------
 .. rubric:: Display Properties
 
+.. include:: _props/effect_3d.rst
 .. include:: _props/alarm_pulsing.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
-.. include:: _props/boolean_label_position.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
-.. include:: _props/on_label.rst
-.. include:: _props/show_boolean_label.rst
+
+Horizontal (``horizontal``)
+    Direction of the LEDs.
+
+Labels (``label``)
+    The labels corresponding with each LED. Labels are only
+    visible when **Square LED** is enabled.
+
+LED Border (``led_border``)
+    The width of the border surrounding each LED bulb.
+
+LED Border Color (``led_border_color``)
+    The color of the border surrounding each LED bulb.
+
+Number of Bits (``num_bits``)
+  The number of bits (LEDs) to display.
+
+Off Color (``off_color``)
+    Color of each LED when it is off.
+
+On Color (``on_color``)
+    Color of each LED when it is on.
+
+Pack LEDs (``led_packed``)
+    Collapse borders between successive LEDs. Has best
+    effect when using square LEDs.
+
+Reverse Bits (``bitReverse``)
+    Left (or top) bit corresponds with the least-significant bit.
+
+.. include:: _props/square_led.rst
+
+Start Bit (``startBit``)
+    Bit position to start displaying from (zero-based).
+
 .. include:: _props/tooltip.rst
-.. include:: _props/transparency.rst
-
-
-..
-    ---------------------------------------------------------------------------
-.. rubric:: Image Properties
-
-.. include:: _props/align_to_nearest_second.rst
-.. include:: _props/auto_size1.rst
-.. include:: _props/no_animation.rst
-.. include:: _props/off_image.rst
-.. include:: _props/on_image.rst
-.. include:: _props/stretch_to_fit.rst
 
 
 ..

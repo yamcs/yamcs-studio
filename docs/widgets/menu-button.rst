@@ -1,7 +1,9 @@
-Image Boolean Indicator
-=======================
+Menu Button
+===========
 
-Boolean widget that alternates images based on its value.
+Control widget for opening a menu when clicked. A menu item is created for each
+action.
+
 
 ..
     ---------------------------------------------------------------------------
@@ -17,15 +19,16 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
-.. include:: _props/data_type.rst
-.. include:: _props/off_state.rst
-.. include:: _props/on_state.rst
+
+Actions from PV (``actions_from_pv``)
+    If the PV is an enumerated PV, populate actions based on the list of
+    enumeration states. When selected, each action will write that
+    specific state value to the attached PV.
+
+.. include:: _props/enabled.rst
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
 .. include:: _props/visible.rst
-..
-    .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?
 
 
 ..
@@ -45,26 +48,18 @@ Boolean widget that alternates images based on its value.
 .. include:: _props/alarm_pulsing.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
-.. include:: _props/boolean_label_position.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
-.. include:: _props/on_label.rst
-.. include:: _props/show_boolean_label.rst
+.. include:: _props/label.rst
+
+Show Down Arrow (``show_down_arrow``)
+    Show a down chevron next to the label.
+
 .. include:: _props/tooltip.rst
-.. include:: _props/transparency.rst
 
-
-..
-    ---------------------------------------------------------------------------
-.. rubric:: Image Properties
-
-.. include:: _props/align_to_nearest_second.rst
-.. include:: _props/auto_size1.rst
-.. include:: _props/no_animation.rst
-.. include:: _props/off_image.rst
-.. include:: _props/on_image.rst
-.. include:: _props/stretch_to_fit.rst
+Transparent (``transparent``)
+    Do not draw the button background.
 
 
 ..

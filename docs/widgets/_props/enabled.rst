@@ -1,2 +1,2 @@
 Enabled (``enabled``)
-    Unset to make this control widget not operatable.
+    Unset to make this control widget unusable.

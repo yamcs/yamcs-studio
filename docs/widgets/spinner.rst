@@ -1,7 +1,8 @@
-Image Boolean Indicator
-=======================
+Spinner
+=======
 
-Boolean widget that alternates images based on its value.
+Widget for writing to a numeric PV.
+
 
 ..
     ---------------------------------------------------------------------------
@@ -17,15 +18,15 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
-.. include:: _props/data_type.rst
-.. include:: _props/off_state.rst
-.. include:: _props/on_state.rst
+.. include:: _props/enabled.rst
+.. include:: _props/limits_from_pv2.rst
+.. include:: _props/maximum.rst
+.. include:: _props/minimum.rst
+.. include:: _props/page_increment.rst
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
+.. include:: _props/step_increment.rst
 .. include:: _props/visible.rst
-..
-    .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?
 
 
 ..
@@ -45,26 +46,35 @@ Boolean widget that alternates images based on its value.
 .. include:: _props/alarm_pulsing.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
-.. include:: _props/boolean_label_position.rst
+
+Button on Left (``buttons_on_left``)
+    Place the arrow buttons left of the input field.
+
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
-.. include:: _props/on_label.rst
-.. include:: _props/show_boolean_label.rst
+.. include:: _props/format.rst
+.. include:: _props/horizontal_alignment.rst
+
+Horizontal Buttons Layout (``horizontal_buttons_layout``)
+    Place the arrow buttons next to each other.
+
+Precision (``precision``)
+    Precision in case of Decimal format.
+
+    Ignored when ** Precision from PV** is enabled.
+
+.. include:: _props/precision_from_pv.rst
+
+Show Text (``show_text``)
+    Display current value. If unset only the arrow buttons are visible.
+
 .. include:: _props/tooltip.rst
-.. include:: _props/transparency.rst
 
+Transparent (``transparent``)
+    Do not draw the input background.
 
-..
-    ---------------------------------------------------------------------------
-.. rubric:: Image Properties
-
-.. include:: _props/align_to_nearest_second.rst
-.. include:: _props/auto_size1.rst
-.. include:: _props/no_animation.rst
-.. include:: _props/off_image.rst
-.. include:: _props/on_image.rst
-.. include:: _props/stretch_to_fit.rst
+.. include:: _props/vertical_alignment.rst
 
 
 ..

@@ -1,2 +1,2 @@
 Maximum (``maximum``)
-    The upper limit on the scale.
+    The upper limit of the widget.

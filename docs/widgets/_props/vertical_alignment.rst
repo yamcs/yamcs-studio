@@ -1,14 +1,14 @@
-Horizontal Alignment (``horizontal_alignment``)
+Vertical Alignment (``vertical_alignment``)
     Placement of the text within the widget area.
 
     .. list-table::
-        :widths: 25 75
-        
+        :widths: 25 75        
+
         * - Code
           - Value
         * - 0
-          - Left
+          - Top
         * - 1
-          - Center
+          - Middle
         * - 2
-          - Right
+          - Bottom

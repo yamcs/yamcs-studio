@@ -1,7 +1,10 @@
-Image Boolean Indicator
-=======================
+Action Button
+=============
 
-Boolean widget that alternates images based on its value.
+Control widget for executing an action when clicked.
+
+For example, a button can be used to open another display.
+
 
 ..
     ---------------------------------------------------------------------------
@@ -17,15 +20,14 @@ Boolean widget that alternates images based on its value.
 .. rubric:: Behavior Properties
 
 .. include:: _props/actions.rst
-.. include:: _props/bit1.rst
-.. include:: _props/data_type.rst
-.. include:: _props/off_state.rst
-.. include:: _props/on_state.rst
+.. include:: _props/push_action_index1.rst
+.. include:: _props/push_action_index2.rst
+.. include:: _props/release_action_index.rst
+.. include:: _props/enabled.rst
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
+.. include:: _props/toggle_button.rst
 .. include:: _props/visible.rst
-..
-    .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?
 
 
 ..
@@ -45,26 +47,15 @@ Boolean widget that alternates images based on its value.
 .. include:: _props/alarm_pulsing.rst
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
-.. include:: _props/boolean_label_position.rst
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
 .. include:: _props/foreground_color.rst
-.. include:: _props/on_label.rst
-.. include:: _props/show_boolean_label.rst
+
+Icon File (``image``)
+    An image file to be shown next to the button text.
+
+.. include:: _props/text.rst
 .. include:: _props/tooltip.rst
-.. include:: _props/transparency.rst
-
-
-..
-    ---------------------------------------------------------------------------
-.. rubric:: Image Properties
-
-.. include:: _props/align_to_nearest_second.rst
-.. include:: _props/auto_size1.rst
-.. include:: _props/no_animation.rst
-.. include:: _props/off_image.rst
-.. include:: _props/on_image.rst
-.. include:: _props/stretch_to_fit.rst
 
 
 ..
