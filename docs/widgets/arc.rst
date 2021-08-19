@@ -3,19 +3,18 @@ Arc
 
 Widget that draws an arc shape.
 
-.. image:: ../capture/widgets/arc/arc.opi.png
-    :align: center
+.. opi:: ../capture/widgets/arc/arc.opi.png
 
 Example of shape fill:
 
 .. opi:: ../capture/widgets/arc/fill.opi.png
 
       * - Background Color
-        - rgb(51, 255, 0)
+        - :color:`rgb(51, 255, 0)`
       * - Fill
         - yes
       * - Foreground Color
-        - rgb(0, 0, 255)
+        - :color:`rgb(0, 0, 255)`
       * - Line Style
         - Dot
       * - Line Width

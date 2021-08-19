@@ -3,9 +3,7 @@ LED
 
 Boolean widget that displays a value as an ON/OFF LED.
 
-.. image:: ../capture/widgets/led/led.opi.png
-    :align: center
-
+.. opi:: ../capture/widgets/led/led.opi.png
 
 The LED can be made square.
 

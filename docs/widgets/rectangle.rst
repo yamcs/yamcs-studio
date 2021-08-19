@@ -3,15 +3,14 @@ Rectangle
 
 Widget that draws a rectangle shape.
 
-.. image:: ../capture/widgets/rectangle/rectangle.opi.png
-    :align: center
+.. opi:: ../capture/widgets/rectangle/rectangle.opi.png
 
 Example of shape fill:
 
 .. opi:: ../capture/widgets/rectangle/fill.opi.png
 
     * - Foreground Color
-      - rgb(255, 0, 0)
+      - :color:`rgb(255, 0, 0)`
     * - Fill Level
       - 40.0
     * - Horizontal Fill
@@ -19,7 +18,7 @@ Example of shape fill:
     * - Transparent
       - yes
     * - Line Color
-      - rgb(255, 0, 0)
+      - :color:`rgb(255, 0, 0)`
     * - Line Width
       - 1
 
@@ -29,17 +28,17 @@ Example of gradient effect:
 .. opi:: ../capture/widgets/rectangle/gradient.opi.png
 
     * - Background Color
-      - rgb(191, 191, 191)
+      - :color:`rgb(191, 191, 191)`
     * - Fill Level
       - 40.0
     * - Foreground Color
-      - rgb(114, 250, 120)
+      - :color:`rgb(114, 250, 120)`
     * - Horizontal Fill
       - no
     * - Gradient
       - yes
     * - Line Color
-      - rgb(161, 161, 161)
+      - :color:`rgb(161, 161, 161)`
     * - Line Width
       - 1
 

@@ -3,16 +3,14 @@ Ellipse
 
 Widget that draws an ellipse shape.
 
-.. image:: ../capture/widgets/ellipse/ellipse.opi.png
-    :align: center
-
+.. opi:: ../capture/widgets/ellipse/ellipse.opi.png
 
 Example of shape fill:
 
 .. opi:: ../capture/widgets/ellipse/fill.opi.png
 
     * - Foreground Color
-      - rgb(255, 0, 0)
+      - :color:`rgb(255, 0, 0)`
     * - Fill Level
       - 40.0
     * - Horizontal Fill
@@ -20,7 +18,7 @@ Example of shape fill:
     * - Transparent
       - yes
     * - Line Color
-      - rgb(255, 0, 0)
+      - :color:`rgb(255, 0, 0)`
     * - Line Width
       - 1
 
@@ -30,17 +28,17 @@ Example of gradient effect:
 .. opi:: ../capture/widgets/ellipse/gradient.opi.png
 
     * - Background Color
-      - rgb(191, 191, 191)
+      - :color:`rgb(191, 191, 191)`
     * - Fill Level
       - 40.0
     * - Foreground Color
-      - rgb(30, 144, 255)
+      - :color:`rgb(30, 144, 255)`
     * - Horizontal Fill
       - no
     * - Gradient
       - yes
     * - Line Color
-      - rgb(161, 161, 161)
+      - :color:`rgb(161, 161, 161)`
     * - Line Width
       - 1
 
