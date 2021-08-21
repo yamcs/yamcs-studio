@@ -242,20 +242,6 @@ public class PVUtil {
     }
 
     /**
-     * Get the full info from the pv in this format
-     *
-     * <pre>
-     * timestamp value severity, status
-     * </pre>
-     *
-     * @param pv
-     * @return the full info string
-     */
-    public final static String getFullString(IPV pv) {
-        return checkPVValue(pv).toString();
-    }
-
-    /**
      * Get the timestamp string of the pv
      *
      * @param pv
@@ -357,7 +343,9 @@ public class PVUtil {
      * @param pv
      *            the PV.
      * @return the status string.
+     * @deprecated
      */
+    @Deprecated
     public final static String getStatus(IPV pv) {
         return VTypeHelper.getAlarmName(checkPVValue(pv));
     }
