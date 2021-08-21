@@ -125,10 +125,12 @@ public class IPV {
      * <code>String</code>, maybe more.
      */
     public void setValue(Object value) {
-        datasource.writeValue(this, value, err -> {
-            if (err != null) {
-                log.log(Level.SEVERE, "Failed to update value", err);
-            }
+        startFinished.thenRun(() -> {
+            datasource.writeValue(this, value, err -> {
+                if (err != null) {
+                    log.log(Level.SEVERE, "Failed to update value", err);
+                }
+            });
         });
     }
 
