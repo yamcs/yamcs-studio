@@ -50,7 +50,7 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
     // private interface AlarmSeverity extends ISeverity{
     // public void copy(ISeverity severity);
     // }
-    private final class WidgetPVListener extends IPVListener.Stub {
+    private final class WidgetPVListener implements IPVListener {
         private String pvPropID;
         private boolean isControlPV;
 
@@ -68,7 +68,6 @@ public class PVWidgetEditpartDelegate implements IPVWidgetEditpart {
 
         @Override
         public void valueChanged(IPV pv) {
-
             final AbstractWidgetModel widgetModel = editpart.getWidgetModel();
 
             // write access

@@ -9,14 +9,14 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.widgets.model.AbstractChoiceModel;
 import org.csstudio.opibuilder.widgets.model.ChoiceButtonModel;
+import org.csstudio.swt.widgets.figures.AbstractChoiceFigure;
+import org.csstudio.ui.util.CustomMediaFactory;
+import org.eclipse.draw2d.IFigure;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.VTypeHelper;
 import org.yamcs.studio.data.vtype.VEnum;
 import org.yamcs.studio.data.vtype.VType;
-import org.csstudio.swt.widgets.figures.AbstractChoiceFigure;
-import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.draw2d.IFigure;
 
 /**
  * The abstract editpart of choice widget.
@@ -74,7 +74,7 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (loadItemsFromPVListener == null) {
-                        loadItemsFromPVListener = new IPVListener.Stub() {
+                        loadItemsFromPVListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();

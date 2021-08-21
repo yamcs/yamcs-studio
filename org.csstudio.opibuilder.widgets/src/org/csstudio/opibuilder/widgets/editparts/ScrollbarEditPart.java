@@ -6,13 +6,13 @@ import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.ScrollBarModel;
+import org.csstudio.swt.widgets.figures.ScrollbarFigure;
+import org.eclipse.draw2d.IFigure;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.VTypeHelper;
 import org.yamcs.studio.data.vtype.Display;
 import org.yamcs.studio.data.vtype.VType;
-import org.csstudio.swt.widgets.figures.ScrollbarFigure;
-import org.eclipse.draw2d.IFigure;
 
 public class ScrollbarEditPart extends AbstractPVWidgetEditPart {
 
@@ -40,7 +40,7 @@ public class ScrollbarEditPart extends AbstractPVWidgetEditPart {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
-                        pvLoadLimitsListener = new IPVListener.Stub() {
+                        pvLoadLimitsListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();

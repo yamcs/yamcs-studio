@@ -21,15 +21,6 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.widgets.model.ArrayModel;
 import org.csstudio.opibuilder.widgets.model.ArrayModel.ArrayDataType;
-import org.yamcs.studio.data.BasicDataType;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VEnum;
-import org.yamcs.studio.data.vtype.VNumberArray;
-import org.yamcs.studio.data.vtype.VString;
-import org.yamcs.studio.data.vtype.VStringArray;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.datadefinition.ByteArrayWrapper;
 import org.csstudio.swt.widgets.datadefinition.DoubleArrayWrapper;
 import org.csstudio.swt.widgets.datadefinition.FloatArrayWrapper;
@@ -53,6 +44,15 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.MouseEvent;
+import org.yamcs.studio.data.BasicDataType;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VEnum;
+import org.yamcs.studio.data.vtype.VNumberArray;
+import org.yamcs.studio.data.vtype.VString;
+import org.yamcs.studio.data.vtype.VStringArray;
+import org.yamcs.studio.data.vtype.VType;
 
 /**
  * Editpart for array widget.
@@ -205,7 +205,7 @@ public class ArrayEditPart extends AbstractContainerEditpart implements IPVWidge
             IPV pv = getPV();
             if (pv != null) {
                 if (pvDataTypeListener == null) {
-                    pvDataTypeListener = new IPVListener.Stub() {
+                    pvDataTypeListener = new IPVListener() {
                         @Override
                         public void valueChanged(IPV pv) {
                             VType value = pv.getValue();

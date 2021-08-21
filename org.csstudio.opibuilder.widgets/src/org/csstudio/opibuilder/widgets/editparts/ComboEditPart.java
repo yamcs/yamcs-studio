@@ -10,17 +10,17 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.figures.ComboFigure;
 import org.csstudio.opibuilder.widgets.model.ComboModel;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.VEnum;
-import org.yamcs.studio.data.vtype.VType;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.VEnum;
+import org.yamcs.studio.data.vtype.VType;
 
 public final class ComboEditPart extends AbstractPVWidgetEditPart {
 
@@ -87,7 +87,7 @@ public final class ComboEditPart extends AbstractPVWidgetEditPart {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (loadItemsFromPVListener == null) {
-                        loadItemsFromPVListener = new IPVListener.Stub() {
+                        loadItemsFromPVListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();

@@ -9,11 +9,6 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.SpinnerModel;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.Display;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.ITextFigure;
 import org.csstudio.swt.widgets.figures.SpinnerFigure;
 import org.csstudio.swt.widgets.figures.SpinnerFigure.NumericFormatType;
@@ -27,6 +22,11 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.SelectEditPartTracker;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.Display;
+import org.yamcs.studio.data.vtype.VType;
 
 public class SpinnerEditpart extends AbstractPVWidgetEditPart {
 
@@ -93,7 +93,7 @@ public class SpinnerEditpart extends AbstractPVWidgetEditPart {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
-                        pvLoadLimitsListener = new IPVListener.Stub() {
+                        pvLoadLimitsListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();

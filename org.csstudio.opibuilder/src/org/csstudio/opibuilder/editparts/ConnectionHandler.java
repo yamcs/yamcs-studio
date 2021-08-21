@@ -30,7 +30,7 @@ import org.yamcs.studio.data.IPVListener;
  */
 public class ConnectionHandler {
 
-    private final class PVConnectionListener extends IPVListener.Stub {
+    private final class PVConnectionListener implements IPVListener {
 
         private boolean lastValueIsNull;
 
@@ -51,7 +51,6 @@ public class ConnectionHandler {
                 markWidgetAsDisconnected(pv);
             }
         }
-
     }
 
     private Map<String, IPV> pvMap;

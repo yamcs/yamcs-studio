@@ -6,12 +6,12 @@ import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.widgets.model.BoolButtonModel;
+import org.csstudio.swt.widgets.figures.BoolButtonFigure;
+import org.eclipse.draw2d.IFigure;
 import org.yamcs.studio.data.IPV;
 import org.yamcs.studio.data.IPVListener;
 import org.yamcs.studio.data.vtype.VEnum;
 import org.yamcs.studio.data.vtype.VType;
-import org.csstudio.swt.widgets.figures.BoolButtonFigure;
-import org.eclipse.draw2d.IFigure;
 
 public class BoolButtonEditPart extends AbstractBoolControlEditPart {
 
@@ -82,7 +82,7 @@ public class BoolButtonEditPart extends AbstractBoolControlEditPart {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (loadLabelsFromPVListener == null) {
-                        loadLabelsFromPVListener = new IPVListener.Stub() {
+                        loadLabelsFromPVListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();

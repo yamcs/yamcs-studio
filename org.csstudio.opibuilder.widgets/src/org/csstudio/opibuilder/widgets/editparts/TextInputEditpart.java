@@ -14,15 +14,6 @@ import org.csstudio.opibuilder.widgets.Activator;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel.Style;
 import org.csstudio.opibuilder.widgets.model.LabelModel;
 import org.csstudio.opibuilder.widgets.model.TextInputModel;
-import org.yamcs.studio.data.FormatEnum;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.Array;
-import org.yamcs.studio.data.vtype.Scalar;
-import org.yamcs.studio.data.vtype.VEnum;
-import org.yamcs.studio.data.vtype.VNumberArray;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.TextFigure;
 import org.csstudio.swt.widgets.figures.TextInputFigure;
 import org.eclipse.draw2d.IFigure;
@@ -32,6 +23,15 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.yamcs.studio.data.FormatEnum;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.Array;
+import org.yamcs.studio.data.vtype.Scalar;
+import org.yamcs.studio.data.vtype.VEnum;
+import org.yamcs.studio.data.vtype.VNumberArray;
+import org.yamcs.studio.data.vtype.VType;
 
 public class TextInputEditpart extends TextUpdateEditPart {
 
@@ -113,7 +113,7 @@ public class TextInputEditpart extends TextUpdateEditPart {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
-                        pvLoadLimitsListener = new IPVListener.Stub() {
+                        pvLoadLimitsListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();

@@ -10,16 +10,16 @@ import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.csstudio.opibuilder.widgets.model.ThumbWheelModel;
-import org.yamcs.studio.data.IPV;
-import org.yamcs.studio.data.IPVListener;
-import org.yamcs.studio.data.VTypeHelper;
-import org.yamcs.studio.data.vtype.Display;
-import org.yamcs.studio.data.vtype.VType;
 import org.csstudio.swt.widgets.figures.ThumbWheelFigure;
 import org.csstudio.swt.widgets.figures.ThumbWheelFigure.WheelListener;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.graphics.FontData;
+import org.yamcs.studio.data.IPV;
+import org.yamcs.studio.data.IPVListener;
+import org.yamcs.studio.data.VTypeHelper;
+import org.yamcs.studio.data.vtype.Display;
+import org.yamcs.studio.data.vtype.VType;
 
 public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
 
@@ -166,7 +166,7 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
                 IPV pv = getPV(AbstractPVWidgetModel.PROP_PVNAME);
                 if (pv != null) {
                     if (pvLoadLimitsListener == null) {
-                        pvLoadLimitsListener = new IPVListener.Stub() {
+                        pvLoadLimitsListener = new IPVListener() {
                             @Override
                             public void valueChanged(IPV pv) {
                                 VType value = pv.getValue();

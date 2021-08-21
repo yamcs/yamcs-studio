@@ -146,7 +146,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
         pvListenerMap = new HashMap<>();
 
-        IPVListener suppressPVListener = new IPVListener.Stub() {
+        IPVListener suppressPVListener = new IPVListener() {
 
             @Override
             public synchronized void valueChanged(IPV pv) {
@@ -158,7 +158,7 @@ public abstract class AbstractScriptStore implements IScriptStore {
 
         };
 
-        IPVListener triggerPVListener = new IPVListener.Stub() {
+        IPVListener triggerPVListener = new IPVListener() {
             @Override
             public synchronized void valueChanged(IPV pv) {
 

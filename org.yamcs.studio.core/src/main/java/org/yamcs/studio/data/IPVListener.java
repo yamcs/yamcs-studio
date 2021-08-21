@@ -6,39 +6,14 @@ package org.yamcs.studio.data;
 public interface IPVListener {
 
     /**
-     * An empty implementation of {@link IPVListener} for convenience.
-     *
-     */
-    public class Stub implements IPVListener {
-        @Override
-        public void connectionChanged(IPV pv) {
-        }
-
-        @Override
-        public void exceptionOccurred(IPV pv, Exception exception) {
-        }
-
-        @Override
-        public void valueChanged(IPV pv) {
-        }
-
-        @Override
-        public void writeFinished(IPV pv, boolean isWriteSucceeded) {
-        }
-
-        @Override
-        public void writePermissionChanged(IPV pv) {
-        }
-    }
-
-    /**
      * Will be called when connection state changed. It the connection is closed by explicitly calling
      * {@link IPV#stop()}, this method will not be notified.
      *
      * @param pv
      *            the pv whose connection state changed.
      */
-    void connectionChanged(IPV pv);
+    default void connectionChanged(IPV pv) {
+    }
 
     /**
      * If no {@link ExceptionHandler} was given to the PV, this method will be called when exception happened.
@@ -49,7 +24,8 @@ public interface IPVListener {
      * @param exception
      *            the exception that has been caught.
      */
-    void exceptionOccurred(IPV pv, Exception exception);
+    default void exceptionOccurred(IPV pv, Exception exception) {
+    }
 
     /**
      * Will be called when PV value changed.
@@ -57,7 +33,8 @@ public interface IPVListener {
      * @param pv
      *            the pv whose value has changed.
      */
-    void valueChanged(IPV pv);
+    default void valueChanged(IPV pv) {
+    }
 
     /**
      * Will be called when a write is finished. <br>
@@ -69,7 +46,8 @@ public interface IPVListener {
      * @param isWriteSucceeded
      *            true if the write was successful.
      */
-    void writeFinished(IPV pv, boolean isWriteSucceeded);
+    default void writeFinished(IPV pv, boolean isWriteSucceeded) {
+    }
 
     /**
      * Will be called when write permission <b>may</b> have changed. The write permission can be get from
@@ -78,6 +56,6 @@ public interface IPVListener {
      * @param pv
      *            the pv whose permission may have changed.
      */
-    void writePermissionChanged(IPV pv);
-
+    default void writePermissionChanged(IPV pv) {
+    }
 }
