@@ -3,6 +3,9 @@ XY Graph
 
 Widget for plotting one or two-dimensional data.
 
+.. image:: _images/examples/xy-graph.png
+    :alt: XY Graph
+    :align: center
 
 ..
     ---------------------------------------------------------------------------
@@ -374,13 +377,13 @@ Y PV (``trace_x_y_pv``)
     ---------------------------------------------------------------------------
 .. rubric:: Additional API
 
-    XY Graph widgets expose the following additional API for use in scripting:
-        
-    ``clearGraph(): void``
-        Clear the graph (deletes the underlying buffer).
+XY Graph widgets expose the following additional API for use in scripting:
     
-    ``getXBuffer(trace: number): double[]``
-        Returns the current X axis values for the given trace.
-    
-    ``getYBuffer(trace: number): double[]``
-        Returns the current Y axis values for the given trace.
+``clearGraph(): void``
+    Clear the graph (deletes the underlying buffer).
+
+``getXBuffer(trace: number): double[]``
+    Returns the current X axis values for the given trace.
+
+``getYBuffer(trace: number): double[]``
+    Returns the current Y axis values for the given trace.

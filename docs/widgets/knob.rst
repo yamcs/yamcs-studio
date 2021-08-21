@@ -3,6 +3,10 @@ Knob
 
 Widget for reading and writing a numeric value.
 
+.. image:: _images/examples/knob.png
+    :alt: Knob
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

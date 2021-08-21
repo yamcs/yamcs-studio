@@ -3,6 +3,10 @@ Gauge
 
 Widget that displays a numeric value on a gauge.
 
+.. image:: _images/examples/gauge.png
+    :alt: Gauge
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

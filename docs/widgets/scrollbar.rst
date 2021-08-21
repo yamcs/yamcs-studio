@@ -3,6 +3,9 @@ Scrollbar
 
 Widget for writing to a numeric PV.
 
+.. image:: _images/examples/scrollbar.png
+    :alt: Scrollbar
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

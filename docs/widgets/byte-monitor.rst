@@ -3,6 +3,9 @@ Byte Monitor
 
 Widget that displays the bits of a numeric value as a series of LEDs.
 
+.. image:: _images/examples/byte-monitor.png
+    :alt: Byte Monitor
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

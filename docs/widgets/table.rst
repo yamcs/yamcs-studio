@@ -1,9 +1,34 @@
 Table
 =====
 
-Widget that works like a spreadsheet. Not all functionalities are exposed
-as properties. The main use case for this widget is to be populated
-dynamically from within scripts.
+Widget that works like a spreadsheet.
+
+.. image:: _images/examples/table.png
+    :alt: Table
+    :align: center
+
+Not all functionalities are exposed as properties. The main use case for
+this widget is to be populated dynamically from within scripts.
+
+For example, the following JavaScript would append and reveal a
+row. To make the script run upon display initialization, attach it to
+the Table widget with a trigger PV set to the formula ``=1``.
+
+.. code-block:: javascript
+
+    var table = widget.getTable();
+
+    var rowIndex = table.appendRow();
+    table.setCellText(rowIndex, 0, Math.random());
+    table.revealRow(rowIndex);
+
+Any row column can be modified. The table is automatically extended
+as needed:
+
+.. code-block:: javascript
+
+    var table = widget.getTable();
+    table.setCellText(4, 5, Math.random());
 
 
 ..

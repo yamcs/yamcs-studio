@@ -7,6 +7,9 @@ widgets are relative to the top-left of the specific sash panel they belong to.
 The panels can be oriented left/right or top/bottom. The available container
 space can be redistributed at runtime by dragging the sash.
 
+.. image:: _images/examples/sash-container.png
+    :alt: Sash Container
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

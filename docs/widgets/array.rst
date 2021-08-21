@@ -3,6 +3,10 @@ Array
 
 Widget for reading or writing an array of other widgets of the same type.
 
+.. image:: _images/examples/array.png
+    :alt: Array
+    :align: center
+
 When dropping a new widget onto an array widget, that widget will be
 duplicated by the length of that array. Each singular contained widget
 is matched to one element of the array.

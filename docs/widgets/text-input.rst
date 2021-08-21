@@ -3,6 +3,10 @@ Text Input
 
 Widget for reading and writing to a PV.
 
+.. image:: _images/examples/text-input.png
+    :alt: Text Input
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

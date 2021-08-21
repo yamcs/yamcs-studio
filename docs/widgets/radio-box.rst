@@ -3,6 +3,9 @@ Radio Box
 
 Widget for writing one of a list of available values to a PV.
 
+.. image:: _images/examples/radio-box.png
+    :alt: Radio Box
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

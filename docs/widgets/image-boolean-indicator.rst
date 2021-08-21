@@ -3,6 +3,10 @@ Image Boolean Indicator
 
 Boolean widget that alternates images based on its value.
 
+.. image:: _images/examples/image-boolean-indicator.png
+    :alt: Image Boolean Indicator
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

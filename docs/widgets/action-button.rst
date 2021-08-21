@@ -5,6 +5,9 @@ Control widget for executing an action when clicked.
 
 For example, a button can be used to open another display.
 
+.. image:: _images/examples/action-button.png
+    :alt: Action Button
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

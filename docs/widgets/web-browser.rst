@@ -3,6 +3,10 @@ Web Browser
 
 Widget that embeds the native browser engine.
 
+.. image:: _images/examples/web-browser.png
+    :alt: Web Browser
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

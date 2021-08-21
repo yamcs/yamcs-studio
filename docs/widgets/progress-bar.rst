@@ -3,6 +3,10 @@ Progress Bar
 
 Widget that displays a numeric value on a bar graph.
 
+.. image:: _images/examples/progress-bar.png
+    :alt: Progress Bar
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

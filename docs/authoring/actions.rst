@@ -1,7 +1,7 @@
 Actions
 =======
 
-Widgets have an **Actions** property which is used to trigger actions upon user interaction. The common case is to associate Actions with :doc:`control-widgets`, but in principle it can be made to work with other widgets as well.
+Widgets have an **Actions** property which is used to trigger actions upon user interaction. The common case is to associate Actions with control widgets, but in principle it can be made to work with other widgets as well.
 
 .. image:: _images/open-opi-action.png
     :alt: Sample Action
@@ -10,7 +10,7 @@ Widgets have an **Actions** property which is used to trigger actions upon user 
 The list of available actions currently includes:
 
 Open OPI
-    | Often used in combination with :doc:`Action Buttons <control-widgets>` to organize displays hierarchically.
+    | Often used in combination with :doc:`Action Buttons <../widgets/action-button>` to organize displays hierarchically.
     | Indicate the workspace path to the OPI with ``File Path``.
     | Use the ``Mode`` to select whether the OPI should by default open in the same tab. Note that the runtime user can override this default behaviour by right-clicking the button.
 

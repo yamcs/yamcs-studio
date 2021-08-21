@@ -1,7 +1,11 @@
 Scaled Slider
 =============
 
-Widget for reading and writing a numeric value.
+Widget for reading and writing a numeric value in increments.
+
+.. image:: _images/examples/scaled-slider.png
+    :alt: Scaled Slider
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

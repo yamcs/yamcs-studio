@@ -9,7 +9,6 @@ Editing Displays
     editor-area
     outline
     properties
-    palette
     actions
     rules
     scripts

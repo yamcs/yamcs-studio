@@ -4,6 +4,10 @@ Menu Button
 Control widget for opening a menu when clicked. A menu item is created for each
 action.
 
+.. image:: _images/examples/menu-button.png
+    :alt: Menu Button
+    :align: center
+
 
 ..
     ---------------------------------------------------------------------------

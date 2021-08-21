@@ -21,7 +21,7 @@ OPI files are created with some default properties, which includes a grid, and a
 Palette
 -------
 
-Notice the :doc:`palette` attached to the right of the Editor Area. The Palette contains the widgets bundled with your version of Yamcs Studio. Use the palette as your toolbox when you author a display.
+Notice the palette attached to the right of the Editor Area. The Palette contains the widgets bundled with your version of Yamcs Studio. Use the palette as your toolbox when you author a display.
 
 To add a widget to your display, click first on its icon in the Palette, then click where you want to put it in the Editor Area.
 

@@ -3,6 +3,10 @@ Thermometer
 
 Widget that displays a numeric value as a thermometer.
 
+.. image:: _images/examples/thermometer.png
+    :alt: Thermometer
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

@@ -3,6 +3,11 @@ Boolean Switch
 
 Widget for writing 0 or 1 to the attached PV. This widget can also be used to flip a single bit of the attached PV.
 
+.. image:: _images/examples/boolean-switch.png
+    :alt: Boolean Switch
+    :align: center
+
+If **Width** is greater than **Height**, the switch will render horizontally, otherwise vertically.
 
 ..
     ---------------------------------------------------------------------------

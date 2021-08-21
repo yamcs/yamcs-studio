@@ -5,6 +5,9 @@ Widget for writing 0 or 1 to the attached PV. This widget can also be used to fl
 
 The widget shows the current state by switching between two configurable images.
 
+.. image:: _images/examples/image-boolean-button.png
+    :alt: Image Boolean Button
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

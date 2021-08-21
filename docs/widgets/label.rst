@@ -3,6 +3,12 @@ Label
 
 Widget that draws a text label.
 
+.. image:: _images/examples/label.png
+    :alt: Label
+    :align: center
+
+Labels can be edited in-place by pressing :kbd:`F2` on them.
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties
@@ -19,6 +25,13 @@ Widget that draws a text label.
 .. include:: _props/rules.rst
 .. include:: _props/scripts.rst
 .. include:: _props/visible.rst
+
+Show Scrollbar (``show_scrollbar``)
+    Show scrollbars when the text overflows the bounding box of this
+    widget.
+
+    This property is only visible when **Wrap Words** is set.
+
 .. include:: _props/wrap_words.rst
 ..
     .. include:: _props/enabled.rst -- TODO? Why visible in Yamcs Studio?

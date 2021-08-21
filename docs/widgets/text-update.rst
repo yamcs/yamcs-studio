@@ -3,6 +3,10 @@ Text Update
 
 Widget that displays a PV value.
 
+.. image:: _images/examples/text-update.png
+    :alt: Text Update
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

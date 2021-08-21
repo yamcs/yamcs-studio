@@ -4,6 +4,10 @@ Intensity Graph
 Widget that displays an array of numbers as an image. An Intensity Graph
 could be used to display a video image, temperature pattern or terrain.
 
+.. image:: _images/examples/intensity-graph.png
+    :alt: Intensity Graph
+    :align: center
+
 An Intensity Graph can be used in two different modes toggled by the
 property **RGB Mode**:
 

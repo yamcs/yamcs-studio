@@ -4,6 +4,10 @@ Tabbed Container
 Container widget for grouping widgets in a number of tabs. X and Y coordinates
 of contained widgets are relative to the top-left of the container.
 
+.. image:: _images/examples/tabbed-container.png
+    :alt: Tabbed Container
+    :align: center
+
 While editing in Yamcs Studio, tabs can be organized via the right-click
 context menu.
 

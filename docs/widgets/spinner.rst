@@ -1,8 +1,11 @@
 Spinner
 =======
 
-Widget for writing to a numeric PV.
+Widget for writing to a numeric PV in increments.
 
+.. image:: _images/examples/spinner-example.png
+    :alt: Spinner
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

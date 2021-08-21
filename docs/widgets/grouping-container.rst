@@ -9,7 +9,7 @@ By default a Grouping Container is *Unlocked* as indicated in the top-left corne
 Click this indicator to switch the container to *Locked*. Once locked you will not
 be able to directly select its contained widgets.
 
-Widgets can be added to a container in two ways:
+Widgets can be added to a group in two ways:
 
 * By dragging and dropping widgets onto the area of an existing Grouping Container.
 * By selecting existing widgets and choosing **Create Group** from the right-click

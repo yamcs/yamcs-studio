@@ -3,6 +3,10 @@ Tank
 
 Widget that displays a numeric value as a fillable tank.
 
+.. image:: _images/examples/tank.png
+    :alt: Tank
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

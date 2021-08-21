@@ -3,6 +3,15 @@ Polyline
 
 Widget that draws a line or polyline, possibly with arrowheads.
 
+.. image:: _images/examples/polyline.png
+    :alt: Polyline
+    :align: center
+
+To draw a polyline, choose the tool from the Palette, and click on the
+start location. Every next click will add a new point. Double-click to
+indicate this is the last point. Points can be repositioned using the
+yellow handles.
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

@@ -3,6 +3,9 @@ Choice Button
 
 Widget for writing one of a list of available values to a PV.
 
+.. image:: _images/examples/choice-button.png
+    :alt: Choice Button
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

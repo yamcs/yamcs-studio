@@ -3,6 +3,9 @@ Combo
 
 Widget for writing one of a list of available values to a PV.
 
+.. image:: _images/examples/combo.png
+    :alt: Combo
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

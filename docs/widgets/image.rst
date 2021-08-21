@@ -3,6 +3,10 @@ Image
 
 Widget that display an image.
 
+.. image:: _images/examples/image.png
+    :alt: Image
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties

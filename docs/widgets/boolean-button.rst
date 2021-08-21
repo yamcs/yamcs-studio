@@ -3,6 +3,9 @@ Boolean Button
 
 Widget for writing 0 or 1 to the attached PV. This widget can also be used to flip a single bit of the attached PV.
 
+.. image:: _images/examples/boolean-button.png
+    :alt: Boolean Button
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

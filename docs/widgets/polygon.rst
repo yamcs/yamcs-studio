@@ -5,6 +5,12 @@ Widget that draws a polygon shape.
 
 .. opi:: ../capture/widgets/polygon/polygon.opi.png
 
+To draw a polygon, choose the tool from the Palette, and click on the
+start location. Every next click will add a new point. Double-click to
+indicate this is the last point. The last point is connected to the
+first point to form a closed shape. Points can be repositioned using the
+yellow handles.
+
 Example of shape fill:
 
 .. opi:: ../capture/widgets/polygon/fill.opi.png

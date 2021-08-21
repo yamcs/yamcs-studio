@@ -26,14 +26,14 @@ The default widgets in Yamcs Studio are listed below.
       - |ellipse| :doc:`ellipse`
       -
 
-.. |arc| image:: _images/arc.png
-.. |ellipse| image:: _images/ellipse2.png
-.. |image| image:: _images/image.png
-.. |label| image:: _images/label.png
-.. |polygon| image:: _images/polygon.png
-.. |polyline| image:: _images/polyline.png
-.. |rectangle| image:: _images/rectangle2.png
-.. |rounded-rectangle| image:: _images/roundedRectangle.png
+.. |arc| image:: _images/icons/arc.png
+.. |ellipse| image:: _images/icons/ellipse2.png
+.. |image| image:: _images/icons/image.png
+.. |label| image:: _images/icons/label.png
+.. |polygon| image:: _images/icons/polygon.png
+.. |polyline| image:: _images/icons/polyline.png
+.. |rectangle| image:: _images/icons/rectangle2.png
+.. |rounded-rectangle| image:: _images/icons/roundedRectangle.png
 
 
 .. rubric:: Monitors
@@ -42,7 +42,7 @@ The default widgets in Yamcs Studio are listed below.
 
     * - |led| :doc:`led`
       - |progress-bar| :doc:`progress-bar`
-      - |xygraph| :doc:`xy-graph` :sup:`*`
+      - |xygraph| :doc:`xy-graph`
     * - |image-boolean-indicator| :doc:`image-boolean-indicator`
       - |gauge| :doc:`gauge`
       - |intensity-graph| :doc:`intensity-graph`
@@ -53,19 +53,17 @@ The default widgets in Yamcs Studio are listed below.
       - |tank| :doc:`tank`
       -
 
-.. |byte-monitor| image:: _images/ByteMonitor.png
-.. |gauge| image:: _images/gauge2.png
-.. |image-boolean-indicator| image:: _images/imageBooleanIndicator.png
-.. |intensity-graph| image:: _images/intensityGraph.png
-.. |led| image:: _images/LED.png
-.. |meter| image:: _images/XMeter.png
-.. |progress-bar| image:: _images/ProgressBar.png
-.. |tank| image:: _images/tank.png
-.. |text-update| image:: _images/textUpdate.png
-.. |thermometer| image:: _images/Thermo.png
-.. |xygraph| image:: _images/XYGraph.png
-
-:sup:`*` Clear the view on this widget by right-clicking on it and selecting **Clear Graph**. If you want advanced controls, like zooming, activate the toolbar by right-clicking on your widget and selecting **Show/Hide Graph Toolbar**.
+.. |byte-monitor| image:: _images/icons/ByteMonitor.png
+.. |gauge| image:: _images/icons/gauge2.png
+.. |image-boolean-indicator| image:: _images/icons/imageBooleanIndicator.png
+.. |intensity-graph| image:: _images/icons/intensityGraph.png
+.. |led| image:: _images/icons/LED.png
+.. |meter| image:: _images/icons/XMeter.png
+.. |progress-bar| image:: _images/icons/ProgressBar.png
+.. |tank| image:: _images/icons/tank.png
+.. |text-update| image:: _images/icons/textUpdate.png
+.. |thermometer| image:: _images/icons/Thermo.png
+.. |xygraph| image:: _images/icons/XYGraph.png
 
 
 .. rubric:: Controls
@@ -88,21 +86,21 @@ The default widgets in Yamcs Studio are listed below.
       - |boolean-button| :doc:`boolean-button`
       - |combo| :doc:`combo`
 
-.. |action-button| image:: _images/actionbutton.png
-.. |boolean-button| image:: _images/BoolButton.png
-.. |boolean-switch| image:: _images/BoolSwitch.png
-.. |check-box| image:: _images/checkboxenabledon.png
-.. |choice-button| image:: _images/ChoiceButton.png
-.. |combo| image:: _images/combo.png
-.. |image-boolean-button| image:: _images/imageButton.png
-.. |knob| image:: _images/knob.png
-.. |menu-button| image:: _images/menubutton.png
-.. |radio-box| image:: _images/radiobutton.png
-.. |scaled-slider| image:: _images/scaled_slider.png
-.. |scrollbar| image:: _images/scrollbar.png
-.. |spinner| image:: _images/Spinner.png
-.. |text-input| image:: _images/textInput.png
-.. |thumb-wheel| image:: _images/thumbwheel.png
+.. |action-button| image:: _images/icons/actionbutton.png
+.. |boolean-button| image:: _images/icons/BoolButton.png
+.. |boolean-switch| image:: _images/icons/BoolSwitch.png
+.. |check-box| image:: _images/icons/checkboxenabledon.png
+.. |choice-button| image:: _images/icons/ChoiceButton.png
+.. |combo| image:: _images/icons/combo.png
+.. |image-boolean-button| image:: _images/icons/imageButton.png
+.. |knob| image:: _images/icons/knob.png
+.. |menu-button| image:: _images/icons/menubutton.png
+.. |radio-box| image:: _images/icons/radiobutton.png
+.. |scaled-slider| image:: _images/icons/scaled_slider.png
+.. |scrollbar| image:: _images/icons/scrollbar.png
+.. |spinner| image:: _images/icons/Spinner.png
+.. |text-input| image:: _images/icons/textInput.png
+.. |thumb-wheel| image:: _images/icons/thumbwheel.png
 
 
 .. rubric:: Others
@@ -119,14 +117,14 @@ The default widgets in Yamcs Studio are listed below.
       - |tabbed-container| :doc:`tabbed-container`
       -
 
-.. |array| image:: _images/array.png
-.. |grid-layout| image:: _images/grid.png
-.. |grouping-container| image:: _images/groupContainer.png
-.. |linking-container| image:: _images/linkingcontainer.png
-.. |sash-container| image:: _images/SashContainer.png
-.. |tabbed-container| image:: _images/tab.png
-.. |table| image:: _images/table.png
-.. |web-browser| image:: _images/web_browser.png
+.. |array| image:: _images/icons/array.png
+.. |grid-layout| image:: _images/icons/grid.png
+.. |grouping-container| image:: _images/icons/groupContainer.png
+.. |linking-container| image:: _images/icons/linkingcontainer.png
+.. |sash-container| image:: _images/icons/SashContainer.png
+.. |tabbed-container| image:: _images/icons/tab.png
+.. |table| image:: _images/icons/table.png
+.. |web-browser| image:: _images/icons/web_browser.png
 
 
 Color Decorations

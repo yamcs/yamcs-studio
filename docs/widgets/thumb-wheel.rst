@@ -3,6 +3,9 @@ Thumb Wheel
 
 Widget for reading or writing a numeric PV by digit.
 
+.. image:: _images/examples/thumb-wheel.png
+    :alt: Thumb Wheel
+    :align: center
 
 ..
     ---------------------------------------------------------------------------

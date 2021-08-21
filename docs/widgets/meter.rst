@@ -3,6 +3,10 @@ Meter
 
 Widget that displays a numeric value on a meter.
 
+.. image:: _images/examples/meter.png
+    :alt: Meter
+    :align: center
+
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties
