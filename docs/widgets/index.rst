@@ -1,15 +1,11 @@
 Widgets
 =======
 
-A display is a container for widgets.
+A display is a container for ordered widgets, each occupying an area
+specified by x, y, width and height coordinates.
 
-Most widgets are backed by a PV. Some widgets (e.g. widgets used for layout) are typically not connected to a PV. Other widgets (e.g. charts) can be backed by more than one PV.
-
-
-Catalogue of Widgets
---------------------
-
-The default widgets in Yamcs Studio are listed below.
+The widgets in Yamcs Studio are listed below. Note that a :doc:`display`
+is itself also a kind of widget.
 
 
 .. rubric:: Graphics
@@ -169,6 +165,7 @@ Yamcs parameters support five different levels of alarms, as well as a range of 
     check-box
     choice-button
     combo
+    display
     ellipse
     gauge
     grid-layout
