@@ -13,12 +13,12 @@ Yamcs Studio is a desktop client for use with Yamcs, the server. In its default 
     :titlesonly:
 
     intro/index
+    display-builder/index
     display-runner/index
     pv/index
     widgets/index
+    actions/index
+    borders/index
+    rules/index
     scripts/index
-    inspect/index
-    authoring/index
-    views/index
     tuning/index
-

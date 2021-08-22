@@ -3,14 +3,6 @@ Display Builder
 
 The Display Builder window is used to create or edit displays.
 
-.. image:: _images/opi-editor.png
-    :alt: Display Builder
-    :align: center
-
-In the left explorer, expand the YSS Landing project and open for example ``FlightData.opi`` by double-clicking the file.
-
-The window layout can be decomposed like this:
-
 .. image:: _images/yss-opi-editor-flight-data-annotated.png
     :alt: Edit FlightData.opi
     :align: center
@@ -18,7 +10,7 @@ The window layout can be decomposed like this:
 1. Explorer
     The :doc:`explorer` contains all projects within the current workspace. In general a project is at the same level as a mission, but this is not strictly necessary. When we launch Yamcs Studio with a new workspace, it will always automatically create the YSS project. Once you have added your own project, you can remove YSS Landing and it will not be auto created anymore.
 
-    A project contains Operator Displays (``*.opi``), images, style definitions (``*.def``), custom scripts (``*.js``), etc. By right-clicking an OPI file, displays can be opened in two different modes.
+    A project contains Operator Displays (``*.opi``), images, custom scripts (``*.js``), etc. By right-clicking an OPI file, displays can be opened in two different modes.
 
     * In editing mode (default)
     * In runtime mode (via a new view)
@@ -40,7 +32,18 @@ The window layout can be decomposed like this:
 
 When you are done doing changes, make sure to save them (**File > Save All**). You can now test out your changes by clicking the launch button |opi-editor-launch| from the toolbar.
 
-This will open a new runtime window (notice it uses the OPI Runtime perspective). If you leave this window open, and you save more changes, do a right-click in your display tab and choose **Refresh OPI**. You will do this a lot as you go about editing displays. You can also refresh by hitting **F5**, but make sure that your display actually has focus (for example by clicking somewhere in the editor before hitting **F5**).
+This will open the :doc:`../display-runner/index` window. If you leave this window open, and you save more changes, do a right-click in your display tab and choose **Refresh OPI**. You will do this a lot as you go about editing displays. You can also refresh by hitting **F5**, but make sure that your display actually has focus (for example by clicking somewhere in the editor before hitting **F5**).
 
 
 .. |opi-editor-launch| image:: _images/opi-editor-launch.png
+
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    explorer
+    editor-area
+    outline
+    properties
+    opi-schema

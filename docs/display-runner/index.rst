@@ -21,5 +21,22 @@ The Display Runner window is useful for realtime operations, or for testing out 
 5. Operator Displays
     This area contains displays that were authored in the Display Builder window. Displays contain any number of widgets. Most widgets can be connected to TM, which will also make them alarm-sensitive. In practice this means that they will be highlighted using different decorations depending on the alarm level. There are also things like button widgets which can for example open other displays, or launch a telecommand, or open dialog boxes, etc. All widgets are highly customisable using scripts and/or rules.
 
-6. Built-In Displays
-    Yamcs Studio comes with an array of built-in displays that offer more dynamic views on different aspects of Yamcs. These built-in displays (or :doc:`../views/index`, as Yamcs Studio calls them) cover concepts like commanding, event logging, alarm overview and archive browsing.
+6. Views
+    Yamcs Studio includes extra views for interacting with other Yamcs functionalities.
+
+    .. toctree::
+        :maxdepth: 1
+
+        archive
+        event-log
+        command-stack
+        command-history
+
+There are a few standalone windows that can be opened for inspecting widgets. 
+
+.. toctree::
+    :maxdepth: 1
+
+    pv-list
+    pv-info
+    opi-probe

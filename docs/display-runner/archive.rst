@@ -1,5 +1,5 @@
-Archive
-=======
+Archive View
+============
 
 The Archive view represents a visual view of the data stored in the Yamcs archive. Through this view we can also initialize and control replays of archived telemetry.
 

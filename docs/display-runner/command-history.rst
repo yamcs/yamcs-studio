@@ -1,5 +1,5 @@
-Command History
-===============
+Command History View
+====================
 
 The Command History keeps track of all commands that were issued using Yamcs (not just by yourself, but by anyone).
 

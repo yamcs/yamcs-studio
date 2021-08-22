@@ -1,2 +1,2 @@
 Rules (``rules``)
-    Control property values of this widget dynamically.
+    :doc:`../../rules/index` attached to this widget.

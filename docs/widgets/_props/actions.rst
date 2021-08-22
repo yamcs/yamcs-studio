@@ -1,2 +1,2 @@
 Actions (``actions``)
-    Executable actions attached to this widget.
+    Executable :doc:`/actions/index` attached to this widget.

@@ -9,4 +9,4 @@ Yamcs Studio is a TM/TC front-end for Yamcs. It contains an editor for building 
 
     first-steps
     ui
-    connecting-to-yamcs
+    connect-to-yamcs

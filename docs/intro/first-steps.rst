@@ -21,10 +21,18 @@ Empty Workspace
 
 Yamcs Studio is now launched and you should see an empty workspace with the default window arrangement:
 
-.. image:: _images/empty-workspace.png
+.. image:: _images/opi-editor.png
     :alt: Empty Workspace
     :align: center
 
 The empty area in the middle is where displays will open.
 
-Yamcs Studio has two different windows. Display Builder and Display Runner. When Yamcs Studio is launched for the first time on a new workspace the user will be welcomed with the default Display Builder window.
+Yamcs Studio has two different windows. :doc:`../display-builder/index` and :doc:`../display-runner/index`. When Yamcs Studio is launched for the first time on a new workspace the user will be welcomed with the Display Builder window.
+
+
+Example Project
+---------------
+
+Yamcs Studio comes with a demo project that contains many examples
+on how to use any of the available widgets. To add this project to your
+workspace choose **File > New > Example...**, then **OPI Examples**.
