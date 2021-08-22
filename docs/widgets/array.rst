@@ -128,8 +128,9 @@ Spinner Width (``spinner_width``)
     ---------------------------------------------------------------------------
 .. rubric:: Additional API
 
-Array widgets expose the following additional API for use in scripting:
+Array widgets expose the following additional :doc:`../scripts/api/Widget`
+API for use in scripting:
     
-``getIndex(child): int``
+**getIndex(** child **)**
     Get the index of a child widget. If the given widget is not a child
     this method returns ``-1``.

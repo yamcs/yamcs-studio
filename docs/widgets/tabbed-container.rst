@@ -115,10 +115,11 @@ Title (``tab_x_title``)
     ---------------------------------------------------------------------------
 .. rubric:: Additional API
 
-Tabbed Container widgets expose the following additional API for use in scripting:
+Tabbed Container widgets expose the following additional :doc:`../scripts/api/Widget`
+API for use in scripting:
 
-``getActiveTabIndex(): int``
+**getActiveTabIndex()**
     Get the index of the active tab.
 
-``setActiveTabIndex(index: int): void``
+**setActiveTabIndex(** index **)**
     Activate a specific tab.

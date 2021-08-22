@@ -133,21 +133,23 @@ Default Content (``default_content``)
     ---------------------------------------------------------------------------
 .. rubric:: Additional API
 
-Table widgets expose the following additional API for use in scripting:
+Table widgets expose the following additional :doc:`../scripts/api/Widget`
+API for use in scripting:
 
-``getTable(): SpreadSheetTable``
-    Returns an object for modifying the spreadsheet underlying this table.
+**getTable()**
+    Returns a SpreadSheetTable object for modifying the spreadsheet underlying this table.
 
-``setAllowedHeaders(headers: string[]): void``
-    Restrict the column names. If this is set, adding a column at runtime
-    will require to select from one of the available headers.
+**setAllowedHeaders(** headers **)**
+    Restrict the column names to the given string array.
+    If this is set, adding a column at runtime will
+    require to select from one of the available headers.
 
 
 ..
     ---------------------------------------------------------------------------
 .. rubric:: Class: ``SpreadSheetTable``
 
-``addCellEditingListener(listener): void``
+**addCellEditingListener(** listener **)**
     Adds a listener that gets notified whenever a cell is edited.
 
     Usage with JavaScript is as follows:
@@ -166,7 +168,7 @@ Table widgets expose the following additional API for use in scripting:
             })
         );
 
-``addModifiedListener(listener): void``
+**addModifiedListener(** listener **)**
     Adds a listener that gets notified whenever content is modified.
 
     Usage with JavaScript is as follows:
@@ -185,7 +187,7 @@ Table widgets expose the following additional API for use in scripting:
             })
         );
     
-``addSelectionChangedListener(listener): void``
+**addSelectionChangedListener(** listener **)**
     Adds a listener that gets notified whenever the selection of the table
     changes.
 
@@ -205,75 +207,75 @@ Table widgets expose the following additional API for use in scripting:
             })
         );
 
-``appendRow(): int``
+**appendRow()**
     Adds a row at the bottom of to the spreadsheet, returning the row index.
 
-``autoSizeColumns(): void``
+**autoSizeColumns()**
     Calculate and apply automatic widths for all columns.
 
-``deleteColumn(index: int): void``
+**deleteColumn(** index **)**
     Deletes a column.
 
-``deleteRow(index: int): void``
+**deleteRow(** index **)**
     Deletes a row.
 
-``getCellText(row: int, col: int): string``
+**getCellText(** row, col **)**
     Returns the text of a specific cell.
 
-``getColumnCount(): int``
+**getColumnCount()**
     Returns the number of columns.
 
-``isColumnEditable(index: int): boolean``
+**isColumnEditable(** index **)**
     Returns ``true`` if a column is editable.
 
-``getColumnHeaders(): string[]``
-    Returns the column headers.
+**getColumnHeaders()**
+    Returns an array with the column headers.
 
-``getContent(): string[][]``
+**getContent()**
     Returns all spreadsheet data as a two-dimensional array.
 
-``getRowCount(): int``
+**getRowCount()**
     Returns the number of rows.
 
-``getSelection(): string[][]``
+**getSelection()**
     Returns the current selected data as a two-dimensional array.
 
-``insertColumn(index: int): void``
+**insertColumn(** index **)**
     Insert a new column, where each value is initialized to
     an empty string.
 
-``insertRow(index: int): void``
+**insertRow(** index **)**
     Insert a new row, where each value is initialized to
     an empty string.
 
-``isEditable(): boolean``
+**isEditable()**
     Returns ``true`` if the spreadsheet is editable.
 
-``isEmpty(): boolean``
+**isEmpty()**
     Returns ``true`` if the spreadsheet is empty.
 
-``refresh(): void``
+**refresh()**
     Refresh the table to reflect its content.
 
-``revealRow(index: int): void``
+**revealRow(** index **)**
     Scroll a specific row into view.
 
-``setCellBackground(row: int, col: int, color): void``
+**setCellBackground(** row, col, color **)**
     Set the background color of a cell.
 
-    Colors can be obtained from :ref:`ColorFontUtil`.
+    Colors can be obtained from :doc:`../scripts/api/ColorFontUtil`.
 
-``setCellForeground(row: int, col: int, color): void``
+**setCellForeground(** row, col, color **)**
     Set the foreground color of a cell.
 
-    Colors can be obtained from :ref:`ColorFontUtil`.
+    Colors can be obtained from :doc:`../scripts/api/ColorFontUtil`.
 
-``setCellText(row: int, col: int, text: string): void``
+**setCellText(** row, col, text **)**
     Set the text of a cell. If the row index is
     beyond the current row count, the spreadsheet is
     extended as necessary.
 
-``setColumnCellEditorData(col: int, data): void``
+**setColumnCellEditorData(** col, data **)**
     Set data required for a specific Cell Editor.
 
     In the case of a Cell Editor of type ``DROPDOWN``, data should
@@ -293,56 +295,56 @@ Table widgets expose the following additional API for use in scripting:
 
         var data = Java.to(["ON", "OFF"], "java.lang.String[]");
 
-``setColumnCellEditorType(col: int, type: string): void``
+**setColumnCellEditorType(** col, type **)**
     Set the editor for cells of a specific column. Type must be one of
     ``TEXT``, ``DROPDOWN``, ``CHECKBOX`` or ``CUSTOMIZED``.
 
-``setColumnEditable(col: int, editable: boolean): void``
+**setColumnEditable(** col, editable **)**
     Set whether the given column is editable or not.
 
-``setColumnHeader(col: int, header: string): void``
+**setColumnHeader(** col, header **)**
     Set the header for a specific column.
 
-``setColumnHeaders(headers: string[]): void``
+**setColumnHeaders(** headers **)**
     Set multiple column headers at once. If the given array is
     larger than the current column count, new columns will be
     appended to the right.
 
-``setColumnHeaderVisible(show: boolean): void``
+**setColumnHeaderVisible(** show **)**
     Set whether to show headers or not.
 
-``setColumnsCount(count: int): void``
+**setColumnsCount(** count **)**
     Set the number of columns. If the number is less than the current
     number of columns, columns will be deleted from the right. If the
     number is greater than the current number of columns, new columns
     will be appended to the right.
 
-``setColumnWidth(col: int, width: int): void``
+**setColumnWidth(** col, width **)**
     Set the pixel width of a specific column.
 
-``setColumnWidths(widths: int[]): void``
+**setColumnWidths(** widths **)**
     Set multiple column widths at once. If the given array is
     larger than the current column count, new columns will be
     appended to the right.
 
-``setContent(content: string[][]): void``
-    Replace the current contents of this spreadsheet with the
-    given content.
+**setContent(** content **)**
+    Replace the current contents (a two-dimensional array)
+    of this spreadsheet with the given content.
 
-``setEditable(editable: boolean): void``
+**setEditable(** editable **)**
     Set whether this spreadsheet is editable or not.
 
-``setFont(font): void``
+**setFont(** font **)**
     Set the font used in this spreadsheet.
 
-    Fonts can be obtained from :ref:`ColorFontUtil`.
+    Fonts can be obtained from :doc:`../scripts/api/ColorFontUtil`.
 
-``setRowBackground(row: int, color): void``
+**setRowBackground(** row, color **)**
     Set the background color of a row.
 
-    Colors can be obtained from :ref:`ColorFontUtil`.
+    Colors can be obtained from :doc:`../scripts/api/ColorFontUtil`.
 
-``setRowForeground(row: int, color): void``
+**setRowForeground(** row, color **)**
     Set the foreground color of a column.
 
-    Colors can be obtained from :ref:`ColorFontUtil`.
+    Colors can be obtained from :doc:`../scripts/api/ColorFontUtil`.

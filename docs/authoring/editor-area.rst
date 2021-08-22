@@ -7,7 +7,7 @@ The Editor Area is a unique zone in Yamcs Studio where files are opened for edit
 OPI Files
 ---------
 
-OPI stands for Operator Interface, but is more commonly referred to as a *display*. OPIs are often static, but when needed can be made very dynamic by combining different widgets and PVs together using concepts like :doc:`actions`, :doc:`rules` and :doc:`scripts`.
+OPI stands for Operator Interface, but is more commonly referred to as a *display*. OPIs are often static, but when needed can be made very dynamic by combining different widgets and PVs together using concepts like :doc:`actions`, :doc:`rules` and :doc:`../scripts/index`.
 
 In the Display Builder window, create a new OPI file, right-click in the Explorer on the desired location, and select **New > OPI File**.
 

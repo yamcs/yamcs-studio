@@ -377,13 +377,16 @@ Y PV (``trace_x_y_pv``)
     ---------------------------------------------------------------------------
 .. rubric:: Additional API
 
-XY Graph widgets expose the following additional API for use in scripting:
+XY Graph widgets expose the following additional :doc:`../scripts/api/Widget`
+API for use in scripting:
     
-``clearGraph(): void``
+**clearGraph()**
     Clear the graph (deletes the underlying buffer).
 
-``getXBuffer(trace: number): double[]``
-    Returns the current X axis values for the given trace.
+**getXBuffer(** trace **)**
+    Returns the current X axis values for the given trace index as an array
+    of doubles.
 
-``getYBuffer(trace: number): double[]``
-    Returns the current Y axis values for the given trace.
+**getYBuffer(** trace **)**
+    Returns the current Y axis values for the given trace index as an array
+    of doubles.

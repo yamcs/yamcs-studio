@@ -11,5 +11,4 @@ Editing Displays
     properties
     actions
     rules
-    scripts
     opi-schema

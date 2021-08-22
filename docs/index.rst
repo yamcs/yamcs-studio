@@ -16,6 +16,7 @@ Yamcs Studio is a desktop client for use with Yamcs, the server. In its default 
     display-runner/index
     pv/index
     widgets/index
+    scripts/index
     inspect/index
     authoring/index
     views/index
