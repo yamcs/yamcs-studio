@@ -81,12 +81,12 @@ public class FileUtil {
      * @throws Exception
      *             if the file does not exist or is not a correct XML file.
      */
-    public static Element loadXMLFile(final String filePath, final AbstractBaseEditPart widget) throws Exception {
-        final IPath path = buildAbsolutePath(filePath, widget);
+    public static Element loadXMLFile(String filePath, AbstractBaseEditPart widget) throws Exception {
+        IPath path = buildAbsolutePath(filePath, widget);
         SAXBuilder saxBuilder = new SAXBuilder();
         saxBuilder.setEntityResolver(new CssEntityResolver());
         File file = ResourceUtil.getFile(path);
-        final Document doc;
+        Document doc;
         if (file == null) {
             InputStream inputStream = ResourceUtil.pathToInputStream(path);
             doc = saxBuilder.build(inputStream);
@@ -117,6 +117,10 @@ public class FileUtil {
     public static InputStream getInputStreamFromFile(String filePath, AbstractBaseEditPart widget) throws Exception {
         IPath path = buildAbsolutePath(filePath, widget);
         return ResourceUtil.pathToInputStream(path);
+    }
+
+    public static InputStream getInputStreamFromFile(String filePath) throws Exception {
+        return getInputStreamFromFile(filePath, null);
     }
 
     /**
@@ -228,19 +232,21 @@ public class FileUtil {
             project.open(new NullProgressMonitor());
             IFolder folder = null;
             for (int i = 1; i < path.segmentCount() - 1; i++) {
-                if (i == 1)
+                if (i == 1) {
                     folder = project.getFolder(path.segment(i));
-                else
+                } else {
                     folder = folder.getFolder(path.segment(i));
+                }
                 if (!(folder.exists())) {
                     folder.create(true, true, null);
                 }
             }
             IContainer container;
-            if (folder == null)
+            if (folder == null) {
                 container = project;
-            else
+            } else {
                 container = folder;
+            }
             IFile file = container.getFile(ResourceUtil.getPathFromString(path.lastSegment()));
             if (file.exists()) {
                 StringBuilder sb = new StringBuilder();
@@ -287,6 +293,10 @@ public class FileUtil {
         action.run();
     }
 
+    public static void openFile(String filePath) {
+        openFile(filePath, null);
+    }
+
     /**
      * Open a web page.
      * 
@@ -317,6 +327,10 @@ public class FileUtil {
         action.setWidgetModel(widget != null ? widget.getWidgetModel() : null);
         action.setPropertyValue(PlayWavFileAction.PROP_PATH, filePath);
         action.run();
+    }
+
+    public static void playWavFile(String filePath) {
+        playWavFile(filePath, null);
     }
 
     /**
@@ -394,8 +408,9 @@ public class FileUtil {
 
     protected static IPath buildAbsolutePath(String filePath, AbstractBaseEditPart widget) {
         IPath path = ResourceUtil.getPathFromString(filePath);
-        if (!path.isAbsolute())
+        if (!path.isAbsolute()) {
             path = ResourceUtil.buildAbsolutePath(widget.getWidgetModel(), path);
+        }
         return path;
     }
 
@@ -407,11 +422,11 @@ public class FileUtil {
      *            path in workspace.
      * @return the system path on OS. Return an empty string if the path doesn't exist.
      */
-    public static String workspacePathToSysPath(String workspacePath) throws RuntimeException {
+    public static String workspacePathToSysPath(String workspacePath) {
         IPath path = ResourceUtil.workspacePathToSysPath(new Path(workspacePath));
-        if (path == null)
+        if (path == null) {
             return null;
+        }
         return path.toOSString();
     }
-
 }

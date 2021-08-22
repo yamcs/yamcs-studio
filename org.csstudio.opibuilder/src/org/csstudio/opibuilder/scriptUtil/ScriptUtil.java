@@ -50,9 +50,9 @@ public class ScriptUtil {
      * @param macrosInput
      *            the macrosInput. null if no macros needed.
      */
-    public final static void openOPI(AbstractBaseEditPart widget,
+    public static void openOPI(AbstractBaseEditPart widget,
             String opiPath, int target, MacrosInput macrosInput) {
-        final OpenDisplayAction action = new OpenDisplayAction();
+        OpenDisplayAction action = new OpenDisplayAction();
 
         // Map target IDs of this API to DisplayMode
         final DisplayMode mode;
@@ -212,8 +212,8 @@ public class ScriptUtil {
         widget.getViewer().getControl().getDisplay().asyncExec(runnable);
     }
 
+    @Deprecated
     public final static Version getBOYVersion() {
         return OPIBuilderPlugin.getDefault().getBundle().getVersion();
     }
-
 }

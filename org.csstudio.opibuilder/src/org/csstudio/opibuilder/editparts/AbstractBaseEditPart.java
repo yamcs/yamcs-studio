@@ -345,6 +345,10 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         return super.getAdapter(key);
     }
 
+    public String getName() {
+        return getWidgetModel().getName();
+    }
+
     /**
      * @return the map with all PVs. PV name is the key. It is not allowed to change the Map by client. null if no PV on
      *         this widget.
