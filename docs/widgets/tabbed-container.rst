@@ -16,9 +16,7 @@ context menu.
     ---------------------------------------------------------------------------
 .. rubric:: Basic Properties
 
-Macros (``macros``)
-    Manage the macros available within this container.
-
+.. include:: _props/macros.rst
 .. include:: _props/name.rst
 .. include:: _props/widget_type.rst
 

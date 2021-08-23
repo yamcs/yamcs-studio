@@ -1,7 +1,78 @@
 Borders
 =======
 
-When a widget is backed by a PV, it will be decorated according to its runtime state. The specific colors of these decorations can vary since the default colors can be overridden (or disabled) by the display author.
+All widgets can show a border surrounding their bounding box. The border look is
+controlled by the properties **Border Color**, **Border Width** and **Border Style**.
+
+.. image:: ../capture/borders/styles.opi.png
+    :alt: Border Styles
+    :align: center
+
+The codes for these borders are:
+
+.. list-table::
+    :widths: 10 20 70
+
+    * - Code
+      - Value
+      - Comment
+    * - 0
+      - None
+      - 
+    * - 1
+      - Line Style
+      - 
+    * - 2
+      - Raised Style
+      - 
+    * - 3
+      - Lowered Style
+      - 
+    * - 4
+      - Etched Style
+      - 
+    * - 5
+      - Ridged Style
+      - 
+    * - 6
+      - Button Raised Style
+      - 
+    * - 7
+      - Button Pressed Style
+      - 
+    * - 8
+      - Dot Style
+      - 
+    * - 9
+      - Dash Style
+      - 
+    * - 10
+      - Dash Dot Style
+      - 
+    * - 11
+      - Dash Dot Dot Style
+      - 
+    * - 12
+      - Title Bar Style
+      - | Title is the value of the **Name** property.
+        | Title background uses **Background Color**.
+    * - 13
+      - Group Box Style
+      - | Title is the value of the **Name** property.
+        | Border and title background use **Background Color**.
+        | Title foreground uses **Border Color**.
+    * - 14
+      - Round Rectangle Background
+      - Applies **Background Color** of the widget.
+    * - 15
+      - Empty Background
+      - 
+
+
+.. rubric:: PV-sensitivity
+
+When a widget is backed by a PV, the border transforms depending on
+the PV state.
 
 Connected
     No decorations
@@ -15,14 +86,25 @@ Disconnected
 Expired
     Blinking solid pink border around the widget
 
+
+.. rubric:: Alarm-sensitivity
+
+If the widget has the border property **Alarm Sensitive** set, the
+border transforms to a 2 pixel wide alarm border when the PV
+is in alarm state.
+
 Minor Alarm
     Solid orange border around the widget
 
 Major Alarm
     Solid red border around the widget
 
+.. image:: ../capture/borders/minor-alarm.opi.png
+    :alt: Border Styles (Minor Alarm)
+    :align: center
 
-Yamcs parameters support five different levels of alarms, as well as a range of special monitoring values. This information is transformed using the following mapping:
+
+If the PV is connected to a Yamcs parameter, the mapping is done as follows:
 
 * WATCH, WARNING, DISTRESS → MINOR
 * CRITICAL, SEVERE → MAJOR

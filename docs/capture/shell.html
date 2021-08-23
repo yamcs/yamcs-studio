@@ -50,7 +50,7 @@
 
             const params = new URLSearchParams(window.location.search);
             display.setSource(params.get("f"));
-            display.transparent = true;
+            display.transparent = params.has("transparent");
         </script>
     </body>
 </html>
