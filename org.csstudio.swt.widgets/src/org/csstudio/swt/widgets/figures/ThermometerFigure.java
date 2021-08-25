@@ -211,6 +211,7 @@ public class ThermometerFigure extends AbstractLinearMarkedFigure {
         }
         this.temperatureUnit = temperatureUnit;
         unit.setText(temperatureUnit.getUnitString());
+        unit.setVisible(temperatureUnit != TemperatureUnit.NONE);
     }
 
     @Override
