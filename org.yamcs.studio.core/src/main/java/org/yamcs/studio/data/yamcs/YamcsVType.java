@@ -1,16 +1,15 @@
 package org.yamcs.studio.data.yamcs;
 
+import static java.lang.Double.isNaN;
+
 import java.text.NumberFormat;
 import java.time.Instant;
-import java.util.List;
 
 import org.yamcs.protobuf.Mdb.AlarmLevelType;
-import org.yamcs.protobuf.Mdb.AlarmRange;
 import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
-import org.yamcs.studio.core.MissionDatabase;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.data.vtype.Alarm;
 import org.yamcs.studio.data.vtype.AlarmSeverity;
@@ -96,7 +95,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Double getLowerWarningLimit() {
         if (pval != null && !raw) {
             // Assumes ordered ranges
-            for (AlarmRange range : pval.getAlarmRangeList()) {
+            for (var range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.WATCH
                         || range.getLevel() == AlarmLevelType.WARNING
                         || range.getLevel() == AlarmLevelType.DISTRESS) {
@@ -118,7 +117,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Double getUpperWarningLimit() {
         if (pval != null && !raw) {
             // Assumes ordered ranges
-            for (AlarmRange range : pval.getAlarmRangeList()) {
+            for (var range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.WATCH
                         || range.getLevel() == AlarmLevelType.WARNING
                         || range.getLevel() == AlarmLevelType.DISTRESS) {
@@ -137,7 +136,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Double getLowerAlarmLimit() {
         if (pval != null && !raw) {
             // Assumes ordered ranges
-            for (AlarmRange range : pval.getAlarmRangeList()) {
+            for (var range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.CRITICAL
                         || range.getLevel() == AlarmLevelType.SEVERE) {
                     if (range.hasMinInclusive()) {
@@ -158,7 +157,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     public Double getUpperAlarmLimit() {
         if (pval != null && !raw) {
             // Assumes ordered ranges
-            for (AlarmRange range : pval.getAlarmRangeList()) {
+            for (var range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.CRITICAL
                         || range.getLevel() == AlarmLevelType.SEVERE) {
                     if (range.hasMaxInclusive()) {
@@ -174,21 +173,21 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public Double getLowerDisplayLimit() {
-        Double loLimit = getLowerAlarmLimit();
-        if (loLimit == Double.NaN) {
+        var loLimit = getLowerAlarmLimit();
+        if (isNaN(loLimit)) {
             loLimit = getLowerWarningLimit();
         }
-
+        // Returning NaN will make widgets use 'minimum' property
         return loLimit;
     }
 
     @Override
     public Double getUpperDisplayLimit() {
-        Double hiLimit = getUpperAlarmLimit();
-        if (hiLimit == Double.NaN) {
+        var hiLimit = getUpperAlarmLimit();
+        if (isNaN(hiLimit)) {
             hiLimit = getUpperWarningLimit();
         }
-
+        // Returning NaN will make widgets use 'maximum' property
         return hiLimit;
     }
 
@@ -205,7 +204,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
     @Override
     public String getUnits() {
         if (pval != null && !raw) {
-            MissionDatabase mdb = YamcsPlugin.getMissionDatabase();
+            var mdb = YamcsPlugin.getMissionDatabase();
             if (mdb != null) {
                 String unit = mdb.getCombinedUnit(pval.getId());
                 return (unit == null) ? "" : unit;
@@ -262,7 +261,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
         case AGGREGATE:
             return new AggregateVType(pval, raw);
         case ARRAY:
-            List<Value> arrayValues = value.getArrayValueList();
+            var arrayValues = value.getArrayValueList();
             if (arrayValues.isEmpty()) {
                 return null; // TODO
             } else {
