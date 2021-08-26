@@ -23,9 +23,11 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     private ParameterValue pval;
     protected Value value;
+    private boolean raw;
 
     public YamcsVType(ParameterValue pval, boolean raw) {
         this.pval = pval;
+        this.raw = raw;
         value = raw ? pval.getRawValue() : pval.getEngValue();
     }
 
@@ -92,7 +94,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public Double getLowerWarningLimit() {
-        if (pval != null) {
+        if (pval != null && !raw) {
             // Assumes ordered ranges
             for (AlarmRange range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.WATCH
@@ -114,7 +116,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperWarningLimit() {
-        if (pval != null) {
+        if (pval != null && !raw) {
             // Assumes ordered ranges
             for (AlarmRange range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.WATCH
@@ -133,7 +135,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public Double getLowerAlarmLimit() {
-        if (pval != null) {
+        if (pval != null && !raw) {
             // Assumes ordered ranges
             for (AlarmRange range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.CRITICAL
@@ -154,7 +156,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
      */
     @Override
     public Double getUpperAlarmLimit() {
-        if (pval != null) {
+        if (pval != null && !raw) {
             // Assumes ordered ranges
             for (AlarmRange range : pval.getAlarmRangeList()) {
                 if (range.getLevel() == AlarmLevelType.CRITICAL
@@ -202,7 +204,7 @@ public class YamcsVType implements VType, Alarm, Time, Display {
 
     @Override
     public String getUnits() {
-        if (pval != null) {
+        if (pval != null && !raw) {
             MissionDatabase mdb = YamcsPlugin.getMissionDatabase();
             if (mdb != null) {
                 String unit = mdb.getCombinedUnit(pval.getId());
