@@ -506,7 +506,7 @@ $(trace_0_y_pv_value)</tooltip>
     <trace_3_update_delay>100</trace_3_update_delay>
     <scripts>
       <path pathString="../scripts/AddAxisExample.js" checkConnect="true" sfe="false" seoe="false">
-        <pv trig="true">1</pv>
+        <pv trig="true">=1</pv>
       </path>
     </scripts>
     <trace_0_anti_alias>true</trace_0_anti_alias>

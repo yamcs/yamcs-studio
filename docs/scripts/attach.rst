@@ -28,7 +28,7 @@ Each script must have at least one Input PV that has the
 If you require to execute a script that only runs when the display
 initializes, use a formula ``=1`` as your trigger PV.
 
-By default a script executes only when all of its inputs have a value,
+By default a script executes only when all of its inputs are connected and have a value,
 and one of its trigger PVs is updated.
 
 

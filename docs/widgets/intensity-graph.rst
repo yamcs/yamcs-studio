@@ -108,8 +108,8 @@ Minimum (``minimum``)
     The lower limit for a singular array element.
 
 Profile on Single Line (``single_line_profiling``)
-    If set, profile on a single pixel. A crosshair is added
-    to the graph which can be adjusted by dragging it around.
+    If set, profile on a single pixel. A horizontal and vertical
+    guideline is added to the graph. These can be dragged around.
 
     If unset, the profiling is performed on the average of
     all pixels.
@@ -162,6 +162,19 @@ Color Map (``color_map``)
     If the option **Auto Scale** is selected, the value range of the color map
     is remapped to the range indicated by the properties **Minimum** and
     **Maximum**. If unselected, there is no remapping, and the lookup is direct.
+
+    .. note::
+
+        This property has multiple sub-properties. Use in scripts and rules is
+        limited to switching between the predefined maps: GrayScale, JET,
+        ColorSpectrum, Hot, Cool or Shaded.
+
+        .. code-block:: javascript
+
+            widget.setPropertyValue("color_map", "JET");
+
+        When doing so the other sub-properties (interpolate, autoscale) default
+        to true.
 
 .. include:: _props/font.rst
 .. include:: _props/forecolor_alarm_sensitive.rst

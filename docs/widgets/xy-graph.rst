@@ -59,7 +59,9 @@ Trigger PV (``trigger_pv``)
 .. include:: _props/backcolor_alarm_sensitive.rst
 .. include:: _props/background_color.rst
 .. include:: _props/forecolor_alarm_sensitive.rst
-.. include:: _props/foreground_color.rst
+
+Foreground Color (``foreground_color``)
+    The color of the title.
 
 Plot Area Background Color (``plot_area_background_color``)
     Background color used to colorize the plot area.
@@ -100,15 +102,18 @@ Title Font (``title_font``)
 
 The property names for the following properties take the form
 ``axis_x_property_name``, where ``x`` is the zero-based index of that axis.
-The first axis is always the X axis. Others are Y axes.
+
+The first two axes are always the *primary* X and Y axis.
+Other axes are considered *secondary* and have additional properties
+**Left/Bottom Side** and **Y Axis**.
 
 Auto Scale (``axis_x_auto_scale``)
     Whether to automatically adjust the scale of this axis.
 
-Auto Scale Treshold (``axis_x_auto_scale_treshold``)
+Auto Scale Threshold (``axis_x_auto_scale_threshold``)
     Value in the range ``[0-1]`` representing a portion of the plot
     area. If **Auto Scale** is enabled, it will only trigger if
-    current spare space exceeds this treshold.
+    current spare space exceeds this threshold.
 
 Axis Color (``axis_x_axis_color``)
     The color of this axis. Used for colorizing ticks, title and labels.
@@ -122,13 +127,19 @@ Dash Grid Line (``axis_x_dash_grid_line``)
 Grid Color (``axis_x_grid_color``)
     The color of the grid matching this axis.
 
+Left/Bottom Side (``axis_x_left_bottom_side``)
+    If true this axis is shown on the left (Y axis) or bottom (X axis) side.
+    If false this axis is shown on the right (Y axis) or to (X axis) side.
+
+    This property is only available for *secondary* axes (index > 1).
+
 Log Scale (``axis_x_log_scale``)
     Use a logarithmic scale.
 
-Maximum (``axis_x_minimum``)
+Maximum (``axis_x_maximum``)
     The upper bound the axis range.
 
-Minimum (``axis_x_maximum``)
+Minimum (``axis_x_minimum``)
     The lower bound of the axis range.
 
 Scale Font (``axis_x_scale_font``)
@@ -165,34 +176,51 @@ Time Format (``axis_x_time_format``)
     The format used in case this axis should be used for showing time.
 
     .. list-table::
-        :widths: 25 75
+        :widths: 10 20 70
 
         * - Code
           - Value
+          - Description
         * - 0
           - None
+          - This axis is not time-based (number formatting defined by **Scale Format**).
         * - 1
-          - yyyy-MM-dd HH:mm:ss
+          - | yyyy-MM-dd
+            | HH:mm:ss
+          -
         * - 2
-          - yyyy-MM-dd HH:mm:ss.SSS
+          - | yyyy-MM-dd
+            | HH:mm:ss.SSS
+          -
         * - 3
           - HH:mm:ss
+          -
         * - 4
           - HH:mm:ss.SSS
+          -
         * - 5
           - HH:mm
+          -
         * - 6
           - yyyy-MM-dd
+          -
         * - 7
           - MMMMM d
-        * - 6
+          -
+        * - 8
           - Auto
+          - The format of the time label is automatically determined.
 
 Title Font (``axis_x_title_font``)
     Font used for rendering the axis title.
 
 Visible (``axis_x_visible``)
     Whether this axis is visible.
+
+Y Axis (``axis_x_y_axis``)
+    Whether this is an Y axis.
+
+    This property is only available for *secondary* axes (index > 1).
 
 
 ..
@@ -260,25 +288,25 @@ Point Style (``trace_x_point_style``)
           - Point
         * - 2
           - Circle
-        * - 4
+        * - 3
           - Filled Circle
-        * - 5
+        * - 4
           - Triangle
-        * - 6
+        * - 5
           - Filled Triangle
-        * - 7
+        * - 6
           - Square
-        * - 8
+        * - 7
           - Filled Square
-        * - 9
+        * - 8
           - Diamond
-        * - 10
+        * - 9
           - Filled Diamond
-        * - 11
+        * - 10
           - X Cross
-        * - 12
+        * - 11
           - Cross
-        * - 13
+        * - 12
           - Bar
 
 Trace Color (``trace_x_trace_color``)
@@ -298,21 +326,21 @@ Trace Type (``trace_x_trace_type``)
           - Dash Line
         * - 2
           - Point
-        * - 4
+        * - 3
           - Bar
-        * - 5
+        * - 4
           - Area
-        * - 6
+        * - 5
           - Line Area
-        * - 7
+        * - 6
           - Step Vertically
-        * - 8
+        * - 7
           - Step Horizontally
-        * - 9
+        * - 8
           - Dash Dot Line
-        * - 10
+        * - 9
           - Dash Dot Dot Line
-        * - 11
+        * - 10
           - Dot Line
 
 Update Delay (``trace_x_update_delay``)
@@ -343,12 +371,12 @@ Update Mode (``trace_x_update_mode``)
           - Update the buffer whenever the X PV has changed. Data coming from the
             Y PV may be missed with this mode (for example because Y PV updates
             faster than X PV).
-        * - 4
+        * - 3
           - Y
           - Update the buffer whenever the Y PV has changed. Data coming from the
             X PV may be missed with this mode (for example because X PV updates
             faster than Y PV).
-        * - 5
+        * - 4
           - Trigger
           - Update the buffer only whenever the **Trigger PV** has changed. This
             is one of the graph properties shared between all traces. Data coming
@@ -381,7 +409,7 @@ XY Graph widgets expose the following additional :doc:`../scripts/api/Widget`
 API for use in scripting:
     
 **clearGraph()**
-    Clear the graph (deletes the underlying buffer).
+    Clear the graph (deletes trace buffers).
 
 **getXBuffer(** trace **)**
     Returns the current X axis values for the given trace index as an array

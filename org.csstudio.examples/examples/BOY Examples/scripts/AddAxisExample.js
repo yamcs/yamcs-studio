@@ -1,5 +1,4 @@
-importPackage(Packages.org.csstudio.opibuilder.scriptUtil);
-importPackage(Packages.org.csstudio.swt.xygraph.figures);
+var Axis = Java.type("org.eclipse.nebula.visualization.xygraph.figures.Axis");
 
 var xygraph = widget.getFigure().getXYGraph();
 

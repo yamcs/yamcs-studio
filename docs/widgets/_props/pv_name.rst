@@ -3,4 +3,4 @@ PV Name (``pv_name``)
     value follows value updates of the corresponding PV.
 
     It is not a requirement to use a PV. You may also control the widget
-    value through scripting by updating the hidden property ``pv_value``.
+    value directly through scripting.

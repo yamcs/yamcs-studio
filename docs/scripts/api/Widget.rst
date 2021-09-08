@@ -103,7 +103,7 @@ The following methods are common to all widgets:
 Widgets that have the **PV Name** property can read or write a PV.
 They have the following additional methods:
 
-**getPV( [propertyName] )**
+**getPV(** [propertyName] **)**
     Return the :doc:`PV` object for a specific widget property.
 
     If ``propertyName`` is not specified, it defaults to ``pv_name``,
