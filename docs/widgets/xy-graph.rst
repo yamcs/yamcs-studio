@@ -24,8 +24,10 @@ Widget for plotting one or two-dimensional data.
 
 Axis Count (``axis_count``)
     The number of axis. Must be between 2 and 4. For each axis, a property group
-    is added. The first axis is always considered the X axis. Up to three other axis
-    may be used as Y axis.
+    is added. The first axis is always considered the primary X axis. The second
+    axis is always considered the primary Y axis. Up to two other axes
+    may be added, whether they are X or Y is controlled with the **Y Axis**
+    property of each secondary axis.
 
 .. include:: _props/enabled.rst
 .. include:: _props/rules.rst
