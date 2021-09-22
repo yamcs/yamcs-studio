@@ -1,7 +1,7 @@
 Image
 =====
 
-Widget that display an image.
+Widget that displays an image.
 
 .. image:: _images/examples/image.png
     :alt: Image

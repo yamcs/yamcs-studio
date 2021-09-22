@@ -19,7 +19,7 @@ The following methods are available.
     * ``8``: New shell
 
     Custom ``macros`` can be provided to the new OPI.
-    Use :doc:`DataUtil.createMacrosInput() <DataUtil>`
+    Use :doc:`DataUtil.createMacrosInput(false) <DataUtil>`
 
 **closeCurrentOPI()**
     Close the currently active OPI display.
@@ -56,4 +56,12 @@ The following methods are available.
 
 .. code-block:: javascript
 
-    ConsoleUtil.writeError("Something went wrong");
+    ScriptUtil.openOPI(widget, "foo.opi", 0, null);
+
+
+.. code-block:: javascript
+
+    var macros = DataUtil.createMacrosInput(false);
+    macros.put("foo", "abc");
+    macros.put("bar", "def");
+    ScriptUtil.openOPI(widget, "foo.opi", 0, macros);
