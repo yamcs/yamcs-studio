@@ -13,7 +13,7 @@
   </organization>
 
   <properties>
-    <tycho.version>2.3.0</tycho.version>
+    <tycho.version>2.5.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Disable default deploy. Only p2 output repo gets deployed -->
     <maven.deploy.skip>true</maven.deploy.skip>
@@ -151,7 +151,7 @@
           <target>
             <file>../platform.target</file>
           </target>
-          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-15</executionEnvironment>
+          <executionEnvironment>org.eclipse.justj.openjdk.hotspot.jre.full-17</executionEnvironment>
           <environments>
             <environment>
               <os>linux</os>
@@ -167,6 +167,11 @@
               <os>win32</os>
               <ws>win32</ws>
               <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>aarch64</arch>
             </environment>
             <environment>
               <os>macosx</os>

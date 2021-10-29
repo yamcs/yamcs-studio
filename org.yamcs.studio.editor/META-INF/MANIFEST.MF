@@ -10,5 +10,4 @@ Bundle-Version: 1.5.10.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.yamcs.studio.editor.base
-Eclipse-PlatformFilter: (| (osgi.ws=win32) (& (osgi.ws=cocoa)(osgi.arch=x86_64)) (osgi.ws=gtk))
 Automatic-Module-Name: org.yamcs.studio.editor
