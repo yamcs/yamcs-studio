@@ -4,6 +4,7 @@ Limits from PV (``limits_from_pv``)
     If the PV is backed by a Yamcs parameter, the mapping is as follows:
 
     .. list-table::
+        :header-rows: 1
         :widths: 50 50
         
         * - Yamcs

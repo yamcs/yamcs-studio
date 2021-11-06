@@ -11,6 +11,7 @@ Helper methods for creating widgets at runtime.
 The following is a list of types for all available widgets:
 
 .. list-table::
+    :header-rows: 1
     :widths: 30 70
 
     * - Widget

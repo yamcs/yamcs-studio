@@ -3,6 +3,7 @@ Boolean Label Position (``boolean_label_position``)
     top-left, top-right, bottom-left, bottom-right).
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
         
         * - Code

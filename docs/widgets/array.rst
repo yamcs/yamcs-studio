@@ -48,6 +48,7 @@ Data Type (``data_type``)
     This property is not available when the array is backed by a PV.
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
 
         * - Code

@@ -55,6 +55,7 @@ This input field needs to be expressed in JavaScript. The **Input PVs** are
 available in different formats:
 
 .. list-table::
+    :header-rows: 1
     :widths: 25 50
 
     * - Type
@@ -69,6 +70,7 @@ available in different formats:
 The numeric alarm state of an input PV is is accessible as follows:
 
 .. list-table::
+    :header-rows: 1
     :widths: 25 50
 
     * - Alarm

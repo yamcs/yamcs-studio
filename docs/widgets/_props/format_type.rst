@@ -2,6 +2,7 @@ Format Type (``format_type``)
     How to format the PV value.
 
     .. list-table::
+        :header-rows: 1
         :widths: 10 20 70
         
         * - Code

@@ -156,6 +156,7 @@ Scale Format (``axis_x_scale_format``)
     Some examples:
 
     .. list-table::
+        :header-rows: 1
         :widths: 33 33 33
 
         * - Value
@@ -178,6 +179,7 @@ Time Format (``axis_x_time_format``)
     The format used in case this axis should be used for showing time.
 
     .. list-table::
+        :header-rows: 1
         :widths: 10 20 70
 
         * - Code
@@ -260,6 +262,7 @@ Plot Mode (``trace_x_plot_mode``)
     Specifies what to do when the underlying buffer fills up.
 
     .. list-table::
+        :header-rows: 1
         :widths: 10 20 70
 
         * - Code
@@ -280,6 +283,7 @@ Point Style (``trace_x_point_style``)
     How to stylize data points.
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
 
         * - Code
@@ -318,6 +322,7 @@ Trace Type (``trace_x_trace_type``)
     Type of trace visualization.
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
 
         * - Code
@@ -354,6 +359,7 @@ Update Mode (``trace_x_update_mode``)
     this trace. 
     
     .. list-table::
+        :header-rows: 1
         :widths: 10 20 70
 
         * - Code

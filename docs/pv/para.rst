@@ -32,7 +32,7 @@ the property **Limits from PV** enabled:
   If Yamcs does not specify any lower bound, the widget reverts to the configured
   **Minimum** property.
  
-* The uppeer bound of the scale matches the most-severe upper bound of the parameter.
+* The upper bound of the scale matches the most-severe upper bound of the parameter.
   If Yamcs does not specify any upper bound, the widget reverts to the configured
   **Maximum** property.
  

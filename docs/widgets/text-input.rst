@@ -21,6 +21,7 @@ Style (``style``)
     compatibility between different OS platforms.
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
 
         * - Code
@@ -93,6 +94,7 @@ File Return Part (``file_return_part``)
     ``File``.
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
 
         * - Code
@@ -113,6 +115,7 @@ File Source (``file_source``)
     ``File``.
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
 
         * - Code
@@ -132,6 +135,7 @@ Selector Type (``selector_type``)
     Use a special type of selector.
 
     .. list-table::
+        :header-rows: 1
         :widths: 25 75
 
         * - Code

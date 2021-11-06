@@ -7,6 +7,7 @@ Scale Format (``scale_format``)
     Some examples:
 
     .. list-table::
+        :header-rows: 1
         :widths: 33 33 33
 
         * - Value

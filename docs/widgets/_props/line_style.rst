@@ -2,6 +2,7 @@ Line Style (``line_style``)
     The type of stroke.
 
     .. list-table::
+        :header-rows: 1
         :widths: 10 20 70
         
         * - Code
