@@ -178,6 +178,8 @@ Show Grid (``axis_x_show_grid``)
 Time Format (``axis_x_time_format``)
     The format used in case this axis should be used for showing time.
 
+    .. tabularcolumns:: \Yc{0.1}\Yl{0.2}\Y{0.7}
+
     .. list-table::
         :header-rows: 1
         :widths: 10 20 70
@@ -261,6 +263,8 @@ Name (``trace_x_name``)
 Plot Mode (``trace_x_plot_mode``)
     Specifies what to do when the underlying buffer fills up.
 
+    .. tabularcolumns:: \Yc{0.1}\Yl{0.2}\Y{0.7}
+
     .. list-table::
         :header-rows: 1
         :widths: 10 20 70
@@ -281,6 +285,8 @@ Point Size (``trace_x_point_size``)
 
 Point Style (``trace_x_point_style``)
     How to stylize data points.
+
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
 
     .. list-table::
         :header-rows: 1
@@ -321,6 +327,8 @@ Trace Color (``trace_x_trace_color``)
 Trace Type (``trace_x_trace_type``)
     Type of trace visualization.
 
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
+
     .. list-table::
         :header-rows: 1
         :widths: 25 75
@@ -356,7 +364,9 @@ Update Delay (``trace_x_update_delay``)
 
 Update Mode (``trace_x_update_mode``)
     Specify when PV updates should be added to the FIFO buffer underlying
-    this trace. 
+    this trace.
+
+    .. tabularcolumns:: \Yc{0.1}\Yl{0.2}\Y{0.7}
     
     .. list-table::
         :header-rows: 1

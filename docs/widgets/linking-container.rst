@@ -67,6 +67,8 @@ Resize Behaviour (``resize_behaviour``)
     How to match the size of the Linking Container with that of the
     linked display or group.
 
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
+
     .. list-table::
         :header-rows: 1
         :widths: 25 75

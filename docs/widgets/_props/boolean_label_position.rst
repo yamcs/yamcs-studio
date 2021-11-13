@@ -2,6 +2,8 @@ Boolean Label Position (``boolean_label_position``)
     Where to position the label within the widget area (top, bottom, left, right,
     top-left, top-right, bottom-left, bottom-right).
 
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
+
     .. list-table::
         :header-rows: 1
         :widths: 25 75

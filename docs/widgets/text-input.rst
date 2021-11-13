@@ -20,6 +20,8 @@ Style (``style``)
     Prefer the use of *Classic*. It leads to better
     compatibility between different OS platforms.
 
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
+
     .. list-table::
         :header-rows: 1
         :widths: 25 75
@@ -93,6 +95,8 @@ File Return Part (``file_return_part``)
     This property is only visible when **Selector Type** is set to
     ``File``.
 
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
+
     .. list-table::
         :header-rows: 1
         :widths: 25 75
@@ -114,6 +118,8 @@ File Source (``file_source``)
     This property is only visible when **Selector Type** is set to
     ``File``.
 
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
+
     .. list-table::
         :header-rows: 1
         :widths: 25 75
@@ -133,6 +139,8 @@ File Source (``file_source``)
 
 Selector Type (``selector_type``)
     Use a special type of selector.
+
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
 
     .. list-table::
         :header-rows: 1

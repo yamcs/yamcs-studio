@@ -10,6 +10,8 @@ controlled by the properties **Border Color**, **Border Width** and **Border Sty
 
 The codes for these borders are:
 
+.. tabularcolumns:: \Yc{0.1}\Yl{0.2}\Y{0.7}
+
 .. list-table::
     :header-rows: 1
     :widths: 10 20 70

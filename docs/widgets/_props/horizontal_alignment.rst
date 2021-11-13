@@ -1,6 +1,8 @@
 Horizontal Alignment (``horizontal_alignment``)
     Placement of the text within the widget area.
 
+    .. tabularcolumns:: \Yc{0.25}\Y{0.75}
+
     .. list-table::
         :header-rows: 1
         :widths: 25 75

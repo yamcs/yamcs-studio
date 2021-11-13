@@ -86,17 +86,12 @@ html_static_path = ["_static"]
 html_show_sourcelink = False
 
 latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
     "papersize": "a4paper",
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-    # Additional stuff for the LaTeX preamble.
-    #
-    "preamble": "\setcounter{tocdepth}{2}",
-    # Latex figure (float) alignment
-    #
+    "preamble": r"""
+      \newcolumntype{\Yl}[1]{>{\raggedright\arraybackslash}\Y{#1}}
+      \newcolumntype{\Yr}[1]{>{\raggedleft\arraybackslash}\Y{#1}}
+      \newcolumntype{\Yc}[1]{>{\centering\arraybackslash}\Y{#1}} 
+    """,
     "figure_align": "htbp",
 }
 

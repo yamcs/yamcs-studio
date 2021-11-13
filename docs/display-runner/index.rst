@@ -24,13 +24,13 @@ The Display Runner window is useful for realtime operations, or for testing out 
 6. Views
     Yamcs Studio includes extra views for interacting with other Yamcs functionalities.
 
-    .. toctree::
-        :maxdepth: 1
+.. toctree::
+    :maxdepth: 1
 
-        archive
-        event-log
-        command-stack
-        command-history
+    archive
+    event-log
+    command-stack
+    command-history
 
 There are a few standalone windows that can be opened for inspecting widgets. 
 
