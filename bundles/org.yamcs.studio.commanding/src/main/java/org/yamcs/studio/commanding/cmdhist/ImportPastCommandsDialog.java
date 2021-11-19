@@ -16,21 +16,14 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.api.YamcsApiException;
-import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
 import org.yamcs.studio.core.TimeInterval;
 import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.core.client.YamcsStudioClient;
-import org.yamcs.studio.core.model.ArchiveCatalogue;
 import org.yamcs.studio.core.model.TimeCatalogue;
 import org.yamcs.studio.core.ui.utils.RCPUtils;
 import org.yamcs.utils.TimeEncoding;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
 public class ImportPastCommandsDialog extends TitleAreaDialog {
-
-    private CommandHistoryView cmdhistView;
 
     private DateTime startDate;
     private DateTime startTime;
@@ -40,9 +33,11 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
     private DateTime stopTime;
     private Calendar stopTimeValue;
 
-    public ImportPastCommandsDialog(Shell parentShell, CommandHistoryView cmdhistView) {
+    private long start;
+    private long stop;
+
+    public ImportPastCommandsDialog(Shell parentShell) {
         super(parentShell);
-        this.cmdhistView = cmdhistView;
     }
 
     @Override
@@ -55,8 +50,9 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
         String errorMessage = null;
         Calendar start = RCPUtils.toCalendar(startDate, startTime);
         Calendar stop = RCPUtils.toCalendar(stopDate, stopTime);
-        if (start.after(stop))
+        if (start.after(stop)) {
             errorMessage = "Stop has to be greater than start";
+        }
 
         setErrorMessage(errorMessage);
         getButton(IDialogConstants.OK_ID).setEnabled(errorMessage == null);
@@ -127,31 +123,9 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
             return;
         }
 
-        getButton(IDialogConstants.OK_ID).setEnabled(false);
-
-        long start = TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime));
-        long stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
-        TimeInterval interval = new TimeInterval(start, stop);
-
-        ArchiveCatalogue catalogue = ArchiveCatalogue.getInstance();
-        catalogue.downloadCommands(interval, data -> {
-            try {
-                CommandHistoryEntry commandHistoryEntry = CommandHistoryEntry.parseFrom(data);
-                Display.getDefault().asyncExec(() -> {
-                    cmdhistView.processCommandHistoryEntry(commandHistoryEntry);
-                });
-            } catch (InvalidProtocolBufferException e) {
-                throw new YamcsApiException("Failed to decode server message", e);
-            }
-        }).whenComplete((data, exc) -> {
-            if (exc == null) {
-                Display.getDefault().asyncExec(() -> {
-                    ImportPastCommandsDialog.super.okPressed();
-                });
-            } else {
-                getButton(IDialogConstants.OK_ID).setEnabled(true);
-            }
-        });
+        this.start = TimeEncoding.fromCalendar(RCPUtils.toCalendar(startDate, startTime));
+        this.stop = TimeEncoding.fromCalendar(RCPUtils.toCalendar(stopDate, stopTime));
+        super.okPressed();
     }
 
     public void initialize(TimeInterval interval, List<String> packets, List<String> ppGroups) {
@@ -164,5 +138,13 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
     @Override
     public boolean close() {
         return super.close();
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public long getStop() {
+        return stop;
     }
 }

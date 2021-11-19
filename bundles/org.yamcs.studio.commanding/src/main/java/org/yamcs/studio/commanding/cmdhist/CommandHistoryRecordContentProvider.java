@@ -2,6 +2,7 @@ package org.yamcs.studio.commanding.cmdhist;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -65,19 +66,7 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
                 .replace(VERIFIER_TIME_SUFFIX, "");
     }
 
-    public void processCommandHistoryEntry(CommandHistoryEntry entry) {
-        CommandId commandId = entry.getCommandId();
-        CommandHistoryRecord rec;
-        boolean create;
-        if (recordsByCommandId.containsKey(commandId)) {
-            rec = recordsByCommandId.get(commandId);
-            create = false;
-        } else {
-            rec = new CommandHistoryRecord(commandId);
-            recordsByCommandId.put(commandId, rec);
-            create = true;
-        }
-
+    private void updateRecord(CommandHistoryRecord rec, CommandHistoryEntry entry) {
         // Autoprocess attributes for additional columns
         for (CommandHistoryAttribute attr : entry.getAttrList()) {
             String shortName = toHumanReadableName(attr);
@@ -127,6 +116,43 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
                 rec.addCellValue(shortName, attr.getValue());
             }
         }
+    }
+
+    public void processCommandHistoryEntries(List<CommandHistoryEntry> entries) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        CommandHistoryRecord rec = null;
+        for (CommandHistoryEntry entry : entries) {
+            CommandId commandId = entry.getCommandId();
+            if (recordsByCommandId.containsKey(commandId)) {
+                rec = recordsByCommandId.get(commandId);
+            } else {
+                rec = new CommandHistoryRecord(commandId);
+                recordsByCommandId.put(commandId, rec);
+            }
+            updateRecord(rec, entry);
+        }
+
+        tableViewer.setInput("anything-except-null");
+        tableViewer.refresh();
+        maybeSelectAndReveal(rec);
+    }
+
+    public void processCommandHistoryEntry(CommandHistoryEntry entry) {
+        CommandId commandId = entry.getCommandId();
+        CommandHistoryRecord rec;
+        boolean create;
+        if (recordsByCommandId.containsKey(commandId)) {
+            rec = recordsByCommandId.get(commandId);
+            create = false;
+        } else {
+            rec = new CommandHistoryRecord(commandId);
+            recordsByCommandId.put(commandId, rec);
+            create = true;
+        }
+        updateRecord(rec, entry);
 
         // All done, make changes visible
         if (create) {

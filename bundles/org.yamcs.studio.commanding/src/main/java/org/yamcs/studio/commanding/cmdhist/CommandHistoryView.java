@@ -409,8 +409,28 @@ public class CommandHistoryView extends ViewPart {
         getViewSite().setSelectionProvider(tableViewer);
     }
 
+    public void processCommandHistoryEntries(List<CommandHistoryEntry> cmdhistEntries) {
+        if (tableViewer.getTable().isDisposed()) {
+            return;
+        }
+
+        for (CommandHistoryEntry cmdhistEntry : cmdhistEntries) {
+            maybeUpdateColumns(cmdhistEntry);
+        }
+        tableContentProvider.processCommandHistoryEntries(cmdhistEntries);
+        updateSummaryLine();
+    }
+
     public void processCommandHistoryEntry(CommandHistoryEntry cmdhistEntry) {
         // Maybe we need to update structure
+        maybeUpdateColumns(cmdhistEntry);
+
+        // Now add content
+        tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
+        updateSummaryLine();
+    }
+
+    private void maybeUpdateColumns(CommandHistoryEntry cmdhistEntry) {
         for (CommandHistoryAttribute attr : cmdhistEntry.getAttrList()) {
             if (IGNORED_ATTRIBUTES.contains(attr.getName())) {
                 continue;
@@ -460,10 +480,6 @@ public class CommandHistoryView extends ViewPart {
                 });
             }
         }
-
-        // Now add content
-        tableContentProvider.processCommandHistoryEntry(cmdhistEntry);
-        updateSummaryLine();
     }
 
     private void checkMinWidth(TableColumn column) {
