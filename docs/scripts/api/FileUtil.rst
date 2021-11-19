@@ -111,6 +111,19 @@ global variable ``widget``).
     This method returns the selected save path, or null
     if the user cancelled.
 
+**openDirectoryDialog()**
+    Open a directory selector on the local file system.
+
+    This method returns the selected path, or null
+    if the user cancelled.
+
+**openDirectoryDialog(** startingFolder **)**
+    Open a directory selector on the local file system
+    starting at the specified folder.
+
+    This method returns the selected path, or null
+    if the user cancelled.
+
 **workspacePathToSysPath(** workspacePath **)**
     Returns the local file system path for the given workspace path.
 

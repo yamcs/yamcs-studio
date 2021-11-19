@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -331,6 +332,17 @@ public class FileUtil {
 
     public static void playWavFile(String filePath) {
         playWavFile(filePath, null);
+    }
+
+    public static String openDirectoryDialog() {
+        DirectoryDialog dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
+        return dialog.open();
+    }
+
+    public static String openDirectoryDialog(String startingFolder) {
+        DirectoryDialog dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
+        dialog.setFilterPath(startingFolder);
+        return dialog.open();
     }
 
     /**
