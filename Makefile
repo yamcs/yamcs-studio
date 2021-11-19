@@ -2,11 +2,11 @@
 
 .PHONY: build-deps
 build-deps:
-	mvn -f p2deps/pom.xml clean install
+	mvn -f p2deps/pom.xml clean install -Dtycho.localArtifacts=ignore
 
 .PHONY: build
 build: build-deps
-	mvn clean install -DskipTests
+	mvn clean install -DskipTests -Dtycho.localArtifacts=ignore
 
 .PHONY: set-version
 set-version:
