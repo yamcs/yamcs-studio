@@ -44,17 +44,6 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
         return recordsByCommandId.values().toArray();
     }
 
-    public void addCommands(List<Command> commands) {
-        if (commands.isEmpty()) {
-            return;
-        }
-
-        Collections.reverse(commands);
-        for (Command command : commands) {
-            processCommand(command);
-        }
-    }
-
     public void processCommand(Command command) {
         if (recordsByCommandId.containsKey(command.getId())) {
             CommandHistoryRecord rec = recordsByCommandId.get(command.getId());
@@ -68,6 +57,28 @@ public class CommandHistoryRecordContentProvider implements IStructuredContentPr
             tableViewer.add(rec);
             maybeSelectAndReveal(rec);
         }
+    }
+
+    public void addCommands(List<Command> commands) {
+        if (commands.isEmpty()) {
+            return;
+        }
+
+        Collections.reverse(commands);
+        CommandHistoryRecord rec = null;
+        for (Command command : commands) {
+            if (recordsByCommandId.containsKey(command.getId())) {
+                rec = recordsByCommandId.get(command.getId());
+                rec.merge(command);
+            } else {
+                rec = new CommandHistoryRecord(command);
+                recordsByCommandId.put(command.getId(), rec);
+            }
+        }
+
+        tableViewer.setInput("anything-except-null");
+        tableViewer.refresh();
+        maybeSelectAndReveal(rec);
     }
 
     public void maybeSelectAndReveal(CommandHistoryRecord rec) {

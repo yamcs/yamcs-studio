@@ -13,15 +13,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.yamcs.client.archive.ArchiveClient;
-import org.yamcs.studio.core.YamcsPlugin;
 
 public class ImportPastCommandsDialog extends TitleAreaDialog {
-
-    private CommandHistoryView cmdhistView;
 
     private CDateTime startDate;
     private Calendar startTimeValue;
@@ -29,9 +24,11 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
     private CDateTime stopDate;
     private Calendar stopTimeValue;
 
-    public ImportPastCommandsDialog(Shell parentShell, CommandHistoryView cmdhistView) {
+    private Instant start;
+    private Instant stop;
+
+    public ImportPastCommandsDialog(Shell parentShell) {
         super(parentShell);
-        this.cmdhistView = cmdhistView;
     }
 
     @Override
@@ -93,29 +90,21 @@ public class ImportPastCommandsDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        getButton(IDialogConstants.OK_ID).setEnabled(false);
-
-        Instant start = null;
         if (startDate.hasSelection()) {
             start = startDate.getSelection().toInstant();
         }
-        Instant stop = null;
         if (stopDate.hasSelection()) {
             stop = stopDate.getSelection().toInstant();
         }
+        super.okPressed();
+    }
 
-        ArchiveClient archive = YamcsPlugin.getArchiveClient();
-        archive.streamCommands(command -> Display.getDefault().asyncExec(() -> {
-            cmdhistView.processCommand(command, true);
-        }), start, stop).whenComplete((data, exc) -> {
-            if (exc == null) {
-                Display.getDefault().asyncExec(() -> {
-                    ImportPastCommandsDialog.super.okPressed();
-                });
-            } else {
-                getButton(IDialogConstants.OK_ID).setEnabled(true);
-            }
-        });
+    public Instant getStart() {
+        return start;
+    }
+
+    public Instant getStop() {
+        return stop;
     }
 
     @Override
