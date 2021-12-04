@@ -22,11 +22,13 @@
 
 package org.csstudio.opibuilder.properties;
 
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.IntegerPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
-/**The integer property.
+/**
+ * The integer property.
+ *
  * @author Xihui Chen, Sven Wende (similar class as in SDS)
  *
  */
@@ -42,12 +44,17 @@ public class IntegerProperty extends AbstractWidgetProperty {
      */
     private int max;
 
-    /**Integer Property Constructor. The property value type is integer.
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created.
+    /**
+     * Integer Property Constructor. The property value type is integer.
+     *
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created.
      */
     public IntegerProperty(final String prop_id, final String description,
             final WidgetPropertyCategory category, final int defaultValue) {
@@ -55,14 +62,22 @@ public class IntegerProperty extends AbstractWidgetProperty {
         min = Integer.MIN_VALUE;
         max = Integer.MAX_VALUE;
     }
-    /**Integer Property Constructor. The property value type is integer.
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created.
-     * @param minValue the minimum allowed integer value.
-     * @param maxValue the maximum allowed integer value.
+
+    /**
+     * Integer Property Constructor. The property value type is integer.
+     *
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created.
+     * @param minValue
+     *            the minimum allowed integer value.
+     * @param maxValue
+     *            the maximum allowed integer value.
      */
     public IntegerProperty(final String prop_id, final String description,
             final WidgetPropertyCategory category, final int defaultValue,
@@ -73,11 +88,11 @@ public class IntegerProperty extends AbstractWidgetProperty {
         max = maxValue;
     }
 
-
     @Override
     public Object checkValue(final Object value) {
-        if(value == null)
+        if (value == null) {
             return null;
+        }
 
         Integer acceptedValue = null;
 
@@ -110,9 +125,7 @@ public class IntegerProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if(PropertySSHelper.getIMPL() == null)
-            return null;
-        return PropertySSHelper.getIMPL().getIntegerPropertyDescriptor(prop_id, description);
+        return new IntegerPropertyDescriptor(prop_id, description);
     }
 
     @Override

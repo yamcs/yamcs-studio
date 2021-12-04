@@ -2,7 +2,6 @@ package org.csstudio.opibuilder.properties;
 
 import java.util.List;
 
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
@@ -11,12 +10,12 @@ public class MatrixProperty extends AbstractWidgetProperty {
     /**
      * XML ELEMENT name for a row.
      */
-    public static final String XML_ELEMENT_ROW= "row";
+    public static final String XML_ELEMENT_ROW = "row";
 
     /**
      * XML ELEMENT name for a column.
      */
-    public static final String XML_ELEMENT_COLUMN= "col";
+    public static final String XML_ELEMENT_COLUMN = "col";
 
     public MatrixProperty(String prop_id, String description,
             WidgetPropertyCategory category, double[][] defaultValue) {
@@ -25,8 +24,9 @@ public class MatrixProperty extends AbstractWidgetProperty {
 
     @Override
     public Object checkValue(Object value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         double[][] acceptableValue = null;
         if (value instanceof double[][]) {
             acceptableValue = (double[][]) value;
@@ -36,11 +36,7 @@ public class MatrixProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if (PropertySSHelper.getIMPL() == null)
-            return null;
-        PropertyDescriptor propertyDescriptor = PropertySSHelper.getIMPL()
-                .getMatrixPropertyDescriptor(prop_id, description);
-        return propertyDescriptor;
+        return null;
     }
 
     @Override
@@ -60,8 +56,9 @@ public class MatrixProperty extends AbstractWidgetProperty {
     @Override
     public double[][] readValueFromXML(Element propElement) throws Exception {
         List<?> rowChildren = propElement.getChildren();
-        if (rowChildren.size() == 0)
+        if (rowChildren.size() == 0) {
             return null;
+        }
         double[][] result = new double[rowChildren.size()][((Element) rowChildren
                 .get(0)).getChildren().size()];
         int i = 0, j = 0;

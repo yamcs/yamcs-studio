@@ -22,11 +22,10 @@
 
 package org.csstudio.opibuilder.properties;
 
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.DoublePropertyDescriptor;
 import org.csstudio.opibuilder.util.OPIColor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
-
 
 /**
  * A property, which is able to handle Double values.
@@ -35,7 +34,6 @@ import org.jdom.Element;
  *
  */
 public final class DoubleProperty extends AbstractWidgetProperty {
-
 
     /**
      * Lower border for the property value.
@@ -47,12 +45,17 @@ public final class DoubleProperty extends AbstractWidgetProperty {
      */
     private double max;
 
-    /**Double Property Constructor. The property value type is double.
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created.
+    /**
+     * Double Property Constructor. The property value type is double.
+     *
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created.
      */
     public DoubleProperty(String propId, String description,
             WidgetPropertyCategory category, double defaultValue) {
@@ -61,15 +64,21 @@ public final class DoubleProperty extends AbstractWidgetProperty {
         max = Double.MAX_VALUE;
     }
 
-
-    /**Color Property Constructor. The property value type is {@link OPIColor}.
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created.
-     * @param min the minimum allowed double value.
-     * @param max the maximum allowed double value.
+    /**
+     * Color Property Constructor. The property value type is {@link OPIColor}.
+     *
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created.
+     * @param min
+     *            the minimum allowed double value.
+     * @param max
+     *            the maximum allowed double value.
      */
     public DoubleProperty(String propId, String description,
             WidgetPropertyCategory category, double defaultValue,
@@ -79,13 +88,11 @@ public final class DoubleProperty extends AbstractWidgetProperty {
         this.max = max;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object checkValue(final Object value) {
-        if(value == null)
+        if (value == null) {
             return null;
+        }
 
         Double acceptedValue = null;
 
@@ -118,9 +125,7 @@ public final class DoubleProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if(PropertySSHelper.getIMPL() == null)
-            return null;
-        return PropertySSHelper.getIMPL().getDoublePropertyDescriptor(prop_id, description);
+        return new DoublePropertyDescriptor(prop_id, description);
     }
 
     @Override

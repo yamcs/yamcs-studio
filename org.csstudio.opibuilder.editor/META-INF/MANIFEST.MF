@@ -27,7 +27,5 @@ Bundle-Activator: org.csstudio.opibuilder.editor.Activator
 Export-Package: org.csstudio.opibuilder.actions,
  org.csstudio.opibuilder.editor,
  org.csstudio.opibuilder.preferences,
- org.csstudio.opibuilder.properties.support,
- org.csstudio.opibuilder.visualparts,
  org.csstudio.opibuilder.wizards
 Automatic-Module-Name: org.csstudio.opibuilder.editor

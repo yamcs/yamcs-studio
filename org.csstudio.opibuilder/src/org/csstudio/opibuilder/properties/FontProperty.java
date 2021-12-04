@@ -7,7 +7,7 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.properties;
 
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.OPIFontPropertyDescriptor;
 import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIFont;
 import org.eclipse.swt.graphics.FontData;
@@ -84,9 +84,6 @@ public class FontProperty extends AbstractWidgetProperty {
         super(prop_id, description, category, MediaService.getInstance().getOPIFont(defaultValue));
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.properties.AbstractWidgetProperty#checkValue(java.lang.Object)
-     */
     @Override
     public Object checkValue(Object value) {
         if (value == null) {
@@ -111,15 +108,9 @@ public class FontProperty extends AbstractWidgetProperty {
         return acceptedValue;
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.properties.AbstractWidgetProperty#createPropertyDescriptor()
-     */
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if (PropertySSHelper.getIMPL() == null) {
-            return null;
-        }
-        return PropertySSHelper.getIMPL().getOPIFontPropertyDescriptor(prop_id, description);
+        return new OPIFontPropertyDescriptor(prop_id, description);
     }
 
     @Override

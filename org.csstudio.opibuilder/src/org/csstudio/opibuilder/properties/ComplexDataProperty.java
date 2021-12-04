@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.datadefinition.AbstractComplexData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.ComplexDataPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
@@ -68,11 +68,7 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if (PropertySSHelper.getIMPL() == null) {
-            return null;
-        }
-        return PropertySSHelper.getIMPL().getComplexDataPropertyDescriptor(prop_id,
-                description, dialogTitle);
+        return new ComplexDataPropertyDescriptor(prop_id, description, dialogTitle);
     }
 
     @Override

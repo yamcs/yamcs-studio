@@ -1,6 +1,6 @@
 package org.csstudio.opibuilder.properties;
 
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.FilePathPropertyDescriptorWithFilter;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
@@ -25,12 +25,6 @@ public class FilePathPropertyWithFilter extends FilePathProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if(PropertySSHelper.getIMPL() == null)
-            return null;
-        return PropertySSHelper.getIMPL().FilePathPropertyDescriptorWithFilter(
-                prop_id, description, widgetModel, filters);
-//        return new FilePathPropertyDescriptorWithFilter(prop_id, description,
-//                widgetModel, filters);
+        return new FilePathPropertyDescriptorWithFilter(prop_id, description, widgetModel, filters);
     }
-
 }

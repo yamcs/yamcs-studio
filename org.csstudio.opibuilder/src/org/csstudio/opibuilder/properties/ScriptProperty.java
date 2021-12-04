@@ -8,7 +8,7 @@
 package org.csstudio.opibuilder.properties;
 
 import org.csstudio.opibuilder.editparts.ExecutionMode;
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.ScriptPropertyDescriptor;
 import org.csstudio.opibuilder.script.PVTuple;
 import org.csstudio.opibuilder.script.ScriptData;
 import org.csstudio.opibuilder.script.ScriptService.ScriptType;
@@ -107,10 +107,7 @@ public class ScriptProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if (PropertySSHelper.getIMPL() == null) {
-            return null;
-        }
-        return PropertySSHelper.getIMPL().getScriptPropertyDescriptor(prop_id, widgetModel, description);
+        return new ScriptPropertyDescriptor(prop_id, widgetModel, description);
     }
 
     @Override

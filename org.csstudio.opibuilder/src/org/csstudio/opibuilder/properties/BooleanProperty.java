@@ -7,57 +7,59 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.properties;
 
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.BooleanPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
 /**
  * A boolean widget property.
+ *
  * @author Alexander Will(class of same name in SDS)
  * @author Xihui Chen
  *
  */
 public final class BooleanProperty extends AbstractWidgetProperty {
 
-
-    /**Boolean Property Constructor
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created.
+    /**
+     * Boolean Property Constructor
+     *
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created.
      */
     public BooleanProperty(String propId, String description,
             WidgetPropertyCategory category, boolean defaultValue) {
         super(propId, description, category, Boolean.valueOf(defaultValue));
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     public Object checkValue(final Object value) {
-        if(value == null)
+        if (value == null) {
             return null;
+        }
 
         Boolean acceptedValue;
-        if (value instanceof Boolean)
+        if (value instanceof Boolean) {
             acceptedValue = (Boolean) value;
-        else
+        } else {
             acceptedValue = Boolean.parseBoolean(value.toString());
+        }
 
         return acceptedValue;
     }
 
-
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if(PropertySSHelper.getIMPL() == null)
-            return null;
-        return PropertySSHelper.getIMPL().getBooleanPropertyDescriptor(prop_id, description);
+        return new BooleanPropertyDescriptor(prop_id, description);
     }
-
 
     @Override
     public void writeToXML(Element propElement) {
@@ -76,9 +78,7 @@ public final class BooleanProperty extends AbstractWidgetProperty {
 
     @Override
     public String toStringInRuleScript(Object propValue) {
-        return (Boolean)propValue? "true" : "false";
+        return (Boolean) propValue ? "true" : "false";
     }
-
-
 
 }

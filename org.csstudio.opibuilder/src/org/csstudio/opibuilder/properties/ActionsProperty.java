@@ -14,7 +14,7 @@ import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.properties.support.PropertySSHelper;
+import org.csstudio.opibuilder.properties.support.ActionsPropertyDescriptor;
 import org.csstudio.opibuilder.widgetActions.AbstractWidgetAction;
 import org.csstudio.opibuilder.widgetActions.ActionsInput;
 import org.csstudio.opibuilder.widgetActions.WidgetActionFactory;
@@ -99,11 +99,7 @@ public class ActionsProperty extends AbstractWidgetProperty {
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
-        if (PropertySSHelper.getIMPL() == null) {
-            return null;
-        }
-        return PropertySSHelper.getIMPL().getActionsPropertyDescriptor(
-                prop_id, description, showHookOption);
+        return new ActionsPropertyDescriptor(prop_id, description, showHookOption);
     }
 
     @Override
