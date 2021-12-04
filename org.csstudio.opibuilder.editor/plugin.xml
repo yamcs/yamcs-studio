@@ -284,32 +284,6 @@
          </visibility>
       </objectContribution>
    </extension>
-   <extension
-         point="org.eclipse.ui.decorators">
-      <!-- (FDI) Deactivated. Perhaps should remove. Image size for an icon is really low -->
-      <decorator
-            adaptable="true"
-            class="org.csstudio.opibuilder.tools.thumbnails.ImageIconDecorator"
-            id="ImageIcons.decorator"
-            label="File icons based on image preview"
-            lightweight="false"
-            location="BOTTOM_RIGHT"
-            state="false">
-         <enablement>
-            <or>
-               <objectClass
-                     name="org.eclipse.core.resources.IFile">
-               </objectClass>
-               <objectClass
-                     name="org.eclipse.core.resources.IStorage">
-               </objectClass>
-            </or>
-         </enablement>
-         <description>
-            Displays an image of an image file as its icon.
-         </description>
-      </decorator>
-   </extension>
    <extension point="org.eclipse.ui.decorators">
       <decorator
             adaptable="true"
