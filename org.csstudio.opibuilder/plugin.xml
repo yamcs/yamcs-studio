@@ -100,17 +100,6 @@
       </actionSet>
    </extension>
    <extension
-         point="org.eclipse.help.toc">
-      <toc
-            file="toc.xml"
-            primary="true">
-      </toc>
-      <toc
-            file="tocChangelog.xml"
-            primary="false">
-      </toc>
-   </extension>
-   <extension
          point="org.eclipse.ui.elementFactories">
       <factory
             class="org.csstudio.opibuilder.runmode.RunnerInputFactory"
@@ -170,18 +159,6 @@
             </objectState>
          </visibility>
       </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.help.index">
-      <index
-            file="index.xml">
-      </index>
-   </extension>
-   <extension
-         point="org.eclipse.help.contexts">
-      <contexts
-            file="OPIContextHelp.xml">
-      </contexts>
    </extension>
    <extension
          point="org.eclipse.ui.views">
