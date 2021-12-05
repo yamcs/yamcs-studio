@@ -7,7 +7,9 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.util;
 
-/**Infinite loop detected.
+/**
+ * Infinite loop detected.
+ * 
  * @author Xihui Chen
  *
  */

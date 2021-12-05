@@ -165,9 +165,6 @@ public abstract class AbstractScaledWidgetFigure extends Figure implements Intro
         return transparent;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void paintFigure(final Graphics graphics) {
         if (!transparent) {

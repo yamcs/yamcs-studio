@@ -31,20 +31,18 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 /**
- * Class <code>DrillDownComposite</code> implements a simple web
- * style navigation metaphor.  Home, back, and "drill into" buttons are
- * added to a tree viewer for easier navigation.
+ * Class <code>DrillDownComposite</code> implements a simple web style navigation metaphor. Home, back, and "drill into"
+ * buttons are added to a tree viewer for easier navigation.
  *
  * <p>
- * <b>Code is based upon
- * <code>org.eclipse.ui.part.DrillDownComposite</code> in
- * plugin <code>org.eclipse.ui.workbench</code>.</b>
+ * <b>Code is based upon <code>org.eclipse.ui.part.DrillDownComposite</code> in plugin
+ * <code>org.eclipse.ui.workbench</code>.</b>
  * </p>
  *
  * @author Kai Meyer
  *
  */
-//TODO: Copied from org.csstudio.platform.ui. Review is needed.
+// TODO: Copied from org.csstudio.platform.ui. Review is needed.
 class DrillDownComposite extends Composite {
 
     /**
@@ -65,8 +63,10 @@ class DrillDownComposite extends Composite {
     /**
      * Constructs a new DrillDownTreeViewer.
      *
-     * @param parent the parent composite for this control
-     * @param style the SWT style for this control
+     * @param parent
+     *            the parent composite for this control
+     * @param style
+     *            the SWT style for this control
      */
     public DrillDownComposite(final Composite parent, final int style) {
         super(parent, style);
@@ -98,10 +98,10 @@ class DrillDownComposite extends Composite {
     }
 
     /**
-     * Sets the child viewer.  This method should only be called once, after the
-     * viewer has been created.
+     * Sets the child viewer. This method should only be called once, after the viewer has been created.
      *
-     * @param aViewer the new child viewer
+     * @param aViewer
+     *            the new child viewer
      */
     public final void setChildTree(final TreeViewer aViewer) {
         // Save viewer.
@@ -119,8 +119,8 @@ class DrillDownComposite extends Composite {
 
     /**
      * Delivers the ToolBarManager of this DrillDownComposite.
-     * @return ToolBarManager
-     *             The ToolbarManager of this DrillDownComposite
+     * 
+     * @return ToolBarManager The ToolbarManager of this DrillDownComposite
      */
     public final ToolBarManager getToolBarManager() {
         return _toolBarMgr;

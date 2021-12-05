@@ -174,8 +174,10 @@ public class ExprParser {
                 args.add(current == null ? new ExprMissing() : current);
                 current = c;
                 int rows = 1;
-                if (cols == -1) cols = args.size();
-                else rows = args.size() / cols;
+                if (cols == -1)
+                    cols = args.size();
+                else
+                    rows = args.size() / cols;
                 ExprArray a = new ExprArray(rows, cols);
                 for (int i = 0; i < args.size(); i++) {
                     a.set(0, i, (Expr) args.get(i));

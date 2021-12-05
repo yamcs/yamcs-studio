@@ -15,7 +15,7 @@ import java.util.EventListener;
  * @author Xihui Chen
  *
  */
-public interface IManualStringValueChangeListener extends EventListener{
+public interface IManualStringValueChangeListener extends EventListener {
     /**
      * React on a manual value changing.
      *

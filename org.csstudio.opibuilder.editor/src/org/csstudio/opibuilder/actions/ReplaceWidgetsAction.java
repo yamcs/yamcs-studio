@@ -24,14 +24,15 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**The action that paste the properties from clipboard.
+/**
+ * The action that paste the properties from clipboard.
+ * 
  * @author Xihui Chen
  *
  */
 public class ReplaceWidgetsAction extends SelectionAction {
 
-    public static final String ID = "org.csstudio.opibuilder.actions.replaceWidgets";   
-
+    public static final String ID = "org.csstudio.opibuilder.actions.replaceWidgets";
 
     public ReplaceWidgetsAction(IWorkbenchPart part) {
         super(part);
@@ -43,21 +44,19 @@ public class ReplaceWidgetsAction extends SelectionAction {
 
     @Override
     protected boolean calculateEnabled() {
-        if(getSelectedWidgetModels().size() >0 &&
+        if (getSelectedWidgetModels().size() > 0 &&
                 !(getSelectedWidgetModels().get(0) instanceof DisplayModel))
             return true;
         return false;
     }
 
-
-    public Command createReplaceWidgetCommand(String typeID){
+    public Command createReplaceWidgetCommand(String typeID) {
         CompoundCommand cmd = new CompoundCommand("Replace widgets");
 
-        for(AbstractWidgetModel targetWidget : getSelectedWidgetModels()){
-            AbstractWidgetModel widgetModel = WidgetsService.getInstance().
-                    getWidgetDescriptor(typeID).getWidgetModel();
-            for(String prop_id : targetWidget.getAllPropertyIDs()){
-                if(widgetModel.getProperty(prop_id) == null ||
+        for (AbstractWidgetModel targetWidget : getSelectedWidgetModels()) {
+            AbstractWidgetModel widgetModel = WidgetsService.getInstance().getWidgetDescriptor(typeID).getWidgetModel();
+            for (String prop_id : targetWidget.getAllPropertyIDs()) {
+                if (widgetModel.getProperty(prop_id) == null ||
                         prop_id.equals(AbstractWidgetModel.PROP_WIDGET_TYPE))
                     continue;
                 widgetModel.setPropertyValue(prop_id, targetWidget.getPropertyValue(prop_id));
@@ -69,13 +68,12 @@ public class ReplaceWidgetsAction extends SelectionAction {
 
     }
 
-
     @Override
     public void run() {
         WidgetsSelectDialog dialog = new WidgetsSelectDialog(
                 getWorkbenchPart().getSite().getShell(), 1, false);
         dialog.setDefaultSelectedWidgetID("org.csstudio.opibuilder.widgets.NativeText");
-        if(dialog.open() == Window.OK){
+        if (dialog.open() == Window.OK) {
             String typeID = dialog.getOutput();
             execute(createReplaceWidgetCommand(typeID));
         }

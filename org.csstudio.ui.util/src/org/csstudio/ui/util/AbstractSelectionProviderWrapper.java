@@ -8,14 +8,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
- * Helper class to wrap a selection provider (e.g. a table, a tree, ...),
- * so that events are fired at the same time, but the selection is changed
- * to a different type (e.g. String to ProcessVariable).
+ * Helper class to wrap a selection provider (e.g. a table, a tree, ...), so that events are fired at the same time, but
+ * the selection is changed to a different type (e.g. String to ProcessVariable).
  * <p>
- * This class is useful when constructing a composite that should behave like
- * a standard JFace widget in term of selection but with CSS business objects.
- * To use, you implement the transform and reverseTransform that convert the selection
- * back and forth.
+ * This class is useful when constructing a composite that should behave like a standard JFace widget in term of
+ * selection but with CSS business objects. To use, you implement the transform and reverseTransform that convert the
+ * selection back and forth.
  *
  * @author carcassi
  */
@@ -51,7 +49,6 @@ public abstract class AbstractSelectionProviderWrapper implements ISelectionProv
             }
         });
     }
-
 
     @Override
     public void removeSelectionChangedListener(

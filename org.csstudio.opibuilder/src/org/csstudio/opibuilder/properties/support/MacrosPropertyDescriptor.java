@@ -13,8 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 /**
- * Descriptor for a property that has a value which should be edited with a macros
- * cell editor.
+ * Descriptor for a property that has a value which should be edited with a macros cell editor.
  *
  * @author Xihui Chen
  *
@@ -32,9 +31,6 @@ public final class MacrosPropertyDescriptor extends TextPropertyDescriptor {
         super(id, displayName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new MacrosCellEditor(parent, "Edit Macros");

@@ -31,8 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
 /**
- * Descriptor for a property that is a boolean value which should be edited with
- * a boolean cell editor.
+ * Descriptor for a property that is a boolean value which should be edited with a boolean cell editor.
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
@@ -63,9 +62,6 @@ public final class BooleanPropertyDescriptor extends PropertyDescriptor {
         setLabelProvider(new BooleanLabelProvider());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new CheckboxCellEditor(parent);
@@ -82,29 +78,26 @@ public final class BooleanPropertyDescriptor extends PropertyDescriptor {
      *
      */
     private final static class BooleanLabelProvider extends LabelProvider {
-        /**
-         * {@inheritDoc}
-         */
+
         @Override
         public Image getImage(final Object element) {
             if (element instanceof Boolean) {
-                if (((Boolean)element).booleanValue()) {
-                    return CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/checked.gif");
+                if (((Boolean) element).booleanValue()) {
+                    return CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                            "icons/checked.gif");
                 } else {
-                    return CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/unchecked.gif");
+                    return CustomMediaFactory.getInstance().getImageFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
+                            "icons/unchecked.gif");
                 }
             } else {
                 return null;
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String getText(final Object element) {
             if (element instanceof Boolean) {
-                if (((Boolean)element).booleanValue()) {
+                if (((Boolean) element).booleanValue()) {
                     return "yes";
                 } else {
                     return "no";

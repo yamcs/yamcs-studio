@@ -12,22 +12,20 @@ import java.util.TimerTask;
 
 import org.eclipse.swt.widgets.Display;
 
-public class RepeatFiringBehavior
-{
-    protected static final int
-        INITIAL_DELAY = 250,
-        STEP_DELAY = 40;
+public class RepeatFiringBehavior {
+    protected static final int INITIAL_DELAY = 250,
+            STEP_DELAY = 40;
 
-    protected int
-        stepDelay = INITIAL_DELAY,
-        initialDelay = STEP_DELAY;
+    protected int stepDelay = INITIAL_DELAY,
+            initialDelay = STEP_DELAY;
 
     protected Timer timer;
 
     private Runnable runTask;
     private Display display;
+
     public RepeatFiringBehavior() {
-         display = Display.getCurrent();
+        display = Display.getCurrent();
     }
 
     public void pressed() {
@@ -42,6 +40,7 @@ public class RepeatFiringBehavior
     public void canceled() {
         suspend();
     }
+
     public void released() {
         suspend();
     }
@@ -55,22 +54,22 @@ public class RepeatFiringBehavior
     }
 
     public void suspend() {
-        if (timer == null) return;
+        if (timer == null)
+            return;
         timer.cancel();
         timer = null;
     }
-
 
     public void setRunTask(Runnable runTask) {
         this.runTask = runTask;
     }
 
-class Task
-    extends TimerTask {
+    class Task
+            extends TimerTask {
 
-    public void run() {
-        display.syncExec(runTask);
+        public void run() {
+            display.syncExec(runTask);
+        }
     }
-}
 
 }

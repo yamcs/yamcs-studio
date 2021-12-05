@@ -20,10 +20,11 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * A bulb figure, which could be used for knob, LED etc.
+ * 
  * @author Xihui Chen
  *
  */
-public class Bulb extends Figure{
+public class Bulb extends Figure {
 
     private Color bulbColor;
 
@@ -33,7 +34,7 @@ public class Bulb extends Figure{
 
     public Bulb() {
         setBulbColor(CustomMediaFactory.getInstance().getColor(
-                new RGB(150,150,150)));
+                new RGB(150, 150, 150)));
         setEffect3D(true);
     }
 
@@ -44,27 +45,28 @@ public class Bulb extends Figure{
 
     @Override
     public void setBounds(Rectangle rect) {
-        //get the square in the rect
+        // get the square in the rect
         rect.width = Math.min(rect.width, rect.height);
-        if(rect.width < 3)
-            rect.width =3;
+        if (rect.width < 3)
+            rect.width = 3;
         rect.height = rect.width;
         super.setBounds(rect);
 
     }
+
     @Override
     protected void paintClientArea(Graphics graphics) {
         graphics.setAntialias(SWT.ON);
 
-        if(effect3D && GraphicsUtil.testPatternSupported(graphics)) {
+        if (effect3D && GraphicsUtil.testPatternSupported(graphics)) {
             // Fills the circle with solid bulb color
             graphics.setBackgroundColor(bulbColor);
             graphics.fillOval(bounds);
 
-            //diagonal linear gradient
-                Pattern p = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x,    bounds.y,
-                        bounds.x + getWidth(), bounds.y + getHeight(),
-                        COLOR_WHITE, 255, bulbColor, 0);
+            // diagonal linear gradient
+            Pattern p = GraphicsUtil.createScaledPattern(graphics, Display.getCurrent(), bounds.x, bounds.y,
+                    bounds.x + getWidth(), bounds.y + getHeight(),
+                    COLOR_WHITE, 255, bulbColor, 0);
             try {
                 graphics.setBackgroundPattern(p);
                 graphics.fillOval(bounds);
@@ -82,10 +84,11 @@ public class Bulb extends Figure{
     }
 
     /**
-     * @param bulbColor the bulbColor to set
+     * @param bulbColor
+     *            the bulbColor to set
      */
     public void setBulbColor(Color color) {
-        if(this.bulbColor != null && this.bulbColor.equals(color))
+        if (this.bulbColor != null && this.bulbColor.equals(color))
             return;
         this.bulbColor = color;
         repaint();
@@ -104,18 +107,14 @@ public class Bulb extends Figure{
     }
 
     /**
-     * @param effect3D the effect3D to set
+     * @param effect3D
+     *            the effect3D to set
      */
     public void setEffect3D(boolean effect3D) {
-        if(this.effect3D == effect3D)
+        if (this.effect3D == effect3D)
             return;
         this.effect3D = effect3D;
         repaint();
     }
-
-
-
-
-
 
 }

@@ -13,7 +13,9 @@ import org.csstudio.opibuilder.widgets.model.TabModel;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.dialogs.MessageDialog;
 
-/**The command which add a tab to the tab widget.
+/**
+ * The command which add a tab to the tab widget.
+ * 
  * @author Xihui Chen
  *
  */
@@ -34,11 +36,10 @@ public class RemoveTabCommand extends Command {
 
     @Override
     public void execute() {
-        if(tabModel.getChildren().size()>1){
+        if (tabModel.getChildren().size() > 1) {
             tabModel.removeTab(tabIndex);
             executed = true;
-        }
-        else
+        } else
             MessageDialog.openInformation(null, "Failed to Remove Tab",
                     "There must be at least one tab in the tab folder.");
 
@@ -46,13 +47,9 @@ public class RemoveTabCommand extends Command {
 
     @Override
     public void undo() {
-        if(executed)
+        if (executed)
             tabModel.addTab(tabIndex, tabItem);
         executed = false;
     }
-
-
-
-
 
 }

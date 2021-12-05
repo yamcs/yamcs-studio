@@ -11,8 +11,8 @@ import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.SchemeBorder.Scheme;
 
 /**
- * <code>CSSSchemeBorder</code> provide a single source access to the real SchemeBorder, which for some reason is
- * not same for RAP and RCP. RAP implements access to borders as methods, RCP does it with with fields.
+ * <code>CSSSchemeBorder</code> provide a single source access to the real SchemeBorder, which for some reason is not
+ * same for RAP and RCP. RAP implements access to borders as methods, RCP does it with with fields.
  *
  * @author <a href="mailto:jaka.bobnar@cosylab.com">Jaka Bobnar</a>
  */

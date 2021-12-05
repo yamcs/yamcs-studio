@@ -69,9 +69,6 @@ public final class RoundedRectangleFigure extends RoundedRectangle implements In
     private boolean gradient = false;
     private Boolean support3D = null;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void fillShape(final Graphics graphics) {
 

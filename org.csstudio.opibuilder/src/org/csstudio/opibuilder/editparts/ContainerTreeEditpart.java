@@ -20,7 +20,9 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 
-/**Tree Editpart for container widgets.
+/**
+ * Tree Editpart for container widgets.
+ * 
  * @author Xihui Chen
  *
  */
@@ -32,15 +34,14 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
         super(model);
     }
 
-
     @Override
     protected void createEditPolicies() {
         super.createEditPolicies();
-        if(getWidgetModel().isChildrenOperationAllowable()){
+        if (getWidgetModel().isChildrenOperationAllowable()) {
             installEditPolicy(EditPolicy.CONTAINER_ROLE, new WidgetContainerEditPolicy());
             installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE, new WidgetTreeContainerEditPolicy());
         }
-        //If this editpart is the contents of the viewer, then it is not deletable!
+        // If this editpart is the contents of the viewer, then it is not deletable!
         if (getParent() instanceof RootEditPart)
             installEditPolicy(EditPolicy.COMPONENT_ROLE, new RootComponentEditPolicy());
     }
@@ -53,34 +54,32 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
 
-                if(evt.getOldValue() instanceof Integer){
-                    addChild(createChild(evt.getNewValue()), ((Integer)evt
+                if (evt.getOldValue() instanceof Integer) {
+                    addChild(createChild(evt.getNewValue()), ((Integer) evt
                             .getOldValue()).intValue());
-                }else if (evt.getOldValue() instanceof AbstractWidgetModel){
-                    EditPart child = (EditPart)getViewer().getEditPartRegistry().get(
+                } else if (evt.getOldValue() instanceof AbstractWidgetModel) {
+                    EditPart child = (EditPart) getViewer().getEditPartRegistry().get(
                             evt.getOldValue());
-                    if(child != null)
+                    if (child != null)
                         removeChild(child);
-                }else
+                } else
                     refreshChildren();
                 refreshVisuals();
             }
         };
-        getWidgetModel().getChildrenProperty().
-            addPropertyChangeListener(childrenPropertyChangeListener);
+        getWidgetModel().getChildrenProperty().addPropertyChangeListener(childrenPropertyChangeListener);
 
     }
 
     @Override
     public void deactivate() {
         super.deactivate();
-        getWidgetModel().getChildrenProperty().
-            removePropertyChangeListener(childrenPropertyChangeListener);
+        getWidgetModel().getChildrenProperty().removePropertyChangeListener(childrenPropertyChangeListener);
     }
 
     @Override
-    public AbstractContainerModel getWidgetModel(){
-        return (AbstractContainerModel)getModel();
+    public AbstractContainerModel getWidgetModel() {
+        return (AbstractContainerModel) getModel();
     }
 
     @Override
@@ -91,9 +90,9 @@ public class ContainerTreeEditpart extends WidgetTreeEditpart {
     @Override
     protected void refreshVisuals() {
         super.refreshVisuals();
-        for(Object child : getChildren()){
-            if(child instanceof WidgetTreeEditpart)
-                ((WidgetTreeEditpart)child).refreshVisuals();
+        for (Object child : getChildren()) {
+            if (child instanceof WidgetTreeEditpart)
+                ((WidgetTreeEditpart) child).refreshVisuals();
         }
     }
 

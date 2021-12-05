@@ -20,11 +20,13 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-/**Data of a rule.
+/**
+ * Data of a rule.
+ * 
  * @author Xihui Chen
  *
  */
-public class RuleData implements IAdaptable{
+public class RuleData implements IAdaptable {
 
     public static final String QUOTE = "\"";
 
@@ -71,7 +73,8 @@ public class RuleData implements IAdaptable{
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public final void setName(String name) {
         this.name = name;
@@ -85,7 +88,8 @@ public class RuleData implements IAdaptable{
     }
 
     /**
-     * @param propId the propId to set
+     * @param propId
+     *            the propId to set
      */
     public final void setPropId(String propId) {
         this.propId = propId;
@@ -99,85 +103,88 @@ public class RuleData implements IAdaptable{
         return outputExpValue;
     }
 
-
-    public List<Expression> getExpressionList(){
+    public List<Expression> getExpressionList() {
         return expressionList;
     }
 
-    public void addExpression(Expression exp){
-        if(!expressionList.contains(exp))
+    public void addExpression(Expression exp) {
+        if (!expressionList.contains(exp))
             expressionList.add(exp);
     }
 
-    public void removeExpression(Expression exp){
+    public void removeExpression(Expression exp) {
         expressionList.remove(exp);
     }
 
-    /**Get the input PVs of the script
+    /**
+     * Get the input PVs of the script
+     * 
      * @return
      */
     public List<PVTuple> getPVList() {
         return pvList;
     }
 
-    public void addPV(PVTuple pvTuple){
-        if(!pvList.contains(pvTuple)){
+    public void addPV(PVTuple pvTuple) {
+        if (!pvList.contains(pvTuple)) {
             pvList.add(pvTuple);
         }
     }
 
-    public void removePV(PVTuple pvTuple){
+    public void removePV(PVTuple pvTuple) {
         pvList.remove(pvTuple);
     }
 
-    /**Generate the Javascript string for this rule.
+    /**
+     * Generate the Javascript string for this rule.
+     * 
      * @return the script string
      */
-    public String generateScript(){
-        if(expressionList.size() <=0)
+    public String generateScript() {
+        if (expressionList.size() <= 0)
             return "";
         StringBuilder sb = new StringBuilder(
                 "importPackage(Packages.org.csstudio.opibuilder.scriptUtil); \n");
 
         AbstractWidgetProperty property = widgetModel.getProperty(propId);
-        boolean needDbl = false, needInt = false, needStr = false, needSev=false;
-        for(Expression exp : expressionList){
-            if(!needDbl)
+        boolean needDbl = false, needInt = false, needStr = false, needSev = false;
+        for (Expression exp : expressionList) {
+            if (!needDbl)
                 needDbl = containRegex(exp.getBooleanExpression(), "pv\\d") ||
                         (outputExpValue && containRegex(exp.getValue().toString(), "pv\\d"));
-            if(!needInt){
-                if(exp.getBooleanExpression().contains("pvInt"))
+            if (!needInt) {
+                if (exp.getBooleanExpression().contains("pvInt"))
                     needInt = true;
-                if(outputExpValue && exp.getValue().toString().contains("pvInt"))
+                if (outputExpValue && exp.getValue().toString().contains("pvInt"))
                     needInt = true;
             }
-            if(!needStr){
-                if(exp.getBooleanExpression().contains("pvStr"))
+            if (!needStr) {
+                if (exp.getBooleanExpression().contains("pvStr"))
                     needStr = true;
-                if(outputExpValue && exp.getValue().toString().contains("pvStr"))
+                if (outputExpValue && exp.getValue().toString().contains("pvStr"))
                     needStr = true;
             }
-            if(!needSev){
-                if(exp.getBooleanExpression().contains("pvSev"))
+            if (!needSev) {
+                if (exp.getBooleanExpression().contains("pvSev"))
                     needSev = true;
-                if(outputExpValue && exp.getValue().toString().contains("pvSev"))
+                if (outputExpValue && exp.getValue().toString().contains("pvSev"))
                     needSev = true;
             }
 
         }
-        for(int i=0; i<pvList.size(); i++){
-            if(needDbl)
-                sb.append("var pv" + i + " = PVUtil."+ "getDouble(pvs[" + i + "]);\n"); 
-            if(needInt)
-                sb.append("var pvInt" + i + " = PVUtil."+ "getLong(pvs[" + i + "]);\n"); 
-            if(needStr)
-                sb.append("var pvStr" + i + " = PVUtil."+ "getString(pvs[" + i + "]);\n"); 
-            if(needSev)
+        for (int i = 0; i < pvList.size(); i++) {
+            if (needDbl)
+                sb.append("var pv" + i + " = PVUtil." + "getDouble(pvs[" + i + "]);\n");
+            if (needInt)
+                sb.append("var pvInt" + i + " = PVUtil." + "getLong(pvs[" + i + "]);\n");
+            if (needStr)
+                sb.append("var pvStr" + i + " = PVUtil." + "getString(pvs[" + i + "]);\n");
+            if (needSev)
                 sb.append("var pvSev" + i + " = PVUtil.getSeverity(pvs[" + i + "]);\n");
         }
-        int i=0;
-        for(Expression exp : expressionList){
-            sb.append(i == 0 ? "if(" : "else if(");   
+        int i = 0;
+        for (Expression exp : expressionList) {
+            sb.append(i == 0 ? "if(" : "else if(");
             sb.append(expressionList.get(i++).getBooleanExpression());
             sb.append(")\n");
 
@@ -188,20 +195,20 @@ public class RuleData implements IAdaptable{
         }
         sb.append("else\n");
         sb.append("\twidget.setPropertyValue(\"" + propId + "\"," +
-                generatePropValueString(property, null)+");\n");
+                generatePropValueString(property, null) + ");\n");
 
         return sb.toString();
     }
 
-    public RuleData getCopy(){
+    public RuleData getCopy() {
         RuleData result = new RuleData(widgetModel);
         result.setName(name);
         result.setOutputExpValue(outputExpValue);
         result.setPropId(propId);
-        for(Expression expression : expressionList){
+        for (Expression expression : expressionList) {
             result.addExpression(expression.getCopy());
         }
-        for(PVTuple pvTuple : pvList){
+        for (PVTuple pvTuple : pvList) {
             result.addPV(pvTuple.getCopy());
         }
         return result;
@@ -217,22 +224,20 @@ public class RuleData implements IAdaptable{
             Expression exp) {
         Object value;
         String propValue;
-        if(exp != null && outputExpValue){
+        if (exp != null && outputExpValue) {
             propValue = exp.getValue().toString();
             return propValue;
-        }
-        else{
-            if(exp != null)
+        } else {
+            if (exp != null)
                 value = exp.getValue();
             else
                 value = property.getPropertyValue();
 
-            if(value == null)
+            if (value == null)
                 return "null";
 
             propValue = property.toStringInRuleScript(value);
         }
-
 
         return propValue;
     }
@@ -241,12 +246,14 @@ public class RuleData implements IAdaptable{
         return widgetModel.getProperty(propId);
     }
 
-    /**Convert this {@link RuleData} to {@link RuleScriptData} so
-     * that the scriptEngine code can be reused for running rules.
+    /**
+     * Convert this {@link RuleData} to {@link RuleScriptData} so that the scriptEngine code can be reused for running
+     * rules.
+     * 
      * @return
      */
-    public RuleScriptData convertToScriptData(){
-        RuleScriptData ruleScriptData  = new RuleScriptData(this);
+    public RuleScriptData convertToScriptData() {
+        RuleScriptData ruleScriptData = new RuleScriptData(this);
         ruleScriptData.setPVList(pvList);
         ruleScriptData.setScriptString(generateScript());
         return ruleScriptData;
@@ -254,7 +261,7 @@ public class RuleData implements IAdaptable{
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if(adapter == IWorkbenchAdapter.class)
+        if (adapter == IWorkbenchAdapter.class)
             return adapter.cast(new IWorkbenchAdapter() {
 
                 @Override
@@ -286,9 +293,13 @@ public class RuleData implements IAdaptable{
         return widgetModel;
     }
 
-    /**If a String contains the regular expression.
-     * @param source the source string.
-     * @param regex the regular expression.
+    /**
+     * If a String contains the regular expression.
+     * 
+     * @param source
+     *            the source string.
+     * @param regex
+     *            the regular expression.
      * @return true if the source string contains the input regex. false other wise.
      */
     private static boolean containRegex(final String source, final String regex) {

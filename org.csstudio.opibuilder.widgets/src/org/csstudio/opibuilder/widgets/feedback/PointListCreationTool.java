@@ -38,8 +38,8 @@ import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.TargetingTool;
 
 /**
- * A custom creation tool for PointList dependend widgets. The tool produces a
- * point list, by interpreting each left click as location for a new point.
+ * A custom creation tool for PointList dependend widgets. The tool produces a point list, by interpreting each left
+ * click as location for a new point.
  *
  * @author Sven Wende, Xihui Chen
  *
@@ -47,11 +47,9 @@ import org.eclipse.gef.tools.TargetingTool;
 
 public final class PointListCreationTool extends TargetingTool {
     /**
-     * Property to be used in AbstractTool#setProperties(java.util.Map) for
-     * {@link #setFactory(CreationFactory)}.
+     * Property to be used in AbstractTool#setProperties(java.util.Map) for {@link #setFactory(CreationFactory)}.
      */
     public static final Object PROPERTY_CREATION_FACTORY = "factory";
-
 
     /**
      * The creation factory.
@@ -66,12 +64,9 @@ public final class PointListCreationTool extends TargetingTool {
     /**
      * List of common EditPart.
      *
-     * This maintains the list of common EditParts where all
-     * the points belong to. The first element of this
-     * list is the descendant EditPart where all points belong
-     * to. The second element is the parent of the first, and
-     * the third element is the parent of the second, and so
-     * on. The last element of this list is the root EditPart.
+     * This maintains the list of common EditParts where all the points belong to. The first element of this list is the
+     * descendant EditPart where all points belong to. The second element is the parent of the first, and the third
+     * element is the parent of the second, and so on. The last element of this list is the root EditPart.
      */
     private ArrayList<EditPart> commonEditParts = null;
 
@@ -87,9 +82,6 @@ public final class PointListCreationTool extends TargetingTool {
         super();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void applyProperty(final Object key, final Object value) {
         if (PROPERTY_CREATION_FACTORY.equals(key)) {
@@ -101,9 +93,6 @@ public final class PointListCreationTool extends TargetingTool {
         super.applyProperty(key, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Request createTargetRequest() {
         _points = new PointList();
@@ -112,18 +101,12 @@ public final class PointListCreationTool extends TargetingTool {
         return request;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void deactivate() {
         super.deactivate();
         _snap2Helper = null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected String getCommandName() {
         return REQ_CREATE;
@@ -140,9 +123,6 @@ public final class PointListCreationTool extends TargetingTool {
         return (CreateRequest) getTargetRequest();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected String getDebugName() {
         return "Creation Tool";
@@ -183,9 +163,6 @@ public final class PointListCreationTool extends TargetingTool {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean handleButtonDown(final int button) {
         if (getTargetEditPart() != null) {
@@ -201,57 +178,51 @@ public final class PointListCreationTool extends TargetingTool {
         // the tool is in progress mode, until a doubleclick occurs
         setState(STATE_DRAG_IN_PROGRESS);
 
-            // handle clicks
+        // handle clicks
 
-            Point p = getSnapedLocation();
-            if (_points.size() == 0) {
-                // add a new point
-                _points.addPoint(p);
-            } else {
-                // override the last point, which was the "preview" point before
-                _points.setPoint(p, _points.size() - 1);
-
-            }
-            // add an additional point, which is just for previewing the next
-            // axis in the graphical feedback
+        Point p = getSnapedLocation();
+        if (_points.size() == 0) {
+            // add a new point
             _points.addPoint(p);
+        } else {
+            // override the last point, which was the "preview" point before
+            _points.setPoint(p, _points.size() - 1);
 
-            if (commonEditParts == null) {
-                // This is the first point. Register all ancestors to the list.
-                commonEditParts = new ArrayList<EditPart>();
-                EditPart ep = getTargetEditPart();
-                while (ep != null) {
-                    commonEditParts.add(ep);
-                    ep = ep.getParent();
-                }
+        }
+        // add an additional point, which is just for previewing the next
+        // axis in the graphical feedback
+        _points.addPoint(p);
+
+        if (commonEditParts == null) {
+            // This is the first point. Register all ancestors to the list.
+            commonEditParts = new ArrayList<EditPart>();
+            EditPart ep = getTargetEditPart();
+            while (ep != null) {
+                commonEditParts.add(ep);
+                ep = ep.getParent();
+            }
+        } else {
+            // Remove all EditParts which the added point does not belong to.
+            int index = commonEditParts.indexOf(getTargetEditPart());
+            if (index == -1) {
+                commonEditParts.clear();
             } else {
-                // Remove all EditParts which the added point does not belong to.
-                int index = commonEditParts.indexOf(getTargetEditPart());
-                if (index == -1) {
-                    commonEditParts.clear();
-                } else {
-                    for (int i=0; i<index; i++) {
-                        commonEditParts.remove(i);
-                    }
+                for (int i = 0; i < index; i++) {
+                    commonEditParts.remove(i);
                 }
             }
+        }
 
         updateTargetRequest();
         setCurrentCommand(getCommand());
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean handleButtonUp(final int button) {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean handleDragInProgress() {
         if (isInState(STATE_DRAG_IN_PROGRESS)) {
@@ -262,17 +233,11 @@ public final class PointListCreationTool extends TargetingTool {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean handleDragStarted() {
         return stateTransition(STATE_DRAG, STATE_DRAG_IN_PROGRESS);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean handleFocusLost() {
         if (isInState(STATE_DRAG | STATE_DRAG_IN_PROGRESS)) {
@@ -284,9 +249,6 @@ public final class PointListCreationTool extends TargetingTool {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean handleHover() {
         if (isInState(STATE_INITIAL)) {
@@ -295,9 +257,6 @@ public final class PointListCreationTool extends TargetingTool {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean handleMove() {
         if (getState() != STATE_TERMINAL && getState() != STATE_INVALID) {
@@ -338,10 +297,9 @@ public final class PointListCreationTool extends TargetingTool {
     }
 
     /**
-     * Executes the current command and selects the newly created object. The
-     * button that was released to cause this creation is passed in, but since
-     * {@link #handleButtonDown(int)} goes into the invalid state if the button
-     * pressed is not button 1, this will always be button 1.
+     * Executes the current command and selects the newly created object. The button that was released to cause this
+     * creation is passed in, but since {@link #handleButtonDown(int)} goes into the invalid state if the button pressed
+     * is not button 1, this will always be button 1.
      *
      * @param button
      *            the button that was pressed
@@ -367,7 +325,7 @@ public final class PointListCreationTool extends TargetingTool {
         if (editpart instanceof EditPart) {
             // Force the new object to get positioned in the viewer.
             viewer.flush();
-            if(((EditPart) editpart).isSelectable())
+            if (((EditPart) editpart).isSelectable())
                 viewer.select((EditPart) editpart);
         }
     }
@@ -382,9 +340,6 @@ public final class PointListCreationTool extends TargetingTool {
         _factory = factory;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("unchecked")
     protected void updateTargetRequest() {

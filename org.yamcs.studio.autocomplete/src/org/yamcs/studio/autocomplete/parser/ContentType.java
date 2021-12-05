@@ -10,9 +10,8 @@ package org.yamcs.studio.autocomplete.parser;
 import org.yamcs.studio.autocomplete.IAutoCompleteProvider;
 
 /**
- * Common content types, can be extended to define specific content types.
- * Used by {@link IContentParser} & {@link IAutoCompleteProvider} to filter
- * content.
+ * Common content types, can be extended to define specific content types. Used by {@link IContentParser} &
+ * {@link IAutoCompleteProvider} to filter content.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

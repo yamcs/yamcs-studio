@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 package org.csstudio.opibuilder.actions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,34 +22,37 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPart;
 
-
-/**Change widget orientation.
+/**
+ * Change widget orientation.
+ * 
  * @author Xihui Chen
  *
  */
 public class ChangeOrientationAction extends SelectionAction {
 
-    public enum OrientationType{
+    public enum OrientationType {
         FLIP_HORIZONTAL("Flip Horizontal", "icons/flip_horizontal.png"),
         FLIP_VERTICAL("Flip Vertical", "icons/flip_vertical.png"),
         ROTATE_CLOCKWISE("Rotate Right " + "90\u00b0", "icons/rotate_clockwise.png"),
-        ROTATE_COUNTERCLOCKWISE("Rotate Left " + "90\u00b0", "icons/rotate_anticlockwise.png");   
+        ROTATE_COUNTERCLOCKWISE("Rotate Left " + "90\u00b0", "icons/rotate_anticlockwise.png");
+
         private String label;
         private String iconPath;
+
         private OrientationType(String label, String iconPath) {
             this.label = label;
             this.iconPath = iconPath;
         }
 
-        public String getLabel(){
+        public String getLabel() {
             return label;
         }
 
-        public String getActionID(){
+        public String getActionID() {
             return "org.csstudio.opibuilder.actions." + toString();
         }
 
-        public ImageDescriptor getImageDescriptor(){
+        public ImageDescriptor getImageDescriptor() {
             return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
                     OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
@@ -65,14 +69,13 @@ public class ChangeOrientationAction extends SelectionAction {
         this.orientationType = orientationType;
     }
 
-
     @Override
     public void run() {
         CompoundCommand compoundCommand = new CompoundCommand(orientationType.getLabel());
-            for(AbstractWidgetModel widgetModel : getSelectedWidgetModels()){
-                compoundCommand.add(new ChangeOrientationCommand(widgetModel, orientationType));
-            }
-                execute(compoundCommand);
+        for (AbstractWidgetModel widgetModel : getSelectedWidgetModels()) {
+            compoundCommand.add(new ChangeOrientationCommand(widgetModel, orientationType));
+        }
+        execute(compoundCommand);
     }
 
     protected final List<AbstractWidgetModel> getSelectedWidgetModels() {
@@ -89,11 +92,10 @@ public class ChangeOrientationAction extends SelectionAction {
         return selectedWidgetModels;
     }
 
-
     @Override
     protected boolean calculateEnabled() {
         List<AbstractWidgetModel> selectedWidgetModels = getSelectedWidgetModels();
-        if(selectedWidgetModels.size() >= 1 &&
+        if (selectedWidgetModels.size() >= 1 &&
                 !(selectedWidgetModels.get(0) instanceof DisplayModel))
             return true;
         return false;

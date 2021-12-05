@@ -14,29 +14,28 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.part.ViewPart;
 
-/** RCP 'View' for debugging a Perspective
- *  @author Kay Kasemir
+/**
+ * RCP 'View' for debugging a Perspective
+ * 
+ * @author Kay Kasemir
  */
-public class PlaceHolderView extends ViewPart
-{
+public class PlaceHolderView extends ViewPart {
     /** View ID registered in plugin.xml */
     public static final String ID = "org.csstudio.opibuilder.placeHolder";
 
     @Override
-    public void createPartControl(final Composite parent)
-    {
+    public void createPartControl(final Composite parent) {
         final IViewSite site = getViewSite();
         parent.setLayout(new FillLayout());
 
         final Text text = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
         text.setText("Placeholder for displays that should appear in this location.\n" +
-                     "Close after all displays have been arranged.");
+                "Close after all displays have been arranged.");
         setPartName(site.getSecondaryId());
     }
 
     @Override
-    public void setFocus()
-    {
+    public void setFocus() {
         // NOP
     }
 }

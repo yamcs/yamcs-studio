@@ -25,6 +25,7 @@ import org.eclipse.gef.requests.CreateRequest;
 
 /**
  * The edit policy for widgets operation on a tree.
+ * 
  * @author Xihui Chen
  *
  */
@@ -36,11 +37,11 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
         @SuppressWarnings("rawtypes")
         List editparts = request.getEditParts();
         int index = findIndexOfTreeItemAt(request.getLocation());
-        for(int i=0; i< editparts.size(); i++){
-            EditPart child = (EditPart)editparts.get(index >=0 ? editparts.size()-1-i : i);
-            if(isAncestor(child, getHost())){
+        for (int i = 0; i < editparts.size(); i++) {
+            EditPart child = (EditPart) editparts.get(index >= 0 ? editparts.size() - 1 - i : i);
+            if (isAncestor(child, getHost())) {
                 cmd.add(UnexecutableCommand.INSTANCE);
-            }else{
+            } else {
                 AbstractWidgetModel childModel = (AbstractWidgetModel) child.getModel();
                 cmd.add(createCreateCommand(
                         childModel,
@@ -68,26 +69,26 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
         int newIndex = findIndexOfTreeItemAt(request.getLocation());
         int tempIndex = newIndex;
 
-        for(int i = 0; i < editparts.size(); i++){
-            EditPart child = (EditPart)editparts.get(editparts.size()-1-i);
+        for (int i = 0; i < editparts.size(); i++) {
+            EditPart child = (EditPart) editparts.get(editparts.size() - 1 - i);
 
             int oldIndex = children.indexOf(child);
-            if(oldIndex == tempIndex || oldIndex + 1 == tempIndex){
+            if (oldIndex == tempIndex || oldIndex + 1 == tempIndex) {
                 command.add(UnexecutableCommand.INSTANCE);
                 return command;
-            } else if(oldIndex <= tempIndex){
+            } else if (oldIndex <= tempIndex) {
                 tempIndex--;
             }
 
             command.add(new ChangeOrderCommand(tempIndex,
-                    (AbstractContainerModel)getHost().getModel(),
+                    (AbstractContainerModel) getHost().getModel(),
                     (AbstractWidgetModel) child.getModel()));
         }
         return command;
     }
 
     protected Command createCreateCommand(AbstractWidgetModel widgetModel,
-            Rectangle r, int index, String label){
+            Rectangle r, int index, String label) {
 
         WidgetCreateCommand cmd = new WidgetCreateCommand(
                 widgetModel, (AbstractContainerModel) getHost().getModel(), r, false, true);
@@ -97,10 +98,10 @@ public class WidgetTreeContainerEditPolicy extends TreeContainerEditPolicy {
 
     }
 
-    protected boolean isAncestor(EditPart source, EditPart target){
-        if(source == target)
+    protected boolean isAncestor(EditPart source, EditPart target) {
+        if (source == target)
             return true;
-        if(target.getParent() != null)
+        if (target.getParent() != null)
             return isAncestor(source, target.getParent());
         return false;
     }

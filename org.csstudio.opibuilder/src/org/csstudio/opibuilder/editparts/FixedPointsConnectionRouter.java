@@ -18,6 +18,7 @@ import org.eclipse.gef.EditPart;
 
 /**
  * The router that route a connection through fixed points
+ * 
  * @author Xihui Chen
  *
  */
@@ -73,10 +74,10 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
 
         connPoints.addPoint(startPointRel);
 
-        AbstractOpiBuilderAnchor anchor = (AbstractOpiBuilderAnchor)conn.getSourceAnchor();
+        AbstractOpiBuilderAnchor anchor = (AbstractOpiBuilderAnchor) conn.getSourceAnchor();
         final ConnectorOrientation startDirection = anchor.getOrientation();
 
-        anchor = (AbstractOpiBuilderAnchor)conn.getTargetAnchor();
+        anchor = (AbstractOpiBuilderAnchor) conn.getTargetAnchor();
         final ConnectorOrientation endDirection = anchor.getOrientation();
 
         PointList newPoints = constraintPoints.getCopy();
@@ -92,23 +93,27 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
         }
         LOGGER.log(Level.FINEST, buildPointDebug("newPoints", newPoints));
 
-        connPoints.addAll(adjustRouteEndsToAnchors(newPoints, startDirection, endDirection, startPointRel, endPointRel));
+        connPoints
+                .addAll(adjustRouteEndsToAnchors(newPoints, startDirection, endDirection, startPointRel, endPointRel));
 
         connPoints.addPoint(endPointRel);
 
         conn.setPoints(connPoints);
     }
 
-    private PointList adjustRouteEndsToAnchors(PointList oldPoints, ConnectorOrientation startDirection, ConnectorOrientation endDirection, Point startPointRel, Point endPointRel) {
+    private PointList adjustRouteEndsToAnchors(PointList oldPoints, ConnectorOrientation startDirection,
+            ConnectorOrientation endDirection, Point startPointRel, Point endPointRel) {
         simpleMove(oldPoints, startDirection, endDirection, startPointRel, endPointRel);
 
         return oldPoints;
     }
 
     //
-    //--------------------------------------------------------------- One or two point connections -------------------------------
+    // --------------------------------------------------------------- One or two point connections
+    // -------------------------------
     //
-    private void simpleMove(PointList translatedPoints, ConnectorOrientation startDirection, ConnectorOrientation endDirection, Point startPointRel, Point endPointRel) {
+    private void simpleMove(PointList translatedPoints, ConnectorOrientation startDirection,
+            ConnectorOrientation endDirection, Point startPointRel, Point endPointRel) {
         // Handle the start point
         final Point firstPoint = translatedPoints.getFirstPoint();
         onePointMove(firstPoint, startDirection, startPointRel);
@@ -132,15 +137,15 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
     }
 
     //
-    //--------------------------------------------------------------- Other methods -------------------------------
+    // --------------------------------------------------------------- Other methods -------------------------------
     //
 
     private String buildPointDebug(String name, PointList points) {
         final StringBuilder sb = new StringBuilder(points.size() * 8 + 32);
         sb.append(name).append(": [");
-        for(int i = 0; i < points.size(); ++i) {
+        for (int i = 0; i < points.size(); ++i) {
             final Point p = points.getPoint(i);
-            sb.append(p.toString()).append(i>=points.size()-1?"":", ");
+            sb.append(p.toString()).append(i >= points.size() - 1 ? "" : ", ");
         }
         return sb.append(']').toString();
     }
@@ -161,9 +166,10 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
                 // are both connected widgets defined - this should be always true
                 if ((connectionModel.getSource() == null) || (connectionModel.getTarget() == null))
                     return null;
-                AbstractContainerModel sourceModel =  connectionModel.getSource().getParent();
-                AbstractContainerModel targetModel =  connectionModel.getTarget().getParent();
-                // if one of them is null, then at least one end if the connection is in the top-most container. No translation.
+                AbstractContainerModel sourceModel = connectionModel.getSource().getParent();
+                AbstractContainerModel targetModel = connectionModel.getTarget().getParent();
+                // if one of them is null, then at least one end if the connection is in the top-most container. No
+                // translation.
                 if ((sourceModel == null) || (targetModel == null))
                     return null;
                 // otherwise, see if any of them is scrollable
@@ -210,8 +216,10 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
     }
 
     /**
-     * @param a scrollable A
-     * @param b scrollable B
+     * @param a
+     *            scrollable A
+     * @param b
+     *            scrollable B
      * @return <code>true</code> if A is ancestor of B, <code>false</code> otherwise
      */
     private boolean isAAncestorOfB(AbstractScrollableEditpart a, AbstractScrollableEditpart b) {
@@ -232,7 +240,7 @@ public class FixedPointsConnectionRouter extends AbstractRouter {
             AbstractScrollableEditpart partTwo = two;
             while (partTwo != null) {
                 if (partOne == partTwo)
-                    return partOne.getScrollPane();             // common parent found
+                    return partOne.getScrollPane(); // common parent found
                 partTwo = getScrollable(partTwo.getParent());
             }
             partOne = getScrollable(partOne.getParent());

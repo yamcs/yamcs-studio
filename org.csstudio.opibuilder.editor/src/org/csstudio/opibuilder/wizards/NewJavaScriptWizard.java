@@ -19,7 +19,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-/**A wizard for creating new Javascript File.
+/**
+ * A wizard for creating new Javascript File.
+ * 
  * @author Xihui Chen
  */
 public class NewJavaScriptWizard extends Wizard implements INewWizard {
@@ -32,7 +34,7 @@ public class NewJavaScriptWizard extends Wizard implements INewWizard {
 
     @Override
     public void addPages() {
-        jsFilePage =new NewJavaScriptWizardPage("JavaScriptFilePage", selection);
+        jsFilePage = new NewJavaScriptWizardPage("JavaScriptFilePage", selection);
         addPage(jsFilePage);
     }
 

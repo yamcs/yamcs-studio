@@ -113,9 +113,6 @@ public final class GUIRefreshThread implements Runnable {
         return guiRefreshCycle;
     }
 
-    /**
-     * {@inheritDoc}.
-     */
     @Override
     public void run() {
         boolean isEmpty;

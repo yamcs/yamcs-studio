@@ -32,8 +32,11 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
     private AbstractWidgetProperty widgetProperty;
     private List<IWidgetPropertyChangeHandler> handlers;
 
-    /**Constructor.
-     * @param editpart backlint to the editpart, which uses this listener.
+    /**
+     * Constructor.
+     * 
+     * @param editpart
+     *            backlint to the editpart, which uses this listener.
      */
     public WidgetPropertyChangeListener(AbstractBaseEditPart editpart,
             AbstractWidgetProperty property) {
@@ -47,10 +50,10 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
         Runnable runnable = new Runnable() {
             @Override
             public synchronized void run() {
-                if(editpart == null || !editpart.isActive()){
+                if (editpart == null || !editpart.isActive()) {
                     return;
                 }
-                for(IWidgetPropertyChangeHandler h : handlers) {
+                for (IWidgetPropertyChangeHandler h : handlers) {
                     IFigure figure = editpart.getFigure();
                     h.handleChange(
                             evt.getOldValue(), evt.getNewValue(), figure);
@@ -66,7 +69,9 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
                 .addIgnorableTask(task);
     }
 
-    /**Add handler, which is informed when a property changed.
+    /**
+     * Add handler, which is informed when a property changed.
+     * 
      * @param handler
      */
     public void addHandler(final IWidgetPropertyChangeHandler handler) {
@@ -74,7 +79,7 @@ public class WidgetPropertyChangeListener implements PropertyChangeListener {
         handlers.add(handler);
     }
 
-    public void removeAllHandlers(){
+    public void removeAllHandlers() {
         handlers.clear();
     }
 

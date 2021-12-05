@@ -14,12 +14,13 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 
-/**A special border which fills the background with a round rectangle.
+/**
+ * A special border which fills the background with a round rectangle.
+ * 
  * @author Xihui Chen
  *
  */
 public class RoundRectangleBackgroundBorder extends AbstractBackground {
-
 
     private static final int ARC_SIZE = 8;
 
@@ -29,17 +30,19 @@ public class RoundRectangleBackgroundBorder extends AbstractBackground {
 
     /**
      *
-     * @param borderColor the border color
-     * @param lineWidth the line width in pixels.
+     * @param borderColor
+     *            the border color
+     * @param lineWidth
+     *            the line width in pixels.
      */
     public RoundRectangleBackgroundBorder(Color backgroundColor, int lineWidth) {
-        this.backgroundColor=backgroundColor;
+        this.backgroundColor = backgroundColor;
         this.lineWidth = lineWidth;
     }
 
     @Override
     public Insets getInsets(IFigure figure) {
-        return new Insets(lineWidth >0? 2*lineWidth : 2);
+        return new Insets(lineWidth > 0 ? 2 * lineWidth : 2);
     }
 
     @Override
@@ -52,7 +55,7 @@ public class RoundRectangleBackgroundBorder extends AbstractBackground {
      */
     @Override
     public void paint(IFigure figure, Graphics graphics, Insets insets) {
-        if(lineWidth <= 0)
+        if (lineWidth <= 0)
             return;
         graphics.pushState();
         graphics.setAntialias(SWT.ON);
@@ -63,7 +66,7 @@ public class RoundRectangleBackgroundBorder extends AbstractBackground {
         }
         tempRect.shrink(lineWidth / 2, lineWidth / 2);
         graphics.setLineWidth(lineWidth);
-        graphics.setForegroundColor(backgroundColor);//ColorConstants.buttonDarker);
+        graphics.setForegroundColor(backgroundColor);// ColorConstants.buttonDarker);
         graphics.drawRoundRectangle(tempRect, ARC_SIZE, ARC_SIZE);
         graphics.popState();
     }
@@ -74,12 +77,11 @@ public class RoundRectangleBackgroundBorder extends AbstractBackground {
         graphics.pushState();
         graphics.setAntialias(SWT.ON);
         tempRect.setBounds(getPaintRectangle(figure, insets));
-//        if(backgroundColor != null)
-//            graphics.setBackgroundColor(backgroundColor);
-        tempRect.shrink(lineWidth <= 1? 1 : lineWidth/2, lineWidth <= 1? 1 : lineWidth/2);
+        // if(backgroundColor != null)
+        // graphics.setBackgroundColor(backgroundColor);
+        tempRect.shrink(lineWidth <= 1 ? 1 : lineWidth / 2, lineWidth <= 1 ? 1 : lineWidth / 2);
         graphics.fillRoundRectangle(tempRect, ARC_SIZE, ARC_SIZE);
         graphics.popState();
     }
-
 
 }

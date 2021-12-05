@@ -30,7 +30,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-/**Select properties dialog.
+/**
+ * Select properties dialog.
+ * 
  * @author Xihui Chen
  *
  */
@@ -50,7 +52,7 @@ public class PropertiesSelectDialog extends Dialog {
 
     }
 
-    public List<String> getOutput(){
+    public List<String> getOutput() {
         return selectedProps;
     }
 
@@ -76,11 +78,10 @@ public class PropertiesSelectDialog extends Dialog {
 
         propSet.remove(AbstractPVWidgetModel.PROP_PVVALUE);
 
-        for(Object propId : propSet.toArray()){
-            if(!widgetModel.getProperty(propId.toString()).isVisibleInPropSheet())
+        for (Object propId : propSet.toArray()) {
+            if (!widgetModel.getProperty(propId.toString()).isVisibleInPropSheet())
                 propSet.remove(propId);
         }
-
 
         String[] propArray = propSet.toArray(new String[0]);
         Arrays.sort(propArray);
@@ -104,7 +105,7 @@ public class PropertiesSelectDialog extends Dialog {
             @SuppressWarnings("unchecked")
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                selectedProps = ((StructuredSelection)viewer.getSelection()).toList();
+                selectedProps = ((StructuredSelection) viewer.getSelection()).toList();
             }
         });
         viewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -120,7 +121,7 @@ public class PropertiesSelectDialog extends Dialog {
     class PropertyListLableProvider extends LabelProvider {
         @Override
         public String getText(Object element) {
-            String propID = (String)element;
+            String propID = (String) element;
             return widgetModel.getProperty(propID).getDescription() + " (" + propID + ")";
         }
     }

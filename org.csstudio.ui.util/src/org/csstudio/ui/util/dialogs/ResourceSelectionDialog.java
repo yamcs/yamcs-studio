@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
  *
  * @author Kai Meyer, Joerg Rathlev
  */
-//TODO: Copied from org.csstudio.platform.ui. Review is needed.
+// TODO: Copied from org.csstudio.platform.ui. Review is needed.
 public final class ResourceSelectionDialog extends Dialog implements Listener {
     /**
      * The message to display, or <code>null</code> if none.
@@ -68,21 +68,19 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
     private Text _resourcePathText;
 
     /**
-     * Creates an input dialog with OK and Cancel buttons. Note that the dialog
-     * will have no visual representation (no widgets) until it is told to open.
+     * Creates an input dialog with OK and Cancel buttons. Note that the dialog will have no visual representation (no
+     * widgets) until it is told to open.
      * <p>
      * Note that the <code>open</code> method blocks for input dialogs.
      * </p>
      *
      * @param parentShell
-     *            the parent shell, or <code>null</code> to create a top-level
-     *            shell
+     *            the parent shell, or <code>null</code> to create a top-level shell
      * @param dialogMessage
      *            the dialog message, or <code>null</code> if none
      * @param fileExtensions
-     *            the file extensions of files to show in the dialog. Use an
-     *            empty array or <code>null</code> to show only containers
-     *            (folders).
+     *            the file extensions of files to show in the dialog. Use an empty array or <code>null</code> to show
+     *            only containers (folders).
      */
     public ResourceSelectionDialog(final Shell parentShell,
             final String dialogMessage, final String[] fileExtensions) {
@@ -94,8 +92,7 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
     }
 
     /**
-     * Sets the initially selected resource. Must be called before the dialog is
-     * displayed.
+     * Sets the initially selected resource. Must be called before the dialog is displayed.
      *
      * @param path
      *            the path to the initially selected resource.
@@ -104,18 +101,12 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
         _path = path;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("Resources");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Control createDialogArea(final Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -148,12 +139,9 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
         return composite;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void okPressed() {
-//      _path = _resourceSelectionGroup.getFullPath();
+        // _path = _resourceSelectionGroup.getFullPath();
         _path = new Path(_resourcePathText.getText());
 
         super.okPressed();
@@ -162,22 +150,21 @@ public final class ResourceSelectionDialog extends Dialog implements Listener {
     /**
      * Returns the path to the selected resource.
      *
-     * @return the path to the selected resource, or <code>null</code> if no
-     *         resource was selected.
+     * @return the path to the selected resource, or <code>null</code> if no resource was selected.
      */
     public IPath getSelectedResource() {
         return _path;
     }
 
     public void handleEvent(Event event) {
-       if(event != null){
-           ResourceSelectionGroup widget = (ResourceSelectionGroup) event.widget;
-           if(widget != null &&  widget.getFullPath() != null ){
-               _resourcePathText.setText(widget.getFullPath().toString());
-           }
-       }
-       if(SWT.MouseDoubleClick == event.type ){
+        if (event != null) {
+            ResourceSelectionGroup widget = (ResourceSelectionGroup) event.widget;
+            if (widget != null && widget.getFullPath() != null) {
+                _resourcePathText.setText(widget.getFullPath().toString());
+            }
+        }
+        if (SWT.MouseDoubleClick == event.type) {
             okPressed();
-       }
+        }
     }
 }

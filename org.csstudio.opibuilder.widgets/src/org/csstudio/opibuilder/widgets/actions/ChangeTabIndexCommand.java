@@ -12,7 +12,9 @@ import org.csstudio.opibuilder.widgets.editparts.TabItem;
 import org.csstudio.opibuilder.widgets.model.TabModel;
 import org.eclipse.gef.commands.Command;
 
-/**Change tab index.
+/**
+ * Change tab index.
+ * 
  * @author Xihui Chen
  *
  */
@@ -42,9 +44,5 @@ public class ChangeTabIndexCommand extends Command {
         tabModel.removeTab(newIndex);
         tabModel.addTab(oldIndex, tabItem);
     }
-
-
-
-
 
 }

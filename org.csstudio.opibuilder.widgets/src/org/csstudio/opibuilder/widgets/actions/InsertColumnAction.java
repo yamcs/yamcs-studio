@@ -30,7 +30,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Insert a column on the table widget.
+/**
+ * Insert a column on the table widget.
+ * 
  * @author Xihui Chen
  *
  */
@@ -42,6 +44,7 @@ public class InsertColumnAction implements IObjectActionDelegate {
 
         /**
          * Create the dialog.
+         * 
          * @param parentShell
          */
         public InsertColumnDialog(Shell parentShell) {
@@ -50,6 +53,7 @@ public class InsertColumnAction implements IObjectActionDelegate {
 
         /**
          * Create contents of the dialog.
+         * 
          * @param parent
          */
         @Override
@@ -62,7 +66,7 @@ public class InsertColumnAction implements IObjectActionDelegate {
             GridData gd_grpPosition = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
             grpPosition.setLayoutData(gd_grpPosition);
             FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-            fillLayout.marginHeight=5;
+            fillLayout.marginHeight = 5;
             fillLayout.marginWidth = 5;
             fillLayout.spacing = 5;
             grpPosition.setLayout(fillLayout);
@@ -107,7 +111,7 @@ public class InsertColumnAction implements IObjectActionDelegate {
             return container;
         }
 
-        public boolean isBefore(){
+        public boolean isBefore() {
             return isBefore;
         }
 
@@ -133,13 +137,13 @@ public class InsertColumnAction implements IObjectActionDelegate {
         TableEditPart tableEditPart = getSelectedWidget();
         allowedHeaders = tableEditPart.getAllowedHeaders();
         InsertColumnDialog dialog = new InsertColumnDialog(targetPart.getSite().getShell());
-        if (dialog.open() == Dialog.OK){
+        if (dialog.open() == Dialog.OK) {
             boolean before = dialog.isBefore();
-            int index =0;
-            if(!tableEditPart.getTable().isEmpty())
-                index = tableEditPart.getMenuTriggeredCell().y + (before? 0:1);
+            int index = 0;
+            if (!tableEditPart.getTable().isEmpty())
+                index = tableEditPart.getMenuTriggeredCell().y + (before ? 0 : 1);
             tableEditPart.getTable().insertColumn(index);
-            if(dialog.getColumnTitle() != null && !dialog.getColumnTitle().isEmpty()){
+            if (dialog.getColumnTitle() != null && !dialog.getColumnTitle().isEmpty()) {
                 tableEditPart.getTable().setColumnHeader(index, dialog.getColumnTitle());
             }
         }
@@ -153,10 +157,10 @@ public class InsertColumnAction implements IObjectActionDelegate {
         }
     }
 
-    private TableEditPart getSelectedWidget(){
-        if(selection.getFirstElement() instanceof TableEditPart){
-            return (TableEditPart)selection.getFirstElement();
-        }else
+    private TableEditPart getSelectedWidget() {
+        if (selection.getFirstElement() instanceof TableEditPart) {
+            return (TableEditPart) selection.getFirstElement();
+        } else
             return null;
     }
 

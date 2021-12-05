@@ -14,7 +14,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-/**The cellEditor for macros property descriptor.
+/**
+ * The cellEditor for macros property descriptor.
+ * 
  * @author Xihui Chen
  *
  */
@@ -29,9 +31,8 @@ public class StringListCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
 
-        StringListEditDialog dialog =
-            new StringListEditDialog(parentShell, data, dialogTitle);
-        if(dialog.open() == Window.OK){
+        StringListEditDialog dialog = new StringListEditDialog(parentShell, data, dialogTitle);
+        if (dialog.open() == Window.OK) {
             data = dialog.getResult();
         }
     }
@@ -49,10 +50,10 @@ public class StringListCellEditor extends AbstractDialogCellEditor {
     @SuppressWarnings("unchecked")
     @Override
     protected void doSetValue(Object value) {
-        if(value == null || !(value instanceof List))
+        if (value == null || !(value instanceof List))
             data = new ArrayList<String>();
         else
-            data = (List<String>)value;
+            data = (List<String>) value;
 
     }
 

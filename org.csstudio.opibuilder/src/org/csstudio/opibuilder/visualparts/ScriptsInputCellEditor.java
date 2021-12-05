@@ -15,7 +15,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-/**The cell editor for scripts input.
+/**
+ * The cell editor for scripts input.
+ * 
  * @author Xihui Chen
  *
  */
@@ -25,21 +27,20 @@ public class ScriptsInputCellEditor extends AbstractDialogCellEditor {
 
     private AbstractWidgetModel widgetModel;
 
-    public ScriptsInputCellEditor(Composite parent,final AbstractWidgetModel widgetModel, String title) {
+    public ScriptsInputCellEditor(Composite parent, final AbstractWidgetModel widgetModel, String title) {
         super(parent, title);
         this.widgetModel = widgetModel;
     }
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
-        "org.eclipse.help.ui.HelpView") !=null)
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
+                "org.eclipse.help.ui.HelpView") != null)
             PlatformUI.getWorkbench().getHelpSystem().displayHelp(
                     OPIBuilderPlugin.PLUGIN_ID + ".script");
-        ScriptsInputDialog dialog =
-            new ScriptsInputDialog(parentShell, scriptsInput,
-                    dialogTitle, widgetModel);
-        if(dialog.open() == Window.OK){
+        ScriptsInputDialog dialog = new ScriptsInputDialog(parentShell, scriptsInput,
+                dialogTitle, widgetModel);
+        if (dialog.open() == Window.OK) {
             scriptsInput = new ScriptsInput(dialog.getScriptDataList());
         }
 
@@ -57,10 +58,10 @@ public class ScriptsInputCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if(value == null || !(value instanceof ScriptsInput))
+        if (value == null || !(value instanceof ScriptsInput))
             scriptsInput = new ScriptsInput();
         else
-            scriptsInput = (ScriptsInput)value;
+            scriptsInput = (ScriptsInput) value;
 
     }
 

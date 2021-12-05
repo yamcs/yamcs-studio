@@ -37,9 +37,6 @@ public final class BooleanProperty extends AbstractWidgetProperty {
         super(propId, description, category, Boolean.valueOf(defaultValue));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object checkValue(final Object value) {
         if (value == null) {

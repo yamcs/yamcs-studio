@@ -21,7 +21,8 @@ public interface SVGHandlerListener {
      * In case of animated SVG, notifies when a new {@link Image} is available. {@link SVGHandler} is responsible of
      * images disposal. For practical reason, this method is invoked in the UI thread.
      *
-     * @param image, new image to display.
+     * @param image,
+     *            new image to display.
      */
     public void newImage(Image image);
 }

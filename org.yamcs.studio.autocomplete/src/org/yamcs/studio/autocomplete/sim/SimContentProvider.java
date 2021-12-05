@@ -20,8 +20,7 @@ import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.studio.autocomplete.tooltips.TooltipData;
 
 /**
- * Simulation Data Source content provider.
- * Provides all available functions & theirs tooltips.
+ * Simulation Data Source content provider. Provides all available functions & theirs tooltips.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

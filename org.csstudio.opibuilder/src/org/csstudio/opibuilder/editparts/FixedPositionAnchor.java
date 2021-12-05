@@ -39,7 +39,8 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
         case TOP_RIGHT:
             return ConnectorOrientation.VERTICAL;
         default:
-            throw new IllegalStateException("Unknown constant of " + AnchorPosition.class.getCanonicalName() + ": " + anchorPosition.toString());
+            throw new IllegalStateException("Unknown constant of " + AnchorPosition.class.getCanonicalName() + ": "
+                    + anchorPosition.toString());
         }
 
     }
@@ -50,8 +51,9 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
     }
 
     /**
-     * Returns the bounds of this ChopboxAnchor's owner. Subclasses can override this method to adjust the box the anchor can be placed on. For
-     * instance, the owner figure may have a drop shadow that should not be included in the box.
+     * Returns the bounds of this ChopboxAnchor's owner. Subclasses can override this method to adjust the box the
+     * anchor can be placed on. For instance, the owner figure may have a drop shadow that should not be included in the
+     * box.
      *
      * @return The bounds of this ChopboxAnchor's owner
      * @since 2.0
@@ -125,7 +127,8 @@ public class FixedPositionAnchor extends AbstractOpiBuilderAnchor {
     public boolean equals(Object obj) {
         if (obj instanceof FixedPositionAnchor) {
             FixedPositionAnchor other = (FixedPositionAnchor) obj;
-            return other.getOwner() == getOwner() && other.getBox().equals(getBox()) && other.anchorPosition == anchorPosition;
+            return other.getOwner() == getOwner() && other.getBox().equals(getBox())
+                    && other.anchorPosition == anchorPosition;
         }
         return false;
     }

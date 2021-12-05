@@ -17,8 +17,9 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editpolicies.GraphicalEditPolicy;
 import org.eclipse.swt.graphics.Color;
 
-/** The EditPolicy help to show the blue background
- * when there are selected widgets hovering over the container.
+/**
+ * The EditPolicy help to show the blue background when there are selected widgets hovering over the container.
+ * 
  * @author Xihui Chen
  *
  */
@@ -31,24 +32,23 @@ public class ContainerHighlightEditPolicy extends GraphicalEditPolicy {
 
     @Override
     public EditPart getTargetEditPart(Request request) {
-        return request.getType().equals(RequestConstants.REQ_SELECTION_HOVER) ?
-                getHost() : null;
+        return request.getType().equals(RequestConstants.REQ_SELECTION_HOVER) ? getHost() : null;
     }
 
-    private Color getContainerBackground(){
+    private Color getContainerBackground() {
         return getContainerFigure().getBackgroundColor();
     }
 
-    private IFigure getContainerFigure(){
-        return ((GraphicalEditPart)getHost()).getContentPane();
+    private IFigure getContainerFigure() {
+        return ((GraphicalEditPart) getHost()).getContentPane();
     }
 
-    private void setContainerBackground(Color c){
+    private void setContainerBackground(Color c) {
         getContainerFigure().setBackgroundColor(c);
     }
 
-    protected void showHighlight(){
-        if (revertColor == null){
+    protected void showHighlight() {
+        if (revertColor == null) {
             revertColor = getContainerBackground();
             revertOpaque = getContainerFigure().isOpaque();
             setContainerBackground(BACK_BLUE);
@@ -57,8 +57,8 @@ public class ContainerHighlightEditPolicy extends GraphicalEditPolicy {
     }
 
     @Override
-    public void eraseTargetFeedback(Request request){
-        if (revertColor != null){
+    public void eraseTargetFeedback(Request request) {
+        if (revertColor != null) {
             setContainerBackground(revertColor);
             getContainerFigure().setOpaque(revertOpaque);
             revertColor = null;
@@ -66,18 +66,13 @@ public class ContainerHighlightEditPolicy extends GraphicalEditPolicy {
     }
 
     @Override
-    public void showTargetFeedback(Request request){
-        if(request.getType().equals(RequestConstants.REQ_MOVE) ||
-            request.getType().equals(RequestConstants.REQ_ADD) ||
-            request.getType().equals(RequestConstants.REQ_CLONE) ||
-            request.getType().equals(RequestConstants.REQ_CREATE) ||
-            request.getType().equals(DropPVRequest.REQ_DROP_PV)
-        )
+    public void showTargetFeedback(Request request) {
+        if (request.getType().equals(RequestConstants.REQ_MOVE) ||
+                request.getType().equals(RequestConstants.REQ_ADD) ||
+                request.getType().equals(RequestConstants.REQ_CLONE) ||
+                request.getType().equals(RequestConstants.REQ_CREATE) ||
+                request.getType().equals(DropPVRequest.REQ_DROP_PV))
             showHighlight();
     }
-
-
-
-
 
 }

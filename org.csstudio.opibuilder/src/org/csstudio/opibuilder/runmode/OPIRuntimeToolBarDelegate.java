@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 package org.csstudio.opibuilder.runmode;
+
 import org.csstudio.opibuilder.actions.NavigateOPIsAction;
 import org.csstudio.opibuilder.actions.PartZoomInAction;
 import org.csstudio.opibuilder.actions.PartZoomOutAction;
@@ -16,14 +17,15 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.ActionFactory;
 
-
-/**The toolbar contributor for OPI runner
+/**
+ * The toolbar contributor for OPI runner
+ * 
  * @author Xihui Chen
  *
  */
-public class OPIRuntimeToolBarDelegate{
+public class OPIRuntimeToolBarDelegate {
 
-     /**
+    /**
      * The action bars; <code>null</code> until <code>init</code> is called.
      */
     private IActionBars bars;
@@ -40,16 +42,15 @@ public class OPIRuntimeToolBarDelegate{
     private PartZoomOutAction partZoomOutAction;
     private PartZoomComboContributionItem partZoomComboContributionItem;
 
-
-     public void init(IActionBars bars, IWorkbenchPage page) {
-            this.page = page;
-            this.bars = bars;
-            backwardAction = new NavigateOPIsAction(false);
-            forwardAction = new NavigateOPIsAction(true);
-            partZoomInAction = new PartZoomInAction();
-            partZoomOutAction = new PartZoomOutAction();
-            partZoomComboContributionItem = new PartZoomComboContributionItem(page);
-     }
+    public void init(IActionBars bars, IWorkbenchPage page) {
+        this.page = page;
+        this.bars = bars;
+        backwardAction = new NavigateOPIsAction(false);
+        forwardAction = new NavigateOPIsAction(true);
+        partZoomInAction = new PartZoomInAction();
+        partZoomOutAction = new PartZoomOutAction();
+        partZoomComboContributionItem = new PartZoomComboContributionItem(page);
+    }
 
     public void contributeToToolBar(IToolBarManager toolBarManager) {
         toolbar = toolBarManager;
@@ -60,8 +61,9 @@ public class OPIRuntimeToolBarDelegate{
         toolBarManager.add(forwardAction);
     }
 
-
-    /**Hook {@link IOPIRuntime} with this toolbar.
+    /**
+     * Hook {@link IOPIRuntime} with this toolbar.
+     * 
      * @param opiRuntime
      */
     public void setActiveOPIRuntime(IOPIRuntime opiRuntime) {
@@ -87,7 +89,7 @@ public class OPIRuntimeToolBarDelegate{
 
     }
 
-     /**
+    /**
      * Returns this contributor's workbench page.
      *
      * @return the workbench page
@@ -95,7 +97,6 @@ public class OPIRuntimeToolBarDelegate{
     public IWorkbenchPage getPage() {
         return page;
     }
-
 
     /**
      * Returns this contributor's action bars.

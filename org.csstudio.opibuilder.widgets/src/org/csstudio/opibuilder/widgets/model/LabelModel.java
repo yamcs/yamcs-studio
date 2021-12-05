@@ -17,26 +17,26 @@ import org.csstudio.swt.widgets.figures.TextFigure.H_ALIGN;
 import org.csstudio.swt.widgets.figures.TextFigure.V_ALIGN;
 import org.csstudio.ui.util.CustomMediaFactory;
 
-/**The model for label widget.
+/**
+ * The model for label widget.
+ * 
  * @author Xihui Chen
  *
  */
-public class LabelModel extends AbstractPVWidgetModel implements ITextModel{
-
-
+public class LabelModel extends AbstractPVWidgetModel implements ITextModel {
 
     /**
      * The ID of the text property.
      */
-    public static final String PROP_TEXT= "text";
+    public static final String PROP_TEXT = "text";
     /** The ID of the <i>transparent</i> property. */
-    public static final String PROP_TRANSPARENT = "transparent";   
+    public static final String PROP_TRANSPARENT = "transparent";
 
     /** The ID of the <i>Auto Size</i> property. */
-    public static final String PROP_AUTOSIZE = "auto_size";   
+    public static final String PROP_AUTOSIZE = "auto_size";
 
-    public static final String PROP_ALIGN_H = "horizontal_alignment";   
-    public static final String PROP_ALIGN_V = "vertical_alignment";   
+    public static final String PROP_ALIGN_H = "horizontal_alignment";
+    public static final String PROP_ALIGN_V = "vertical_alignment";
     public static final String PROP_WRAP_WORDS = "wrap_words";
     public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar";
     protected boolean pvModel = false;
@@ -64,7 +64,7 @@ public class LabelModel extends AbstractPVWidgetModel implements ITextModel{
         addProperty(new BooleanProperty(PROP_SHOW_SCROLLBAR, "Show Scrollbar",
                 WidgetPropertyCategory.Behavior, false));
 
-        if(!pvModel){
+        if (!pvModel) {
             setTooltip("");
             setPropertyVisible(PROP_PVNAME, false);
             setPropertyVisible(PROP_PVVALUE, false);
@@ -75,15 +75,13 @@ public class LabelModel extends AbstractPVWidgetModel implements ITextModel{
         }
     }
 
-    public H_ALIGN getHorizontalAlignment(){
-        return H_ALIGN.values()[
-                      (Integer)getCastedPropertyValue(PROP_ALIGN_H)];
+    public H_ALIGN getHorizontalAlignment() {
+        return H_ALIGN.values()[(Integer) getCastedPropertyValue(PROP_ALIGN_H)];
     }
 
-
-    public V_ALIGN getVerticalAlignment(){
-        return V_ALIGN.values()[
-                      (Integer)getCastedPropertyValue(PROP_ALIGN_V)];    }
+    public V_ALIGN getVerticalAlignment() {
+        return V_ALIGN.values()[(Integer) getCastedPropertyValue(PROP_ALIGN_V)];
+    }
 
     @Override
     public String getTypeID() {
@@ -91,37 +89,37 @@ public class LabelModel extends AbstractPVWidgetModel implements ITextModel{
     }
 
     @Override
-    public String getText(){
-        return (String)getCastedPropertyValue(PROP_TEXT);
+    public String getText() {
+        return (String) getCastedPropertyValue(PROP_TEXT);
     }
 
     @Override
-    public void setText(String text){
+    public void setText(String text) {
         setPropertyValue(PROP_TEXT, text);
     }
 
-    public void setText(String text, boolean fire){
+    public void setText(String text, boolean fire) {
         getProperty(PROP_TEXT).setPropertyValue(text, fire);
     }
 
-    public boolean isTransparent(){
-        return (Boolean)getCastedPropertyValue(PROP_TRANSPARENT);
+    public boolean isTransparent() {
+        return (Boolean) getCastedPropertyValue(PROP_TRANSPARENT);
     }
 
-    public boolean isAutoSize(){
-        return (Boolean)getCastedPropertyValue(PROP_AUTOSIZE);
+    public boolean isAutoSize() {
+        return (Boolean) getCastedPropertyValue(PROP_AUTOSIZE);
     }
 
-    public boolean isWrapWords(){
-        return (Boolean)getPropertyValue(PROP_WRAP_WORDS);
+    public boolean isWrapWords() {
+        return (Boolean) getPropertyValue(PROP_WRAP_WORDS);
     }
 
-    public void setFont(OPIFont font){
+    public void setFont(OPIFont font) {
         setPropertyValue(PROP_FONT, font);
     }
 
     public boolean isShowScrollbar() {
-        return (Boolean)getPropertyValue(PROP_SHOW_SCROLLBAR);
+        return (Boolean) getPropertyValue(PROP_SHOW_SCROLLBAR);
     }
 
 }

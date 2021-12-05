@@ -25,35 +25,34 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-/**The transfer for clip board related actions.
+/**
+ * The transfer for clip board related actions.
+ * 
  * @author Xihui Chen
  */
 public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
 
-
-
     private static PropertiesCopyDataTransfer instance;
 
-    private static final String TYPE_NAME = "PropertiesCopyDataTransfer:" 
+    private static final String TYPE_NAME = "PropertiesCopyDataTransfer:"
             + System.currentTimeMillis();
 
     private static final int TYPEID = registerType(TYPE_NAME);
 
-
     public synchronized static PropertiesCopyDataTransfer getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new PropertiesCopyDataTransfer();
         return instance;
     }
 
     @Override
     protected int[] getTypeIds() {
-        return new int[] {TYPEID};
+        return new int[] { TYPEID };
     }
 
     @Override
     protected String[] getTypeNames() {
-        return new String[] {TYPE_NAME};
+        return new String[] { TYPE_NAME };
     }
 
     @Override
@@ -63,7 +62,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
         }
 
         try {
-            super.javaToNative(((String)object).getBytes("UTF-8"), transferData);
+            super.javaToNative(((String) object).getBytes("UTF-8"), transferData);
         } catch (UnsupportedEncodingException e) {
             ErrorHandlerUtil.handleError("Convert to UTF-8 bytes failed", e);
         }
@@ -71,10 +70,10 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
 
     @Override
     protected Object nativeToJava(TransferData transferData) {
-        if(!isSupportedType(transferData))
+        if (!isSupportedType(transferData))
             return null;
-        byte[] bytes = (byte[])super.nativeToJava(transferData);
-        if(bytes == null)
+        byte[] bytes = (byte[]) super.nativeToJava(transferData);
+        if (bytes == null)
             return null;
         try {
             SAXBuilder saxBuilder = new SAXBuilder();
@@ -83,12 +82,12 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
 
             List<String> propIDList = new ArrayList<String>();
             AbstractWidgetModel widgetModel = null;
-            for(Object o : root.getChildren()){
-                if(o instanceof Element){
-                    Element e = (Element)o;
-                    if(e.getName().equals(CopyPropertiesAction.PROPID_ELEMENT))
-                        for(Object po : e.getChildren()){
-                            Element pe = (Element)po;
+            for (Object o : root.getChildren()) {
+                if (o instanceof Element) {
+                    Element e = (Element) o;
+                    if (e.getName().equals(CopyPropertiesAction.PROPID_ELEMENT))
+                        for (Object po : e.getChildren()) {
+                            Element pe = (Element) po;
                             propIDList.add(pe.getName());
                         }
                     else
@@ -97,7 +96,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
             }
             return new PropertiesCopyData(widgetModel, propIDList);
         } catch (Exception e) {
-             OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to transfer XML to widget", e);
+            OPIBuilderPlugin.getLogger().log(Level.WARNING, "Failed to transfer XML to widget", e);
         }
         return null;
 
@@ -111,7 +110,7 @@ public class PropertiesCopyDataTransfer extends ByteArrayTransfer {
      * @return true, if the input object is valid, false otherwise
      */
     private boolean checkInput(final Object input) {
-        if(input == null)
+        if (input == null)
             return false;
         return input instanceof String;
     }

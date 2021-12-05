@@ -24,7 +24,6 @@ public class PathEditorInputFactory implements IElementFactory {
 
     public static final String TAG_PATH = "path";
 
-    /** {@inheritDoc} */
     @Override
     public IAdaptable createElement(final IMemento memento) {
         String port_path = memento.getString(TAG_PATH);

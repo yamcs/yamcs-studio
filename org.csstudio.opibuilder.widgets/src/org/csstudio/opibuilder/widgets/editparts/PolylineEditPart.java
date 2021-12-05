@@ -31,7 +31,7 @@ import org.csstudio.swt.widgets.figures.PolylineFigure.ArrowType;
 import org.eclipse.draw2d.IFigure;
 
 /**
- *Editpart for polyline widget.
+ * Editpart for polyline widget.
  *
  * @author Sven Wende, Alexander Will (similar class as in SDS)
  * @author Xihui Chen
@@ -39,9 +39,6 @@ import org.eclipse.draw2d.IFigure;
  */
 public final class PolylineEditPart extends AbstractPolyEditPart {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected IFigure doCreateFigure() {
         PolylineFigure polyline = new PolylineFigure();
@@ -57,15 +54,11 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
         return polyline;
     }
 
-
     @Override
     public PolyLineModel getWidgetModel() {
-        return (PolyLineModel)getModel();
+        return (PolyLineModel) getModel();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
 
@@ -117,13 +110,12 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 PolylineFigure figure = (PolylineFigure) refreshableFigure;
-                figure.setArrowType(ArrowType.values()[(Integer)newValue]);
+                figure.setArrowType(ArrowType.values()[(Integer) newValue]);
                 getWidgetModel().updateBounds();
                 return true;
             }
         };
         setPropertyChangeHandler(PolyLineModel.PROP_ARROW, handler);
-
 
         // arrow length
         handler = new IWidgetPropertyChangeHandler() {
@@ -132,7 +124,7 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 PolylineFigure figure = (PolylineFigure) refreshableFigure;
-                figure.setArrowLineLength((Integer)newValue);
+                figure.setArrowLineLength((Integer) newValue);
                 getWidgetModel().updateBounds();
                 return true;
             }
@@ -146,25 +138,24 @@ public final class PolylineEditPart extends AbstractPolyEditPart {
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 PolylineFigure figure = (PolylineFigure) refreshableFigure;
-                figure.setFillArrow((Boolean)newValue);
+                figure.setFillArrow((Boolean) newValue);
                 return true;
             }
         };
         setPropertyChangeHandler(PolyLineModel.PROP_FILL_ARROW, handler);
 
-
     }
 
     @Override
     public void setValue(Object value) {
-        if(value instanceof Number){
-            ((PolylineFigure)getFigure()).setFill(((Number)value).doubleValue());
-        }else
+        if (value instanceof Number) {
+            ((PolylineFigure) getFigure()).setFill(((Number) value).doubleValue());
+        } else
             super.setValue(value);
     }
 
     @Override
     public Object getValue() {
-        return ((PolylineFigure)getFigure()).getFill();
+        return ((PolylineFigure) getFigure()).getFill();
     }
 }

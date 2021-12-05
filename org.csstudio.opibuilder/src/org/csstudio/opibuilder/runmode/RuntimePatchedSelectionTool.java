@@ -21,8 +21,8 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * Custom selection tool for OPI Runtime. Copies PV name to pastebuffer on
- * middle click. Also patches behaviour on right-click.
+ * Custom selection tool for OPI Runtime. Copies PV name to pastebuffer on middle click. Also patches behaviour on
+ * right-click.
  *
  * @author Xihui Chen
  * @author Will Rogers
@@ -34,9 +34,8 @@ public class RuntimePatchedSelectionTool extends SelectionTool {
     private boolean cursorChanged = false;
 
     /**
-     * Work around a bug in GEF: right click is recognized as mouse exit event
-     * in LightWeightSystem, so handleButtonUp() will not be invoked for right
-     * click button up. This will cause unexpected select behavior.
+     * Work around a bug in GEF: right click is recognized as mouse exit event in LightWeightSystem, so handleButtonUp()
+     * will not be invoked for right click button up. This will cause unexpected select behavior.
      */
     @Override
     protected boolean handleViewerExited() {
@@ -46,8 +45,7 @@ public class RuntimePatchedSelectionTool extends SelectionTool {
     }
 
     /**
-     * Intercept middle clicks and copy PV name to pastebuffer if available.
-     * Change cursor to copy symbol.
+     * Intercept middle clicks and copy PV name to pastebuffer if available. Change cursor to copy symbol.
      */
     @Override
     protected boolean handleButtonDown(int button) {

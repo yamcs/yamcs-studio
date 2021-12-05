@@ -13,23 +13,24 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
  * The widget model for Boolean Button.
+ * 
  * @author Xihui Chen
  *
  */
 public class BoolButtonModel extends AbstractBoolControlModel {
 
-    /** True if the widget is drawn with advanced graphics. In some platforms,
-     * advance graphics may not be available, in which case the widget will not be drawn
-     * with advanced graphics even this is set to true.*/
+    /**
+     * True if the widget is drawn with advanced graphics. In some platforms, advance graphics may not be available, in
+     * which case the widget will not be drawn with advanced graphics even this is set to true.
+     */
     public static final String PROP_EFFECT3D = "effect_3d";
 
     /** True if the widget is square button. */
     public static final String PROP_SQUARE_BUTTON = "square_button";
 
-    /** True if the LED indicator is visible.*/
+    /** True if the LED indicator is visible. */
     public static final String PROP_SHOW_LED = "show_led";
 
     /** True if PV ONAM, ZNAM used instead of OnLabel and OffLabel */
@@ -71,6 +72,7 @@ public class BoolButtonModel extends AbstractBoolControlModel {
 
         setPropertyVisible(PROP_BOOL_LABEL_POS, false);
     }
+
     /**
      * The ID of this widget model.
      */

@@ -14,19 +14,18 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Delete a column from the table widget.
+/**
+ * Delete a column from the table widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class DeleteColumnAction implements IObjectActionDelegate {
 
-
-
     private IStructuredSelection selection;
 
     public DeleteColumnAction() {
     }
-
 
     @Override
     public void run(IAction action) {
@@ -42,13 +41,12 @@ public class DeleteColumnAction implements IObjectActionDelegate {
         }
     }
 
-    private TableEditPart getSelectedWidget(){
-        if(selection.getFirstElement() instanceof TableEditPart){
-            return (TableEditPart)selection.getFirstElement();
-        }else
+    private TableEditPart getSelectedWidget() {
+        if (selection.getFirstElement() instanceof TableEditPart) {
+            return (TableEditPart) selection.getFirstElement();
+        } else
             return null;
     }
-
 
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {

@@ -16,11 +16,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**The abstract action which will be performed on a widget target.
+/**
+ * The abstract action which will be performed on a widget target.
+ * 
  * @author Xihui Chen
  *
  */
-public abstract class AbstractWidgetTargetAction  implements IObjectActionDelegate {
+public abstract class AbstractWidgetTargetAction implements IObjectActionDelegate {
 
     protected IWorkbenchPart targetPart;
     /**
@@ -38,10 +40,11 @@ public abstract class AbstractWidgetTargetAction  implements IObjectActionDelega
     }
 
     /**
-     * Executes the given {@link Command} using the command stack.  The stack is obtained by
-     * calling {@link #getCommandStack()}, which uses <code>IAdapatable</code> to retrieve the
-     * stack from the workbench part.
-     * @param command the command to execute
+     * Executes the given {@link Command} using the command stack. The stack is obtained by calling
+     * {@link #getCommandStack()}, which uses <code>IAdapatable</code> to retrieve the stack from the workbench part.
+     * 
+     * @param command
+     *            the command to execute
      */
     protected void execute(Command command) {
         if (command == null || !command.canExecute() || getCommandStack() == null)
@@ -50,9 +53,9 @@ public abstract class AbstractWidgetTargetAction  implements IObjectActionDelega
     }
 
     /**
-     * Returns the editor's command stack. This is done by asking the workbench part for its
-     * CommandStack via
+     * Returns the editor's command stack. This is done by asking the workbench part for its CommandStack via
      * {@link org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)}.
+     * 
      * @return the command stack
      */
     protected CommandStack getCommandStack() {
@@ -65,11 +68,11 @@ public abstract class AbstractWidgetTargetAction  implements IObjectActionDelega
         }
     }
 
-    protected IStructuredSelection getSelection(){
-        if(selection !=null)
+    protected IStructuredSelection getSelection() {
+        if (selection != null)
             return selection;
         else
-             return  StructuredSelection.EMPTY;
+            return StructuredSelection.EMPTY;
     }
 
 }

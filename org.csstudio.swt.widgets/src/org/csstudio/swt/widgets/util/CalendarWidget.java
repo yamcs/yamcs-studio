@@ -21,11 +21,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 
-/** Widget for displaying and selecting an absolute date and time.
- *  @author Kay Kasemir
+/**
+ * Widget for displaying and selecting an absolute date and time.
+ * 
+ * @author Kay Kasemir
  */
-public class CalendarWidget extends Composite
-{
+public class CalendarWidget extends Composite {
     /** Widget for date. */
     private DateTime date;
 
@@ -35,37 +36,42 @@ public class CalendarWidget extends Composite
     /** The currently configed calendar (date and time). */
     private Calendar calendar;
 
-    /** Used to prevent recursion when the widget updates the GUI,
-     *  which in turn fires listener notifications...
+    /**
+     * Used to prevent recursion when the widget updates the GUI, which in turn fires listener notifications...
      */
     private boolean in_GUI_update = false;
 
-    private ArrayList<CalendarWidgetListener> listeners
-       = new ArrayList<CalendarWidgetListener>();
+    private ArrayList<CalendarWidgetListener> listeners = new ArrayList<CalendarWidgetListener>();
 
-    /** Construct widget, initialized to the 'current' time.
-     *  @param parent Widget parent.
-     *  @param flags SWT widget flags.
+    /**
+     * Construct widget, initialized to the 'current' time.
+     * 
+     * @param parent
+     *            Widget parent.
+     * @param flags
+     *            SWT widget flags.
      */
-    public CalendarWidget(Composite parent, int flags)
-    {
+    public CalendarWidget(Composite parent, int flags) {
         this(parent, flags, Calendar.getInstance());
     }
 
-    /** Construct widget, initialized to given time.
-     *  @param parent Widget parent.
-     *  @param flags SWT widget flags.
+    /**
+     * Construct widget, initialized to given time.
+     * 
+     * @param parent
+     *            Widget parent.
+     * @param flags
+     *            SWT widget flags.
      */
-    public CalendarWidget(final Composite parent, int flags, Calendar calendar)
-    {
+    public CalendarWidget(final Composite parent, int flags, Calendar calendar) {
         super(parent, flags);
         GridLayout layout = new GridLayout();
         setLayout(layout);
         GridData gd;
 
-        // |               |
-        // |    Calendar   |
-        // |               |
+        // | |
+        // | Calendar |
+        // | |
         // Time: ---time---
         // [Today] [Midnight] [Noon]
 
@@ -115,25 +121,19 @@ public class CalendarWidget extends Composite
         // Initialize to 'now'
         setCalendar(calendar);
 
-        now.addSelectionListener(new SelectionAdapter()
-        {
+        now.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-                if (!in_GUI_update)
-                {
+            public void widgetSelected(SelectionEvent e) {
+                if (!in_GUI_update) {
                     setCalendar(Calendar.getInstance());
                 }
             }
         });
 
-        midnight.addSelectionListener(new SelectionAdapter()
-        {
+        midnight.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-                if (!in_GUI_update)
-                {
+            public void widgetSelected(SelectionEvent e) {
+                if (!in_GUI_update) {
                     time.setHours(0);
                     time.setMinutes(0);
                     time.setSeconds(0);
@@ -141,13 +141,10 @@ public class CalendarWidget extends Composite
                 }
             }
         });
-        noon.addSelectionListener(new SelectionAdapter()
-        {
+        noon.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e)
-            {
-                if (!in_GUI_update)
-                {
+            public void widgetSelected(SelectionEvent e) {
+                if (!in_GUI_update) {
                     time.setHours(12);
                     time.setMinutes(0);
                     time.setSeconds(0);
@@ -155,11 +152,9 @@ public class CalendarWidget extends Composite
                 }
             }
         });
-        final SelectionAdapter update = new SelectionAdapter()
-        {
+        final SelectionAdapter update = new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e)
-            {
+            public void widgetSelected(SelectionEvent e) {
                 if (!in_GUI_update)
                     updateDataFromGUI();
             }
@@ -169,23 +164,22 @@ public class CalendarWidget extends Composite
     }
 
     /** Add given listener. */
-    public void addListener(CalendarWidgetListener listener)
-    {
+    public void addListener(CalendarWidgetListener listener) {
         if (!listeners.contains(listener))
             listeners.add(listener);
     }
 
     /** Remove given listener. */
-    public void removeListener(CalendarWidgetListener listener)
-    {
+    public void removeListener(CalendarWidgetListener listener) {
         listeners.remove(listener);
     }
 
-    /** Set the widget to display the given time.
-     *  @see #setNow()
+    /**
+     * Set the widget to display the given time.
+     * 
+     * @see #setNow()
      */
-    public void setCalendar(final Calendar calendar)
-    {
+    public void setCalendar(final Calendar calendar) {
         this.calendar = calendar;
         this.calendar.set(Calendar.SECOND, 0);
         this.calendar.set(Calendar.MILLISECOND, 0);
@@ -193,14 +187,12 @@ public class CalendarWidget extends Composite
     }
 
     /** @return Returns the currently selected time. */
-    public Calendar getCalendar()
-    {
+    public Calendar getCalendar() {
         return (Calendar) calendar.clone();
     }
 
     /** Update the data from the interactive GUI elements. */
-    private void updateDataFromGUI()
-    {
+    private void updateDataFromGUI() {
         calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, date.getYear());
         calendar.set(Calendar.MONTH, date.getMonth());
@@ -213,8 +205,7 @@ public class CalendarWidget extends Composite
     }
 
     /** Display the current value of the data on the GUI. */
-    private void updateGUIfromData()
-    {
+    private void updateGUIfromData() {
         in_GUI_update = true;
         date.setYear(calendar.get(Calendar.YEAR));
         date.setMonth(calendar.get(Calendar.MONTH));

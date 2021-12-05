@@ -57,8 +57,7 @@ public class Activator extends AbstractUIPlugin {
     }
 
     /** @return Logger for plugin ID */
-    public static Logger getLogger()
-    {
+    public static Logger getLogger() {
         return logger;
     }
 }

@@ -7,15 +7,15 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.properties.support;
 
-
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.visualparts.ScriptsInputCellEditor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
-
-/**The property descriptor for script.
+/**
+ * The property descriptor for script.
+ * 
  * @author Xihui Chen
  *
  */
@@ -36,9 +36,6 @@ public class ScriptPropertyDescriptor extends TextPropertyDescriptor {
         this.widgetModel = widgetModel;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new ScriptsInputCellEditor(parent, widgetModel, "Attach Scripts");

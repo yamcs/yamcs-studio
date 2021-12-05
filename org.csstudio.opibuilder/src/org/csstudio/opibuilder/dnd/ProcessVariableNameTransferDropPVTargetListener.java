@@ -14,7 +14,9 @@ import org.csstudio.csdata.ProcessVariable;
 import org.csstudio.ui.util.dnd.SerializableItemTransfer;
 import org.eclipse.gef.EditPartViewer;
 
-/**The Drop PV target listener for process variable name transfer.
+/**
+ * The Drop PV target listener for process variable name transfer.
+ * 
  * @author Xihui Chen
  *
  */
@@ -26,11 +28,11 @@ public class ProcessVariableNameTransferDropPVTargetListener extends AbstractDro
 
     @Override
     protected String[] getPVNamesFromTransfer() {
-        if(getCurrentEvent().data == null)
+        if (getCurrentEvent().data == null)
             return null;
-        ProcessVariable[] pvArray = (ProcessVariable[])getCurrentEvent().data;
+        ProcessVariable[] pvArray = (ProcessVariable[]) getCurrentEvent().data;
         List<String> pvList = new ArrayList<String>();
-        for(ProcessVariable pv : pvArray){
+        for (ProcessVariable pv : pvArray) {
             pvList.add(pv.getName());
         }
         return pvList.toArray(new String[pvList.size()]);

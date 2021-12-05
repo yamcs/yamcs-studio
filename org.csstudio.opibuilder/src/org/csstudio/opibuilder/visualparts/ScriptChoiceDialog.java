@@ -20,7 +20,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-/**A dialog with two buttons to select which type of script need to be created.
+/**
+ * A dialog with two buttons to select which type of script need to be created.
+ * 
  * @author Xihui Chen
  *
  */
@@ -31,7 +33,6 @@ public class ScriptChoiceDialog extends Dialog {
     public ScriptChoiceDialog(Shell parentShell) {
         super(parentShell);
     }
-
 
     @Override
     protected Control createContents(Composite parent) {
@@ -72,7 +73,5 @@ public class ScriptChoiceDialog extends Dialog {
     public boolean isEmbedded() {
         return isEmbedded;
     }
-
-
 
 }

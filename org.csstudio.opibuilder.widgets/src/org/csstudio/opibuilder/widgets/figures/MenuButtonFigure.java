@@ -14,12 +14,12 @@ import org.eclipse.swt.graphics.Image;
  * @author Matthew Furseman
  *
  */
-public class MenuButtonFigure extends Label implements ITextFigure{
+public class MenuButtonFigure extends Label implements ITextFigure {
 
     public static final int ICON_WIDTH = 15;
 
-    private static final Image downArrow = CustomMediaFactory.getInstance().
-            getImageFromPlugin(Activator.PLUGIN_ID, "icons/downArrow.png");
+    private static final Image downArrow = CustomMediaFactory.getInstance().getImageFromPlugin(Activator.PLUGIN_ID,
+            "icons/downArrow.png");
 
     @Override
     public void setText(String s) {
@@ -34,13 +34,13 @@ public class MenuButtonFigure extends Label implements ITextFigure{
     }
 
     /**
-     * Control the appearance of the down arrow indicator
-     * on the menu button.
+     * Control the appearance of the down arrow indicator on the menu button.
      *
-     * @param isVisible if the arrow is to be shown.
+     * @param isVisible
+     *            if the arrow is to be shown.
      */
     public void setDownArrowVisible(boolean isVisible) {
-        if(isVisible) {
+        if (isVisible) {
             setIcon(downArrow);
             setLabelAlignment(PositionConstants.RIGHT);
             setTextPlacement(PositionConstants.WEST);
@@ -52,8 +52,8 @@ public class MenuButtonFigure extends Label implements ITextFigure{
     }
 
     /**
-     * Layout the contents of the widget so that, if an icon is displayed, it is
-     * right aligned and the text remains centred.
+     * Layout the contents of the widget so that, if an icon is displayed, it is right aligned and the text remains
+     * centred.
      */
     private void updateLayout() {
         /*
@@ -62,6 +62,6 @@ public class MenuButtonFigure extends Label implements ITextFigure{
          * of the label then adding an appropriate gap so that the text looks as
          * if it has been centred.
          */
-        setIconTextGap((getBounds().width - this.getTextBounds().width - ICON_WIDTH)/2);
+        setIconTextGap((getBounds().width - this.getTextBounds().width - ICON_WIDTH) / 2);
     }
 }

@@ -16,7 +16,9 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
-/**The base widget property class for all kinds of widget property.
+/**
+ * The base widget property class for all kinds of widget property.
+ * 
  * @author Xihui Chen
  *
  */
@@ -47,12 +49,17 @@ public abstract class AbstractWidgetProperty {
 
     protected AbstractWidgetModel widgetModel;
 
-    /**Widget Property Constructor
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param defaultValue the default value when the widget is first created. It cannot be null.
+    /**
+     * Widget Property Constructor
+     * 
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param defaultValue
+     *            the default value when the widget is first created. It cannot be null.
      */
     public AbstractWidgetProperty(String prop_id, String description,
             WidgetPropertyCategory category, Object defaultValue) {
@@ -65,27 +72,33 @@ public abstract class AbstractWidgetProperty {
         pcsDelegate = new PropertyChangeSupport(this);
     }
 
-    /**Add listener on property change event. The listener will be removed when widget deactivated,
-     * so it is better to call this method in edit part during activating the widget to make sure the widget
-     * always have necessary listeners added.
-     * @param listener the listener which will be notified when property value changed.
+    /**
+     * Add listener on property change event. The listener will be removed when widget deactivated, so it is better to
+     * call this method in edit part during activating the widget to make sure the widget always have necessary
+     * listeners added.
+     * 
+     * @param listener
+     *            the listener which will be notified when property value changed.
      */
-    public synchronized final void addPropertyChangeListener(PropertyChangeListener listener){
-        if(listener == null){
+    public synchronized final void addPropertyChangeListener(PropertyChangeListener listener) {
+        if (listener == null) {
             return;
         }
         pcsDelegate.addPropertyChangeListener(listener);
     }
 
-    /**Check if the requestNewValue is convertible or legal.
-     * @param value the value to be checked.
-     * @return The value after being checked. It might be coerced if the requestValue
-     * is illegal. return null if it is not convertible or illegal.
+    /**
+     * Check if the requestNewValue is convertible or legal.
+     * 
+     * @param value
+     *            the value to be checked.
+     * @return The value after being checked. It might be coerced if the requestValue is illegal. return null if it is
+     *         not convertible or illegal.
      */
     public abstract Object checkValue(final Object value);
 
-    public final void firePropertyChange(final Object oldValue, final Object newValue){
-        if(pcsDelegate.hasListeners(prop_id))
+    public final void firePropertyChange(final Object oldValue, final Object newValue) {
+        if (pcsDelegate.hasListeners(prop_id))
             pcsDelegate.firePropertyChange(prop_id, oldValue, newValue);
     }
 
@@ -97,7 +110,7 @@ public abstract class AbstractWidgetProperty {
         return defaultValue;
     }
 
-    public boolean isDefaultValue(){
+    public boolean isDefaultValue() {
         return defaultValue.equals(propertyValue);
     }
 
@@ -106,7 +119,7 @@ public abstract class AbstractWidgetProperty {
     }
 
     public final IPropertyDescriptor getPropertyDescriptor() {
-        if(propertyDescriptor == null)
+        if (propertyDescriptor == null)
             createPropertyDescriptor(visibleInPropSheet);
         return propertyDescriptor;
     }
@@ -126,42 +139,49 @@ public abstract class AbstractWidgetProperty {
         return propertyValue;
     }
 
-    /**Get the formatted value to be displayed in property sheet.
+    /**
+     * Get the formatted value to be displayed in property sheet.
+     * 
      * @return
      */
-    //public abstract Object getFormattedPropertyValue();
+    // public abstract Object getFormattedPropertyValue();
 
     public final boolean isVisibleInPropSheet() {
         return visibleInPropSheet;
     }
 
-    public final void removeAllPropertyChangeListeners(){
-        for(PropertyChangeListener l : pcsDelegate.getPropertyChangeListeners()){
-            //if(l instanceof WidgetPropertyChangeListener)
-            //    ((WidgetPropertyChangeListener) l).removeAllHandlers();
+    public final void removeAllPropertyChangeListeners() {
+        for (PropertyChangeListener l : pcsDelegate.getPropertyChangeListeners()) {
+            // if(l instanceof WidgetPropertyChangeListener)
+            // ((WidgetPropertyChangeListener) l).removeAllHandlers();
             pcsDelegate.removePropertyChangeListener(l);
         }
     }
 
-    public final PropertyChangeListener[] getAllPropertyChangeListeners(){
+    public final PropertyChangeListener[] getAllPropertyChangeListeners() {
         return pcsDelegate.getPropertyChangeListeners();
     }
 
-    public final void removePropertyChangeListener(PropertyChangeListener listener){
-        if(listener instanceof WidgetPropertyChangeListener)
+    public final void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (listener instanceof WidgetPropertyChangeListener)
             ((WidgetPropertyChangeListener) listener).removeAllHandlers();
         pcsDelegate.removePropertyChangeListener(listener);
     }
 
-    /**If the property should be saved to xml file.
+    /**
+     * If the property should be saved to xml file.
+     * 
      * @return the isSavable
      */
     public boolean isSavable() {
         return isSavable;
     }
 
-    /**Set to true if the property should be saved to xml file.
-     * @param isSavable the isSavable to set
+    /**
+     * Set to true if the property should be saved to xml file.
+     * 
+     * @param isSavable
+     *            the isSavable to set
      */
     public void setSavable(boolean isSavable) {
         this.isSavable = isSavable;
@@ -177,55 +197,63 @@ public abstract class AbstractWidgetProperty {
     }
 
     /**
-     * @param defaultValue the defaultValue to set
+     * @param defaultValue
+     *            the defaultValue to set
      */
     public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    /**Set property value and fire the listeners on the property.
+    /**
+     * Set property value and fire the listeners on the property.
+     * 
      * @param value
      */
     public void setPropertyValue(Object value) {
-        //do conversion and legally check
+        // do conversion and legally check
         Object newValue = checkValue(value);
-        if(newValue == null || newValue.equals(propertyValue))
+        if (newValue == null || newValue.equals(propertyValue))
             return;
-        Object oldValue= getPropertyValue();
+        Object oldValue = getPropertyValue();
         propertyValue = newValue;
         firePropertyChange(oldValue, getPropertyValue());
     }
 
-    /**Set property value and fire the listeners on the property.oldValue will
-     * be set as null.
+    /**
+     * Set property value and fire the listeners on the property.oldValue will be set as null.
+     * 
      * @param value
      */
     public void setPropertyValue_IgnoreOldValue(Object value) {
-        //do conversion and legally check
+        // do conversion and legally check
         Object newValue = checkValue(value);
-        if(newValue == null || newValue.equals(propertyValue))
+        if (newValue == null || newValue.equals(propertyValue))
             return;
         propertyValue = newValue;
         firePropertyChange(null, getPropertyValue());
     }
 
-    /**Set the property value.
-     * @param value the value to be set.
-     * @param fire true if listeners should be fired regardless the old value.
-     * If false, only set the property value without firing listeners.
+    /**
+     * Set the property value.
+     * 
+     * @param value
+     *            the value to be set.
+     * @param fire
+     *            true if listeners should be fired regardless the old value. If false, only set the property value
+     *            without firing listeners.
      */
-    public void setPropertyValue(Object value, boolean fire){
-        if(fire){
-            //do conversion and legally check
+    public void setPropertyValue(Object value, boolean fire) {
+        if (fire) {
+            // do conversion and legally check
             Object newValue = checkValue(value);
-            if(newValue == null)
+            if (newValue == null)
                 return;
             propertyValue = newValue;
             firePropertyChange(null, getPropertyValue());
 
-        }else{
+        } else {
             Object newValue = checkValue(value);
-            if(newValue == null || newValue.equals(propertyValue))
+            if (newValue == null || newValue.equals(propertyValue))
                 return;
             propertyValue = newValue;
         }
@@ -236,20 +264,19 @@ public abstract class AbstractWidgetProperty {
      * @return true if visibility changed.
      */
     public final boolean setVisibleInPropSheet(boolean visibleInPropSheet) {
-        if(visibleInPropSheet == this.visibleInPropSheet)
+        if (visibleInPropSheet == this.visibleInPropSheet)
             return false;
         createPropertyDescriptor(visibleInPropSheet);
         this.visibleInPropSheet = visibleInPropSheet;
         return true;
     }
 
-    private void createPropertyDescriptor(final boolean visibleInPropSheet){
-        if(visibleInPropSheet){
+    private void createPropertyDescriptor(final boolean visibleInPropSheet) {
+        if (visibleInPropSheet) {
             propertyDescriptor = createPropertyDescriptor();
-            if(propertyDescriptor != null)
-                propertyDescriptor.setCategory(category == null? null : category.toString());
-        }
-        else
+            if (propertyDescriptor != null)
+                propertyDescriptor.setCategory(category == null ? null : category.toString());
+        } else
             propertyDescriptor = null;
     }
 
@@ -260,12 +287,14 @@ public abstract class AbstractWidgetProperty {
 
     /**
      * Write the property value into a XML element.
+     * 
      * @param propElement
      */
     public abstract void writeToXML(Element propElement);
 
-
-    /**Read the property value from a XML element.
+    /**
+     * Read the property value from a XML element.
+     * 
      * @param propElement
      * @return
      */
@@ -273,7 +302,7 @@ public abstract class AbstractWidgetProperty {
 
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        if(widgetModel != null)
+        if (widgetModel != null)
             setExecutionMode(widgetModel.getExecutionMode());
     }
 
@@ -281,34 +310,38 @@ public abstract class AbstractWidgetProperty {
         this.executionMode = executionMode;
     }
 
-
     public ExecutionMode getExecutionMode() {
         return executionMode;
     }
 
-    /**Subclass should override this method if it is configurable by rule.
-     * If this returns true, the method {@link #toStringInRuleScript()} should be
-     * properly overridden too.
+    /**
+     * Subclass should override this method if it is configurable by rule. If this returns true, the method
+     * {@link #toStringInRuleScript()} should be properly overridden too.
+     * 
      * @return true if this property is configurable by rule.
      */
-    public boolean configurableByRule(){
+    public boolean configurableByRule() {
         return false;
     }
 
-
-    /**Subclass should override this method if it only accept output expression.
+    /**
+     * Subclass should override this method if it only accept output expression.
+     * 
      * @return true if this property only accept output expression.
      */
-    public boolean onlyAcceptExpressionInRule(){
+    public boolean onlyAcceptExpressionInRule() {
         return false;
     }
 
-    /**Convert to the property value string in the script generated by rule.
-     * @param propValue the property value
+    /**
+     * Convert to the property value string in the script generated by rule.
+     * 
+     * @param propValue
+     *            the property value
      * @return the string.
      */
-    public String toStringInRuleScript(Object propValue){
-        if(propValue!=null)
+    public String toStringInRuleScript(Object propValue) {
+        if (propValue != null)
             return propValue.toString();
         else
             return "";
@@ -318,6 +351,5 @@ public abstract class AbstractWidgetProperty {
     public String toString() {
         return widgetModel.getName() + "." + prop_id + ": " + getPropertyValue().toString();
     }
-
 
 }

@@ -28,7 +28,7 @@ public class SimContentParser implements IContentParser {
             return false;
         if (desc.getValue().startsWith(SIM_SOURCE)
                 || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                && SIM_SOURCE.equals(desc.getDefaultDataSource())))
+                        && SIM_SOURCE.equals(desc.getDefaultDataSource())))
             return true;
         return false;
     }

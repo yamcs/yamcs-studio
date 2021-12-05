@@ -71,12 +71,12 @@ public class IntensityGraphFigure extends Figure implements Introspectable {
      *
      */
     public static enum ColorDepth {
-    BIT8("8 bit"), // No need to convert
-    BIT16("16 bit"), // Convert by >>8
-    BIT24("24 bit"), // Convert by >>16
-    BIT30("30 bit"), // Convert by >>22
-    SCALE("Scaled to [Max, Min]"), // Convert by (x-min)/(max-min)*255
-    LOWER8BIT("Use only lower 8 bits"); // Convert by &0xFF
+        BIT8("8 bit"), // No need to convert
+        BIT16("16 bit"), // Convert by >>8
+        BIT24("24 bit"), // Convert by >>16
+        BIT30("30 bit"), // Convert by >>22
+        SCALE("Scaled to [Max, Min]"), // Convert by (x-min)/(max-min)*255
+        LOWER8BIT("Use only lower 8 bits"); // Convert by &0xFF
 
         private ColorDepth(String description) {
             this.description = description;

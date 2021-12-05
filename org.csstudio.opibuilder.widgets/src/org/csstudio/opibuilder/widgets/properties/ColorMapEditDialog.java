@@ -115,9 +115,6 @@ public class ColorMapEditDialog extends TrayDialog {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);

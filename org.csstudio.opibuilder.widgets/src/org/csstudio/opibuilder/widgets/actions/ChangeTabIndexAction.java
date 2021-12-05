@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.actions;
+
 import org.csstudio.opibuilder.actions.AbstractWidgetTargetAction;
 import org.csstudio.opibuilder.widgets.editparts.TabEditPart;
 import org.eclipse.gef.commands.Command;
@@ -15,14 +16,13 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 
-
-/**Duplicate the current tab.
+/**
+ * Duplicate the current tab.
+ * 
  * @author Xihui Chen
  *
  */
 public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
-
-
 
     @Override
     public void run(IAction action) {
@@ -36,26 +36,24 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
                         try {
                             int newIndex = Integer.parseInt(newText);
                             int itemCount = getSelectedTabWidget().getTabItemCount();
-                            if(newIndex < 0 || newIndex >= itemCount)
-                                return NLS.bind("Invalid Tab Index! It must be between [0, {0}]",  itemCount-1);
+                            if (newIndex < 0 || newIndex >= itemCount)
+                                return NLS.bind("Invalid Tab Index! It must be between [0, {0}]", itemCount - 1);
                         } catch (Exception e) {
                             return "It must be an integer!";
                         }
                         return null;
                     }
                 });
-        if(newIndexDialog.open() == Window.OK){
+        if (newIndexDialog.open() == Window.OK) {
             int newIndex = Integer.parseInt(newIndexDialog.getValue());
-            if( newIndex != activeTabIndex){
+            if (newIndex != activeTabIndex) {
                 Command command = new ChangeTabIndexCommand(getSelectedTabWidget(), newIndex);
-                    execute(command);
+                execute(command);
 
             }
         }
 
-
     }
-
 
     /**
      * Gets the widget models of all currently selected EditParts.
@@ -63,8 +61,7 @@ public class ChangeTabIndexAction extends AbstractWidgetTargetAction {
      * @return a list with all widget models that are currently selected
      */
     protected final TabEditPart getSelectedTabWidget() {
-        return (TabEditPart)selection.getFirstElement();
+        return (TabEditPart) selection.getFirstElement();
     }
-
 
 }

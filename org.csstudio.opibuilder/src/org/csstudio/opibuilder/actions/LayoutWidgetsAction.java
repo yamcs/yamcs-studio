@@ -12,6 +12,7 @@ import org.eclipse.jface.action.IAction;
 
 /**
  * An action to layout widgets in a container.
+ * 
  * @author Xihui Chen
  *
  */
@@ -26,8 +27,8 @@ public class LayoutWidgetsAction extends AbstractWidgetTargetAction {
 
     }
 
-    protected AbstractLayoutEditpart getLayoutWidget(){
-        return (AbstractLayoutEditpart)selection.getFirstElement();
+    protected AbstractLayoutEditpart getLayoutWidget() {
+        return (AbstractLayoutEditpart) selection.getFirstElement();
     }
 
 }

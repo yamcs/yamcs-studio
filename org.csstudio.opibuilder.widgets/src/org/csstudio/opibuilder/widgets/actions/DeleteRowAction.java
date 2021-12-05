@@ -14,19 +14,18 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Delete a row from the table widget.
+/**
+ * Delete a row from the table widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class DeleteRowAction implements IObjectActionDelegate {
 
-
-
     private IStructuredSelection selection;
 
     public DeleteRowAction() {
     }
-
 
     @Override
     public void run(IAction action) {
@@ -41,13 +40,12 @@ public class DeleteRowAction implements IObjectActionDelegate {
         }
     }
 
-    private TableEditPart getSelectedWidget(){
-        if(selection.getFirstElement() instanceof TableEditPart){
-            return (TableEditPart)selection.getFirstElement();
-        }else
+    private TableEditPart getSelectedWidget() {
+        if (selection.getFirstElement() instanceof TableEditPart) {
+            return (TableEditPart) selection.getFirstElement();
+        } else
             return null;
     }
-
 
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {

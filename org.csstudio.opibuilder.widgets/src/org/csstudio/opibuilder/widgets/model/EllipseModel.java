@@ -48,9 +48,9 @@ public class EllipseModel extends AbstractShapeModel {
     protected void configureProperties() {
         super.configureProperties();
         addProperty(new ColorProperty(PROP_BACKGROUND_GRADIENT_START_COLOR, "Background Gradient Start Color",
-                WidgetPropertyCategory.Display,  CustomMediaFactory.COLOR_WHITE));
+                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new ColorProperty(PROP_FOREGROUND_GRADIENT_START_COLOR, "Foreground Gradient Start Color",
-                WidgetPropertyCategory.Display,  CustomMediaFactory.COLOR_WHITE));
+                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new BooleanProperty(PROP_GRADIENT, "Gradient",
                 WidgetPropertyCategory.Display, false));
     }
@@ -60,15 +60,15 @@ public class EllipseModel extends AbstractShapeModel {
         return ID;
     }
 
-    public boolean isGradient(){
-        return (Boolean)getPropertyValue(PROP_GRADIENT);
+    public boolean isGradient() {
+        return (Boolean) getPropertyValue(PROP_GRADIENT);
     }
 
-    public Color getBackgroundGradientStartColor(){
-        return ((OPIColor)getPropertyValue(PROP_BACKGROUND_GRADIENT_START_COLOR)).getSWTColor();
+    public Color getBackgroundGradientStartColor() {
+        return ((OPIColor) getPropertyValue(PROP_BACKGROUND_GRADIENT_START_COLOR)).getSWTColor();
     }
 
-    public Color getForegroundGradientStartColor(){
-        return ((OPIColor)getPropertyValue(PROP_FOREGROUND_GRADIENT_START_COLOR)).getSWTColor();
+    public Color getForegroundGradientStartColor() {
+        return ((OPIColor) getPropertyValue(PROP_FOREGROUND_GRADIENT_START_COLOR)).getSWTColor();
     }
 }

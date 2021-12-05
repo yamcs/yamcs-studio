@@ -22,12 +22,12 @@ import org.eclipse.draw2d.text.TextFlow;
 import org.eclipse.swt.graphics.Font;
 
 /**
- * A text figure which is able to wrap text automatically and show scrollbar if necessary.  *
+ * A text figure which is able to wrap text automatically and show scrollbar if necessary. *
  *
  * @author Xihui Chen
  *
  */
-public class WrappableTextFigure extends TextFigure{
+public class WrappableTextFigure extends TextFigure {
 
     /** The inner TextFlow **/
     private TextFlow textFlow;
@@ -36,20 +36,21 @@ public class WrappableTextFigure extends TextFigure{
     private ScrollPane scrollPane;
     private boolean transparent;
     private boolean oldSelectable = true;
+
     public WrappableTextFigure() {
         this(false);
     }
 
     /**
-     * Creates a text figure with  a
-     * flowPage containing a TextFlow with the style WORD_WRAP_SOFT.
+     * Creates a text figure with a flowPage containing a TextFlow with the style WORD_WRAP_SOFT.
      *
-     * @param borderSize the size of the MarginBorder
+     * @param borderSize
+     *            the size of the MarginBorder
      */
     public WrappableTextFigure(boolean runMode) {
         super(runMode);
         flowPage = new FlowPage();
-        textFlow = new TextFlow(""){
+        textFlow = new TextFlow("") {
             @Override
             public void setFont(Font f) {
                 super.setFont(f);
@@ -61,7 +62,7 @@ public class WrappableTextFigure extends TextFigure{
                 ParagraphTextLayout.WORD_WRAP_SOFT));
         flowPage.add(textFlow);
 
-        scrollPane = new ScrollPane(){
+        scrollPane = new ScrollPane() {
             public boolean isOpaque() {
                 return !transparent;
             };
@@ -95,21 +96,19 @@ public class WrappableTextFigure extends TextFigure{
 
     @Override
     public boolean containsPoint(int x, int y) {
-        if(scrollPane.getHorizontalScrollBar().isVisible()
-                || scrollPane.getVerticalScrollBar().isVisible()){
+        if (scrollPane.getHorizontalScrollBar().isVisible()
+                || scrollPane.getVerticalScrollBar().isVisible()) {
             oldSelectable = selectable;
             selectable = true;
-        }else
+        } else
             selectable = oldSelectable;
         return super.containsPoint(x, y);
     }
 
-    public Dimension getAutoSizeDimension(){
+    public Dimension getAutoSizeDimension() {
         return flowPage.getPreferredSize().getCopy().expand(
                 getInsets().getWidth(), getInsets().getHeight());
     }
-
-
 
     /**
      * Returns the text inside the TextFlow.
@@ -120,53 +119,51 @@ public class WrappableTextFigure extends TextFigure{
         return textFlow.getText();
     }
 
-
     @Override
     protected void layout() {
         Rectangle clientArea = getClientArea();
         Dimension preferedSize = scrollPane.getPreferredSize();
-            int x=clientArea.x;
-            if(clientArea.width > preferedSize.width){
+        int x = clientArea.x;
+        if (clientArea.width > preferedSize.width) {
 
-                switch (horizontalAlignment) {
-                case CENTER:
-                    x = clientArea.x + (clientArea.width - preferedSize.width)/2;
-                    break;
-                case RIGHT:
-                    x = clientArea.x + clientArea.width - preferedSize.width;
-                    break;
-                case LEFT:
-                default:
-                    x=clientArea.x;
-                    break;
-                }
-            }else{
-                preferedSize = scrollPane.getPreferredSize(clientArea.width, -1);
+            switch (horizontalAlignment) {
+            case CENTER:
+                x = clientArea.x + (clientArea.width - preferedSize.width) / 2;
+                break;
+            case RIGHT:
+                x = clientArea.x + clientArea.width - preferedSize.width;
+                break;
+            case LEFT:
+            default:
+                x = clientArea.x;
+                break;
             }
-            int y=clientArea.y;
-            if(clientArea.height > preferedSize.height){
-                switch (verticalAlignment) {
-                case MIDDLE:
-                    y = clientArea.y + (clientArea.height - preferedSize.height)/2;
-                    break;
-                case BOTTOM:
-                    y = clientArea.y + clientArea.height - preferedSize.height;
-                    break;
-                case TOP:
-                default:
-                    y=clientArea.y;
-                    break;
-                }
+        } else {
+            preferedSize = scrollPane.getPreferredSize(clientArea.width, -1);
+        }
+        int y = clientArea.y;
+        if (clientArea.height > preferedSize.height) {
+            switch (verticalAlignment) {
+            case MIDDLE:
+                y = clientArea.y + (clientArea.height - preferedSize.height) / 2;
+                break;
+            case BOTTOM:
+                y = clientArea.y + clientArea.height - preferedSize.height;
+                break;
+            case TOP:
+            default:
+                y = clientArea.y;
+                break;
             }
-            Rectangle textBounds = new Rectangle(x, y,
-                    clientArea.width - (x - clientArea.x), clientArea.height - (y - clientArea.y));
-            //textFlow.setMinimumSize(textBounds.getSize());
-            //textFlow.setPreferredSize(textBounds.getSize());
+        }
+        Rectangle textBounds = new Rectangle(x, y,
+                clientArea.width - (x - clientArea.x), clientArea.height - (y - clientArea.y));
+        // textFlow.setMinimumSize(textBounds.getSize());
+        // textFlow.setPreferredSize(textBounds.getSize());
 
-            scrollPane.setBounds(textBounds);
+        scrollPane.setBounds(textBounds);
 
     }
-
 
     @Override
     public void setFont(Font f) {
@@ -176,10 +173,9 @@ public class WrappableTextFigure extends TextFigure{
         revalidate();
     }
 
-
     @Override
     public void setOpaque(boolean opaque) {
-        transparent =!opaque;
+        transparent = !opaque;
         scrollPane.setOpaque(opaque);
         textFlow.setOpaque(opaque);
         super.setOpaque(opaque);
@@ -187,10 +183,10 @@ public class WrappableTextFigure extends TextFigure{
     }
 
     public void setWrapWords(boolean wrapWords) {
-        if(wrapWords){
+        if (wrapWords) {
             viewport.setContentsTracksWidth(true);
             scrollPane.setHorizontalScrollBarVisibility(ScrollPane.NEVER);
-        }else{
+        } else {
             viewport.setContentsTracksWidth(false);
             scrollPane.setHorizontalScrollBarVisibility(ScrollPane.AUTOMATIC);
         }
@@ -198,30 +194,25 @@ public class WrappableTextFigure extends TextFigure{
         revalidate();
     }
 
-    public void setShowScrollbar(boolean showScrollbar){
+    public void setShowScrollbar(boolean showScrollbar) {
         scrollPane.setScrollBarVisibility(
-                showScrollbar? ScrollPane.AUTOMATIC : ScrollPane.NEVER);
+                showScrollbar ? ScrollPane.AUTOMATIC : ScrollPane.NEVER);
         revalidate();
     }
-
-
-
 
     /**
      * Sets the text of the TextFlow to the given value.
      *
-     * @param newText the new text value.
+     * @param newText
+     *            the new text value.
      */
     public void setText(String newText) {
         textFlow.setText(newText);
         revalidate();
     }
 
-
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
-
-
 
 }

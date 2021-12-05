@@ -10,7 +10,9 @@ package org.csstudio.opibuilder.widgets.editparts;
 
 import org.eclipse.draw2d.IFigure;
 
-/**The delegate interface that describes the common functions of Native Text and draw2d Text Input.
+/**
+ * The delegate interface that describes the common functions of Native Text and draw2d Text Input.
+ * 
  * @author Xihui Chen
  *
  */
@@ -23,6 +25,5 @@ public interface ITextInputEditPartDelegate {
     public void updatePropSheet();
 
     public void createEditPolicies();
-
 
 }

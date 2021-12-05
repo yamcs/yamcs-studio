@@ -14,17 +14,18 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ViewportAwareConnectionLayerClippingStrategy;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-/**A patched connection layer clipping strategy that will hide the connection when
- * either one of the source or target is not showing.
+/**
+ * A patched connection layer clipping strategy that will hide the connection when either one of the source or target is
+ * not showing.
+ * 
  * @author Xihui Chen
  *
  */
-public class PatchedConnectionLayerClippingStrategy extends ViewportAwareConnectionLayerClippingStrategy{
+public class PatchedConnectionLayerClippingStrategy extends ViewportAwareConnectionLayerClippingStrategy {
 
     public PatchedConnectionLayerClippingStrategy(ConnectionLayer connectionLayer) {
         super(connectionLayer);
     }
-
 
     @Override
     protected Rectangle[] getEdgeClippingRectangle(Connection connection) {
@@ -44,8 +45,8 @@ public class PatchedConnectionLayerClippingStrategy extends ViewportAwareConnect
         // the connection has to be clipped at.
         IFigure sourceFigure = sourceAnchor.getOwner();
         IFigure targetFigure = targetAnchor.getOwner();
-        if(!sourceFigure.isShowing() || !targetFigure.isShowing())
-            return new Rectangle[]{};
+        if (!sourceFigure.isShowing() || !targetFigure.isShowing())
+            return new Rectangle[] {};
         return super.getEdgeClippingRectangle(connection);
     }
 

@@ -15,7 +15,9 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.eclipse.core.runtime.Assert;
 
-/**The abstract data that holds multiple properties.
+/**
+ * The abstract data that holds multiple properties.
+ * 
  * @author Xihui
  *
  */
@@ -29,15 +31,15 @@ public abstract class AbstractComplexData {
         propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();
         configureProperties();
 
-
     }
 
-
-
-    /**Add a property to the widget.
-     * @param property the property to be added.
+    /**
+     * Add a property to the widget.
+     * 
+     * @param property
+     *            the property to be added.
      */
-    public void addProperty(final AbstractWidgetProperty property){
+    public void addProperty(final AbstractWidgetProperty property) {
         Assert.isNotNull(property);
         property.setWidgetModel(getWidgetModel());
         propertyMap.put(property.getPropertyID(), property);
@@ -48,10 +50,10 @@ public abstract class AbstractComplexData {
      */
     protected abstract void configureProperties();
 
-    public AbstractWidgetProperty[] getAllProperties(){
+    public AbstractWidgetProperty[] getAllProperties() {
         AbstractWidgetProperty[] propArray = new AbstractWidgetProperty[propertyMap.size()];
-        int i=0;
-        for(AbstractWidgetProperty p : propertyMap.values())
+        int i = 0;
+        for (AbstractWidgetProperty p : propertyMap.values())
             propArray[i++] = p;
         return propArray;
     }
@@ -62,7 +64,7 @@ public abstract class AbstractComplexData {
 
     public AbstractComplexData getCopy() {
         AbstractComplexData copy = createInstance();
-        for(String id : propertyMap.keySet()){
+        for (String id : propertyMap.keySet()) {
             copy.setPropertyValue(id, getPropertyValue(id));
         }
         copy.setWidgetModel(getWidgetModel());
@@ -91,11 +93,12 @@ public abstract class AbstractComplexData {
     }
 
     /**
-     * @param widgetModel the widgetModel to set
+     * @param widgetModel
+     *            the widgetModel to set
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for(AbstractWidgetProperty property : getAllProperties())
+        for (AbstractWidgetProperty property : getAllProperties())
             property.setWidgetModel(widgetModel);
     }
 
@@ -106,13 +109,13 @@ public abstract class AbstractComplexData {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null || !(obj instanceof AbstractComplexData))
+        if (obj == null || !(obj instanceof AbstractComplexData))
             return false;
-        AbstractComplexData objData = ((AbstractComplexData)obj);
-        for(AbstractWidgetProperty property : getAllProperties()){
-            if(objData.getProperty(property.getPropertyID()) == null)
+        AbstractComplexData objData = ((AbstractComplexData) obj);
+        for (AbstractWidgetProperty property : getAllProperties()) {
+            if (objData.getProperty(property.getPropertyID()) == null)
                 return false;
-            if(!(property.getPropertyValue().equals(
+            if (!(property.getPropertyValue().equals(
                     objData.getPropertyValue(property.getPropertyID()))))
                 return false;
         }

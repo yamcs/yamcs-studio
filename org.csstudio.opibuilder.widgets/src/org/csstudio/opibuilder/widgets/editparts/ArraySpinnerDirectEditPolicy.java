@@ -16,17 +16,18 @@ import org.eclipse.gef.requests.DirectEditRequest;
 
 /**
  * The Editpolicy to handle direct text edit in index spinner of an array widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class ArraySpinnerDirectEditPolicy
-    extends DirectEditPolicy {
+        extends DirectEditPolicy {
 
     /**
      * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
      */
     protected Command getDirectEditCommand(DirectEditRequest edit) {
-        String text = (String)edit.getCellEditor().getValue();
+        String text = (String) edit.getCellEditor().getValue();
         text = text.replace("e", "E");
         try {
             int value = new DecimalFormat().parse(text).intValue();
@@ -44,39 +45,36 @@ public class ArraySpinnerDirectEditPolicy
      */
     @Override
     protected void showCurrentEditValue(DirectEditRequest request) {
-        //String value = (String)request.getCellEditor().getValue();
-        //((LabelFigure)getHostFigure()).setText(value);
-        //hack to prevent async layout from placing the cell editor twice.
-        //getHostFigure().getUpdateManager().performUpdate();
-
+        // String value = (String)request.getCellEditor().getValue();
+        // ((LabelFigure)getHostFigure()).setText(value);
+        // hack to prevent async layout from placing the cell editor twice.
+        // getHostFigure().getUpdateManager().performUpdate();
 
     }
 
+    static class ArraySpinnerEditCommand extends Command {
 
-static class ArraySpinnerEditCommand extends Command    {
+        private int newIndex, oldIndex;
+        private ArrayEditPart arrayEditpart;
 
-    private int newIndex, oldIndex;
-    private ArrayEditPart arrayEditpart;
+        public ArraySpinnerEditCommand(ArrayEditPart arrayEditpart, int newIndex) {
+            this.arrayEditpart = arrayEditpart;
+            this.newIndex = newIndex;
+        }
 
-    public ArraySpinnerEditCommand(ArrayEditPart arrayEditpart, int newIndex) {
-    this.arrayEditpart = arrayEditpart;
-    this.newIndex = newIndex;
+        @Override
+        public void execute() {
+            oldIndex = arrayEditpart.getArrayFigure().getIndex();
+            if (newIndex >= arrayEditpart.getArrayFigure().getArrayLength())
+                newIndex = arrayEditpart.getArrayFigure().getArrayLength() - 1;
+            arrayEditpart.getArrayFigure().setIndex(newIndex);
+        }
+
+        @Override
+        public void undo() {
+            arrayEditpart.getArrayFigure().setIndex(oldIndex);
+        }
+
     }
-
-    @Override
-    public void execute() {
-        oldIndex = arrayEditpart.getArrayFigure().getIndex();
-        if(newIndex>=arrayEditpart.getArrayFigure().getArrayLength())
-            newIndex = arrayEditpart.getArrayFigure().getArrayLength()-1;
-        arrayEditpart.getArrayFigure().setIndex(newIndex);
-    }
-
-    @Override
-    public void undo() {
-        arrayEditpart.getArrayFigure().setIndex(oldIndex);
-    }
-
-}
-
 
 }

@@ -23,7 +23,9 @@ import org.csstudio.opibuilder.util.MacrosInput;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.GraphicalViewer;
 
-/**The model which could contain children.
+/**
+ * The model which could contain children.
+ * 
  * @author Xihui Chen
  *
  */
@@ -38,7 +40,6 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
      */
     public static final String PROP_MACROS = "macros";
 
-
     final private AbstractWidgetProperty childrenProperty;
 
     final private AbstractWidgetProperty selectionProperty;
@@ -49,7 +50,6 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
     private AbstractLayoutModel layoutWidget;
 
-
     public AbstractContainerModel() {
         super();
         childrenProperty = new UnsavableListProperty(
@@ -59,29 +59,32 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
                 PROP_SELECTION, "selection", WidgetPropertyCategory.Behavior, null);
     }
 
-    /**add child to the end of the children list.
-     * @param child the widget to be added
-     * @param changeParent true if the widget's parent should be changed.
+    /**
+     * add child to the end of the children list.
+     * 
+     * @param child
+     *            the widget to be added
+     * @param changeParent
+     *            true if the widget's parent should be changed.
      */
-    public synchronized void addChild(AbstractWidgetModel child, boolean changeParent){
-        if(child != null && !childrenList.contains(child)){
+    public synchronized void addChild(AbstractWidgetModel child, boolean changeParent) {
+        if (child != null && !childrenList.contains(child)) {
             int newIndex = -1;
-            if(layoutWidget != null){
-                newIndex = childrenList.size() -1;
+            if (layoutWidget != null) {
+                newIndex = childrenList.size() - 1;
                 childrenList.add(newIndex, child);
-            }
-            else
+            } else
                 childrenList.add(child);
-            if(child instanceof AbstractLayoutModel)
+            if (child instanceof AbstractLayoutModel)
                 layoutWidget = (AbstractLayoutModel) child;
-            if(changeParent)
+            if (changeParent)
                 child.setParent(this);
             childrenProperty.firePropertyChange(newIndex, child);
         }
 
     }
 
-    public synchronized void addChildren(List<AbstractWidgetModel> children, boolean changeParent){
+    public synchronized void addChildren(List<AbstractWidgetModel> children, boolean changeParent) {
         ArrayList<AbstractWidgetModel> oldList = new ArrayList<AbstractWidgetModel>(childrenList);
         for (AbstractWidgetModel child : children) {
             if (child != null && !childrenList.contains(child)) {
@@ -100,21 +103,21 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
         childrenProperty.firePropertyChange(oldList, children);
     }
 
-    public void addChild(AbstractWidgetModel child){
+    public void addChild(AbstractWidgetModel child) {
         addChild(child, true);
     }
 
-    public synchronized void addChild(int index, AbstractWidgetModel child){
-        if(index < 0){
+    public synchronized void addChild(int index, AbstractWidgetModel child) {
+        if (index < 0) {
             addChild(child);
             return;
         }
-        if(child != null && !childrenList.contains(child)){
-            if(child instanceof AbstractLayoutModel){
+        if (child != null && !childrenList.contains(child)) {
+            if (child instanceof AbstractLayoutModel) {
                 layoutWidget = (AbstractLayoutModel) child;
                 index = childrenList.size();
-            }else if(layoutWidget != null && index == childrenList.size()){
-                index -=1;
+            } else if (layoutWidget != null && index == childrenList.size()) {
+                index -= 1;
             }
             childrenList.add(index, child);
             child.setParent(this);
@@ -126,16 +129,16 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
         return layoutWidget;
     }
 
-    public synchronized void removeChild(AbstractWidgetModel child){
-        if(child != null && childrenList.remove(child)) {
-            if(child instanceof AbstractLayoutModel)
+    public synchronized void removeChild(AbstractWidgetModel child) {
+        if (child != null && childrenList.remove(child)) {
+            if (child instanceof AbstractLayoutModel)
                 layoutWidget = null;
             child.setParent(null);
             childrenProperty.firePropertyChange(child, null);
         }
     }
 
-    public synchronized void removeAllChildren(){
+    public synchronized void removeAllChildren() {
         childrenList.clear();
         layoutWidget = null;
         childrenProperty.firePropertyChange(childrenList, null);
@@ -156,20 +159,20 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
     /**
      * @return all descendants of this container.
      */
-    public List<AbstractWidgetModel> getAllDescendants(){
+    public List<AbstractWidgetModel> getAllDescendants() {
         List<AbstractWidgetModel> allDescendants = new ArrayList<AbstractWidgetModel>();
         allDescendants.addAll(getChildren());
-        for(AbstractWidgetModel widget : getChildren()){
-            if(widget instanceof AbstractContainerModel){
+        for (AbstractWidgetModel widget : getChildren()) {
+            if (widget instanceof AbstractContainerModel) {
                 allDescendants.addAll(((AbstractContainerModel) widget).getAllDescendants());
             }
         }
         return allDescendants;
     }
 
-    public AbstractWidgetModel getChildByName(String name){
-        for(AbstractWidgetModel child : getChildren()){
-            if(child.getName().equals(name))
+    public AbstractWidgetModel getChildByName(String name) {
+        for (AbstractWidgetModel child : getChildren()) {
+            if (child.getName().equals(name))
                 return child;
         }
         return null;
@@ -177,10 +180,9 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
     /**
      * @param widget
-     * @return the index of the widget in the children list, which is also
-     * the order of the widget in the display.
+     * @return the index of the widget in the children list, which is also the order of the widget in the display.
      */
-    public final int getIndexOf(final AbstractWidgetModel widget){
+    public final int getIndexOf(final AbstractWidgetModel widget) {
         return childrenList.indexOf(widget);
     }
 
@@ -188,13 +190,15 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
         return childrenProperty;
     }
 
-    /**Change the order of the child.
+    /**
+     * Change the order of the child.
+     * 
      * @param child
      * @param newIndex
      */
-    public final void changeChildOrder(final AbstractWidgetModel child, final int newIndex){
-        if(childrenList.contains(child) && newIndex >= 0 && newIndex < childrenList.size()){
-            if(newIndex == childrenList.indexOf(child))
+    public final void changeChildOrder(final AbstractWidgetModel child, final int newIndex) {
+        if (childrenList.contains(child) && newIndex >= 0 && newIndex < childrenList.size()) {
+            if (newIndex == childrenList.indexOf(child))
                 return;
             removeChild(child);
             addChild(newIndex, child);
@@ -206,7 +210,7 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
         return selectionProperty;
     }
 
-    public void selectWidgets(List<AbstractWidgetModel> widgets, boolean append){
+    public void selectWidgets(List<AbstractWidgetModel> widgets, boolean append) {
         selectionProperty.firePropertyChange(append, widgets);
     }
 
@@ -214,9 +218,11 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
         selectWidgets(Arrays.asList(newWidget), append);
     }
 
-    /** Set macro map of macro.
-     *  Container keeps reference to the map, no copy.
-     *  @param macroMap Map of macro name/value entries
+    /**
+     * Set macro map of macro. Container keeps reference to the map, no copy.
+     * 
+     * @param macroMap
+     *            Map of macro name/value entries
      */
     public void setMacroMap(final LinkedHashMap<String, String> macroMap) {
         this.macroMap = macroMap;
@@ -227,37 +233,40 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
         return macroMap;
     }
 
-    public MacrosInput getMacrosInput(){
-        return (MacrosInput)getCastedPropertyValue(PROP_MACROS);
+    public MacrosInput getMacrosInput() {
+        return (MacrosInput) getCastedPropertyValue(PROP_MACROS);
     }
 
-    /**Add a macro to the container.
-     * This method must be called before this widget is activated.
-     * @param macroName name of the macro
-     * @param macroValue value of the macro
+    /**
+     * Add a macro to the container. This method must be called before this widget is activated.
+     * 
+     * @param macroName
+     *            name of the macro
+     * @param macroValue
+     *            value of the macro
      */
-    public void addMacro(String macroName, String macroValue){
+    public void addMacro(String macroName, String macroValue) {
         getMacrosInput().put(macroName, macroValue);
     }
 
     /**
      * @return the macros of its parent.
      */
-    public LinkedHashMap<String, String> getParentMacroMap(){
-        if(getParent() != null)
+    public LinkedHashMap<String, String> getParentMacroMap() {
+        if (getParent() != null)
             return getParent().getMacroMap();
         else
             return PreferencesHelper.getMacros();
     }
 
-    /**This is a flag to show if children operation edit policies should be installed.
+    /**
+     * This is a flag to show if children operation edit policies should be installed.
+     * 
      * @return true if children operation allowable.
      */
-    public boolean isChildrenOperationAllowable(){
+    public boolean isChildrenOperationAllowable() {
         return true;
     }
-
-
 
     @Override
     public void scale(double widthRatio, double heightRatio) {
@@ -267,9 +276,9 @@ public abstract class AbstractContainerModel extends AbstractWidgetModel {
 
     public void scaleChildren() {
         Dimension size = getSize();
-        double newWidthRatio = size.width/(double)getOriginSize().width;
-        double newHeightRatio = size.height/(double)getOriginSize().height;
-        for(AbstractWidgetModel child : getChildren()){
+        double newWidthRatio = size.width / (double) getOriginSize().width;
+        double newHeightRatio = size.height / (double) getOriginSize().height;
+        for (AbstractWidgetModel child : getChildren()) {
             child.scale(newWidthRatio, newHeightRatio);
         }
     }

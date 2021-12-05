@@ -22,14 +22,15 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
-
-/**The action to make CSS full screen.
+/**
+ * The action to make CSS full screen.
+ * 
  * @author Xihui Chen
  *
  */
 @SuppressWarnings("restriction")
 public class FullScreenAction extends Action implements
-    IWorkbenchWindowActionDelegate {
+        IWorkbenchWindowActionDelegate {
 
     public static final String ID = "org.csstudio.opibuilder.actions.fullscreen";
     private static final String FULLSCREEN = "Full Screen";
@@ -39,23 +40,23 @@ public class FullScreenAction extends Action implements
     private Menu menuBar;
     private boolean inFullScreen = false;
     private Shell shell;
-    private ImageDescriptor fullScreenImage =
-        CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
+    private ImageDescriptor fullScreenImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
             OPIBuilderPlugin.PLUGIN_ID, "icons/fullscreen.png");
-    private ImageDescriptor exitFullScreenImage =
-        CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
+    private ImageDescriptor exitFullScreenImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
             OPIBuilderPlugin.PLUGIN_ID, "icons/exitfullscreen.png");
     private IWorkbenchWindow window;
     private boolean toolbarWasInvisible;
     private boolean menuBarWasInvisible;
+
     /**
      * Constructor.
-     * @param part The workbench part associated with this PrintAction
+     * 
+     * @param part
+     *            The workbench part associated with this PrintAction
      */
     public FullScreenAction() {
         setActionDefinitionId(ID);
     }
-
 
     /**
      * @see org.eclipse.jface.action.Action#run()
@@ -64,21 +65,21 @@ public class FullScreenAction extends Action implements
     public void run() {
         if (inFullScreen) {
             shell.setFullScreen(false);
-            if (!toolbarWasInvisible){
+            if (!toolbarWasInvisible) {
                 WorkbenchWindowService.setToolbarVisibility((WorkbenchWindow) window, true);
             }
-            if(!menuBarWasInvisible)
+            if (!menuBarWasInvisible)
                 shell.setMenuBar(menuBar);
             inFullScreen = false;
             setText(FULLSCREEN);
             setImageDescriptor(fullScreenImage);
         } else {
 
-            if(PreferencesHelper.isShowFullScreenDialog()){
+            if (PreferencesHelper.isShowFullScreenDialog()) {
                 TipDialog dialog = new TipDialog(shell, "Tip",
                         "Press F11 to exit full screen.");
                 dialog.open();
-                if(!dialog.isShowThisDialogAgain())
+                if (!dialog.isShowThisDialogAgain())
                     PreferencesHelper.setShowFullScreenDialog(false);
             }
             shell.setFullScreen(true);
@@ -89,9 +90,9 @@ public class FullScreenAction extends Action implements
                 toolbarWasInvisible = false;
                 WorkbenchWindowService.setToolbarVisibility((WorkbenchWindow) window, false);
             }
-            if(shell.getMenuBar() == null)
+            if (shell.getMenuBar() == null)
                 menuBarWasInvisible = true;
-            else{
+            else {
                 menuBar = shell.getMenuBar();
                 menuBarWasInvisible = false;
             }
@@ -119,10 +120,9 @@ public class FullScreenAction extends Action implements
         this.window = window;
         shell = window.getShell();
         menuBar = shell.getMenuBar();
-        FullScreenAction registeredAction =
-            WorkbenchWindowService.getInstance().getFullScreenAction(window);
-        //copy states
-        if(registeredAction != null){
+        FullScreenAction registeredAction = WorkbenchWindowService.getInstance().getFullScreenAction(window);
+        // copy states
+        if (registeredAction != null) {
             inFullScreen = registeredAction.inFullScreen;
             menuBarWasInvisible = registeredAction.menuBarWasInvisible;
             toolbarWasInvisible = registeredAction.toolbarWasInvisible;
@@ -144,6 +144,4 @@ public class FullScreenAction extends Action implements
 
     }
 
-
 }
-

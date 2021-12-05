@@ -14,24 +14,21 @@ import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.swt.graphics.Color;
 
-
-/**The model for rectangle widget.
+/**
+ * The model for rectangle widget.
  *
- *@author Sven Wende, Alexander Will (class of same name in SDS)
- *@author Xihui Chen
+ * @author Sven Wende, Alexander Will (class of same name in SDS)
+ * @author Xihui Chen
  *
  */
 public class RectangleModel extends AbstractShapeModel {
 
-
     public final String ID = "org.csstudio.opibuilder.widgets.Rectangle";
-
 
     /**
      * True if the ellipse should be filled with gradient effect.
      */
     public static final String PROP_GRADIENT = "gradient";
-
 
     /**
      * The color on gradient start.
@@ -43,15 +40,13 @@ public class RectangleModel extends AbstractShapeModel {
      */
     public static final String PROP_FOREGROUND_GRADIENT_START_COLOR = "fg_gradient_color";
 
-
-
     @Override
     protected void configureProperties() {
         super.configureProperties();
         addProperty(new ColorProperty(PROP_BACKGROUND_GRADIENT_START_COLOR, "Background Gradient Start Color",
-                WidgetPropertyCategory.Display,  CustomMediaFactory.COLOR_WHITE));
+                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new ColorProperty(PROP_FOREGROUND_GRADIENT_START_COLOR, "Foreground Gradient Start Color",
-                WidgetPropertyCategory.Display,  CustomMediaFactory.COLOR_WHITE));
+                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new BooleanProperty(PROP_GRADIENT, "Gradient",
                 WidgetPropertyCategory.Display, false));
     }
@@ -61,17 +56,16 @@ public class RectangleModel extends AbstractShapeModel {
         return ID;
     }
 
-    public boolean isGradient(){
-        return (Boolean)getPropertyValue(PROP_GRADIENT);
+    public boolean isGradient() {
+        return (Boolean) getPropertyValue(PROP_GRADIENT);
     }
 
-    public Color getBackgroundGradientStartColor(){
-        return ((OPIColor)getPropertyValue(PROP_BACKGROUND_GRADIENT_START_COLOR)).getSWTColor();
+    public Color getBackgroundGradientStartColor() {
+        return ((OPIColor) getPropertyValue(PROP_BACKGROUND_GRADIENT_START_COLOR)).getSWTColor();
     }
 
-    public Color getForegroundGradientStartColor(){
-        return ((OPIColor)getPropertyValue(PROP_FOREGROUND_GRADIENT_START_COLOR)).getSWTColor();
+    public Color getForegroundGradientStartColor() {
+        return ((OPIColor) getPropertyValue(PROP_FOREGROUND_GRADIENT_START_COLOR)).getSWTColor();
     }
-
 
 }

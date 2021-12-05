@@ -16,7 +16,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Image;
 
-/**The Abstract editpart for layout widgets.
+/**
+ * The Abstract editpart for layout widgets.
+ * 
  * @author Xihui Chen
  *
  */
@@ -31,22 +33,28 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
 
     protected abstract Image getIcon();
 
-    /**Get the new bounds after layout.
-     * @param widgetModelList the children widget models to be layout.
-     * @param containerBounds the bounds of the container which contains the widget models.
+    /**
+     * Get the new bounds after layout.
+     * 
+     * @param widgetModelList
+     *            the children widget models to be layout.
+     * @param containerBounds
+     *            the bounds of the container which contains the widget models.
      * @return
      */
     public abstract List<Rectangle> getNewBounds(
             List<AbstractWidgetModel> widgetModelList, Rectangle containerBounds);
 
-    /**Layout widgets.
+    /**
+     * Layout widgets.
+     * 
      * @param widgetModelList
      * @param containerBounds
      */
-    public void layout(List<AbstractWidgetModel> widgetModelList, Rectangle containerBounds){
-        int i=0;
+    public void layout(List<AbstractWidgetModel> widgetModelList, Rectangle containerBounds) {
+        int i = 0;
         List<Rectangle> newBounds = getNewBounds(widgetModelList, containerBounds);
-        for(AbstractWidgetModel model : widgetModelList){
+        for (AbstractWidgetModel model : widgetModelList) {
             model.setBounds(newBounds.get(i));
             i++;
         }
@@ -55,17 +63,19 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
     /**
      * Refresh container's layout.
      */
-    protected void refreshParentLayout(){
-        if(getParent() instanceof AbstractContainerEditpart){
-            ((AbstractContainerEditpart)getParent()).layout();
+    protected void refreshParentLayout() {
+        if (getParent() instanceof AbstractContainerEditpart) {
+            ((AbstractContainerEditpart) getParent()).layout();
         }
     }
 
-    /**The figure for layout widgets.
+    /**
+     * The figure for layout widgets.
+     * 
      * @author Xihui Chen
      *
      */
-    static class LayoutterFigure extends Label{
+    static class LayoutterFigure extends Label {
 
         private ExecutionMode executionMode;
 

@@ -10,7 +10,9 @@ package org.csstudio.opibuilder.dnd;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.swt.dnd.TextTransfer;
 
-/**The Drop PV target listener for text transfer.
+/**
+ * The Drop PV target listener for text transfer.
+ * 
  * @author Xihui Chen
  *
  */
@@ -22,9 +24,9 @@ public class TextTransferDropPVTargetListener extends AbstractDropPVTargetListen
 
     @Override
     protected String[] getPVNamesFromTransfer() {
-        if(getCurrentEvent().data == null)
+        if (getCurrentEvent().data == null)
             return null;
-        String text = (String)getCurrentEvent().data;
+        String text = (String) getCurrentEvent().data;
         String[] pvNames = text.trim().split("\\s+");
         return pvNames;
     }

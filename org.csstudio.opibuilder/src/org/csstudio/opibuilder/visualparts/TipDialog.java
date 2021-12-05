@@ -11,7 +11,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-/**A dialog with a tip and a check box to not show this dialog again.
+/**
+ * A dialog with a tip and a check box to not show this dialog again.
+ * 
  * @author Xihui Chen
  *
  */
@@ -23,9 +25,9 @@ public class TipDialog extends MessageDialog {
      *
      * @param parentShell
      * @param kind
-     *            the kind of dialog to open, one of {@link MessageDialog#ERROR},
-     *            {@link MessageDialog#INFORMATION}, {@link MessageDialog#QUESTION}, {@link MessageDialog#WARNING},
-     *            {@link MessageDialog#CONFIRM}, or {@link MessageDialog#QUESTION_WITH_CANCEL}.
+     *            the kind of dialog to open, one of {@link MessageDialog#ERROR}, {@link MessageDialog#INFORMATION},
+     *            {@link MessageDialog#QUESTION}, {@link MessageDialog#WARNING}, {@link MessageDialog#CONFIRM}, or
+     *            {@link MessageDialog#QUESTION_WITH_CANCEL}.
      * @param dialogTitle
      * @param dialogMessage
      */
@@ -53,8 +55,7 @@ public class TipDialog extends MessageDialog {
         return checkbox;
     }
 
-
-    public boolean isShowThisDialogAgain(){
+    public boolean isShowThisDialogAgain() {
         return showAgain;
     }
 
@@ -68,23 +69,23 @@ public class TipDialog extends MessageDialog {
         case ERROR:
         case INFORMATION:
         case WARNING: {
-            dialogButtonLabels = new String[] {JFaceResources.getString(IDialogLabelKeys.OK_LABEL_KEY)};
+            dialogButtonLabels = new String[] { JFaceResources.getString(IDialogLabelKeys.OK_LABEL_KEY) };
             break;
         }
         case CONFIRM: {
             dialogButtonLabels = new String[] { JFaceResources.getString(IDialogLabelKeys.OK_LABEL_KEY),
-                    JFaceResources.getString(IDialogLabelKeys.CANCEL_LABEL_KEY)};
+                    JFaceResources.getString(IDialogLabelKeys.CANCEL_LABEL_KEY) };
             break;
         }
         case QUESTION: {
             dialogButtonLabels = new String[] { JFaceResources.getString(IDialogLabelKeys.YES_LABEL_KEY),
-                    JFaceResources.getString(IDialogLabelKeys.NO_LABEL_KEY)};
+                    JFaceResources.getString(IDialogLabelKeys.NO_LABEL_KEY) };
             break;
         }
         case QUESTION_WITH_CANCEL: {
             dialogButtonLabels = new String[] { JFaceResources.getString(IDialogLabelKeys.YES_LABEL_KEY),
                     JFaceResources.getString(IDialogLabelKeys.NO_LABEL_KEY),
-                    JFaceResources.getString(IDialogLabelKeys.CANCEL_LABEL_KEY)};
+                    JFaceResources.getString(IDialogLabelKeys.CANCEL_LABEL_KEY) };
             break;
         }
         default: {

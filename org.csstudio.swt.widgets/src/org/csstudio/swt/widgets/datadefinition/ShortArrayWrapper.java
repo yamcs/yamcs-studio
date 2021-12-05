@@ -7,15 +7,15 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.datadefinition;
 
-/**A wrapper for short[].
+/**
+ * A wrapper for short[].
+ * 
  * @author Xihui Chen
  *
  */
 public class ShortArrayWrapper implements IPrimaryArrayWrapper {
 
     private short[] data;
-
-
 
     public ShortArrayWrapper(short[] data) {
         this.data = data;

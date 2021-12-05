@@ -103,9 +103,6 @@ public abstract class AbstractChoiceEditPart extends AbstractPVWidgetEditPart {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         IWidgetPropertyChangeHandler pvNameHandler = (oldValue, newValue, figure) -> {

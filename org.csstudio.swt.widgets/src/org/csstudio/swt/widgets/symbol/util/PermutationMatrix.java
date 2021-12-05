@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 /**
  * Permuation matrix used to flip/rotate images
+ * 
  * @author Fred Arnaud (Sopra Group)
  *
  */

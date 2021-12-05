@@ -39,17 +39,33 @@ import org.osgi.framework.Version;
 public class XYGraphModel extends AbstractPVWidgetModel {
 
     public enum AxisProperty {
-        Y_AXIS("y_axis", "Y Axis"), VISIBLE("visible", "Visible"), PRIMARY("left_bottom_side",
-                "Left/Bottom Side"), TITLE("axis_title", "Axis Title"), TITLE_FONT("title_font",
-                        "Title Font"), SCALE_FONT("scale_font", "Scale Font"), AXIS_COLOR("axis_color",
-                                "Axis Color"), AUTO_SCALE("auto_scale", "Auto Scale"), AUTO_SCALE_THRESHOLD(
-                                        "auto_scale_threshold",
-                                        "Auto Scale Threshold"), LOG("log_scale", "Log Scale"), MAX("maximum",
-                                                "Maximum"), MIN("minimum", "Minimum"), TIME_FORMAT("time_format",
-                                                        "Time Format"), SHOW_GRID("show_grid", "Show Grid"), GRID_COLOR(
-                                                                "grid_color", "Grid Color"), DASH_GRID("dash_grid_line",
-                                                                        "Dash Grid Line"), SCALE_FORMAT("scale_format",
-                                                                                "Scale Format");
+        Y_AXIS("y_axis", "Y Axis"),
+        VISIBLE("visible", "Visible"),
+        PRIMARY("left_bottom_side",
+                "Left/Bottom Side"),
+        TITLE("axis_title", "Axis Title"),
+        TITLE_FONT("title_font",
+                "Title Font"),
+        SCALE_FONT("scale_font", "Scale Font"),
+        AXIS_COLOR("axis_color",
+                "Axis Color"),
+        AUTO_SCALE("auto_scale", "Auto Scale"),
+        AUTO_SCALE_THRESHOLD(
+                "auto_scale_threshold",
+                "Auto Scale Threshold"),
+        LOG("log_scale", "Log Scale"),
+        MAX("maximum",
+                "Maximum"),
+        MIN("minimum", "Minimum"),
+        TIME_FORMAT("time_format",
+                "Time Format"),
+        SHOW_GRID("show_grid", "Show Grid"),
+        GRID_COLOR(
+                "grid_color", "Grid Color"),
+        DASH_GRID("dash_grid_line",
+                "Dash Grid Line"),
+        SCALE_FORMAT("scale_format",
+                "Scale Format");
 
         public String propIDPre;
         public String description;
@@ -66,19 +82,36 @@ public class XYGraphModel extends AbstractPVWidgetModel {
     }
 
     public enum TraceProperty {
-        NAME("name", "Name"), PLOTMODE("plot_mode", "Plot Mode"), BUFFER_SIZE("buffer_size",
-                "Buffer Size"), UPDATE_DELAY("update_delay", "Update Delay"),
+        NAME("name", "Name"),
+        PLOTMODE("plot_mode", "Plot Mode"),
+        BUFFER_SIZE("buffer_size",
+                "Buffer Size"),
+        UPDATE_DELAY("update_delay", "Update Delay"),
         // TRIGGER_VALUE("trigger_value", "Trigger Value"),
         // CLEAR_TRACE("clear_trace", "Clear Plot History"),
-        XPV("x_pv", "X PV"), YPV("y_pv", "Y PV"), XPV_VALUE("x_pv_value", "X PV Value"), YPV_VALUE("y_pv_value",
+        XPV("x_pv", "X PV"),
+        YPV("y_pv", "Y PV"),
+        XPV_VALUE("x_pv_value", "X PV Value"),
+        YPV_VALUE("y_pv_value",
                 "Y PV Value"),
         // CHRONOLOGICAL("chronological", "Chronological"),
-        TRACE_COLOR("trace_color", "Trace Color"), XAXIS_INDEX("x_axis_index", "X Axis Index"), YAXIS_INDEX(
-                "y_axis_index", "Y Axis Index"), TRACE_TYPE("trace_type", "Trace Type"), LINE_WIDTH("line_width",
-                        "Line Width"), POINT_STYLE("point_style", "Point Style"), POINT_SIZE("point_size",
-                                "Point Size"), ANTI_ALIAS("anti_alias", "Anti Alias"), UPDATE_MODE("update_mode",
-                                        "Update Mode"), CONCATENATE_DATA("concatenate_data",
-                                                "Concatenate Data"), VISIBLE("visible", "Visible");
+        TRACE_COLOR("trace_color", "Trace Color"),
+        XAXIS_INDEX("x_axis_index", "X Axis Index"),
+        YAXIS_INDEX(
+                "y_axis_index", "Y Axis Index"),
+        TRACE_TYPE("trace_type", "Trace Type"),
+        LINE_WIDTH("line_width",
+                "Line Width"),
+        POINT_STYLE("point_style", "Point Style"),
+        POINT_SIZE("point_size",
+                "Point Size"),
+        ANTI_ALIAS("anti_alias", "Anti Alias"),
+        UPDATE_MODE("update_mode",
+                "Update Mode"),
+        CONCATENATE_DATA("concatenate_data",
+                "Concatenate Data"),
+        VISIBLE("visible", "Visible");
+
         public String propIDPre;
         public String description;
 

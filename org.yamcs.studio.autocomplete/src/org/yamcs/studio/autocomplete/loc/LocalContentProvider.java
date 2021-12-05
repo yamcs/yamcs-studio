@@ -16,8 +16,7 @@ import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.studio.autocomplete.tooltips.TooltipData;
 
 /**
- * Local Data Source content provider.
- * Provides all available VType & content syntax assistance.
+ * Local Data Source content provider. Provides all available VType & content syntax assistance.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -93,7 +92,8 @@ public class LocalContentProvider implements IAutoCompleteProvider {
             td.styles = new ProposalStyle[1];
             if (locDesc.checkParameters())
                 td.styles[0] = ProposalStyle.getDefault(start, end);
-            else td.styles[0] = ProposalStyle.getError(start, end);
+            else
+                td.styles[0] = ProposalStyle.getError(start, end);
             result.addTooltipData(td);
 
         } else if (locDesc.isCompletingVType()) {

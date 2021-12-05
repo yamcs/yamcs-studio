@@ -11,11 +11,13 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.editparts.AbstractContainerEditpart;
 import org.eclipse.jface.action.IAction;
 
-/**The action will select parent container of current selected widget.
+/**
+ * The action will select parent container of current selected widget.
+ * 
  * @author Xihui Chen
  *
  */
-public class SelectParentAction extends AbstractWidgetTargetAction{
+public class SelectParentAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
@@ -25,10 +27,8 @@ public class SelectParentAction extends AbstractWidgetTargetAction{
 
     }
 
-
     protected final AbstractContainerEditpart getParentContainerEditpart() {
-        return (AbstractContainerEditpart) (
-                (AbstractBaseEditPart)selection.getFirstElement()).getParent();
+        return (AbstractContainerEditpart) ((AbstractBaseEditPart) selection.getFirstElement()).getParent();
     }
 
 }

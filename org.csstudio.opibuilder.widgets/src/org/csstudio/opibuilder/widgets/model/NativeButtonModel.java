@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.model;
 
-
 /**
  * Model for native button widget.
  *
@@ -16,14 +15,12 @@ package org.csstudio.opibuilder.widgets.model;
  *
  */
 @Deprecated
-public final class NativeButtonModel extends ActionButtonModel{
-
+public final class NativeButtonModel extends ActionButtonModel {
 
     /**
      * The ID of this widget model.
      */
     public static final String ID = "org.csstudio.opibuilder.widgets.NativeButton";
-
 
     @Override
     protected void configureProperties() {
@@ -33,18 +30,8 @@ public final class NativeButtonModel extends ActionButtonModel{
         removeProperty(PROP_ALARM_PULSING);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getTypeID() {
         return ID;
     }
-
-
-
-
-
-
 }

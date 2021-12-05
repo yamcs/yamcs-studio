@@ -11,8 +11,6 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.eclipse.gef.commands.Command;
 
-
-
 /**
  * A command to reconnect a connection to a different start point or end point.
  *
@@ -43,10 +41,10 @@ public class ConnectionReconnectCommand extends Command {
         }
         setLabel("Reconnect");
         this.connection = conn;
-        this.oldSource=conn.getSource();
-        this.oldTarget= conn.getTarget();
-        this.oldSourceTerminal=conn.getSourceTerminal();
-        this.oldTargetTerminal=conn.getTargetTerminal();
+        this.oldSource = conn.getSource();
+        this.oldTarget = conn.getTarget();
+        this.oldSourceTerminal = conn.getSourceTerminal();
+        this.oldTargetTerminal = conn.getTargetTerminal();
     }
 
     /*
@@ -93,18 +91,18 @@ public class ConnectionReconnectCommand extends Command {
      */
     @Override
     public void execute() {
-        if(newSource != null && newSourceTerminal != null){
+        if (newSource != null && newSourceTerminal != null) {
             connection.connect(newSource, newSourceTerminal,
                     oldTarget, oldTargetTerminal);
-        }else if(newTarget != null && newTargetTerminal != null){
+        } else if (newTarget != null && newTargetTerminal != null) {
             connection.connect(oldSource, oldSourceTerminal, newTarget, newTargetTerminal);
-        }else {
+        } else {
             throw new IllegalStateException("Connection requirement is not met");
         }
     }
 
     public void setNewSource(AbstractWidgetModel newSource) {
-        if(newSource == null){
+        if (newSource == null) {
             throw new IllegalArgumentException();
         }
         this.newSource = newSource;
@@ -117,7 +115,7 @@ public class ConnectionReconnectCommand extends Command {
     }
 
     public void setNewTarget(AbstractWidgetModel newTarget) {
-        if(newTarget == null){
+        if (newTarget == null) {
             throw new IllegalArgumentException();
         }
         this.newTarget = newTarget;

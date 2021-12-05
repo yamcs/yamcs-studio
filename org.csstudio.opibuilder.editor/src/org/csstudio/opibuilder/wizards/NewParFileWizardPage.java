@@ -26,7 +26,6 @@ public class NewParFileWizardPage extends WizardNewFileCreationPage {
         return result;
     }
 
-
     @Override
     protected String getNewFileLabel() {
         return "File Name:";
@@ -34,6 +33,6 @@ public class NewParFileWizardPage extends WizardNewFileCreationPage {
 
     @Override
     public String getFileExtension() {
-        return "par"; //TODO get from
+        return "par"; // TODO get from
     }
 }

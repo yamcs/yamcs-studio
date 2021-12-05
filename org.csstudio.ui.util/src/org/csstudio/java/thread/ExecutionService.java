@@ -61,13 +61,16 @@ public class ExecutionService {
         _normalPriorityQueue = new LinkedBlockingQueue<Runnable>();
         _highPriorityQueue = new LinkedBlockingQueue<Runnable>();
 
-        _lowPriorityExectorService = new ThreadPoolExecutor(LOW_PRIORITY_THREADS, LOW_PRIORITY_THREADS, 0L, TimeUnit.MILLISECONDS,
+        _lowPriorityExectorService = new ThreadPoolExecutor(LOW_PRIORITY_THREADS, LOW_PRIORITY_THREADS, 0L,
+                TimeUnit.MILLISECONDS,
                 _lowPriorityQueue, new CssThreadFactory(Thread.MIN_PRIORITY));
 
-        _normalPriorityExectorService = new ThreadPoolExecutor(NORMAL_PRIORITY_THREADS, NORMAL_PRIORITY_THREADS, 0L, TimeUnit.MILLISECONDS,
+        _normalPriorityExectorService = new ThreadPoolExecutor(NORMAL_PRIORITY_THREADS, NORMAL_PRIORITY_THREADS, 0L,
+                TimeUnit.MILLISECONDS,
                 _normalPriorityQueue, new CssThreadFactory(Thread.NORM_PRIORITY));
 
-        _highPriorityExecutorService = new ThreadPoolExecutor(HIGH_PRIORITY_THREADS, HIGH_PRIORITY_THREADS, 0L, TimeUnit.MILLISECONDS,
+        _highPriorityExecutorService = new ThreadPoolExecutor(HIGH_PRIORITY_THREADS, HIGH_PRIORITY_THREADS, 0L,
+                TimeUnit.MILLISECONDS,
                 _highPriorityQueue, new CssThreadFactory(Thread.MAX_PRIORITY));
 
         _scheduledExecutorService = Executors.newScheduledThreadPool(SCHEDULED_THREADS);
@@ -143,7 +146,7 @@ public class ExecutionService {
                 try {
                     runnable.run();
                 } catch (Throwable t) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, t.getMessage(),t);
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, t.getMessage(), t);
                 }
             }
         });

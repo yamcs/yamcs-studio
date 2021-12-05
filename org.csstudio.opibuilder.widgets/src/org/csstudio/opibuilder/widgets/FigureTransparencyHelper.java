@@ -29,14 +29,15 @@ public class FigureTransparencyHelper {
     }
 
     public static void addHandler(AbstractBaseEditPart editPart, IFigure figure) {
-        editPart.setPropertyChangeHandler(FigureTransparencyHelper.PROP_TRANSPARENCY, new IWidgetPropertyChangeHandler() {
-            @Override
-            public boolean handleChange(final Object oldValue, final Object newValue,
-                    final IFigure figure) {
-                figure.repaint();
-                return true;
-            }
-        });
+        editPart.setPropertyChangeHandler(FigureTransparencyHelper.PROP_TRANSPARENCY,
+                new IWidgetPropertyChangeHandler() {
+                    @Override
+                    public boolean handleChange(final Object oldValue, final Object newValue,
+                            final IFigure figure) {
+                        figure.repaint();
+                        return true;
+                    }
+                });
     }
 
     public static boolean isTransparency(AbstractWidgetModel model) {

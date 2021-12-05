@@ -17,11 +17,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Tweak GEF ZoomAction
- * Base zoom action that only dedicates to a part. The GEF ZoomAction's zoom manager is
- * not changeable, which result in using RetargetAction to switch parts. This doesn't work
- * for OPIView which has its own toolbar.
- *  Sub-classes can perform zoom in or zoom out.
+/**
+ * Tweak GEF ZoomAction Base zoom action that only dedicates to a part. The GEF ZoomAction's zoom manager is not
+ * changeable, which result in using RetargetAction to switch parts. This doesn't work for OPIView which has its own
+ * toolbar. Sub-classes can perform zoom in or zoom out.
  *
  * @author danlee, Xihui Chen
  */
@@ -46,16 +45,17 @@ abstract class PartZoomAction extends Action implements ZoomListener, Disposable
     }
 
     /**
-     * @param part a part which must have a ZoomManager Adapter.
+     * @param part
+     *            a part which must have a ZoomManager Adapter.
      */
-    public void setPart(IWorkbenchPart part){
-        if(this.part == part)
+    public void setPart(IWorkbenchPart part) {
+        if (this.part == part)
             return;
         this.part = part;
-        if(zoomManager != null)
+        if (zoomManager != null)
             zoomManager.removeZoomListener(this);
         ZoomManager newZoomManager = part.getAdapter(ZoomManager.class);
-        if(newZoomManager != null){
+        if (newZoomManager != null) {
             newZoomManager.addZoomListener(this);
             zoomManager = newZoomManager;
         }
@@ -66,7 +66,7 @@ abstract class PartZoomAction extends Action implements ZoomListener, Disposable
      */
     @Override
     public void dispose() {
-        if(zoomManager != null)
+        if (zoomManager != null)
             zoomManager.removeZoomListener(this);
         zoomManager = null;
         part = null;

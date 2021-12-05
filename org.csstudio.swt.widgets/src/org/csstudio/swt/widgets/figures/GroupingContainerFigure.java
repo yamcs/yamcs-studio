@@ -20,11 +20,13 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.StackLayout;
 
-/**The figure of grouping container, which can host children widgets.
+/**
+ * The figure of grouping container, which can host children widgets.
+ * 
  * @author Xihui Chen
  *
  */
-public class GroupingContainerFigure extends Figure implements Introspectable{
+public class GroupingContainerFigure extends Figure implements Introspectable {
 
     private IFigure pane;
 
@@ -35,7 +37,7 @@ public class GroupingContainerFigure extends Figure implements Introspectable{
     private boolean showScrollbar = false;
 
     public GroupingContainerFigure() {
-        scrollPane = new ScrollPane(){
+        scrollPane = new ScrollPane() {
             @Override
             public boolean isOpaque() {
                 return !transparent;
@@ -54,31 +56,26 @@ public class GroupingContainerFigure extends Figure implements Introspectable{
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
 
-    public IFigure getContentPane(){
+    public IFigure getContentPane() {
         return pane;
     }
 
-    public boolean isShowScrollBar(){
+    public boolean isShowScrollBar() {
         return showScrollbar;
     }
 
     @Override
     public void setOpaque(boolean opaque) {
-        transparent =!opaque;
+        transparent = !opaque;
         pane.setOpaque(opaque);
         super.setOpaque(opaque);
     }
 
-    public void setShowScrollBar(boolean show){
-        if(this.showScrollbar == show)
+    public void setShowScrollBar(boolean show) {
+        if (this.showScrollbar == show)
             return;
         this.showScrollbar = show;
         scrollPane.setScrollBarVisibility(show ? ScrollPane.AUTOMATIC : ScrollPane.NEVER);
     }
-
-
-
-
-
 
 }

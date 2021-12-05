@@ -36,12 +36,13 @@ public final class PointListHelper {
      * Private constructor to prevent instantiation.
      *
      */
-    private PointListHelper(){
+    private PointListHelper() {
 
     }
+
     /**
-     * Transforms the points in the specified point list to fit the given size.
-     * All point coordinates are transformed relatively to the new size.
+     * Transforms the points in the specified point list to fit the given size. All point coordinates are transformed
+     * relatively to the new size.
      *
      * @param points
      *            the point list
@@ -53,11 +54,11 @@ public final class PointListHelper {
      */
     public static PointList scaleToSize(final PointList points, final int width,
             final int height) {
-        //assert points != null;
+        // assert points != null;
         if (width <= 0 || height <= 0) {
             return points;
-            //    throw new IllegalArgumentException(
-        //            "Illegal dimensions. Width and height must be > 0.");
+            // throw new IllegalArgumentException(
+            // "Illegal dimensions. Width and height must be > 0.");
         }
 
         double oldW = points.getBounds().width;
@@ -88,8 +89,7 @@ public final class PointListHelper {
     }
 
     /**
-     * Moves the origin (0,0) of the coordinate system of all the points in the
-     * specified point list to the Point (x,y).
+     * Moves the origin (0,0) of the coordinate system of all the points in the specified point list to the Point (x,y).
      *
      * @param points
      *            the point list
@@ -112,8 +112,10 @@ public final class PointListHelper {
     /**
      * Scales the point list to the new bounds.
      *
-     * @param points the point list
-     * @param targetBounds the target bounds
+     * @param points
+     *            the point list
+     * @param targetBounds
+     *            the target bounds
      * @return a point list copy, which has been scaled to the new bounds
      */
     public static PointList scaleTo(final PointList points, final Rectangle targetBounds) {

@@ -139,9 +139,6 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
         _canChooseProject = canChooseProject;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void createControl(final Composite parent) {
         initializeDialogUnits(parent);
@@ -421,9 +418,6 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
         return valid;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void setVisible(final boolean visible) {
         super.setVisible(visible);
@@ -432,11 +426,6 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
         }
     }
 
-    /**
-     * Return the file extension.
-     *
-     * @return The file extension.
-     */
     public String getFileExtension() {
         return null;
     }

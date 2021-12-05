@@ -18,7 +18,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-/**The central factory to create editpart for all widgets.
+/**
+ * The central factory to create editpart for all widgets.
+ * 
  * @author Sven Wende (class of same name in SDS)
  * @author Xihui Chen
  */
@@ -40,27 +42,25 @@ public class WidgetEditPartFactory implements EditPartFactory {
     @Override
     public EditPart createEditPart(EditPart context, Object model) {
         EditPart part = getPartForModel(model);
-        if(part != null){
+        if (part != null) {
             part.setModel(model);
-            if(part instanceof AbstractBaseEditPart) {
-                ((AbstractBaseEditPart)part).setExecutionMode(executionMode);
-                ((AbstractBaseEditPart)part).setSite(site);
-            }
-            else if(part instanceof WidgetConnectionEditPart)
-                ((WidgetConnectionEditPart)part).setExecutionMode(executionMode);
+            if (part instanceof AbstractBaseEditPart) {
+                ((AbstractBaseEditPart) part).setExecutionMode(executionMode);
+                ((AbstractBaseEditPart) part).setSite(site);
+            } else if (part instanceof WidgetConnectionEditPart)
+                ((WidgetConnectionEditPart) part).setExecutionMode(executionMode);
         }
         return part;
     }
 
-    private EditPart getPartForModel(Object model){
-        if(model instanceof DisplayModel)
+    private EditPart getPartForModel(Object model) {
+        if (model instanceof DisplayModel)
             return new DisplayEditpart();
-        if(model instanceof ConnectionModel)
+        if (model instanceof ConnectionModel)
             return new WidgetConnectionEditPart();
-        if(model instanceof AbstractWidgetModel){
-            AbstractBaseEditPart editpart =
-                WidgetsService.getInstance().getWidgetDescriptor(
-                    ((AbstractWidgetModel)model).getTypeID()).getWidgetEditpart();
+        if (model instanceof AbstractWidgetModel) {
+            AbstractBaseEditPart editpart = WidgetsService.getInstance().getWidgetDescriptor(
+                    ((AbstractWidgetModel) model).getTypeID()).getWidgetEditpart();
             return editpart;
         }
         OPIBuilderPlugin.getLogger().log(Level.WARNING,

@@ -19,7 +19,7 @@
  * PROJECT IN THE FILE LICENSE.HTML. IF THE LICENSE IS NOT INCLUDED YOU MAY FIND A COPY
  * AT HTTP://WWW.DESY.DE/LEGAL/LICENSE.HTM
  */
- package org.csstudio.swt.widgets.util;
+package org.csstudio.swt.widgets.util;
 
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
@@ -47,8 +47,7 @@ public final class TextPainter {
     public static final int BOTTOM_RIGHT = 8;
 
     /**
-     * Calculates the offset to the top-left corner of the text, according to
-     * the given anchor point.
+     * Calculates the offset to the top-left corner of the text, according to the given anchor point.
      *
      * @param gfx
      *            the graphics context (need this to get the font)
@@ -61,19 +60,37 @@ public final class TextPainter {
     public static Point getDelta(Graphics gfx, String text, int align) {
         Dimension td = FigureUtilities.getTextExtents(text, gfx.getFont());
 
-        if (align == TOP_LEFT)   { return new Point(0          ,0); }
-        if (align == TOP_CENTER) { return new Point(-td.width/2,0); }
-        if (align == TOP_RIGHT)  { return new Point(-td.width  ,0); }
+        if (align == TOP_LEFT) {
+            return new Point(0, 0);
+        }
+        if (align == TOP_CENTER) {
+            return new Point(-td.width / 2, 0);
+        }
+        if (align == TOP_RIGHT) {
+            return new Point(-td.width, 0);
+        }
 
-        if (align == LEFT)   { return new Point(0          ,-td.height/2); }
-        if (align == CENTER) { return new Point(-td.width/2,-td.height/2); }
-        if (align == RIGHT)  { return new Point(-td.width  ,-td.height/2); }
+        if (align == LEFT) {
+            return new Point(0, -td.height / 2);
+        }
+        if (align == CENTER) {
+            return new Point(-td.width / 2, -td.height / 2);
+        }
+        if (align == RIGHT) {
+            return new Point(-td.width, -td.height / 2);
+        }
 
-        if (align == BOTTOM_LEFT)   { return new Point(0          ,-td.height); }
-        if (align == BOTTOM_CENTER) { return new Point(-td.width/2,-td.height); }
-        if (align == BOTTOM_RIGHT)  { return new Point(-td.width  ,-td.height); }
+        if (align == BOTTOM_LEFT) {
+            return new Point(0, -td.height);
+        }
+        if (align == BOTTOM_CENTER) {
+            return new Point(-td.width / 2, -td.height);
+        }
+        if (align == BOTTOM_RIGHT) {
+            return new Point(-td.width, -td.height);
+        }
 
-        return new Point(0,0);
+        return new Point(0, 0);
     }
 
     /**
@@ -96,8 +113,8 @@ public final class TextPainter {
     }
 
     /**
-     * Draws the given text, rotated for the specified angle
-     * (counter-clockwise).</br> The text will be rotated around the anchor.
+     * Draws the given text, rotated for the specified angle (counter-clockwise).</br>
+     * The text will be rotated around the anchor.
      *
      * @param gfx
      *            the graphics context
@@ -120,8 +137,7 @@ public final class TextPainter {
             gfx.rotate((float) angle);
         } catch (RuntimeException e) {
             /**
-             * some classes (e.g. {@link ScaledGraphics}) might not support
-             * rotation yet
+             * some classes (e.g. {@link ScaledGraphics}) might not support rotation yet
              */
         }
 
@@ -131,8 +147,7 @@ public final class TextPainter {
             gfx.rotate(-(float) angle);
         } catch (RuntimeException e) {
             /**
-             * some classes (e.g. {@link ScaledGraphics}) might not support
-             * rotation yet
+             * some classes (e.g. {@link ScaledGraphics}) might not support rotation yet
              */
         }
         gfx.translate(-x, -y);

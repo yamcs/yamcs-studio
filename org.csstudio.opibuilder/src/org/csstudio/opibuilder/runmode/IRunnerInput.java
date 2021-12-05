@@ -16,7 +16,8 @@ import org.eclipse.ui.IPersistableElement;
 public interface IRunnerInput extends IPathEditorInput, IPersistableElement {
 
     /**
-     * @param displayOpenManager the displayOpenManager to set
+     * @param displayOpenManager
+     *            the displayOpenManager to set
      */
     public void setDisplayOpenManager(
             DisplayOpenManager displayOpenManager);

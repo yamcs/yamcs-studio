@@ -15,8 +15,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Widget that display a range (currently only time, and only vertical) which can be modified
- * using a mouse drag.
+ * Widget that display a range (currently only time, and only vertical) which can be modified using a mouse drag.
  *
  * @author carcassi
  */
@@ -28,13 +27,14 @@ public class RangeWidget extends Canvas {
     private boolean editable = true;
 
     // The tick sizes for the first few ticks (loop around after that)
-    private int[] sizes = new int[] {20, 10, 10, 10, 10, 15, 10, 10, 10, 10};
+    private int[] sizes = new int[] { 20, 10, 10, 10, 10, 15, 10, 10, 10, 10 };
     private Set<RangeListener> listeners = new HashSet<RangeListener>();
 
     /**
      * Adds a listener, notified if the range resolution changes.
      *
-     * @param listener a new listener
+     * @param listener
+     *            a new listener
      */
     public void addRangeListener(RangeListener listener) {
         listeners.add(listener);
@@ -43,7 +43,8 @@ public class RangeWidget extends Canvas {
     /**
      * Removes a listener.
      *
-     * @param listener listener to be removed
+     * @param listener
+     *            listener to be removed
      */
     public void removeRangeListener(RangeListener listener) {
         listeners.remove(listener);
@@ -56,10 +57,10 @@ public class RangeWidget extends Canvas {
     }
 
     /**
-     * Determines whether the range start at the top (and goes down)
-     * or at the bottom (and goes up).
+     * Determines whether the range start at the top (and goes down) or at the bottom (and goes up).
      *
-     * @param startPosition SWT.TOP or SWT.BOTTOM
+     * @param startPosition
+     *            SWT.TOP or SWT.BOTTOM
      */
     public void setStartPosition(int startPosition) {
         this.startPosition = startPosition;
@@ -87,7 +88,8 @@ public class RangeWidget extends Canvas {
     /**
      * Changes whether the use can use the mouse to change the resolution.
      *
-     * @param editable true if user changes are allowed
+     * @param editable
+     *            true if user changes are allowed
      */
     public void setEditable(boolean editable) {
         this.editable = editable;
@@ -96,8 +98,10 @@ public class RangeWidget extends Canvas {
     /**
      * A new range widget.
      *
-     * @param parent parent component
-     * @param style SWT style
+     * @param parent
+     *            parent component
+     * @param style
+     *            SWT style
      */
     public RangeWidget(Composite parent, int style) {
         super(parent, style);
@@ -161,11 +165,11 @@ public class RangeWidget extends Canvas {
     }
 
     /**
-     * Changes how much distance is represented by each pixel. For example,
-     * 1 ms per pixel or 20 seconds per pixel. The distance is expressed in
-     * seconds.
+     * Changes how much distance is represented by each pixel. For example, 1 ms per pixel or 20 seconds per pixel. The
+     * distance is expressed in seconds.
      *
-     * @param distancePerPx seconds (or fraction) represented by each pixel
+     * @param distancePerPx
+     *            seconds (or fraction) represented by each pixel
      */
     public void setDistancePerPx(double distancePerPx) {
         this.distancePerPx = distancePerPx;
@@ -217,7 +221,8 @@ public class RangeWidget extends Canvas {
                 if (sizeIndex == 0) {
                     // Invert screen position if start from bottom
                     if ((startPosition & SWT.BOTTOM) != 0) {
-                        e.gc.drawText(calculateLabel(distancePerPx * currentPx), 0, tickPosition - e.gc.getFontMetrics().getHeight());
+                        e.gc.drawText(calculateLabel(distancePerPx * currentPx), 0,
+                                tickPosition - e.gc.getFontMetrics().getHeight());
                     } else {
                         e.gc.drawText(calculateLabel(distancePerPx * currentPx), 0, tickPosition);
                     }

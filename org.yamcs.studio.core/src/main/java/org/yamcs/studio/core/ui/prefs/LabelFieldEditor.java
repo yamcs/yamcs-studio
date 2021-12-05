@@ -13,16 +13,14 @@ public class LabelFieldEditor extends FieldEditor {
     private Label label;
 
     /**
-     * All labels can use the same preference name since they don't store any
-     * preference.
+     * All labels can use the same preference name since they don't store any preference.
      */
     public LabelFieldEditor(String value, Composite parent) {
         super("label", value, parent);
     }
 
     /**
-     *  Adjusts the field editor to be displayed correctly
-     *  for the given number of columns.
+     * Adjusts the field editor to be displayed correctly for the given number of columns.
      */
     @Override
     protected void adjustForNumColumns(int numColumns) {

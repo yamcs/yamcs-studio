@@ -10,8 +10,9 @@ package org.csstudio.opibuilder.scriptUtil;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 
-/**Utility class to facilitate Javascript programming
- * for color operation.
+/**
+ * Utility class to facilitate Javascript programming for color operation.
+ * 
  * @author Xihui Chen
  *
  */
@@ -57,54 +58,62 @@ public class ColorFontUtil {
     final static public RGB YELLOW = new RGB(255, 255, 0);
 
     /**
-     * Get a color with the given
-     * red, green and blue values.
+     * Get a color with the given red, green and blue values.
      *
-     * @param red the red component of the new instance
-     * @param green the green component of the new instance
-     * @param blue the blue component of the new instance
+     * @param red
+     *            the red component of the new instance
+     * @param green
+     *            the green component of the new instance
+     * @param blue
+     *            the blue component of the new instance
      *
-     * @exception IllegalArgumentException <ul>
-     *    <li>ERROR_INVALID_ARGUMENT - if the red, green or blue argument is not between 0 and 255</li>
-     * </ul>
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_INVALID_ARGUMENT - if the red, green or blue argument is not between 0 and 255</li>
+     *                </ul>
      */
-    public final static RGB getColorFromRGB(int red, int green, int blue){
+    public final static RGB getColorFromRGB(int red, int green, int blue) {
         return new RGB(red, green, blue);
     }
 
     /**
-    * Get a color with the given
-    * hue, saturation, and brightness.
-    *
-    * @param hue the hue value for the HSB color (from 0 to 360)
-    * @param saturation the saturation value for the HSB color (from 0 to 1)
-    * @param brightness the brightness value for the HSB color (from 0 to 1)
-    *
-    * @exception IllegalArgumentException <ul>
-    *    <li>ERROR_INVALID_ARGUMENT - if the hue is not between 0 and 360 or
-    *    the saturation or brightness is not between 0 and 1</li>
-    * </ul>
-    *
-    */
-    public final static RGB getColorFromHSB(float hue, float saturation, float brightness){
+     * Get a color with the given hue, saturation, and brightness.
+     *
+     * @param hue
+     *            the hue value for the HSB color (from 0 to 360)
+     * @param saturation
+     *            the saturation value for the HSB color (from 0 to 1)
+     * @param brightness
+     *            the brightness value for the HSB color (from 0 to 1)
+     *
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_INVALID_ARGUMENT - if the hue is not between 0 and 360 or the saturation or brightness
+     *                is not between 0 and 1</li>
+     *                </ul>
+     *
+     */
+    public final static RGB getColorFromHSB(float hue, float saturation, float brightness) {
         return new RGB(hue, saturation, brightness);
     }
 
     /**
-     * Get a new font data given a font name,
-     * the height of the desired font in points,
-     * and a font style.
+     * Get a new font data given a font name, the height of the desired font in points, and a font style.
      *
-     * @param name the name of the font (must not be null)
-     * @param height the font height in points
-     * @param style A bitwise combination of NORMAL(0), BOLD(1) and ITALIC(2).
+     * @param name
+     *            the name of the font (must not be null)
+     * @param height
+     *            the font height in points
+     * @param style
+     *            A bitwise combination of NORMAL(0), BOLD(1) and ITALIC(2).
      *
-     * @exception IllegalArgumentException <ul>
-     *    <li>ERROR_NULL_ARGUMENT - when the font name is null</li>
-     *    <li>ERROR_INVALID_ARGUMENT - if the height is negative</li>
-     * </ul>
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_NULL_ARGUMENT - when the font name is null</li>
+     *                <li>ERROR_INVALID_ARGUMENT - if the height is negative</li>
+     *                </ul>
      */
-    public final static FontData getFont(String name, int height, int style){
+    public final static FontData getFont(String name, int height, int style) {
         return new FontData(name, height, style);
     }
 

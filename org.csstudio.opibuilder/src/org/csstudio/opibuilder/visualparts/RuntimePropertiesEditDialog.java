@@ -31,7 +31,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
-/**Editing runtime properties dialog.
+/**
+ * Editing runtime properties dialog.
+ * 
  * @author Xihui Chen
  *
  */
@@ -43,29 +45,28 @@ public class RuntimePropertiesEditDialog extends Dialog {
     public RuntimePropertiesEditDialog(Shell parentShell,
             AbstractWidgetModel widgetModel) {
         super(parentShell);
-        List<AbstractWidgetProperty> runningPropertyList =
-            widgetModel.getRuntimePropertyList();
-        if(runningPropertyList != null){
-            int i=0;
-            for(AbstractWidgetProperty prop : runningPropertyList){
-                if(prop.isVisibleInPropSheet())
+        List<AbstractWidgetProperty> runningPropertyList = widgetModel.getRuntimePropertyList();
+        if (runningPropertyList != null) {
+            int i = 0;
+            for (AbstractWidgetProperty prop : runningPropertyList) {
+                if (prop.isVisibleInPropSheet())
                     i++;
             }
             propertyDataArray = new PropertyData[i];
-            i=0;
-            for(AbstractWidgetProperty prop : runningPropertyList){
-                if(prop.isVisibleInPropSheet())
+            i = 0;
+            for (AbstractWidgetProperty prop : runningPropertyList) {
+                if (prop.isVisibleInPropSheet())
                     propertyDataArray[i++] = new PropertyData(prop,
-                        prop.getPropertyValue());
+                            prop.getPropertyValue());
             }
-        }else {
+        } else {
             propertyDataArray = new PropertyData[0];
         }
         // Allow resize
         setShellStyle(getShellStyle() | SWT.RESIZE);
     }
 
-    public PropertyData[] getOutput(){
+    public PropertyData[] getOutput() {
         return propertyDataArray;
     }
 
@@ -109,7 +110,6 @@ public class RuntimePropertiesEditDialog extends Dialog {
                 viewer.getTable());
         tvColumn.setEditingSupport(editingSupport);
 
-
         viewer.setContentProvider(new ArrayContentProvider());
         viewer.setLabelProvider(new PropertyDataLabelProvider());
         viewer.getTable().setLayoutData(
@@ -117,11 +117,7 @@ public class RuntimePropertiesEditDialog extends Dialog {
         return viewer;
     }
 
-
-
 }
-
-
 
 /**
  * The {@link EditingSupport} for the value columns of the property table.
@@ -136,46 +132,30 @@ class PropertyDataEditingSupport extends EditingSupport {
      */
     private final Table table;
 
-
-    /**
-     * Constructor.
-     *
-     * @param viewer
-     *            The {@link ColumnViewer} for this
-     *            {@link EditingSupport}.
-     * @param table
-     *            The {@link Table}
-     */
     public PropertyDataEditingSupport(final ColumnViewer viewer,
             final Table table) {
         super(viewer);
         this.table = table;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean canEdit(final Object element) {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected CellEditor getCellEditor(final Object element) {
         PropertyData propertyData;
-        if((propertyData = getSelectedProperty()) != null){
+        if ((propertyData = getSelectedProperty()) != null) {
             return propertyData.property.getPropertyDescriptor().createPropertyEditor(table);
         }
         return null;
     }
 
-    private PropertyData getSelectedProperty(){
+    private PropertyData getSelectedProperty() {
         IStructuredSelection selection = (IStructuredSelection) this
                 .getViewer().getSelection();
-        if(selection.getFirstElement() instanceof PropertyData){
+        if (selection.getFirstElement() instanceof PropertyData) {
             PropertyData property = (PropertyData) selection
                     .getFirstElement();
             return property;
@@ -183,22 +163,15 @@ class PropertyDataEditingSupport extends EditingSupport {
         return null;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Object getValue(final Object element) {
         if (element instanceof PropertyData) {
-                return ((PropertyData)element).tmpValue;
-            }
+            return ((PropertyData) element).tmpValue;
+        }
 
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void setValue(final Object element, final Object value) {
         if (element instanceof PropertyData) {
@@ -209,19 +182,15 @@ class PropertyDataEditingSupport extends EditingSupport {
     }
 }
 
-
 /**
-* The {@link LabelProvider} for the properties table.
-*
-* @author Xihui Chen
-*
-*/
+ * The {@link LabelProvider} for the properties table.
+ *
+ * @author Xihui Chen
+ *
+ */
 class PropertyDataLabelProvider extends LabelProvider implements
-                ITableLabelProvider {
+        ITableLabelProvider {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Image getColumnImage(final Object element,
             final int columnIndex) {
@@ -229,8 +198,7 @@ class PropertyDataLabelProvider extends LabelProvider implements
             PropertyData propertyData = (PropertyData) element;
 
             try {
-                return propertyData.property.getPropertyDescriptor().getLabelProvider().
-                        getImage(propertyData.tmpValue);
+                return propertyData.property.getPropertyDescriptor().getLabelProvider().getImage(propertyData.tmpValue);
             } catch (NullPointerException e) {
             }
 
@@ -238,9 +206,6 @@ class PropertyDataLabelProvider extends LabelProvider implements
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getColumnText(final Object element,
             final int columnIndex) {
@@ -260,6 +225,4 @@ class PropertyDataLabelProvider extends LabelProvider implements
         }
         return "error";
     }
-
-
 }

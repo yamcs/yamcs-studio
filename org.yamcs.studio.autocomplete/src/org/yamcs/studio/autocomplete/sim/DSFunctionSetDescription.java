@@ -24,8 +24,10 @@ public class DSFunctionSetDescription {
     /**
      * A new function set description.
      *
-     * @param name the name of the function set
-     * @param description the description of the function set
+     * @param name
+     *            the name of the function set
+     * @param description
+     *            the description of the function set
      */
     public DSFunctionSetDescription(String name, String description) {
         this.name = name;
@@ -39,7 +41,8 @@ public class DSFunctionSetDescription {
     /**
      * Adds a function in the set.
      *
-     * @param function the function to add
+     * @param function
+     *            the function to add
      * @return this description
      */
     public DSFunctionSetDescription addFunction(DSFunction function) {

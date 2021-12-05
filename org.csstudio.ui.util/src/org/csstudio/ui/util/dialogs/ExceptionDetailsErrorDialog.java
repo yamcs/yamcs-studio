@@ -43,13 +43,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * A dialog to display one or more errors to the user, as contained in an
- * <code>IStatus</code> object. If an error contains additional detailed
- * information then a Details button is automatically supplied, which shows or
- * hides an error details viewer when pressed by the user.
+ * A dialog to display one or more errors to the user, as contained in an <code>IStatus</code> object. If an error
+ * contains additional detailed information then a Details button is automatically supplied, which shows or hides an
+ * error details viewer when pressed by the user.
  * <p>
- * Taken from http://rubenlaguna.com/wp/2007/07/25/eclipse-error-reporting-exception-stacktrace-details/
- * and modified.
+ * Taken from http://rubenlaguna.com/wp/2007/07/25/eclipse-error-reporting-exception-stacktrace-details/ and modified.
  *
  * @see org.eclipse.core.runtime.IStatus
  */
@@ -107,37 +105,33 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     private boolean shouldIncludeTopLevelErrorInDetails = false;
 
     /**
-     * Creates an error dialog. Note that the dialog will have no visual
-     * representation (no widgets) until it is told to open.
+     * Creates an error dialog. Note that the dialog will have no visual representation (no widgets) until it is told to
+     * open.
      * <p>
-     * Normally one should use <code>openError</code> to create and open one of
-     * these. This constructor is useful only if the error object being
-     * displayed contains child items <it>and </it> you need to specify a mask
-     * which will be used to filter the displaying of these children.
+     * Normally one should use <code>openError</code> to create and open one of these. This constructor is useful only
+     * if the error object being displayed contains child items <it>and </it> you need to specify a mask which will be
+     * used to filter the displaying of these children.
      * </p>
      *
      * @param parentShell
      *            the shell under which to create this dialog
      * @param dialogTitle
-     *            the title to use for this dialog, or <code>null</code> to
-     *            indicate that the default title should be used
+     *            the title to use for this dialog, or <code>null</code> to indicate that the default title should be
+     *            used
      * @param message
-     *            the message to show in this dialog, or <code>null</code> to
-     *            indicate that the error's message should be shown as the
-     *            primary message
+     *            the message to show in this dialog, or <code>null</code> to indicate that the error's message should
+     *            be shown as the primary message
      * @param status
      *            the error to show to the user
      * @param displayMask
-     *            the mask to use to filter the displaying of child items, as
-     *            per <code>IStatus.matches</code>
+     *            the mask to use to filter the displaying of child items, as per <code>IStatus.matches</code>
      * @see org.eclipse.core.runtime.IStatus#matches(int)
      */
     public ExceptionDetailsErrorDialog(Shell parentShell, String dialogTitle,
             String message, IStatus status, int displayMask) {
         super(parentShell);
         this.title = dialogTitle == null ? JFaceResources
-                .getString("Problem_Occurred") :
-                dialogTitle;
+                .getString("Problem_Occurred") : dialogTitle;
         this.message = message == null ? status.getMessage()
                 : JFaceResources
                         .format("Reason", new Object[] { message, status.getMessage() });
@@ -200,9 +194,8 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * This implementation of the <code>Dialog</code> framework method creates
-     * and lays out a composite and calls <code>createMessageArea</code> and
-     * <code>createCustomArea</code> to populate it. Subclasses should override
+     * This implementation of the <code>Dialog</code> framework method creates and lays out a composite and calls
+     * <code>createMessageArea</code> and <code>createCustomArea</code> to populate it. Subclasses should override
      * <code>createCustomArea</code> to add contents below the message.
      */
     protected Control createDialogArea(Composite parent) {
@@ -304,10 +297,9 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      * (non-Javadoc) Method declared on Window.
      */
     /**
-     * Extends <code>Window.open()</code>. Opens an error dialog to display the
-     * error. If you specified a mask to filter the displaying of these
-     * children, the error dialog will only be displayed if there is at least
-     * one child status matching the mask.
+     * Extends <code>Window.open()</code>. Opens an error dialog to display the error. If you specified a mask to filter
+     * the displaying of these children, the error dialog will only be displayed if there is at least one child status
+     * matching the mask.
      */
     public int open() {
         if (!AUTOMATED_MODE && shouldDisplay(status, displayMask)) {
@@ -318,25 +310,22 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Opens an error dialog to display the given error. Use this method if the
-     * error object being displayed does not contain child items, or if you wish
-     * to display all such items without filtering.
+     * Opens an error dialog to display the given error. Use this method if the error object being displayed does not
+     * contain child items, or if you wish to display all such items without filtering.
      *
      * @param parent
      *            the parent shell of the dialog, or <code>null</code> if none
      * @param dialogTitle
-     *            the title to use for this dialog, or <code>null</code> to
-     *            indicate that the default title should be used
+     *            the title to use for this dialog, or <code>null</code> to indicate that the default title should be
+     *            used
      * @param message
-     *            the message to show in this dialog, or <code>null</code> to
-     *            indicate that the error's message should be shown as the
-     *            primary message
+     *            the message to show in this dialog, or <code>null</code> to indicate that the error's message should
+     *            be shown as the primary message
      * @param status
      *            the error to show to the user
-     * @return the code of the button that was pressed that resulted in this
-     *         dialog closing. This will be <code>Dialog.OK</code> if the OK
-     *         button was pressed, or <code>Dialog.CANCEL</code> if this
-     *         dialog's close window decoration or the ESC key was used.
+     * @return the code of the button that was pressed that resulted in this dialog closing. This will be
+     *         <code>Dialog.OK</code> if the OK button was pressed, or <code>Dialog.CANCEL</code> if this dialog's close
+     *         window decoration or the ESC key was used.
      */
     public static int openError(Shell parent, String dialogTitle,
             String message, IStatus status) {
@@ -345,30 +334,25 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Opens an error dialog to display the given error. Use this method if the
-     * error object being displayed contains child items <it>and </it> you wish
-     * to specify a mask which will be used to filter the displaying of these
-     * children. The error dialog will only be displayed if there is at least
-     * one child status matching the mask.
+     * Opens an error dialog to display the given error. Use this method if the error object being displayed contains
+     * child items <it>and </it> you wish to specify a mask which will be used to filter the displaying of these
+     * children. The error dialog will only be displayed if there is at least one child status matching the mask.
      *
      * @param parentShell
      *            the parent shell of the dialog, or <code>null</code> if none
      * @param title
-     *            the title to use for this dialog, or <code>null</code> to
-     *            indicate that the default title should be used
+     *            the title to use for this dialog, or <code>null</code> to indicate that the default title should be
+     *            used
      * @param message
-     *            the message to show in this dialog, or <code>null</code> to
-     *            indicate that the error's message should be shown as the
-     *            primary message
+     *            the message to show in this dialog, or <code>null</code> to indicate that the error's message should
+     *            be shown as the primary message
      * @param status
      *            the error to show to the user
      * @param displayMask
-     *            the mask to use to filter the displaying of child items, as
-     *            per <code>IStatus.matches</code>
-     * @return the code of the button that was pressed that resulted in this
-     *         dialog closing. This will be <code>Dialog.OK</code> if the OK
-     *         button was pressed, or <code>Dialog.CANCEL</code> if this
-     *         dialog's close window decoration or the ESC key was used.
+     *            the mask to use to filter the displaying of child items, as per <code>IStatus.matches</code>
+     * @return the code of the button that was pressed that resulted in this dialog closing. This will be
+     *         <code>Dialog.OK</code> if the OK button was pressed, or <code>Dialog.CANCEL</code> if this dialog's close
+     *         window decoration or the ESC key was used.
      * @see org.eclipse.core.runtime.IStatus#matches(int)
      */
     public static int openError(Shell parentShell, String title,
@@ -379,10 +363,9 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Populates the list using this error dialog's status object. This walks
-     * the child static of the status object and displays them in a list. The
-     * format for each entry is status_path : status_message If the status's
-     * path was null then it (and the colon) are omitted.
+     * Populates the list using this error dialog's status object. This walks the child static of the status object and
+     * displays them in a list. The format for each entry is status_path : status_message If the status's path was null
+     * then it (and the colon) are omitted.
      *
      * @param listToPopulate
      *            The list to fill.
@@ -393,20 +376,17 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Populate the list with the messages from the given status. Traverse the
-     * children of the status deeply and also traverse CoreExceptions that
-     * appear in the status.
+     * Populate the list with the messages from the given status. Traverse the children of the status deeply and also
+     * traverse CoreExceptions that appear in the status.
      *
      * @param listToPopulate
      *            the list to populate
      * @param buildingStatus
      *            the status being displayed
      * @param nesting
-     *            the nesting level (increases one level for each level of
-     *            children)
+     *            the nesting level (increases one level for each level of children)
      * @param includeStatus
-     *            whether to include the buildingStatus in the display or just
-     *            its children
+     *            whether to include the buildingStatus in the display or just its children
      */
     private void populateList(Text listToPopulate, IStatus buildingStatus,
             int nesting, boolean includeStatus) {
@@ -480,8 +460,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      *            a status object
      * @param mask
      *            a mask as per <code>IStatus.matches</code>
-     * @return <code>true</code> if the given status should be displayed, and
-     *         <code>false</code> otherwise
+     * @return <code>true</code> if the given status should be displayed, and <code>false</code> otherwise
      * @see org.eclipse.core.runtime.IStatus#matches(int)
      */
     protected static boolean shouldDisplay(IStatus status, int mask) {
@@ -498,8 +477,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Toggles the unfolding of the details area. This is triggered by the user
-     * pressing the details button.
+     * Toggles the unfolding of the details area. This is triggered by the user pressing the details button.
      */
     private void toggleDetailsArea() {
         Point windowSize = getShell().getSize();
@@ -559,7 +537,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
             clipboard.dispose();
         }
         StringBuffer statusBuffer = new StringBuffer();
-        //populateCopyBuffer(status, statusBuffer, 0);
+        // populateCopyBuffer(status, statusBuffer, 0);
         statusBuffer.append(text.getText());
         clipboard = new Clipboard(text.getDisplay());
         clipboard.setContents(new Object[] { statusBuffer.toString() },
@@ -579,12 +557,10 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Show the details portion of the dialog if it is not already visible. This
-     * method will only work when it is invoked after the control of the dialog
-     * has been set. In other words, after the <code>createContents</code>
-     * method has been invoked and has returned the control for the content area
-     * of the dialog. Invoking the method before the content area has been set
-     * or after the dialog has been disposed will have no effect.
+     * Show the details portion of the dialog if it is not already visible. This method will only work when it is
+     * invoked after the control of the dialog has been set. In other words, after the <code>createContents</code>
+     * method has been invoked and has returned the control for the content area of the dialog. Invoking the method
+     * before the content area has been set or after the dialog has been disposed will have no effect.
      *
      * @since 3.1
      */
@@ -598,11 +574,9 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Return whether the Details button should be included. This method is
-     * invoked once when the dialog is built. By default, the Details button is
-     * only included if the status used when creating the dialog was a
-     * multi-status or if the status contains an exception. Subclasses may
-     * override.
+     * Return whether the Details button should be included. This method is invoked once when the dialog is built. By
+     * default, the Details button is only included if the status used when creating the dialog was a multi-status or if
+     * the status contains an exception. Subclasses may override.
      *
      * @return whether the Details button should be included
      * @since 3.1
@@ -612,9 +586,8 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /**
-     * Set the status displayed by this error dialog to the given status. This
-     * only affects the status displayed by the Details list. The message, image
-     * and title should be updated by the subclass, if desired.
+     * Set the status displayed by this error dialog to the given status. This only affects the status displayed by the
+     * Details list. The message, image and title should be updated by the subclass, if desired.
      *
      * @param status
      *            the status to be displayed in the details list

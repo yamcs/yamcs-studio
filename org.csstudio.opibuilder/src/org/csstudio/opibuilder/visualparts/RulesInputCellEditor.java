@@ -15,7 +15,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-/**The cell editor for rules input.
+/**
+ * The cell editor for rules input.
+ * 
  * @author Xihui Chen
  *
  */
@@ -25,22 +27,21 @@ public class RulesInputCellEditor extends AbstractDialogCellEditor {
 
     private AbstractWidgetModel widgetModel;
 
-    public RulesInputCellEditor(Composite parent,final AbstractWidgetModel widgetModel, String title) {
+    public RulesInputCellEditor(Composite parent, final AbstractWidgetModel widgetModel, String title) {
         super(parent, title);
         this.widgetModel = widgetModel;
     }
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        RulesInputDialog dialog =
-            new RulesInputDialog(parentShell, rulesInput, widgetModel, dialogTitle);
+        RulesInputDialog dialog = new RulesInputDialog(parentShell, rulesInput, widgetModel, dialogTitle);
 
-        if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
-                "org.eclipse.help.ui.HelpView") !=null)
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
+                "org.eclipse.help.ui.HelpView") != null)
             PlatformUI.getWorkbench().getHelpSystem().displayHelp(
                     OPIBuilderPlugin.PLUGIN_ID + ".rule");
 
-        if(dialog.open() == Window.OK){
+        if (dialog.open() == Window.OK) {
             rulesInput = new RulesInput(dialog.getRuleDataList());
         }
 
@@ -58,10 +59,10 @@ public class RulesInputCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if(value == null || !(value instanceof RulesInput))
+        if (value == null || !(value instanceof RulesInput))
             rulesInput = new RulesInput();
         else
-            rulesInput = (RulesInput)value;
+            rulesInput = (RulesInput) value;
 
     }
 

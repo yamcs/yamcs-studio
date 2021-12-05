@@ -15,7 +15,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
-/**The property descriptor for OPI Color.
+/**
+ * The property descriptor for OPI Color.
+ * 
  * @author Xihui Chen
  *
  */
@@ -35,17 +37,15 @@ public class OPIColorPropertyDescriptor extends PropertyDescriptor {
         return editor;
     }
 
-
-    private final static class OPIColorLabelProvider extends LabelProvider{
+    private final static class OPIColorLabelProvider extends LabelProvider {
 
         @Override
         public Image getImage(Object element) {
-            if(element !=null && element instanceof OPIColor){
-                return ((OPIColor)element).getImage();
+            if (element != null && element instanceof OPIColor) {
+                return ((OPIColor) element).getImage();
             }
             return null;
         }
     }
-
 
 }

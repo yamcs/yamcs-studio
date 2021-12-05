@@ -11,9 +11,8 @@ import org.yamcs.studio.autocomplete.parser.ContentDescriptor;
 import org.yamcs.studio.autocomplete.parser.ContentType;
 
 /**
- * Interface for auto-complete providers. Each parser is provided via OSGI
- * services. The listResult method is executed by {@link AutoCompleteService} in
- * a dedicated thread.
+ * Interface for auto-complete providers. Each parser is provided via OSGI services. The listResult method is executed
+ * by {@link AutoCompleteService} in a dedicated thread.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -23,8 +22,7 @@ public interface IAutoCompleteProvider {
     public boolean accept(final ContentType type);
 
     /**
-     * @return {@link AutoCompleteResult} matching the provided
-     *         {@link ContentDescriptor}
+     * @return {@link AutoCompleteResult} matching the provided {@link ContentDescriptor}
      */
     public AutoCompleteResult listResult(final ContentDescriptor desc,
             final int limit);

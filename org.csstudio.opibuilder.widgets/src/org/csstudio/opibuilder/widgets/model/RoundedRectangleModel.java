@@ -15,14 +15,13 @@ import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.swt.graphics.Color;
 
-
-/**The model for a rounded rectangle widget.
+/**
+ * The model for a rounded rectangle widget.
  *
  * @author Xihui Chen
  *
  */
 public class RoundedRectangleModel extends AbstractShapeModel {
-
 
     public final String ID = "org.csstudio.opibuilder.widgets.RoundedRectangle";
 
@@ -49,12 +48,10 @@ public class RoundedRectangleModel extends AbstractShapeModel {
      */
     public static final String PROP_FOREGROUND_GRADIENT_START_COLOR = "fg_gradient_color";
 
-
     @Override
     public String getTypeID() {
         return ID;
     }
-
 
     @Override
     protected void configureProperties() {
@@ -64,9 +61,9 @@ public class RoundedRectangleModel extends AbstractShapeModel {
         addProperty(new IntegerProperty(PROP_CORNER_HEIGHT, "Corner Height",
                 WidgetPropertyCategory.Display, DEFAULT_CORNER_HEIGHT));
         addProperty(new ColorProperty(PROP_BACKGROUND_GRADIENT_START_COLOR, "Background Gradient Start Color",
-                WidgetPropertyCategory.Display,  CustomMediaFactory.COLOR_WHITE));
+                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new ColorProperty(PROP_FOREGROUND_GRADIENT_START_COLOR, "Foreground Gradient Start Color",
-                WidgetPropertyCategory.Display,  CustomMediaFactory.COLOR_WHITE));
+                WidgetPropertyCategory.Display, CustomMediaFactory.COLOR_WHITE));
         addProperty(new BooleanProperty(PROP_GRADIENT, "Gradient",
                 WidgetPropertyCategory.Display, false));
     }
@@ -74,29 +71,27 @@ public class RoundedRectangleModel extends AbstractShapeModel {
     /**
      * @return the corner width
      */
-    public final int getCornerWidth(){
-        return (Integer)getPropertyValue(PROP_CORNER_WIDTH);
+    public final int getCornerWidth() {
+        return (Integer) getPropertyValue(PROP_CORNER_WIDTH);
     }
-
 
     /**
      * @return the corner height
      */
-    public final int getCornerHeight(){
-        return (Integer)getPropertyValue(PROP_CORNER_HEIGHT);
+    public final int getCornerHeight() {
+        return (Integer) getPropertyValue(PROP_CORNER_HEIGHT);
     }
 
-    public boolean isGradient(){
-        return (Boolean)getPropertyValue(PROP_GRADIENT);
+    public boolean isGradient() {
+        return (Boolean) getPropertyValue(PROP_GRADIENT);
     }
 
-    public Color getBackgroundGradientStartColor(){
-        return ((OPIColor)getPropertyValue(PROP_BACKGROUND_GRADIENT_START_COLOR)).getSWTColor();
+    public Color getBackgroundGradientStartColor() {
+        return ((OPIColor) getPropertyValue(PROP_BACKGROUND_GRADIENT_START_COLOR)).getSWTColor();
     }
 
-    public Color getForegroundGradientStartColor(){
-        return ((OPIColor)getPropertyValue(PROP_FOREGROUND_GRADIENT_START_COLOR)).getSWTColor();
+    public Color getForegroundGradientStartColor() {
+        return ((OPIColor) getPropertyValue(PROP_FOREGROUND_GRADIENT_START_COLOR)).getSWTColor();
     }
-
 
 }

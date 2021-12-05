@@ -18,11 +18,12 @@ import org.yamcs.studio.autocomplete.ui.content.IContentProposalSearchHandler;
 public interface IAutoCompleteProposalProvider {
 
     /**
-     * Requests providers for proposals and notify the handler each time a
-     * provider answers.
+     * Requests providers for proposals and notify the handler each time a provider answers.
      *
-     * @param contents the content to complete.
-     * @param handler see {@link IContentProposalSearchHandler}.
+     * @param contents
+     *            the content to complete.
+     * @param handler
+     *            see {@link IContentProposalSearchHandler}.
      */
     public void getProposals(final String contents,
             final IContentProposalSearchHandler handler);

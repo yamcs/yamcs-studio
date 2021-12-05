@@ -25,7 +25,9 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 
-/**Go back/forward to one of the OPIs opened before in the OPI Runner.
+/**
+ * Go back/forward to one of the OPIs opened before in the OPI Runner.
+ * 
  * @author Xihui Chen
  *
  */
@@ -36,7 +38,6 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
     private DisplayOpenManager manager;
     private boolean recreateMenu;
     private boolean forward;
-
 
     private class MenuCreator implements IMenuCreator {
         private Menu historyMenu;
@@ -81,24 +82,22 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
         private void fillMenu(final Menu menu) {
             if (manager == null)
                 return;
-            Object[] entries = forward ?
-                    manager.getForwardStackEntries() : manager.getBackStackEntries();
+            Object[] entries = forward ? manager.getForwardStackEntries() : manager.getBackStackEntries();
             RunnerInput[] runnerInputArray = new RunnerInput[entries.length];
-            int i=entries.length-1;
-            for(final Object o : entries){
-                runnerInputArray[i--] = (RunnerInput)o;
+            int i = entries.length - 1;
+            for (final Object o : entries) {
+                runnerInputArray[i--] = (RunnerInput) o;
             }
 
-            for(final RunnerInput input : runnerInputArray){
+            for (final RunnerInput input : runnerInputArray) {
                 final MenuItem menuItem = new MenuItem(menu, SWT.None);
                 menuItem.setText(input.getName());
-                menuItem.addSelectionListener(new SelectionAdapter(){
+                menuItem.addSelectionListener(new SelectionAdapter() {
                     @Override
                     public void widgetSelected(SelectionEvent e) {
-                        if(forward){
+                        if (forward) {
                             manager.goForward(menu.indexOf(menuItem));
-                        }
-                        else
+                        } else
                             manager.goBack(menu.indexOf(menuItem));
                     }
                 });
@@ -119,8 +118,6 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
             }
         }
     }
-
-
 
     public NavigateOPIsAction(boolean forward) {
         this.forward = forward;
@@ -149,9 +146,9 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
 
     @Override
     public void run() {
-        if(manager == null)
+        if (manager == null)
             return;
-        if(forward)
+        if (forward)
             manager.goForward();
         else
             manager.goBack();
@@ -161,7 +158,7 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
     public boolean isEnabled() {
         if (manager == null)
             return false;
-        return forward?manager.canForward() : manager.canBackward();
+        return forward ? manager.canForward() : manager.canBackward();
     }
 
     public void setDisplayOpenManager(DisplayOpenManager manager) {
@@ -180,18 +177,19 @@ public class NavigateOPIsAction extends Action implements IDisplayOpenManagerLis
         update();
     }
 
-    public void update(){
-        if (manager == null) return;
+    public void update() {
+        if (manager == null)
+            return;
         setEnabled(isEnabled());
         recreateMenu = true;
-        if(forward){
-            if(manager.canForward())
-                setToolTipText(FORWARD + " to " + ((IRunnerInput)(manager.getForwardStackEntries()[0])).getName());
+        if (forward) {
+            if (manager.canForward())
+                setToolTipText(FORWARD + " to " + ((IRunnerInput) (manager.getForwardStackEntries()[0])).getName());
             else
                 setToolTipText(FORWARD);
-        }else{
-            if(manager.canBackward())
-                setToolTipText(BACK + " to " + ((IRunnerInput)(manager.getBackStackEntries()[0])).getName());
+        } else {
+            if (manager.canBackward())
+                setToolTipText(BACK + " to " + ((IRunnerInput) (manager.getBackStackEntries()[0])).getName());
             else
                 setToolTipText(BACK);
         }

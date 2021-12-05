@@ -19,7 +19,7 @@ import org.eclipse.ui.part.EditorActionBarContributor;
  * @author Xihui Chen
  *
  */
-//DO NOT REMOVE. RAP NEEDS THIS!
+// DO NOT REMOVE. RAP NEEDS THIS!
 public class OPIRunnerToolBarContributor extends EditorActionBarContributor {
 
     private OPIRuntimeToolBarDelegate opiRuntimeToolBarDelegate;

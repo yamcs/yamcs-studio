@@ -15,13 +15,13 @@ import org.csstudio.swt.widgets.figures.RoundedRectangleFigure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 
-/**The editpart of a rectangle widget.
+/**
+ * The editpart of a rectangle widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class RoundedRectangleEditpart extends AbstractShapeEditPart {
-
-
 
     @Override
     protected IFigure doCreateFigure() {
@@ -41,9 +41,8 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
 
     @Override
     public RoundedRectangleModel getWidgetModel() {
-        return (RoundedRectangleModel)getModel();
+        return (RoundedRectangleModel) getModel();
     }
-
 
     @Override
     protected void registerPropertyChangeHandlers() {
@@ -87,43 +86,41 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
         };
         setPropertyChangeHandler(RoundedRectangleModel.PROP_TRANSPARENT, transparentHandler);
 
-
         // line color
         IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
-                ((RoundedRectangleFigure)refreshableFigure).setLineColor(
-                        ((OPIColor)newValue).getSWTColor());
+                ((RoundedRectangleFigure) refreshableFigure).setLineColor(
+                        ((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
         setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR,
                 lineColorHandler);
 
-
-        //corner width
+        // corner width
         IWidgetPropertyChangeHandler cornerWidthHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 RoundedRectangleFigure figure = (RoundedRectangleFigure) refreshableFigure;
-                figure.setCornerWidth((Integer)newValue);
+                figure.setCornerWidth((Integer) newValue);
                 return true;
             }
         };
         setPropertyChangeHandler(RoundedRectangleModel.PROP_CORNER_WIDTH, cornerWidthHandler);
 
-        //corner height
+        // corner height
         IWidgetPropertyChangeHandler cornerHeightHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 RoundedRectangleFigure figure = (RoundedRectangleFigure) refreshableFigure;
-                figure.setCornerHeight((Integer)newValue);
+                figure.setCornerHeight((Integer) newValue);
                 return true;
             }
         };
@@ -133,7 +130,7 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((RoundedRectangleFigure)figure).setGradient((Boolean)newValue);
+                ((RoundedRectangleFigure) figure).setGradient((Boolean) newValue);
                 return false;
             }
         };
@@ -143,7 +140,7 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((RoundedRectangleFigure)figure).setBackGradientStartColor(((OPIColor)newValue).getSWTColor());
+                ((RoundedRectangleFigure) figure).setBackGradientStartColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
         };
@@ -153,7 +150,7 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((RoundedRectangleFigure)figure).setForeGradientStartColor(((OPIColor)newValue).getSWTColor());
+                ((RoundedRectangleFigure) figure).setForeGradientStartColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
         };
@@ -163,16 +160,15 @@ public class RoundedRectangleEditpart extends AbstractShapeEditPart {
 
     @Override
     public void setValue(Object value) {
-        if(value instanceof Number){
-            ((RoundedRectangleFigure)getFigure()).setFill(((Number)value).doubleValue());
-        }else
+        if (value instanceof Number) {
+            ((RoundedRectangleFigure) getFigure()).setFill(((Number) value).doubleValue());
+        } else
             super.setValue(value);
     }
 
     @Override
     public Object getValue() {
-        return ((RoundedRectangleFigure)getFigure()).getFill();
+        return ((RoundedRectangleFigure) getFigure()).getFill();
     }
-
 
 }

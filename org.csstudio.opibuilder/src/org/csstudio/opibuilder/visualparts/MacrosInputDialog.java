@@ -27,7 +27,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.jdom.Verifier;
 
-/**The dialog for editing macros.
+/**
+ * The dialog for editing macros.
+ * 
  * @author Xihui Chen
  *
  */
@@ -43,8 +45,8 @@ public class MacrosInputDialog extends Dialog {
         super(parentShell);
         this.title = dialogTitle;
         this.contents = new ArrayList<String[]>();
-        for(String key : macrosInput.getMacrosMap().keySet()){
-            this.contents.add(new String[]{key, macrosInput.getMacrosMap().get(key)});
+        for (String key : macrosInput.getMacrosMap().keySet()) {
+            this.contents.add(new String[] { key, macrosInput.getMacrosMap().get(key) });
         }
         this.includeParentMacros = macrosInput.isInclude_parent_macros();
 
@@ -59,15 +61,15 @@ public class MacrosInputDialog extends Dialog {
         // at least on OS X, it has some minimum size below which it
         // doesn't properly shrink.
         tableEditor = new StringTableEditor(
-                container, new String[]{"Name", "Value"}, new boolean[]{true, true},
-                contents, new MacroEditDialog(getShell()), new int[]{150, 150});
+                container, new String[] { "Name", "Value" }, new boolean[] { true, true },
+                contents, new MacroEditDialog(getShell()), new int[] { 150, 150 });
         tableEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         final Button checkBox = new Button(container, SWT.CHECK);
         checkBox.setSelection(includeParentMacros);
         checkBox.setText("Include macros from parent.");
         checkBox.setLayoutData(new GridData(SWT.FILL, 0, true, false));
-        checkBox.addSelectionListener(new SelectionAdapter(){
+        checkBox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 includeParentMacros = checkBox.getSelection();
@@ -76,9 +78,6 @@ public class MacrosInputDialog extends Dialog {
         return container;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
@@ -89,7 +88,7 @@ public class MacrosInputDialog extends Dialog {
 
     public MacrosInput getResult() {
         LinkedHashMap<String, String> macrosMap = new LinkedHashMap<String, String>();
-        for(String[] row : contents){
+        for (String[] row : contents) {
             macrosMap.put(row[0], row[1]);
         }
         return new MacrosInput(macrosMap, includeParentMacros);
@@ -97,12 +96,12 @@ public class MacrosInputDialog extends Dialog {
 
     @Override
     protected void okPressed() {
-        tableEditor.forceFocus();  //this can help the last edit value applied.
+        tableEditor.forceFocus(); // this can help the last edit value applied.
         String reason;
-        for(String[] row : contents){
+        for (String[] row : contents) {
             reason = Verifier.checkElementName(row[0]);
-            if(reason != null){
-                MessageDialog.openError(getShell(),    "Illegal Macro Name",
+            if (reason != null) {
+                MessageDialog.openError(getShell(), "Illegal Macro Name",
                         NLS.bind("{0} is not a valid Macro name.\n {1}", row[0], reason));
                 return;
             }

@@ -4,7 +4,9 @@ import org.eclipse.gef.internal.InternalImages;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 
-/**Tweak {@link ZoomInAction}.
+/**
+ * Tweak {@link ZoomInAction}.
+ * 
  * @author danlee, Xihui Chen
  */
 @SuppressWarnings("restriction")
@@ -17,7 +19,7 @@ public class PartZoomInAction extends PartZoomAction {
      *            the zoom manager
      */
     public PartZoomInAction() {
-        super("Zoom &In", InternalImages.DESC_ZOOM_IN    );
+        super("Zoom &In", InternalImages.DESC_ZOOM_IN);
         setToolTipText("Zoom In");
         setId(GEFActionConstants.ZOOM_IN);
         setActionDefinitionId(GEFActionConstants.ZOOM_IN);
@@ -28,7 +30,7 @@ public class PartZoomInAction extends PartZoomAction {
      */
     @Override
     public void run() {
-        if(zoomManager != null)
+        if (zoomManager != null)
             zoomManager.zoomIn();
     }
 

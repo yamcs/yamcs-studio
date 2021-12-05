@@ -18,8 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 /**
- * Descriptor for a property that has a value which should be edited with a String Table
- * cell editor.
+ * Descriptor for a property that has a value which should be edited with a String Table cell editor.
  *
  * @author Xihui Chen
  *
@@ -30,6 +29,7 @@ public final class StringTablePropertyDescriptor extends TextPropertyDescriptor 
     private TitlesProvider columnTitles;
     private CellEditorType[] cellEditorTypes;
     private Object[] cellEditorDatas;
+
     /**
      * Standard constructor.
      *
@@ -39,38 +39,35 @@ public final class StringTablePropertyDescriptor extends TextPropertyDescriptor 
      *            the name to display for the property
      */
     public StringTablePropertyDescriptor(final Object id, final String displayName,
-            final TitlesProvider tilesProvider, CellEditorType[] cellEditorTypes,  Object[] cellEditorDatas) {
+            final TitlesProvider tilesProvider, CellEditorType[] cellEditorTypes, Object[] cellEditorDatas) {
         super(id, displayName);
         this.displayName = displayName;
         this.columnTitles = tilesProvider;
         this.cellEditorTypes = cellEditorTypes;
         this.cellEditorDatas = cellEditorDatas;
-        setLabelProvider(new LabelProvider(){
+        setLabelProvider(new LabelProvider() {
             @Override
             public String getText(Object element) {
-                if(element == null)
+                if (element == null)
                     return "";
-                else if(!(element instanceof String[][]))
+                else if (!(element instanceof String[][]))
                     return element.toString();
-                String[][] stringTable = (String[][])element;
-                if(stringTable.length >0)
+                String[][] stringTable = (String[][]) element;
+                if (stringTable.length > 0)
                     return Arrays.toString(stringTable[0]) +
-                            (stringTable.length > 1? "..." : "");
+                            (stringTable.length > 1 ? "..." : "");
                 return "";
             }
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
-        CellEditor editor = new StringTableCellEditor(parent, "Edit " + displayName, columnTitles, cellEditorTypes, cellEditorDatas);
+        CellEditor editor = new StringTableCellEditor(parent, "Edit " + displayName, columnTitles, cellEditorTypes,
+                cellEditorDatas);
         if (getValidator() != null) {
             editor.setValidator(getValidator());
         }
         return editor;
     }
-
 }

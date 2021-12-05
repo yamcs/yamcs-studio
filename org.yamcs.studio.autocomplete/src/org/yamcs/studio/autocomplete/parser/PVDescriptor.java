@@ -13,8 +13,7 @@ import java.util.Map;
 import org.yamcs.studio.autocomplete.IAutoCompleteProvider;
 
 /**
- * Descriptor used in {@link IContentParser} and {@link IAutoCompleteProvider}
- * to describe a content matching a PV.
+ * Descriptor used in {@link IContentParser} and {@link IAutoCompleteProvider} to describe a content matching a PV.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

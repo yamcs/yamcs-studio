@@ -16,8 +16,12 @@ import org.eclipse.swt.SWT;
  *
  */
 public enum LineStyle {
-    SOLID("Solid", SWT.LINE_SOLID), DASH("Dash", SWT.LINE_DASH), DOT("Dot", SWT.LINE_DOT), DASH_DOT("DashDot",
-            SWT.LINE_DASHDOT), Dash_DOTDOT("DashDotDot", SWT.LINE_DASHDOTDOT);
+    SOLID("Solid", SWT.LINE_SOLID),
+    DASH("Dash", SWT.LINE_DASH),
+    DOT("Dot", SWT.LINE_DOT),
+    DASH_DOT("DashDot",
+            SWT.LINE_DASHDOT),
+    Dash_DOTDOT("DashDotDot", SWT.LINE_DASHDOTDOT);
 
     String description;
     int style;

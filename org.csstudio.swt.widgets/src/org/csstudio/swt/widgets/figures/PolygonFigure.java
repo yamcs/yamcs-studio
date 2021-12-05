@@ -64,9 +64,6 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
         setBackgroundColor(ColorConstants.darkGreen);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void fillShape(final Graphics graphics) {
         graphics.pushState();
@@ -104,9 +101,6 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
         return fill;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rectangle getHandleBounds() {
         return getPoints().getBounds();
@@ -148,7 +142,6 @@ public final class PolygonFigure extends Polygon implements HandleBounds, Intros
 
     /**
      * Overridden, to ensure that the bounds rectangle gets repainted each time, the _points of the polygon change.
-     * {@inheritDoc}
      */
     @Override
     public void setBounds(final Rectangle rect) {

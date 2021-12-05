@@ -132,9 +132,6 @@ public class RuleDataEditDialog extends TrayDialog {
         return ruleData;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
@@ -566,9 +563,6 @@ public class RuleDataEditDialog extends TrayDialog {
     class ExpressionLabelProvider extends LabelProvider implements
             ITableLabelProvider {
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Image getColumnImage(final Object element,
                 final int columnIndex) {
@@ -586,9 +580,6 @@ public class RuleDataEditDialog extends TrayDialog {
             return null;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String getColumnText(final Object element,
                 final int columnIndex) {

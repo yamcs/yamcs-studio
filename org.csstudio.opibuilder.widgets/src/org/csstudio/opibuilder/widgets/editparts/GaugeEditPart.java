@@ -19,17 +19,13 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.IFigure;
 
 /**
- * EditPart controller for the Gauge widget. The controller mediates between
- * {@link GaugeModel} and {@link GaugeFigure}.
+ * EditPart controller for the Gauge widget. The controller mediates between {@link GaugeModel} and {@link GaugeFigure}.
  *
  * @author Xihui Chen
  *
  */
 public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected IFigure doCreateFigure() {
         final GaugeModel model = getWidgetModel();
@@ -47,17 +43,14 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     public GaugeModel getWidgetModel() {
-        return (GaugeModel)getModel();
+        return (GaugeModel) getModel();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        //needle Color
+        // needle Color
         IWidgetPropertyChangeHandler needleColorColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -70,8 +63,7 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(GaugeModel.PROP_NEEDLE_COLOR, needleColorColorHandler);
 
-
-        //effect 3D
+        // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -84,7 +76,7 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(GaugeModel.PROP_EFFECT3D, effect3DHandler);
 
-        //Ramp gradient
+        // Ramp gradient
         IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -101,9 +93,9 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if(((Integer)newValue) < GaugeModel.MINIMUM_SIZE)
+                if (((Integer) newValue) < GaugeModel.MINIMUM_SIZE)
                     newValue = GaugeModel.MINIMUM_SIZE;
-                getWidgetModel().setSize((Integer)newValue, (Integer)newValue);
+                getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
                 return false;
             }
         };
@@ -114,11 +106,8 @@ public final class GaugeEditPart extends AbstractMarkedWidgetEditPart {
                 sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
             }
         };
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).
-            addPropertyChangeListener(sizeListener);
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT).
-            addPropertyChangeListener(sizeListener);
-
+        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(sizeListener);
+        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT).addPropertyChangeListener(sizeListener);
 
     }
 

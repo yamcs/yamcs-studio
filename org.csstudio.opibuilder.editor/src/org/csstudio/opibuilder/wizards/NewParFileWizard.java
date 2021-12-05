@@ -22,10 +22,9 @@ public class NewParFileWizard extends Wizard implements INewWizard {
 
     @Override
     public void addPages() {
-        parFilePage =new NewParFileWizardPage("PARFilePage", selection);
+        parFilePage = new NewParFileWizardPage("PARFilePage", selection);
         addPage(parFilePage);
     }
-
 
     @Override
     public boolean performFinish() {

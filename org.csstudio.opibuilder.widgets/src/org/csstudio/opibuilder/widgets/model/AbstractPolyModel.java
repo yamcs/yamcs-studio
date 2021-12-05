@@ -22,7 +22,6 @@
 
 package org.csstudio.opibuilder.widgets.model;
 
-
 import org.csstudio.opibuilder.datadefinition.WidgetScaleData;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.DoubleProperty;
@@ -40,8 +39,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
  */
 public abstract class AbstractPolyModel extends AbstractShapeModel {
 
-
-
     /**
      * Rotation angle of the widget.
      */
@@ -51,7 +48,6 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
      * Points of the widget.
      */
     public static final String PROP_POINTS = "points";
-
 
     /**
      * The original Points without rotation.
@@ -64,9 +60,6 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         setScaleOptions(true, true, true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureProperties() {
         super.configureProperties();
@@ -76,13 +69,13 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
                 "Points", WidgetPropertyCategory.Display, new PointList()));
     }
 
-
     /**
      * Sets the specified _points for the polygon.
      *
      * @param points
      *            the polygon points
-     * @param rememberPoints true if the zero degree relative points should be remembered, false otherwise.
+     * @param rememberPoints
+     *            true if the zero degree relative points should be remembered, false otherwise.
      */
     public void setPoints(final PointList points,
             final boolean rememberPoints) {
@@ -110,13 +103,9 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         return (PointList) getProperty(PROP_POINTS).getPropertyValue();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setSize(final int width, final int height) {
-        if(getSize().width == width && getSize().height == height)
+        if (getSize().width == width && getSize().height == height)
             return;
 
         PointList newPoints = PointsUtil.scalePointsBySize(getPoints(), width, height);
@@ -124,11 +113,6 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         setPoints(newPoints, true);
     }
 
-
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLocation(final int x, final int y) {
         PointList points = getPoints();
@@ -142,7 +126,8 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
     /**
      * Rotates all points.
      *
-     * @param points The PoinList, which points should be rotated
+     * @param points
+     *            The PoinList, which points should be rotated
      * @param angle
      *            The angle to rotate
      * @return The rotated PointList
@@ -169,10 +154,12 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
 
     /**
      * Rotates the given points to 0 degrees and sets them as <code>_originalPoints</code>.
-     * @param points The current {@link PointList}
+     * 
+     * @param points
+     *            The current {@link PointList}
      */
     protected void rememberZeroDegreePoints(final PointList points) {
-        if (this.getRotationAngle()==0) {
+        if (this.getRotationAngle() == 0) {
             zeroDegreePoints = points.getCopy();
         } else {
             zeroDegreePoints = this.rotatePoints(points, -this.getRotationAngle());
@@ -180,18 +167,16 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
     }
 
     /**
-     * Returns the rotation angle for this widget. Returns 0 if this widget is
-     * not rotatable
+     * Returns the rotation angle for this widget. Returns 0 if this widget is not rotatable
      *
      * @return The rotation angle
      */
     public final double getRotationAngle() {
-            return (Double) getProperty(PROP_ROTATION).getPropertyValue();
+        return (Double) getProperty(PROP_ROTATION).getPropertyValue();
     }
 
     /**
-     * Sets the rotation angle for this widget, only when this widget is
-     * rotatable.
+     * Sets the rotation angle for this widget, only when this widget is rotatable.
      *
      * @param angle
      *            The angle
@@ -200,22 +185,18 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         setPropertyValue(PROP_ROTATION, angle);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final synchronized void setPropertyValue(Object propertyID,
             Object value) {
         if (propertyID.equals(AbstractPolyModel.PROP_POINTS)) {
             if (value instanceof PointList) {
                 this.setPoints((PointList) value, true);
-            }else if (value instanceof int[])
+            } else if (value instanceof int[])
                 this.setPoints(new PointList((int[]) value), true);
-        }
-        else if (propertyID.equals(AbstractWidgetModel.PROP_XPOS) ||
+        } else if (propertyID.equals(AbstractWidgetModel.PROP_XPOS) ||
                 propertyID.equals(AbstractWidgetModel.PROP_YPOS) ||
                 propertyID.equals(AbstractWidgetModel.PROP_WIDTH) ||
-                propertyID.equals(AbstractWidgetModel.PROP_HEIGHT)){
+                propertyID.equals(AbstractWidgetModel.PROP_HEIGHT)) {
             int newValue = (int) Double.parseDouble(value.toString());
             if (propertyID.equals(AbstractWidgetModel.PROP_XPOS)
                     && (newValue != getPoints().getBounds().x)) {
@@ -230,7 +211,7 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
                     && (newValue != getPoints().getBounds().height)) {
                 setSize(getSize().width, newValue);
             }
-        }else {
+        } else {
             super.setPropertyValue(propertyID, value);
         }
     }
@@ -249,7 +230,6 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         setPoints(PointsUtil.flipPointsHorizontally(getPoints(), centerX), true);
     }
 
-
     @Override
     public void flipVertically() {
         setPoints(PointsUtil.flipPointsVertically(getPoints()), true);
@@ -262,34 +242,32 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
 
     @Override
     public void rotate90(boolean clockwise) {
-        setPoints(PointsUtil.rotatePoints(getPoints(), clockwise? 90:270), true);
+        setPoints(PointsUtil.rotatePoints(getPoints(), clockwise ? 90 : 270), true);
     }
-
 
     @Override
     public void rotate90(boolean clockwise, Point center) {
-        setPoints(PointsUtil.rotatePoints(getPoints(), clockwise? 90:270, center), true);
+        setPoints(PointsUtil.rotatePoints(getPoints(), clockwise ? 90 : 270, center), true);
     }
 
     @Override
     protected void doScale(double widthRatio, double heightRatio) {
-        if(initialPoints == null){
+        if (initialPoints == null) {
             initialPoints = getPoints();
         }
         PointList pl = initialPoints.getCopy();
         Point initLoc = pl.getBounds().getLocation();
-        pl.translate((int)Math.round(initLoc.x*widthRatio) -initLoc.x,
-                (int)Math.round(initLoc.y * heightRatio) - initLoc.y);
-
+        pl.translate((int) Math.round(initLoc.x * widthRatio) - initLoc.x,
+                (int) Math.round(initLoc.y * heightRatio) - initLoc.y);
 
         WidgetScaleData scaleOptions = getScaleOptions();
-        if(scaleOptions.isKeepWHRatio()&&
-                scaleOptions.isHeightScalable() && scaleOptions.isWidthScalable()){
+        if (scaleOptions.isKeepWHRatio() &&
+                scaleOptions.isHeightScalable() && scaleOptions.isWidthScalable()) {
             widthRatio = Math.min(widthRatio, heightRatio);
             heightRatio = widthRatio;
-        }else if(!scaleOptions.isHeightScalable())
+        } else if (!scaleOptions.isHeightScalable())
             heightRatio = 1;
-        else if(!scaleOptions.isWidthScalable())
+        else if (!scaleOptions.isWidthScalable())
             widthRatio = 1;
 
         PointsUtil.scalePoints(pl, widthRatio, heightRatio);
@@ -297,7 +275,5 @@ public abstract class AbstractPolyModel extends AbstractShapeModel {
         setPoints(pl, true);
 
     }
-
-
 
 }

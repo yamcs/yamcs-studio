@@ -21,7 +21,6 @@
  */
 package org.csstudio.opibuilder.visualparts;
 
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -50,13 +49,12 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
     private boolean _dialogIsOpen = false;
 
     /**
-     * Creates a new string cell editor parented under the given control. The
-     * cell editor value is a Map of Strings.
+     * Creates a new string cell editor parented under the given control. The cell editor value is a Map of Strings.
      *
      * @param parent
      *            The parent table.
      * @param title
-     *               The title for this CellEditor
+     *            The title for this CellEditor
      */
     public AbstractDialogCellEditor(final Composite parent, final String title) {
         super(parent, SWT.NONE);
@@ -64,9 +62,6 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
         _title = title;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void activate() {
         if (!_dialogIsOpen) {
@@ -81,28 +76,26 @@ public abstract class AbstractDialogCellEditor extends CellEditor {
 
     /**
      * Creates and opens the Dialog.
-     * @param parentShell The parent shell for the dialog
-     * @param dialogTitle The title for the dialog
+     * 
+     * @param parentShell
+     *            The parent shell for the dialog
+     * @param dialogTitle
+     *            The title for the dialog
      */
     protected abstract void openDialog(final Shell parentShell, final String dialogTitle);
 
     /**
      * Returns, if CellEditor.fireApplyEditorValue() should be called.
+     * 
      * @return true if CellEditor.fireApplyEditorValue() should be called, false otherwise
      */
     protected abstract boolean shouldFireChanges();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected final Control createControl(final Composite parent) {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void doSetFocus() {
         // Ignore

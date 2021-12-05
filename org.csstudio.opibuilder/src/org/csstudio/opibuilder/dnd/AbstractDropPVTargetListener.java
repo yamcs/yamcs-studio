@@ -14,12 +14,13 @@ import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 
-/**The listener when a pv name related transfer data is dropped to the viewer.
+/**
+ * The listener when a pv name related transfer data is dropped to the viewer.
+ * 
  * @author Xihui Chen
  *
  */
 public abstract class AbstractDropPVTargetListener extends AbstractTransferDropTargetListener {
-
 
     public AbstractDropPVTargetListener(EditPartViewer viewer, Transfer xfer) {
         super(viewer, xfer);
@@ -27,14 +28,14 @@ public abstract class AbstractDropPVTargetListener extends AbstractTransferDropT
 
     @Override
     protected void updateTargetRequest() {
-        ((DropPVRequest)getTargetRequest()).setLocation(getDropLocation());
+        ((DropPVRequest) getTargetRequest()).setLocation(getDropLocation());
     }
 
     @Override
     protected void updateTargetEditPart() {
         super.updateTargetEditPart();
-        if(getTargetEditPart() instanceof AbstractBaseEditPart)
-            ((DropPVRequest)getTargetRequest()).setTargetWidget(
+        if (getTargetEditPart() instanceof AbstractBaseEditPart)
+            ((DropPVRequest) getTargetRequest()).setTargetWidget(
                     (AbstractBaseEditPart) getTargetEditPart());
 
     }
@@ -53,9 +54,9 @@ public abstract class AbstractDropPVTargetListener extends AbstractTransferDropT
     @Override
     protected void handleDrop() {
         String[] pvNames = getPVNamesFromTransfer();
-        if(pvNames == null)
+        if (pvNames == null)
             return;
-        ((DropPVRequest)getTargetRequest()).setPvNames(pvNames);
+        ((DropPVRequest) getTargetRequest()).setPvNames(pvNames);
         super.handleDrop();
     }
 

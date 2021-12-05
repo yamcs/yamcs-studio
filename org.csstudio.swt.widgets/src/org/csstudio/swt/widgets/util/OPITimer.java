@@ -12,14 +12,15 @@ import java.util.concurrent.TimeUnit;
 
 import org.csstudio.java.thread.ExecutionService;
 
-/**A customized timer for the internal use of OPI builder.
- * It will execute a task after certain delay. The timer can be reseted
- * or stopped during the delay period.
- * The timer will stop and dispose automatically when it is due.
+/**
+ * A customized timer for the internal use of OPI builder. It will execute a task after certain delay. The timer can be
+ * reseted or stopped during the delay period. The timer will stop and dispose automatically when it is due.
+ * 
  * <pre>
  *   |------------|---------------|
  * Start      Due/start task  task done
  * </pre>
+ * 
  * @author Xihui Chen
  *
  */
@@ -35,34 +36,36 @@ public class OPITimer {
 
     private final Runnable dueTask = new Runnable() {
 
-            public void run() {
-                due = true;
-            }
-        };
+        public void run() {
+            due = true;
+        }
+    };
+
     /**
      * Schedules the specified task for execution after the specified delay.
      *
-     * @param task  task to be scheduled.
-     * @param delay delay in milliseconds before task is to be executed.
-     * @throws IllegalArgumentException if <tt>delay</tt> is negative, or
-     *         <tt>delay + System.currentTimeMillis()</tt> is negative.
-     * @throws IllegalStateException if task was already scheduled or
-     *         canceled, or timer was canceled.
+     * @param task
+     *            task to be scheduled.
+     * @param delay
+     *            delay in milliseconds before task is to be executed.
+     * @throws IllegalArgumentException
+     *             if <tt>delay</tt> is negative, or <tt>delay + System.currentTimeMillis()</tt> is negative.
+     * @throws IllegalStateException
+     *             if task was already scheduled or canceled, or timer was canceled.
      */
     public synchronized void start(final Runnable task, long delay) {
         this.delay = delay;
         this.task = task;
-        if(!due)
+        if (!due)
             stop();
 
-        //mark it as due before task started
+        // mark it as due before task started
         dueTaskFuture = ExecutionService.getInstance().getScheduledExecutorService().schedule(
-                dueTask, delay-1, TimeUnit.MILLISECONDS);
+                dueTask, delay - 1, TimeUnit.MILLISECONDS);
 
-        //start task
+        // start task
         scheduledTaskFuture = ExecutionService.getInstance().getScheduledExecutorService().schedule(
                 task, delay, TimeUnit.MILLISECONDS);
-
 
         due = false;
     }
@@ -70,28 +73,28 @@ public class OPITimer {
     /**
      * Reset the timer to start from zero again.
      */
-    public synchronized void reset(){
-        if(!due)
+    public synchronized void reset() {
+        if (!due)
             start(task, delay);
     }
 
     /**
      * @return true if timer is due
      */
-    public synchronized boolean isDue(){
+    public synchronized boolean isDue() {
         return due;
     }
 
     /**
      * Stop the timer. Cancel the scheduled task.
      */
-    public synchronized void stop(){
-        if(dueTaskFuture != null){
+    public synchronized void stop() {
+        if (dueTaskFuture != null) {
             dueTaskFuture.cancel(false);
         }
-        if(scheduledTaskFuture != null)
+        if (scheduledTaskFuture != null)
             scheduledTaskFuture.cancel(false);
-        due =true;
+        due = true;
     }
 
 }

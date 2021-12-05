@@ -9,8 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.autocomplete.parser.engine;
 
-public enum ExprTokenType
-{
+public enum ExprTokenType {
     Decimal,
     Integer,
     String,

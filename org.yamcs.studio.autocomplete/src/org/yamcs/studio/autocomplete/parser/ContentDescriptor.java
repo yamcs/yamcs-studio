@@ -11,8 +11,8 @@ import org.yamcs.studio.autocomplete.AutoCompleteType;
 import org.yamcs.studio.autocomplete.IAutoCompleteProvider;
 
 /**
- * Descriptor used in {@link IContentParser} and {@link IAutoCompleteProvider}
- * to describe the current auto-completed content.
+ * Descriptor used in {@link IContentParser} and {@link IAutoCompleteProvider} to describe the current auto-completed
+ * content.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

@@ -12,7 +12,6 @@ import org.csstudio.opibuilder.properties.ComboProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.visualparts.BorderStyle;
 
-
 /**
  * Model for native text widget.
  *
@@ -59,7 +58,7 @@ public final class NativeTextModel extends TextInputModel {
         addProperty(new BooleanProperty(PROP_SHOW_V_SCROLL, "Show Vertical Scrollbar",
                 WidgetPropertyCategory.Display, false));
         addProperty(new ComboProperty(PROP_NEXT_FOCUS, "Next Focus",
-                WidgetPropertyCategory.Behavior, FOCUS_TRAVERSE.stringValues(),0));
+                WidgetPropertyCategory.Behavior, FOCUS_TRAVERSE.stringValues(), 0));
         removeProperty(PROP_TRANSPARENT);
         removeProperty(PROP_ROTATION);
         removeProperty(PROP_ALIGN_V);
@@ -68,50 +67,45 @@ public final class NativeTextModel extends TextInputModel {
         removeProperty(PROP_FILE_RETURN_PART);
         removeProperty(PROP_FILE_SOURCE);
         removeProperty(PROP_SHOW_SCROLLBAR);
-        //If border is alarm sensitive, redraw the border will also redraw the whole canvas in WebOPI
-        //so make it invisible to make sure user can get best performance.
-        //Maybe border is not frequently changed?
-        //setPropertyVisible(PROP_BORDER_ALARMSENSITIVE, false);
+        // If border is alarm sensitive, redraw the border will also redraw the whole canvas in WebOPI
+        // so make it invisible to make sure user can get best performance.
+        // Maybe border is not frequently changed?
+        // setPropertyVisible(PROP_BORDER_ALARMSENSITIVE, false);
 
-    }
-
-
-    @Override
-    public boolean isShowNativeBorder(){
-        return (Boolean)getPropertyValue(PROP_SHOW_NATIVE_BORDER);
     }
 
     @Override
-    public boolean isReadOnly(){
-        return (Boolean)getPropertyValue(PROP_READ_ONLY);
+    public boolean isShowNativeBorder() {
+        return (Boolean) getPropertyValue(PROP_SHOW_NATIVE_BORDER);
     }
 
     @Override
-    public boolean isPasswordInput(){
-        return (Boolean)getPropertyValue(PROP_PASSWORD_INPUT);
+    public boolean isReadOnly() {
+        return (Boolean) getPropertyValue(PROP_READ_ONLY);
     }
 
     @Override
-    public boolean isShowHScroll(){
-        return (Boolean)getPropertyValue(PROP_SHOW_H_SCROLL);
+    public boolean isPasswordInput() {
+        return (Boolean) getPropertyValue(PROP_PASSWORD_INPUT);
     }
 
     @Override
-    public boolean isShowVScroll(){
-        return (Boolean)getPropertyValue(PROP_SHOW_V_SCROLL);
+    public boolean isShowHScroll() {
+        return (Boolean) getPropertyValue(PROP_SHOW_H_SCROLL);
     }
 
     @Override
-    public FOCUS_TRAVERSE getFocusTraverse(){
-        return FOCUS_TRAVERSE.values()[(Integer)getPropertyValue(PROP_NEXT_FOCUS)];
+    public boolean isShowVScroll() {
+        return (Boolean) getPropertyValue(PROP_SHOW_V_SCROLL);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    public FOCUS_TRAVERSE getFocusTraverse() {
+        return FOCUS_TRAVERSE.values()[(Integer) getPropertyValue(PROP_NEXT_FOCUS)];
+    }
+
     @Override
     public String getTypeID() {
         return ID;
     }
-
 }

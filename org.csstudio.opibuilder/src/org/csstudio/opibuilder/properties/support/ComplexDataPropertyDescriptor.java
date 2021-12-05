@@ -7,19 +7,18 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.properties.support;
 
-
 import org.csstudio.opibuilder.visualparts.ComplexDataCellEditor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
-
-/**The property descriptor for complex data property.
+/**
+ * The property descriptor for complex data property.
+ * 
  * @author Xihui Chen
  *
  */
 public class ComplexDataPropertyDescriptor extends TextPropertyDescriptor {
-
 
     private String dialogTitle;
 
@@ -31,7 +30,7 @@ public class ComplexDataPropertyDescriptor extends TextPropertyDescriptor {
      * @param displayName
      *            the name to display for the property
      * @param dialogTitle
-     *               title of the dialog.
+     *            title of the dialog.
      */
     public ComplexDataPropertyDescriptor(final Object id,
             final String displayName, final String dialogTitle) {
@@ -39,9 +38,6 @@ public class ComplexDataPropertyDescriptor extends TextPropertyDescriptor {
         this.dialogTitle = dialogTitle;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new ComplexDataCellEditor(parent, dialogTitle);
@@ -50,5 +46,4 @@ public class ComplexDataPropertyDescriptor extends TextPropertyDescriptor {
         }
         return editor;
     }
-
 }

@@ -14,12 +14,13 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.visualparts.BorderStyle;
 import org.eclipse.swt.graphics.RGB;
 
-/**The model for web browser widget.
+/**
+ * The model for web browser widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class WebBrowserModel extends AbstractWidgetModel {
-
 
     public final String ID = "org.csstudio.opibuilder.widgets.webbrowser";
     public static final String PROP_URL = "url";
@@ -40,10 +41,9 @@ public class WebBrowserModel extends AbstractWidgetModel {
         setPropertyVisible(PROP_FONT, false);
     }
 
-    public String getURL(){
-        return (String)getPropertyValue(PROP_URL);
+    public String getURL() {
+        return (String) getPropertyValue(PROP_URL);
     }
-
 
     @Override
     public String getTypeID() {
@@ -51,7 +51,7 @@ public class WebBrowserModel extends AbstractWidgetModel {
     }
 
     public boolean isShowToolBar() {
-        return (Boolean)getPropertyValue(PROP_SHOW_TOOLBAR);
+        return (Boolean) getPropertyValue(PROP_SHOW_TOOLBAR);
     }
 
 }

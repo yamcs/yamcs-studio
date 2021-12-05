@@ -116,15 +116,15 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
 
                                 @Override
                                 public void run() {
-                                    if(((PointList)evt.getOldValue()).size() !=
-                                            ((PointList)evt.getNewValue()).size())
+                                    if (((PointList) evt.getOldValue()).size() != ((PointList) evt.getNewValue())
+                                            .size())
                                         updateRouter(getConnectionFigure());
                                     else
                                         refreshBendpoints(getConnectionFigure());
                                 }
                             };
-                            //It should update at the same rate as other widget at run time
-                            if(getExecutionMode() == ExecutionMode.RUN_MODE){
+                            // It should update at the same rate as other widget at run time
+                            if (getExecutionMode() == ExecutionMode.RUN_MODE) {
                                 Display display = getViewer().getControl().getDisplay();
                                 WidgetIgnorableUITask task = new WidgetIgnorableUITask(
                                         getWidgetModel().getProperty(ConnectionModel.PROP_POINTS),
@@ -133,7 +133,7 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                                 GUIRefreshThread.getInstance(
                                         getExecutionMode() == ExecutionMode.RUN_MODE)
                                         .addIgnorableTask(task);
-                            }else
+                            } else
                                 runnable.run();
                         }
                     });
@@ -168,11 +168,11 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                         @Override
                         public void propertyChange(PropertyChangeEvent evt) {
                             getConnectionFigure().setAntialias(
-                                    getWidgetModel().isAntiAlias()? SWT.ON : SWT.OFF);
-                            for(Object obj : getConnectionFigure().getChildren()){
-                                if(obj instanceof Shape)
-                                    ((Shape)obj).setAntialias(
-                                            getWidgetModel().isAntiAlias()? SWT.ON : SWT.OFF);
+                                    getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
+                            for (Object obj : getConnectionFigure().getChildren()) {
+                                if (obj instanceof Shape)
+                                    ((Shape) obj).setAntialias(
+                                            getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
                             }
                         }
                     });
@@ -236,12 +236,12 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                         }
                     });
             getWidgetModel().getProperty(ConnectionModel.PROP_IS_LOADED_FROM_LINKING_CONTAINER)
-            .addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    updateRouter(getConnectionFigure());
-                }
-            });
+                    .addPropertyChangeListener(new PropertyChangeListener() {
+                        @Override
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            updateRouter(getConnectionFigure());
+                        }
+                    });
         }
     }
 
@@ -258,9 +258,11 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                         @Override
                         protected void showConnectionMoveFeedback(
                                 ReconnectRequest request) {
-                            EditPolicy connectionHandlesEditpolicy = getEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE);
-                            if(connectionHandlesEditpolicy !=null && connectionHandlesEditpolicy instanceof ManhattanBendpointEditPolicy){
-                                ((ManhattanBendpointEditPolicy)connectionHandlesEditpolicy).removeSelectionHandles();
+                            EditPolicy connectionHandlesEditpolicy = getEditPolicy(
+                                    EditPolicy.CONNECTION_BENDPOINTS_ROLE);
+                            if (connectionHandlesEditpolicy != null
+                                    && connectionHandlesEditpolicy instanceof ManhattanBendpointEditPolicy) {
+                                ((ManhattanBendpointEditPolicy) connectionHandlesEditpolicy).removeSelectionHandles();
                             }
                             if (getConnection().getConnectionRouter() instanceof FixedPointsConnectionRouter) {
                                 originalRouter = getConnection()
@@ -276,7 +278,7 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                         @Override
                         protected void eraseConnectionMoveFeedback(
                                 ReconnectRequest request) {
-                            if(originalRouter != null){
+                            if (originalRouter != null) {
                                 originalRouter.setConstraint(getConnection(), originalConstraint);
                                 getConnection().setConnectionRouter(originalRouter);
                             }
@@ -329,23 +331,22 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
         ConnectionModel widgetModel = getWidgetModel();
 
         // Skip calculating intersections if line_jump_add is set to none
-        if(widgetModel.getLineJumpAdd().equals(LineJumpAdd.NONE)) {
+        if (widgetModel.getLineJumpAdd().equals(LineJumpAdd.NONE)) {
             return pointsInConnection;
         }
 
         PointList intersections = new PointList();
         int lineJumpSize = connection.getLineJumpSize();
 
-
         DisplayModel rootDisplayModel = widgetModel.getRootDisplayModel();
-        while(rootDisplayModel.getParentDisplayModel() != null) {
-           rootDisplayModel = rootDisplayModel.getParentDisplayModel();
+        while (rootDisplayModel.getParentDisplayModel() != null) {
+            rootDisplayModel = rootDisplayModel.getParentDisplayModel();
         }
         List<ConnectionModel> connectionList = rootDisplayModel.getConnectionList();
 
-        for(int i=0; (i+1)<pointsInConnection.size();) {
+        for (int i = 0; (i + 1) < pointsInConnection.size();) {
             Point x1y1 = pointsInConnection.getPoint(i);
-            Point x2y2 = pointsInConnection.getPoint(i+1);
+            Point x2y2 = pointsInConnection.getPoint(i + 1);
             /* The Manhattan connection in CS-Studio always has at least 3 segments, even if
              * they are invisible to the user, because he sees a straight line. But if these
              * invisible segments fall exactly where this connection intersects another
@@ -359,8 +360,8 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
              * To achieve this we need to manipulate the index to skip the joined
              * segments.
              */
-            i++;   // increase 'i' once for the next point (simple case)
-            for (int j = (i+1); j < pointsInConnection.size(); j++) {
+            i++; // increase 'i' once for the next point (simple case)
+            for (int j = (i + 1); j < pointsInConnection.size(); j++) {
                 // we may increase 'i' some more if we detect joined segments
                 Point p = pointsInConnection.getPoint(j);
                 if ((p.x() == x1y1.x()) || (p.y() == x1y1.y())) {
@@ -379,36 +380,37 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
             ArrayList<Point> intersectionPointsList = new ArrayList<Point>();
 
             // line is horizontal
-            if(y1-y2 == 0) {
+            if (y1 - y2 == 0) {
                 // Property is not set to horizontal. Skip
-                if(! (widgetModel.getLineJumpAdd().equals(LineJumpAdd.HORIZONTAL_LINES))) {
+                if (!(widgetModel.getLineJumpAdd().equals(LineJumpAdd.HORIZONTAL_LINES))) {
                     continue;
                 }
             }
             // line is vertical
-            if(x1-x2 == 0) {
+            if (x1 - x2 == 0) {
                 // Property is not set to vertical. Skip
-                if(! (widgetModel.getLineJumpAdd().equals(LineJumpAdd.VERTICAL_LINES))) {
+                if (!(widgetModel.getLineJumpAdd().equals(LineJumpAdd.VERTICAL_LINES))) {
                     continue;
                 }
             }
             // skip for slanting lines
-            if(x1-x2 != 0 && y1-y2 != 0) {
+            if (x1 - x2 != 0 && y1 - y2 != 0) {
                 continue;
             }
 
             for (ConnectionModel connModel : connectionList) {
-                if(connModel != getModel()) {
-                    WidgetConnectionEditPart widgetConnectionEditPart = (WidgetConnectionEditPart) getViewer().getEditPartRegistry().get(connModel);
-                    if(widgetConnectionEditPart == null) {
+                if (connModel != getModel()) {
+                    WidgetConnectionEditPart widgetConnectionEditPart = (WidgetConnectionEditPart) getViewer()
+                            .getEditPartRegistry().get(connModel);
+                    if (widgetConnectionEditPart == null) {
                         continue;
                     }
                     PolylineJumpConnection connectionFigure = widgetConnectionEditPart.getConnectionFigure();
                     PointList pointListOfConnection = getPointListOfConnectionForConnection(connectionFigure);
 
-                    for(int j=0; (j+1)<pointListOfConnection.size(); j++) {
+                    for (int j = 0; (j + 1) < pointListOfConnection.size(); j++) {
                         Point x3y3 = pointListOfConnection.getPoint(j);
-                        Point x4y4 = pointListOfConnection.getPoint(j+1);
+                        Point x4y4 = pointListOfConnection.getPoint(j + 1);
 
                         int x3 = x3y3.x;
                         int y3 = x3y3.y;
@@ -416,19 +418,19 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                         int y4 = x4y4.y;
 
                         // Edge Case: Check if lines are parallel
-                        if((x1 -x2)*(y3 - y4)-(y1 - y2)*(x3 - x4) != 0) {
+                        if ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4) != 0) {
                             // Calculate intersection point https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-                            double itx = (x1*y2 - y1*x2)*(x3 - x4) - (x1-x2)*(x3*y4 - y3*x4);
-                            itx = itx/( ((x1-x2)*(y3-y4)) - ((y1-y2)*(x3-x4)) );
+                            double itx = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4);
+                            itx = itx / (((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4)));
 
-                            double ity = (x1*y2 - y1*x2)*(y3 - y4) - (y1-y2)*(x3*y4 - y3*x4);
-                            ity = ity/( ((x1-x2)*(y3-y4)) - ((y1-y2)*(x3-x4)) );
+                            double ity = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4);
+                            ity = ity / (((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4)));
 
                             Point intersectionPoint = new Point(itx, ity);
 
                             // Edge case: intersection is very near to end point
                             // Ignore
-                            if(intersectionPoint.getDistance(x1y1) < lineJumpSize ||
+                            if (intersectionPoint.getDistance(x1y1) < lineJumpSize ||
                                     intersectionPoint.getDistance(x2y2) < lineJumpSize) {
                                 continue;
                             }
@@ -441,25 +443,25 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                             Polyline line2 = new Polyline();
                             line2.addPoint(new Point(x3, y3));
                             line2.addPoint(new Point(x4, y4));
-                            if(line1.containsPoint((int)itx, (int)ity) && line2.containsPoint((int)itx, (int)ity)) {
+                            if (line1.containsPoint((int) itx, (int) ity)
+                                    && line2.containsPoint((int) itx, (int) ity)) {
                                 // Line segments intersect.
                                 // Store intersection point and points x unit far away from intersection point
 
-
-                                if(lineJumpSize > 0) {
+                                if (lineJumpSize > 0) {
                                     Point intersectionPoint1 = null;
                                     // Get point between intersection point and start point
                                     double d = x1y1.getDistance(intersectionPoint);
                                     double dt = lineJumpSize;
 
                                     // Edge Case: Intersection point is start point
-                                    if(((int)d) == 0) {
+                                    if (((int) d) == 0) {
                                         intersectionPoint1 = x1y1;
                                     } else {
-                                        double t = dt/d;
+                                        double t = dt / d;
 
-                                        double xit1 = (((1-t)*intersectionPoint.x) + t*x1);
-                                        double yit1 = (((1-t)*intersectionPoint.y) + t*y1);
+                                        double xit1 = (((1 - t) * intersectionPoint.x) + t * x1);
+                                        double yit1 = (((1 - t) * intersectionPoint.y) + t * y1);
 
                                         intersectionPoint1 = new Point(xit1, yit1);
                                     }
@@ -471,13 +473,13 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                                     d = intersectionPoint.getDistance(x2y2);
 
                                     // Edge Case: Intersection point is end point
-                                    if(((int)d) == 0) {
+                                    if (((int) d) == 0) {
                                         intersectionPoint2 = x2y2;
                                     } else {
-                                        double t = dt/d;
+                                        double t = dt / d;
 
-                                        double xit2 = (((1-t)*intersectionPoint.x) + t*x2);
-                                        double yit2 = (((1-t)*intersectionPoint.y) + t*y2);
+                                        double xit2 = (((1 - t) * intersectionPoint.x) + t * x2);
+                                        double yit2 = (((1 - t) * intersectionPoint.y) + t * y2);
 
                                         intersectionPoint2 = new Point(xit2, yit2);
                                     }
@@ -488,10 +490,10 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                                     Polyline line3 = new Polyline();
                                     line3.addPoint(x1y1);
                                     line3.addPoint(x2y2);
-                                    if(!line3.containsPoint(intersectionPoint1)){
+                                    if (!line3.containsPoint(intersectionPoint1)) {
                                         intersectionPoint1 = x1y1;
                                     }
-                                    if(!line3.containsPoint(intersectionPoint2)){
+                                    if (!line3.containsPoint(intersectionPoint2)) {
                                         intersectionPoint2 = x2y2;
                                     }
 
@@ -519,16 +521,15 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
                 }
             });
 
-            for(Point p : intersectionPointsList) {
+            for (Point p : intersectionPointsList) {
                 intersections.addPoint(p);
             }
         }
-        if(pointsInConnection.size() > 0) {
+        if (pointsInConnection.size() > 0) {
             intersections.addPoint(pointsInConnection.getLastPoint());
         }
         return intersections;
     }
-
 
     private PointList getPointListOfConnectionForConnection(PolylineJumpConnection connection) {
         return connection.getPoints();
@@ -574,12 +575,12 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
         default:
             break;
         }
-        if(targetDecoration != null)
-            ((Shape)targetDecoration).setAntialias(
-                    getWidgetModel().isAntiAlias()? SWT.ON : SWT.OFF);
-        if(sourceDecoration != null)
-            ((Shape)sourceDecoration).setAntialias(
-                    getWidgetModel().isAntiAlias()? SWT.ON : SWT.OFF);
+        if (targetDecoration != null)
+            ((Shape) targetDecoration).setAntialias(
+                    getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
+        if (sourceDecoration != null)
+            ((Shape) sourceDecoration).setAntialias(
+                    getWidgetModel().isAntiAlias() ? SWT.ON : SWT.OFF);
         connection.setTargetDecoration(targetDecoration);
         connection.setSourceDecoration(sourceDecoration);
     }
@@ -611,26 +612,26 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
         ConnectionRouter router = ConnectionRouter.NULL;
         switch (getWidgetModel().getRouterType()) {
         case MANHATTAN:
-            //Allow move bendpoint
-            if(getExecutionMode()==ExecutionMode.EDIT_MODE)
+            // Allow move bendpoint
+            if (getExecutionMode() == ExecutionMode.EDIT_MODE)
                 installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-                    new ManhattanBendpointEditPolicy());
-            //no points, use manhattan
-            if(getWidgetModel().getPoints().size() == 0){
+                        new ManhattanBendpointEditPolicy());
+            // no points, use manhattan
+            if (getWidgetModel().getPoints().size() == 0) {
                 router = new ManhattanConnectionRouter();
                 break;
             }
-            //has points, use points for routing
+            // has points, use points for routing
             router = new FixedPointsConnectionRouter();
             ((FixedPointsConnectionRouter) router).setConnectionModel(getWidgetModel());
             connection.setConnectionRouter(router);
             refreshBendpoints(connection);
             return;
         case STRAIGHT_LINE:
-            //no bendpoint
-            if(getExecutionMode()==ExecutionMode.EDIT_MODE)
+            // no bendpoint
+            if (getExecutionMode() == ExecutionMode.EDIT_MODE)
                 installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE,
-                    null);
+                        null);
             router = ConnectionRouter.NULL;
         default:
             break;
@@ -640,18 +641,18 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
 
     /**
      * Updates the bendpoints, based on the model.
+     * 
      * @param connection
      */
     protected void refreshBendpoints(PolylineConnection connection) {
-        //Only work for manhattan router
-        if (!(connection.getConnectionRouter()
-                instanceof FixedPointsConnectionRouter))
+        // Only work for manhattan router
+        if (!(connection.getConnectionRouter() instanceof FixedPointsConnectionRouter))
             return;
         PointList points = getWidgetModel().getPoints().getCopy();
-        if(points.size() ==0){
+        if (points.size() == 0) {
             points = connection.getPoints().getCopy();
             points.removePoint(0);
-            points.removePoint(points.size()-1);
+            points.removePoint(points.size() - 1);
             getWidgetModel().setPoints(points);
         }
         connection.setRoutingConstraint(points);
@@ -707,7 +708,7 @@ public class WidgetConnectionEditPart extends AbstractConnectionEditPart {
         return super.getAdapter(key);
     }
 
-    public void setPropertyValue(String propID, Object value){
+    public void setPropertyValue(String propID, Object value) {
         getWidgetModel().setPropertyValue(propID, value);
     }
 

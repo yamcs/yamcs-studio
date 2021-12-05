@@ -69,9 +69,6 @@ public final class OPIRectangleFigure extends RectangleFigure implements Introsp
         this.runMode = runMode;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected synchronized void fillShape(final Graphics graphics) {
         Rectangle figureBounds = getClientArea();

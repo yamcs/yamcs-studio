@@ -7,7 +7,9 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
-/**The listener on a operations manager.
+/**
+ * The listener on a operations manager.
+ * 
  * @author Xihui Chen
  *
  */

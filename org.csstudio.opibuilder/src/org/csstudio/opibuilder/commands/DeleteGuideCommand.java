@@ -21,7 +21,6 @@
  */
 package org.csstudio.opibuilder.commands;
 
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,38 +32,20 @@ import org.eclipse.gef.commands.Command;
 
 /**
  * A Command to delete a guide.
+ * 
  * @author Kai Meyer (original author), Xihui Chen (since import from SDS 2009/9)
  */
 public final class DeleteGuideCommand extends Command {
 
-    /**
-     * The RulerModel.
-     */
     private RulerModel parent;
-    /**
-     * The GuideModel.
-     */
     private GuideModel guide;
-    /**
-     * A Map of {@link AbstractWidgetModel} and Integers.
-     */
     private Map<AbstractWidgetModel, Integer> oldParts;
 
-    /**
-     * Constructor.
-     * @param guide
-     *             The GuideModel
-     * @param parent
-     *             The RulerModel
-     */
     public DeleteGuideCommand(final GuideModel guide, final RulerModel parent) {
         this.guide = guide;
         this.parent = parent;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         oldParts = new HashMap<AbstractWidgetModel, Integer>(guide.getMap());
@@ -75,16 +56,13 @@ public final class DeleteGuideCommand extends Command {
         parent.removeGuide(guide);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void undo() {
         parent.addGuide(guide);
         Iterator<AbstractWidgetModel> iter = oldParts.keySet().iterator();
         while (iter.hasNext()) {
             AbstractWidgetModel model = iter.next();
-            guide.attachPart(model, ((Integer)oldParts.get(model)).intValue());
+            guide.attachPart(model, ((Integer) oldParts.get(model)).intValue());
         }
     }
 }

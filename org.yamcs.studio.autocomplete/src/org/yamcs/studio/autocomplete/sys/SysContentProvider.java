@@ -24,8 +24,7 @@ import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.studio.autocomplete.proposals.TopProposalFinder;
 
 /**
- * System Data Source content provider
- * Provides all available system functions & system properties.
+ * System Data Source content provider Provides all available system functions & system properties.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -119,7 +118,8 @@ public class SysContentProvider implements IAutoCompleteProvider {
 
         int dotIndex = sysDesc.getValue().indexOf(SYSTEM_SEPARATOR);
         String propValue = sysDesc.getValue().substring(dotIndex + 1);
-        String regex = propValue.replaceAll("\\.", "\\\\.");;
+        String regex = propValue.replaceAll("\\.", "\\\\.");
+        ;
         regex = regex.replaceAll("\\*", ".*");
         regex = regex.replaceAll("\\?", ".");
         Pattern valuePattern = null;

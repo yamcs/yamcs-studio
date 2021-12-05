@@ -12,26 +12,27 @@ import org.csstudio.opibuilder.properties.ColorProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
  * This class defines a gauge widget model.
+ * 
  * @author Xihui Chen
  */
-public class GaugeModel extends AbstractMarkedWidgetModel{
+public class GaugeModel extends AbstractMarkedWidgetModel {
 
     /** Needle color. */
     public static final String PROP_NEEDLE_COLOR = "needle_color";
 
-    /** True if the widget is drawn with advanced graphics. In some platforms,
-     * advance graphics may not be available, in which case the widget will not be drawn
-     * with advanced graphics even this is set to true.*/
+    /**
+     * True if the widget is drawn with advanced graphics. In some platforms, advance graphics may not be available, in
+     * which case the widget will not be drawn with advanced graphics even this is set to true.
+     */
     public static final String PROP_EFFECT3D = "effect_3d";
 
     /** True if the ramp is gradient. */
     public static final String PROP_RAMP_GRADIENT = "ramp_gradient";
 
     /** The default value of the default fill color property. */
-    private static final RGB DEFAULT_NEEDLE_COLOR = new RGB(255,0,0);
+    private static final RGB DEFAULT_NEEDLE_COLOR = new RGB(255, 0, 0);
 
     /** The default value of the height property. */
     private static final int DEFAULT_HEIGHT = 138;
@@ -48,8 +49,8 @@ public class GaugeModel extends AbstractMarkedWidgetModel{
 
     public GaugeModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setForegroundColor(new RGB(255,255,255));
-        setBackgroundColor(new RGB(0,64,128));
+        setForegroundColor(new RGB(255, 255, 255));
+        setBackgroundColor(new RGB(0, 64, 128));
         setScaleOptions(true, true, true);
     }
 

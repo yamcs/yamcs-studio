@@ -58,9 +58,10 @@ public class TooltipLabel extends Figure {
         return FigureUtilities.getTextExtents(tooltipText, Display.getDefault().getSystemFont()).expand(2, 2);
     }
 
-    private String getConnectionText(){
-        if (editPart == null || editPart.getConnectionHandler() == null || editPart.getConnectionHandler().getToolTipText() == null){
-        return "";
+    private String getConnectionText() {
+        if (editPart == null || editPart.getConnectionHandler() == null
+                || editPart.getConnectionHandler().getToolTipText() == null) {
+            return "";
         }
         return editPart.getConnectionHandler().getToolTipText();
     }

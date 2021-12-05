@@ -7,9 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.preferences;
 
-
-
-
 import org.csstudio.ui.util.swt.stringtable.RowEditDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -20,13 +17,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-/**Dialog that allows user edit the macros.
+/**
+ * Dialog that allows user edit the macros.
+ * 
  * @author Xihui Chen
  */
 public class MacroEditDialog extends RowEditDialog {
 
     private Text titleText, detailsText;
-
 
     public MacroEditDialog(Shell parentShell) {
         super(parentShell);

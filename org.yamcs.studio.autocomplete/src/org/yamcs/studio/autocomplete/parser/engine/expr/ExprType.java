@@ -9,8 +9,7 @@
  *******************************************************************************/
 package org.yamcs.studio.autocomplete.parser.engine.expr;
 
-public enum ExprType
-{
+public enum ExprType {
     Double,
     Integer,
     Boolean,

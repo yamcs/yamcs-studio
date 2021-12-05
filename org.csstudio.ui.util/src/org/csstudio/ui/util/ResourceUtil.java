@@ -38,7 +38,7 @@ import org.eclipse.core.runtime.Path;
  *
  */
 
-//TODO: Copied from org.csstudio.platform.ui. Review is needed.
+// TODO: Copied from org.csstudio.platform.ui. Review is needed.
 public final class ResourceUtil {
 
     /**
@@ -79,7 +79,7 @@ public final class ResourceUtil {
      * @return IResourceUtil
      */
     public static ResourceUtil getInstance() {
-        if (_instance==null) {
+        if (_instance == null) {
             _instance = new ResourceUtil();
         }
         return _instance;
@@ -87,15 +87,15 @@ public final class ResourceUtil {
 
     /**
      * Creates a new Folder in the parentContainer.
+     * 
      * @param parentContainer
-     *             The IContainer, where the new folder is built in
+     *            The IContainer, where the new folder is built in
      * @param folderName
-     *             The name of the folder
-     * @return int
-     *             The result-status
+     *            The name of the folder
+     * @return int The result-status
      */
     public int createFolder(final IContainer parentContainer, final String folderName) {
-        if (folderName != null && folderName.trim().length()>0) {
+        if (folderName != null && folderName.trim().length() > 0) {
             IFolder folder = parentContainer.getFolder(new Path(folderName));
             if (folder.exists()) {
                 return FOLDEREXISTS;
@@ -114,13 +114,13 @@ public final class ResourceUtil {
 
     /**
      * Creates a new Project.
+     * 
      * @param projectName
-     *             The name of the project
-     * @return int
-     *             The result-status
+     *            The name of the project
+     * @return int The result-status
      */
     public int createProject(final String projectName) {
-        if (projectName!=null && projectName.trim().length()>0) {
+        if (projectName != null && projectName.trim().length() > 0) {
             IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
             if (project.exists()) {
                 return PROJECTEXISTS;

@@ -83,25 +83,16 @@ public class ThumbWheelModel extends AbstractPVWidgetModel {
     /** The default value of the number of decimal digits property. */
     private static final int DEFAULT_DECIMAL_DIGITS = 2;
 
-    /**
-     * Standard constructor.
-     */
     public ThumbWheelModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setForegroundColor(new RGB(0, 0, 0));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getTypeID() {
         return ID;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureProperties() {
         // addProperty(new DoubleProperty(PROP_VALUE, "Value",

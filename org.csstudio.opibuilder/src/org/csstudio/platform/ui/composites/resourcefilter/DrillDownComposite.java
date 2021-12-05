@@ -31,13 +31,12 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 /**
- * Class <code>DrillDownComposite</code> implements a simple web style
- * navigation metaphor. Home, back, and "drill into" buttons are added to a tree
- * viewer for easier navigation.
+ * Class <code>DrillDownComposite</code> implements a simple web style navigation metaphor. Home, back, and "drill into"
+ * buttons are added to a tree viewer for easier navigation.
  *
  * <p>
- * <b>Code is based upon <code>org.eclipse.ui.part.DrillDownComposite</code> in
- * plugin <code>org.eclipse.ui.workbench</code>.</b>
+ * <b>Code is based upon <code>org.eclipse.ui.part.DrillDownComposite</code> in plugin
+ * <code>org.eclipse.ui.workbench</code>.</b>
  * </p>
  *
  * @author Kai Meyer
@@ -99,8 +98,7 @@ public class DrillDownComposite extends Composite {
     }
 
     /**
-     * Sets the child viewer. This method should only be called once, after the
-     * viewer has been created.
+     * Sets the child viewer. This method should only be called once, after the viewer has been created.
      *
      * @param aViewer
      *            the new child viewer

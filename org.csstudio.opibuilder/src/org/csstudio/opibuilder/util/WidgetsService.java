@@ -23,8 +23,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-/**A service help to find the widget from extensions and help to
- * maintain the widgets information.
+/**
+ * A service help to find the widget from extensions and help to maintain the widgets information.
+ * 
  * @author Xihui Chen
  *
  */
@@ -49,7 +50,7 @@ public final class WidgetsService {
      * @return the instance
      */
     public synchronized static final WidgetsService getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new WidgetsService();
         return instance;
     }
@@ -58,7 +59,7 @@ public final class WidgetsService {
         feedbackFactoriesMap = new HashMap<String, IGraphicalFeedbackFactory>();
         allWidgetDescriptorsMap = new LinkedHashMap<String, WidgetDescriptor>();
         allCategoriesMap = new LinkedHashMap<String, List<String>>();
-        for(MajorCategories mc : MajorCategories.values())
+        for (MajorCategories mc : MajorCategories.values())
             allCategoriesMap.put(mc.toString(), new ArrayList<String>());
         loadAllWidgets();
         loadAllFeedbackFactories();
@@ -67,21 +68,20 @@ public final class WidgetsService {
     /**
      * Load all widgets information from extensions.
      */
-    private void loadAllWidgets(){
+    private void loadAllWidgets() {
         IExtensionRegistry extReg = Platform.getExtensionRegistry();
-        IConfigurationElement[] confElements =
-            extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_WIDGET);
+        IConfigurationElement[] confElements = extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_WIDGET);
         List<IConfigurationElement> boyElements = new LinkedList<IConfigurationElement>();
         List<IConfigurationElement> otherElements = new LinkedList<IConfigurationElement>();
-        //Sort elements. opibuilder.widgets should always appear first.
-        for(IConfigurationElement element : confElements){
-            if(element.getContributor().getName().equals(BOY_WIDGETS_PLUGIN_NAME))
+        // Sort elements. opibuilder.widgets should always appear first.
+        for (IConfigurationElement element : confElements) {
+            if (element.getContributor().getName().equals(BOY_WIDGETS_PLUGIN_NAME))
                 boyElements.add(element);
             else
                 otherElements.add(element);
         }
         boyElements.addAll(otherElements);
-        for(IConfigurationElement element : boyElements){
+        for (IConfigurationElement element : boyElements) {
             String typeId = element.getAttribute("typeId");
             String name = element.getAttribute("name");
             String icon = element.getAttribute("icon");
@@ -97,34 +97,35 @@ public final class WidgetsService {
                 category = DEFAULT_CATEGORY;
             }
 
-            if(typeId != null){
+            if (typeId != null) {
                 List<String> list = allCategoriesMap.get(category);
-                if(list == null){
+                if (list == null) {
                     list = new ArrayList<String>();
                     allCategoriesMap.put(category, list);
                 }
                 // ensure no duplicates in the widgets palette
-                if (!list.contains(typeId)) list.add(typeId);
+                if (!list.contains(typeId))
+                    list.add(typeId);
                 allWidgetDescriptorsMap.put(typeId, new WidgetDescriptor(
                         element, typeId, name, description, icon, category, pluginId, onlineHelpHtml));
             }
         }
 
         // sort the widget in the categories
-        //for(List<String> list : allCategoriesMap.values())
-        //    Collections.sort(list);
+        // for(List<String> list : allCategoriesMap.values())
+        // Collections.sort(list);
     }
 
-    private void loadAllFeedbackFactories(){
+    private void loadAllFeedbackFactories() {
         IExtensionRegistry extReg = Platform.getExtensionRegistry();
-        IConfigurationElement[] confElements =
-            extReg.getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_FEEDBACK_FACTORY);
-        for(IConfigurationElement element : confElements){
+        IConfigurationElement[] confElements = extReg
+                .getConfigurationElementsFor(OPIBuilderPlugin.EXTPOINT_FEEDBACK_FACTORY);
+        for (IConfigurationElement element : confElements) {
             String typeId = element.getAttribute("typeId");
-            if(typeId != null){
+            if (typeId != null) {
                 try {
                     feedbackFactoriesMap.put(typeId,
-                            (IGraphicalFeedbackFactory)element.createExecutableExtension("class"));
+                            (IGraphicalFeedbackFactory) element.createExecutableExtension("class"));
                 } catch (CoreException e) {
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, "Cannot load feedback provider", e);
                 }
@@ -132,32 +133,29 @@ public final class WidgetsService {
         }
     }
 
-
     /**
-     * @return the allCategoriesMap the map which contains all the name of the
-     * categories and the widgets under them. The widgets list has been sorted by string.
+     * @return the allCategoriesMap the map which contains all the name of the categories and the widgets under them.
+     *         The widgets list has been sorted by string.
      */
     public final Map<String, List<String>> getAllCategoriesMap() {
         return allCategoriesMap;
     }
 
-
     /**
-     * @param typeId the typeId of the widget.
+     * @param typeId
+     *            the typeId of the widget.
      * @return the {@link WidgetDescriptor} of the widget.
      */
-    public final WidgetDescriptor getWidgetDescriptor(String typeId){
+    public final WidgetDescriptor getWidgetDescriptor(String typeId) {
         return allWidgetDescriptorsMap.get(typeId);
     }
 
-    public final String[] getAllWidgetTypeIDs(){
+    public final String[] getAllWidgetTypeIDs() {
         return allWidgetDescriptorsMap.keySet().toArray(new String[0]);
     }
 
-    public final IGraphicalFeedbackFactory getWidgetFeedbackFactory(String typeId){
+    public final IGraphicalFeedbackFactory getWidgetFeedbackFactory(String typeId) {
         return feedbackFactoriesMap.get(typeId);
     }
-
-
 
 }

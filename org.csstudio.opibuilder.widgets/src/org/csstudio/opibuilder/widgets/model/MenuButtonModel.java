@@ -34,7 +34,7 @@ import org.csstudio.ui.util.CustomMediaFactory;
  * @author Helge Rickens, Kai Meyer, Xihui Chen
  *
  */
-public final class MenuButtonModel extends AbstractPVWidgetModel implements ITextModel{
+public final class MenuButtonModel extends AbstractPVWidgetModel implements ITextModel {
     private static final boolean DEFAULT_ACTIONS_FROM_PV = false;
     /**
      * The ID of the label property.
@@ -43,8 +43,7 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
 
     public static final String PROP_ACTIONS_FROM_PV = "actions_from_pv";
 
-
-    public static final String PROP_TRANSPARENT = "transparent";   
+    public static final String PROP_TRANSPARENT = "transparent";
 
     /**
      * The ID of the show down arrow property.
@@ -75,9 +74,6 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
         setPropertyValue(PROP_BORDER_ALARMSENSITIVE, false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureProperties() {
         addProperty(new StringProperty(PROP_LABEL, "Label",
@@ -96,15 +92,11 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
 
     }
 
-
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getTypeID() {
         return ID;
     }
+
     /**
      * Return the label text.
      *
@@ -124,16 +116,16 @@ public final class MenuButtonModel extends AbstractPVWidgetModel implements ITex
         setPropertyValue(PROP_LABEL, text);
     }
 
-    public boolean isActionsFromPV(){
-        return (Boolean)getCastedPropertyValue(PROP_ACTIONS_FROM_PV);
+    public boolean isActionsFromPV() {
+        return (Boolean) getCastedPropertyValue(PROP_ACTIONS_FROM_PV);
     }
 
     public boolean isTransparent() {
-        return (Boolean)getPropertyValue(PROP_TRANSPARENT);
+        return (Boolean) getPropertyValue(PROP_TRANSPARENT);
     }
 
     public boolean showDownArrow() {
-        return (Boolean)getPropertyValue(PROP_SHOW_DOWN_ARROW);
+        return (Boolean) getPropertyValue(PROP_SHOW_DOWN_ARROW);
     }
 
 }

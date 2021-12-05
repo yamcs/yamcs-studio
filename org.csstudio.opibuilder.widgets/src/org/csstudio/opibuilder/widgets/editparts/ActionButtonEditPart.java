@@ -28,8 +28,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 
 /**
- * EditPart controller for the ActioButton widget. The controller mediates
- * between {@link ActionButtonModel} and {@link ActionButtonFigure2}.
+ * EditPart controller for the ActioButton widget. The controller mediates between {@link ActionButtonModel} and
+ * {@link ActionButtonFigure2}.
  *
  * @author Sven Wende (class of same name in SDS)
  * @author Xihui Chen
@@ -39,9 +39,6 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
 
     private IButtonEditPartDelegate delegate;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected IFigure doCreateFigure() {
         ActionButtonModel model = getWidgetModel();
@@ -138,9 +135,6 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
         delegate.deactivate();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
 
@@ -149,10 +143,9 @@ public class ActionButtonEditPart extends AbstractPVWidgetEditPart {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 AbstractWidgetModel model = getWidgetModel();
-                WidgetDescriptor descriptor =
-                        WidgetsService.getInstance().getWidgetDescriptor(model.getTypeID());
-                String type = descriptor == null? model.getTypeID().substring(
-                        model.getTypeID().lastIndexOf(".")+1) :    descriptor.getName();
+                WidgetDescriptor descriptor = WidgetsService.getInstance().getWidgetDescriptor(model.getTypeID());
+                String type = descriptor == null ? model.getTypeID().substring(
+                        model.getTypeID().lastIndexOf(".") + 1) : descriptor.getName();
                 model.setPropertyValue(AbstractWidgetModel.PROP_WIDGET_TYPE, type);
                 AbstractContainerModel parent = model.getParent();
                 parent.removeChild(model);

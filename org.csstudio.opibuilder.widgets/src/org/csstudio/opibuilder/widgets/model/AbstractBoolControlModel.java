@@ -16,39 +16,35 @@ import org.csstudio.swt.widgets.figures.AbstractBoolControlFigure.ShowConfirmDia
 
 /**
  * Abstract model for boolean controls.
+ * 
  * @author Xihui Chen
  *
  */
 public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
 
-
     /**
      * If the button should be a toggle button.
      */
-    public static final String PROP_TOGGLE_BUTTON= "toggle_button";
+    public static final String PROP_TOGGLE_BUTTON = "toggle_button";
 
     /** If a confirm dialog should be shown before performing action. */
     public static final String PROP_CONFIRM_DIALOG = "show_confirm_dialog";
 
-    /** The password needed to perform action*/
+    /** The password needed to perform action */
     public static final String PROP_PASSWORD = "password";
 
     /** The message which will be shown on confirm dialog. */
     public static final String PROP_CONFIRM_TIP = "confirm_message";
 
-
     public static final String DEFAULT_CONFIRM_TIP = "Are you sure you want to do this?";
 
     /**
-     * The action which will be executed when widget is pushed. It is the index the actions in
-     * actions property.
+     * The action which will be executed when widget is pushed. It is the index the actions in actions property.
      */
     public static final String PROP_PUSH_ACTION_INDEX = "push_action_index";
 
-
     /**
-     * The action which will be executed when widget is released. It is the index the action in
-     * actions property.
+     * The action which will be executed when widget is released. It is the index the action in actions property.
      */
     public static final String PROP_RELEASED_ACTION_INDEX = "released_action_index";
 
@@ -72,6 +68,7 @@ public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
         addProperty(new IntegerProperty(PROP_RELEASED_ACTION_INDEX, "Release Action Index",
                 WidgetPropertyCategory.Behavior, 0, 0, Integer.MAX_VALUE));
     }
+
     /**
      * The ID of this widget model.
      */
@@ -93,7 +90,7 @@ public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
      * @return true if the confirm dialog should be shown, false otherwise
      */
     public ShowConfirmDialog getShowConfirmDialog() {
-        return ShowConfirmDialog.values()[(Integer)getPropertyValue(PROP_CONFIRM_DIALOG)];
+        return ShowConfirmDialog.values()[(Integer) getPropertyValue(PROP_CONFIRM_DIALOG)];
     }
 
     /**
@@ -111,18 +108,19 @@ public class AbstractBoolControlModel extends AbstractBoolWidgetModel {
     }
 
     /**
-     * Return the index of the selected WidgetAction from the ActionData.
-     * The Action is running when the button is released.
+     * Return the index of the selected WidgetAction from the ActionData. The Action is running when the button is
+     * released.
+     * 
      * @return The index
      */
     public int getPushActionIndex() {
         return (Integer) getProperty(PROP_PUSH_ACTION_INDEX).getPropertyValue();
     }
 
-
     /**
-     * Return the index of the selected WidgetAction from the ActionData.
-     * The Action is running when the button is released.
+     * Return the index of the selected WidgetAction from the ActionData. The Action is running when the button is
+     * released.
+     * 
      * @return The index
      */
     public int getReleasedActionIndex() {

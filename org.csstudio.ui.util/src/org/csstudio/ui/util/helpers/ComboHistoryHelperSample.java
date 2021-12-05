@@ -14,6 +14,7 @@ public class ComboHistoryHelperSample {
 
     /**
      * Launch the application.
+     * 
      * @param args
      */
     public static void main(String[] args) {
@@ -21,7 +22,6 @@ public class ComboHistoryHelperSample {
         Shell shell = new Shell();
         shell.setSize(450, 300);
         shell.setText("SWT Application");
-
 
         text = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
         text.setBounds(10, 44, 412, 201);

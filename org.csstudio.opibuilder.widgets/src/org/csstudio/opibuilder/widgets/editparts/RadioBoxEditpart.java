@@ -11,7 +11,9 @@ import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.swt.widgets.figures.AbstractChoiceFigure;
 import org.csstudio.swt.widgets.figures.RadioBoxFigure;
 
-/**Editpart of Radio Box widget.
+/**
+ * Editpart of Radio Box widget.
+ * 
  * @author Xihui Chen
  *
  */

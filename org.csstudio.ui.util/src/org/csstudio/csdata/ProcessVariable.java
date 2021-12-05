@@ -23,72 +23,68 @@ package org.csstudio.csdata;
 
 import java.io.Serializable;
 
-/** Control System Process Variable Name
+/**
+ * Control System Process Variable Name
  *
- *  Allows Drag-and-Drop to transfer PV names,
- *  can be used for context menu object contributions.
+ * Allows Drag-and-Drop to transfer PV names, can be used for context menu object contributions.
  *
- *  All control system model items must serialize for Drag-and-Drop.
- *  They should be immutable. They should implement proper <code>equals()</code>
- *  and <code>hashCode()</code> to support collections.
+ * All control system model items must serialize for Drag-and-Drop. They should be immutable. They should implement
+ * proper <code>equals()</code> and <code>hashCode()</code> to support collections.
  *
- *  @author Sven Wende - Contributed to original ProcessVariable
- *  @author Gabriele Carcassi
- *  @author Kay Kasemir
+ * @author Sven Wende - Contributed to original ProcessVariable
+ * @author Gabriele Carcassi
+ * @author Kay Kasemir
  */
-public class ProcessVariable implements Serializable
-{
+public class ProcessVariable implements Serializable {
     /** @see Serializable */
     final private static long serialVersionUID = 1L;
 
     /** Process Variable name */
     private final String name;
 
-    /** Initialize
-     *  @param name Process Variable name
+    /**
+     * Initialize
+     * 
+     * @param name
+     *            Process Variable name
      */
-    public ProcessVariable(final String name)
-    {
+    public ProcessVariable(final String name) {
         if (name == null)
             throw new IllegalArgumentException("Empty name");
         this.name = name;
     }
 
     /** @return Process Variable Name */
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    /** Determine hash code from name
-     *  {@inheritDoc}
+    /**
+     * Determine hash code from name
      */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
 
-    /** Check equality by name
-     *  {@inheritDoc}
+    /**
+     * Check equality by name
      */
     @Override
-    public boolean equals(final Object obj)
-    {
+    public boolean equals(final Object obj) {
         if (this == obj)
             return true;
-        if (! (obj instanceof ProcessVariable))
+        if (!(obj instanceof ProcessVariable))
             return false;
         final ProcessVariable other = (ProcessVariable) obj;
         return name.equals(other.getName());
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "ProcessVariable '" + name + "'";
     }
 }

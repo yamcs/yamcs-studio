@@ -68,9 +68,6 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
     private boolean gradient = false;
     private Boolean support3D = null;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void fillShape(final Graphics graphics) {
         if (support3D == null)
@@ -119,11 +116,6 @@ public final class EllipseFigure extends Ellipse implements Introspectable {
         }
     }
 
-    /**
-     * @param graphics
-     * @param figureBounds
-     * @return
-     */
     protected Pattern setGradientPattern(final Graphics graphics,
             Rectangle figureBounds, Color gradientStartColor, Color fillColor) {
         Pattern pattern;

@@ -19,7 +19,9 @@ import org.eclipse.gef.editpolicies.ContainerEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
 
-/**Container edit policy which supports children orphan.
+/**
+ * Container edit policy which supports children orphan.
+ * 
  * @author Xihui Chen
  *
  */
@@ -35,10 +37,10 @@ public class WidgetContainerEditPolicy extends ContainerEditPolicy {
         @SuppressWarnings("rawtypes")
         List parts = request.getEditParts();
         CompoundCommand result = new CompoundCommand("Orphan Children");
-        for(int i=0; i<parts.size(); i++){
+        for (int i = 0; i < parts.size(); i++) {
             OrphanChildCommand orphan = new OrphanChildCommand(
-                    (AbstractContainerModel)(getHost().getModel()),
-                    (AbstractWidgetModel)((EditPart)parts.get(i)).getModel());
+                    (AbstractContainerModel) (getHost().getModel()),
+                    (AbstractWidgetModel) ((EditPart) parts.get(i)).getModel());
             orphan.setLabel("Reparenting widget");
             result.add(orphan);
         }

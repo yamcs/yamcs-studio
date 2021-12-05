@@ -75,8 +75,7 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
     private SnapToHelper _snapToHelper;
 
     /**
-     * The initial point list, when a drag operation starts. Used to calculate
-     * deviations for feedback.
+     * The initial point list, when a drag operation starts. Used to calculate deviations for feedback.
      */
     private PointList _oldPoints;
 
@@ -86,8 +85,7 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
     private Request _sourceRequest;
 
     /**
-     * Constructs a new DragEditPartsTracker with the given source edit part and
-     * point index.
+     * Constructs a new DragEditPartsTracker with the given source edit part and point index.
      *
      * @param owner
      *            the source edit part
@@ -100,7 +98,8 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
         setDisabledCursor(Cursors.NO);
         assert owner != null;
         assert owner.getFigure() instanceof Polyline : "owner.getFigure() instanceof Polyline";
-        assert ((Polyline) owner.getFigure()).getPoints().size() > pointIndex : "((Polyline) owner.getFigure()).getPoints().size()>pointIndex";
+        assert ((Polyline) owner.getFigure()).getPoints()
+                .size() > pointIndex : "((Polyline) owner.getFigure()).getPoints().size()>pointIndex";
         assert pointIndex >= 0 : "pointIndex>=0";
         _owner = owner;
         _pointIndex = pointIndex;
@@ -114,8 +113,7 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
     /**
      * The TargetEditPart is the parent of the EditPart being resized.
      *
-     * @return The target EditPart; may be <code>null</code> in 2.1
-     *         applications that use the now deprecated
+     * @return The target EditPart; may be <code>null</code> in 2.1 applications that use the now deprecated
      *         {@link ResizeTracker#ResizeTracker(int) constructor}.
      */
     protected GraphicalEditPart getTargetEditPart() {
@@ -144,17 +142,11 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
         return sourceRect;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected String getCommandName() {
         return RequestConstants.REQ_RESIZE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @SuppressWarnings("unchecked")
     @Override
     protected Request createSourceRequest() {
@@ -174,9 +166,6 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
         return request;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("unchecked")
     protected void updateSourceRequest() {
@@ -219,9 +208,6 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
         request.getExtendedData().put(EXT_DATA_POINT_INDEX, _pointIndex);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Command getCommand() {
         if (_owner == null) {
@@ -243,9 +229,6 @@ public final class PolyPointDragTracker extends SimpleDragTracker {
         return _sourceRequest;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void performDrag() {
         super.performDrag();

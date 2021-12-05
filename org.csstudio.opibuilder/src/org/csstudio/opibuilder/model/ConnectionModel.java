@@ -203,8 +203,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     public static final String PATH_DELIMITER = "_";
 
     /**
-     * All points of this connection except start and end anchor.
-     * null if it should be routed by router.
+     * All points of this connection except start and end anchor. null if it should be routed by router.
      */
     public static final String PROP_POINTS = "points";
 
@@ -233,10 +232,12 @@ public class ConnectionModel extends AbstractWidgetModel {
 
     private ScrollPane scrollPane;
 
-    /**Construct a connection model which belongs to the displayModel.
-     * If this is a temporary connection model which doesn't belong to any display model,
-     * displayModel can be null.
-     * @param displayModel the display model. Can be null.
+    /**
+     * Construct a connection model which belongs to the displayModel. If this is a temporary connection model which
+     * doesn't belong to any display model, displayModel can be null.
+     * 
+     * @param displayModel
+     *            the display model. Can be null.
      */
     public ConnectionModel(DisplayModel displayModel) {
         this.displayModel = displayModel;
@@ -274,7 +275,7 @@ public class ConnectionModel extends AbstractWidgetModel {
                 WidgetPropertyCategory.Display, 10, 1, 100));
 
         AbstractWidgetProperty loadedFromLinkingContainer = new StringProperty(PROP_IS_LOADED_FROM_LINKING_CONTAINER,
-                        "Is Loaded From Linking Container", WidgetPropertyCategory.Behavior, "false");
+                "Is Loaded From Linking Container", WidgetPropertyCategory.Behavior, "false");
         addProperty(loadedFromLinkingContainer);
         setPropertyVisibleAndSavable(PROP_IS_LOADED_FROM_LINKING_CONTAINER, false, false);
 
@@ -286,19 +287,19 @@ public class ConnectionModel extends AbstractWidgetModel {
         srcWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if(displayModel == null)
+                if (displayModel == null)
                     return;
                 String wuid = evt.getNewValue().toString();
                 String path = getPropertyValue(PROP_SRC_PATH).toString();
 
                 AbstractWidgetModel w = null;
-                if(path == null || path.equals("")){
+                if (path == null || path.equals("")) {
                     w = getTerminal(displayModel, null, wuid);
-                }else {
+                } else {
                     List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
                     w = getTerminal(displayModel, paths, wuid);
                 }
-                if(w != null){
+                if (w != null) {
                     source = w;
                     reconnect();
                 } else
@@ -311,18 +312,18 @@ public class ConnectionModel extends AbstractWidgetModel {
         tgtWUIDProp.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if(displayModel == null)
+                if (displayModel == null)
                     return;
                 String wuid = evt.getNewValue().toString();
                 String path = getPropertyValue(PROP_TGT_PATH).toString();
                 AbstractWidgetModel w = null;
-                if(path == null || path.equals("")){
+                if (path == null || path.equals("")) {
                     w = getTerminal(displayModel, null, wuid);
-                }else {
+                } else {
                     List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
                     w = getTerminal(displayModel, paths, wuid);
                 }
-                if(w != null){
+                if (w != null) {
                     target = w;
                     reconnect();
                 } else
@@ -367,19 +368,21 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     private AbstractWidgetModel getTerminal(AbstractContainerModel root, List<String> paths, String wuid) {
-        if(root == null) return null;
+        if (root == null)
+            return null;
 
-        if(paths == null || paths.isEmpty()) {
-            return getTerminal(root,wuid);
+        if (paths == null || paths.isEmpty()) {
+            return getTerminal(root, wuid);
         }
 
         AbstractContainerModel widget = root;
         String tempId = paths.get(0);
-        for(AbstractWidgetModel w : widget.getChildren()) {
-            if(w instanceof AbstractContainerModel && w.getWUID().equals(tempId)) {
-                AbstractWidgetModel tempResult =
-                        getTerminal((AbstractContainerModel)w, paths.subList(1, paths.size()), wuid);
-                if(tempResult != null) return tempResult;
+        for (AbstractWidgetModel w : widget.getChildren()) {
+            if (w instanceof AbstractContainerModel && w.getWUID().equals(tempId)) {
+                AbstractWidgetModel tempResult = getTerminal((AbstractContainerModel) w, paths.subList(1, paths.size()),
+                        wuid);
+                if (tempResult != null)
+                    return tempResult;
             }
         }
 
@@ -387,13 +390,14 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     private AbstractWidgetModel getTerminal(AbstractContainerModel model, String wuid) {
-        for(AbstractWidgetModel w : model.getChildren()) {
-            if(w.getWUID().equals(wuid)) {
+        for (AbstractWidgetModel w : model.getChildren()) {
+            if (w.getWUID().equals(wuid)) {
                 return w;
             }
             if (w instanceof AbstractContainerModel) {
-                AbstractWidgetModel m = getTerminal((AbstractContainerModel)w, wuid);
-                if (m != null) return m;
+                AbstractWidgetModel m = getTerminal((AbstractContainerModel) w, wuid);
+                if (m != null)
+                    return m;
             }
         }
         return null;
@@ -423,8 +427,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     /**
-     * Reconnect this connection. The connection will reconnect with the shapes
-     * it was previously attached to.
+     * Reconnect this connection. The connection will reconnect with the shapes it was previously attached to.
      */
     public void reconnect() {
         if (!isConnected && source != null && target != null) {
@@ -446,9 +449,9 @@ public class ConnectionModel extends AbstractWidgetModel {
         String wuid = target.getWUID();
         String path = getPropertyValue(PROP_TGT_PATH).toString();
         AbstractWidgetModel w = null;
-        if(path == null || path.equals("")){
+        if (path == null || path.equals("")) {
             w = getTerminal(displayModel, null, wuid);
-        }else {
+        } else {
             List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
             w = getTerminal(displayModel, paths, wuid);
         }
@@ -457,9 +460,9 @@ public class ConnectionModel extends AbstractWidgetModel {
         wuid = source.getWUID();
         path = getPropertyValue(PROP_SRC_PATH).toString();
         w = null;
-        if(path == null || path.equals("")){
+        if (path == null || path.equals("")) {
             w = getTerminal(displayModel, null, wuid);
-        }else {
+        } else {
             List<String> paths = Arrays.asList(path.split(PATH_DELIMITER));
             w = getTerminal(displayModel, paths, wuid);
         }
@@ -470,9 +473,8 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     /**
-     * Reconnect to a different source and/or target shape. The connection will
-     * disconnect from its current attachments and reconnect to the new source
-     * and target.
+     * Reconnect to a different source and/or target shape. The connection will disconnect from its current attachments
+     * and reconnect to the new source and target.
      *
      * @param newSource
      *            a new source endpoint for this connection (non null)
@@ -540,11 +542,11 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     public String[] getTargetPath() {
-        return ((String)getPropertyValue(PROP_TGT_PATH)).split(PATH_DELIMITER);
+        return ((String) getPropertyValue(PROP_TGT_PATH)).split(PATH_DELIMITER);
     }
 
     public String[] getSourcePath() {
-        return ((String)getPropertyValue(PROP_SRC_PATH)).split(PATH_DELIMITER);
+        return ((String) getPropertyValue(PROP_SRC_PATH)).split(PATH_DELIMITER);
     }
 
     /**
@@ -591,8 +593,8 @@ public class ConnectionModel extends AbstractWidgetModel {
     /**
      * @return the points on this connection except start and end anchors, can be null.
      */
-    public PointList getPoints(){
-        return (PointList)getPropertyValue(PROP_POINTS);
+    public PointList getPoints() {
+        return (PointList) getPropertyValue(PROP_POINTS);
     }
 
     public void setPoints(PointList points) {
@@ -603,7 +605,7 @@ public class ConnectionModel extends AbstractWidgetModel {
      * @return the original points before scaling.
      */
     public PointList getOriginPoints() {
-        if(originPoints == null)
+        if (originPoints == null)
             originPoints = getPoints();
         return originPoints;
     }
@@ -623,16 +625,17 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     private String buildTerminalPathFromModel(AbstractWidgetModel model) {
-        if(model == null) return "";
+        if (model == null)
+            return "";
 
         AbstractWidgetModel parent = model.getParent();
         String result = "";
-        while(parent != null && parent.getWUID() != null && !(parent instanceof DisplayModel)) {
+        while (parent != null && parent.getWUID() != null && !(parent instanceof DisplayModel)) {
             result = parent.getWUID() + PATH_DELIMITER + result;
             parent = parent.getParent();
         }
 
-        if(result.endsWith(PATH_DELIMITER))
+        if (result.endsWith(PATH_DELIMITER))
             return result.substring(0, result.length() - 1);
         else
             return result;
@@ -644,7 +647,7 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     public int getLineJumpSize() {
-        return (int)getPropertyValue(PROP_LINE_JUMP_SIZE);
+        return (int) getPropertyValue(PROP_LINE_JUMP_SIZE);
     }
 
     public LineJumpStyle getLineJumpStyle() {
@@ -660,7 +663,8 @@ public class ConnectionModel extends AbstractWidgetModel {
     }
 
     /**
-     * @param scrollPane the scrollPane to set
+     * @param scrollPane
+     *            the scrollPane to set
      */
     public void setScrollPane(ScrollPane scrollPane) {
         this.scrollPane = scrollPane;

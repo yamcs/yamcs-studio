@@ -41,8 +41,6 @@ public class WidgetCreateCommand extends Command {
 
     private int index = -1;
 
-
-
     /**
      * @param newWidget
      *            The new Widget to be added.
@@ -63,8 +61,6 @@ public class WidgetCreateCommand extends Command {
             SchemaService.getInstance().applySchema(this.newWidget);
         }
     }
-
-
 
     /**
      * @param newWidget
@@ -91,10 +87,10 @@ public class WidgetCreateCommand extends Command {
         return newWidget != null && container != null;
     }
 
-    private void generateNewWUID(AbstractWidgetModel widgetModel){
+    private void generateNewWUID(AbstractWidgetModel widgetModel) {
         widgetModel.generateNewWUID();
-        if(widgetModel instanceof AbstractContainerModel){
-            for(AbstractWidgetModel child: ((AbstractContainerModel)widgetModel).getChildren())
+        if (widgetModel instanceof AbstractContainerModel) {
+            for (AbstractWidgetModel child : ((AbstractContainerModel) widgetModel).getChildren())
                 generateNewWUID(child);
         }
     }
@@ -103,8 +99,8 @@ public class WidgetCreateCommand extends Command {
     public void execute() {
         oldBounds = newWidget.getBounds();
         generateNewWUID(newWidget);
-        //If the new created widget has connections on it, remove their points.
-        for(ConnectionModel conn : newWidget.getSourceConnections()){
+        // If the new created widget has connections on it, remove their points.
+        for (ConnectionModel conn : newWidget.getSourceConnections()) {
             conn.setPoints(new PointList());
         }
         redo();
@@ -153,14 +149,15 @@ public class WidgetCreateCommand extends Command {
             }
             newWidget.setName(nameHead
                     + "_"
-                    + (nameMap.get(nameHead) == null ? 0 : nameMap
-                            .get(nameHead) + 1));
+                    + (nameMap.get(nameHead) == null ? 0
+                            : nameMap
+                                    .get(nameHead) + 1));
         }
         container.addChild(index, newWidget);
         container.selectWidget(newWidget, append);
-        if(newWidget instanceof AbstractContainerModel) {
+        if (newWidget instanceof AbstractContainerModel) {
             try {
-                XMLUtil.fillLinkingContainers((AbstractContainerModel)newWidget);
+                XMLUtil.fillLinkingContainers((AbstractContainerModel) newWidget);
             } catch (Exception e) {
                 e.printStackTrace();
             }

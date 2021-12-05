@@ -7,7 +7,9 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.script;
 
-/**The expression data for a rule.
+/**
+ * The expression data for a rule.
+ * 
  * @author Xihui Chen
  *
  */
@@ -29,7 +31,8 @@ public class Expression {
     }
 
     /**
-     * @param booleanExpression the booleanExpression to set
+     * @param booleanExpression
+     *            the booleanExpression to set
      */
     public final void setBooleanExpression(String booleanExpression) {
         this.booleanExpression = booleanExpression;
@@ -43,15 +46,15 @@ public class Expression {
     }
 
     /**
-     * @param value the value to set
+     * @param value
+     *            the value to set
      */
     public final void setValue(Object value) {
         this.value = value;
     }
 
-    public Expression getCopy(){
+    public Expression getCopy() {
         return new Expression(booleanExpression, value);
     }
-
 
 }

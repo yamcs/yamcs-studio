@@ -32,24 +32,14 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 public final class DoubleCellEditor extends TextCellEditor {
-    /**
-     * Standard constructor.
-     *
-     * @param parent
-     *            The parent control.
-     */
+
     public DoubleCellEditor(final Composite parent) {
         super(parent);
     }
 
-
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void doSetValue(final Object value) {
-        if (value==null) {
+        if (value == null) {
             super.doSetValue(String.valueOf(new Double(0)));
         } else {
             super.doSetValue(String.valueOf(value.toString()));

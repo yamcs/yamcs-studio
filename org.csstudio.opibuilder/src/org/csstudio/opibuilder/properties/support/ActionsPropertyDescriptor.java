@@ -7,14 +7,14 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.properties.support;
 
-
 import org.csstudio.opibuilder.visualparts.ActionsCellEditor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
-
-/**The property descriptor for actions property.
+/**
+ * The property descriptor for actions property.
+ * 
  * @author Xihui Chen
  *
  */
@@ -36,9 +36,6 @@ public class ActionsPropertyDescriptor extends TextPropertyDescriptor {
         this.showHookOption = showHookOption;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new ActionsCellEditor(parent, "Set Actions", showHookOption);

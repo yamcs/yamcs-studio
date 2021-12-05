@@ -13,8 +13,8 @@ import java.util.List;
 import org.yamcs.studio.autocomplete.IAutoCompleteProvider;
 
 /**
- * Descriptor used in {@link IContentParser} and {@link IAutoCompleteProvider}
- * to describe a content matching a function.
+ * Descriptor used in {@link IContentParser} and {@link IAutoCompleteProvider} to describe a content matching a
+ * function.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

@@ -31,7 +31,9 @@ import org.csstudio.opibuilder.widgets.model.RoundedRectangleModel;
 import org.csstudio.swt.widgets.figures.OPIRectangleFigure;
 import org.eclipse.draw2d.IFigure;
 
-/**The editpart of a rectangle widget.
+/**
+ * The editpart of a rectangle widget.
+ * 
  * @author Sven Wende & Stefan Hofer (similar class in SDS)
  * @author Xihui Chen
  *
@@ -56,9 +58,8 @@ public class RectangleEditpart extends AbstractShapeEditPart {
 
     @Override
     public RectangleModel getWidgetModel() {
-        return (RectangleModel)getModel();
+        return (RectangleModel) getModel();
     }
-
 
     @Override
     protected void registerPropertyChangeHandlers() {
@@ -107,8 +108,8 @@ public class RectangleEditpart extends AbstractShapeEditPart {
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
-                ((OPIRectangleFigure)refreshableFigure).setLineColor(
-                        ((OPIColor)newValue).getSWTColor());
+                ((OPIRectangleFigure) refreshableFigure).setLineColor(
+                        ((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
@@ -119,7 +120,7 @@ public class RectangleEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((OPIRectangleFigure)figure).setGradient((Boolean)newValue);
+                ((OPIRectangleFigure) figure).setGradient((Boolean) newValue);
                 return false;
             }
         };
@@ -129,7 +130,7 @@ public class RectangleEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((OPIRectangleFigure)figure).setBackGradientStartColor(((OPIColor)newValue).getSWTColor());
+                ((OPIRectangleFigure) figure).setBackGradientStartColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
         };
@@ -139,34 +140,34 @@ public class RectangleEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((OPIRectangleFigure)figure).setForeGradientStartColor(((OPIColor)newValue).getSWTColor());
+                ((OPIRectangleFigure) figure).setForeGradientStartColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
         };
         setPropertyChangeHandler(RoundedRectangleModel.PROP_FOREGROUND_GRADIENT_START_COLOR, handler);
 
-
     }
 
     @Override
     public void setValue(Object value) {
-        if(value instanceof Number){
-            ((OPIRectangleFigure)getFigure()).setFill(((Number)value).doubleValue());
-        }else
+        if (value instanceof Number) {
+            ((OPIRectangleFigure) getFigure()).setFill(((Number) value).doubleValue());
+        } else
             super.setValue(value);
     }
 
     @Override
     public Object getValue() {
-        return ((OPIRectangleFigure)getFigure()).getFill();
+        return ((OPIRectangleFigure) getFigure()).getFill();
     }
 
     /**
-     * The rectangle is selectable if it has any actions, has a tooltip defined
-     * or is opaque.  A transparent rectangle should pass clicks or tooltips through.
+     * The rectangle is selectable if it has any actions, has a tooltip defined or is opaque. A transparent rectangle
+     * should pass clicks or tooltips through.
+     * 
      * @return whether the rectangle is selectable
      */
-    private boolean determineSelectable(){
+    private boolean determineSelectable() {
         boolean hasActions = !getWidgetModel().getActionsInput().getActionsList().isEmpty();
         boolean hasTooltip = getWidgetModel().getTooltip().trim().length() > 0;
         boolean opaque = !getWidgetModel().isTransparent();

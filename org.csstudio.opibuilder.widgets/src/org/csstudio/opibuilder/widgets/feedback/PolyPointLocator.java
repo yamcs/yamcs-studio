@@ -32,9 +32,8 @@ import org.eclipse.gef.handles.HandleBounds;
 
 /**
  *
- * Places a handle for a polygon or polyline point. The placement is determined by
- * indicating the polyline figure to which the placement is relative, and a value
- * indicating a point index.
+ * Places a handle for a polygon or polyline point. The placement is determined by indicating the polyline figure to
+ * which the placement is relative, and a value indicating a point index.
  *
  * @author Sven Wende
  */
@@ -51,35 +50,34 @@ public final class PolyPointLocator implements Locator {
 
     /**
      * Constructs a poly point handle locator.
-     * @param referenceFigure the reference figure ({@link Polyline} or subclasses of it)
-     * @param pointIndex the index of the polygon point for which a handle should be placed
+     * 
+     * @param referenceFigure
+     *            the reference figure ({@link Polyline} or subclasses of it)
+     * @param pointIndex
+     *            the index of the polygon point for which a handle should be placed
      */
     public PolyPointLocator(final Polyline referenceFigure, final int pointIndex) {
         assert referenceFigure != null;
-        assert pointIndex>=0 : "pointIndex>=0";
-        assert referenceFigure.getPoints().size()>pointIndex : "referenceFigure.getPoints().size()>pointIndex";
+        assert pointIndex >= 0 : "pointIndex>=0";
+        assert referenceFigure.getPoints().size() > pointIndex : "referenceFigure.getPoints().size()>pointIndex";
         _pointIndex = pointIndex;
         _referenceFigure = referenceFigure;
     }
 
     /**
-     * Returns the Reference Box in the Reference Figure's coordinate system.
-     * The returned Rectangle may be by reference, and should <b>not</b> be
-     * modified.
+     * Returns the Reference Box in the Reference Figure's coordinate system. The returned Rectangle may be by
+     * reference, and should <b>not</b> be modified.
      *
      * @return the reference box
      * @since 2.0
      */
     protected Rectangle getReferenceBox() {
         if (_referenceFigure instanceof HandleBounds) {
-            return ((HandleBounds)_referenceFigure).getHandleBounds();
+            return ((HandleBounds) _referenceFigure).getHandleBounds();
         }
         return _referenceFigure.getBounds();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void relocate(final IFigure target) {
         Point p = _referenceFigure.getPoints().getPoint(_pointIndex);

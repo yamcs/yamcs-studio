@@ -17,11 +17,13 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Display;
 
-/**The action to lock or unlock children in grouping container.
+/**
+ * The action to lock or unlock children in grouping container.
+ * 
  * @author Xihui Chen
  *
  */
-public class LockUnlockChildrenAction extends AbstractWidgetTargetAction{
+public class LockUnlockChildrenAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
@@ -36,7 +38,7 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction{
     public static Command createLockUnlockCommand(
             final GroupingContainerModel containerModel) {
         Command cmd = new SetWidgetPropertyCommand(containerModel,
-                GroupingContainerModel.PROP_LOCK_CHILDREN, !containerModel.isLocked()){
+                GroupingContainerModel.PROP_LOCK_CHILDREN, !containerModel.isLocked()) {
             @Override
             public void execute() {
                 super.execute();
@@ -49,23 +51,23 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction{
                 selectWidgets();
             }
 
-            private void selectWidgets(){
-                //must be queued so it is executed after property has been changed.
+            private void selectWidgets() {
+                // must be queued so it is executed after property has been changed.
                 GUIRefreshThread.getInstance(false).addIgnorableTask(
                         new WidgetIgnorableUITask(this,
                                 new Runnable() {
 
-                    public void run() {
-//                        if(!containerModel.isLocked())
-//                            containerModel.selectWidgets(containerModel.getChildren(), false);
-//                        else
-                            containerModel.getParent().selectWidget(containerModel, false);
-                    }
-                }, Display.getCurrent()));
+                                    public void run() {
+                                        // if(!containerModel.isLocked())
+                                        // containerModel.selectWidgets(containerModel.getChildren(), false);
+                                        // else
+                                        containerModel.getParent().selectWidget(containerModel, false);
+                                    }
+                                }, Display.getCurrent()));
 
             }
         };
-        cmd.setLabel(containerModel.isLocked()? "Unlock Children" : "Lock Children");
+        cmd.setLabel(containerModel.isLocked() ? "Unlock Children" : "Lock Children");
         return cmd;
     }
 
@@ -75,7 +77,7 @@ public class LockUnlockChildrenAction extends AbstractWidgetTargetAction{
      * @return a list with all widget models that are currently selected
      */
     protected final GroupingContainerModel getSelectedContainer() {
-        return ((GroupingContainerEditPart)selection.getFirstElement()).getWidgetModel();
+        return ((GroupingContainerEditPart) selection.getFirstElement()).getWidgetModel();
     }
 
 }

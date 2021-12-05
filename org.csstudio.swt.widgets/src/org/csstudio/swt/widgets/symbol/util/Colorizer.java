@@ -107,7 +107,8 @@ public class Colorizer {
                         } else if (lightness < 0) {
                             lum = (int) (((double) lum * (lightness + 100f)) / 100f);
                         }
-                        Color final_color = new Color(final_red_lookup[lum], final_green_lookup[lum], final_blue_lookup[lum]);
+                        Color final_color = new Color(final_red_lookup[lum], final_green_lookup[lum],
+                                final_blue_lookup[lum]);
                         RGB degraded = new RGB(final_color.getRed(), final_color.getGreen(), final_color.getBlue());
                         if (palette.isDirect) {
                             int appliedColor = palette.getPixel(degraded);

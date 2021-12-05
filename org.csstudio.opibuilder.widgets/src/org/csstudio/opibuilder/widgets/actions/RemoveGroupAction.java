@@ -19,12 +19,13 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.action.IAction;
 
-/**The action will remove a group and move all the selected widgets to the group's parent.
+/**
+ * The action will remove a group and move all the selected widgets to the group's parent.
+ * 
  * @author Xihui Chen
  *
  */
-public class RemoveGroupAction extends AbstractWidgetTargetAction{
-
+public class RemoveGroupAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
@@ -32,15 +33,15 @@ public class RemoveGroupAction extends AbstractWidgetTargetAction{
 
         GroupingContainerModel containerModel = getSelectedContainer();
 
-        //Orphan order should be reversed so that undo operation has the correct order.
+        // Orphan order should be reversed so that undo operation has the correct order.
         AbstractWidgetModel[] widgetsArray = containerModel.getChildren().toArray(
                 new AbstractWidgetModel[containerModel.getChildren().size()]);
-        for(int i = widgetsArray.length -1; i>=0; i--){
+        for (int i = widgetsArray.length - 1; i >= 0; i--) {
             compoundCommand.add(new OrphanChildCommand(containerModel, widgetsArray[i]));
         }
 
         Point leftCorner = containerModel.getLocation();
-        for(AbstractWidgetModel widget : containerModel.getChildren()){
+        for (AbstractWidgetModel widget : containerModel.getChildren()) {
             compoundCommand.add(new AddWidgetCommand(containerModel.getParent(), widget,
                     new Rectangle(widget.getLocation(), widget.getSize()).translate(leftCorner)));
         }
@@ -49,14 +50,13 @@ public class RemoveGroupAction extends AbstractWidgetTargetAction{
 
     }
 
-
     /**
      * Gets the widget models of all currently selected EditParts.
      *
      * @return a list with all widget models that are currently selected
      */
     protected final GroupingContainerModel getSelectedContainer() {
-        return ((GroupingContainerEditPart)selection.getFirstElement()).getWidgetModel();
+        return ((GroupingContainerEditPart) selection.getFirstElement()).getWidgetModel();
     }
 
 }

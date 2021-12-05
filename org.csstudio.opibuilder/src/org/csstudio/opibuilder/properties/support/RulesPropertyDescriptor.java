@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.properties.support;
 
-
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.RulesProperty;
 import org.csstudio.opibuilder.visualparts.RulesInputCellEditor;
@@ -15,8 +14,9 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
-
-/**The property descriptor for {@link RulesProperty}.
+/**
+ * The property descriptor for {@link RulesProperty}.
+ * 
  * @author Xihui Chen
  *
  */
@@ -37,9 +37,6 @@ public class RulesPropertyDescriptor extends TextPropertyDescriptor {
         this.widgetModel = widgetModel;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new RulesInputCellEditor(parent, widgetModel, "Attach Rules");

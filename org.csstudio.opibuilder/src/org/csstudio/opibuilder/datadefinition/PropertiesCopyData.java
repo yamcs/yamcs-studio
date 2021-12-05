@@ -11,7 +11,9 @@ import java.util.List;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 
-/**The data for coping properties.
+/**
+ * The data for coping properties.
+ * 
  * @author Xihui Chen
  *
  */
@@ -35,7 +37,8 @@ public class PropertiesCopyData {
     }
 
     /**
-     * @param widgetModel the widgetModel to set
+     * @param widgetModel
+     *            the widgetModel to set
      */
     public final void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
@@ -49,13 +52,11 @@ public class PropertiesCopyData {
     }
 
     /**
-     * @param propIDList the propIDList to set
+     * @param propIDList
+     *            the propIDList to set
      */
     public final void setPropIDList(List<String> propIDList) {
         this.propIDList = propIDList;
     }
-
-
-
 
 }

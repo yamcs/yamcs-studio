@@ -10,8 +10,7 @@ package org.yamcs.studio.autocomplete.tooltips;
 import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 
 /**
- * Content that will be displayed in UI. Result of concatenation of all provided
- * {@link TooltipData}.
+ * Content that will be displayed in UI. Result of concatenation of all provided {@link TooltipData}.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

@@ -40,7 +40,7 @@ public class LocalContentParser implements IContentParser {
             return false;
         if (desc.getValue().startsWith(LOCAL_SOURCE)
                 || (desc.getValue().indexOf(AutoCompleteConstants.DATA_SOURCE_NAME_SEPARATOR) == -1
-                && LOCAL_SOURCE.equals(desc.getDefaultDataSource())))
+                        && LOCAL_SOURCE.equals(desc.getDefaultDataSource())))
             return true;
         return false;
     }

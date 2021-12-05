@@ -10,8 +10,8 @@ package org.csstudio.opibuilder.editparts;
 import org.eclipse.draw2d.ScrollPane;
 
 /**
- * This is an abstract class which represents all Container Editparts which can
- * be scrollable and have a {@link ScrollPane}
+ * This is an abstract class which represents all Container Editparts which can be scrollable and have a
+ * {@link ScrollPane}
  *
  * @author mvitorovic
  */

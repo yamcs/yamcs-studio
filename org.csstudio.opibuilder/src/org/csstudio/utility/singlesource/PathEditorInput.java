@@ -48,13 +48,11 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
         return path;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return path.hashCode();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj) {
         if (!(obj instanceof IPathEditorInput)) {
@@ -67,7 +65,6 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
                 other.toPortableString().equals(path.toPortableString());
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean exists() {
         // Try workspace file
@@ -87,31 +84,26 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
         return false;
     }
 
-    /** {@inheritDoc} */
     @Override
     public ImageDescriptor getImageDescriptor() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         return path.lastSegment();
     }
 
-    /** {@inheritDoc} */
     @Override
     public IPersistableElement getPersistable() {
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getToolTipText() {
         return path.toOSString();
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Object getAdapter(final Class adapter) {
@@ -122,13 +114,11 @@ public class PathEditorInput implements IPathEditorInput, IPersistableElement {
         return root.getFile(path);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void saveState(final IMemento memento) {
         memento.putString(PathEditorInputFactory.TAG_PATH, path.toPortableString());
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getFactoryId() {
         return PathEditorInputFactory.ID;

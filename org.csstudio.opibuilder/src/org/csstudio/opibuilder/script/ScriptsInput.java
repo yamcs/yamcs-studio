@@ -12,8 +12,9 @@ import java.util.List;
 
 import org.csstudio.opibuilder.properties.ScriptProperty;
 
-/**The value type definition for {@link ScriptProperty}, which describes the input
- * for a Script Property.
+/**
+ * The value type definition for {@link ScriptProperty}, which describes the input for a Script Property.
+ * 
  * @author Xihui Chen
  *
  */
@@ -39,9 +40,9 @@ public class ScriptsInput {
     /**
      * @return a total contents copy of this ScriptsInput.
      */
-    public ScriptsInput getCopy(){
+    public ScriptsInput getCopy() {
         ScriptsInput copy = new ScriptsInput();
-        for(ScriptData data : scriptList){
+        for (ScriptData data : scriptList) {
             copy.getScriptList().add(data.getCopy());
         }
         return copy;
@@ -49,16 +50,15 @@ public class ScriptsInput {
 
     @Override
     public String toString() {
-        if(scriptList.size() ==0){
+        if (scriptList.size() == 0) {
             return "no script attached";
         }
-        if(scriptList.size() == 1){
-            if(scriptList.get(0).isEmbedded())
+        if (scriptList.size() == 1) {
+            if (scriptList.get(0).isEmbedded())
                 return scriptList.get(0).getScriptName();
             return scriptList.get(0).getPath().toString();
         }
         return scriptList.size() + " scripts attached";
     }
-
 
 }

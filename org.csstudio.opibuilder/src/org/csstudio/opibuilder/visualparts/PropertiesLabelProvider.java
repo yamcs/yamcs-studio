@@ -13,17 +13,14 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
-* The {@link LabelProvider} for the properties table.
-*
-* @author Xihui Chen
-*
-*/
+ * The {@link LabelProvider} for the properties table.
+ *
+ * @author Xihui Chen
+ *
+ */
 public class PropertiesLabelProvider extends LabelProvider implements
-                ITableLabelProvider {
+        ITableLabelProvider {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Image getColumnImage(final Object element,
             final int columnIndex) {
@@ -32,16 +29,12 @@ public class PropertiesLabelProvider extends LabelProvider implements
 
             if (property.isVisibleInPropSheet()
                     && property.getPropertyDescriptor().getLabelProvider() != null) {
-                    return property.getPropertyDescriptor().getLabelProvider().
-                        getImage(property.getPropertyValue());
+                return property.getPropertyDescriptor().getLabelProvider().getImage(property.getPropertyValue());
             }
         }
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getColumnText(final Object element, final int columnIndex) {
         if (element instanceof AbstractWidgetProperty) {
@@ -61,6 +54,5 @@ public class PropertiesLabelProvider extends LabelProvider implements
         }
         return "error";
     }
-
 
 }

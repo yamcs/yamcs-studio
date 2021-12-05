@@ -12,13 +12,15 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
 
-/**The request to drop a pv on a target.
+/**
+ * The request to drop a pv on a target.
+ * 
  * @author Xihui Chen
  *
  */
 public class DropPVRequest extends Request implements DropRequest {
 
-    public final static String REQ_DROP_PV = "drop pv"; 
+    public final static String REQ_DROP_PV = "drop pv";
 
     private String[] pvNames;
 
@@ -48,7 +50,8 @@ public class DropPVRequest extends Request implements DropRequest {
     }
 
     /**
-     * @param targetWidget the targetWidget to set
+     * @param targetWidget
+     *            the targetWidget to set
      */
     public void setTargetWidget(AbstractBaseEditPart targetWidget) {
         this.targetWidget = targetWidget;

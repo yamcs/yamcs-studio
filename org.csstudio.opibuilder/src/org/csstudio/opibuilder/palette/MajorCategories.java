@@ -7,7 +7,9 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.palette;
 
-/**The Major categories of widgets on the palette.
+/**
+ * The Major categories of widgets on the palette.
+ * 
  * @author Xihui Chen
  *
  */
@@ -23,7 +25,7 @@ public enum MajorCategories {
 
     private String description;
 
-    private MajorCategories(String description){
+    private MajorCategories(String description) {
         this.description = description;
     }
 

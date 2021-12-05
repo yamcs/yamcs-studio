@@ -31,8 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 /**
- * Descriptor for a property that has a value which should be edited with a pointlist
- * cell editor.
+ * Descriptor for a property that has a value which should be edited with a pointlist cell editor.
+ * 
  * @author Kai Meyer(original author), Xihui Chen
  */
 public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
@@ -51,9 +51,6 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
         setLabelProvider(new PointlistLabelProvider());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new PointListCellEditor(parent);
@@ -69,17 +66,14 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
      * @author Kai Meyer
      */
     private final static class PointlistLabelProvider extends LabelProvider {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String getText(final Object element) {
             if (element instanceof PointList) {
                 PointList list = (PointList) element;
                 StringBuffer buffer = new StringBuffer();
-                if (list.size()>0) {
+                if (list.size() > 0) {
                     this.addPointText(buffer, list.getPoint(0));
-                    for (int i=1;i<list.size();i++) {
+                    for (int i = 1; i < list.size(); i++) {
                         buffer.append("; ");
                         this.addPointText(buffer, list.getPoint(i));
                     }
@@ -92,10 +86,11 @@ public class PointlistPropertyDescriptor extends TextPropertyDescriptor {
 
         /**
          * Adds the text of the given Point to the StringBuffer.
+         * 
          * @param buffer
-         *             The StringBuffer
+         *            The StringBuffer
          * @param point
-         *             The Point
+         *            The Point
          */
         private void addPointText(final StringBuffer buffer, final Point point) {
             buffer.append("(");

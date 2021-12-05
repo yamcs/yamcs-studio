@@ -28,13 +28,12 @@ import org.eclipse.swt.widgets.Control;
 import static org.csstudio.ui.util.ReflectUtil.*;
 
 /**
- * General purpose utility to allowing Drag-and-Drop "Drag" of any
- * adaptable or {@link Serializable} object.
+ * General purpose utility to allowing Drag-and-Drop "Drag" of any adaptable or {@link Serializable} object.
  *
- * <p>As an example, assume a TableViewer or TreeViewer where the input
- * contains Serializable objects like ProcessVariable.
- * This would allow dragging the first of the
- * currently selected elements:
+ * <p>
+ * As an example, assume a TableViewer or TreeViewer where the input contains Serializable objects like ProcessVariable.
+ * This would allow dragging the first of the currently selected elements:
+ * 
  * <pre>
  * ...Viewer viewer = ...
  * new ControlSystemDragSource(viewer.getControl())
@@ -47,32 +46,30 @@ import static org.csstudio.ui.util.ReflectUtil.*;
  * };
  * </pre>
  *
- * <p>In principle this would allow dagging any number of selected PVs
- * out of the viewer:
+ * <p>
+ * In principle this would allow dagging any number of selected PVs out of the viewer:
+ * 
  * <pre>
- * new ControlSystemDragSource(viewer.getControl())
- * {
- *     public Object getSelection()
- *     {
+ * new ControlSystemDragSource(viewer.getControl()) {
+ *     public Object getSelection() {
  *         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
  *         final Object[] objs = selection.toArray();
  *         return objs;
- *      }
+ *     }
  * };
  * </pre>
  *
- * <p>.. but note that it will fail. The data needs to be serialized as the actual array
- * type, not an Object array:
+ * <p>
+ * .. but note that it will fail. The data needs to be serialized as the actual array type, not an Object array:
+ * 
  * <pre>
- * new ControlSystemDragSource(viewer.getControl())
- * {
- *     public Object getSelection()
- *     {
+ * new ControlSystemDragSource(viewer.getControl()) {
+ *     public Object getSelection() {
  *         final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
  *         final Object[] objs = selection.toArray();
  *         final ProcessVariable[] pvs = Arrays.copyOf(objs, objs.length, ProcessVariable[].class);
  *         return pvs;
- *      }
+ *     }
  * };
  * </pre>
  *
@@ -83,15 +80,16 @@ import static org.csstudio.ui.util.ReflectUtil.*;
 abstract public class ControlSystemDragSource {
     final private DragSource source;
 
-    /** Initialize 'drag' source
-     *  @param control Control from which the selection may be dragged
+    /**
+     * Initialize 'drag' source
+     * 
+     * @param control
+     *            Control from which the selection may be dragged
      */
-    public ControlSystemDragSource(final Control control)
-    {
+    public ControlSystemDragSource(final Control control) {
         source = new DragSource(control, DND.DROP_COPY);
 
-        source.addDragListener(new DragSourceAdapter()
-        {
+        source.addDragListener(new DragSourceAdapter() {
             @Override
             public void dragStart(DragSourceEvent event) {
                 Object selection = getSelection();
@@ -107,8 +105,7 @@ abstract public class ControlSystemDragSource {
             }
 
             @Override
-            public void dragSetData(final DragSourceEvent event)
-            {   // Drag has been performed, provide data
+            public void dragSetData(final DragSourceEvent event) { // Drag has been performed, provide data
                 Object selection = getSelection();
                 for (Transfer transfer : supportedTransfers(selection)) {
                     if (transfer.isSupportedType(event.dataType)) {
@@ -225,11 +222,11 @@ abstract public class ControlSystemDragSource {
         return supportedTransfers.toArray(new Transfer[supportedTransfers.size()]);
     }
 
-    /** To be implemented by derived class:
-     *  Provide the control system items that should be 'dragged'
-     *  from this drag source
+    /**
+     * To be implemented by derived class: Provide the control system items that should be 'dragged' from this drag
+     * source
      *
-     *  @return the selection (can be single object or array)
+     * @return the selection (can be single object or array)
      */
     abstract public Object getSelection();
 }

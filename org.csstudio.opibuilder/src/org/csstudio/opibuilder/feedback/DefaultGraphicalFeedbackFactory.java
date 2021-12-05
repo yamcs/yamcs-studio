@@ -23,9 +23,10 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
-/**A default implementation of {@link IGraphicalFeedbackFactory} which does nothing to changing
- * default graphical feedback behavior.
- * Subclass can override this class to create customized feedback behavior.
+/**
+ * A default implementation of {@link IGraphicalFeedbackFactory} which does nothing to changing default graphical
+ * feedback behavior. Subclass can override this class to create customized feedback behavior.
+ * 
  * @author Xihui Chen
  *
  */

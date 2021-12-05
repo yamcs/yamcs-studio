@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.figures;
 
-
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.eclipse.draw2d.ColorConstants;
@@ -18,13 +17,14 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.internal.browser.BrowserViewer;
 
-/**Figure for a web browser widget.
+/**
+ * Figure for a web browser widget.
+ * 
  * @author Xihui Chen
  *
  */
 @SuppressWarnings("restriction")
 public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
-
 
     private BrowserViewer browserViewer;
     private Browser browser;
@@ -37,8 +37,8 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
     }
 
     @Override
-    public void setUrl(String url){
-        if(runmode && url.trim().length() > 0)
+    public void setUrl(String url) {
+        if (runmode && url.trim().length() > 0)
             try {
                 browserViewer.setURL(url);
             } catch (Exception e) {
@@ -51,12 +51,12 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
     @Override
     protected void paintOutlineFigure(Graphics graphics) {
         super.paintOutlineFigure(graphics);
-        if(errorMassage != null){
+        if (errorMassage != null) {
             graphics.pushState();
             graphics.setBackgroundColor(ColorConstants.white);
             Rectangle clientArea = getClientArea();
             graphics.fillRectangle(clientArea);
-            if(getBorder() == null){
+            if (getBorder() == null) {
                 graphics.setForegroundColor(ColorConstants.gray);
                 graphics.drawRectangle(getBounds());
             }
@@ -73,14 +73,15 @@ public class WebBrowserFigure extends AbstractWebBrowserFigure<BrowserViewer> {
     }
 
     @Override
-    protected  BrowserViewer createSWTWidget(Composite parent, int style) {
+    protected BrowserViewer createSWTWidget(Composite parent, int style) {
         try {
             browserViewer = new BrowserViewer(parent, style);
             browserViewer.setLayoutData(null);
             browser = browserViewer.getBrowser();
         } catch (Exception e) {
             errorMassage = "Failed to create web browser widget.\n" +
-                    "It may not available on your platform.\n" + e;;
+                    "It may not available on your platform.\n" + e;
+            ;
             ErrorHandlerUtil.handleError(errorMassage, e);
         }
         return browserViewer;

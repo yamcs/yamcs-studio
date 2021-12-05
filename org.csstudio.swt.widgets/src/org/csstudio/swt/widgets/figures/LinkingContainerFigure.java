@@ -25,7 +25,9 @@ import org.eclipse.draw2d.StackLayout;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.swt.widgets.Display;
 
-/**The figure of linking container, which can host children widgets from another OPI file.
+/**
+ * The figure of linking container, which can host children widgets from another OPI file.
+ * 
  * @author Xihui Chen
  *
  */
@@ -50,11 +52,11 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
         scrollPane.setViewport(viewPort);
         scrollPane.setContents(pane);
 
-        zoomManager = new ZoomManager(pane, viewPort){
+        zoomManager = new ZoomManager(pane, viewPort) {
             @Override
             protected double getFitPageZoomLevel() {
                 double fitPageZoomLevel = super.getFitPageZoomLevel();
-                if(fitPageZoomLevel<=0){
+                if (fitPageZoomLevel <= 0) {
                     fitPageZoomLevel = 0.1;
                 }
                 return fitPageZoomLevel;
@@ -62,9 +64,9 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
             }
         };
 
-        addFigureListener(new FigureListener(){
+        addFigureListener(new FigureListener() {
             public void figureMoved(IFigure source) {
-                Display.getDefault().asyncExec(new Runnable(){
+                Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
                         updateZoom();
                     }
@@ -73,11 +75,10 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
             }
         });
 
-
         updateZoom();
     }
 
-    public IFigure getContentPane(){
+    public IFigure getContentPane() {
         return pane;
     }
 
@@ -88,7 +89,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
     @Override
     public void setBorder(Border border) {
         super.setBorder(border);
-        Display.getDefault().asyncExec(new Runnable(){
+        Display.getDefault().asyncExec(new Runnable() {
             public void run() {
                 updateZoom();
             }
@@ -97,7 +98,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
 
     public void setZoomToFitAll(boolean zoomToFitAll) {
         this.zoomToFitAll = zoomToFitAll;
-        Display.getDefault().asyncExec(new Runnable(){
+        Display.getDefault().asyncExec(new Runnable() {
             public void run() {
                 updateZoom();
             }
@@ -111,7 +112,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
 
         if (zoomToFitAll) {
             zoomManager.setZoomAsText(Draw2dSingletonUtil.ZoomManager_FIT_ALL);
-        }else
+        } else
             zoomManager.setZoom(1.0);
     }
 
@@ -124,7 +125,7 @@ public class LinkingContainerFigure extends Figure implements Introspectable {
     }
 
     public void setShowScrollBars(boolean showScrollBars) {
-        if(showScrollBars) {
+        if (showScrollBars) {
             scrollPane.setHorizontalScrollBarVisibility(ScrollPane.AUTOMATIC);
             scrollPane.setVerticalScrollBarVisibility(ScrollPane.AUTOMATIC);
         } else {

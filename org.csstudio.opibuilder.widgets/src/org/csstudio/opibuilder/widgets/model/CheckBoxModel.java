@@ -18,20 +18,19 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * The model for checkbox widget
+ * 
  * @author Xihui Chen
  */
-public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
+public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel {
 
-
-
-    /** Bit of the PV to be read and writtend.*/
+    /** Bit of the PV to be read and writtend. */
     public static final String PROP_BIT = "bit";
 
     /** Text of the label. */
     public static final String PROP_LABEL = "label";
 
     /** True if the widget size can be automatically adjusted along with the text size. */
-    public static final String PROP_AUTOSIZE = "auto_size";   
+    public static final String PROP_AUTOSIZE = "auto_size";
 
     /**
      * The color of the selected item.
@@ -45,7 +44,7 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
 
     public CheckBoxModel() {
         setSize(100, 20);
-        setForegroundColor(new RGB(0,0,0));
+        setForegroundColor(new RGB(0, 0, 0));
         setScaleOptions(true, false, false);
     }
 
@@ -54,28 +53,24 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
         addProperty(new IntegerProperty(PROP_BIT, "Bit",
                 WidgetPropertyCategory.Behavior, 0, -1, 63));
         addProperty(new StringProperty(PROP_LABEL, "Label",
-                WidgetPropertyCategory.Display, ""));   
+                WidgetPropertyCategory.Display, ""));
         addProperty(new BooleanProperty(PROP_AUTOSIZE, "Auto Size",
                 WidgetPropertyCategory.Display, false));
         addProperty(new ColorProperty(PROP_SELECTED_COLOR, "Selected Color",
                 WidgetPropertyCategory.Display, new RGB(77, 77, 77)));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getTypeID() {
         return ID;
     }
+
     /**
-     * @return the bit. If bit is -1, the value channel must be enum, otherwise,
-     * it must be numeric value
+     * @return the bit. If bit is -1, the value channel must be enum, otherwise, it must be numeric value
      */
     public Integer getBit() {
         return (Integer) getProperty(PROP_BIT).getPropertyValue();
     }
-
 
     /**
      * @return the on label
@@ -94,11 +89,11 @@ public class CheckBoxModel extends AbstractPVWidgetModel implements ITextModel{
         setPropertyValue(PROP_LABEL, text);
     }
 
-    public boolean isAutoSize(){
-        return (Boolean)getCastedPropertyValue(PROP_AUTOSIZE);
+    public boolean isAutoSize() {
+        return (Boolean) getCastedPropertyValue(PROP_AUTOSIZE);
     }
 
-    public OPIColor getSelectedColor(){
-        return (OPIColor)getPropertyValue(PROP_SELECTED_COLOR);
+    public OPIColor getSelectedColor() {
+        return (OPIColor) getPropertyValue(PROP_SELECTED_COLOR);
     }
 }

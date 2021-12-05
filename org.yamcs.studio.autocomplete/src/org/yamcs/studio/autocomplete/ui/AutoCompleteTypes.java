@@ -10,8 +10,7 @@ package org.yamcs.studio.autocomplete.ui;
 import org.yamcs.studio.autocomplete.AutoCompleteType;
 
 /**
- * List commonly used types. Each type defines a specific behavior, see
- * AutoComplete providers preferences.
+ * List commonly used types. Each type defines a specific behavior, see AutoComplete providers preferences.
  *
  * @author Fred Arnaud (Sopra Group)
  */

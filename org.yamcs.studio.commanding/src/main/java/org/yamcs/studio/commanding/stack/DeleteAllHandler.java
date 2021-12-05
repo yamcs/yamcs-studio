@@ -19,7 +19,8 @@ public class DeleteAllHandler extends AbstractHandler {
         IWorkbenchPart part = window.getActivePage().findView(CommandStackView.ID);
         CommandStackView commandStackView = (CommandStackView) part;
 
-        if (MessageDialog.openConfirm(shell, "Confirm Deletion", "Are you sure you want to delete all commands from the stack?")) {
+        if (MessageDialog.openConfirm(shell, "Confirm Deletion",
+                "Are you sure you want to delete all commands from the stack?")) {
             CommandStack.getInstance().getCommands().clear();
             commandStackView.refreshState();
         }

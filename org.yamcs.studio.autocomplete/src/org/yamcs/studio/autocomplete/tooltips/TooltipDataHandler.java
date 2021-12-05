@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 
-
 /**
  * Handles a list of {@link TooltipData} to provide a {@link TooltipContent}.
  *

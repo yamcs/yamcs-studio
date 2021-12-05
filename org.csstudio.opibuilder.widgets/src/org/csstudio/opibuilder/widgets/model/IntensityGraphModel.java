@@ -46,13 +46,13 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
 
     public enum AxisProperty {
         TITLE("axis_title", "Axis Title"),
-        TITLE_FONT("title_font", "Title Font"), 
+        TITLE_FONT("title_font", "Title Font"),
         SCALE_FONT("scale_font", "Scale Font"),
-        AXIS_COLOR("axis_color", "Axis Color"), 
-        SHOW_MINOR_TICKS("show_minor_ticks", "Show Minor Ticks"), 
-        MAJOR_TICK_STEP_HINT("major_tick_step_hint", "Major Tick Step Hint"), 
-        MAX("maximum", "Maximum"), 
-        MIN("minimum", "Minimum"), 
+        AXIS_COLOR("axis_color", "Axis Color"),
+        SHOW_MINOR_TICKS("show_minor_ticks", "Show Minor Ticks"),
+        MAJOR_TICK_STEP_HINT("major_tick_step_hint", "Major Tick Step Hint"),
+        MAX("maximum", "Maximum"),
+        MIN("minimum", "Minimum"),
         VISIBLE("visible", "Visible");
 
         public String propIDPre;
@@ -70,15 +70,15 @@ public class IntensityGraphModel extends AbstractPVWidgetModel {
     }
 
     public enum ROIProperty {
-        TITLE("title", "Title"), 
-        VISIBLE("visible", "Visible"), 
-        XPV("x_pv", "X PV"), 
-        YPV("y_pv", "Y PV"), 
-        XPV_VALUE("x_pv_value", "X PV Value"), 
-        YPV_VALUE("y_pv_value", "Y PV Value"), 
-        WPV("width_pv", "Width PV"), 
-        HPV("height_pv", "Height PV"), 
-        WPV_VALUE("w_pv_value", "W PV Value"), 
+        TITLE("title", "Title"),
+        VISIBLE("visible", "Visible"),
+        XPV("x_pv", "X PV"),
+        YPV("y_pv", "Y PV"),
+        XPV_VALUE("x_pv_value", "X PV Value"),
+        YPV_VALUE("y_pv_value", "Y PV Value"),
+        WPV("width_pv", "Width PV"),
+        HPV("height_pv", "Height PV"),
+        WPV_VALUE("w_pv_value", "W PV Value"),
         HPV_VALUE("h_pv_value", "H PV Value");
 
         public String propIDPre;

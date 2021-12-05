@@ -36,8 +36,10 @@ public class AutoCompleteWidget {
     /**
      * Enable auto-completed content on the specified widget.
      *
-     * @param control {@link Combo} or {@link Text}
-     * @param type see {@link AutoCompleteTypes}
+     * @param control
+     *            {@link Combo} or {@link Text}
+     * @param type
+     *            see {@link AutoCompleteTypes}
      */
     public AutoCompleteWidget(Control control, String type) {
         Assert.isNotNull(type);
@@ -49,9 +51,12 @@ public class AutoCompleteWidget {
     /**
      * Enable auto-completed content on the specified widget.
      *
-     * @param control {@link Combo} or {@link Text}
-     * @param type see {@link AutoCompleteTypes}
-     * @param historyHandlers control which trigger add entry event on history
+     * @param control
+     *            {@link Combo} or {@link Text}
+     * @param type
+     *            see {@link AutoCompleteTypes}
+     * @param historyHandlers
+     *            control which trigger add entry event on history
      */
     public AutoCompleteWidget(Control control, String type,
             List<Control> historyHandlers) {
@@ -66,8 +71,10 @@ public class AutoCompleteWidget {
     /**
      * Enable auto-completed content on the specified widget.
      *
-     * @param control {@link Combo} or {@link Text}
-     * @param type see {@link AutoCompleteTypes}
+     * @param control
+     *            {@link Combo} or {@link Text}
+     * @param type
+     *            see {@link AutoCompleteTypes}
      */
     public AutoCompleteWidget(CellEditor cellEditor, String type) {
         Assert.isNotNull(type);
@@ -79,9 +86,12 @@ public class AutoCompleteWidget {
     /**
      * Enable auto-completed content on the specified widget.
      *
-     * @param control {@link Combo} or {@link Text}
-     * @param type see {@link AutoCompleteTypes}
-     * @param historyHandlers control which trigger add entry event on history
+     * @param control
+     *            {@link Combo} or {@link Text}
+     * @param type
+     *            see {@link AutoCompleteTypes}
+     * @param historyHandlers
+     *            control which trigger add entry event on history
      */
     public AutoCompleteWidget(CellEditor cellEditor, String type,
             List<Control> historyHandlers) {
@@ -94,8 +104,7 @@ public class AutoCompleteWidget {
     }
 
     /**
-     * Return a character array representing the keyboard input triggers used
-     * for firing the ContentProposalAdapter.
+     * Return a character array representing the keyboard input triggers used for firing the ContentProposalAdapter.
      *
      * @return - character array of trigger chars
      */
@@ -115,8 +124,7 @@ public class AutoCompleteWidget {
     }
 
     /**
-     * Returns KeyStroke object which when pressed will fire the
-     * ContentProposalAdapter.
+     * Returns KeyStroke object which when pressed will fire the ContentProposalAdapter.
      *
      * @return - the activation keystroke
      */

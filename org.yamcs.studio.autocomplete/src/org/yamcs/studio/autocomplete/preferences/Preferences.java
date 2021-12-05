@@ -26,7 +26,8 @@ public class Preferences {
     final public static String MAX_TOP_RESULTS = "max_top_results";
 
     /**
-     * @param setting Preference identifier
+     * @param setting
+     *            Preference identifier
      * @return String from preference system, or <code>null</code>
      */
     private static String getString(final String setting) {
@@ -34,8 +35,10 @@ public class Preferences {
     }
 
     /**
-     * @param setting Preference identifier
-     * @param default_value Default value when preferences unavailable
+     * @param setting
+     *            Preference identifier
+     * @param default_value
+     *            Default value when preferences unavailable
      * @return String from preference system, or <code>null</code>
      */
     private static String getString(final String setting,

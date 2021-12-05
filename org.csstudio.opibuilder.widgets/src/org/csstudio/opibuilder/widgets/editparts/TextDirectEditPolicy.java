@@ -14,20 +14,21 @@ import org.eclipse.gef.requests.DirectEditRequest;
 
 /**
  * The Editpolicy to handle direct text edit.
+ * 
  * @author Xihui Chen
  *
  */
 public class TextDirectEditPolicy
-    extends DirectEditPolicy {
+        extends DirectEditPolicy {
 
     /**
      * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
      */
     @Override
     protected Command getDirectEditCommand(DirectEditRequest edit) {
-        String labelText = (String)edit.getCellEditor().getValue();
+        String labelText = (String) edit.getCellEditor().getValue();
         LabelEditCommand command = new LabelEditCommand(
-                (ITextModel)getHost().getModel(),labelText);
+                (ITextModel) getHost().getModel(), labelText);
         return command;
     }
 
@@ -36,40 +37,37 @@ public class TextDirectEditPolicy
      */
     @Override
     protected void showCurrentEditValue(DirectEditRequest request) {
-        //String value = (String)request.getCellEditor().getValue();
-        //((LabelFigure)getHostFigure()).setText(value);
-        //hack to prevent async layout from placing the cell editor twice.
-        //getHostFigure().getUpdateManager().performUpdate();
-
+        // String value = (String)request.getCellEditor().getValue();
+        // ((LabelFigure)getHostFigure()).setText(value);
+        // hack to prevent async layout from placing the cell editor twice.
+        // getHostFigure().getUpdateManager().performUpdate();
 
     }
 
+    static class LabelEditCommand extends Command {
 
-static class LabelEditCommand extends Command    {
+        private String newText, oldText;
+        private ITextModel textModel;
 
-    private String newText, oldText;
-    private ITextModel textModel;
+        public LabelEditCommand(ITextModel l, String s) {
+            textModel = l;
+            if (s != null)
+                newText = s;
+            else
+                newText = "";
+        }
 
-    public LabelEditCommand(ITextModel l, String s) {
-    textModel = l;
-    if (s != null)
-        newText = s;
-    else
-        newText = ""; 
+        @Override
+        public void execute() {
+            oldText = textModel.getText();
+            textModel.setText(newText);
+        }
+
+        @Override
+        public void undo() {
+            textModel.setText(oldText);
+        }
+
     }
-
-    @Override
-    public void execute() {
-        oldText = textModel.getText();
-        textModel.setText(newText);
-    }
-
-    @Override
-    public void undo() {
-        textModel.setText(oldText);
-    }
-
-}
-
 
 }

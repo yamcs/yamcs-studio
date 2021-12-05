@@ -191,9 +191,6 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
 

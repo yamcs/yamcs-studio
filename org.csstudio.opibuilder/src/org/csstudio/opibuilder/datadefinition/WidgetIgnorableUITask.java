@@ -11,13 +11,13 @@ import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
 import org.csstudio.opibuilder.util.GUIRefreshThread;
 import org.eclipse.swt.widgets.Display;
 
-/** The element in the {@link GUIRefreshThread}'s task queue.
- *  An existing task in the queue should be ignored when a new task arrives
- *  that has the same identifyObject.
- *  For example, multiple tasks calling Gauge.setValue() are ignorable
- *  since the widget only needs to display the latest value.
- *  @author Xihui Chen
- *  @author Kay Kasemir Reviewed, made immutable
+/**
+ * The element in the {@link GUIRefreshThread}'s task queue. An existing task in the queue should be ignored when a new
+ * task arrives that has the same identifyObject. For example, multiple tasks calling Gauge.setValue() are ignorable
+ * since the widget only needs to display the latest value.
+ * 
+ * @author Xihui Chen
+ * @author Kay Kasemir Reviewed, made immutable
  */
 public class WidgetIgnorableUITask {
 
@@ -33,25 +33,29 @@ public class WidgetIgnorableUITask {
 
     final private Display display;
 
-    /**Constructor.
-     * @param identifyObject the object that identifies this task. If the task associated
-     * with the same identifyObject has not been executed, it will be ignored.
-     * @param runnableTask the task to be executed.
-     * @param display Associated Display.
+    /**
+     * Constructor.
+     * 
+     * @param identifyObject
+     *            the object that identifies this task. If the task associated with the same identifyObject has not been
+     *            executed, it will be ignored.
+     * @param runnableTask
+     *            the task to be executed.
+     * @param display
+     *            Associated Display.
      */
     public WidgetIgnorableUITask(final Object identifyObject, final Runnable runnableTask,
-            final Display display){
+            final Display display) {
         this.identifyObject = identifyObject;
         this.runnableTask = runnableTask;
         this.display = display;
     }
 
-
     public Display getDisplay() {
         return display;
     }
 
-        /**
+    /**
      * @return the identify object
      */
     public Object getIdentifyObject() {
@@ -65,14 +69,16 @@ public class WidgetIgnorableUITask {
         return runnableTask;
     }
 
-    /** @param obj Possible other {@link WidgetIgnorableUITask}
-     *  @return <code>true</code> if other {@link WidgetIgnorableUITask}
-     *          refers to the same {@link AbstractWidgetProperty}
+    /**
+     * @param obj
+     *            Possible other {@link WidgetIgnorableUITask}
+     * @return <code>true</code> if other {@link WidgetIgnorableUITask} refers to the same
+     *         {@link AbstractWidgetProperty}
      */
     @Override
     public boolean equals(final Object obj) {
-        if(obj instanceof WidgetIgnorableUITask)
-            return identifyObject ==((WidgetIgnorableUITask)obj).getIdentifyObject();
+        if (obj instanceof WidgetIgnorableUITask)
+            return identifyObject == ((WidgetIgnorableUITask) obj).getIdentifyObject();
         else
             return false;
     }

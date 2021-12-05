@@ -16,8 +16,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
- * Abstract class for all commands that use AdapterUtil for conversion
- * and displays the exception in a suitable dialog.
+ * Abstract class for all commands that use AdapterUtil for conversion and displays the exception in a suitable dialog.
  *
  * @author carcassi
  *
@@ -33,11 +32,15 @@ public abstract class AbstractAdaptedHandler<T> extends AbstractHandler {
     /**
      * Searches for the view of the given class with the given view id.
      *
-     * @param clazz the view class
-     * @param viewId the view id
+     * @param clazz
+     *            the view class
+     * @param viewId
+     *            the view id
      * @return the view
-     * @throws PartInitException if the view was not found
-     * @throws ClassCastException if the view is of a different type
+     * @throws PartInitException
+     *             if the view was not found
+     * @throws ClassCastException
+     *             if the view is of a different type
      */
     public static <T> T findView(Class<T> clazz, String viewId) throws PartInitException {
         IWorkbench workbench = PlatformUI.getWorkbench();
@@ -61,11 +64,12 @@ public abstract class AbstractAdaptedHandler<T> extends AbstractHandler {
     /**
      * Implements the command. The selection is already converted to the target class.
      *
-     * @param data data in the selection
-     * @param event event of the command
+     * @param data
+     *            data in the selection
+     * @param event
+     *            event of the command
      */
     protected abstract void execute(List<T> data, ExecutionEvent event)
-    throws Exception;
-
+            throws Exception;
 
 }

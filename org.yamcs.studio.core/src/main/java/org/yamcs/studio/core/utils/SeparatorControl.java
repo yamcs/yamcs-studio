@@ -7,8 +7,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 /**
- * A custom separator. Eclipse don't seem to work in 4.3 when using menu
- * contributions in the plugin.xml.
+ * A custom separator. Eclipse don't seem to work in 4.3 when using menu contributions in the plugin.xml.
  *
  * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=413213
  */

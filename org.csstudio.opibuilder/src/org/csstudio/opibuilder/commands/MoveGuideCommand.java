@@ -21,7 +21,6 @@
  */
 package org.csstudio.opibuilder.commands;
 
-
 import java.util.Iterator;
 
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
@@ -31,6 +30,7 @@ import org.eclipse.gef.commands.Command;
 
 /**
  * A Command to move a Guide.
+ * 
  * @author Kai Meyer (original author), Xihui Chen (since import from SDS 2009/9)
  */
 public final class MoveGuideCommand extends Command {
@@ -45,19 +45,17 @@ public final class MoveGuideCommand extends Command {
 
     /**
      * Constructor.
+     * 
      * @param guide
-     *             the guide, which position has changed
+     *            the guide, which position has changed
      * @param pDelta
-     *             the distance
+     *            the distance
      */
     public MoveGuideCommand(final GuideModel guide, final int pDelta) {
         this.pDelta = pDelta;
         this.guide = guide;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         guide.setPosition(guide.getPosition() + pDelta);
@@ -74,9 +72,6 @@ public final class MoveGuideCommand extends Command {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void undo() {
         guide.setPosition(guide.getPosition() - pDelta);

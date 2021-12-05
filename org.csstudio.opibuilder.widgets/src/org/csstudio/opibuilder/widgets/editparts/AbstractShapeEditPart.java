@@ -45,9 +45,6 @@ public abstract class AbstractShapeEditPart extends AbstractPVWidgetEditPart {
         return shape;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         // line width

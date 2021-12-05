@@ -11,6 +11,7 @@ import org.eclipse.draw2d.IFigure;
 
 /**
  * An interface that for figures that provide text.
+ * 
  * @author Xihui Chen
  *
  */

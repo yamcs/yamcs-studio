@@ -22,20 +22,21 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.RGB;
 
-/**The model for a tab widget.
+/**
+ * The model for a tab widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class TabModel extends AbstractContainerModel {
 
-    public enum TabProperty{
+    public enum TabProperty {
         TITLE("title", "Title"),
         FONT("font", "Font"),
         FORECOLOR("foreground_color", "Foreground Color"),
         BACKCOLOR("background_color", "Background Color"),
         ICON_PATH("icon_path", "Icon Path"),
         ENABLED("enabled", "Enabled");
-
 
         public String propIDPre;
         public String description;
@@ -51,7 +52,7 @@ public class TabModel extends AbstractContainerModel {
         }
     }
 
-    public interface ITabItemHandler{
+    public interface ITabItemHandler {
 
         public void addTab(int index, TabItem tabItem);
 
@@ -66,16 +67,15 @@ public class TabModel extends AbstractContainerModel {
 
     public static final String PROP_MINIMUM_TAB_HEIGHT = "minimum_tab_height";
 
+    private static final RGB DEFAULT_TAB_FORECOLOR = new RGB(0, 0, 0);
 
-    private static final RGB DEFAULT_TAB_FORECOLOR = new RGB(0,0,0);
-
-    private static final RGB DEFAULT_TAB_BACKCOLOR = new RGB(255,255,255);
+    private static final RGB DEFAULT_TAB_BACKCOLOR = new RGB(255, 255, 255);
 
     private static final String DEFAULT_TAB_FONT = MediaService.DEFAULT_FONT;
 
     public static final int MAX_TABS_AMOUNT = 20;
 
-    private static final String[] FILE_EXTENSIONS = new String[] {"jpg", "jpeg", "gif", "bmp", "png"};
+    private static final String[] FILE_EXTENSIONS = new String[] { "jpg", "jpeg", "gif", "bmp", "png" };
 
     /**
      * The ID of this widget model.
@@ -87,7 +87,6 @@ public class TabModel extends AbstractContainerModel {
     public TabModel() {
         setSize(300, 200);
     }
-
 
     @Override
     protected void configureProperties() {
@@ -103,21 +102,21 @@ public class TabModel extends AbstractContainerModel {
         addTabsProperties();
     }
 
-    private void addTabsProperties(){
-        for(int i=0; i < MAX_TABS_AMOUNT; i++){
-            for(TabProperty tabProperty : TabProperty.values())
+    private void addTabsProperties() {
+        for (int i = 0; i < MAX_TABS_AMOUNT; i++) {
+            for (TabProperty tabProperty : TabProperty.values())
                 addTabProperty(tabProperty, i);
         }
     }
 
-    private void addTabProperty(TabProperty tabProperty, final int tabIndex){
+    private void addTabProperty(TabProperty tabProperty, final int tabIndex) {
         String propID = makeTabPropID(tabProperty.propIDPre, tabIndex);
 
         WidgetPropertyCategory category;
-        category = new WidgetPropertyCategory(){
+        category = new WidgetPropertyCategory() {
             @Override
             public String toString() {
-                return NLS.bind("Tab {0}",tabIndex);
+                return NLS.bind("Tab {0}", tabIndex);
             }
         };
 
@@ -147,26 +146,27 @@ public class TabModel extends AbstractContainerModel {
         }
     }
 
-    public static String makeTabPropID(String propIDPre, int index){
+    public static String makeTabPropID(String propIDPre, int index) {
         return "tab_" + index + "_" + propIDPre;
     }
-
-
 
     @Override
     public String getTypeID() {
         return ID;
     }
 
-    /**Get the property value of a tabItem.
-     * @param index index of the tab item.
-     * @param tabProperty the property.
+    /**
+     * Get the property value of a tabItem.
+     * 
+     * @param index
+     *            index of the tab item.
+     * @param tabProperty
+     *            the property.
      * @return the value of the property.
      */
-    public Object getTabPropertyValue(int index, TabProperty tabProperty){
+    public Object getTabPropertyValue(int index, TabProperty tabProperty) {
         return getPropertyValue(makeTabPropID(tabProperty.propIDPre, index));
     }
-
 
     /**
      * @return The number of tabs.
@@ -175,8 +175,8 @@ public class TabModel extends AbstractContainerModel {
         return (Integer) getProperty(PROP_TAB_COUNT).getPropertyValue();
     }
 
-    public int getMinimumTabHeight(){
-        return (Integer)getPropertyValue(PROP_MINIMUM_TAB_HEIGHT);
+    public int getMinimumTabHeight() {
+        return (Integer) getPropertyValue(PROP_MINIMUM_TAB_HEIGHT);
     }
 
     /**
@@ -193,41 +193,43 @@ public class TabModel extends AbstractContainerModel {
         return (Integer) getProperty(PROP_ACTIVE_TAB).getPropertyValue();
     }
 
-    public IPath toAbsolutePath(IPath path){
+    public IPath toAbsolutePath(IPath path) {
         IPath absolutePath = path;
-        if(absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute())
+        if (absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute())
             absolutePath = ResourceUtil.buildAbsolutePath(this, absolutePath);
         return absolutePath;
     }
 
-
-    /**Add a TabItem to the index;
+    /**
+     * Add a TabItem to the index;
+     * 
      * @param index
      * @param tabItem
      */
-    public void addTab(int index, TabItem tabItem){
-        if(tabItemHandler != null){
+    public void addTab(int index, TabItem tabItem) {
+        if (tabItemHandler != null) {
             tabItemHandler.addTab(index, tabItem);
         }
     }
 
-    /**Remove a tab.
+    /**
+     * Remove a tab.
+     * 
      * @param index
      */
-    public  void removeTab(int index){
-        if(tabItemHandler != null){
+    public void removeTab(int index) {
+        if (tabItemHandler != null) {
             tabItemHandler.removeTab(index);
         }
     }
 
-
     /**
-     * @param tabItemHandler the tabItemHandler to set
+     * @param tabItemHandler
+     *            the tabItemHandler to set
      */
     public void setTabItemHandler(ITabItemHandler tabItemHandler) {
         this.tabItemHandler = tabItemHandler;
     }
-
 
     /**
      * @return the tabItemHandler

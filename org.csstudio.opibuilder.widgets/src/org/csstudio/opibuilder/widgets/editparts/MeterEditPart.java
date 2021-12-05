@@ -14,17 +14,13 @@ import org.csstudio.swt.widgets.figures.MeterFigure;
 import org.eclipse.draw2d.IFigure;
 
 /**
- * EditPart controller for the Gauge widget. The controller mediates between
- * {@link MeterModel} and {@link MeterFigure}.
+ * EditPart controller for the Gauge widget. The controller mediates between {@link MeterModel} and {@link MeterFigure}.
  *
  * @author Xihui Chen
  *
  */
 public final class MeterEditPart extends AbstractMarkedWidgetEditPart {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected IFigure doCreateFigure() {
         final MeterModel model = getWidgetModel();
@@ -44,9 +40,6 @@ public final class MeterEditPart extends AbstractMarkedWidgetEditPart {
         return (MeterModel) getModel();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();

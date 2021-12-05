@@ -16,7 +16,9 @@ import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 
-/**The action to reroute a connection.
+/**
+ * The action to reroute a connection.
+ * 
  * @author Xihui Chen
  *
  */
@@ -28,21 +30,18 @@ public class RerouteConnectionAction extends AbstractWidgetTargetAction {
                 getSelectedConnection().getWidgetModel(), ConnectionModel.PROP_POINTS, new PointList()));
     }
 
-
-
-    protected WidgetConnectionEditPart getSelectedConnection(){
-        return (WidgetConnectionEditPart)getSelection().getFirstElement();
+    protected WidgetConnectionEditPart getSelectedConnection() {
+        return (WidgetConnectionEditPart) getSelection().getFirstElement();
     }
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         super.selectionChanged(action, selection);
-        if(getSelectedConnection() == null)
+        if (getSelectedConnection() == null)
             return;
         Connection figure = getSelectedConnection().getConnectionFigure();
         action.setEnabled(figure != null &&
                 figure.getConnectionRouter() instanceof FixedPointsConnectionRouter);
     }
-
 
 }

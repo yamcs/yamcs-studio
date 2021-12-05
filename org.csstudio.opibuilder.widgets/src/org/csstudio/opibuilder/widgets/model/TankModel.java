@@ -13,13 +13,13 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
  * This class defines a tank widget model.
+ * 
  * @author Xihui Chen
  * @author Takashi Nakamoto - added "FillColor Alarm Sensitive" property
  */
-public class TankModel extends AbstractMarkedWidgetModel{
+public class TankModel extends AbstractMarkedWidgetModel {
 
     /** The ID of the fill color property. */
     public static final String PROP_FILL_COLOR = "fill_color";
@@ -35,9 +35,8 @@ public class TankModel extends AbstractMarkedWidgetModel{
      */
     public static final String PROP_FILLBACKGROUND_COLOR = "color_fillbackground";
 
-
     /** The default value of the default fill color property. */
-    private static final RGB DEFAULT_FILL_COLOR = new RGB(0,0,255);
+    private static final RGB DEFAULT_FILL_COLOR = new RGB(0, 0, 255);
 
     /** The default value of the height property. */
     private static final int DEFAULT_HEIGHT = 180;
@@ -57,7 +56,7 @@ public class TankModel extends AbstractMarkedWidgetModel{
 
     public TankModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setForegroundColor(new RGB(0,0,0));
+        setForegroundColor(new RGB(0, 0, 0));
     }
 
     @Override
@@ -71,7 +70,6 @@ public class TankModel extends AbstractMarkedWidgetModel{
         addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
                 WidgetPropertyCategory.Display, true));
 
-
         addProperty(new ColorProperty(PROP_FILLBACKGROUND_COLOR, "Color Fillbackground",
                 WidgetPropertyCategory.Display, DEFAULT_FILLBACKGROUND_COLOR));
 
@@ -79,8 +77,6 @@ public class TankModel extends AbstractMarkedWidgetModel{
         setPropertyValue(PROP_HI_COLOR, new RGB(255, 128, 0));
         setPropertyVisible(PROP_VALUE_LABEL_FORMAT, false);
     }
-
-
 
     @Override
     public String getTypeID() {
@@ -108,9 +104,9 @@ public class TankModel extends AbstractMarkedWidgetModel{
         return (Boolean) getProperty(PROP_EFFECT3D).getPropertyValue();
     }
 
-
     /**
      * Gets the RGB for fillbackground.
+     * 
      * @return The fillbackground color
      */
     public Color getFillbackgroundColor() {

@@ -31,8 +31,7 @@ import org.eclipse.swt.dnd.TransferData;
  * @author Gabriele Carcassi
  * @author Kay Kasemir
  */
-public class SerializableItemTransfer extends ByteArrayTransfer
-{
+public class SerializableItemTransfer extends ByteArrayTransfer {
     /** Type handled by this Transfer */
     final private String className;
 
@@ -43,18 +42,17 @@ public class SerializableItemTransfer extends ByteArrayTransfer
     final private int typeId;
 
     /** Cache of types to the SerializableItemTransfer for that type */
-    final private static Map<String, SerializableItemTransfer> instances =
-        new HashMap<String, SerializableItemTransfer>();
+    final private static Map<String, SerializableItemTransfer> instances = new HashMap<String, SerializableItemTransfer>();
 
-    /** @param classes Types to be transferred
-     *  @return Transfers for those types
+    /**
+     * @param classes
+     *            Types to be transferred
+     * @return Transfers for those types
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static Transfer[] getTransfers(Class[] classes)
-    {
+    public static Transfer[] getTransfers(Class[] classes) {
         final Transfer[] transfers = new Transfer[classes.length];
-        for (int i = 0; i < classes.length ; i++)
-        {
+        for (int i = 0; i < classes.length; i++) {
             Transfer transfer = getTransfer(classes[i]);
             transfers[i] = transfer;
         }
@@ -73,8 +71,10 @@ public class SerializableItemTransfer extends ByteArrayTransfer
         return getTransfer(clazz.getName());
     }
 
-    /** @param clazz Type to be transferred
-     *  @return Transfer for that type
+    /**
+     * @param clazz
+     *            Type to be transferred
+     * @return Transfer for that type
      */
     public static SerializableItemTransfer getTransfer(String className) {
         SerializableItemTransfer transfer = instances.get(className);
@@ -85,27 +85,25 @@ public class SerializableItemTransfer extends ByteArrayTransfer
         return transfer;
     }
 
-    /** Initialize
-     *  @param clazz Type handled by this Transfer
+    /**
+     * Initialize
+     * 
+     * @param clazz
+     *            Type handled by this Transfer
      */
-    private SerializableItemTransfer(final String className)
-    {
+    private SerializableItemTransfer(final String className) {
         this.className = className;
         typeName = "java:" + className;
         typeId = registerType(typeName);
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected int[] getTypeIds()
-    {
+    protected int[] getTypeIds() {
         return new int[] { typeId };
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected String[] getTypeNames()
-    {
+    protected String[] getTypeNames() {
         return new String[] { typeName };
     }
 
@@ -113,19 +111,17 @@ public class SerializableItemTransfer extends ByteArrayTransfer
         return className;
     }
 
-    /** Serialize item
-     *  {@inheritDoc}
+    /**
+     * Serialize item
      */
     @Override
-    public void javaToNative (final Object object, final TransferData transferData)
-    {
+    public void javaToNative(final Object object, final TransferData transferData) {
         // Check that it's an object of the right type
         if (!ReflectUtil.isInstance(object, getClassName())) {
             throw new IllegalArgumentException("Trying to serialize and object of the wrong type");
         }
 
-        try
-        {
+        try {
             // Write data to a byte array
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
             final ObjectOutputStream oos = new ObjectOutputStream(out);
@@ -135,19 +131,16 @@ public class SerializableItemTransfer extends ByteArrayTransfer
 
             // ByteArrayTransfer converts to medium
             super.javaToNative(buffer, transferData);
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING, "Serialization failed", ex);
         }
     }
 
-    /** De-serialize items
-     *  {@inheritDoc}
+    /**
+     * De-serialize items
      */
     @Override
-    public Object nativeToJava(final TransferData transferData)
-    {
+    public Object nativeToJava(final TransferData transferData) {
         if (!isSupportedType(transferData))
             return null;
 
@@ -155,26 +148,21 @@ public class SerializableItemTransfer extends ByteArrayTransfer
         if (buffer == null)
             return null;
 
-
         final Object obj;
-        try
-        {
+        try {
             final ByteArrayInputStream in = new ByteArrayInputStream(buffer);
             final ObjectInputStream readIn = new ObjectInputStreamWithOsgiClassResolution(in);
             obj = readIn.readObject();
             readIn.close();
             return obj;
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING, "De-Serialization failed", ex);
         }
         return null;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "SerializableItemTransfer for " + typeName;
     }
 }

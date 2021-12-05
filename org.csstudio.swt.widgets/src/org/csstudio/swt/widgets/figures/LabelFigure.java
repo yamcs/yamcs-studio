@@ -25,8 +25,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
  * @author Xihui Chen
  *
  */
-public class LabelFigure extends Figure implements Introspectable{
-
+public class LabelFigure extends Figure implements Introspectable {
 
     protected V_ALIGN verticalAlignment = V_ALIGN.TOP;
     protected H_ALIGN horizontalAlignment = H_ALIGN.LEFT;
@@ -45,7 +44,8 @@ public class LabelFigure extends Figure implements Introspectable{
     /**
      * Constructor
      *
-     * @param runMode true if this figure is in run mode; false if in edit mode.
+     * @param runMode
+     *            true if this figure is in run mode; false if in edit mode.
      */
     public LabelFigure(boolean runMode) {
         this.runMode = runMode;
@@ -54,59 +54,58 @@ public class LabelFigure extends Figure implements Introspectable{
     protected void calculateTextLocation() {
         Rectangle clientArea = getClientArea();
         Dimension textSize = getTextSize();
-            int x=0;
-            if(clientArea.width > textSize.width){
+        int x = 0;
+        if (clientArea.width > textSize.width) {
 
-                switch (horizontalAlignment) {
-                case CENTER:
-                    x = (clientArea.width - textSize.width)/2;
-                    break;
-                case RIGHT:
-                    x = clientArea.width - textSize.width;
-                    break;
-                case LEFT:
-                default:
-                    break;
-                }
+            switch (horizontalAlignment) {
+            case CENTER:
+                x = (clientArea.width - textSize.width) / 2;
+                break;
+            case RIGHT:
+                x = clientArea.width - textSize.width;
+                break;
+            case LEFT:
+            default:
+                break;
             }
+        }
 
-            int y=0;
-            if(clientArea.height > textSize.height){
-                switch (verticalAlignment) {
-                case MIDDLE:
-                    y = (clientArea.height - textSize.height)/2;
-                    break;
-                case BOTTOM:
-                    y =clientArea.height - textSize.height;
-                    break;
-                case TOP:
-                default:
-                    break;
-                }
+        int y = 0;
+        if (clientArea.height > textSize.height) {
+            switch (verticalAlignment) {
+            case MIDDLE:
+                y = (clientArea.height - textSize.height) / 2;
+                break;
+            case BOTTOM:
+                y = clientArea.height - textSize.height;
+                break;
+            case TOP:
+            default:
+                break;
             }
+        }
 
-            textLocation = new Point(x, y);
+        textLocation = new Point(x, y);
     }
 
     protected Dimension calculateTextSize() {
         return Draw2dSingletonUtil.getTextUtilities().getTextExtents(text, getFont());
     }
 
-    protected void clearLocation(){
+    protected void clearLocation() {
         textLocation = null;
         textSize = null;
     }
 
     @Override
     public boolean containsPoint(int x, int y) {
-        if(runMode && !selectable)
+        if (runMode && !selectable)
             return false;
         else
             return super.containsPoint(x, y);
     }
 
-
-    public Dimension getAutoSizeDimension(){
+    public Dimension getAutoSizeDimension() {
         return getPreferredSize().getCopy().expand(
                 getInsets().getWidth(), getInsets().getHeight());
     }
@@ -122,7 +121,6 @@ public class LabelFigure extends Figure implements Introspectable{
         return horizontalAlignment;
     }
 
-
     @Override
     public Dimension getMinimumSize(int wHint, int hHint) {
         return getTextSize();
@@ -137,7 +135,6 @@ public class LabelFigure extends Figure implements Introspectable{
     public String getText() {
         return text;
     }
-
 
     protected Point getTextLocation() {
         if (textLocation != null)
@@ -182,7 +179,7 @@ public class LabelFigure extends Figure implements Introspectable{
     @Override
     protected void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
-        if(text.length() == 0)
+        if (text.length() == 0)
             return;
         Rectangle clientArea = getClientArea();
         graphics.translate(clientArea.x, clientArea.y);
@@ -191,7 +188,7 @@ public class LabelFigure extends Figure implements Introspectable{
     }
 
     public void setHorizontalAlignment(H_ALIGN hAlignment) {
-        if(this.horizontalAlignment == hAlignment)
+        if (this.horizontalAlignment == hAlignment)
             return;
         horizontalAlignment = hAlignment;
         revalidate();
@@ -199,19 +196,20 @@ public class LabelFigure extends Figure implements Introspectable{
     }
 
     /**
-     * @param runMode the runMode to set
+     * @param runMode
+     *            the runMode to set
      */
     public void setRunMode(boolean runMode) {
         this.runMode = runMode;
     }
 
     /**
-     * @param selectable the selectable to set
+     * @param selectable
+     *            the selectable to set
      */
     public void setSelectable(boolean selectable) {
         this.selectable = selectable;
     }
-
 
     public void setText(String s) {
         // "text" will never be null.
@@ -225,27 +223,30 @@ public class LabelFigure extends Figure implements Introspectable{
     }
 
     public void setVerticalAlignment(V_ALIGN vAlignment) {
-        if(this.verticalAlignment == vAlignment)
+        if (this.verticalAlignment == vAlignment)
             return;
         verticalAlignment = vAlignment;
         revalidate();
         repaint();
     }
 
-    public enum H_ALIGN{
+    public enum H_ALIGN {
         LEFT("Left"),
         CENTER("Center"),
         RIGHT("Right");
-        public static String[] stringValues(){
+
+        public static String[] stringValues() {
             String[] result = new String[values().length];
-            int i=0;
-            for(H_ALIGN h : values()){
+            int i = 0;
+            for (H_ALIGN h : values()) {
                 result[i++] = h.toString();
             }
             return result;
         }
+
         String descripion;
-        H_ALIGN(String description){
+
+        H_ALIGN(String description) {
             this.descripion = description;
         }
 
@@ -255,20 +256,23 @@ public class LabelFigure extends Figure implements Introspectable{
         }
     }
 
-    public enum V_ALIGN{
+    public enum V_ALIGN {
         TOP("Top"),
         MIDDLE("Middle"),
         BOTTOM("Bottom");
-        public static String[] stringValues(){
+
+        public static String[] stringValues() {
             String[] result = new String[values().length];
-            int i=0;
-            for(V_ALIGN h : values()){
+            int i = 0;
+            for (V_ALIGN h : values()) {
                 result[i++] = h.toString();
             }
             return result;
         }
+
         String descripion;
-        V_ALIGN(String description){
+
+        V_ALIGN(String description) {
             this.descripion = description;
         }
 
@@ -279,5 +283,3 @@ public class LabelFigure extends Figure implements Introspectable{
     }
 
 }
-
-

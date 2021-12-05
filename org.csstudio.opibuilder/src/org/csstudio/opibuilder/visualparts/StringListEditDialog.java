@@ -18,7 +18,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-/**The dialog for editing String List.
+/**
+ * The dialog for editing String List.
+ * 
  * @author Xihui Chen
  *
  */
@@ -33,7 +35,7 @@ public class StringListEditDialog extends Dialog {
         super(parentShell);
         this.title = dialogTitle;
         this.contents = new ArrayList<String>();
-        for(String item : inputData){
+        for (String item : inputData) {
             this.contents.add(item);
         }
         // Allow resize
@@ -46,15 +48,12 @@ public class StringListEditDialog extends Dialog {
         // Table editor should stretch to fill the dialog space, but
         // at least on OS X, it has some minimum size below which it
         // doesn't properly shrink.
-        tableEditor = new StringTableEditor(container,contents);
+        tableEditor = new StringTableEditor(container, contents);
         tableEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         return container;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);

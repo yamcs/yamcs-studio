@@ -19,8 +19,7 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * Utility class to change image behavior like color, shape, rotation
- * management, ...
+ * Utility class to change image behavior like color, shape, rotation management, ...
  *
  * @author Fred Arnaud (Sopra Group)
  */
@@ -33,8 +32,7 @@ public final class ImageUtils {
     }
 
     /**
-     * Apply the specified {@link PermutationMatrix} to the given
-     * {@link ImageData}.
+     * Apply the specified {@link PermutationMatrix} to the given {@link ImageData}.
      */
     public static ImageData applyMatrix(ImageData srcData, PermutationMatrix pm) {
         if (srcData == null || pm == null
@@ -184,9 +182,11 @@ public final class ImageUtils {
         int gradientWidth = 512, gradientHeight = 10;
         int average = (int) sum / count;
         int start = average - 32;
-        if (start < 0) start = 0;
+        if (start < 0)
+            start = 0;
         int end = max + luminance;
-        if (end > gradientWidth - 1) end = gradientWidth - 1;
+        if (end > gradientWidth - 1)
+            end = gradientWidth - 1;
 
         // create the color gradient
         java.awt.Color color1 = new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue());
@@ -220,7 +220,8 @@ public final class ImageUtils {
                             && current.blue < 255) {
                         int gradientRGB = gradient.getRGB(current.red, 0);
                         java.awt.Color gradientColor = new java.awt.Color(gradientRGB);
-                        RGB degraded = new RGB(gradientColor.getRed(), gradientColor.getGreen(), gradientColor.getBlue());
+                        RGB degraded = new RGB(gradientColor.getRed(), gradientColor.getGreen(),
+                                gradientColor.getBlue());
                         if (palette.isDirect) {
                             int appliedColor = palette.getPixel(degraded);
                             imageData.setPixel(x, y, appliedColor);
@@ -247,7 +248,8 @@ public final class ImageUtils {
     /**
      * Crop the given rectangle with the given insets.
      *
-     * @param rect rectangle to crop.
+     * @param rect
+     *            rectangle to crop.
      * @param insets
      */
     public static void crop(Rectangle rect, Insets insets) {
@@ -358,13 +360,8 @@ public final class ImageUtils {
     }
 
     private static int applyShade(int shadedPixel, int pixelToShade, PaletteData palette) {
-        int newColor = 0
-        ,redMask = palette.redMask
-        ,blueMask = palette.blueMask
-        ,greenMask = palette.greenMask
-        ,redShift = palette.redShift
-        ,greenShift = palette.greenShift
-        ,blueShift = palette.blueShift;
+        int newColor = 0, redMask = palette.redMask, blueMask = palette.blueMask, greenMask = palette.greenMask,
+                redShift = palette.redShift, greenShift = palette.greenShift, blueShift = palette.blueShift;
 
         float ratioR = ((shadedPixel & redMask) >> redShift) / 255f;
         float ratioG = ((shadedPixel & greenMask) >> greenShift) / 255f;
@@ -376,9 +373,18 @@ public final class ImageUtils {
         r = (int) Math.round(r * ratioR);
         g = (int) Math.round(g * ratioG);
         b = (int) Math.round(b * ratioB);
-        if (r < 0) r = 0; else if (r > 255) r = 255;
-        if (g < 0) g = 0; else if (g > 255) g = 255;
-        if (b < 0) b = 0; else if (b > 255) b = 255;
+        if (r < 0)
+            r = 0;
+        else if (r > 255)
+            r = 255;
+        if (g < 0)
+            g = 0;
+        else if (g > 255)
+            g = 255;
+        if (b < 0)
+            b = 0;
+        else if (b > 255)
+            b = 255;
 
         newColor |= (redShift < 0 ? r << -redShift : r >>> redShift) & redMask;
         newColor |= (greenShift < 0 ? g << -greenShift : g >>> greenShift) & greenMask;
@@ -417,8 +423,7 @@ public final class ImageUtils {
                     RGB current = palette.getRGB(pixelValue);
                     if (current.blue == current.green
                             && current.blue == current.red
-                            && current.blue < 255)
-                    {
+                            && current.blue < 255) {
                         float[] pixelHSB = new float[3];
                         java.awt.Color.RGBtoHSB(current.red, current.green, current.blue, pixelHSB);
                         int awtRGB = java.awt.Color.HSBtoRGB(hsb[0], hsb[1], 1 - pixelHSB[2]);

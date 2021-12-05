@@ -8,8 +8,8 @@
 package org.yamcs.studio.autocomplete;
 
 /**
- * Used by {@link AutoCompleteService} to notify that a
- * {@link IAutoCompleteProvider} has returned a {@link AutoCompleteResult}.
+ * Used by {@link AutoCompleteService} to notify that a {@link IAutoCompleteProvider} has returned a
+ * {@link AutoCompleteResult}.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

@@ -19,8 +19,8 @@ import org.yamcs.studio.autocomplete.ui.content.ContentProposalList;
 import org.yamcs.studio.autocomplete.ui.content.IContentProposalSearchHandler;
 
 /**
- * Implements {@link IAutoCompleteProposalProvider} and manages the
- * {@link ContentProposalList} with results from {@link AutoCompleteService}.
+ * Implements {@link IAutoCompleteProposalProvider} and manages the {@link ContentProposalList} with results from
+ * {@link AutoCompleteService}.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -36,9 +36,6 @@ public class AutoCompleteProposalProvider implements
         this.currentList = new ContentProposalList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void getProposals(final String contents,
             final IContentProposalSearchHandler handler) {
@@ -76,7 +73,8 @@ public class AutoCompleteProposalProvider implements
                             ContentProposalList cpl = null;
                             synchronized (currentList) {
                                 if (result.getProvider() != null)
-                                    currentList.addProposals(result.getProvider(), contentProposalsArray, result.getCount(), index);
+                                    currentList.addProposals(result.getProvider(), contentProposalsArray,
+                                            result.getCount(), index);
                                 currentList.addTopProposals(topContentProposals);
                                 cpl = currentList.clone();
                             }
@@ -89,28 +87,18 @@ public class AutoCompleteProposalProvider implements
         currentList.setExpected(expected);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasProviders() {
         return AutoCompleteService.getInstance().hasProviders(type);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void cancel() {
         AutoCompleteService.getInstance().cancel(type);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getType() {
         return type;
     }
-
 }

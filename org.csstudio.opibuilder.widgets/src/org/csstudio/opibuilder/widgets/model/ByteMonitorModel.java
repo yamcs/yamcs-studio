@@ -41,7 +41,7 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     /** True if the LEDs are horizontal arranged. */
     public static final String PROP_HORIZONTAL = "horizontal";
 
-    /** Reverse the direction that bytes are displayed normal display is start bit on right or bottom*/
+    /** Reverse the direction that bytes are displayed normal display is start bit on right or bottom */
     public static final String PROP_BIT_REVERSE = "bitReverse";
 
     /** Default color if the bit is on */
@@ -54,9 +54,9 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     public static final String PROP_SQUARE_LED = "square_led";
 
     /** The default color of the on color property. */
-    private static final RGB DEFAULT_ON_COLOR = new RGB(0,255,0);
+    private static final RGB DEFAULT_ON_COLOR = new RGB(0, 255, 0);
     /** The default color of the off color property. */
-    private static final RGB DEFAULT_OFF_COLOR = new RGB(0, 100 ,0);
+    private static final RGB DEFAULT_OFF_COLOR = new RGB(0, 100, 0);
 
     /** The ID of the effect 3D property. */
     public static final String PROP_EFFECT3D = "effect_3d";
@@ -119,38 +119,38 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     }
 
     public boolean isHorizontal() {
-        return (Boolean)getPropertyValue(PROP_HORIZONTAL);
+        return (Boolean) getPropertyValue(PROP_HORIZONTAL);
     }
 
-    public boolean isReverseBits(){
-        return (Boolean)getPropertyValue(PROP_BIT_REVERSE);
+    public boolean isReverseBits() {
+        return (Boolean) getPropertyValue(PROP_BIT_REVERSE);
     }
 
     @Override
     public void flipHorizontally() {
         super.flipHorizontally();
-        if(isHorizontal())
+        if (isHorizontal())
             setPropertyValue(PROP_BIT_REVERSE, !isReverseBits());
     }
 
     @Override
     public void flipHorizontally(int centerX) {
         super.flipHorizontally(centerX);
-        if(isHorizontal())
+        if (isHorizontal())
             setPropertyValue(PROP_BIT_REVERSE, !isReverseBits());
     }
 
     @Override
     public void flipVertically() {
         super.flipVertically();
-        if(!isHorizontal())
+        if (!isHorizontal())
             setPropertyValue(PROP_BIT_REVERSE, !isReverseBits());
     }
 
     @Override
     public void flipVertically(int centerY) {
         super.flipVertically(centerY);
-        if(!isHorizontal())
+        if (!isHorizontal())
             setPropertyValue(PROP_BIT_REVERSE, !isReverseBits());
     }
 
@@ -167,7 +167,7 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getLabels(){
-        return (List<String>)getPropertyValue(PROP_LABELS);
+    public List<String> getLabels() {
+        return (List<String>) getPropertyValue(PROP_LABELS);
     }
 }

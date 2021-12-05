@@ -15,11 +15,13 @@ import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-/**The dynamic help provider for OPI Editor and widgets.
+/**
+ * The dynamic help provider for OPI Editor and widgets.
+ * 
  * @author Xihui Chen
  *
  */
-public class OPIHelpContextProvider implements IContextProvider{
+public class OPIHelpContextProvider implements IContextProvider {
 
     private GraphicalViewer viewer;
 
@@ -35,14 +37,14 @@ public class OPIHelpContextProvider implements IContextProvider{
     @Override
     public IContext getContext(Object target) {
         ISelection selection = viewer.getSelection();
-        if(selection instanceof IStructuredSelection){
-            Object obj = ((IStructuredSelection)selection).getFirstElement();
-            if(obj instanceof AbstractBaseEditPart && !(obj instanceof DisplayEditpart)){
+        if (selection instanceof IStructuredSelection) {
+            Object obj = ((IStructuredSelection) selection).getFirstElement();
+            if (obj instanceof AbstractBaseEditPart && !(obj instanceof DisplayEditpart)) {
                 return new WidgetSelectionContext(
-                        ((AbstractBaseEditPart)obj).getWidgetModel());
+                        ((AbstractBaseEditPart) obj).getWidgetModel());
             }
         }
-        return HelpSystem.getContext(OPIBuilderPlugin.PLUGIN_ID +  ".opi_editor");
+        return HelpSystem.getContext(OPIBuilderPlugin.PLUGIN_ID + ".opi_editor");
     }
 
     @Override
@@ -84,7 +86,7 @@ public class OPIHelpContextProvider implements IContextProvider{
 
         @Override
         public String getCategory(IHelpResource topic) {
-            if(topic instanceof WidgetHelpResource)
+            if (topic instanceof WidgetHelpResource)
                 return "See Details";
             return null;
         }
@@ -95,27 +97,26 @@ public class OPIHelpContextProvider implements IContextProvider{
 
         private AbstractWidgetModel widgetModel;
 
-
         public WidgetHelpResource(AbstractWidgetModel widgetModel) {
             this.widgetModel = widgetModel;
         }
 
         @Override
         public String getHref() {
-            WidgetDescriptor widgetDescriptor =
-                    WidgetsService.getInstance().getWidgetDescriptor(widgetModel.getTypeID());
+            WidgetDescriptor widgetDescriptor = WidgetsService.getInstance()
+                    .getWidgetDescriptor(widgetModel.getTypeID());
             String onlineHelpHtml = widgetDescriptor.getOnlineHelpHtml();
-            if( onlineHelpHtml != null && !onlineHelpHtml.trim().isEmpty()){
+            if (onlineHelpHtml != null && !onlineHelpHtml.trim().isEmpty()) {
                 return widgetDescriptor.getPluginId() + "/" + widgetDescriptor.getOnlineHelpHtml();
             }
-            if(widgetDescriptor.getPluginId().trim().equals("org.csstudio.opibuilder.widgets")){
+            if (widgetDescriptor.getPluginId().trim().equals("org.csstudio.opibuilder.widgets")) {
                 String modelClassName = widgetModel.getClass().getSimpleName();
                 StringBuilder sb = new StringBuilder("/");
                 sb.append(OPIBuilderPlugin.PLUGIN_ID);
                 sb.append("/html/widgets/");
-                sb.append(modelClassName.substring(0, modelClassName.length()-5));
+                sb.append(modelClassName.substring(0, modelClassName.length() - 5));
                 sb.append(".html");
-                return  sb.toString();
+                return sb.toString();
             }
             return OPIBuilderPlugin.PLUGIN_ID + "/html/widgets/WidgetHelpNotFound.html";
         }

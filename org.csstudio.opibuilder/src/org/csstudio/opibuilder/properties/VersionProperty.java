@@ -10,11 +10,13 @@ package org.csstudio.opibuilder.properties;
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.jdom.Element;
 
-/**Version property.
+/**
+ * Version property.
+ * 
  * @author Xihui Chen
  *
  */
-public class VersionProperty extends UnchangableStringProperty{
+public class VersionProperty extends UnchangableStringProperty {
 
     public VersionProperty(String prop_id, String description,
             WidgetPropertyCategory category, String defaultValue) {
@@ -31,6 +33,5 @@ public class VersionProperty extends UnchangableStringProperty{
     public boolean configurableByRule() {
         return false;
     }
-
 
 }

@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * The cell editor for OPIFont
+ * 
  * @author Xihui Chen
  *
  */
@@ -22,16 +23,14 @@ public class OPIFontCellEditor extends AbstractDialogCellEditor {
 
     private OPIFont opiFont;
 
-
     public OPIFontCellEditor(Composite parent, String title) {
         super(parent, title);
     }
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        OPIFontDialog dialog =
-            new OPIFontDialog(parentShell, opiFont, dialogTitle);
-        if(dialog.open() == Window.OK)
+        OPIFontDialog dialog = new OPIFontDialog(parentShell, opiFont, dialogTitle);
+        if (dialog.open() == Window.OK)
             opiFont = dialog.getOutput();
     }
 
@@ -47,10 +46,10 @@ public class OPIFontCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if(value == null || !(value instanceof OPIFont))
+        if (value == null || !(value instanceof OPIFont))
             opiFont = MediaService.getInstance().getOPIFont("unknown");
         else
-            opiFont = (OPIFont)value;
+            opiFont = (OPIFont) value;
     }
 
 }

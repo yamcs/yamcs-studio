@@ -44,14 +44,13 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
         figure.setOpaque(!getWidgetModel().isTransparent());
         figure.setSashPosition(model.getSashPosition());
 
-
         return figure;
     }
 
     @Override
     public void activate() {
         super.activate();
-        if(getWidgetModel().getChildren().size()==0){
+        if (getWidgetModel().getChildren().size() == 0) {
             groupContainer1 = createGroupingContainerModel(true);
             groupContainer2 = createGroupingContainerModel(false);
             UIBundlingThread.getInstance().addRunnable(new Runnable() {
@@ -62,55 +61,53 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
                     getWidgetModel().addChild(groupContainer2);
                 }
             });
-        }else{
+        } else {
             groupContainer1 = (GroupingContainerModel) getWidgetModel().getChildren().get(0);
             groupContainer2 = (GroupingContainerModel) getWidgetModel().getChildren().get(1);
         }
-        getSashFigure().addLayoutListener(new LayoutListener.Stub(){
+        getSashFigure().addLayoutListener(new LayoutListener.Stub() {
 
             @Override
             public void postLayout(IFigure container) {
 
-
                 Rectangle[] bounds = getSashFigure().getSubPanelsBounds();
-                if(groupContainer1.getBounds().equals(bounds[0]) &&
+                if (groupContainer1.getBounds().equals(bounds[0]) &&
                         groupContainer2.getBounds().equals(bounds[1]))
                     return;
-                //make sure the origin size has been recorded.
+                // make sure the origin size has been recorded.
                 groupContainer1.getOriginSize();
                 groupContainer2.getOriginSize();
                 groupContainer1.setBounds(bounds[0]);
                 groupContainer2.setBounds(bounds[1]);
-                if(getExecutionMode() == ExecutionMode.RUN_MODE){
-                    if(getWidgetModel().isPanel1AutoScaleChildren())
+                if (getExecutionMode() == ExecutionMode.RUN_MODE) {
+                    if (getWidgetModel().isPanel1AutoScaleChildren())
                         groupContainer1.scaleChildren();
-                    if(getWidgetModel().isPanel2AutoScaleChildren())
+                    if (getWidgetModel().isPanel2AutoScaleChildren())
                         groupContainer2.scaleChildren();
                 }
-                if(getExecutionMode() == ExecutionMode.EDIT_MODE){
+                if (getExecutionMode() == ExecutionMode.EDIT_MODE) {
                     getViewer().getEditDomain().getCommandStack().execute(
-                        new SetWidgetPropertyCommand(getWidgetModel(), SashContainerModel.PROP_SASH_POSITION,
-                        getSashFigure().getSashPosition()));
+                            new SetWidgetPropertyCommand(getWidgetModel(), SashContainerModel.PROP_SASH_POSITION,
+                                    getSashFigure().getSashPosition()));
                 }
             }
         });
 
         getSashFigure().setSashPosition(getWidgetModel().getSashPosition());
 
-
     }
 
-    private GroupingContainerModel createGroupingContainerModel(boolean isPanel1){
+    private GroupingContainerModel createGroupingContainerModel(boolean isPanel1) {
         GroupingContainerModel groupingContainerModel = new GroupingContainerModel();
-        groupingContainerModel.setName(isPanel1? "Panel 1" : "Panel 2");
+        groupingContainerModel.setName(isPanel1 ? "Panel 1" : "Panel 2");
         groupingContainerModel.setBorderStyle(BorderStyle.NONE);
         groupingContainerModel.setPropertyValue(GroupingContainerModel.PROP_TRANSPARENT, true);
 
         return groupingContainerModel;
     }
 
-    /**
-     * {@inheritDoc} Overidden, to set the selection behaviour of child
+    /*
+     * Overidden, to set the selection behaviour of child
      * EditParts.
      */
     @Override
@@ -132,9 +129,9 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
         installEditPolicy(EditPolicy.LAYOUT_ROLE, null);
         installEditPolicy(EditPolicy.LAYOUT_ROLE, null);
 
-        //the snap feedback effect
+        // the snap feedback effect
         installEditPolicy("Snap Feedback", null);
-        if(getExecutionMode() == ExecutionMode.EDIT_MODE)
+        if (getExecutionMode() == ExecutionMode.EDIT_MODE)
             installEditPolicy(DropPVtoPVWidgetEditPolicy.DROP_PV_ROLE, null);
 
     }
@@ -151,7 +148,7 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setSashPosition((Double)newValue);
+                getSashFigure().setSashPosition((Double) newValue);
                 return false;
             }
         };
@@ -173,7 +170,7 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setSashWidth((Integer)newValue);
+                getSashFigure().setSashWidth((Integer) newValue);
                 return false;
             }
         };
@@ -184,7 +181,7 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setHorizontal((Boolean)newValue);
+                getSashFigure().setHorizontal((Boolean) newValue);
                 return false;
             }
         };
@@ -195,7 +192,7 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                getSashFigure().setOpaque(!(Boolean)newValue);
+                getSashFigure().setOpaque(!(Boolean) newValue);
                 return false;
             }
         };
@@ -212,6 +209,5 @@ public class SashContainerEditPart extends AbstractContainerEditpart {
     public IFigure getContentPane() {
         return getSashFigure().getContentPane();
     }
-
 
 }

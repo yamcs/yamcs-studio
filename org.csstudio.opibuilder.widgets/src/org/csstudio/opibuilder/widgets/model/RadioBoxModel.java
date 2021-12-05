@@ -9,8 +9,9 @@ package org.csstudio.opibuilder.widgets.model;
 
 import org.eclipse.swt.graphics.RGB;
 
-
-/**Model of Radio Box.
+/**
+ * Model of Radio Box.
+ * 
  * @author Xihui Chen
  *
  */
@@ -20,13 +21,12 @@ public class RadioBoxModel extends AbstractChoiceModel {
 
     public RadioBoxModel() {
         setPropertyValue(PROP_COLOR_BACKGROUND, new RGB(230, 230, 230));
-        setPropertyValue(PROP_SELECTED_COLOR, new RGB(77,77,77));
+        setPropertyValue(PROP_SELECTED_COLOR, new RGB(77, 77, 77));
     }
 
     @Override
     public String getTypeID() {
         return ID;
     }
-
 
 }

@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.figures;
 
-
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.Graphics;
@@ -20,18 +19,18 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
-/**Figure for a Combo widget.
+/**
+ * Figure for a Combo widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
 
-
     Triangle selector;
-    private final static Color GRAY_COLOR =
-        CustomMediaFactory.getInstance().getColor(240,240,240);
-    private final static Color DARK_GRAY_COLOR =
-        CustomMediaFactory.getInstance().getColor(CustomMediaFactory.COLOR_DARK_GRAY);
+    private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(240, 240, 240);
+    private final static Color DARK_GRAY_COLOR = CustomMediaFactory.getInstance()
+            .getColor(CustomMediaFactory.COLOR_DARK_GRAY);
 
     private static final int SELECTOR_WIDTH = 8;
 
@@ -39,7 +38,7 @@ public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
 
     public ComboFigure(AbstractBaseEditPart editPart) {
         super(editPart);
-        if(!runmode){
+        if (!runmode) {
             selector = new Triangle();
             selector.setBackgroundColor(DARK_GRAY_COLOR);
             selector.setDirection(PositionConstants.SOUTH);
@@ -51,16 +50,16 @@ public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
 
     @Override
     protected Combo createSWTWidget(Composite parent, int style) {
-        combo= new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+        combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
         return combo;
     }
 
     @Override
     protected void layout() {
         super.layout();
-        if(!runmode){
+        if (!runmode) {
             Rectangle clientArea = getClientArea().getCopy().shrink(2, 2);
-            selector.setBounds(new Rectangle(clientArea.x + clientArea.width - SELECTOR_WIDTH -2,
+            selector.setBounds(new Rectangle(clientArea.x + clientArea.width - SELECTOR_WIDTH - 2,
                     clientArea.y, SELECTOR_WIDTH, clientArea.height));
         }
     }
@@ -82,7 +81,7 @@ public class ComboFigure extends AbstractSWTWidgetFigure<Combo> {
         combo.setText(text);
     }
 
-    public Dimension getAutoSizeDimension(){
+    public Dimension getAutoSizeDimension() {
         return new Dimension(getBounds().width,
                 combo.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + getInsets().getHeight());
     }

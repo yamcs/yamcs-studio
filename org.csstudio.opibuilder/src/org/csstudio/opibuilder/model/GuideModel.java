@@ -30,9 +30,9 @@ import java.util.Set;
 
 import org.csstudio.opibuilder.util.GuideUtil;
 
-
 /**
  * The Model for a Guide.
+ * 
  * @author Kai Meyer
  */
 public final class GuideModel implements Serializable {
@@ -69,8 +69,9 @@ public final class GuideModel implements Serializable {
 
     /**
      * Constructor.
+     * 
      * @param position
-     *             The position of this guide
+     *            The position of this guide
      */
     public GuideModel(final int position) {
         _position = position;
@@ -78,8 +79,9 @@ public final class GuideModel implements Serializable {
 
     /**
      * Sets the orientation.
+     * 
      * @param isHorizontal
-     *             The new orientation for this guide
+     *            The new orientation for this guide
      */
     public void setOrientation(final boolean isHorizontal) {
         _isHorizontal = isHorizontal;
@@ -87,8 +89,9 @@ public final class GuideModel implements Serializable {
 
     /**
      * Sets the position.
+     * 
      * @param position
-     *             The new Position for this guide
+     *            The new Position for this guide
      */
     public void setPosition(final int position) {
         if (_position != position) {
@@ -101,8 +104,8 @@ public final class GuideModel implements Serializable {
 
     /**
      * Returns if this guide has a horizontal orientation.
-     * @return boolean
-     *             True, if this guide has a horizontal orientation, false otherwise
+     * 
+     * @return boolean True, if this guide has a horizontal orientation, false otherwise
      */
     public boolean isHorizontal() {
         return _isHorizontal;
@@ -110,8 +113,8 @@ public final class GuideModel implements Serializable {
 
     /**
      * Returns the position of this guide.
-     * @return int
-     *             The position of this guide
+     * 
+     * @return int The position of this guide
      */
     public int getPosition() {
         return _position;
@@ -119,8 +122,9 @@ public final class GuideModel implements Serializable {
 
     /**
      * Adds a PropertyChangeListener to this guide.
+     * 
      * @param listener
-     *             The listener to add
+     *            The listener to add
      */
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         _listeners.addPropertyChangeListener(listener);
@@ -128,8 +132,9 @@ public final class GuideModel implements Serializable {
 
     /**
      * Removes a PropertyChangeListener from this guide.
+     * 
      * @param listener
-     *             The listener to remove
+     *            The listener to remove
      */
     public void removePropertyChangeListener(final PropertyChangeListener listener) {
         _listeners.removePropertyChangeListener(listener);
@@ -137,10 +142,11 @@ public final class GuideModel implements Serializable {
 
     /**
      * Attaches the given AbstractWidgetEditPart with the alignment to this guide.
+     * 
      * @param model
-     *             The AbstractWidgetEditPart
+     *            The AbstractWidgetEditPart
      * @param alignment
-     *             The alignment for the EditPart
+     *            The alignment for the EditPart
      */
     public void attachPart(final AbstractWidgetModel model, final int alignment) {
         if (getMap().containsKey(model) && getAlignment(model) == alignment) {
@@ -153,42 +159,42 @@ public final class GuideModel implements Serializable {
 
     /**
      * Detaches the given part from this guide.
+     * 
      * @param model
-     *             The part that is to be detached from this guide
+     *            The part that is to be detached from this guide
      */
     public void detachPart(final AbstractWidgetModel model) {
         if (getMap().containsKey(model)) {
             getMap().remove(model);
             GuideUtil.getInstance().removeGuide(model, this.isHorizontal());
-//            if (this.isHorizontal()) {
-//                model.setHorizontalGuide(null);
-//            } else {
-//                model.setVerticalGuide(null);
-//            }
+            // if (this.isHorizontal()) {
+            // model.setHorizontalGuide(null);
+            // } else {
+            // model.setVerticalGuide(null);
+            // }
             _listeners.firePropertyChange(PROPERTY_CHILDREN_CHANGED, null, model);
         }
     }
 
     /**
-     * This methods returns the edge along which the given part is attached to this guide.
-     * This information is used by
+     * This methods returns the edge along which the given part is attached to this guide. This information is used by
      * to determine whether to attach or detach a part from a guide during resize operations.
      *
-     * @param    model    The part whose alignment has to be found
-     * @return    an int representing the edge along which the given part is attached to this
-     *             guide; 1 is bottom or right; 0, center; -1, top or left; -2 if the part is not
-     *             attached to this guide
+     * @param model
+     *            The part whose alignment has to be found
+     * @return an int representing the edge along which the given part is attached to this guide; 1 is bottom or right;
+     *         0, center; -1, top or left; -2 if the part is not attached to this guide
      */
     public int getAlignment(final AbstractWidgetModel model) {
         if (getMap().get(model) != null) {
-            return ((Integer)getMap().get(model)).intValue();
+            return ((Integer) getMap().get(model)).intValue();
         }
         return -2;
     }
 
     /**
-     * @return    The Map containing all the parts attached to this guide, and their alignments;
-     *             the keys are LogicSubparts and values are Integers
+     * @return The Map containing all the parts attached to this guide, and their alignments; the keys are LogicSubparts
+     *         and values are Integers
      */
     public Map<AbstractWidgetModel, Integer> getMap() {
         if (_map == null) {
@@ -198,8 +204,8 @@ public final class GuideModel implements Serializable {
     }
 
     /**
-     * @return    the set of all the parts attached to this guide; a set is used because a part
-     *             can only be attached to a guide along one edge.
+     * @return the set of all the parts attached to this guide; a set is used because a part can only be attached to a
+     *         guide along one edge.
      */
     public Set<AbstractWidgetModel> getAttachedModels() {
         return getMap().keySet();

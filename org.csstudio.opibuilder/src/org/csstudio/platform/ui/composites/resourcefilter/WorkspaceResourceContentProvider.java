@@ -46,16 +46,13 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
     }
 
     /**
-     * The visual part that is using this content provider is about to be
-     * disposed. Deallocate all allocated SWT resources.
+     * The visual part that is using this content provider is about to be disposed. Deallocate all allocated SWT
+     * resources.
      */
     @Override
     public void dispose() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object[] getChildren(final Object element) {
         if (element instanceof IWorkspace) {
@@ -95,13 +92,11 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
     }
 
     /**
-     * Returns whether the given resource should be included in the contents
-     * this content provider returns.
+     * Returns whether the given resource should be included in the contents this content provider returns.
      *
      * @param resource
      *            the resource.
-     * @return <code>true</code> if the resource should be included,
-     *         <code>false</code> otherwise.
+     * @return <code>true</code> if the resource should be included, <code>false</code> otherwise.
      */
     private boolean includeResource(IResource resource) {
         if (resource.getType() != IResource.FILE || filters == null) {
@@ -117,17 +112,11 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object[] getElements(final Object element) {
         return getChildren(element);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object getParent(final Object element) {
         if (element instanceof IResource) {
@@ -136,25 +125,18 @@ final class WorkspaceResourceContentProvider implements ITreeContentProvider {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasChildren(final Object element) {
         return getChildren(element).length > 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void inputChanged(final Viewer viewer, final Object oldInput,
             final Object newInput) {
     }
 
     /**
-     * Specify whether or not to show closed projects in the tree viewer.
-     * Default is to show closed projects.
+     * Specify whether or not to show closed projects in the tree viewer. Default is to show closed projects.
      *
      * @param show
      *            boolean if false, do not show closed projects in the tree

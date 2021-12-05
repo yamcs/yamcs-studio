@@ -44,15 +44,11 @@ import org.eclipse.gef.EditPart;
  */
 public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
 
-
     @Override
     public AbstractPolyModel getWidgetModel() {
-        return (AbstractPolyModel)getModel();
+        return (AbstractPolyModel) getModel();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
@@ -66,17 +62,17 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
                 Polyline polyline = (Polyline) refreshableFigure;
 
                 PointList points = (PointList) newValue;
-                if(points.size() != polyline.getPoints().size()){
+                if (points.size() != polyline.getPoints().size()) {
                     anchorMap = null;
-                    //delete connections on deleted points
-                    if(points.size() < polyline.getPoints().size()){
-                        for(ConnectionModel conn : getWidgetModel().getSourceConnections()){
-                            if(Integer.parseInt(conn.getSourceTerminal()) >= points.size()){
+                    // delete connections on deleted points
+                    if (points.size() < polyline.getPoints().size()) {
+                        for (ConnectionModel conn : getWidgetModel().getSourceConnections()) {
+                            if (Integer.parseInt(conn.getSourceTerminal()) >= points.size()) {
                                 conn.disconnect();
                             }
                         }
-                        for(ConnectionModel conn : getWidgetModel().getTargetConnections()){
-                            if(Integer.parseInt(conn.getTargetTerminal()) >= points.size()){
+                        for (ConnectionModel conn : getWidgetModel().getTargetConnections()) {
+                            if (Integer.parseInt(conn.getTargetTerminal()) >= points.size()) {
                                 conn.disconnect();
                             }
                         }
@@ -98,20 +94,19 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
         };
         setPropertyChangeHandler(AbstractPolyModel.PROP_POINTS, pointsHandler);
 
-
-        IWidgetPropertyChangeHandler rotationHandler = new IWidgetPropertyChangeHandler(){
+        IWidgetPropertyChangeHandler rotationHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(Object oldValue, Object newValue,
                     IFigure figure) {
                 getWidgetModel().setPoints(
                         PointsUtil.rotatePoints(getWidgetModel().getOriginalPoints().getCopy(),
-                                (Double)newValue), false);
+                                (Double) newValue),
+                        false);
                 return false;
             }
         };
 
         setPropertyChangeHandler(AbstractPolyModel.PROP_ROTATION, rotationHandler);
-
 
     }
 
@@ -120,11 +115,10 @@ public abstract class AbstractPolyEditPart extends AbstractShapeEditPart {
         return (Polyline) super.getFigure();
     }
 
-
     @Override
     protected void fillAnchorMap() {
         anchorMap = new HashMap<String, ConnectionAnchor>(getFigure().getPoints().size());
-        for(int i=0; i<getFigure().getPoints().size(); i++){
+        for (int i = 0; i < getFigure().getPoints().size(); i++) {
             anchorMap.put(Integer.toString(i), new PolyGraphAnchor(getFigure(), i));
         }
     }

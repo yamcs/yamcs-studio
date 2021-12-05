@@ -10,23 +10,21 @@ package org.csstudio.opibuilder.runmode;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorLauncher;
 
-/** {@link IEditorLauncher} that opens display in new OPIShell.
+/**
+ * {@link IEditorLauncher} that opens display in new OPIShell.
  *
- *  <p>Registered in plugin.xml as "Editor" for *.opi files,
- *  allowing users to launch displays from the Eclipse Navigator,
- *  or by opening the file in the "default editor" based
- *  on the Eclipse registry.
+ * <p>
+ * Registered in plugin.xml as "Editor" for *.opi files, allowing users to launch displays from the Eclipse Navigator,
+ * or by opening the file in the "default editor" based on the Eclipse registry.
  *
- *  @author Kay Kasemir
- *  @author Will Rogers
- *  @author Jaka Bobnar
+ * @author Kay Kasemir
+ * @author Will Rogers
+ * @author Jaka Bobnar
  */
-public class ShellLauncher implements IEditorLauncher
-{
+public class ShellLauncher implements IEditorLauncher {
     @Override
-    public void open(final IPath path)
-    {
-        //The path is an absolute system path, which needs to be transformed to workspace path
+    public void open(final IPath path) {
+        // The path is an absolute system path, which needs to be transformed to workspace path
         IPath workspacePath = LauncherHelper.systemPathToWorkspacePath(path);
         OPIShell.openOPIShell(workspacePath, null);
 

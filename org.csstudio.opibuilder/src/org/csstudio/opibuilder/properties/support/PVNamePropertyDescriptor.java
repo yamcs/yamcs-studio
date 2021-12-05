@@ -20,7 +20,6 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
  */
 public class PVNamePropertyDescriptor extends TextPropertyDescriptor {
 
-
     /**
      * @param id
      *            id of the property
@@ -34,9 +33,6 @@ public class PVNamePropertyDescriptor extends TextPropertyDescriptor {
         setDescription(detailedDescription);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
 
@@ -44,6 +40,4 @@ public class PVNamePropertyDescriptor extends TextPropertyDescriptor {
         editor.getControl().setToolTipText(getDescription());
         return editor;
     }
-
-
 }

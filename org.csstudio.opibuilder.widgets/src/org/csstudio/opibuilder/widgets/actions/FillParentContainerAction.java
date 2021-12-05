@@ -17,26 +17,26 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.IAction;
 
-/**The action will auto size the selected widget to fill its parent container.
+/**
+ * The action will auto size the selected widget to fill its parent container.
+ * 
  * @author Xihui Chen
  *
  */
-public class FillParentContainerAction extends AbstractWidgetTargetAction{
-
+public class FillParentContainerAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
 
-        AbstractBaseEditPart widget = (AbstractBaseEditPart)selection.getFirstElement();
+        AbstractBaseEditPart widget = (AbstractBaseEditPart) selection.getFirstElement();
 
         AbstractContainerEditpart containerEditpart = getParentContainerEditpart();
 
         Dimension size = null;
-        if(containerEditpart instanceof DisplayEditpart)
-            size = ((DisplayEditpart)containerEditpart).getWidgetModel().getSize();
+        if (containerEditpart instanceof DisplayEditpart)
+            size = ((DisplayEditpart) containerEditpart).getWidgetModel().getSize();
         else
-            size= containerEditpart.getFigure().getClientArea().getSize();
-
+            size = containerEditpart.getFigure().getClientArea().getSize();
 
         Command cmd = new SetBoundsCommand(widget.getWidgetModel(),
                 new Rectangle(0, 0, size.width, size.height));
@@ -45,10 +45,8 @@ public class FillParentContainerAction extends AbstractWidgetTargetAction{
 
     }
 
-
     protected final AbstractContainerEditpart getParentContainerEditpart() {
-        return (AbstractContainerEditpart) (
-                (AbstractBaseEditPart)selection.getFirstElement()).getParent();
+        return (AbstractContainerEditpart) ((AbstractBaseEditPart) selection.getFirstElement()).getParent();
     }
 
 }

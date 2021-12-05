@@ -7,17 +7,17 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.figures;
 
-
 import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Control;
 
-/**Figure for a web browser widget.
+/**
+ * Figure for a web browser widget.
+ * 
  * @author Xihui Chen
  *
  */
-public abstract class AbstractWebBrowserFigure <T extends Control> extends AbstractSWTWidgetFigure<T> {
-
+public abstract class AbstractWebBrowserFigure<T extends Control> extends AbstractSWTWidgetFigure<T> {
 
     public AbstractWebBrowserFigure(AbstractBaseEditPart editpart, int style) {
         super(editpart, style);
@@ -25,6 +25,6 @@ public abstract class AbstractWebBrowserFigure <T extends Control> extends Abstr
 
     public abstract void setUrl(String url);
 
-    public abstract Browser getBrowser() ;
+    public abstract Browser getBrowser();
 
 }

@@ -14,10 +14,11 @@ import org.eclipse.draw2d.IFigure;
 
 /**
  * Boolean Switch EditPart
+ * 
  * @author Xihui Chen
  *
  */
-public class BoolSwitchEditPart extends AbstractBoolControlEditPart{
+public class BoolSwitchEditPart extends AbstractBoolControlEditPart {
 
     @Override
     protected IFigure doCreateFigure() {
@@ -29,19 +30,18 @@ public class BoolSwitchEditPart extends AbstractBoolControlEditPart{
         boolSwitch.setEffect3D(model.isEffect3D());
         return boolSwitch;
 
-
     }
 
     @Override
     public BoolSwitchModel getWidgetModel() {
-        return (BoolSwitchModel)getModel();
+        return (BoolSwitchModel) getModel();
     }
 
     @Override
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        //effect 3D
+        // effect 3D
         IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -53,7 +53,6 @@ public class BoolSwitchEditPart extends AbstractBoolControlEditPart{
             }
         };
         setPropertyChangeHandler(BoolSwitchModel.PROP_EFFECT3D, handler);
-
 
     }
 

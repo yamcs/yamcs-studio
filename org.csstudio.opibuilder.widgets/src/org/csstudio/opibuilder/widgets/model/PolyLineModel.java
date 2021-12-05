@@ -15,24 +15,19 @@ import org.csstudio.swt.widgets.figures.PolylineFigure;
 import org.csstudio.swt.widgets.figures.PolylineFigure.ArrowType;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-
-
-/**The model for polyline widget.
+/**
+ * The model for polyline widget.
+ * 
  * @author Sven Wende, Alexander Will (class of same name in SDS)
  * @author Xihui Chen
  *
  */
 public class PolyLineModel extends AbstractPolyModel {
 
-
-
-
-
     /**
      * The ID of this widget model.
      */
     public static final String ID = "org.csstudio.opibuilder.widgets.polyline";
-
 
     public static final String PROP_ARROW = "arrows";
 
@@ -44,7 +39,6 @@ public class PolyLineModel extends AbstractPolyModel {
         setLineWidth(1);
 
     }
-
 
     @Override
     protected void configureProperties() {
@@ -64,46 +58,43 @@ public class PolyLineModel extends AbstractPolyModel {
         return ID;
     }
 
-    public int getArrowType(){
-        return (Integer)getCastedPropertyValue(PROP_ARROW);
+    public int getArrowType() {
+        return (Integer) getCastedPropertyValue(PROP_ARROW);
     }
 
-    public void setArrowType(int type){
+    public void setArrowType(int type) {
         setPropertyValue(PROP_ARROW, type);
     }
 
-
-    public int getArrowLength(){
-        return (Integer)getCastedPropertyValue(PROP_ARROW_LENGTH);
+    public int getArrowLength() {
+        return (Integer) getCastedPropertyValue(PROP_ARROW_LENGTH);
     }
 
-    public void setArrowLength(int value){
+    public void setArrowLength(int value) {
         setPropertyValue(PROP_ARROW_LENGTH, value);
     }
-
-
 
     /**
      * Sets the specified _points for the polygon.
      *
      * @param points
      *            the polygon points
-     * @param rememberPoints true if the zero relative points should be remembered, false otherwise.
+     * @param rememberPoints
+     *            true if the zero relative points should be remembered, false otherwise.
      */
-//    @Override
-//    public void setPoints(final PointList points,
-//            final boolean rememberPoints) {
-//        if (points.size() > 0) {
-//            PointList copy = points.getCopy();
-//            if (rememberPoints) {
-//                rememberZeroDegreePoints(copy);
-//            }
-//            getProperty(PROP_POINTS).setPropertyValue(points);
-//
-//            updateBounds();
-//        }
-//    }
-
+    // @Override
+    // public void setPoints(final PointList points,
+    // final boolean rememberPoints) {
+    // if (points.size() > 0) {
+    // PointList copy = points.getCopy();
+    // if (rememberPoints) {
+    // rememberZeroDegreePoints(copy);
+    // }
+    // getProperty(PROP_POINTS).setPropertyValue(points);
+    //
+    // updateBounds();
+    // }
+    // }
 
     /**
      * Update the figure bounds based on points and arrows.
@@ -117,14 +108,11 @@ public class PolyLineModel extends AbstractPolyModel {
         getProperty(PROP_HEIGHT).setPropertyValue(bounds.height);
     }
 
-
-
-
     public boolean isFillArrow() {
-        return (Boolean)getCastedPropertyValue(PROP_FILL_ARROW);
+        return (Boolean) getCastedPropertyValue(PROP_FILL_ARROW);
     }
 
-    public void setFillArrow(boolean fill){
+    public void setFillArrow(boolean fill) {
         setPropertyValue(PROP_FILL_ARROW, fill);
     }
 

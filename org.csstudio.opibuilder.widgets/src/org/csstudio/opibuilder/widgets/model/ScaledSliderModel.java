@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.model;
 
-
 import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.ColorProperty;
 import org.csstudio.opibuilder.properties.DoubleProperty;
@@ -17,12 +16,12 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
  * This class defines a scaled slider widget model.
+ * 
  * @author Xihui Chen
  */
-public class ScaledSliderModel extends AbstractMarkedWidgetModel{
+public class ScaledSliderModel extends AbstractMarkedWidgetModel {
 
     /** The ID of the fill color property. */
     public static final String PROP_FILL_COLOR = "fill_color";
@@ -44,12 +43,13 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel{
      */
     public static final String PROP_STEP_INCREMENT = "step_increment";
 
-    /** The amount the slider will move when page up or page down areas are
-    pressed.*/
+    /**
+     * The amount the slider will move when page up or page down areas are pressed.
+     */
     public static final String PROP_PAGE_INCREMENT = "page_increment";
 
     /** The default value of the default fill color property. */
-    private static final RGB DEFAULT_FILL_COLOR = new RGB(0,0,255);
+    private static final RGB DEFAULT_FILL_COLOR = new RGB(0, 0, 255);
 
     /** The default value of the height property. */
     private static final int DEFAULT_HEIGHT = 200;
@@ -72,7 +72,7 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel{
 
     public ScaledSliderModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setForegroundColor(new RGB(0,0,0));
+        setForegroundColor(new RGB(0, 0, 0));
         isControlWidget = true;
     }
 
@@ -81,7 +81,7 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel{
         super.configureProperties();
 
         addProperty(new ColorProperty(PROP_FILL_COLOR, "Fill Color",
-                WidgetPropertyCategory.Display,DEFAULT_FILL_COLOR));
+                WidgetPropertyCategory.Display, DEFAULT_FILL_COLOR));
 
         addProperty(new BooleanProperty(PROP_EFFECT3D, "3D Effect",
                 WidgetPropertyCategory.Display, true));
@@ -90,14 +90,13 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel{
                 WidgetPropertyCategory.Display, false));
 
         addProperty(new ColorProperty(PROP_FILLBACKGROUND_COLOR, "Color Fillbackground",
-                WidgetPropertyCategory.Display,DEFAULT_FILLBACKGROUND_COLOR));
+                WidgetPropertyCategory.Display, DEFAULT_FILLBACKGROUND_COLOR));
 
         addProperty(new ColorProperty(PROP_THUMB_COLOR, "Thumb Color",
-                WidgetPropertyCategory.Display,DEFAULT_THUMB_COLOR));
+                WidgetPropertyCategory.Display, DEFAULT_THUMB_COLOR));
 
         addProperty(new DoubleProperty(PROP_STEP_INCREMENT, "Step_Increment",
                 WidgetPropertyCategory.Behavior, DEFAULT_STEP_INCREMENT, 0, Double.MAX_VALUE), true);
-
 
         addProperty(new DoubleProperty(PROP_PAGE_INCREMENT, "Page_Increment",
                 WidgetPropertyCategory.Behavior, DEFAULT_PAGE_INCREMENT, 0, Double.MAX_VALUE), true);
@@ -135,6 +134,7 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel{
 
     /**
      * Gets the RGB for fillbackground.
+     * 
      * @return The fillbackground color
      */
     public Color getFillbackgroundColor() {
@@ -143,6 +143,7 @@ public class ScaledSliderModel extends AbstractMarkedWidgetModel{
 
     /**
      * Gets the RGB for thumb.
+     * 
      * @return The thumb color
      */
     public Color getThumbColor() {

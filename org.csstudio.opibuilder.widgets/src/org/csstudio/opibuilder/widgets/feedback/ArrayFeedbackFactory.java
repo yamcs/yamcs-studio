@@ -18,6 +18,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 
 /**
  * The feedback factory for array widget.
+ * 
  * @author Xihui
  *
  */
@@ -27,31 +28,28 @@ public class ArrayFeedbackFactory extends DefaultGraphicalFeedbackFactory {
     public void showChangeBoundsFeedback(AbstractWidgetModel widgetModel,
             PrecisionRectangle bounds, IFigure feedbackFigure,
             ChangeBoundsRequest request) {
-        ArrayModel arrayModel = (ArrayModel)widgetModel;
+        ArrayModel arrayModel = (ArrayModel) widgetModel;
 
-        if(arrayModel.getChildren().isEmpty()){
+        if (arrayModel.getChildren().isEmpty()) {
             super.showChangeBoundsFeedback(widgetModel, bounds, feedbackFigure, request);
             return;
         }
 
         Dimension sizeDelta = request.getSizeDelta();
-        if(arrayModel.isHorizontal()){
+        if (arrayModel.isHorizontal()) {
             int eWidth = arrayModel.getChildren().get(0).getWidth();
-            bounds.width -=sizeDelta.width;
-            sizeDelta.width = Math.round((float)sizeDelta.width/eWidth)*eWidth;
-            bounds.width +=sizeDelta.width;
-        }else{
+            bounds.width -= sizeDelta.width;
+            sizeDelta.width = Math.round((float) sizeDelta.width / eWidth) * eWidth;
+            bounds.width += sizeDelta.width;
+        } else {
             int eHeight = arrayModel.getChildren().get(0).getHeight();
-            bounds.height -=sizeDelta.height;
-            sizeDelta.height = Math.round((float)sizeDelta.height/eHeight)*eHeight;
-            bounds.height +=sizeDelta.height;
+            bounds.height -= sizeDelta.height;
+            sizeDelta.height = Math.round((float) sizeDelta.height / eHeight) * eHeight;
+            bounds.height += sizeDelta.height;
         }
 
         super.showChangeBoundsFeedback(widgetModel, bounds, feedbackFigure, request);
 
     }
-
-
-
 
 }

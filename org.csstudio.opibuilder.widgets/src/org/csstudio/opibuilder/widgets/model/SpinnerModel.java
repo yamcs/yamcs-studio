@@ -16,13 +16,13 @@ import org.csstudio.opibuilder.visualparts.BorderStyle;
 import org.csstudio.swt.widgets.figures.SpinnerFigure.NumericFormatType;
 
 /**
- *The model of spinner widget.
+ * The model of spinner widget.
+ * 
  * @author Xihui Chen
  */
 public class SpinnerModel extends LabelModel {
 
     public final String ID = "org.csstudio.opibuilder.widgets.spinner";
-
 
     /** The ID of the minimum property. */
     public static final String PROP_MIN = "minimum";
@@ -30,22 +30,24 @@ public class SpinnerModel extends LabelModel {
     /** The ID of the maximum property. */
     public static final String PROP_MAX = "maximum";
 
-    /**the amount the scrollbar will move when the up or down arrow buttons are
-    pressed.*/
+    /**
+     * the amount the scrollbar will move when the up or down arrow buttons are pressed.
+     */
     public static final String PROP_STEP_INCREMENT = "step_increment";
 
-    /** The amount the scrollbar will move when the page up or page down areas are
-    pressed.*/
+    /**
+     * The amount the scrollbar will move when the page up or page down areas are pressed.
+     */
     public static final String PROP_PAGE_INCREMENT = "page_increment";
 
     public static final String PROP_LIMITS_FROM_PV = "limits_from_pv";
-    public static final String PROP_PRECISION = "precision";   
-    public static final String PROP_PRECISION_FROM_PV = "precision_from_pv";   
-    public static final String PROP_BUTTONS_ON_LEFT= "buttons_on_left";   
+    public static final String PROP_PRECISION = "precision";
+    public static final String PROP_PRECISION_FROM_PV = "precision_from_pv";
+    public static final String PROP_BUTTONS_ON_LEFT = "buttons_on_left";
 
-    public static final String PROP_HORIZONTAL_BUTTONS_LAYOUT= "horizontal_buttons_layout";   
+    public static final String PROP_HORIZONTAL_BUTTONS_LAYOUT = "horizontal_buttons_layout";
 
-    public static final String PROP_SHOW_TEXT = "show_text";   
+    public static final String PROP_SHOW_TEXT = "show_text";
 
     /**
      * The Format of the value.
@@ -121,8 +123,8 @@ public class SpinnerModel extends LabelModel {
         return (Double) getProperty(PROP_MAX).getPropertyValue();
     }
 
-    public boolean showText(){
-        return (Boolean)getPropertyValue(PROP_SHOW_TEXT);
+    public boolean showText() {
+        return (Boolean) getPropertyValue(PROP_SHOW_TEXT);
     }
 
     /**
@@ -143,16 +145,16 @@ public class SpinnerModel extends LabelModel {
         return (Boolean) getProperty(PROP_LIMITS_FROM_PV).getPropertyValue();
     }
 
-    public boolean isPrecisionFromPV(){
+    public boolean isPrecisionFromPV() {
         return (Boolean) getProperty(PROP_PRECISION_FROM_PV).getPropertyValue();
     }
 
-    public boolean isButtonsOnLeft(){
-        return (Boolean)getPropertyValue(PROP_BUTTONS_ON_LEFT);
+    public boolean isButtonsOnLeft() {
+        return (Boolean) getPropertyValue(PROP_BUTTONS_ON_LEFT);
     }
 
-    public boolean isHorizontalButtonsLayout(){
-        return (Boolean)getPropertyValue(PROP_HORIZONTAL_BUTTONS_LAYOUT);
+    public boolean isHorizontalButtonsLayout() {
+        return (Boolean) getPropertyValue(PROP_HORIZONTAL_BUTTONS_LAYOUT);
     }
 
     @Override
@@ -161,7 +163,7 @@ public class SpinnerModel extends LabelModel {
     }
 
     public NumericFormatType getFormat() {
-        int i = (Integer)getPropertyValue(PROP_FORMAT);
+        int i = (Integer) getPropertyValue(PROP_FORMAT);
         return NumericFormatType.values()[i];
     }
 }

@@ -50,8 +50,6 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
         return hiColor;
     }
 
-
-
     /**
      * @return the hihiColor
      */
@@ -137,156 +135,143 @@ public abstract class AbstractMarkedWidgetFigure extends AbstractScaledWidgetFig
     }
 
     /**
-     * @param hiColor the hiColor to set
+     * @param hiColor
+     *            the hiColor to set
      */
     public void setHiColor(Color hiColor) {
-        if(this.hiColor != null && this.hiColor.equals(hiColor))
+        if (this.hiColor != null && this.hiColor.equals(hiColor))
             return;
         this.hiColor = hiColor;
         repaint();
     }
 
-
     /**
-     * @param hihiColor the hihiColor to set
+     * @param hihiColor
+     *            the hihiColor to set
      */
     public void setHihiColor(Color hihiColor) {
-        if(this.hihiColor != null && this.hihiColor.equals(hihiColor))
+        if (this.hihiColor != null && this.hihiColor.equals(hihiColor))
             return;
         this.hihiColor = hihiColor;
         repaint();
     }
 
-
     /**
-     * @param hihiLevel the hihiLevel to set
+     * @param hihiLevel
+     *            the hihiLevel to set
      */
     public void setHihiLevel(final double hihiLevel) {
-        if(this.hihiLevel == hihiLevel)
+        if (this.hihiLevel == hihiLevel)
             return;
         this.hihiLevel = hihiLevel;
         repaint();
     }
 
-
-
     /**
-     * @param hiLevel the hiLevel to set
+     * @param hiLevel
+     *            the hiLevel to set
      */
     public void setHiLevel(final double hiLevel) {
-        if(this.hiLevel == hiLevel)
+        if (this.hiLevel == hiLevel)
             return;
         this.hiLevel = hiLevel;
         repaint();
     }
 
-
-
     /**
-     * @param loColor the loColor to set
+     * @param loColor
+     *            the loColor to set
      */
     public void setLoColor(Color loColor) {
-        if(this.loColor != null && this.loColor.equals(loColor))
+        if (this.loColor != null && this.loColor.equals(loColor))
             return;
         this.loColor = loColor;
         repaint();
     }
 
-
-
-
-
     /**
-     * @param loLevel the loLevel to set
+     * @param loLevel
+     *            the loLevel to set
      */
     public void setLoLevel(final double loLevel) {
-        if(this.loLevel == loLevel)
+        if (this.loLevel == loLevel)
             return;
         this.loLevel = loLevel;
         repaint();
     }
 
-
-
     /**
-     * @param loloColor the loloColor to set
+     * @param loloColor
+     *            the loloColor to set
      */
     public void setLoloColor(Color loloColor) {
-        if(this.loloColor != null && this.loloColor.equals(loloColor))
+        if (this.loloColor != null && this.loloColor.equals(loloColor))
             return;
         this.loloColor = loloColor;
         repaint();
     }
 
-
-
-
-
     /**
-     * @param loloLevel the loloLevel to set
+     * @param loloLevel
+     *            the loloLevel to set
      */
     public void setLoloLevel(final double loloLevel) {
-        if(this.loloLevel == loloLevel)
+        if (this.loloLevel == loloLevel)
             return;
         this.loloLevel = loloLevel;
         repaint();
     }
 
-
-
     /**
-     * @param showHi the showHi to set
+     * @param showHi
+     *            the showHi to set
      */
     public void setShowHi(boolean showHi) {
-        if(this.showHi == showHi)
+        if (this.showHi == showHi)
             return;
         this.showHi = showHi;
         repaint();
     }
 
-
-
     /**
-     * @param showHihi the showHihi to set
+     * @param showHihi
+     *            the showHihi to set
      */
     public void setShowHihi(boolean showHihi) {
-        if(this.showHihi == showHihi)
+        if (this.showHihi == showHihi)
             return;
         this.showHihi = showHihi;
         repaint();
     }
 
-
-
     /**
-     * @param showLo the showLo to set
+     * @param showLo
+     *            the showLo to set
      */
     public void setShowLo(boolean showLo) {
-        if(this.showLo == showLo)
+        if (this.showLo == showLo)
             return;
         this.showLo = showLo;
         repaint();
     }
 
-
-
     /**
-     * @param showLolo the showLolo to set
+     * @param showLolo
+     *            the showLolo to set
      */
     public void setShowLolo(boolean showLolo) {
-        if(this.showLolo == showLolo)
+        if (this.showLolo == showLolo)
             return;
         this.showLolo = showLolo;
         repaint();
     }
 
-
-
     /**
-     * @param showMarkers the showMarkers to set
+     * @param showMarkers
+     *            the showMarkers to set
      */
     public void setShowMarkers(final boolean showMarkers) {
-        if(this.showMarkers == showMarkers)
+        if (this.showMarkers == showMarkers)
             return;
         this.showMarkers = showMarkers;
         repaint();

@@ -19,8 +19,7 @@ import java.util.regex.Pattern;
 import org.yamcs.studio.autocomplete.AutoCompleteHelper;
 
 /**
- * Helper that uses delimiters to find the common matching token in a provided
- * list using delimiters.
+ * Helper that uses delimiters to find the common matching token in a provided list using delimiters.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

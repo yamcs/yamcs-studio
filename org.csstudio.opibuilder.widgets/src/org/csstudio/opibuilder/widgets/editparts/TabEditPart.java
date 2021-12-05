@@ -163,8 +163,8 @@ public class TabEditPart extends AbstractContainerEditpart {
         setActiveTabIndex(index);
     }
 
-    /**
-     * {@inheritDoc} Overidden, to set the selection behaviour of child EditParts.
+    /*
+     * Overidden, to set the selection behaviour of child EditParts.
      */
     @Override
     protected final EditPart createChild(final Object model) {

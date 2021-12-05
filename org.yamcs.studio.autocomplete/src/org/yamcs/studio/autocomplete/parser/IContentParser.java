@@ -10,9 +10,8 @@ package org.yamcs.studio.autocomplete.parser;
 import org.yamcs.studio.autocomplete.AutoCompleteService;
 
 /**
- * Common interface for auto-completed fields content parsers. Used by
- * {@link AutoCompleteService} to parse field content and select providers. Each
- * parser is defined via OSGI services.
+ * Common interface for auto-completed fields content parsers. Used by {@link AutoCompleteService} to parse field
+ * content and select providers. Each parser is defined via OSGI services.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  *
@@ -25,8 +24,8 @@ public interface IContentParser {
     public boolean accept(final ContentDescriptor desc);
 
     /**
-     * @return {@link ContentDescriptor} to be submitted to providers or parsers
-     *         if the replay attribute is set to <code>true</code>.
+     * @return {@link ContentDescriptor} to be submitted to providers or parsers if the replay attribute is set to
+     *         <code>true</code>.
      */
     public ContentDescriptor parse(final ContentDescriptor desc);
 

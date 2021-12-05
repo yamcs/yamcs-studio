@@ -19,12 +19,13 @@ import org.csstudio.opibuilder.util.OPIColor;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.swt.graphics.RGB;
 
-/**The abstract model for choice widget.
+/**
+ * The abstract model for choice widget.
+ * 
  * @author Xihui Chen
  *
  */
 public abstract class AbstractChoiceModel extends AbstractPVWidgetModel {
-
 
     /**
      * Items of the choice widget.
@@ -43,14 +44,14 @@ public abstract class AbstractChoiceModel extends AbstractPVWidgetModel {
 
     public static final RGB DEFAULT_SELECTED_COLOR = CustomMediaFactory.COLOR_WHITE;
 
-    /** True if items should be horizontal arranged.*/
+    /** True if items should be horizontal arranged. */
     public static final String PROP_HORIZONTAL = "horizontal";
 
-    public static final String[] DEFAULT_ITEMS = new String[]{"Choice 1", "Choice 2", "Choice 3"};
+    public static final String[] DEFAULT_ITEMS = new String[] { "Choice 1", "Choice 2", "Choice 3" };
 
     public AbstractChoiceModel() {
-        setBackgroundColor(new RGB(255,255,255));
-        setForegroundColor(new RGB(0,0,0));
+        setBackgroundColor(new RGB(255, 255, 255));
+        setForegroundColor(new RGB(0, 0, 0));
     }
 
     @Override
@@ -66,18 +67,16 @@ public abstract class AbstractChoiceModel extends AbstractPVWidgetModel {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getItems(){
-        return (List<String>)getPropertyValue(PROP_ITEMS);
+    public List<String> getItems() {
+        return (List<String>) getPropertyValue(PROP_ITEMS);
     }
 
-    public boolean isItemsFromPV(){
-        return (Boolean)getPropertyValue(PROP_ITEMS_FROM_PV);
+    public boolean isItemsFromPV() {
+        return (Boolean) getPropertyValue(PROP_ITEMS_FROM_PV);
     }
 
-
-
-    public OPIColor getSelectedColor(){
-        return (OPIColor)getPropertyValue(PROP_SELECTED_COLOR);
+    public OPIColor getSelectedColor() {
+        return (OPIColor) getPropertyValue(PROP_SELECTED_COLOR);
     }
 
     /**
@@ -86,6 +85,5 @@ public abstract class AbstractChoiceModel extends AbstractPVWidgetModel {
     public boolean isHorizontal() {
         return (Boolean) getProperty(PROP_HORIZONTAL).getPropertyValue();
     }
-
 
 }

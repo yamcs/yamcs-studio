@@ -7,15 +7,15 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.datadefinition;
 
-/**A wrapper for int[].
+/**
+ * A wrapper for int[].
+ * 
  * @author Xihui Chen
  *
  */
 public class IntArrayWrapper implements IPrimaryArrayWrapper {
 
     private int[] data;
-
-
 
     public IntArrayWrapper(int[] data) {
         this.data = data;

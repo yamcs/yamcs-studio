@@ -9,7 +9,9 @@ package org.csstudio.opibuilder.widgets.feedback;
 
 import org.csstudio.opibuilder.widgets.model.GaugeModel;
 
-/**Feedback Factory for Gauge.
+/**
+ * Feedback Factory for Gauge.
+ * 
  * @author Xihui Chen
  *
  */

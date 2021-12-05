@@ -21,9 +21,9 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Tweak {@link ZoomComboContributionItem} to dedicate to a part.
- * A ControlContribution that uses a {@link org.eclipse.swt.widgets.Combo} as
- * its control
+/**
+ * Tweak {@link ZoomComboContributionItem} to dedicate to a part. A ControlContribution that uses a
+ * {@link org.eclipse.swt.widgets.Combo} as its control
  *
  * @author Eric Bordeau, Xihui Chen
  */
@@ -114,8 +114,7 @@ public class PartZoomComboContributionItem extends ContributionItem implements
     }
 
     /**
-     * Creates and returns the control for this contribution item under the
-     * given parent composite.
+     * Creates and returns the control for this contribution item under the given parent composite.
      *
      * @param parent
      *            the parent composite
@@ -168,10 +167,9 @@ public class PartZoomComboContributionItem extends ContributionItem implements
     }
 
     /**
-     * The control item implementation of this <code>IContributionItem</code>
-     * method calls the <code>createControl</code> framework method. Subclasses
-     * must implement <code>createControl</code> rather than overriding this
-     * method.
+     * The control item implementation of this <code>IContributionItem</code> method calls the
+     * <code>createControl</code> framework method. Subclasses must implement <code>createControl</code> rather than
+     * overriding this method.
      *
      * @param parent
      *            The parent of the control to fill
@@ -182,8 +180,8 @@ public class PartZoomComboContributionItem extends ContributionItem implements
     }
 
     /**
-     * The control item implementation of this <code>IContributionItem</code>
-     * method throws an exception since controls cannot be added to menus.
+     * The control item implementation of this <code>IContributionItem</code> method throws an exception since controls
+     * cannot be added to menus.
      *
      * @param parent
      *            The menu
@@ -196,11 +194,9 @@ public class PartZoomComboContributionItem extends ContributionItem implements
     }
 
     /**
-     * The control item implementation of this <code>IContributionItem</code>
-     * method calls the <code>createControl</code> framework method to create a
-     * control under the given parent, and then creates a new tool item to hold
-     * it. Subclasses must implement <code>createControl</code> rather than
-     * overriding this method.
+     * The control item implementation of this <code>IContributionItem</code> method calls the
+     * <code>createControl</code> framework method to create a control under the given parent, and then creates a new
+     * tool item to hold it. Subclasses must implement <code>createControl</code> rather than overriding this method.
      *
      * @param parent
      *            The ToolBar to add the new control to
@@ -284,14 +280,15 @@ public class PartZoomComboContributionItem extends ContributionItem implements
     }
 
     /**
-     * @param part a part which must have a ZoomManager Adapter.
+     * @param part
+     *            a part which must have a ZoomManager Adapter.
      */
-    public void setPart(IWorkbenchPart part){
-        if(this.part == part)
+    public void setPart(IWorkbenchPart part) {
+        if (this.part == part)
             return;
         this.part = part;
         ZoomManager newZoomManager = part.getAdapter(ZoomManager.class);
-        if(newZoomManager != null){
+        if (newZoomManager != null) {
             setZoomManager(newZoomManager);
         }
     }

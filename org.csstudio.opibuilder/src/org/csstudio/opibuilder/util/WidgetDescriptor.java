@@ -15,9 +15,10 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-/**This class help to hold the related information for a widget which are
- * acquired from the extension. The widget model and editpart will be loaded lazily,
- * which also make the widget plugin loaded lazily.
+/**
+ * This class help to hold the related information for a widget which are acquired from the extension. The widget model
+ * and editpart will be loaded lazily, which also make the widget plugin loaded lazily.
+ * 
  * @author Xihui Chen
  *
  */
@@ -43,7 +44,6 @@ public class WidgetDescriptor {
      */
     private String description;
 
-
     /**
      * The relative icon path of the widget relative to its plugin
      */
@@ -62,12 +62,18 @@ public class WidgetDescriptor {
     private String onlineHelpHtml;
 
     /**
-     * @param element The configurationElement which hold the
-     * @param typeID The typeID of the widget.
-     * @param name The name of the widget
-     * @param iconPath The relative icon path of the widget relative to its plugin
-     * @param category The category of the widget
-     * @param pluginId The pluginID where the widget belongs to.
+     * @param element
+     *            The configurationElement which hold the
+     * @param typeID
+     *            The typeID of the widget.
+     * @param name
+     *            The name of the widget
+     * @param iconPath
+     *            The relative icon path of the widget relative to its plugin
+     * @param category
+     *            The category of the widget
+     * @param pluginId
+     *            The pluginID where the widget belongs to.
      */
     public WidgetDescriptor(IConfigurationElement element, String typeID,
             String name, String description, String iconPath, String category, String pluginId,
@@ -85,7 +91,7 @@ public class WidgetDescriptor {
     /**
      * @return the model of the widget.
      */
-    public final AbstractWidgetModel getWidgetModel(){
+    public final AbstractWidgetModel getWidgetModel() {
         try {
             return (AbstractWidgetModel) element.createExecutableExtension("model_class");
         } catch (CoreException e) {
@@ -97,7 +103,7 @@ public class WidgetDescriptor {
     /**
      * @return the editpart of the widget.
      */
-    public final AbstractBaseEditPart getWidgetEditpart(){
+    public final AbstractBaseEditPart getWidgetEditpart() {
         try {
             return (AbstractBaseEditPart) element.createExecutableExtension("editpart_class");
         } catch (CoreException e) {
@@ -105,7 +111,6 @@ public class WidgetDescriptor {
         }
         return null;
     }
-
 
     /**
      * @return the typeID
@@ -142,7 +147,6 @@ public class WidgetDescriptor {
         return pluginId;
     }
 
-
     public String getDescription() {
         return description;
     }
@@ -150,9 +154,5 @@ public class WidgetDescriptor {
     public String getOnlineHelpHtml() {
         return onlineHelpHtml;
     }
-
-
-
-
 
 }

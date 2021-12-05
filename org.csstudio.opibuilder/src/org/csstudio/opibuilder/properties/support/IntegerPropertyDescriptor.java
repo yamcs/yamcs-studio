@@ -28,8 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 /**
- * Descriptor for a property that has a value which should be edited with a
- * integer cell editor.
+ * Descriptor for a property that has a value which should be edited with a integer cell editor.
  *
  * @author Alexander Will(Original Author), Xihui Chen (import from SDS since 2009/09)
  *
@@ -49,9 +48,6 @@ public final class IntegerPropertyDescriptor extends TextPropertyDescriptor {
         super(id, displayName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CellEditor createPropertyEditor(final Composite parent) {
         CellEditor editor = new IntegerCellEditor(parent);

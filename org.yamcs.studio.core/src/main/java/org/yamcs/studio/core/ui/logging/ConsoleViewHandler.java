@@ -200,7 +200,6 @@ public class ConsoleViewHandler extends Handler {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void flush() {
         // Flush in UI thread to avoid lockups

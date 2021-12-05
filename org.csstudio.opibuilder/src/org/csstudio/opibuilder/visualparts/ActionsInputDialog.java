@@ -112,9 +112,6 @@ public class ActionsInputDialog extends TrayDialog {
         super.okPressed();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
@@ -482,17 +479,8 @@ public class ActionsInputDialog extends TrayDialog {
      *
      */
     private final class MenuAction extends Action {
-        /**
-         * The {@link ActionType}.
-         */
         private ActionType type;
 
-        /**
-         * Constructor.
-         *
-         * @param type
-         *            The {@link ActionType} for the action.
-         */
         public MenuAction(final ActionType type) {
             this.type = type;
             this.setText("Add " + type.getDescription());
@@ -500,9 +488,6 @@ public class ActionsInputDialog extends TrayDialog {
 
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
             AbstractWidgetAction widgetAction = WidgetActionFactory.createWidgetAction(type);

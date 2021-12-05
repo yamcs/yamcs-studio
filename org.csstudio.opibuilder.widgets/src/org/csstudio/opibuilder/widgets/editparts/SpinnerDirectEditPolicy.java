@@ -15,20 +15,21 @@ import org.eclipse.gef.requests.DirectEditRequest;
 
 /**
  * The Editpolicy to handle direct text edit in spinner.
+ * 
  * @author Xihui Chen
  *
  */
 public class SpinnerDirectEditPolicy
-    extends DirectEditPolicy {
+        extends DirectEditPolicy {
 
     /**
      * @see DirectEditPolicy#getDirectEditCommand(DirectEditRequest)
      */
     @Override
     protected Command getDirectEditCommand(DirectEditRequest edit) {
-        String labelText = (String)edit.getCellEditor().getValue();
-        SpinnerEditpart spinner = (SpinnerEditpart)getHost();
-        SpinnerEditCommand command = new SpinnerEditCommand((LabelModel)spinner.getModel(),labelText);
+        String labelText = (String) edit.getCellEditor().getValue();
+        SpinnerEditpart spinner = (SpinnerEditpart) getHost();
+        SpinnerEditCommand command = new SpinnerEditCommand((LabelModel) spinner.getModel(), labelText);
         return command;
     }
 
@@ -37,40 +38,37 @@ public class SpinnerDirectEditPolicy
      */
     @Override
     protected void showCurrentEditValue(DirectEditRequest request) {
-        //String value = (String)request.getCellEditor().getValue();
-        //((LabelFigure)getHostFigure()).setText(value);
-        //hack to prevent async layout from placing the cell editor twice.
-        //getHostFigure().getUpdateManager().performUpdate();
-
+        // String value = (String)request.getCellEditor().getValue();
+        // ((LabelFigure)getHostFigure()).setText(value);
+        // hack to prevent async layout from placing the cell editor twice.
+        // getHostFigure().getUpdateManager().performUpdate();
 
     }
 
+    static class SpinnerEditCommand extends Command {
 
-static class SpinnerEditCommand extends Command    {
+        private String newText, oldText;
+        private LabelModel label;
 
-    private String newText, oldText;
-    private LabelModel label;
+        public SpinnerEditCommand(LabelModel l, String s) {
+            label = l;
+            if (s != null)
+                newText = s;
+            else
+                newText = "";
+        }
 
-    public SpinnerEditCommand(LabelModel l, String s) {
-    label = l;
-    if (s != null)
-        newText = s;
-    else
-        newText = ""; 
+        @Override
+        public void execute() {
+            oldText = label.getText();
+            label.setPropertyValue(TextUpdateModel.PROP_TEXT, newText, true);
+        }
+
+        @Override
+        public void undo() {
+            label.setText(oldText);
+        }
+
     }
-
-    @Override
-    public void execute() {
-        oldText = label.getText();
-        label.setPropertyValue(TextUpdateModel.PROP_TEXT, newText, true);
-    }
-
-    @Override
-    public void undo() {
-        label.setText(oldText);
-    }
-
-}
-
 
 }

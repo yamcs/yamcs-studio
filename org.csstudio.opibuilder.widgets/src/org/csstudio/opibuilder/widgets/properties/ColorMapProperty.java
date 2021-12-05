@@ -18,7 +18,9 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
-/**The property for script.
+/**
+ * The property for script.
+ * 
  * @author Xihui Chen
  *
  */
@@ -56,8 +58,6 @@ public class ColorMapProperty extends AbstractWidgetProperty {
      */
     public static final String XML_ATTRIBUTE_BLUE = "blue";
 
-
-
     public ColorMapProperty(String prop_id, String description,
             WidgetPropertyCategory category, ColorMap defaultValue) {
         super(prop_id, description, category, defaultValue);
@@ -66,17 +66,17 @@ public class ColorMapProperty extends AbstractWidgetProperty {
 
     @Override
     public Object checkValue(Object value) {
-        if(value == null)
+        if (value == null)
             return null;
         ColorMap acceptableValue = null;
-        if(value instanceof ColorMap){
-            if(((ColorMap)value).getMap().size() >=2)
-                acceptableValue = (ColorMap)value;
-        }else if (value instanceof String){
-            for(PredefinedColorMap map : ColorMap.PredefinedColorMap.values()){
-                if(map.toString().equals(value)){
+        if (value instanceof ColorMap) {
+            if (((ColorMap) value).getMap().size() >= 2)
+                acceptableValue = (ColorMap) value;
+        } else if (value instanceof String) {
+            for (PredefinedColorMap map : ColorMap.PredefinedColorMap.values()) {
+                if (map.toString().equals(value)) {
                     acceptableValue = new ColorMap(map, true, true);
-                break;
+                    break;
                 }
             }
 
@@ -84,9 +84,6 @@ public class ColorMapProperty extends AbstractWidgetProperty {
 
         return acceptableValue;
     }
-
-
-
 
     @Override
     protected PropertyDescriptor createPropertyDescriptor() {
@@ -100,14 +97,14 @@ public class ColorMapProperty extends AbstractWidgetProperty {
                 propElement.getChild(XML_ELEMENT_INTERPOLATE).getValue()));
         result.setAutoScale(Boolean.parseBoolean(
                 propElement.getChild(XML_ELEMENT_AUTOSCALE).getValue()));
-        if(propElement.getChild(XML_ELEMENT_MAP).getChildren().size() ==0){
+        if (propElement.getChild(XML_ELEMENT_MAP).getChildren().size() == 0) {
             PredefinedColorMap p = PredefinedColorMap.fromIndex(Integer.parseInt(
-                propElement.getChild(XML_ELEMENT_MAP).getValue()));
+                    propElement.getChild(XML_ELEMENT_MAP).getValue()));
             result.setPredefinedColorMap(p);
-        }else{
+        } else {
             LinkedHashMap<Double, RGB> map = new LinkedHashMap<Double, RGB>();
-            for(Object o : propElement.getChild(XML_ELEMENT_MAP).getChildren()){
-                Element e = (Element)o;
+            for (Object o : propElement.getChild(XML_ELEMENT_MAP).getChildren()) {
+                Element e = (Element) o;
                 map.put(Double.parseDouble(e.getValue()),
                         new RGB(Integer.parseInt(e.getAttributeValue(XML_ATTRIBUTE_RED)),
                                 Integer.parseInt(e.getAttributeValue(XML_ATTRIBUTE_GREEN)),
@@ -121,15 +118,15 @@ public class ColorMapProperty extends AbstractWidgetProperty {
 
     @Override
     public void writeToXML(Element propElement) {
-        ColorMap colorMap = (ColorMap)getPropertyValue();
+        ColorMap colorMap = (ColorMap) getPropertyValue();
         Element interpolateElement = new Element(XML_ELEMENT_INTERPOLATE);
         interpolateElement.setText(Boolean.toString(colorMap.isInterpolate()));
         Element autoScaleElement = new Element(XML_ELEMENT_AUTOSCALE);
         autoScaleElement.setText(Boolean.toString(colorMap.isAutoScale()));
 
         Element preDefinedElement = new Element(XML_ELEMENT_MAP);
-        if(colorMap.getPredefinedColorMap() == PredefinedColorMap.None){
-            for(Double k : colorMap.getMap().keySet()){
+        if (colorMap.getPredefinedColorMap() == PredefinedColorMap.None) {
+            for (Double k : colorMap.getMap().keySet()) {
                 Element colorElement = new Element(XML_ELEMENT_E);
                 colorElement.setText(k.toString());
                 RGB color = colorMap.getMap().get(k);
@@ -138,15 +135,14 @@ public class ColorMapProperty extends AbstractWidgetProperty {
                 colorElement.setAttribute(XML_ATTRIBUTE_BLUE, "" + color.blue);
                 preDefinedElement.addContent(colorElement);
             }
-        }else{
+        } else {
             preDefinedElement.setText(Integer.toString(
-                PredefinedColorMap.toIndex(colorMap.getPredefinedColorMap())));
+                    PredefinedColorMap.toIndex(colorMap.getPredefinedColorMap())));
         }
         propElement.addContent(interpolateElement);
         propElement.addContent(autoScaleElement);
         propElement.addContent(preDefinedElement);
     }
-
 
     @Override
     public boolean configurableByRule() {

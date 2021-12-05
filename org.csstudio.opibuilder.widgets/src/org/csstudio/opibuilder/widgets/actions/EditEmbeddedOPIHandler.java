@@ -1,4 +1,5 @@
 package org.csstudio.opibuilder.widgets.actions;
+
 import org.csstudio.opibuilder.util.ErrorHandlerUtil;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.csstudio.opibuilder.widgets.editparts.LinkingContainerEditpart;
@@ -16,15 +17,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-
 public class EditEmbeddedOPIHandler extends AbstractHandler implements IHandler {
 
     private static final String OPI_EDITOR_ID = "org.csstudio.opibuilder.OPIEditor";
 
     /**
-     * Determine the widget that was the object of the mouse click.
-     * If it can be established to be a LinkingContainerEditpart, extract
-     * the path of the embedded opi and request opening an OPIEditor with this file.
+     * Determine the widget that was the object of the mouse click. If it can be established to be a
+     * LinkingContainerEditpart, extract the path of the embedded opi and request opening an OPIEditor with this file.
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -47,7 +46,7 @@ public class EditEmbeddedOPIHandler extends AbstractHandler implements IHandler 
                 IWorkbenchPage page = window.getActivePage();
                 if (page != null) {
                     try {
-                        IEditorInput editorInput =  ResourceUtil.editorInputFromPath(path);
+                        IEditorInput editorInput = ResourceUtil.editorInputFromPath(path);
                         page.openEditor(editorInput, OPI_EDITOR_ID, true,
                                 IWorkbenchPage.MATCH_ID | IWorkbenchPage.MATCH_INPUT);
                     } catch (PartInitException ex) {

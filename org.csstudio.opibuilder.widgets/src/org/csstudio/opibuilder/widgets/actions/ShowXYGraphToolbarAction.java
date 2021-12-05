@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.actions;
+
 import org.csstudio.opibuilder.actions.AbstractWidgetTargetAction;
 import org.csstudio.opibuilder.commands.SetWidgetPropertyCommand;
 import org.csstudio.opibuilder.widgets.editparts.XYGraphEditPart;
@@ -13,13 +14,13 @@ import org.csstudio.opibuilder.widgets.model.XYGraphModel;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.IAction;
 
-
-/**Show/Hide XYGraph Toolbar
+/**
+ * Show/Hide XYGraph Toolbar
+ * 
  * @author Xihui Chen
  *
  */
 public class ShowXYGraphToolbarAction extends AbstractWidgetTargetAction {
-
 
     @Override
     public void run(IAction action) {
@@ -36,6 +37,6 @@ public class ShowXYGraphToolbarAction extends AbstractWidgetTargetAction {
      * @return a list with all widget models that are currently selected
      */
     protected final XYGraphEditPart getSelectedXYGraph() {
-        return (XYGraphEditPart)selection.getFirstElement();
+        return (XYGraphEditPart) selection.getFirstElement();
     }
 }

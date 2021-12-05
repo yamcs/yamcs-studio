@@ -12,7 +12,9 @@ import org.csstudio.opibuilder.editparts.AbstractBaseEditPart;
 import org.csstudio.swt.widgets.natives.SpreadSheetTable;
 import org.eclipse.swt.widgets.Composite;
 
-/**A figure that holds a {@link SpreadSheetTable}.
+/**
+ * A figure that holds a {@link SpreadSheetTable}.
+ * 
  * @author Xihui Chen
  *
  */

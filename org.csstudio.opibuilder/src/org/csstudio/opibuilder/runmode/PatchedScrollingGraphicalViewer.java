@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * Patched Scrolling graphical viewer implementation.
+ * 
  * @author swende (original author), Xihui Chen (since import from SDS 2009/9)
  *
  */
@@ -39,10 +40,8 @@ public class PatchedScrollingGraphicalViewer extends ScrollingGraphicalViewer {
     private MenuManager contextMenu;
 
     /**
-     * The original implementation in
-     * {@link GraphicalViewerImpl#setContextMenu(MenuManager)} registers a menu
-     * listener on the context menu. This causes a memory leak, because that
-     * listener is never removed.
+     * The original implementation in {@link GraphicalViewerImpl#setContextMenu(MenuManager)} registers a menu listener
+     * on the context menu. This causes a memory leak, because that listener is never removed.
      */
     @Override
     public void setContextMenu(MenuManager manager) {

@@ -22,13 +22,11 @@ import org.eclipse.core.runtime.Assert;
 public class Proposal implements Comparable<Proposal> {
 
     /**
-     * Value that completes the field content (originalValue) and will be
-     * displayed in the main pop-up.
+     * Value that completes the field content (originalValue) and will be displayed in the main pop-up.
      */
     private final String value;
     /**
-     * Description that will be displayed in a secondary pop-up if not
-     * <code>null</code>.
+     * Description that will be displayed in a secondary pop-up if not <code>null</code>.
      */
     private String description;
     /**
@@ -36,23 +34,21 @@ public class Proposal implements Comparable<Proposal> {
      */
     private List<ProposalStyle> styles;
     /**
-     * <code>true</code> if the proposal is not a final one (example: CWS- as
-     * part of a PV name CWS-C4CO-...) => display a magnifying glass icon.
+     * <code>true</code> if the proposal is not a final one (example: CWS- as part of a PV name CWS-C4CO-...) => display
+     * a magnifying glass icon.
      */
     private final boolean isPartial;
     /**
-     * <code>true</code> if the proposal is a formula function => display a
-     * function icon.
+     * <code>true</code> if the proposal is a formula function => display a function icon.
      */
     private boolean isFunction = false;
     /**
-     * <code>true</code> if the proposal start with the field content => append
-     * instead of replace. Used by top proposal manager.
+     * <code>true</code> if the proposal start with the field content => append instead of replace. Used by top proposal
+     * manager.
      */
     private boolean startWithContent = false;
     /**
-     * Used by top proposals manager to calculate a display priority if one
-     * proposal is provided more than once.
+     * Used by top proposals manager to calculate a display priority if one proposal is provided more than once.
      */
     private int occurrence;
     /**
@@ -64,8 +60,7 @@ public class Proposal implements Comparable<Proposal> {
      */
     private String originalValue = "";
     /**
-     * Data that will be processed by {@link TooltipDataHandler} when the
-     * proposal is selected in the UI.
+     * Data that will be processed by {@link TooltipDataHandler} when the proposal is selected in the UI.
      */
     private List<TooltipData> tooltips;
 

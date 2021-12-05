@@ -13,7 +13,9 @@ import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.eclipse.draw2d.geometry.Point;
 
-/**The model for grouping container widget.
+/**
+ * The model for grouping container widget.
+ * 
  * @author Xihui Chen
  *
  */
@@ -24,24 +26,22 @@ public class GroupingContainerModel extends AbstractContainerModel {
      */
     public static final String ID = "org.csstudio.opibuilder.widgets.groupingContainer";
 
-    /**True if the background color is transparent. */
-    public static final String PROP_TRANSPARENT = "transparent";   
+    /** True if the background color is transparent. */
+    public static final String PROP_TRANSPARENT = "transparent";
 
-    /** True if children widgets are not selectable.*/
+    /** True if children widgets are not selectable. */
     public static final String PROP_LOCK_CHILDREN = "lock_children";
     /**
      * True if scrollbar is visible when children widgets are out of range.
      */
     public static final String PROP_SHOW_SCROLLBAR = "show_scrollbar";
 
-
-    /**Forward background and foreground color properties change to children. */
-    public static final String PROP_FORWARD_COLORS = "fc";   
-
+    /** Forward background and foreground color properties change to children. */
+    public static final String PROP_FORWARD_COLORS = "fc";
 
     public GroupingContainerModel() {
         setSize(200, 200);
-        //setBorderStyle(BorderStyle.GROUP_BOX);
+        // setBorderStyle(BorderStyle.GROUP_BOX);
     }
 
     @Override
@@ -62,50 +62,45 @@ public class GroupingContainerModel extends AbstractContainerModel {
         return ID;
     }
 
-
     /**
      * Returns, if this widget should have a transparent background.
-     * @return boolean
-     *                 True, if it should have a transparent background, false otherwise
+     * 
+     * @return boolean True, if it should have a transparent background, false otherwise
      */
     public boolean isTransparent() {
         return (Boolean) getProperty(PROP_TRANSPARENT).getPropertyValue();
     }
 
     /**
-    * @return boolean
-    *                 True, if the children should be locked, false otherwise
-    */
+     * @return boolean True, if the children should be locked, false otherwise
+     */
     public boolean isLocked() {
         return (Boolean) getProperty(PROP_LOCK_CHILDREN).getPropertyValue();
     }
 
     /**
-    * @return boolean
-    *                 True, if scrollbar should be shown when necessary, false otherwise.
-    */
+     * @return boolean True, if scrollbar should be shown when necessary, false otherwise.
+     */
     public boolean isShowScrollbar() {
         return (Boolean) getProperty(PROP_SHOW_SCROLLBAR).getPropertyValue();
     }
 
-    public boolean isForwardColors(){
-        return (Boolean)getPropertyValue(PROP_FORWARD_COLORS);
+    public boolean isForwardColors() {
+        return (Boolean) getPropertyValue(PROP_FORWARD_COLORS);
     }
-
-
 
     @Override
     public void flipVertically() {
-        int centerY = getHeight()/2;
-        for(AbstractWidgetModel abstractWidgetModel : getChildren()){
+        int centerY = getHeight() / 2;
+        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipVertically(centerY);
         }
     }
 
     @Override
     public void flipHorizontally() {
-        int centerX = getWidth()/2;
-        for(AbstractWidgetModel abstractWidgetModel : getChildren()){
+        int centerX = getWidth() / 2;
+        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.flipHorizontally(centerX);
         }
     }
@@ -114,8 +109,8 @@ public class GroupingContainerModel extends AbstractContainerModel {
     public void rotate90(boolean clockwise) {
         boolean oldLock = isLocked();
         setPropertyValue(PROP_LOCK_CHILDREN, false);
-        Point center = new Point(getWidth()/2, getHeight()/2);
-        for(AbstractWidgetModel abstractWidgetModel : getChildren()){
+        Point center = new Point(getWidth() / 2, getHeight() / 2);
+        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.rotate90(clockwise, center);
         }
         Point oldLoc = getLocation();
@@ -124,14 +119,12 @@ public class GroupingContainerModel extends AbstractContainerModel {
 
         int dx = newLoc.x - oldLoc.x;
         int dy = newLoc.y - oldLoc.y;
-        //move back
-        for(AbstractWidgetModel abstractWidgetModel : getChildren()){
+        // move back
+        for (AbstractWidgetModel abstractWidgetModel : getChildren()) {
             abstractWidgetModel.setLocation(
                     abstractWidgetModel.getLocation().translate(-dx, -dy));
         }
         setPropertyValue(PROP_LOCK_CHILDREN, oldLock);
     }
-
-
 
 }

@@ -20,13 +20,13 @@ import org.eclipse.gef.commands.CompoundCommand;
 
 /**
  * The common code for {@link LayoutWidgetsAction} and {@link LayoutWidgetsHandler}.
+ * 
  * @author Xihui Chen
  *
  */
 public class LayoutWidgetsImp {
 
-
-    public  static void run(AbstractLayoutEditpart layoutWidget, CommandStack commandStack) {
+    public static void run(AbstractLayoutEditpart layoutWidget, CommandStack commandStack) {
 
         AbstractContainerModel container = layoutWidget.getWidgetModel().getParent();
 
@@ -34,16 +34,15 @@ public class LayoutWidgetsImp {
         modelChildren.addAll(container.getChildren());
         modelChildren.remove(layoutWidget.getWidgetModel());
 
-        if(modelChildren.size() ==0)
+        if (modelChildren.size() == 0)
             return;
 
-        List<Rectangle> newBounds =
-            layoutWidget.getNewBounds(modelChildren, container.getBounds());
+        List<Rectangle> newBounds = layoutWidget.getNewBounds(modelChildren, container.getBounds());
 
         CompoundCommand compoundCommand = new CompoundCommand("Layout Widgets");
 
-        int i=0;
-        for(AbstractWidgetModel model : modelChildren){
+        int i = 0;
+        for (AbstractWidgetModel model : modelChildren) {
             compoundCommand.add(new SetBoundsCommand(model, newBounds.get(i)));
             i++;
         }
@@ -51,6 +50,5 @@ public class LayoutWidgetsImp {
         commandStack.execute(compoundCommand);
 
     }
-
 
 }

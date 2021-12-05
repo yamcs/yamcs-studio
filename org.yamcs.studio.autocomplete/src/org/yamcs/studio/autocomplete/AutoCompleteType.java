@@ -10,8 +10,7 @@ package org.yamcs.studio.autocomplete;
 import org.yamcs.studio.autocomplete.parser.IContentParser;
 
 /**
- * Common types for auto-completed fields, used by {@link IContentParser} to
- * determine if the field has to be parsed.
+ * Common types for auto-completed fields, used by {@link IContentParser} to determine if the field has to be parsed.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */
@@ -32,9 +31,12 @@ public class AutoCompleteType {
 
     public static AutoCompleteType valueOf(String value) {
         switch (value) {
-        case "PV": return PV;
-        case "Formula": return Formula;
-        default: return new AutoCompleteType(value);
+        case "PV":
+            return PV;
+        case "Formula":
+            return Formula;
+        default:
+            return new AutoCompleteType(value);
         }
     }
 

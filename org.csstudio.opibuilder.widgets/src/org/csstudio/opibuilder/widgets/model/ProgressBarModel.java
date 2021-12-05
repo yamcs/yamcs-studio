@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.model;
 
-
 import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.ColorProperty;
 import org.csstudio.opibuilder.properties.DoubleProperty;
@@ -17,12 +16,12 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
  * This class defines a scaled slider widget model.
+ * 
  * @author Xihui Chen
  */
-public class ProgressBarModel extends AbstractMarkedWidgetModel{
+public class ProgressBarModel extends AbstractMarkedWidgetModel {
 
     /** The ID of the fill color property. */
     public static final String PROP_FILL_COLOR = "fill_color";
@@ -43,12 +42,12 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
 
     public static final String PROP_ORIGIN = "origin";
 
-    public static final String PROP_ORIGIN_IGNORED= "origin_ignored";
+    public static final String PROP_ORIGIN_IGNORED = "origin_ignored";
 
-    public static final String PROP_INDICATOR_MODE= "indicator_mode";
+    public static final String PROP_INDICATOR_MODE = "indicator_mode";
 
     /** The default value of the default fill color property. */
-    private static final RGB DEFAULT_FILL_COLOR = new RGB(0,0,255);
+    private static final RGB DEFAULT_FILL_COLOR = new RGB(0, 0, 255);
 
     /** The default value of the height property. */
     private static final int DEFAULT_HEIGHT = 80;
@@ -66,7 +65,7 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
 
     public ProgressBarModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setForegroundColor(new RGB(0,0,0));
+        setForegroundColor(new RGB(0, 0, 0));
     }
 
     @Override
@@ -74,7 +73,7 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
         super.configureProperties();
 
         addProperty(new ColorProperty(PROP_FILL_COLOR, "Fill Color",
-                WidgetPropertyCategory.Display,DEFAULT_FILL_COLOR));
+                WidgetPropertyCategory.Display, DEFAULT_FILL_COLOR));
 
         addProperty(new BooleanProperty(PROP_FILLCOLOR_ALARM_SENSITIVE, "FillColor Alarm Sensitive",
                 WidgetPropertyCategory.Display, false));
@@ -89,13 +88,13 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
                 WidgetPropertyCategory.Display, true));
 
         addProperty(new ColorProperty(PROP_FILLBACKGROUND_COLOR, "Color Fillbackground",
-                WidgetPropertyCategory.Display,DEFAULT_FILLBACKGROUND_COLOR));
+                WidgetPropertyCategory.Display, DEFAULT_FILLBACKGROUND_COLOR));
 
         addProperty(new DoubleProperty(PROP_ORIGIN, "Origin", WidgetPropertyCategory.Behavior,
                 0));
 
         addProperty(new BooleanProperty(PROP_ORIGIN_IGNORED, "Origin Ignored",
-                WidgetPropertyCategory.Behavior , true));
+                WidgetPropertyCategory.Behavior, true));
 
         addProperty(new BooleanProperty(PROP_INDICATOR_MODE, "Indicator Mode",
                 WidgetPropertyCategory.Display, false));
@@ -134,6 +133,7 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
     public boolean isShowLabel() {
         return (Boolean) getProperty(PROP_SHOW_LABEL).getPropertyValue();
     }
+
     /**
      * @return true if the widget is in horizontal orientation, false otherwise
      */
@@ -143,6 +143,7 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
 
     /**
      * Gets the RGB for fillbackground.
+     * 
      * @return The fillbackground color
      */
     public Color getFillbackgroundColor() {
@@ -150,15 +151,15 @@ public class ProgressBarModel extends AbstractMarkedWidgetModel{
     }
 
     public double getOrigin() {
-        return (Double)getPropertyValue(PROP_ORIGIN);
+        return (Double) getPropertyValue(PROP_ORIGIN);
     }
 
-    public boolean isOriginIgnored(){
-        return (Boolean)getPropertyValue(PROP_ORIGIN_IGNORED);
+    public boolean isOriginIgnored() {
+        return (Boolean) getPropertyValue(PROP_ORIGIN_IGNORED);
     }
 
-    public boolean isIndicatorMode(){
-        return (Boolean)getPropertyValue(PROP_INDICATOR_MODE);
+    public boolean isIndicatorMode() {
+        return (Boolean) getPropertyValue(PROP_INDICATOR_MODE);
     }
 
     @Override

@@ -27,6 +27,7 @@ import org.eclipse.gef.commands.Command;
 
 /**
  * A command, that changes the point list of a poly widget.
+ * 
  * @author Sven Wende
  *
  */
@@ -48,8 +49,11 @@ public final class ChangePolyPointsCommand extends Command {
 
     /**
      * Constructor.
-     * @param polyModel the polyline element, whose points should be changed
-     * @param newPoints the new point list
+     * 
+     * @param polyModel
+     *            the polyline element, whose points should be changed
+     * @param newPoints
+     *            the new point list
      */
     public ChangePolyPointsCommand(final AbstractPolyModel polyModel,
             final PointList newPoints) {
@@ -59,19 +63,12 @@ public final class ChangePolyPointsCommand extends Command {
         _newPoints = newPoints;
     }
 
-    /**
-    * {@inheritDoc}
-     */
-
     @Override
     public void execute() {
         _oldPoints = _polyModel.getPoints();
         _polyModel.setPoints(_newPoints, true);
     }
 
-    /**
-    * {@inheritDoc}
-     */
     @Override
     public void undo() {
         _polyModel.setPoints(_oldPoints, true);

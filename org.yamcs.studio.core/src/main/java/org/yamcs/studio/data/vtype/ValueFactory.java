@@ -923,8 +923,8 @@ public class ValueFactory {
 
     /**
      * Converts a standard java type to VTypes. Returns null if no conversion is possible. Calls
-     * {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display)} with no
-     * alarm, time now and no display.
+     * {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display)}
+     * with no alarm, time now and no display.
      *
      * @param javaObject
      *            the value to wrap
@@ -1011,8 +1011,9 @@ public class ValueFactory {
     }
 
     /**
-     * As {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display)} but
-     * throws an exception if conversion not possible.
+     * As
+     * {@link #toVType(java.lang.Object, org.yamcs.studio.data.vtype.Alarm, org.yamcs.studio.data.vtype.Time, org.yamcs.studio.data.vtype.Display)}
+     * but throws an exception if conversion not possible.
      *
      * @param javaObject
      *            the value to wrap

@@ -34,13 +34,19 @@ public class ComboProperty extends AbstractWidgetProperty {
 
     private String[] labelsArray;
 
-    /**Combo Property Constructor. The property value type is integer.
-     * @param prop_id the property id which should be unique in a widget model.
-     * @param description the description of the property,
-     * which will be shown as the property name in property sheet.
-     * @param category the category of the widget.
-     * @param labelsArray the array of labels in combo's drop box.
-     * @param defaultValue the default value when the widget is first created.
+    /**
+     * Combo Property Constructor. The property value type is integer.
+     * 
+     * @param prop_id
+     *            the property id which should be unique in a widget model.
+     * @param description
+     *            the description of the property, which will be shown as the property name in property sheet.
+     * @param category
+     *            the category of the widget.
+     * @param labelsArray
+     *            the array of labels in combo's drop box.
+     * @param defaultValue
+     *            the default value when the widget is first created.
      */
     public ComboProperty(String prop_id, String description,
             WidgetPropertyCategory category, String[] labelsArray,
@@ -52,7 +58,7 @@ public class ComboProperty extends AbstractWidgetProperty {
 
     @Override
     public Object checkValue(Object value) {
-        if(value == null)
+        if (value == null)
             return null;
         Integer acceptedValue = null;
 
@@ -72,7 +78,7 @@ public class ComboProperty extends AbstractWidgetProperty {
             if (acceptedValue < 0) {
                 acceptedValue = 0;
             } else if (acceptedValue >= labelsArray.length) {
-                acceptedValue = labelsArray.length-1;
+                acceptedValue = labelsArray.length - 1;
             }
         }
 
@@ -92,10 +98,10 @@ public class ComboProperty extends AbstractWidgetProperty {
 
     @Override
     public Object readValueFromXML(Element propElement) {
-         try {
+        try {
             return Integer.parseInt(propElement.getValue());
         } catch (NumberFormatException e) {
-            return Boolean.parseBoolean(propElement.getValue())? 1 : 0;
+            return Boolean.parseBoolean(propElement.getValue()) ? 1 : 0;
         }
     }
 

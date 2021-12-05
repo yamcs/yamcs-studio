@@ -118,18 +118,12 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
         relative = !path.isAbsolute();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);
         shell.setText("Resources");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Control createDialogArea(final Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);

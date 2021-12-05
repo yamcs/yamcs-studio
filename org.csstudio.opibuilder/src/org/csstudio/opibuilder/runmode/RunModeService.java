@@ -39,26 +39,26 @@ import org.eclipse.ui.PlatformUI;
 public class RunModeService {
     /** How/where a new display is presented */
     public enum DisplayMode {
-    /** Replace current view or shell with new display content */
-    REPLACE("Replace Current"),
+        /** Replace current view or shell with new display content */
+        REPLACE("Replace Current"),
 
-    /** New view part within existing workbench */
-    NEW_TAB("Workbench Tab"),
+        /** New view part within existing workbench */
+        NEW_TAB("Workbench Tab"),
 
-    /** .. in desired location, if possible */
-    NEW_TAB_LEFT("Workbench Tab (Left)"),
-    NEW_TAB_RIGHT("Workbench Tab (Right)"),
-    NEW_TAB_TOP("Workbench Tab (Top)"),
-    NEW_TAB_BOTTOM("Workbench Tab (Bottom)"),
+        /** .. in desired location, if possible */
+        NEW_TAB_LEFT("Workbench Tab (Left)"),
+        NEW_TAB_RIGHT("Workbench Tab (Right)"),
+        NEW_TAB_TOP("Workbench Tab (Top)"),
+        NEW_TAB_BOTTOM("Workbench Tab (Bottom)"),
 
-    /** .. detached */
-    NEW_TAB_DETACHED("Detached Tab"),
+        /** .. detached */
+        NEW_TAB_DETACHED("Detached Tab"),
 
-    /** New view part in new workbench window */
-    NEW_WINDOW("New workbench"),
+        /** New view part in new workbench window */
+        NEW_WINDOW("New workbench"),
 
-    /** New standalone Shell */
-    NEW_SHELL("Standalone window");
+        /** New standalone Shell */
+        NEW_SHELL("Standalone window");
 
         private String description;
 

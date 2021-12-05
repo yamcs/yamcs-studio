@@ -15,7 +15,9 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.ConnectionModel;
 import org.eclipse.gef.commands.Command;
 
-/**The command to delete a widget.
+/**
+ * The command to delete a widget.
+ * 
  * @author Xihui Chen
  *
  */
@@ -37,7 +39,6 @@ public class WidgetDeleteCommand extends Command {
         this.widget = widget;
     }
 
-
     @Override
     public void execute() {
         sourceConnections = getAllConnections(widget, true);
@@ -45,18 +46,16 @@ public class WidgetDeleteCommand extends Command {
         redo();
     }
 
-    private List<ConnectionModel> getAllConnections(AbstractWidgetModel widget, boolean source){
-            List<ConnectionModel> result = new ArrayList<ConnectionModel>();
-            result.addAll(source ? widget.getSourceConnections() : widget.getTargetConnections());
-            if(widget instanceof AbstractContainerModel){
-                for(AbstractWidgetModel child :
-                    ((AbstractContainerModel)widget).getAllDescendants()){
-                    result.addAll(
-                            source ? child.getSourceConnections() :
-                                child.getTargetConnections());
-                }
+    private List<ConnectionModel> getAllConnections(AbstractWidgetModel widget, boolean source) {
+        List<ConnectionModel> result = new ArrayList<ConnectionModel>();
+        result.addAll(source ? widget.getSourceConnections() : widget.getTargetConnections());
+        if (widget instanceof AbstractContainerModel) {
+            for (AbstractWidgetModel child : ((AbstractContainerModel) widget).getAllDescendants()) {
+                result.addAll(
+                        source ? child.getSourceConnections() : child.getTargetConnections());
             }
-            return result;
+        }
+        return result;
     }
 
     @Override
@@ -74,14 +73,14 @@ public class WidgetDeleteCommand extends Command {
         addConnections(targetConnections);
     }
 
-    private void removeConnections(List<ConnectionModel> connections){
-        for(ConnectionModel conn : connections){
+    private void removeConnections(List<ConnectionModel> connections) {
+        for (ConnectionModel conn : connections) {
             conn.disconnect();
         }
     }
 
-    private void addConnections(List<ConnectionModel> connections){
-        for(ConnectionModel conn: connections){
+    private void addConnections(List<ConnectionModel> connections) {
+        for (ConnectionModel conn : connections) {
             conn.reconnect();
         }
     }

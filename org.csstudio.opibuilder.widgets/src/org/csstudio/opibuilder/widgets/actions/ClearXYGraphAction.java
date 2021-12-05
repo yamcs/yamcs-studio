@@ -11,7 +11,9 @@ import org.csstudio.opibuilder.actions.AbstractWidgetTargetAction;
 import org.csstudio.opibuilder.widgets.editparts.XYGraphEditPart;
 import org.eclipse.jface.action.IAction;
 
-/**Clear XY Graph.
+/**
+ * Clear XY Graph.
+ * 
  * @author Xihui Chen
  *
  */
@@ -29,6 +31,6 @@ public class ClearXYGraphAction extends AbstractWidgetTargetAction {
      * @return a list with all widget models that are currently selected
      */
     protected final XYGraphEditPart getSelectedXYGraph() {
-        return (XYGraphEditPart)selection.getFirstElement();
+        return (XYGraphEditPart) selection.getFirstElement();
     }
 }

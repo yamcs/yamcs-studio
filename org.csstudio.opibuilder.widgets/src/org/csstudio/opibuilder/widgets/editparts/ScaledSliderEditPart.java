@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.editparts;
 
-
 import org.csstudio.opibuilder.editparts.ExecutionMode;
 import org.csstudio.opibuilder.model.AbstractPVWidgetModel;
 import org.csstudio.opibuilder.properties.IWidgetPropertyChangeHandler;
@@ -18,17 +17,14 @@ import org.csstudio.swt.widgets.figures.ScaledSliderFigure;
 import org.eclipse.draw2d.IFigure;
 
 /**
- * EditPart controller for the scaled slider widget. The controller mediates between
- * {@link ScaledSliderModel} and {@link ScaledSliderFigure}.
+ * EditPart controller for the scaled slider widget. The controller mediates between {@link ScaledSliderModel} and
+ * {@link ScaledSliderFigure}.
  *
  * @author Xihui Chen
  *
  */
 public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected IFigure doCreateFigure() {
         final ScaledSliderModel model = getWidgetModel();
@@ -58,17 +54,14 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
 
     @Override
     public ScaledSliderModel getWidgetModel() {
-        return (ScaledSliderModel)getModel();
+        return (ScaledSliderModel) getModel();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        //fillColor
+        // fillColor
         IWidgetPropertyChangeHandler fillColorHandler = new IWidgetPropertyChangeHandler() {
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
@@ -80,7 +73,7 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(ScaledSliderModel.PROP_FILL_COLOR, fillColorHandler);
 
-        //fillBackgroundColor
+        // fillBackgroundColor
         IWidgetPropertyChangeHandler fillBackColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -93,7 +86,7 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(ScaledSliderModel.PROP_FILLBACKGROUND_COLOR, fillBackColorHandler);
 
-        //thumbColor
+        // thumbColor
         IWidgetPropertyChangeHandler thumbColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -106,7 +99,7 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(ScaledSliderModel.PROP_THUMB_COLOR, thumbColorHandler);
 
-        //effect 3D
+        // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -119,8 +112,7 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(ScaledSliderModel.PROP_EFFECT3D, effect3DHandler);
 
-
-        //horizontal
+        // horizontal
         IWidgetPropertyChangeHandler horizontalHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -128,14 +120,14 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
                     final IFigure refreshableFigure) {
                 ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
                 slider.setHorizontal((Boolean) newValue);
-                ScaledSliderModel model = (ScaledSliderModel)getModel();
+                ScaledSliderModel model = (ScaledSliderModel) getModel();
 
-                if((Boolean) newValue) //from vertical to horizontal
-                    model.setLocation(model.getLocation().x - model.getSize().height/2 + model.getSize().width/2,
-                        model.getLocation().y + model.getSize().height/2 - model.getSize().width/2);
-                else  //from horizontal to vertical
-                    model.setLocation(model.getLocation().x + model.getSize().width/2 - model.getSize().height/2,
-                        model.getLocation().y - model.getSize().width/2 + model.getSize().height/2);
+                if ((Boolean) newValue) // from vertical to horizontal
+                    model.setLocation(model.getLocation().x - model.getSize().height / 2 + model.getSize().width / 2,
+                            model.getLocation().y + model.getSize().height / 2 - model.getSize().width / 2);
+                else // from horizontal to vertical
+                    model.setLocation(model.getLocation().x + model.getSize().width / 2 - model.getSize().height / 2,
+                            model.getLocation().y - model.getSize().width / 2 + model.getSize().height / 2);
 
                 model.setSize(model.getSize().height, model.getSize().width);
 
@@ -144,9 +136,8 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(ScaledSliderModel.PROP_HORIZONTAL, horizontalHandler);
 
-
-        //enabled. WidgetBaseEditPart will force the widget as disabled in edit model,
-        //which is not the case for the scaled slider
+        // enabled. WidgetBaseEditPart will force the widget as disabled in edit model,
+        // which is not the case for the scaled slider
         IWidgetPropertyChangeHandler enableHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -159,14 +150,13 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(ScaledSliderModel.PROP_ENABLED, enableHandler);
 
-
         IWidgetPropertyChangeHandler incrementHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setStepIncrement((Double)newValue);
+                slider.setStepIncrement((Double) newValue);
                 return false;
             }
         };
@@ -178,7 +168,7 @@ public final class ScaledSliderEditPart extends AbstractMarkedWidgetEditPart {
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 ScaledSliderFigure slider = (ScaledSliderFigure) refreshableFigure;
-                slider.setPageIncrement((Double)newValue);
+                slider.setPageIncrement((Double) newValue);
                 return false;
             }
         };

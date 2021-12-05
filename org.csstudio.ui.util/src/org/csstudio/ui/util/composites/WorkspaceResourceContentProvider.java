@@ -19,7 +19,7 @@
  * PROJECT IN THE FILE LICENSE.HTML. IF THE LICENSE IS NOT INCLUDED YOU MAY FIND A COPY
  * AT HTTP://WWW.DESY.DE/LEGAL/LICENSE.HTM
  */
- package org.csstudio.ui.util.composites;
+package org.csstudio.ui.util.composites;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +37,15 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * Provides workspace resources as content for a tree viewer.
  *
- * <p>Code is based upon
- * <code>org.eclipse.ui.internal.ide.misc.ContainerContentProvider</code>
- * in plugin <code>org.eclipse.ui.ide</code></p>
+ * <p>
+ * Code is based upon <code>org.eclipse.ui.internal.ide.misc.ContainerContentProvider</code> in plugin
+ * <code>org.eclipse.ui.ide</code>
+ * </p>
  *
  * @author Alexander Will, Joerg Rathlev
  */
 
-//TODO: Copied from org.csstudio.platform.ui. Review is needed.
+// TODO: Copied from org.csstudio.platform.ui. Review is needed.
 final class WorkspaceResourceContentProvider implements
         ITreeContentProvider {
     /**
@@ -61,11 +62,9 @@ final class WorkspaceResourceContentProvider implements
      * Creates a new <code>WorkspaceResourcesContentProvider</code>.
      *
      * @param fileExtensions
-     *            The file extensions of file resources to include in the
-     *            contents provided by the content provider. Use
-     *            <code>null</code> or an empty array to create a content
-     *            provider that provides only container resources (projects
-     *            and folders).
+     *            The file extensions of file resources to include in the contents provided by the content provider. Use
+     *            <code>null</code> or an empty array to create a content provider that provides only container
+     *            resources (projects and folders).
      */
     public WorkspaceResourceContentProvider(String[] fileExtensions) {
         if (fileExtensions != null) {
@@ -77,16 +76,13 @@ final class WorkspaceResourceContentProvider implements
     }
 
     /**
-     * The visual part that is using this content provider is about to be
-     * disposed. Deallocate all allocated SWT resources.
+     * The visual part that is using this content provider is about to be disposed. Deallocate all allocated SWT
+     * resources.
      */
     @Override
     public void dispose() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object[] getChildren(final Object element) {
         if (element instanceof IWorkspace) {
@@ -125,13 +121,11 @@ final class WorkspaceResourceContentProvider implements
     }
 
     /**
-     * Returns whether the given resource should be included in the contents
-     * this content provider returns.
+     * Returns whether the given resource should be included in the contents this content provider returns.
      *
      * @param resource
      *            the resource.
-     * @return <code>true</code> if the resource should be included,
-     *         <code>false</code> otherwise.
+     * @return <code>true</code> if the resource should be included, <code>false</code> otherwise.
      */
     private boolean includeResource(IResource resource) {
         if (resource.getType() != IResource.FILE) {
@@ -143,7 +137,7 @@ final class WorkspaceResourceContentProvider implements
             for (String ext : _fileExtensions) {
                 if (ext != null
                         && (ext.equals(resource.getFileExtension())
-                        || ext.equals("*") || ext.equals("*.*"))) {
+                                || ext.equals("*") || ext.equals("*.*"))) {
                     return true;
                 }
             }
@@ -151,17 +145,11 @@ final class WorkspaceResourceContentProvider implements
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object[] getElements(final Object element) {
         return getChildren(element);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object getParent(final Object element) {
         if (element instanceof IResource) {
@@ -170,25 +158,18 @@ final class WorkspaceResourceContentProvider implements
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasChildren(final Object element) {
         return getChildren(element).length > 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void inputChanged(final Viewer viewer, final Object oldInput,
             final Object newInput) {
     }
 
     /**
-     * Specify whether or not to show closed projects in the tree viewer.
-     * Default is to show closed projects.
+     * Specify whether or not to show closed projects in the tree viewer. Default is to show closed projects.
      *
      * @param show
      *            boolean if false, do not show closed projects in the tree

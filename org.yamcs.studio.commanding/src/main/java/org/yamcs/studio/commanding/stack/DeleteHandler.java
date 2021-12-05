@@ -21,7 +21,8 @@ public class DeleteHandler extends AbstractHandler {
         CommandStackView commandStackView = (CommandStackView) part;
 
         IStructuredSelection sel = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-        if (MessageDialog.openConfirm(shell, "Confirm Deletion", "Are you sure you want to delete the selected commands from the stack?")) {
+        if (MessageDialog.openConfirm(shell, "Confirm Deletion",
+                "Are you sure you want to delete the selected commands from the stack?")) {
             CommandStack.getInstance().getCommands().removeAll(sel.toList());
             commandStackView.refreshState();
         }

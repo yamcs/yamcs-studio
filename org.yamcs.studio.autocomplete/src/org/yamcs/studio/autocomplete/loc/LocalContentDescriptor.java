@@ -41,14 +41,20 @@ public class LocalContentDescriptor extends ContentDescriptor {
     private boolean complete = false;
 
     public String getInitialValueTooltip() {
-        if(vType != null) {
+        if (vType != null) {
             switch (vType) {
-            case "VString": return "\"string\"";
-            case "VStringArray": return "\"string\",...";
-            case "VDouble": return "number";
-            case "VDoubleArray": return "number,...";
-            case "VTable": break;
-            default: return "initialValue";
+            case "VString":
+                return "\"string\"";
+            case "VStringArray":
+                return "\"string\",...";
+            case "VDouble":
+                return "number";
+            case "VDoubleArray":
+                return "number,...";
+            case "VTable":
+                break;
+            default:
+                return "initialValue";
             }
         }
         if (initialValuesTypes.isEmpty())

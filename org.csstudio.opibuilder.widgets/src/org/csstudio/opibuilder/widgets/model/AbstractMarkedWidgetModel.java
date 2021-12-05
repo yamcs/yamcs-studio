@@ -14,19 +14,18 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
- * This class defines a common widget model for any widget
- * which has one scale and standard markers.
- * Standard markers are comprised of LOLO, LO, HI, HIHI.
+ * This class defines a common widget model for any widget which has one scale and standard markers. Standard markers
+ * are comprised of LOLO, LO, HI, HIHI.
+ * 
  * @author Xihui Chen
  */
 public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetModel {
 
-    /** Show alarm markers(or ramp for round scale widgets).*/
+    /** Show alarm markers(or ramp for round scale widgets). */
     public static final String PROP_SHOW_MARKERS = "show_markers";
 
-    /** Low low level.*/
+    /** Low low level. */
     public static final String PROP_LOLO_LEVEL = "level_lolo";
 
     /** Low level. */
@@ -38,8 +37,7 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
     /** High High Level */
     public static final String PROP_HIHI_LEVEL = "level_hihi";
 
-
-    /** Show low low marker.*/
+    /** Show low low marker. */
     public static final String PROP_SHOW_LOLO = "show_lolo";
 
     /** Show low marker. */
@@ -67,16 +65,16 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
     public static final String PROP_LIMITS_FROM_PV = "limits_from_pv";
 
     /** The default value of the levels property. */
-    private static final double[] DEFAULT_LEVELS = new double[]{10, 20, 80, 90};
+    private static final double[] DEFAULT_LEVELS = new double[] { 10, 20, 80, 90 };
 
     /** The default color of the lolo color property. */
-    private static final RGB DEFAULT_LOLO_COLOR = new RGB(255,0,0);
+    private static final RGB DEFAULT_LOLO_COLOR = new RGB(255, 0, 0);
     /** The default color of the lo color property. */
-    private static final RGB DEFAULT_LO_COLOR = new RGB(255, 255 ,0);
+    private static final RGB DEFAULT_LO_COLOR = new RGB(255, 255, 0);
     /** The default color of the hi color property. */
-    private static final RGB DEFAULT_HI_COLOR = new RGB(255, 255,0);
+    private static final RGB DEFAULT_HI_COLOR = new RGB(255, 255, 0);
     /** The default color of the hihi color property. */
-    private static final RGB DEFAULT_HIHI_COLOR = new RGB(255,0,0);
+    private static final RGB DEFAULT_HIHI_COLOR = new RGB(255, 0, 0);
 
     protected boolean isControlWidget = false;
 
@@ -116,13 +114,12 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
         addProperty(new BooleanProperty(PROP_LIMITS_FROM_PV, "Limits From PV",
                 WidgetPropertyCategory.Behavior, true));
 
-
     }
 
     /**
      * Gets the lolo level for this model.
-     * @return double
-     *                 The lolo level
+     * 
+     * @return double The lolo level
      */
     public double getLoloLevel() {
         return (Double) getProperty(PROP_LOLO_LEVEL).getPropertyValue();
@@ -130,8 +127,8 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
 
     /**
      * Gets the lo level for this model.
-     * @return double
-     *                 The lo level
+     * 
+     * @return double The lo level
      */
     public double getLoLevel() {
         return (Double) getProperty(PROP_LO_LEVEL).getPropertyValue();
@@ -139,8 +136,8 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
 
     /**
      * Gets the hi level for this model.
-     * @return double
-     *                 The hi level
+     * 
+     * @return double The hi level
      */
     public double getHiLevel() {
         return (Double) getProperty(PROP_HI_LEVEL).getPropertyValue();
@@ -148,13 +145,12 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
 
     /**
      * Gets the hihi level of this model.
-     * @return double
-     *                 The hihi level
+     * 
+     * @return double The hihi level
      */
     public double getHihiLevel() {
         return (Double) getProperty(PROP_HIHI_LEVEL).getPropertyValue();
     }
-
 
     /**
      * @return the lolo color
@@ -169,22 +165,20 @@ public abstract class AbstractMarkedWidgetModel extends AbstractScaledWidgetMode
     public Color getLoColor() {
         return getSWTColorFromColorProperty(PROP_LO_COLOR);
     }
+
     /**
      * @return the hi color
      */
     public Color getHiColor() {
         return getSWTColorFromColorProperty(PROP_HI_COLOR);
     }
+
     /**
      * @return the hihi color
      */
     public Color getHihiColor() {
         return getSWTColorFromColorProperty(PROP_HIHI_COLOR);
     }
-
-
-
-
 
     /**
      * @return true if the minor ticks should be shown, false otherwise

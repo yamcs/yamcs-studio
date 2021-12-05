@@ -41,14 +41,12 @@ public class SashContainerModel extends AbstractContainerModel {
 
     public static final String PROP_HORIZONTAL = "horizontal";
 
-//    /** True if children widgets are not selectable.*/
-//    public static final String PROP_LOCK_CHILDREN = "lock_children";
-//
+    // /** True if children widgets are not selectable.*/
+    // public static final String PROP_LOCK_CHILDREN = "lock_children";
+    //
     public static final String PROP_PANEL1_AUTO_SCALE_CHILDREN = "panel1_auto_scale_children";
 
     public static final String PROP_PANEL2_AUTO_SCALE_CHILDREN = "panel2_auto_scale_children";
-
-
 
     public SashContainerModel() {
         setSize(400, 300);
@@ -60,12 +58,12 @@ public class SashContainerModel extends AbstractContainerModel {
                 WidgetPropertyCategory.Display, false));
         addProperty(new BooleanProperty(PROP_HORIZONTAL, "Horizontal",
                 WidgetPropertyCategory.Display, true));
-        addProperty(new ComboProperty(PROP_SASH_STYLE, "Sash Style",WidgetPropertyCategory.Display,
+        addProperty(new ComboProperty(PROP_SASH_STYLE, "Sash Style", WidgetPropertyCategory.Display,
                 SashContainerFigure.SashStyle.stringValues(), 2));
         addProperty(new DoubleProperty(PROP_SASH_POSITION, "Sash Position", WidgetPropertyCategory.Display, 0.5));
         addProperty(new IntegerProperty(PROP_SASH_WIDTH, "Sash Width", WidgetPropertyCategory.Display, 3, 1, 100));
-//        addProperty(new BooleanProperty(PROP_LOCK_CHILDREN, "Lock Children",
-//                WidgetPropertyCategory.Behavior, false));
+        // addProperty(new BooleanProperty(PROP_LOCK_CHILDREN, "Lock Children",
+        // WidgetPropertyCategory.Behavior, false));
 
         addProperty(new BooleanProperty(PROP_PANEL1_AUTO_SCALE_CHILDREN,
                 "Auto Scale Children (at Runtime)", new WidgetPropertyCategory() {
@@ -91,8 +89,7 @@ public class SashContainerModel extends AbstractContainerModel {
     /**
      * Returns, if this widget should have a transparent background.
      *
-     * @return boolean True, if it should have a transparent background, false
-     *         otherwise
+     * @return boolean True, if it should have a transparent background, false otherwise
      */
     public boolean isTransparent() {
         return (Boolean) getProperty(PROP_TRANSPARENT).getPropertyValue();
@@ -105,40 +102,38 @@ public class SashContainerModel extends AbstractContainerModel {
         return (Boolean) getProperty(PROP_HORIZONTAL).getPropertyValue();
     }
 
-//    /**
-//    * @return boolean
-//    *                 True, if the children should be locked, false otherwise
-//    */
-//    public boolean isLocked() {
-//        return (Boolean) getProperty(PROP_LOCK_CHILDREN).getPropertyValue();
-//    }
+    // /**
+    // * @return boolean
+    // * True, if the children should be locked, false otherwise
+    // */
+    // public boolean isLocked() {
+    // return (Boolean) getProperty(PROP_LOCK_CHILDREN).getPropertyValue();
+    // }
 
     /**
-     * @return boolean True, if panel 1 will auto scale children when sash moved, false
-     *         otherwise.
+     * @return boolean True, if panel 1 will auto scale children when sash moved, false otherwise.
      */
     public boolean isPanel1AutoScaleChildren() {
         return (Boolean) getProperty(PROP_PANEL1_AUTO_SCALE_CHILDREN).getPropertyValue();
     }
 
     /**
-     * @return boolean True, if panel 2 will auto scale children when sash moved, false
-     *         otherwise.
+     * @return boolean True, if panel 2 will auto scale children when sash moved, false otherwise.
      */
     public boolean isPanel2AutoScaleChildren() {
         return (Boolean) getProperty(PROP_PANEL2_AUTO_SCALE_CHILDREN).getPropertyValue();
     }
 
-    public SashStyle getSashStyle(){
-        return SashStyle.values()[(Integer)getPropertyValue(PROP_SASH_STYLE)];
+    public SashStyle getSashStyle() {
+        return SashStyle.values()[(Integer) getPropertyValue(PROP_SASH_STYLE)];
     }
 
-    public int getSashWidth(){
+    public int getSashWidth() {
         return (Integer) getPropertyValue(PROP_SASH_WIDTH);
     }
 
-    public double getSashPosition(){
-        return (Double)getPropertyValue(PROP_SASH_POSITION);
+    public double getSashPosition() {
+        return (Double) getPropertyValue(PROP_SASH_POSITION);
     }
 
     @Override
@@ -159,12 +154,12 @@ public class SashContainerModel extends AbstractContainerModel {
 
     @Override
     public void rotate90(boolean clockwise) {
-        setPropertyValue(PROP_HORIZONTAL, !(Boolean)getPropertyValue(PROP_HORIZONTAL));
+        setPropertyValue(PROP_HORIZONTAL, !(Boolean) getPropertyValue(PROP_HORIZONTAL));
     }
 
     @Override
     public void scaleChildren() {
-        //Its children will be scaled when this widget layouts, so it needs to do nothing here
+        // Its children will be scaled when this widget layouts, so it needs to do nothing here
     }
 
 }

@@ -30,8 +30,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 
 /**
- * The EditPolicy for array widget. It can only be used for
- * {@link ArrayEditPart}
+ * The EditPolicy for array widget. It can only be used for {@link ArrayEditPart}
  *
  * @author Xihui Chen
  *
@@ -106,14 +105,11 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
         return result;
     }
 
-
-
-
     /**
-     *The behavior of resizing children in an array will be determined by its editpart.
+     * The behavior of resizing children in an array will be determined by its editpart.
      *
      * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#
-     * getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
+     *      getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
      */
     @Override
     protected Command getResizeChildrenCommand(ChangeBoundsRequest request) {
@@ -146,7 +142,7 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
         CompoundCommand command = new CompoundCommand();
         command.setDebugLabel("Add in ConstrainedLayoutEditPolicy");
         GraphicalEditPart child;
-        if(editParts.size()>0){
+        if (editParts.size() > 0) {
             child = (GraphicalEditPart) editParts.get(0);
             command.add(createAddCommand(
                     request,
@@ -155,7 +151,5 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
         }
         return command.unwrap();
     }
-
-
 
 }

@@ -14,12 +14,13 @@ import org.csstudio.opibuilder.script.ScriptService;
 import org.csstudio.ui.util.wizards.WizardNewFileCreationPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-/**Wizard page for the creation of new javascript files.
+/**
+ * Wizard page for the creation of new javascript files.
+ * 
  * @author Xihui Chen
  *
  */
 public class NewJavaScriptWizardPage extends WizardNewFileCreationPage {
-
 
     public NewJavaScriptWizardPage(String pageName, IStructuredSelection selection) {
         super(pageName, selection);
@@ -33,7 +34,6 @@ public class NewJavaScriptWizardPage extends WizardNewFileCreationPage {
         InputStream result = new ByteArrayInputStream(s.getBytes());
         return result;
     }
-
 
     @Override
     protected String getNewFileLabel() {

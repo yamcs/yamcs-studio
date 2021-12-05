@@ -25,7 +25,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**Insert a row on a Table widget.
+/**
+ * Insert a row on a Table widget.
+ * 
  * @author Xihui Chen
  *
  */
@@ -36,6 +38,7 @@ public class InsertRowAction implements IObjectActionDelegate {
 
         /**
          * Create the dialog.
+         * 
          * @param parentShell
          */
         public InsertRowDialog(Shell parentShell) {
@@ -44,6 +47,7 @@ public class InsertRowAction implements IObjectActionDelegate {
 
         /**
          * Create contents of the dialog.
+         * 
          * @param parent
          */
         @Override
@@ -56,7 +60,7 @@ public class InsertRowAction implements IObjectActionDelegate {
             GridData gd_grpPosition = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
             grpPosition.setLayoutData(gd_grpPosition);
             FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-            fillLayout.marginHeight=5;
+            fillLayout.marginHeight = 5;
             fillLayout.marginWidth = 5;
             fillLayout.spacing = 5;
             grpPosition.setLayout(fillLayout);
@@ -79,7 +83,7 @@ public class InsertRowAction implements IObjectActionDelegate {
             return container;
         }
 
-        public boolean isBefore(){
+        public boolean isBefore() {
             return isBefore;
         }
     }
@@ -98,17 +102,17 @@ public class InsertRowAction implements IObjectActionDelegate {
     @Override
     public void run(IAction action) {
         TableEditPart tableEditPart = getSelectedWidget();
-        if(tableEditPart.getTable().isEmpty()){
-            if(tableEditPart.getTable().getColumnCount() ==0)
+        if (tableEditPart.getTable().isEmpty()) {
+            if (tableEditPart.getTable().getColumnCount() == 0)
                 tableEditPart.getTable().insertColumn(0);
             tableEditPart.getTable().insertRow(0);
             return;
         }
 
         InsertRowDialog dialog = new InsertRowDialog(targetPart.getSite().getShell());
-        if (dialog.open() == Dialog.OK){
+        if (dialog.open() == Dialog.OK) {
             boolean before = dialog.isBefore();
-            tableEditPart.getTable().insertRow(tableEditPart.getMenuTriggeredCell().x + (before? 0:1));
+            tableEditPart.getTable().insertRow(tableEditPart.getMenuTriggeredCell().x + (before ? 0 : 1));
         }
 
     }
@@ -120,10 +124,10 @@ public class InsertRowAction implements IObjectActionDelegate {
         }
     }
 
-    private TableEditPart getSelectedWidget(){
-        if(selection.getFirstElement() instanceof TableEditPart){
-            return (TableEditPart)selection.getFirstElement();
-        }else
+    private TableEditPart getSelectedWidget() {
+        if (selection.getFirstElement() instanceof TableEditPart) {
+            return (TableEditPart) selection.getFirstElement();
+        } else
             return null;
     }
 

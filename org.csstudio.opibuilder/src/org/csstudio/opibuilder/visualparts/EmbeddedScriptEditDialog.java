@@ -75,9 +75,6 @@ public class EmbeddedScriptEditDialog extends TrayDialog {
         return scriptData;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureShell(final Shell shell) {
         super.configureShell(shell);

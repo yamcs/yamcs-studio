@@ -27,8 +27,8 @@ import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.PointList;
 
 /**
- * Custom feedback figure for polyglines. The figure shows a rectangle, which
- * does also include the shape of the polyline.
+ * Custom feedback figure for polyglines. The figure shows a rectangle, which does also include the shape of the
+ * polyline.
  *
  * @author Sven Wende
  *
@@ -75,9 +75,6 @@ public final class PolyFeedbackFigureWithRectangle extends RectangleFigure {
         setBounds(points.getBounds());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void paint(final Graphics graphics) {
         // enable tranparency

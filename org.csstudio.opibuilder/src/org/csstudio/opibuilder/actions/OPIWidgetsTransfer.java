@@ -34,7 +34,9 @@ import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
 
-/**The transfer for clip board related actions.
+/**
+ * The transfer for clip board related actions.
+ * 
  * @author Xihui Chen, Sven Wende (part of the code is copied from SDS)
  *
  */
@@ -47,21 +49,20 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
 
     private static final int TYPEID = registerType(TYPE_NAME);
 
-
     public synchronized static OPIWidgetsTransfer getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new OPIWidgetsTransfer();
         return instance;
     }
 
     @Override
     protected int[] getTypeIds() {
-        return new int[] {TYPEID};
+        return new int[] { TYPEID };
     }
 
     @Override
     protected String[] getTypeNames() {
-        return new String[] {TYPE_NAME};
+        return new String[] { TYPE_NAME };
     }
 
     @Override
@@ -70,25 +71,24 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
             DND.error(DND.ERROR_INVALID_DATA);
         }
         try {
-            super.javaToNative((((String)object).getBytes("UTF-8")), transferData);
+            super.javaToNative((((String) object).getBytes("UTF-8")), transferData);
         } catch (Exception e) {
             ErrorHandlerUtil.handleError("Convert to UTF-8 bytes failed", e);
 
         }
 
-
     }
 
     @Override
     public Object nativeToJava(TransferData transferData) {
-        if(!isSupportedType(transferData))
+        if (!isSupportedType(transferData))
             return null;
-        byte[] bytes = (byte[])super.nativeToJava(transferData);
-        if(bytes == null)
+        byte[] bytes = (byte[]) super.nativeToJava(transferData);
+        if (bytes == null)
             return null;
         try {
-            DisplayModel displayModel =
-                    (DisplayModel) XMLUtil.fillWidgetsFromXMLString(new String(bytes, "UTF-8"), null);
+            DisplayModel displayModel = (DisplayModel) XMLUtil.fillWidgetsFromXMLString(new String(bytes, "UTF-8"),
+                    null);
             List<AbstractWidgetModel> widgets = displayModel.getChildren();
             return widgets;
         } catch (Exception e) {
@@ -99,8 +99,8 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
     }
 
     /**
-     * Checks the provided input, which must be a non-empty list that contains
-     * only objects of type {@link AbstractWidgetModel}.
+     * Checks the provided input, which must be a non-empty list that contains only objects of type
+     * {@link AbstractWidgetModel}.
      *
      * @param input
      *            the input to check
@@ -108,7 +108,7 @@ public class OPIWidgetsTransfer extends ByteArrayTransfer {
      */
     private boolean checkInput(final Object input) {
 
-        if(input == null)
+        if (input == null)
             return false;
         return input instanceof String;
 

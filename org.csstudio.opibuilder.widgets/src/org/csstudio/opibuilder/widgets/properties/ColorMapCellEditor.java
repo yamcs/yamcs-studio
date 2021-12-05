@@ -15,7 +15,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-/**The cell editor for {@link ColorMap}
+/**
+ * The cell editor for {@link ColorMap}
+ * 
  * @author Xihui Chen
  *
  */
@@ -23,6 +25,7 @@ public class ColorMapCellEditor extends AbstractDialogCellEditor {
 
     private ColorMap colorMap;
     private IntensityGraphModel widgetModel;
+
     public ColorMapCellEditor(Composite parent, String title, IntensityGraphModel widgetModel) {
         super(parent, title);
         this.widgetModel = widgetModel;
@@ -30,9 +33,9 @@ public class ColorMapCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        ColorMapEditDialog dialog =
-            new ColorMapEditDialog(parentShell, colorMap, dialogTitle, widgetModel.getMinimum(), widgetModel.getMaximum());
-        if(dialog.open() == Window.OK)
+        ColorMapEditDialog dialog = new ColorMapEditDialog(parentShell, colorMap, dialogTitle, widgetModel.getMinimum(),
+                widgetModel.getMaximum());
+        if (dialog.open() == Window.OK)
             colorMap = dialog.getOutput();
     }
 
@@ -48,10 +51,10 @@ public class ColorMapCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if(value == null || !(value instanceof ColorMap))
+        if (value == null || !(value instanceof ColorMap))
             colorMap = new ColorMap(PredefinedColorMap.GrayScale, true, true);
         else
-            colorMap = (ColorMap)value;
+            colorMap = (ColorMap) value;
     }
 
 }

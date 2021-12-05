@@ -12,9 +12,8 @@ import org.yamcs.studio.autocomplete.proposals.Proposal;
 import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 
 /**
- * Part of {@link TooltipContent} provided via {@link AutoCompleteResult} or
- * {@link Proposal}. This class represents a single line of the final tool-tip
- * content (see {@link TooltipContent}). The usage is 1 {@link TooltipData} per
+ * Part of {@link TooltipContent} provided via {@link AutoCompleteResult} or {@link Proposal}. This class represents a
+ * single line of the final tool-tip content (see {@link TooltipContent}). The usage is 1 {@link TooltipData} per
  * function.
  *
  * @author Fred Arnaud (Sopra Group) - ITER

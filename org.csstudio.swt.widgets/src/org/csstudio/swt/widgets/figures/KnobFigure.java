@@ -40,9 +40,9 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Pattern;
 import org.eclipse.swt.widgets.Display;
 
-
 /**
  * The figure of knob
+ * 
  * @author Xihui Chen
  *
  */
@@ -53,22 +53,21 @@ public class KnobFigure extends AbstractRoundRampedFigure {
         private static final int GAP_BTW_BULB_SCALE = 4;
 
         /** Used as a constraint for the scale. */
-        public static final String SCALE = "scale";  
+        public static final String SCALE = "scale";
         /** Used as a constraint for the bulb. */
         public static final String BULB = "bulb";
         /** Used as a constraint for the Ramp */
-        public static final String RAMP = "ramp";     
+        public static final String RAMP = "ramp";
         /** Used as a constraint for the thumb */
-        public static final String THUMB = "thumb";     
-        /** Used as a constraint for the value label*/
-        public static final String VALUE_LABEL = "valueLabel";     
+        public static final String THUMB = "thumb";
+        /** Used as a constraint for the value label */
+        public static final String VALUE_LABEL = "valueLabel";
 
         private RoundScale scale;
         private RoundScaledRamp ramp;
         private Bulb bulb;
         private Thumb thumb;
         private Label valueLabel;
-
 
         @Override
         protected Dimension calculatePreferredSize(IFigure container, int w,
@@ -79,7 +78,6 @@ public class KnobFigure extends AbstractRoundRampedFigure {
             return d;
         }
 
-
         public void layout(IFigure container) {
             Rectangle area = container.getClientArea();
             area.width = Math.min(area.width, area.height);
@@ -89,48 +87,47 @@ public class KnobFigure extends AbstractRoundRampedFigure {
             Point center = area.getCenter();
             Rectangle bulbBounds = null;
 
-            if(scale != null) {
+            if (scale != null) {
                 scale.setBounds(area);
                 bulbBounds = area.getCopy();
-                bulbBounds.shrink(area.width/2 - scale.getInnerRadius() + GAP_BTW_BULB_SCALE,
-                        area.height/2 - scale.getInnerRadius() + GAP_BTW_BULB_SCALE);
+                bulbBounds.shrink(area.width / 2 - scale.getInnerRadius() + GAP_BTW_BULB_SCALE,
+                        area.height / 2 - scale.getInnerRadius() + GAP_BTW_BULB_SCALE);
             }
 
-            if(scale != null && ramp != null && ramp.isVisible()) {
+            if (scale != null && ramp != null && ramp.isVisible()) {
                 Rectangle rampBounds = area.getCopy();
-                ramp.setBounds(rampBounds.shrink(area.width/2 - scale.getInnerRadius() - ramp.getRampWidth()+2,
-                        area.height/2 - scale.getInnerRadius() - ramp.getRampWidth()+2));
+                ramp.setBounds(rampBounds.shrink(area.width / 2 - scale.getInnerRadius() - ramp.getRampWidth() + 2,
+                        area.height / 2 - scale.getInnerRadius() - ramp.getRampWidth() + 2));
             }
 
-            if(valueLabel != null && valueLabel.isVisible()) {
+            if (valueLabel != null && valueLabel.isVisible()) {
                 Dimension labelSize = valueLabel.getPreferredSize();
-                valueLabel.setBounds(new Rectangle(bulbBounds.x + bulbBounds.width/2 - labelSize.width/2,
-                        bulbBounds.y + bulbBounds.height * 3/4 - labelSize.height/2,
+                valueLabel.setBounds(new Rectangle(bulbBounds.x + bulbBounds.width / 2 - labelSize.width / 2,
+                        bulbBounds.y + bulbBounds.height * 3 / 4 - labelSize.height / 2,
                         labelSize.width, labelSize.height));
             }
 
-            if(bulb != null && scale != null && bulb.isVisible()) {
+            if (bulb != null && scale != null && bulb.isVisible()) {
                 bulb.setBounds(bulbBounds);
             }
 
-            if(scale != null && thumb != null && thumb.isVisible()){
-                Point thumbCenter = new Point(bulbBounds.x + bulbBounds.width*7.0/8.0,
-                        bulbBounds.y + bulbBounds.height/2);
+            if (scale != null && thumb != null && thumb.isVisible()) {
+                Point thumbCenter = new Point(bulbBounds.x + bulbBounds.width * 7.0 / 8.0,
+                        bulbBounds.y + bulbBounds.height / 2);
                 double valuePosition = 360 - scale.getValuePosition(getCoercedValue(), false);
-                thumbCenter = PointsUtil.rotate(thumbCenter,    valuePosition, center);
-                int thumbDiameter = bulbBounds.width/6;
+                thumbCenter = PointsUtil.rotate(thumbCenter, valuePosition, center);
+                int thumbDiameter = bulbBounds.width / 6;
 
-                thumb.setBounds(new Rectangle(thumbCenter.x - thumbDiameter/2,
-                        thumbCenter.y - thumbDiameter/2,
+                thumb.setBounds(new Rectangle(thumbCenter.x - thumbDiameter / 2,
+                        thumbCenter.y - thumbDiameter / 2,
                         thumbDiameter, thumbDiameter));
             }
         }
 
-
         @Override
         public void setConstraint(IFigure child, Object constraint) {
-            if(constraint.equals(SCALE))
-                scale = (RoundScale)child;
+            if (constraint.equals(SCALE))
+                scale = (RoundScale) child;
             else if (constraint.equals(RAMP))
                 ramp = (RoundScaledRamp) child;
             else if (constraint.equals(BULB))
@@ -138,81 +135,82 @@ public class KnobFigure extends AbstractRoundRampedFigure {
             else if (constraint.equals(THUMB))
                 thumb = (Thumb) child;
             else if (constraint.equals(VALUE_LABEL))
-                valueLabel = (Label)child;
+                valueLabel = (Label) child;
         }
     }
+
     class Thumb extends Ellipse {
 
         class ThumbDragger
-        extends MouseMotionListener.Stub
-        implements MouseListener {
+                extends MouseMotionListener.Stub
+                implements MouseListener {
             private PolarPoint startPP;
             protected double oldValuePosition;
             protected boolean armed;
-                Point pole;
-                public void mouseDoubleClicked(MouseEvent me) {
+            Point pole;
 
+            public void mouseDoubleClicked(MouseEvent me) {
+
+            }
+
+            public void mouseDragged(MouseEvent me) {
+                if (!armed)
+                    return;
+
+                PolarPoint currentPP = PolarPoint.point2PolarPoint(pole, me.getLocation());
+                // rotate axis to endAngle
+                currentPP.rotateAxis(((RoundScale) scale).getEndAngle(), false);
+
+                // coerce currentPP to min or max
+                if (currentPP.theta * 180.0 / Math.PI > (((RoundScale) scale).getLengthInDegrees())) {
+                    if (Math.abs(((RoundScale) scale).getValuePosition(getCoercedValue(), true) -
+                            (((RoundScale) scale).getLengthInDegrees())) < ((RoundScale) scale).getLengthInDegrees()
+                                    / 2.0)
+                        currentPP.theta = ((RoundScale) scale).getLengthInDegrees() * Math.PI / 180.0;
+                    else
+                        currentPP.theta = 0;
                 }
 
-                public void mouseDragged(MouseEvent me) {
-                    if (!armed)
-                        return;
+                double difference = currentPP.theta * 180.0 / Math.PI - oldValuePosition;
+                double valueChange = calcValueChange(difference, value);
+                if (increment <= 0 || Math.abs(valueChange) > increment / 2.0) {
+                    // manualSetValue = true;
+                    if (increment > 0)
+                        manualSetValue(value + increment * Math.round(valueChange / increment));
+                    else
+                        manualSetValue(value + valueChange);
 
-                    PolarPoint currentPP =
-                        PolarPoint.point2PolarPoint(pole, me.getLocation());
-                    //rotate axis to endAngle
-                    currentPP.rotateAxis(((RoundScale)scale).getEndAngle(), false);
-
-                    //coerce currentPP to min or max
-                    if(currentPP.theta * 180.0/Math.PI > (((RoundScale)scale).getLengthInDegrees())) {
-                        if(Math.abs(((RoundScale)scale).getValuePosition(getCoercedValue(), true)-
-                            (((RoundScale)scale).getLengthInDegrees())) < ((RoundScale)scale).getLengthInDegrees()/2.0)
-                            currentPP.theta = ((RoundScale)scale).getLengthInDegrees() * Math.PI/180.0;
-                        else
-                            currentPP.theta = 0;
-                    }
-
-                    double difference = currentPP.theta * 180.0/Math.PI - oldValuePosition;
-                    double valueChange = calcValueChange(difference, value);
-                    if(increment <= 0 || Math.abs(valueChange) > increment/2.0) {
-//                        manualSetValue = true;
-                        if(increment > 0)
-                            manualSetValue(value + increment * Math.round(valueChange/increment));
-                        else
-                            manualSetValue(value + valueChange);
-
-                        oldValuePosition = ((RoundScale)scale).getValuePosition(
+                    oldValuePosition = ((RoundScale) scale).getValuePosition(
                             value, true);
-                        fireManualValueChange(value);
-                        KnobFigure.this.revalidate();
-                        KnobFigure.this.repaint();
-                    }
-                    me.consume();
+                    fireManualValueChange(value);
+                    KnobFigure.this.revalidate();
+                    KnobFigure.this.repaint();
                 }
+                me.consume();
+            }
 
-                public void mousePressed(MouseEvent me) {
-                    if(me.button != 1)
-                        return;
-                    armed = true;
-                    pole = scale.getBounds().getCenter();
-                    startPP = PolarPoint.point2PolarPoint(pole, bounds.getCenter());
-                    //rotate axis to endAngle
-                    startPP.rotateAxis(((RoundScale)scale).getEndAngle(), false);
+            public void mousePressed(MouseEvent me) {
+                if (me.button != 1)
+                    return;
+                armed = true;
+                pole = scale.getBounds().getCenter();
+                startPP = PolarPoint.point2PolarPoint(pole, bounds.getCenter());
+                // rotate axis to endAngle
+                startPP.rotateAxis(((RoundScale) scale).getEndAngle(), false);
 
+                oldValuePosition = ((RoundScale) scale).getValuePosition(
+                        getCoercedValue(), true);
+                me.consume();
+            }
 
-                    oldValuePosition = ((RoundScale)scale).getValuePosition(
-                            getCoercedValue(), true);
-                    me.consume();
-                }
-
-                public void mouseReleased(MouseEvent me) {
-                    if(me.button != 1)
-                        return;
-                    if (!armed)
-                        return;
-                    armed = false;
-                    me.consume();
-                }
+            public void mouseReleased(MouseEvent me) {
+                if (me.button != 1)
+                    return;
+                if (!armed)
+                    return;
+                armed = false;
+                me.consume();
+            }
         }
 
         public Thumb() {
@@ -233,7 +231,7 @@ public class KnobFigure extends AbstractRoundRampedFigure {
             Pattern pattern = null;
             graphics.setBackgroundColor(thumbColor);
             boolean support3D = GraphicsUtil.testPatternSupported(graphics);
-            if(support3D && effect3D){
+            if (support3D && effect3D) {
                 try {
                     graphics.setBackgroundColor(thumbColor);
                     super.fillShape(graphics);
@@ -247,11 +245,12 @@ public class KnobFigure extends AbstractRoundRampedFigure {
                 }
             }
             super.fillShape(graphics);
-            if(effect3D && support3D)
+            if (effect3D && support3D)
                 pattern.dispose();
             graphics.setForegroundColor(thumbColor);
         }
     }
+
     private final static Color WHITE_COLOR = CustomMediaFactory.getInstance().getColor(
             CustomMediaFactory.COLOR_WHITE);
     private final static Color GRAY_COLOR = CustomMediaFactory.getInstance().getColor(
@@ -269,7 +268,7 @@ public class KnobFigure extends AbstractRoundRampedFigure {
 
     private double increment = 1;
 
-//    private boolean manualSetValue = false;
+    // private boolean manualSetValue = false;
     private Thumb thumb;
 
     private Bulb bulb;
@@ -278,12 +277,10 @@ public class KnobFigure extends AbstractRoundRampedFigure {
 
     private Label valueLabel;
 
-
     /**
      * Listeners that react on slider events.
      */
-    private List<IManualValueChangeListener> knobListeners =
-        new ArrayList<IManualValueChangeListener>();
+    private List<IManualValueChangeListener> knobListeners = new ArrayList<IManualValueChangeListener>();
 
     public KnobFigure() {
         super();
@@ -310,7 +307,6 @@ public class KnobFigure extends AbstractRoundRampedFigure {
             }
         });
 
-
     }
 
     /**
@@ -323,24 +319,27 @@ public class KnobFigure extends AbstractRoundRampedFigure {
         knobListeners.add(listener);
     }
 
-    /**Convert the difference of two points to the corresponding value to be changed.
-     * @param difference the different theta value in degrees between two polar points.
-     * @param oldValue the old value before this change
+    /**
+     * Convert the difference of two points to the corresponding value to be changed.
+     * 
+     * @param difference
+     *            the different theta value in degrees between two polar points.
+     * @param oldValue
+     *            the old value before this change
      * @return the value to be changed
      */
     private double calcValueChange(double difference, double oldValue) {
         double change;
-        double dragRange = ((RoundScale)scale).getLengthInDegrees();
-        if(scale.isLogScaleEnabled()) {
-                double c = dragRange/(
-                        Math.log10(scale.getRange().getUpper()) -
-                        Math.log10(scale.getRange().getLower()));
+        double dragRange = ((RoundScale) scale).getLengthInDegrees();
+        if (scale.isLogScaleEnabled()) {
+            double c = dragRange / (Math.log10(scale.getRange().getUpper()) -
+                    Math.log10(scale.getRange().getLower()));
 
-                    change = oldValue * (Math.pow(10, -difference/c) - 1);
+            change = oldValue * (Math.pow(10, -difference / c) - 1);
         } else {
 
-                change = -(scale.getRange().getUpper() - scale.getRange().getLower())
-                        * difference / dragRange;
+            change = -(scale.getRange().getUpper() - scale.getRange().getLower())
+                    * difference / dragRange;
         }
         return change;
     }
@@ -353,9 +352,9 @@ public class KnobFigure extends AbstractRoundRampedFigure {
      */
     private void fireManualValueChange(final double newManualValue) {
 
-            for (IManualValueChangeListener l : knobListeners) {
-                l.manualValueChanged(newManualValue);
-            }
+        for (IManualValueChangeListener l : knobListeners) {
+            l.manualValueChanged(newManualValue);
+        }
     }
 
     /**
@@ -379,10 +378,12 @@ public class KnobFigure extends AbstractRoundRampedFigure {
         return effect3D;
     }
 
-    /**Set Value from manual control of the widget. Value will be coerced in range.
+    /**
+     * Set Value from manual control of the widget. Value will be coerced in range.
+     * 
      * @param value
      */
-    public void manualSetValue(double value){
+    public void manualSetValue(double value) {
         setValue(getCoercedValue(value));
     }
 
@@ -390,15 +391,15 @@ public class KnobFigure extends AbstractRoundRampedFigure {
     protected void paintClientArea(Graphics graphics) {
 
         super.paintClientArea(graphics);
-        if(!isEnabled()) {
+        if (!isEnabled()) {
             graphics.setAlpha(DISABLED_ALPHA);
             graphics.setBackgroundColor(GRAY_COLOR);
             graphics.fillRectangle(bounds);
         }
     }
 
-    public void removeManualValueChangeListener(final IManualValueChangeListener listener){
-        if(knobListeners.contains(listener))
+    public void removeManualValueChangeListener(final IManualValueChangeListener listener) {
+        if (knobListeners.contains(listener))
             knobListeners.remove(listener);
     }
 
@@ -407,8 +408,10 @@ public class KnobFigure extends AbstractRoundRampedFigure {
 
         super.setBounds(rect);
     }
+
     /**
-     * @param color the bulb color to set
+     * @param color
+     *            the bulb color to set
      */
     public void setBulbColor(Color color) {
         bulb.setBulbColor(color);
@@ -419,8 +422,10 @@ public class KnobFigure extends AbstractRoundRampedFigure {
         super.setCursor(cursor);
         thumb.setCursor(cursor);
     }
+
     /**
-     * @param effect3D the effect3D to set
+     * @param effect3D
+     *            the effect3D to set
      */
     public void setEffect3D(boolean effect3D) {
         this.effect3D = effect3D;
@@ -431,14 +436,11 @@ public class KnobFigure extends AbstractRoundRampedFigure {
     @Override
     public void setEnabled(boolean value) {
         super.setEnabled(value);
-        if(value)
+        if (value)
             thumb.setCursor(Cursors.HAND);
-        //the disabled cursor should be controlled by widget controller.
+        // the disabled cursor should be controlled by widget controller.
         repaint();
     }
-
-
-
 
     @Override
     public void setFont(Font f) {
@@ -446,35 +448,31 @@ public class KnobFigure extends AbstractRoundRampedFigure {
         super.setFont(f);
     }
 
-
     /**
-     * @param increment the increment to set
+     * @param increment
+     *            the increment to set
      */
     public void setIncrement(double increment) {
         this.increment = increment;
     }
 
-
     /**
-     * @param thumbColor the thumbColor to set
+     * @param thumbColor
+     *            the thumbColor to set
      */
     public void setThumbColor(Color thumbColor) {
-        if(this.thumbColor != null && this.thumbColor.equals(thumbColor))
+        if (this.thumbColor != null && this.thumbColor.equals(thumbColor))
             return;
         this.thumbColor = thumbColor;
         repaint();
     }
 
-
-
-
     @Override
     public void setValue(double value) {
         super.setValue(value);
         valueLabel.setText(getValueText());
-//        manualSetValue = false;
+        // manualSetValue = false;
     }
-
 
     public void setValueLabelVisibility(boolean visible) {
         valueLabel.setVisible(visible);

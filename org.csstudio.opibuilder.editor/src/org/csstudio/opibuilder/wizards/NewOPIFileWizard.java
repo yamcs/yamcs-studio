@@ -19,7 +19,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-/**A wizard for creating new OPI Files.
+/**
+ * A wizard for creating new OPI Files.
+ * 
  * @author Xihui Chen
  *
  */
@@ -31,13 +33,11 @@ public class NewOPIFileWizard extends Wizard implements INewWizard {
 
     private IWorkbench workbench;
 
-
     @Override
     public void addPages() {
-        opiFilePage =new NewOPIFileWizardPage("OPIFilePage", selection);
+        opiFilePage = new NewOPIFileWizardPage("OPIFilePage", selection);
         addPage(opiFilePage);
     }
-
 
     @Override
     public boolean performFinish() {

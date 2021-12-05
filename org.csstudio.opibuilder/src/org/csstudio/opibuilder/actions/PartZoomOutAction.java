@@ -4,7 +4,9 @@ import org.eclipse.gef.internal.InternalImages;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 
-/**Tweak {@link ZoomOutAction}
+/**
+ * Tweak {@link ZoomOutAction}
+ * 
  * @author danlee, Xihui Chen
  */
 @SuppressWarnings("restriction")
@@ -17,7 +19,7 @@ public class PartZoomOutAction extends PartZoomAction {
      *            the zoom manager
      */
     public PartZoomOutAction() {
-        super("Zoom &Out", InternalImages.DESC_ZOOM_OUT    );
+        super("Zoom &Out", InternalImages.DESC_ZOOM_OUT);
         setToolTipText("Zoom Out");
         setId(GEFActionConstants.ZOOM_OUT);
         setActionDefinitionId(GEFActionConstants.ZOOM_OUT);
@@ -28,7 +30,7 @@ public class PartZoomOutAction extends PartZoomAction {
      */
     @Override
     public void run() {
-        if(zoomManager != null)
+        if (zoomManager != null)
             zoomManager.zoomOut();
     }
 

@@ -217,7 +217,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
 
     /**
      * Overridden, to ensure that the bounds rectangle gets repainted each time, the points of the polygon change.
-     * {@inheritDoc}
      */
     /*
      * @Override public void setBounds(final Rectangle rect) { invalidate(); fireFigureMoved(); repaint(); int
@@ -255,9 +254,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
         return fill;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Rectangle getHandleBounds() {
         return getPoints().getBounds();
@@ -288,9 +284,6 @@ public final class PolylineFigure extends Polyline implements HandleBounds, Intr
         return horizontalFill;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void outlineShape(final Graphics graphics) {
         Rectangle figureBounds = getBounds();

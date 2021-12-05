@@ -23,66 +23,70 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-/** Widget that displays an image.
+/**
+ * Widget that displays an image.
  *
- *  <p>Similar to a Label with image, but image is resized to fit the widget.
+ * <p>
+ * Similar to a Label with image, but image is resized to fit the widget.
  *
- *  <p>Image can be provided as {@link InputStream}.
+ * <p>
+ * Image can be provided as {@link InputStream}.
  *
- *  <p>As a shortcut, the widget can also read a file.
+ * <p>
+ * As a shortcut, the widget can also read a file.
  *
- *  <p>Setting the {@link Image} directly is not supported
- *  to avoid issues with ownership and disposal of such an image.
+ * <p>
+ * Setting the {@link Image} directly is not supported to avoid issues with ownership and disposal of such an image.
  *
- *  @author Kay Kasemir
+ * @author Kay Kasemir
  */
 public class ImagePreview extends Canvas implements DisposeListener,
-        PaintListener
-{
+        PaintListener {
     /** Image or <code>null</code> */
     private Image image = null;
 
     /** Additional short message or <code>null</code> */
     private String message = null;
 
-    /** Initialize empty
-     *  @param parent Parent widget
+    /**
+     * Initialize empty
+     * 
+     * @param parent
+     *            Parent widget
      */
-    public ImagePreview(final Composite parent)
-    {
+    public ImagePreview(final Composite parent) {
         super(parent, 0);
         addDisposeListener(this);
         addPaintListener(this);
     }
 
-    /** Set image to display
-     *  @param image_filename Full path to image file or <code>null</code> for no image
+    /**
+     * Set image to display
+     * 
+     * @param image_filename
+     *            Full path to image file or <code>null</code> for no image
      */
-    public void setImage(final String image_filename)
-    {
+    public void setImage(final String image_filename) {
         if (image_filename == null)
             setImage((InputStream) null);
-        else
-        {
-            try
-            {
+        else {
+            try {
                 setImage(new FileInputStream(image_filename));
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 ExceptionDetailsErrorDialog.openError(getShell(), "Error", ex);
             }
         }
     }
 
-    /** Set image to display
-     *  @param image_stream Image stream
+    /**
+     * Set image to display
+     * 
+     * @param image_stream
+     *            Image stream
      */
-    public void setImage(final InputStream image_stream)
-    {
+    public void setImage(final InputStream image_stream) {
         // Remove previous image, if there was one
-        if (image != null)
-        {
+        if (image != null) {
             image.dispose();
             image = null;
             setToolTipText("");
@@ -93,11 +97,13 @@ public class ImagePreview extends Canvas implements DisposeListener,
         redraw();
     }
 
-    /** Set a message that is displayed on top of the image
-     *  @param message Message to display or <code>null</code>
+    /**
+     * Set a message that is displayed on top of the image
+     * 
+     * @param message
+     *            Message to display or <code>null</code>
      */
-    public void setMessage(final String message)
-    {
+    public void setMessage(final String message) {
         this.message = message;
         redraw();
     }
@@ -107,8 +113,7 @@ public class ImagePreview extends Canvas implements DisposeListener,
 
     /** @see Control */
     @Override
-    public Point computeSize(final int wHint, final int hHint)
-    {
+    public Point computeSize(final int wHint, final int hHint) {
         if (image == null)
             return new Point(1, 1);
         return new Point(200, 200);
@@ -116,26 +121,22 @@ public class ImagePreview extends Canvas implements DisposeListener,
 
     /** @see PaintListener */
     @Override
-    public void paintControl(final PaintEvent e)
-    {
+    public void paintControl(final PaintEvent e) {
         final Rectangle bounds = getBounds();
         final GC gc = e.gc;
-        if (image != null)
-        {   // Draw image to fit widget bounds, maintaining
-            // aspect ratio
+        if (image != null) { // Draw image to fit widget bounds, maintaining
+                             // aspect ratio
             final Rectangle img = image.getBounds();
             // Start with original size
             int width = img.width;
             int height = img.height;
             int destX = 0;
             int destY = 0;
-            if (width > bounds.width)
-            {   // Too wide?
+            if (width > bounds.width) { // Too wide?
                 width = bounds.width;
                 height = width * img.height / img.width;
             }
-            if (height > bounds.height)
-            {   // Too high?
+            if (height > bounds.height) { // Too high?
                 height = bounds.height;
                 width = height * img.width / img.height;
             }
@@ -144,8 +145,7 @@ public class ImagePreview extends Canvas implements DisposeListener,
             gc.drawImage(image, 0, 0, img.width, img.height, destX, destY,
                     width, height);
         }
-        if (message != null)
-        {   // Show message
+        if (message != null) { // Show message
             final Point extend = gc.textExtent(message, SWT.DRAW_DELIMITER);
             final int x = (bounds.width - extend.x) / 2;
             final int y = (bounds.height - extend.y) / 2;
@@ -157,8 +157,7 @@ public class ImagePreview extends Canvas implements DisposeListener,
 
     /** @see DisposeListener */
     @Override
-    public void widgetDisposed(final DisposeEvent e)
-    {
+    public void widgetDisposed(final DisposeEvent e) {
         if (image != null)
             image.dispose();
     }

@@ -12,7 +12,9 @@ import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 
-/**The factory creating tree editpart from model.
+/**
+ * The factory creating tree editpart from model.
+ * 
  * @author Xihui Chen
  *
  */
@@ -20,9 +22,9 @@ public class WidgetTreeEditpartFactory implements EditPartFactory {
 
     @Override
     public EditPart createEditPart(EditPart context, Object model) {
-        if(model instanceof AbstractContainerModel)
+        if (model instanceof AbstractContainerModel)
             return new ContainerTreeEditpart((AbstractContainerModel) model);
-        if(model instanceof AbstractWidgetModel)
+        if (model instanceof AbstractWidgetModel)
             return new WidgetTreeEditpart((AbstractWidgetModel) model);
         return null;
     }

@@ -24,15 +24,17 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.action.IAction;
 
-/**The action will auto size the container according to the bounds of its children.
+/**
+ * The action will auto size the container according to the bounds of its children.
+ * 
  * @author Xihui Chen
  *
  */
-public class PerformAutoSizeAction extends AbstractWidgetTargetAction{
+public class PerformAutoSizeAction extends AbstractWidgetTargetAction {
 
     @Override
     public void run(IAction action) {
-        if(getContainerEditpart().getChildren().size() <=0){
+        if (getContainerEditpart().getChildren().size() <= 0) {
             return;
         }
         CompoundCommand compoundCommand = new CompoundCommand("Perform AutoSize");
@@ -40,9 +42,8 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction{
         AbstractContainerEditpart containerEditpart = getContainerEditpart();
         AbstractContainerModel containerModel = containerEditpart.getWidgetModel();
 
-
-        //temporary unlock children so children will not be resized.
-        if(containerEditpart instanceof GroupingContainerEditPart){
+        // temporary unlock children so children will not be resized.
+        if (containerEditpart instanceof GroupingContainerEditPart) {
             compoundCommand.add(new SetWidgetPropertyCommand(containerModel,
                     GroupingContainerModel.PROP_LOCK_CHILDREN, false));
         }
@@ -58,27 +59,24 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction{
                         childrenRange.width + figure.getInsets().left + figure.getInsets().right,
                         childrenRange.height + figure.getInsets().top + figure.getInsets().bottom))));
 
-
-        for(Object editpart : containerEditpart.getChildren()){
-            AbstractWidgetModel widget = ((AbstractBaseEditPart)editpart).getWidgetModel();
+        for (Object editpart : containerEditpart.getChildren()) {
+            AbstractWidgetModel widget = ((AbstractBaseEditPart) editpart).getWidgetModel();
             compoundCommand.add(new SetBoundsCommand(widget, new Rectangle(
                     widget.getLocation().translate(tranlateSize.getNegated()),
                     widget.getSize())));
         }
 
-        //recover lock
-        if(containerEditpart instanceof GroupingContainerEditPart){
+        // recover lock
+        if (containerEditpart instanceof GroupingContainerEditPart) {
             Object oldvalue = containerEditpart.getWidgetModel()
-            .getPropertyValue(GroupingContainerModel.PROP_LOCK_CHILDREN);
+                    .getPropertyValue(GroupingContainerModel.PROP_LOCK_CHILDREN);
             compoundCommand.add(new SetWidgetPropertyCommand(containerModel,
                     GroupingContainerModel.PROP_LOCK_CHILDREN, oldvalue));
         }
 
         execute(compoundCommand);
 
-
     }
-
 
     /**
      * Gets the widget models of all currently selected EditParts.
@@ -86,7 +84,7 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction{
      * @return a list with all widget models that are currently selected
      */
     protected final AbstractContainerEditpart getContainerEditpart() {
-        return (AbstractContainerEditpart)selection.getFirstElement();
+        return (AbstractContainerEditpart) selection.getFirstElement();
     }
 
     /**
@@ -95,9 +93,7 @@ public class PerformAutoSizeAction extends AbstractWidgetTargetAction{
      * @return a list with all widget models that are currently selected
      */
     protected final IFigure getContainerFigure() {
-        return ((AbstractContainerEditpart)selection.getFirstElement()).getFigure();
+        return ((AbstractContainerEditpart) selection.getFirstElement()).getFigure();
     }
-
-
 
 }

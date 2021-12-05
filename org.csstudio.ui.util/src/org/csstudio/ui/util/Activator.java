@@ -24,16 +24,14 @@ public class Activator extends Plugin implements BundleActivator {
     }
 
     @Override
-    public void start(BundleContext context) throws Exception
-    {
+    public void start(BundleContext context) throws Exception {
         super.start(context);
         setPlugin(this);
         this.context = context;
     }
 
     @Override
-    public void stop(BundleContext context) throws Exception
-    {
+    public void stop(BundleContext context) throws Exception {
         setPlugin(this);
         super.stop(context);
     }
@@ -43,23 +41,23 @@ public class Activator extends Plugin implements BundleActivator {
     }
 
     /** Static setter to avoid FindBugs warning */
-    private static void setPlugin(final Activator the_plugin)
-    {
+    private static void setPlugin(final Activator the_plugin) {
         plugin = the_plugin;
     }
 
     /** @eturn The shared instance. */
-    public static Activator getDefault()
-    {
+    public static Activator getDefault() {
         return plugin;
     }
 
-    /** Obtain image descriptor for image in plugin
-     *  @param path Path to image within plugin
-     *  @return {@link ImageDescriptor}
+    /**
+     * Obtain image descriptor for image in plugin
+     * 
+     * @param path
+     *            Path to image within plugin
+     * @return {@link ImageDescriptor}
      */
-    public static ImageDescriptor getImageDescriptor(final String path)
-    {
+    public static ImageDescriptor getImageDescriptor(final String path) {
         return AbstractUIPlugin.imageDescriptorFromPlugin(ID, path);
     }
 }

@@ -11,7 +11,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-/**The dialog cell editor for multiline text editing.
+/**
+ * The dialog cell editor for multiline text editing.
+ * 
  * @author Xihui Chen
  *
  */
@@ -25,9 +27,8 @@ public class MultiLineTextCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        MultilineTextEditDialog dialog =
-            new MultilineTextEditDialog(parentShell, stringValue,dialogTitle);
-        if(dialog.open() == Window.OK){
+        MultilineTextEditDialog dialog = new MultilineTextEditDialog(parentShell, stringValue, dialogTitle);
+        if (dialog.open() == Window.OK) {
             stringValue = dialog.getResult();
         }
 
@@ -45,8 +46,8 @@ public class MultiLineTextCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if(value == null)
-            stringValue =  ""; 
+        if (value == null)
+            stringValue = "";
         else
             stringValue = value.toString();
 

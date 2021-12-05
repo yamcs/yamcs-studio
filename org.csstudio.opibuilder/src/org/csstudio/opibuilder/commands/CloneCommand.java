@@ -21,6 +21,7 @@
  */
 
 package org.csstudio.opibuilder.commands;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * A Command to clone the selected widgets.
+ * 
  * @author Kai Meyer (original author), Xihui Chen (since import from SDS 2009/9)
  *
  */
@@ -83,8 +85,9 @@ public final class CloneCommand extends Command {
 
     /**
      * Constructor.
+     * 
      * @param parent
-     *             The parent {@link DisplayModel} for the widgets
+     *            The parent {@link DisplayModel} for the widgets
      */
     public CloneCommand(final AbstractContainerModel parent) {
         super("Clone Widgets");
@@ -94,10 +97,11 @@ public final class CloneCommand extends Command {
 
     /**
      * Adds the given {@link AbstractWidgetModel} with the given {@link Rectangle} to this Command.
+     * 
      * @param model
-     *             The AbstractWidgetModel
+     *            The AbstractWidgetModel
      * @param newBounds
-     *             The new bounds for the AbstractWidgetModel
+     *            The new bounds for the AbstractWidgetModel
      */
     public void addPart(final AbstractWidgetModel model, final Rectangle newBounds) {
         _models.add(model);
@@ -106,12 +110,12 @@ public final class CloneCommand extends Command {
 
     /**
      * Calculates the difference between the original location of the widget and the new location.
+     * 
      * @param model
-     *             The {@link AbstractWidgetModel}
+     *            The {@link AbstractWidgetModel}
      * @param newBounds
-     *             The new bounds for the widget
-     * @return Dimension
-     *             The difference between the original location of the widget and the new location
+     *            The new bounds for the widget
+     * @return Dimension The difference between the original location of the widget and the new location
      */
     private Dimension calculateDifference(final AbstractWidgetModel model, final Rectangle newBounds) {
         Dimension dim = newBounds.getLocation().getDifference(model.getLocation());
@@ -120,12 +124,13 @@ public final class CloneCommand extends Command {
 
     /**
      * Sets the given {@link GuideModel} for the given orientation.
+     * 
      * @param guide
-     *             The guide
+     *            The guide
      * @param alignment
-     *             The alignment for the guide
+     *            The alignment for the guide
      * @param isHorizontal
-     *             The orientation of the guide
+     *            The orientation of the guide
      */
     public void setGuide(final GuideModel guide, final int alignment, final boolean isHorizontal) {
         if (isHorizontal) {
@@ -138,8 +143,7 @@ public final class CloneCommand extends Command {
     }
 
     /**
-     * Returns a list with widget models that are currently stored on the
-     * clipboard.
+     * Returns a list with widget models that are currently stored on the clipboard.
      *
      * @return a list with widget models or an empty list
      */
@@ -151,15 +155,12 @@ public final class CloneCommand extends Command {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Clipboard clipboard = new Clipboard(Display.getCurrent());
         DisplayModel tempModel = new DisplayModel();
 
-        for(AbstractWidgetModel widget : _models){
+        for (AbstractWidgetModel widget : _models) {
             tempModel.addChild(widget, false);
         }
 
@@ -170,17 +171,17 @@ public final class CloneCommand extends Command {
         _clonedWidgets = getWidgetsFromClipboard();
 
         _compoundCommand = new CompoundCommand();
-        int i=0;
+        int i = 0;
         for (AbstractWidgetModel widgetModel : _clonedWidgets) {
-            if (_difference!=null) {
-                widgetModel.setLocation((widgetModel.getLocation().x+_difference.width),
-                        (widgetModel.getLocation().y+_difference.height));
+            if (_difference != null) {
+                widgetModel.setLocation((widgetModel.getLocation().x + _difference.width),
+                        (widgetModel.getLocation().y + _difference.height));
             } else {
-                widgetModel.setLocation((widgetModel.getLocation().x+10),
-                        (widgetModel.getLocation().y+10));
+                widgetModel.setLocation((widgetModel.getLocation().x + 10),
+                        (widgetModel.getLocation().y + 10));
             }
             _compoundCommand.add(new WidgetCreateCommand(widgetModel, _parent,
-                    new Rectangle(widgetModel.getLocation(), widgetModel.getSize()), (i++ == 0? false : true)));
+                    new Rectangle(widgetModel.getLocation(), widgetModel.getSize()), (i++ == 0 ? false : true)));
 
             if (_hGuide != null) {
                 ChangeGuideCommand hGuideCommand = new ChangeGuideCommand(widgetModel, true);
@@ -196,20 +197,13 @@ public final class CloneCommand extends Command {
         _compoundCommand.execute();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void redo() {
         _compoundCommand.redo();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void undo() {
         _compoundCommand.undo();
     }
-
 }

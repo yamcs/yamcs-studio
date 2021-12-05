@@ -18,12 +18,11 @@ import org.csstudio.opibuilder.util.MediaService;
 import org.csstudio.opibuilder.util.OPIFont;
 
 /**
- * This class defines a common widget model for any widget
- * which has a scale.
+ * This class defines a common widget model for any widget which has a scale.
+ * 
  * @author Xihui Chen
  */
 public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
-
 
     /** True if the widget's background is transparent. */
     public static final String PROP_TRANSPARENT = "transparent_background";
@@ -34,10 +33,10 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
     /** Higher limit of the widget. */
     public static final String PROP_MAX = "maximum";
 
-    /** The minimum distance (in pixels) between major ticks.*/
+    /** The minimum distance (in pixels) between major ticks. */
     public static final String PROP_MAJOR_TICK_STEP_HINT = "major_tick_step_hint";
 
-    /**Show minor ticks. */
+    /** Show minor ticks. */
     public static final String PROP_SHOW_MINOR_TICKS = "show_minor_ticks";
 
     /** Show scale. */
@@ -65,7 +64,7 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
     /** The default value of the maximum property. */
     private static final double DEFAULT_MAX = 100;
 
-        /** The default value of the major tick step hint property. */
+    /** The default value of the major tick step hint property. */
     private static final int DEFAULT_MAJOR_TICK_STEP_HINT = 50;
 
     @Override
@@ -73,7 +72,6 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
 
         addProperty(new BooleanProperty(PROP_TRANSPARENT, "Transparent Background",
                 WidgetPropertyCategory.Display, true));
-
 
         addProperty(new DoubleProperty(PROP_MIN, "Minimum",
                 WidgetPropertyCategory.Behavior, DEFAULT_MIN));
@@ -94,7 +92,7 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
                 WidgetPropertyCategory.Display, false));
 
         addProperty(new FontProperty(PROP_SCALE_FONT, "Scale Font",
-                WidgetPropertyCategory.Display,    MediaService.DEFAULT_FONT));
+                WidgetPropertyCategory.Display, MediaService.DEFAULT_FONT));
 
         addProperty(new StringProperty(PROP_SCALE_FORMAT, "Scale Format",
                 WidgetPropertyCategory.Display, ""));
@@ -103,15 +101,12 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
                 WidgetPropertyCategory.Display, ""));
     }
 
-
-
     /**
      * @return the minimum value
      */
     public Double getMinimum() {
         return (Double) getProperty(PROP_MIN).getPropertyValue();
     }
-
 
     /**
      * @return the maximum value
@@ -127,8 +122,6 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
         return (Integer) getProperty(PROP_MAJOR_TICK_STEP_HINT).getPropertyValue();
     }
 
-
-
     /**
      * @return true if the minor ticks should be shown, false otherwise
      */
@@ -143,7 +136,6 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
         return (Boolean) getProperty(PROP_SHOW_SCALE).getPropertyValue();
     }
 
-
     /**
      * @return true if log scale enabled, false otherwise
      */
@@ -153,23 +145,23 @@ public abstract class AbstractScaledWidgetModel extends AbstractPVWidgetModel {
 
     /**
      * Returns, if this widget should have a transparent background.
-     * @return boolean
-     *                 True, if it should have a transparent background, false otherwise
+     * 
+     * @return boolean True, if it should have a transparent background, false otherwise
      */
     public boolean isTransparent() {
         return (Boolean) getProperty(PROP_TRANSPARENT).getPropertyValue();
     }
 
-    public OPIFont getScaleFont(){
-        return (OPIFont)getCastedPropertyValue(PROP_SCALE_FONT);
+    public OPIFont getScaleFont() {
+        return (OPIFont) getCastedPropertyValue(PROP_SCALE_FONT);
     }
 
-    public String getScaleFormat(){
-        return (String)getPropertyValue(PROP_SCALE_FORMAT);
+    public String getScaleFormat() {
+        return (String) getPropertyValue(PROP_SCALE_FORMAT);
     }
 
-    public String getValueLabelFormat(){
-        return (String)getPropertyValue(PROP_VALUE_LABEL_FORMAT);
+    public String getValueLabelFormat() {
+        return (String) getPropertyValue(PROP_VALUE_LABEL_FORMAT);
     }
 
 }

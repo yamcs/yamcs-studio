@@ -39,9 +39,6 @@ import org.eclipse.draw2d.IFigure;
  */
 public final class PolygonEditPart extends AbstractPolyEditPart {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected IFigure doCreateFigure() {
         PolygonFigure polygon = new PolygonFigure();
@@ -56,12 +53,9 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
 
     @Override
     public PolygonModel getWidgetModel() {
-        return (PolygonModel)getModel();
+        return (PolygonModel) getModel();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         super.registerPropertyChangeHandlers();
@@ -111,27 +105,26 @@ public final class PolygonEditPart extends AbstractPolyEditPart {
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
-                ((PolygonFigure)refreshableFigure).setLineColor(
-                        ((OPIColor)newValue).getSWTColor());
+                ((PolygonFigure) refreshableFigure).setLineColor(
+                        ((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
         setPropertyChangeHandler(AbstractShapeModel.PROP_LINE_COLOR,
                 lineColorHandler);
 
-
     }
 
     @Override
     public void setValue(Object value) {
-        if(value instanceof Number){
-            ((PolygonFigure)getFigure()).setFill(((Number)value).doubleValue());
-        }else
+        if (value instanceof Number) {
+            ((PolygonFigure) getFigure()).setFill(((Number) value).doubleValue());
+        } else
             super.setValue(value);
     }
 
     @Override
     public Object getValue() {
-        return ((PolygonFigure)getFigure()).getFill();
+        return ((PolygonFigure) getFigure()).getFill();
     }
 }

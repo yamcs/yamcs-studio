@@ -16,7 +16,9 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 
-/**The editpolicy for dropping pv onto a XYGraph widget. It will add the dropped PVs to XYGraph as traces.
+/**
+ * The editpolicy for dropping pv onto a XYGraph widget. It will add the dropped PVs to XYGraph as traces.
+ * 
  * @author Xihui Chen
  *
  */
@@ -26,25 +28,25 @@ public class DropPVtoXYGraphEditPolicy extends AbstractEditPolicy {
 
     @Override
     public Command getCommand(Request request) {
-        if(request.getType() == DropPVRequest.REQ_DROP_PV &&
-                request instanceof DropPVRequest){
-            DropPVRequest dropPVRequest =(DropPVRequest)request;
-            if(dropPVRequest.getTargetWidget() != null &&
-                    dropPVRequest.getTargetWidget() instanceof XYGraphEditPart){
+        if (request.getType() == DropPVRequest.REQ_DROP_PV &&
+                request instanceof DropPVRequest) {
+            DropPVRequest dropPVRequest = (DropPVRequest) request;
+            if (dropPVRequest.getTargetWidget() != null &&
+                    dropPVRequest.getTargetWidget() instanceof XYGraphEditPart) {
                 CompoundCommand command = new CompoundCommand("Add Traces");
                 XYGraphModel xyGraphModel = (XYGraphModel) dropPVRequest.getTargetWidget().getWidgetModel();
                 int existTraces = xyGraphModel.getTracesAmount();
-                if(existTraces >= XYGraphModel.MAX_TRACES_AMOUNT)
+                if (existTraces >= XYGraphModel.MAX_TRACES_AMOUNT)
                     return null;
                 command.add(new SetWidgetPropertyCommand(xyGraphModel,
                         XYGraphModel.PROP_TRACE_COUNT, dropPVRequest.getPvNames().length + existTraces));
-                int i=existTraces;
-                for(String pvName : dropPVRequest.getPvNames()){
+                int i = existTraces;
+                for (String pvName : dropPVRequest.getPvNames()) {
                     command.add(new SetWidgetPropertyCommand(xyGraphModel, XYGraphModel.makeTracePropID(
-                                    XYGraphModel.TraceProperty.YPV.propIDPre, i), pvName));
+                            XYGraphModel.TraceProperty.YPV.propIDPre, i), pvName));
                     command.add(new SetWidgetPropertyCommand(xyGraphModel, XYGraphModel.makeTracePropID(
                             XYGraphModel.TraceProperty.NAME.propIDPre, i), pvName));
-                    if(++i >= XYGraphModel.MAX_TRACES_AMOUNT)
+                    if (++i >= XYGraphModel.MAX_TRACES_AMOUNT)
                         break;
                 }
                 return command;
@@ -56,10 +58,9 @@ public class DropPVtoXYGraphEditPolicy extends AbstractEditPolicy {
 
     @Override
     public EditPart getTargetEditPart(Request request) {
-        if(request.getType() == DropPVRequest.REQ_DROP_PV)
+        if (request.getType() == DropPVRequest.REQ_DROP_PV)
             return getHost();
         return super.getTargetEditPart(request);
     }
-
 
 }

@@ -21,16 +21,15 @@
  */
 package org.csstudio.opibuilder.model;
 
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-
 /**
  * The model for a Ruler.
+ * 
  * @author Kai Meyer
  *
  */
@@ -60,18 +59,19 @@ public final class RulerModel implements Serializable {
 
     /**
      * Constructor.
+     * 
      * @param isHorizontal
-     *             The orientation of this ruler
+     *            The orientation of this ruler
      */
     public RulerModel(final boolean isHorizontal) {
         _isHorizontal = isHorizontal;
     }
 
     /**
-     * Adds the given guide to this ruler.
-     * Notifies all registered listeners
+     * Adds the given guide to this ruler. Notifies all registered listeners
+     * 
      * @param guide
-     *             The guide to add
+     *            The guide to add
      */
     public void addGuide(final GuideModel guide) {
         if (!_guides.contains(guide)) {
@@ -82,10 +82,10 @@ public final class RulerModel implements Serializable {
     }
 
     /**
-     * Removes the given guide from this ruler.
-     * Notifies all registered listeners
+     * Removes the given guide from this ruler. Notifies all registered listeners
+     * 
      * @param guide
-     *             The guide to remove
+     *            The guide to remove
      */
     public void removeGuide(final GuideModel guide) {
         if (_guides.remove(guide)) {
@@ -95,8 +95,9 @@ public final class RulerModel implements Serializable {
 
     /**
      * Adds a PropertyChangeListener to this guide.
+     * 
      * @param listener
-     *             The listener to add
+     *            The listener to add
      */
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         _listeners.addPropertyChangeListener(listener);
@@ -104,8 +105,9 @@ public final class RulerModel implements Serializable {
 
     /**
      * Removes the PropertyChangeListener from this guide.
+     * 
      * @param listener
-     *             The listener to remove
+     *            The listener to remove
      */
     public void removePropertyChangeListener(final PropertyChangeListener listener) {
         _listeners.removePropertyChangeListener(listener);
@@ -113,8 +115,8 @@ public final class RulerModel implements Serializable {
 
     /**
      * Returns a List of all guides, contained by this ruler.
-     * @return List
-     *             A List of GuideModels
+     * 
+     * @return List A List of GuideModels
      */
     public List<GuideModel> getGuides() {
         return _guides;
@@ -122,8 +124,8 @@ public final class RulerModel implements Serializable {
 
     /**
      * Returns if this guide has a horizontal orientation.
-     * @return boolean
-     *             True, if this guide has a horizontal orientation, false otherwise
+     * 
+     * @return boolean True, if this guide has a horizontal orientation, false otherwise
      */
     public boolean isHorizontal() {
         return _isHorizontal;

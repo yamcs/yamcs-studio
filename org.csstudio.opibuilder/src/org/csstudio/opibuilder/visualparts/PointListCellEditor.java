@@ -72,8 +72,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
     private List<Point> _orgPointList;
 
     /**
-     * Creates a new string cell editor parented under the given control. The
-     * cell editor value is a PointList.
+     * Creates a new string cell editor parented under the given control. The cell editor value is a PointList.
      *
      * @param parent
      *            The parent table.
@@ -82,27 +81,21 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         super(parent, "Points");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void openDialog(final Shell parentShell, final String dialogTitle) {
-        PointListInputDialog dialog = new PointListInputDialog(parentShell,dialogTitle,"Add or remove Points");
-        if (dialog.open()==Window.CANCEL) {
+        PointListInputDialog dialog = new PointListInputDialog(parentShell, dialogTitle, "Add or remove Points");
+        if (dialog.open() == Window.CANCEL) {
             _pointList = _orgPointList;
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean shouldFireChanges() {
-        if (_pointList.size()==_orgPointList.size()) {
-            for (int i=0;i<_pointList.size();i++) {
+        if (_pointList.size() == _orgPointList.size()) {
+            for (int i = 0; i < _pointList.size(); i++) {
                 Point p1 = _pointList.get(i);
                 Point p2 = _orgPointList.get(i);
-                if (p1.x!=p2.x || p1.y!=p2.y) {
+                if (p1.x != p2.x || p1.y != p2.y) {
                     return true;
                 }
             }
@@ -111,9 +104,6 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Object doGetValue() {
         return this.listToPointList(_pointList);
@@ -121,10 +111,10 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
     /**
      * Creates a new PointList with the Points of the given List.
+     * 
      * @param list
-     *             A {@link List} which contains the Points
-     * @return PointList
-     *             The new {@link PointList}
+     *            A {@link List} which contains the Points
+     * @return PointList The new {@link PointList}
      */
     private PointList listToPointList(final List<Point> list) {
         PointList result = new PointList();
@@ -134,16 +124,13 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void doSetValue(final Object value) {
         Assert.isTrue(value instanceof PointList);
         PointList list = (PointList) value;
         _orgPointList = new LinkedList<Point>();
         _pointList = new LinkedList<Point>();
-        for (int i=0;i<list.size();i++) {
+        for (int i = 0; i < list.size(); i++) {
             _pointList.add(list.getPoint(i));
             _orgPointList.add(list.getPoint(i));
         }
@@ -189,20 +176,19 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         private Action _downAction;
 
         /**
-         * Creates an input dialog with OK and Cancel buttons. Note that the dialog
-         * will have no visual representation (no widgets) until it is told to open.
+         * Creates an input dialog with OK and Cancel buttons. Note that the dialog will have no visual representation
+         * (no widgets) until it is told to open.
          * <p>
          * Note that the <code>open</code> method blocks for input dialogs.
          * </p>
          *
          * @param parentShell
-         *            the parent shell, or <code>null</code> to create a top-level
-         *            shell
+         *            the parent shell, or <code>null</code> to create a top-level shell
          * @param dialogTitle
          *            the dialog title, or <code>null</code> if none
          * @param dialogMessage
          *            the dialog message, or <code>null</code> if none
-
+         * 
          */
         public PointListInputDialog(final Shell parentShell, final String dialogTitle,
                 final String dialogMessage) {
@@ -211,9 +197,6 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _message = dialogMessage;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected void configureShell(final Shell shell) {
             super.configureShell(shell);
@@ -222,9 +205,6 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected Control createDialogArea(final Composite parent) {
             Composite composite = (Composite) super.createDialogArea(parent);
@@ -240,8 +220,8 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                 label.setLayoutData(data);
             }
 
-            Composite toolBarComposite = new Composite(composite,SWT.BORDER);
-            GridLayout gridLayout = new GridLayout(1,false);
+            Composite toolBarComposite = new Composite(composite, SWT.BORDER);
+            GridLayout gridLayout = new GridLayout(1, false);
             gridLayout.marginLeft = 0;
             gridLayout.marginRight = 0;
             gridLayout.marginBottom = 0;
@@ -249,7 +229,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             gridLayout.marginHeight = 0;
             gridLayout.marginWidth = 0;
             toolBarComposite.setLayout(gridLayout);
-            GridData grid = new GridData(SWT.FILL,SWT.FILL,true,true);
+            GridData grid = new GridData(SWT.FILL, SWT.FILL, true, true);
             toolBarComposite.setLayoutData(grid);
 
             ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
@@ -269,8 +249,9 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
         /**
          * Creates Actions and adds them to the given {@link ToolBarManager}.
+         * 
          * @param manager
-         *             The ToolBarManager, which should contain the actions
+         *            The ToolBarManager, which should contain the actions
          */
         private void createActions(final ToolBarManager manager) {
             _addAction = new Action() {
@@ -279,11 +260,11 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                     openPointDialog(true);
                 }
             };
-            _addAction.setText("Add "+_title);
-            _addAction.setToolTipText("Adds a new "+_title+" to the list");
+            _addAction.setText("Add " + _title);
+            _addAction.setToolTipText("Adds a new " + _title + " to the list");
             _addAction.setImageDescriptor(CustomMediaFactory.getInstance()
                     .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                    "icons/add.gif"));
+                            "icons/add.gif"));
             manager.add(_addAction);
             _editAction = new Action() {
                 @Override
@@ -292,11 +273,11 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                     refreshActions();
                 }
             };
-            _editAction.setText("Edit "+_title);
-            _editAction.setToolTipText("Edits the selected "+_title);
+            _editAction.setText("Edit " + _title);
+            _editAction.setToolTipText("Edits the selected " + _title);
             _editAction.setImageDescriptor(CustomMediaFactory.getInstance()
                     .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                    "icons/edit.gif"));
+                            "icons/edit.gif"));
             _editAction.setEnabled(false);
             manager.add(_editAction);
             _removeAction = new Action() {
@@ -306,11 +287,11 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                     refreshActions();
                 }
             };
-            _removeAction.setText("Remove "+_title);
-            _removeAction.setToolTipText("Removes the selected "+_title+" from the list");
+            _removeAction.setText("Remove " + _title);
+            _removeAction.setToolTipText("Removes the selected " + _title + " from the list");
             _removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
                     .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                    "icons/delete.gif"));
+                            "icons/delete.gif"));
             _removeAction.setEnabled(false);
             manager.add(_removeAction);
             manager.add(new Separator());
@@ -324,7 +305,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _upAction.setToolTipText("Increases the index of the selected Point");
             _upAction.setImageDescriptor(CustomMediaFactory.getInstance()
                     .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                    "icons/search_prev.gif"));
+                            "icons/search_prev.gif"));
             _upAction.setEnabled(false);
             manager.add(_upAction);
             _downAction = new Action() {
@@ -337,7 +318,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _downAction.setToolTipText("Decreases the index of the selected Point");
             _downAction.setImageDescriptor(CustomMediaFactory.getInstance()
                     .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                    "icons/search_next.gif"));
+                            "icons/search_next.gif"));
             _downAction.setEnabled(false);
             manager.add(_downAction);
             manager.update(true);
@@ -345,10 +326,10 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
         /**
          * Creates the viewer for the List.
+         * 
          * @param parent
-         *                 The parent composite for the viewer
-         * @return ListViewer
-         *                 The ListViewer
+         *            The parent composite for the viewer
+         * @return ListViewer The ListViewer
          */
         private ListViewer createListViewer(final Composite parent) {
             final ListViewer viewer = new ListViewer(parent);
@@ -358,7 +339,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                 public String getText(final Object element) {
                     if (element instanceof Point) {
                         Point p = (Point) element;
-                        return p.toString();//p.x+","+p.y;
+                        return p.toString();// p.x+","+p.y;
                     }
                     return element.toString();
                 }
@@ -369,9 +350,6 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             gridData.heightHint = 150;
             viewer.getList().setLayoutData(gridData);
             viewer.getList().addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 */
                 @Override
                 public void widgetSelected(final SelectionEvent e) {
                     refreshActions();
@@ -383,8 +361,9 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
         /**
          * Adds a Popup menu to the given ListViewer.
+         * 
          * @param viewer
-         *             The ListViewer
+         *            The ListViewer
          */
         private void hookPopupMenu(final ListViewer viewer) {
             MenuManager popupMenu = new MenuManager();
@@ -401,14 +380,15 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
         /**
          * Adds doubleclick support to the given ListViewer.
+         * 
          * @param viewer
-         *             The Listviewer
+         *            The Listviewer
          */
         private void hookDoubleClick(final ListViewer viewer) {
             viewer.getControl().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseDoubleClick(final MouseEvent e) {
-                    if (_viewer.getList().getSelectionCount()==1) {
+                    if (_viewer.getList().getSelectionCount() == 1) {
                         _editAction.run();
                     } else {
                         _addAction.run();
@@ -419,17 +399,18 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
         /**
          * Opens a Dialog for adding a new Point.
+         * 
          * @param isNew
-         *                 True, if a new Point should be created, false otherwise
+         *            True, if a new Point should be created, false otherwise
          */
         private void openPointDialog(final boolean isNew) {
             int index = _viewer.getList().getItemCount();
             int[] selectedIndices = _viewer.getList().getSelectionIndices();
-            if (selectedIndices.length>0) {
+            if (selectedIndices.length > 0) {
                 index = selectedIndices[0];
             }
-            PointDialog dialog = new PointDialog(this.getParentShell(),"Point", null, index, isNew);
-            if (dialog.open()==Window.OK) {
+            PointDialog dialog = new PointDialog(this.getParentShell(), "Point", null, index, isNew);
+            if (dialog.open() == Window.OK) {
                 this.setInput();
             }
             _viewer.getList().setSelection(index);
@@ -440,10 +421,10 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
          * Removes the current selected Points from the List.
          */
         private void removePoint() {
-            if (_viewer.getList().getSelectionIndices().length>0) {
+            if (_viewer.getList().getSelectionIndices().length > 0) {
                 int[] selectedIndices = _viewer.getList().getSelectionIndices();
                 Arrays.sort(selectedIndices);
-                int i=0;
+                int i = 0;
                 for (int s : selectedIndices) {
                     _pointList.remove(s - i);
                     i++;
@@ -457,35 +438,38 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
          * Enables or disables the RemoveButton.
          */
         private void refreshActions() {
-            if (_viewer.getList().getItemCount()>2) {
-                _removeAction.setEnabled(_viewer.getList().getSelectionIndices().length>0);
+            if (_viewer.getList().getItemCount() > 2) {
+                _removeAction.setEnabled(_viewer.getList().getSelectionIndices().length > 0);
             } else {
                 _removeAction.setEnabled(false);
             }
-            _editAction.setEnabled(_viewer.getList().getSelectionIndices().length==1);
-            _upAction.setEnabled(_viewer.getList().getSelectionIndices().length==1 && _viewer.getList().getSelectionIndex()>0);
-            _downAction.setEnabled(_viewer.getList().getSelectionIndices().length==1 && _viewer.getList().getSelectionIndex()<_viewer.getList().getItemCount()-1);
+            _editAction.setEnabled(_viewer.getList().getSelectionIndices().length == 1);
+            _upAction.setEnabled(
+                    _viewer.getList().getSelectionIndices().length == 1 && _viewer.getList().getSelectionIndex() > 0);
+            _downAction.setEnabled(_viewer.getList().getSelectionIndices().length == 1
+                    && _viewer.getList().getSelectionIndex() < _viewer.getList().getItemCount() - 1);
         }
 
         /**
          * Moves the current selected Point one step up or down, depending on the given boolean.
+         * 
          * @param up
-         *             True, if the Point should be moved up, false otherwise
+         *            True, if the Point should be moved up, false otherwise
          */
         private void movePoint(final boolean up) {
             int newIndex = _viewer.getList().getSelectionIndex();
             Point point = _pointList.get(newIndex);
             _pointList.remove(newIndex);
             if (up) {
-                newIndex = newIndex-1;
+                newIndex = newIndex - 1;
             } else {
-                newIndex = newIndex+1;
+                newIndex = newIndex + 1;
             }
-            if (newIndex<0) {
+            if (newIndex < 0) {
                 newIndex = 0;
             }
-            if (newIndex>_pointList.size()) {
-                newIndex=_pointList.size();
+            if (newIndex > _pointList.size()) {
+                newIndex = _pointList.size();
             }
             _pointList.add(newIndex, point);
             this.setInput();
@@ -505,6 +489,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
     /**
      * This class represents a Dialog for editing a Point.
+     * 
      * @author Kai Meyer
      */
     private final class PointDialog extends Dialog {
@@ -534,15 +519,14 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         private boolean _isNew;
 
         /**
-         * Creates an input dialog with OK and Cancel buttons. Note that the dialog
-         * will have no visual representation (no widgets) until it is told to open.
+         * Creates an input dialog with OK and Cancel buttons. Note that the dialog will have no visual representation
+         * (no widgets) until it is told to open.
          * <p>
          * Note that the <code>open</code> method blocks for input dialogs.
          * </p>
          *
          * @param parentShell
-         *            the parent shell, or <code>null</code> to create a top-level
-         *            shell
+         *            the parent shell, or <code>null</code> to create a top-level shell
          * @param dialogTitle
          *            the dialog title, or <code>null</code> if none
          * @param dialogMessage
@@ -558,14 +542,11 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _title = dialogTitle;
             _message = dialogMessage;
             _isNew = isNew;
-            if (initialValue>=0) {
+            if (initialValue >= 0) {
                 _index = initialValue;
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected void configureShell(final Shell shell) {
             super.configureShell(shell);
@@ -574,9 +555,6 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected Control createDialogArea(final Composite parent) {
             Composite composite = (Composite) super.createDialogArea(parent);
@@ -596,7 +574,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _xSpinner = new Spinner(composite, SWT.BORDER);
             _xSpinner.setMaximum(10000);
             _xSpinner.setMinimum(-10000);
-            if (_index<0 || _index >=_pointList.size()) {
+            if (_index < 0 || _index >= _pointList.size()) {
                 _xSpinner.setSelection(0);
             } else {
                 _xSpinner.setSelection(_pointList.get(_index).x);
@@ -606,7 +584,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             _ySpinner = new Spinner(composite, SWT.BORDER);
             _ySpinner.setMaximum(10000);
             _ySpinner.setMinimum(-10000);
-            if (_index<0 || _index >=_pointList.size()) {
+            if (_index < 0 || _index >= _pointList.size()) {
                 _ySpinner.setSelection(0);
             } else {
                 _ySpinner.setSelection(_pointList.get(_index).y);
@@ -614,19 +592,16 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             return composite;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         protected void okPressed() {
             this.getButton(IDialogConstants.OK_ID).setFocus();
-            if (_index>=0) {
+            if (_index >= 0) {
                 if (!_isNew) {
                     _pointList.remove(_index);
                 }
                 _pointList.add(_index, new Point(_xSpinner.getSelection(), _ySpinner.getSelection()));
             }
-            //_pointList.add(new Point(_xSpinner.getSelection(), _ySpinner.getSelection()));
+            // _pointList.add(new Point(_xSpinner.getSelection(), _ySpinner.getSelection()));
             super.okPressed();
         }
     }

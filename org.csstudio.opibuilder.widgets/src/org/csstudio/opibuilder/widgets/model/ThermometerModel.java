@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.widgets.model;
 
-
 import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.ColorProperty;
 import org.csstudio.opibuilder.properties.ComboProperty;
@@ -16,13 +15,13 @@ import org.csstudio.swt.widgets.figures.ThermometerFigure.TemperatureUnit;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
  * This class defines a thermometer widget model.
+ * 
  * @author Xihui Chen
  * @author Takashi Nakamoto - added "FillColor Alarm Sensitive" property
  */
-public class ThermometerModel extends AbstractMarkedWidgetModel{
+public class ThermometerModel extends AbstractMarkedWidgetModel {
 
     /** The ID of the fill color property. */
     public static final String PROP_FILL_COLOR = "fill_color";
@@ -44,9 +43,8 @@ public class ThermometerModel extends AbstractMarkedWidgetModel{
      */
     public static final String PROP_FILLBACKGROUND_COLOR = "color_fillbackground";
 
-
     /** The default value of the default fill color property. */
-    private static final RGB DEFAULT_FILL_COLOR = new RGB(255,0,0);
+    private static final RGB DEFAULT_FILL_COLOR = new RGB(255, 0, 0);
 
     /** The default value of the height property. */
     private static final int DEFAULT_HEIGHT = 200;
@@ -57,7 +55,7 @@ public class ThermometerModel extends AbstractMarkedWidgetModel{
     /**
      * The default value of the fillbackground color property.
      */
-    private static final RGB DEFAULT_FILLBACKGROUND_COLOR = new RGB(210,210,210);
+    private static final RGB DEFAULT_FILLBACKGROUND_COLOR = new RGB(210, 210, 210);
 
     /**
      * The ID of this widget model.
@@ -66,7 +64,7 @@ public class ThermometerModel extends AbstractMarkedWidgetModel{
 
     public ThermometerModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setForegroundColor(new RGB(0,0,0));
+        setForegroundColor(new RGB(0, 0, 0));
     }
 
     @Override
@@ -94,8 +92,6 @@ public class ThermometerModel extends AbstractMarkedWidgetModel{
         setPropertyValue(PROP_HI_COLOR, new RGB(255, 128, 0));
 
     }
-
-
 
     @Override
     public String getTypeID() {
@@ -139,6 +135,7 @@ public class ThermometerModel extends AbstractMarkedWidgetModel{
 
     /**
      * Gets the RGB for fillbackground.
+     * 
      * @return The fillbackground color
      */
     public Color getFillbackgroundColor() {

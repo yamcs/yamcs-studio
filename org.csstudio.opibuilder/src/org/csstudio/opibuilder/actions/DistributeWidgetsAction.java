@@ -23,13 +23,15 @@ import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**The actions to distribute widgets.
+/**
+ * The actions to distribute widgets.
+ * 
  * @author Xihui Chen
  *
  */
 public class DistributeWidgetsAction extends SelectionAction {
 
-    public enum DistributeType{
+    public enum DistributeType {
         HORIZONTAL_GAP("Distribute by Horizontal GAP", "icons/distribute_hg.png"),
         HORIZONTAL_CENTERS("Distribute by Horizontal Centers", "icons/distribute_hc.png"),
         HORIZONTAL_COMPRESS("Distribute by Horizontal Compress", "icons/distribute_hcompress.png"),
@@ -39,20 +41,21 @@ public class DistributeWidgetsAction extends SelectionAction {
 
         private String label;
         private String iconPath;
+
         private DistributeType(String label, String iconPath) {
             this.label = label;
             this.iconPath = iconPath;
         }
 
-        public String getLabel(){
+        public String getLabel() {
             return label;
         }
 
-        public String getActionID(){
+        public String getActionID() {
             return "org.csstudio.opibuilder.actions." + toString();
         }
 
-        public ImageDescriptor getImageDescriptor(){
+        public ImageDescriptor getImageDescriptor() {
             return CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
                     OPIBuilderPlugin.PLUGIN_ID, iconPath);
         }
@@ -62,10 +65,11 @@ public class DistributeWidgetsAction extends SelectionAction {
     private DistributeType distributeType;
 
     /**
-     * @param part the OPI Editor
-     * @param pasteWidgetsAction pass the paste action will
-     * help to update the enable state of the paste action
-     * after copy action invoked.
+     * @param part
+     *            the OPI Editor
+     * @param pasteWidgetsAction
+     *            pass the paste action will help to update the enable state of the paste action after copy action
+     *            invoked.
      */
     public DistributeWidgetsAction(IWorkbenchPart part, DistributeType distributeType) {
         super(part);
@@ -77,11 +81,10 @@ public class DistributeWidgetsAction extends SelectionAction {
 
     @Override
     protected boolean calculateEnabled() {
-        if(getSelectedWidgetModels().size() < 2)
+        if (getSelectedWidgetModels().size() < 2)
             return false;
         return true;
     }
-
 
     @Override
     public void run() {
@@ -109,156 +112,148 @@ public class DistributeWidgetsAction extends SelectionAction {
         }
     }
 
-
-    private Command getHorizontalGapCommand(){
+    private Command getHorizontalGapCommand() {
         AbstractWidgetModel[] sortedModelArray = getSortedModelArray(true);
         CompoundCommand cmd = new CompoundCommand("Horizontal Gap Distribution");
         int widthSum = 0;
-        for(int i=1; i<sortedModelArray.length-1; i++){
+        for (int i = 1; i < sortedModelArray.length - 1; i++) {
             widthSum += sortedModelArray[i].getWidth();
         }
-        int averageGap = (sortedModelArray[sortedModelArray.length-1].getX() -
-            (sortedModelArray[0].getX() + sortedModelArray[0].getWidth()) - widthSum)
-            /(sortedModelArray.length-1);
+        int averageGap = (sortedModelArray[sortedModelArray.length - 1].getX() -
+                (sortedModelArray[0].getX() + sortedModelArray[0].getWidth()) - widthSum)
+                / (sortedModelArray.length - 1);
 
         int startX = sortedModelArray[0].getX() + sortedModelArray[0].getWidth();
-        for(int i=1; i<sortedModelArray.length-1; i++){
-             cmd.add(new SetWidgetPropertyCommand(
-                     sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
-                     startX + averageGap));
-             startX += averageGap + sortedModelArray[i].getWidth();
+        for (int i = 1; i < sortedModelArray.length - 1; i++) {
+            cmd.add(new SetWidgetPropertyCommand(
+                    sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
+                    startX + averageGap));
+            startX += averageGap + sortedModelArray[i].getWidth();
         }
 
         return cmd;
 
     }
 
-
-    private Command getVerticalGapCommand(){
+    private Command getVerticalGapCommand() {
         AbstractWidgetModel[] sortedModelArray = getSortedModelArray(false);
         CompoundCommand cmd = new CompoundCommand("Vertical Gap Distribution");
         int widthSum = 0;
-        for(int i=1; i<sortedModelArray.length-1; i++){
+        for (int i = 1; i < sortedModelArray.length - 1; i++) {
             widthSum += sortedModelArray[i].getHeight();
         }
-        int averageGap = (sortedModelArray[sortedModelArray.length-1].getY() -
-            (sortedModelArray[0].getY() + sortedModelArray[0].getHeight()) - widthSum)
-            /(sortedModelArray.length-1);
+        int averageGap = (sortedModelArray[sortedModelArray.length - 1].getY() -
+                (sortedModelArray[0].getY() + sortedModelArray[0].getHeight()) - widthSum)
+                / (sortedModelArray.length - 1);
         int startX = sortedModelArray[0].getY() + sortedModelArray[0].getHeight();
-        for(int i=1; i<sortedModelArray.length; i++){
-             cmd.add(new SetWidgetPropertyCommand(
-                     sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
-                     startX + averageGap));
-             startX += averageGap + sortedModelArray[i].getHeight();
+        for (int i = 1; i < sortedModelArray.length; i++) {
+            cmd.add(new SetWidgetPropertyCommand(
+                    sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
+                    startX + averageGap));
+            startX += averageGap + sortedModelArray[i].getHeight();
         }
 
         return cmd;
 
     }
 
-
-
-    private Command getHorizontalCenterCommand(){
+    private Command getHorizontalCenterCommand() {
         AbstractWidgetModel[] sortedModelArray = getSortedModelArray(true);
         CompoundCommand cmd = new CompoundCommand("Horizontal Center Distribution");
 
-        int averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length-1], true) -
-            getCenterLoc(sortedModelArray[0], true))
-            /(sortedModelArray.length-1);
+        int averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length - 1], true) -
+                getCenterLoc(sortedModelArray[0], true))
+                / (sortedModelArray.length - 1);
 
         int startX = getCenterLoc(sortedModelArray[0], true);
-        for(int i=1; i<sortedModelArray.length-1; i++){
-             cmd.add(new SetWidgetPropertyCommand(
-                     sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
-                     startX + averageGap - sortedModelArray[i].getWidth()/2));
-             startX += averageGap;
+        for (int i = 1; i < sortedModelArray.length - 1; i++) {
+            cmd.add(new SetWidgetPropertyCommand(
+                    sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
+                    startX + averageGap - sortedModelArray[i].getWidth() / 2));
+            startX += averageGap;
         }
         return cmd;
 
     }
 
-    private Command getVerticalCenterCommand(){
+    private Command getVerticalCenterCommand() {
         AbstractWidgetModel[] sortedModelArray = getSortedModelArray(false);
         CompoundCommand cmd = new CompoundCommand("Vertical Center Distribution");
 
-        int averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length-1], false) -
-            getCenterLoc(sortedModelArray[0], false))
-            /(sortedModelArray.length-1);
+        int averageGap = (getCenterLoc(sortedModelArray[sortedModelArray.length - 1], false) -
+                getCenterLoc(sortedModelArray[0], false))
+                / (sortedModelArray.length - 1);
 
         int startX = getCenterLoc(sortedModelArray[0], false);
-        for(int i=1; i<sortedModelArray.length-1; i++){
-             cmd.add(new SetWidgetPropertyCommand(
-                     sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
-                     startX + averageGap - sortedModelArray[i].getHeight()/2));
-             startX += averageGap;
+        for (int i = 1; i < sortedModelArray.length - 1; i++) {
+            cmd.add(new SetWidgetPropertyCommand(
+                    sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
+                    startX + averageGap - sortedModelArray[i].getHeight() / 2));
+            startX += averageGap;
         }
         return cmd;
 
     }
 
-
-    private Command getHorizontalCompressCommand(){
+    private Command getHorizontalCompressCommand() {
         AbstractWidgetModel[] sortedModelArray = getSortedModelArray(true);
         CompoundCommand cmd = new CompoundCommand("Horizontal Compress Distribution");
 
         int startX = sortedModelArray[0].getX() + sortedModelArray[0].getWidth();
-        for(int i=1; i<sortedModelArray.length; i++){
-             cmd.add(new SetWidgetPropertyCommand(
-                     sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
-                     startX));
-             startX += sortedModelArray[i].getWidth();
+        for (int i = 1; i < sortedModelArray.length; i++) {
+            cmd.add(new SetWidgetPropertyCommand(
+                    sortedModelArray[i], AbstractWidgetModel.PROP_XPOS,
+                    startX));
+            startX += sortedModelArray[i].getWidth();
         }
 
         return cmd;
 
     }
 
-    private Command getVerticalCompressCommand(){
+    private Command getVerticalCompressCommand() {
         AbstractWidgetModel[] sortedModelArray = getSortedModelArray(false);
         CompoundCommand cmd = new CompoundCommand("Vertical Compress Distribution");
 
         int startX = sortedModelArray[0].getY() + sortedModelArray[0].getHeight();
-        for(int i=1; i<sortedModelArray.length; i++){
-             cmd.add(new SetWidgetPropertyCommand(
-                     sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
-                     startX));
-             startX += sortedModelArray[i].getHeight();
+        for (int i = 1; i < sortedModelArray.length; i++) {
+            cmd.add(new SetWidgetPropertyCommand(
+                    sortedModelArray[i], AbstractWidgetModel.PROP_YPOS,
+                    startX));
+            startX += sortedModelArray[i].getHeight();
         }
 
         return cmd;
 
     }
 
-
-
-    private int getCenterLoc(AbstractWidgetModel model, boolean x){
-        if(x)
-            return model.getX() + model.getWidth()/2;
+    private int getCenterLoc(AbstractWidgetModel model, boolean x) {
+        if (x)
+            return model.getX() + model.getWidth() / 2;
         else
-            return model.getY() + model.getHeight()/2;
+            return model.getY() + model.getHeight() / 2;
     }
 
-    private AbstractWidgetModel[] getSortedModelArray(final boolean byHorizontal){
-        AbstractWidgetModel[] modelArray =
-            new AbstractWidgetModel[getSelectedWidgetModels().size()];
-        int i=0;
-        for(AbstractWidgetModel model : getSelectedWidgetModels()){
+    private AbstractWidgetModel[] getSortedModelArray(final boolean byHorizontal) {
+        AbstractWidgetModel[] modelArray = new AbstractWidgetModel[getSelectedWidgetModels().size()];
+        int i = 0;
+        for (AbstractWidgetModel model : getSelectedWidgetModels()) {
             modelArray[i++] = model;
         }
-        Arrays.sort(modelArray,new Comparator<AbstractWidgetModel>(){
+        Arrays.sort(modelArray, new Comparator<AbstractWidgetModel>() {
             @Override
             public int compare(AbstractWidgetModel o1, AbstractWidgetModel o2) {
                 int o1loc, o2loc;
-                if(byHorizontal){
+                if (byHorizontal) {
                     o1loc = o1.getLocation().x;
                     o2loc = o2.getLocation().x;
-                }else{
+                } else {
                     o1loc = o1.getLocation().y;
                     o2loc = o2.getLocation().y;
                 }
-                if(o1loc < o2loc)
+                if (o1loc < o2loc)
                     return -1;
-                else if(o1loc> o2loc)
+                else if (o1loc > o2loc)
                     return 1;
                 else
                     return 0;
@@ -266,7 +261,6 @@ public class DistributeWidgetsAction extends SelectionAction {
         });
         return modelArray;
     }
-
 
     /**
      * Gets the widget models of all currently selected EditParts.

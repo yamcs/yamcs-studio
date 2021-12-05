@@ -22,15 +22,13 @@ public class DSFunction implements Comparable<DSFunction> {
     private String tooltip;
     private final Class<?> returnType;
     /**
-     * Whether the function is a pure function, given the same arguments always
-     * returns the same result.
+     * Whether the function is a pure function, given the same arguments always returns the same result.
      */
     private final boolean isPure;
     /**
      * Whether the function takes a variable number of arguments.
      * <p>
-     * Variable arguments can only be at the end of the argument list, and have
-     * the same type.
+     * Variable arguments can only be at the end of the argument list, and have the same type.
      */
     private final boolean isVarArgs;
     /**

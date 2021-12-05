@@ -12,30 +12,27 @@ import org.csstudio.opibuilder.properties.BooleanProperty;
 import org.csstudio.opibuilder.properties.IntegerProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 
-/**The widget model for grid layout widget which layout widgets in grids.
+/**
+ * The widget model for grid layout widget which layout widgets in grids.
+ * 
  * @author Xihui Chen
  *
  */
 public class GridLayoutModel extends AbstractLayoutModel {
 
-
-    /** Number of columns*/
+    /** Number of columns */
     public static final String PROP_NUMBER_OF_COLUMNS = "number_of_columns";
 
-    /** Fill extra spaces in a grid*/
+    /** Fill extra spaces in a grid */
     public static final String PROP_FILL_GRIDS = "fill_grids";
 
-
-    /** The gap between grids*/
+    /** The gap between grids */
     public static final String PROP_GRID_GAP = "grid_gap";
-
-
 
     /**
      * The ID of this widget model.
      */
     public static final String ID = "org.csstudio.opibuilder.widgets.gridLayout";
-
 
     @Override
     protected void configureProperties() {
@@ -55,16 +52,16 @@ public class GridLayoutModel extends AbstractLayoutModel {
         return ID;
     }
 
-    public int getNumberOfColumns(){
-        return (Integer)getPropertyValue(PROP_NUMBER_OF_COLUMNS);
+    public int getNumberOfColumns() {
+        return (Integer) getPropertyValue(PROP_NUMBER_OF_COLUMNS);
     }
 
-    public boolean isFillGrids(){
-        return (Boolean)getPropertyValue(PROP_FILL_GRIDS);
+    public boolean isFillGrids() {
+        return (Boolean) getPropertyValue(PROP_FILL_GRIDS);
     }
 
-    public int getGridGap(){
-        return (Integer)getPropertyValue(PROP_GRID_GAP);
+    public int getGridGap() {
+        return (Integer) getPropertyValue(PROP_GRID_GAP);
     }
 
 }

@@ -21,17 +21,13 @@ import org.csstudio.swt.widgets.figures.KnobFigure;
 import org.eclipse.draw2d.IFigure;
 
 /**
- * EditPart controller for the knob widget. The controller mediates between
- * {@link KnobModel} and {@link KnobFigure}.
+ * EditPart controller for the knob widget. The controller mediates between {@link KnobModel} and {@link KnobFigure}.
  *
  * @author Xihui Chen
  *
  */
 public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected IFigure doCreateFigure() {
         final KnobModel model = (KnobModel) getModel();
@@ -51,7 +47,7 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
 
             @Override
             public void manualValueChanged(double newValue) {
-                if (getExecutionMode() == ExecutionMode.RUN_MODE){
+                if (getExecutionMode() == ExecutionMode.RUN_MODE) {
                     setPVValue(AbstractPVWidgetModel.PROP_PVNAME, newValue);
                 }
             }
@@ -63,14 +59,11 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
         registerCommonPropertyChangeHandlers();
 
-        //knob color
+        // knob color
         IWidgetPropertyChangeHandler knobColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -83,8 +76,7 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(KnobModel.PROP_KNOB_COLOR, knobColorHandler);
 
-
-        //thumbColor
+        // thumbColor
         IWidgetPropertyChangeHandler thumbColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -97,7 +89,7 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(KnobModel.PROP_THUMB_COLOR, thumbColorHandler);
 
-        //effect 3D
+        // effect 3D
         IWidgetPropertyChangeHandler effect3DHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -110,8 +102,7 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(KnobModel.PROP_EFFECT3D, effect3DHandler);
 
-
-        //show value label
+        // show value label
         IWidgetPropertyChangeHandler valueLabelHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -124,7 +115,7 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(KnobModel.PROP_SHOW_VALUE_LABEL, valueLabelHandler);
 
-        //Ramp gradient
+        // Ramp gradient
         IWidgetPropertyChangeHandler gradientHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
@@ -137,30 +128,27 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
         };
         setPropertyChangeHandler(KnobModel.PROP_RAMP_GRADIENT, gradientHandler);
 
-
-
-
-        //increment
+        // increment
         IWidgetPropertyChangeHandler incrementHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
                 KnobFigure knob = (KnobFigure) refreshableFigure;
-                knob.setIncrement((Double)newValue);
+                knob.setIncrement((Double) newValue);
                 return false;
             }
         };
         setPropertyChangeHandler(KnobModel.PROP_INCREMENT, incrementHandler);
 
-        //force square size
+        // force square size
         final IWidgetPropertyChangeHandler sizeHandler = new IWidgetPropertyChangeHandler() {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                if(((Integer)newValue) < KnobModel.MINIMUM_SIZE)
+                if (((Integer) newValue) < KnobModel.MINIMUM_SIZE)
                     newValue = KnobModel.MINIMUM_SIZE;
-                getWidgetModel().setSize((Integer)newValue, (Integer)newValue);
+                getWidgetModel().setSize((Integer) newValue, (Integer) newValue);
                 return false;
             }
         };
@@ -171,10 +159,8 @@ public final class KnobEditPart extends AbstractMarkedWidgetEditPart {
                 sizeHandler.handleChange(evt.getOldValue(), evt.getNewValue(), getFigure());
             }
         };
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).
-            addPropertyChangeListener(sizeListener);
-        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT).
-            addPropertyChangeListener(sizeListener);
+        getWidgetModel().getProperty(AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(sizeListener);
+        getWidgetModel().getProperty(AbstractWidgetModel.PROP_HEIGHT).addPropertyChangeListener(sizeListener);
 
     }
 

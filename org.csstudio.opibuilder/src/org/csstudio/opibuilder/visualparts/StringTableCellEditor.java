@@ -16,7 +16,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-/**The cellEditor for macros property descriptor.
+/**
+ * The cellEditor for macros property descriptor.
+ * 
  * @author Xihui Chen
  *
  */
@@ -41,10 +43,9 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
 
-        StringTableEditDialog dialog =
-            new StringTableEditDialog(parentShell, arrayToList(data), dialogTitle,
-                    columnTitles.getTitles(), cellEditorTypes, cellEditorDatas);
-        if(dialog.open() == Window.OK){
+        StringTableEditDialog dialog = new StringTableEditDialog(parentShell, arrayToList(data), dialogTitle,
+                columnTitles.getTitles(), cellEditorTypes, cellEditorDatas);
+        if (dialog.open() == Window.OK) {
             data = listToArray(dialog.getResult());
         }
     }
@@ -61,13 +62,13 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if(value == null || !(value instanceof String[][]))
+        if (value == null || !(value instanceof String[][]))
             data = new String[0][0];
         else
-            data = (String[][])value;
+            data = (String[][]) value;
     }
 
-    private List<String[]> arrayToList(String[][] content){
+    private List<String[]> arrayToList(String[][] content) {
         List<String[]> input = new ArrayList<String[]>();
         if (content.length <= 0) {
             return input;
@@ -76,19 +77,19 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
         for (int i = 0; i < content.length; i++) {
             String[] row = new String[col];
             for (int j = 0; j < col; j++) {
-                if(j < content[i].length)
-                    row[j]=content[i][j];
+                if (j < content[i].length)
+                    row[j] = content[i][j];
                 else
-                    row[j]="";
+                    row[j] = "";
             }
             input.add(row);
         }
         return input;
     }
 
-    private String[][] listToArray(List<String[]> list){
+    private String[][] listToArray(List<String[]> list) {
         int col = 0;
-        if(list.size() >0){
+        if (list.size() > 0) {
             col = list.get(0).length;
         }
         String[][] result = new String[list.size()][col];
@@ -99,7 +100,5 @@ public class StringTableCellEditor extends AbstractDialogCellEditor {
         }
         return result;
     }
-
-
 
 }

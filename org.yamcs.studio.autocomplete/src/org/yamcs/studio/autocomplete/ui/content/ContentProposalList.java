@@ -21,9 +21,8 @@ import org.yamcs.studio.autocomplete.proposals.ProposalStyle;
 import org.yamcs.studio.autocomplete.ui.IAutoCompleteProposalProvider;
 
 /**
- * Handles all proposals from all providers.
- * Applies rules on top proposals.
- * Filled by {@link IAutoCompleteProposalProvider}.
+ * Handles all proposals from all providers. Applies rules on top proposals. Filled by
+ * {@link IAutoCompleteProposalProvider}.
  *
  * @author Fred Arnaud (Sopra Group) - ITER
  */

@@ -26,23 +26,21 @@ import org.eclipse.gef.EditPolicy;
  */
 public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelegate {
 
-
     private TextInputEditpart editpart;
     private TextInputModel model;
     private TextInputFigure textInputFigure;
 
-
-
     /**
      * @param editpart
      * @param model
-     * @param superFigure the figure created by super.doCreateFigure().
+     * @param superFigure
+     *            the figure created by super.doCreateFigure().
      */
     public Draw2DTextInputEditpartDelegate(TextInputEditpart editpart,
             TextInputModel model, TextInputFigure superFigure) {
         this.editpart = editpart;
         this.model = model;
-        this.textInputFigure =superFigure;
+        this.textInputFigure = superFigure;
     }
 
     @Override
@@ -60,13 +58,14 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
                         outputText(newValue);
                     }
 
-
                 });
 
         return textInputFigure;
     }
 
-    /**Call this method when user hit Enter or Ctrl+Enter for multiline input.
+    /**
+     * Call this method when user hit Enter or Ctrl+Enter for multiline input.
+     * 
      * @param newValue
      */
     protected void outputText(String newValue) {
@@ -84,7 +83,6 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
         }
     }
 
-
     @Override
     public void createEditPolicies() {
         editpart.installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE,
@@ -98,7 +96,7 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((TextInputFigure)figure).setSelectorType(model.getSelectorType());
+                ((TextInputFigure) figure).setSelectorType(model.getSelectorType());
                 return false;
             }
         };
@@ -144,7 +142,6 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
                 fileReturnPartHandler);
     }
 
-
     /**
      * @param newValue
      */
@@ -172,7 +169,5 @@ public class Draw2DTextInputEditpartDelegate implements ITextInputEditPartDelega
         }
 
     }
-
-
 
 }

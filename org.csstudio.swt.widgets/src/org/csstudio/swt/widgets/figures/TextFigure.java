@@ -29,8 +29,7 @@ import org.eclipse.swt.graphics.FontData;
  * @author Xihui Chen
  *
  */
-public class TextFigure extends Figure implements Introspectable, ITextFigure{
-
+public class TextFigure extends Figure implements Introspectable, ITextFigure {
 
     protected V_ALIGN verticalAlignment = V_ALIGN.TOP;
     protected H_ALIGN horizontalAlignment = H_ALIGN.LEFT;
@@ -42,7 +41,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     private Point textLocation;
     private Dimension textSize;
 
-    private final Point POINT_ZERO = new Point(0,0);
+    private final Point POINT_ZERO = new Point(0, 0);
 
     private double rotate = 0;
 
@@ -60,7 +59,8 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     /**
      * Constructor
      *
-     * @param runMode true if this figure is in run mode; false if in edit mode.
+     * @param runMode
+     *            true if this figure is in run mode; false if in edit mode.
      */
     public TextFigure(boolean runMode) {
         this.runMode = runMode;
@@ -68,13 +68,13 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
 
     protected void calculateTextLocation(Font font) {
         if (getRotate() == 0) {
-            if(verticalAlignment == V_ALIGN.TOP && horizontalAlignment == H_ALIGN.LEFT){
+            if (verticalAlignment == V_ALIGN.TOP && horizontalAlignment == H_ALIGN.LEFT) {
                 textLocation = POINT_ZERO;
                 return;
             }
             Rectangle textArea = getTextArea();
             Dimension textSize = getTextSize(font);
-                int x=0;
+            int x = 0;
 
             switch (horizontalAlignment) {
             case CENTER:
@@ -117,19 +117,19 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
             case CENTER:
                 if (getRotate() <= 90) {
                     double w = textSize.width * Math.cos(theta)
-                             + textSize.height * Math.sin(theta);
+                            + textSize.height * Math.sin(theta);
                     x = (int) (((double) textArea.width - w) / 2.0 + textSize.height * Math.sin(theta));
                 } else if (getRotate() <= 180) {
                     double w = textSize.height * Math.sin(theta)
-                             - textSize.width * Math.cos(theta);
+                            - textSize.width * Math.cos(theta);
                     x = (int) ((double) textArea.width - ((double) textArea.width - w) / 2.0);
                 } else if (getRotate() <= 270) {
-                    double w = - textSize.width * Math.cos(theta)
-                               - textSize.height * Math.sin(theta);
+                    double w = -textSize.width * Math.cos(theta)
+                            - textSize.height * Math.sin(theta);
                     x = (int) (((double) textArea.width - w) / 2.0 - textSize.width * Math.cos(theta));
                 } else {
                     double w = textSize.width * Math.cos(theta)
-                             - textSize.height * Math.sin(theta);
+                            - textSize.height * Math.sin(theta);
                     x = (int) (((double) textArea.width - w) / 2.0);
                 }
                 break;
@@ -139,10 +139,10 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
                 } else if (getRotate() <= 180) {
                     x = textArea.width;
                 } else if (getRotate() <= 270) {
-                    x = textArea.width - (int) (- textSize.height * Math.sin(theta));
+                    x = textArea.width - (int) (-textSize.height * Math.sin(theta));
                 } else {
                     x = textArea.width
-                        - (int) (textSize.width * Math.cos(theta) - textSize.height * Math.sin(theta));
+                            - (int) (textSize.width * Math.cos(theta) - textSize.height * Math.sin(theta));
                 }
                 break;
             case LEFT:
@@ -151,9 +151,9 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
                     x = (int) (textSize.height * Math.sin(theta));
                 } else if (getRotate() <= 180) {
                     x = (int) (textSize.height * Math.sin(theta)
-                             - textSize.width * Math.cos(theta));
+                            - textSize.width * Math.cos(theta));
                 } else if (getRotate() <= 270) {
-                    x = (int) (- textSize.width * Math.cos(theta));
+                    x = (int) (-textSize.width * Math.cos(theta));
                 } else {
                     x = 0;
                 }
@@ -164,26 +164,26 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
             case MIDDLE:
                 if (getRotate() <= 90) {
                     double h = textSize.width * Math.sin(theta)
-                             + textSize.height * Math.cos(theta);
+                            + textSize.height * Math.cos(theta);
                     y = (int) (((double) textArea.height - h) / 2.0);
                 } else if (getRotate() <= 180) {
                     double h = textSize.width * Math.sin(theta)
-                             - textSize.height * Math.cos(theta);
+                            - textSize.height * Math.cos(theta);
                     y = (int) (((double) textArea.height - h) / 2.0 - textSize.height * Math.cos(theta));
                 } else if (getRotate() <= 270) {
-                    double h = - textSize.width * Math.sin(theta)
-                               - textSize.height * Math.cos(theta);
+                    double h = -textSize.width * Math.sin(theta)
+                            - textSize.height * Math.cos(theta);
                     y = (int) ((double) textArea.height - ((double) textArea.height - h) / 2.0);
                 } else {
                     double h = textSize.height * Math.cos(theta)
-                             - textSize.width * Math.sin(theta);
+                            - textSize.width * Math.sin(theta);
                     y = (int) (((double) textArea.height - h) / 2.0 - textSize.height * Math.sin(theta));
                 }
                 break;
             case BOTTOM:
                 if (getRotate() <= 90) {
                     y = textArea.height
-                        - (int) (textSize.width * Math.sin(theta) + textSize.height * Math.cos(theta));
+                            - (int) (textSize.width * Math.sin(theta) + textSize.height * Math.cos(theta));
                 } else if (getRotate() <= 180) {
                     y = textArea.height - (int) (textSize.width * Math.sin(theta));
                 } else if (getRotate() <= 270) {
@@ -197,12 +197,12 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
                 if (getRotate() <= 90) {
                     y = 0;
                 } else if (getRotate() <= 180) {
-                    y = (int) (- textSize.height * Math.cos(theta));
+                    y = (int) (-textSize.height * Math.cos(theta));
                 } else if (getRotate() <= 270) {
-                    y = (int) (- textSize.width * Math.sin(theta)
-                               - textSize.height * Math.cos(theta));
+                    y = (int) (-textSize.width * Math.sin(theta)
+                            - textSize.height * Math.cos(theta));
                 } else {
-                    y = (int) (- textSize.width * Math.sin(theta));
+                    y = (int) (-textSize.width * Math.sin(theta));
                 }
                 break;
             }
@@ -215,21 +215,20 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
         return Draw2dSingletonUtil.getTextUtilities().getTextExtents(text, font);
     }
 
-    protected void clearLocationSize(){
+    protected void clearLocationSize() {
         textLocation = null;
         textSize = null;
     }
 
     @Override
     public boolean containsPoint(int x, int y) {
-        if(runMode && !selectable)
+        if (runMode && !selectable)
             return false;
         else
             return super.containsPoint(x, y);
     }
 
-
-    public Dimension getAutoSizeDimension(){
+    public Dimension getAutoSizeDimension() {
         return getPreferredSize().getCopy().expand(
                 getInsets().getWidth(), getInsets().getHeight());
     }
@@ -244,7 +243,6 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     public H_ALIGN getHorizontalAlignment() {
         return horizontalAlignment;
     }
-
 
     @Override
     public Dimension getMinimumSize(int wHint, int hHint) {
@@ -261,10 +259,9 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
         return text;
     }
 
-    protected Rectangle getTextArea(){
+    protected Rectangle getTextArea() {
         return getClientArea();
     }
-
 
     protected Point getTextLocation(Font font) {
         if (textLocation != null)
@@ -274,7 +271,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     }
 
     protected Dimension getTextSize(Font font) {
-        if(font != getFont()){
+        if (font != getFont()) {
             return calculateTextSize(font);
         }
         if (textSize == null)
@@ -312,25 +309,25 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     @Override
     protected void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
-        if(text.length() == 0)
+        if (text.length() == 0)
             return;
         Rectangle clientArea = getClientArea();
-        if(realFont == null)
+        if (realFont == null)
             realFont = getFont();
         int h = getTextSize(realFont).height;
-        if (realFont != getFont() && h < clientArea.height-2) {
-            realFont =getFont();
+        if (realFont != getFont() && h < clientArea.height - 2) {
+            realFont = getFont();
             h = getTextSize(realFont).height;
         }
         Font font = realFont;
 
-        int i=0;
+        int i = 0;
         // Shrink font size to fit the figure, if fonts are not
         // explicitly sized in pixels.
-        if (! fontHeightInPixels) {
-            while(h > (clientArea.height+2) && h > 10 && i++<20){
+        if (!fontHeightInPixels) {
+            while (h > (clientArea.height + 2) && h > 10 && i++ < 20) {
                 FontData fd = font.getFontData()[0];
-                fd.setHeight(fd.getHeight()-1);
+                fd.setHeight(fd.getHeight() - 1);
                 font = CustomMediaFactory.getInstance().getFont(fd);
                 h = getTextSize(font).height;
             }
@@ -339,19 +336,18 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
         graphics.setFont(font);
         Rectangle textArea = getTextArea();
         graphics.translate(textArea.x, textArea.y);
-        if(getRotate() ==0)
+        if (getRotate() == 0)
             graphics.drawText(text, getTextLocation(font));
-        else{
+        else {
             try {
                 graphics.pushState();
                 graphics.translate(getTextLocation(font));
                 graphics.rotate((float) getRotate());
                 graphics.drawText(text, 0, 0);
-            } finally{
+            } finally {
                 graphics.popState();
             }
         }
-
 
         graphics.translate(-textArea.x, -textArea.y);
     }
@@ -363,12 +359,13 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     }
 
     public void setFontPixels(boolean fontPixels) {
-        if(this.fontHeightInPixels == fontPixels)
+        if (this.fontHeightInPixels == fontPixels)
             return;
         this.fontHeightInPixels = fontPixels;
         revalidate();
         repaint();
     }
+
     @Override
     public void setEnabled(boolean value) {
         super.setEnabled(value);
@@ -376,7 +373,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     }
 
     public void setHorizontalAlignment(H_ALIGN hAlignment) {
-        if(this.horizontalAlignment == hAlignment)
+        if (this.horizontalAlignment == hAlignment)
             return;
         horizontalAlignment = hAlignment;
         revalidate();
@@ -384,19 +381,20 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     }
 
     /**
-     * @param runMode the runMode to set
+     * @param runMode
+     *            the runMode to set
      */
     public void setRunMode(boolean runMode) {
         this.runMode = runMode;
     }
 
     /**
-     * @param selectable the selectable to set
+     * @param selectable
+     *            the selectable to set
      */
     public void setSelectable(boolean selectable) {
         this.selectable = selectable;
     }
-
 
     public void setText(String s) {
         // "text" will never be null.
@@ -411,7 +409,7 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     }
 
     public void setVerticalAlignment(V_ALIGN vAlignment) {
-        if(this.verticalAlignment == vAlignment)
+        if (this.verticalAlignment == vAlignment)
             return;
         verticalAlignment = vAlignment;
         revalidate();
@@ -428,20 +426,23 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
         repaint();
     }
 
-    public enum H_ALIGN{
+    public enum H_ALIGN {
         LEFT("Left"),
         CENTER("Center"),
         RIGHT("Right");
-        public static String[] stringValues(){
+
+        public static String[] stringValues() {
             String[] result = new String[values().length];
-            int i=0;
-            for(H_ALIGN h : values()){
+            int i = 0;
+            for (H_ALIGN h : values()) {
                 result[i++] = h.toString();
             }
             return result;
         }
+
         String descripion;
-        H_ALIGN(String description){
+
+        H_ALIGN(String description) {
             this.descripion = description;
         }
 
@@ -451,20 +452,23 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
         }
     }
 
-    public enum V_ALIGN{
+    public enum V_ALIGN {
         TOP("Top"),
         MIDDLE("Middle"),
         BOTTOM("Bottom");
-        public static String[] stringValues(){
+
+        public static String[] stringValues() {
             String[] result = new String[values().length];
-            int i=0;
-            for(V_ALIGN h : values()){
+            int i = 0;
+            for (V_ALIGN h : values()) {
                 result[i++] = h.toString();
             }
             return result;
         }
+
         String descripion;
-        V_ALIGN(String description){
+
+        V_ALIGN(String description) {
             this.descripion = description;
         }
 
@@ -475,5 +479,3 @@ public class TextFigure extends Figure implements Introspectable, ITextFigure{
     }
 
 }
-
-

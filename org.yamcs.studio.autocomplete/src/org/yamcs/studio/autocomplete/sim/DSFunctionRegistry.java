@@ -36,7 +36,8 @@ public class DSFunctionRegistry {
     /**
      * Registers a formula set.
      *
-     * @param functionSet a formula set
+     * @param functionSet
+     *            a formula set
      */
     public void registerDSFunctionSet(DSFunctionSet functionSet) {
         functionSets.put(functionSet.getName(), functionSet);
@@ -55,7 +56,8 @@ public class DSFunctionRegistry {
     /**
      * Returns the registered function set with the given name.
      *
-     * @param name the function set name
+     * @param name
+     *            the function set name
      * @return the set or null
      */
     public DSFunctionSet findFunctionSet(String name) {

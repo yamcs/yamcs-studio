@@ -12,8 +12,9 @@ import java.util.LinkedList;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.properties.ActionsProperty;
 
-/**The value type definition for {@link ActionsProperty}, which describes the input
- * for an actions Property.
+/**
+ * The value type definition for {@link ActionsProperty}, which describes the input for an actions Property.
+ * 
  * @author Xihui Chen
  *
  */
@@ -42,7 +43,7 @@ public class ActionsInput {
         return actionsList;
     }
 
-    public void addAction(AbstractWidgetAction action){
+    public void addAction(AbstractWidgetAction action) {
         actionsList.add(action);
         action.setWidgetModel(widgetModel);
     }
@@ -50,9 +51,9 @@ public class ActionsInput {
     /**
      * @return a total contents copy of this ScriptsInput.
      */
-    public ActionsInput getCopy(){
+    public ActionsInput getCopy() {
         ActionsInput copy = new ActionsInput();
-        for(AbstractWidgetAction data : actionsList){
+        for (AbstractWidgetAction data : actionsList) {
             copy.getActionsList().add(data.getCopy());
         }
         copy.setWidgetModel(widgetModel);
@@ -62,15 +63,16 @@ public class ActionsInput {
     }
 
     /**
-     * @param hookWithWidget the hookWithWidget to set
+     * @param hookWithWidget
+     *            the hookWithWidget to set
      */
     public void setHookUpFirstActionToWidget(boolean hookWithWidget) {
         this.hookUpFirstActionToWidget = hookWithWidget;
     }
 
     /**
-     * @return the hookWithWidget true if the first action is hooked with the widget's click,
-     * which means click on the widget will activate the first action in the list.
+     * @return the hookWithWidget true if the first action is hooked with the widget's click, which means click on the
+     *         widget will activate the first action in the list.
      */
     public boolean isFirstActionHookedUpToWidget() {
         return hookUpFirstActionToWidget;
@@ -78,21 +80,22 @@ public class ActionsInput {
 
     @Override
     public String toString() {
-        if(actionsList.size() ==0){
+        if (actionsList.size() == 0) {
             return "no action";
         }
-        if(actionsList.size() == 1){
+        if (actionsList.size() == 1) {
             return actionsList.get(0).getDescription();
         }
         return actionsList.size() + " actions";
     }
 
     /**
-     * @param widgetModel the widgetModel to set
+     * @param widgetModel
+     *            the widgetModel to set
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for(AbstractWidgetAction action : actionsList)
+        for (AbstractWidgetAction action : actionsList)
             action.setWidgetModel(widgetModel);
     }
 
@@ -110,6 +113,5 @@ public class ActionsInput {
     public void setHookUpAllActionsToWidget(boolean hookUpAllActionsToWidget) {
         this.hookUpAllActionsToWidget = hookUpAllActionsToWidget;
     }
-
 
 }

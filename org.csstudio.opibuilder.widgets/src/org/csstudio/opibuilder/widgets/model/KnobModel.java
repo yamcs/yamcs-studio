@@ -14,23 +14,23 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
-
 /**
  * This class defines a knob widget model.
+ * 
  * @author Xihui Chen
  */
-public class KnobModel extends AbstractMarkedWidgetModel{
+public class KnobModel extends AbstractMarkedWidgetModel {
 
     /** Color of the knob. */
     public static final String PROP_KNOB_COLOR = "knob_color";
 
-    /** True if the widget is drawn with advanced graphics. In some platforms,
-     * advance graphics may not be available, in which case the widget will not be drawn
-     * with advanced graphics even this is set to true.*/
+    /**
+     * True if the widget is drawn with advanced graphics. In some platforms, advance graphics may not be available, in
+     * which case the widget will not be drawn with advanced graphics even this is set to true.
+     */
     public static final String PROP_EFFECT3D = "effect_3d";
 
-
-    /**Show value label. */
+    /** Show value label. */
     public static final String PROP_SHOW_VALUE_LABEL = "show_value_label";
 
     /** Color of the thumb. */
@@ -40,14 +40,12 @@ public class KnobModel extends AbstractMarkedWidgetModel{
     public static final String PROP_RAMP_GRADIENT = "ramp_gradient";
 
     /**
-     *The minimum increment step when dragging the thumb.
+     * The minimum increment step when dragging the thumb.
      */
     public static final String PROP_INCREMENT = "increment";
 
-
-
     /** The default value of the default knob color property. */
-    private static final RGB DEFAULT_KNOB_COLOR = new RGB(150,150,150);
+    private static final RGB DEFAULT_KNOB_COLOR = new RGB(150, 150, 150);
 
     /** The default value of the height property. */
     private static final int DEFAULT_HEIGHT = 173;
@@ -60,7 +58,6 @@ public class KnobModel extends AbstractMarkedWidgetModel{
 
     public static final int MINIMUM_SIZE = 100;
 
-
     /**
      * The ID of this widget model.
      */
@@ -68,7 +65,7 @@ public class KnobModel extends AbstractMarkedWidgetModel{
 
     public KnobModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setForegroundColor(new RGB(0,0,0));
+        setForegroundColor(new RGB(0, 0, 0));
         setScaleOptions(true, true, true);
         isControlWidget = true;
     }
@@ -77,9 +74,9 @@ public class KnobModel extends AbstractMarkedWidgetModel{
     protected void configureProperties() {
         super.configureProperties();
 
-//        addPVProperty(new StringProperty(PROP_CONTROL_PV, "Control PV", WidgetPropertyCategory.Basic,
-//                ""), new PVValueProperty(PROP_CONTROL_PV_VALUE, null));
-//
+        // addPVProperty(new StringProperty(PROP_CONTROL_PV, "Control PV", WidgetPropertyCategory.Basic,
+        // ""), new PVValueProperty(PROP_CONTROL_PV_VALUE, null));
+        //
         addProperty(new ColorProperty(PROP_KNOB_COLOR, "Knob Color",
                 WidgetPropertyCategory.Display, DEFAULT_KNOB_COLOR));
 
@@ -99,7 +96,7 @@ public class KnobModel extends AbstractMarkedWidgetModel{
                 WidgetPropertyCategory.Behavior, 1.0));
 
         setPropertyDescription(PROP_SHOW_MARKERS, "Show Ramp");
-//        setPropertyDescription(PROP_PVNAME, "Readback PV");
+        // setPropertyDescription(PROP_PVNAME, "Readback PV");
     }
 
     @Override
@@ -130,6 +127,7 @@ public class KnobModel extends AbstractMarkedWidgetModel{
 
     /**
      * Gets the RGB for thumb.
+     * 
      * @return The thumb color
      */
     public Color getThumbColor() {
@@ -142,7 +140,6 @@ public class KnobModel extends AbstractMarkedWidgetModel{
     public boolean isRampGradient() {
         return (Boolean) getProperty(PROP_RAMP_GRADIENT).getPropertyValue();
     }
-
 
     /**
      * Return the increment value.

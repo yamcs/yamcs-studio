@@ -12,9 +12,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 
 /**
- * We have multiple implementations of the Anchor, and the {@link FixedPointsConnectionRouter} needs to know orientation in which the connector
- * connects to the widget in order to correctly calculate the route. This becomes especially important once the widgets change positions (are
- * animated) through some action.
+ * We have multiple implementations of the Anchor, and the {@link FixedPointsConnectionRouter} needs to know orientation
+ * in which the connector connects to the widget in order to correctly calculate the route. This becomes especially
+ * important once the widgets change positions (are animated) through some action.
  *
  * @author mvitorovic
  */
@@ -35,16 +35,18 @@ abstract public class AbstractOpiBuilderAnchor extends AbstractConnectionAnchor 
 
     /**
      * <p>
-     * In case of linking container zoom edge cases appear when linked OPI contains elements staring on point(0,0).
-     * When zooming some anchor points get out of linked container box. This causes broken connection, as
-     * anchor is no longer found.
-     *<p>
+     * In case of linking container zoom edge cases appear when linked OPI contains elements staring on point(0,0). When
+     * zooming some anchor points get out of linked container box. This causes broken connection, as anchor is no longer
+     * found.
+     * <p>
      * This is fixed by moving the anchor back into the bounds of linking container.
      *
      * @author Borut Terpinc
      *
-     * @param point - reference to anchor point
-     * @param owner - reference to the figure
+     * @param point
+     *            - reference to anchor point
+     * @param owner
+     *            - reference to the figure
      *
      */
 
@@ -60,7 +62,8 @@ abstract public class AbstractOpiBuilderAnchor extends AbstractConnectionAnchor 
     }
 
     /**
-     * @return The direction in which the connection is oriented at this anchor, if the Manhattan router is being selected
+     * @return The direction in which the connection is oriented at this anchor, if the Manhattan router is being
+     *         selected
      */
     abstract public ConnectorOrientation getOrientation();
 }

@@ -29,13 +29,14 @@ import org.csstudio.opibuilder.widgets.model.EllipseModel;
 import org.csstudio.swt.widgets.figures.EllipseFigure;
 import org.eclipse.draw2d.IFigure;
 
-/**The controller for ellipse widget.
+/**
+ * The controller for ellipse widget.
+ * 
  * @author Stefan Hofer & Sven Wende (similar class in SDS)
  * @author Xihui Chen
  *
  */
 public class EllipseEditpart extends AbstractShapeEditPart {
-
 
     @Override
     protected IFigure doCreateFigure() {
@@ -53,9 +54,8 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
     @Override
     public EllipseModel getWidgetModel() {
-        return (EllipseModel)getModel();
+        return (EllipseModel) getModel();
     }
-
 
     @Override
     protected void registerPropertyChangeHandlers() {
@@ -96,14 +96,13 @@ public class EllipseEditpart extends AbstractShapeEditPart {
         };
         setPropertyChangeHandler(AbstractShapeModel.PROP_TRANSPARENT, transparentHandler);
 
-
         // line color
         IWidgetPropertyChangeHandler lineColorHandler = new IWidgetPropertyChangeHandler() {
             public boolean handleChange(final Object oldValue,
                     final Object newValue,
                     final IFigure refreshableFigure) {
-                ((EllipseFigure)refreshableFigure).setLineColor(
-                        ((OPIColor)newValue).getSWTColor());
+                ((EllipseFigure) refreshableFigure).setLineColor(
+                        ((OPIColor) newValue).getSWTColor());
                 return true;
             }
         };
@@ -114,7 +113,7 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((EllipseFigure)figure).setGradient((Boolean)newValue);
+                ((EllipseFigure) figure).setGradient((Boolean) newValue);
                 return false;
             }
         };
@@ -124,7 +123,7 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((EllipseFigure)figure).setBackGradientStartColor(((OPIColor)newValue).getSWTColor());
+                ((EllipseFigure) figure).setBackGradientStartColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
         };
@@ -134,7 +133,7 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
             @Override
             public boolean handleChange(Object oldValue, Object newValue, IFigure figure) {
-                ((EllipseFigure)figure).setForeGradientStartColor(((OPIColor)newValue).getSWTColor());
+                ((EllipseFigure) figure).setForeGradientStartColor(((OPIColor) newValue).getSWTColor());
                 return false;
             }
         };
@@ -143,15 +142,15 @@ public class EllipseEditpart extends AbstractShapeEditPart {
 
     @Override
     public void setValue(Object value) {
-        if(value instanceof Number){
-            ((EllipseFigure)getFigure()).setFill(((Number)value).doubleValue());
-        }else
+        if (value instanceof Number) {
+            ((EllipseFigure) getFigure()).setFill(((Number) value).doubleValue());
+        } else
             super.setValue(value);
     }
 
     @Override
     public Object getValue() {
-        return ((EllipseFigure)getFigure()).getFill();
+        return ((EllipseFigure) getFigure()).getFill();
     }
 
 }

@@ -23,7 +23,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.ui.IActionFilter;
 
-/**The Editpart Controller for a Grouping Container
+/**
+ * The Editpart Controller for a Grouping Container
+ * 
  * @author Xihui Chen
  *
  */
@@ -45,9 +47,8 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     public GroupingContainerModel getWidgetModel() {
-        return (GroupingContainerModel)getModel();
+        return (GroupingContainerModel) getModel();
     }
-
 
     @Override
     protected void createEditPolicies() {
@@ -58,27 +59,28 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
     @Override
     public IFigure getContentPane() {
-        return ((GroupingContainerFigure)getFigure()).getContentPane();
+        return ((GroupingContainerFigure) getFigure()).getContentPane();
     }
+
     @Override
     protected void registerPropertyChangeHandlers() {
-        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler(){
+        IWidgetPropertyChangeHandler handler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(Object oldValue, Object newValue,
                     IFigure figure) {
-                figure.setOpaque(!(Boolean)newValue);
+                figure.setOpaque(!(Boolean) newValue);
                 return true;
             }
         };
 
         setPropertyChangeHandler(GroupingContainerModel.PROP_TRANSPARENT, handler);
 
-        handler = new IWidgetPropertyChangeHandler(){
+        handler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(Object oldValue, Object newValue,
                     IFigure figure) {
-                for(AbstractWidgetModel child : getWidgetModel().getChildren()){
-                    child.setEnabled((Boolean)newValue);
+                for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
+                    child.setEnabled((Boolean) newValue);
                 }
                 return true;
             }
@@ -86,7 +88,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
 
         setPropertyChangeHandler(AbstractWidgetModel.PROP_ENABLED, handler);
 
-        handler = new IWidgetPropertyChangeHandler(){
+        handler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(Object oldValue, Object newValue,
                     IFigure figure) {
@@ -98,11 +100,12 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
         setPropertyChangeHandler(GroupingContainerModel.PROP_LOCK_CHILDREN, handler);
 
         lockChildren(getWidgetModel().isLocked());
-        if(getWidgetModel().getParent() instanceof TabModel){
+        if (getWidgetModel().getParent() instanceof TabModel) {
             removeAllPropertyChangeHandlers(AbstractWidgetModel.PROP_VISIBLE);
             IWidgetPropertyChangeHandler visibilityHandler = new IWidgetPropertyChangeHandler() {
                 @Override
-                public boolean handleChange(final Object oldValue, final Object newValue, final IFigure refreshableFigure) {
+                public boolean handleChange(final Object oldValue, final Object newValue,
+                        final IFigure refreshableFigure) {
                     boolean visible = (Boolean) newValue;
                     final IFigure figure = getFigure();
                     figure.setVisible(visible);
@@ -115,7 +118,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
         IWidgetPropertyChangeHandler showBarHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue, final Object newValue, final IFigure refreshableFigure) {
-                ((GroupingContainerFigure)refreshableFigure).setShowScrollBar((Boolean)newValue);
+                ((GroupingContainerFigure) refreshableFigure).setShowScrollBar((Boolean) newValue);
                 return true;
             }
         };
@@ -124,7 +127,7 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
         IWidgetPropertyChangeHandler fowardColorHandler = new IWidgetPropertyChangeHandler() {
             @Override
             public boolean handleChange(final Object oldValue, final Object newValue, final IFigure refreshableFigure) {
-                if(getWidgetModel().isForwardColors())
+                if (getWidgetModel().isForwardColors())
                     forwardColors();
                 return true;
             }
@@ -133,39 +136,38 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
         setPropertyChangeHandler(GroupingContainerModel.PROP_COLOR_BACKGROUND, fowardColorHandler);
         setPropertyChangeHandler(GroupingContainerModel.PROP_COLOR_FOREGROUND, fowardColorHandler);
 
-
-        //use property listener because it doesn't need to be queued in GUIRefreshThread.
+        // use property listener because it doesn't need to be queued in GUIRefreshThread.
         getWidgetModel().getProperty(
                 AbstractWidgetModel.PROP_WIDTH).addPropertyChangeListener(
                         new PropertyChangeListener() {
 
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            resizeChildren((Integer)(evt.getNewValue()),
-                                    (Integer)(evt.getOldValue()), true);
+                            @Override
+                            public void propertyChange(PropertyChangeEvent evt) {
+                                resizeChildren((Integer) (evt.getNewValue()),
+                                        (Integer) (evt.getOldValue()), true);
 
-                        }
-        });
+                            }
+                        });
 
         getWidgetModel().getProperty(
                 AbstractWidgetModel.PROP_HEIGHT).addPropertyChangeListener(
                         new PropertyChangeListener() {
 
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            resizeChildren((Integer)(evt.getNewValue()),
-                                    (Integer)(evt.getOldValue()), false);
-                        }
-        });
+                            @Override
+                            public void propertyChange(PropertyChangeEvent evt) {
+                                resizeChildren((Integer) (evt.getNewValue()),
+                                        (Integer) (evt.getOldValue()), false);
+                            }
+                        });
 
     }
 
-    private void forwardColors(){
-        for(Object o: getChildren()){
-            if(o instanceof AbstractBaseEditPart){
-                ((AbstractBaseEditPart)o).setPropertyValue(AbstractWidgetModel.PROP_COLOR_BACKGROUND,
+    private void forwardColors() {
+        for (Object o : getChildren()) {
+            if (o instanceof AbstractBaseEditPart) {
+                ((AbstractBaseEditPart) o).setPropertyValue(AbstractWidgetModel.PROP_COLOR_BACKGROUND,
                         getWidgetModel().getPropertyValue(AbstractWidgetModel.PROP_COLOR_BACKGROUND));
-                ((AbstractBaseEditPart)o).setPropertyValue(AbstractWidgetModel.PROP_COLOR_FOREGROUND,
+                ((AbstractBaseEditPart) o).setPropertyValue(AbstractWidgetModel.PROP_COLOR_FOREGROUND,
                         getWidgetModel().getPropertyValue(AbstractWidgetModel.PROP_COLOR_FOREGROUND));
 
             }
@@ -173,14 +175,15 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
     }
 
     /**
-    * @param lock true if the children should be locked.
+     * @param lock
+     *            true if the children should be locked.
      */
     private void lockChildren(boolean lock) {
-        if(getExecutionMode() == ExecutionMode.RUN_MODE)
+        if (getExecutionMode() == ExecutionMode.RUN_MODE)
             return;
-        for(Object o: getChildren()){
-            if(o instanceof AbstractBaseEditPart){
-                ((AbstractBaseEditPart)o).setSelectable(!lock);
+        for (Object o : getChildren()) {
+            if (o instanceof AbstractBaseEditPart) {
+                ((AbstractBaseEditPart) o).setSelectable(!lock);
             }
         }
     }
@@ -198,23 +201,22 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
         return result;
     }
 
-
-    private void resizeChildren(int newValue, int oldValue, boolean isWidth){
-        if(!getWidgetModel().isLocked())
+    private void resizeChildren(int newValue, int oldValue, boolean isWidth) {
+        if (!getWidgetModel().isLocked())
             return;
-        if(getExecutionMode() == ExecutionMode.RUN_MODE &&
+        if (getExecutionMode() == ExecutionMode.RUN_MODE &&
                 getWidgetModel().getRootDisplayModel().getDisplayScaleData().isAutoScaleWidgets()
                 && (getWidgetModel().getScaleOptions().isHeightScalable() ||
                         getWidgetModel().getScaleOptions().isWidthScalable()))
             return;
-        double ratio = (newValue-oldValue)/(double)oldValue;
-        for(AbstractWidgetModel child : getWidgetModel().getChildren()){
-            if(isWidth){
-                child.setX((int) (child.getX()*(1+ratio)));
-                child.setWidth((int) (child.getWidth()*(1+ratio)));
-            }else {
-                child.setY((int) (child.getY()*(1+ratio)));
-                child.setHeight((int) (child.getHeight()*(1+ratio)));
+        double ratio = (newValue - oldValue) / (double) oldValue;
+        for (AbstractWidgetModel child : getWidgetModel().getChildren()) {
+            if (isWidth) {
+                child.setX((int) (child.getX() * (1 + ratio)));
+                child.setWidth((int) (child.getWidth() * (1 + ratio)));
+            } else {
+                child.setY((int) (child.getY() * (1 + ratio)));
+                child.setHeight((int) (child.getHeight() * (1 + ratio)));
             }
         }
     }
@@ -222,18 +224,16 @@ public class GroupingContainerEditPart extends AbstractContainerEditpart {
     @Override
     public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
         if (adapter == IActionFilter.class)
-            return new BaseEditPartActionFilter(){
-            @Override
-            public boolean testAttribute(Object target, String name,
-                    String value) {
-                if (name.equals("allowAutoSize") && value.equals("TRUE"))
-                    return getExecutionMode()==ExecutionMode.EDIT_MODE;
-                return super.testAttribute(target, name, value);
-            }
-        };
+            return new BaseEditPartActionFilter() {
+                @Override
+                public boolean testAttribute(Object target, String name,
+                        String value) {
+                    if (name.equals("allowAutoSize") && value.equals("TRUE"))
+                        return getExecutionMode() == ExecutionMode.EDIT_MODE;
+                    return super.testAttribute(target, name, value);
+                }
+            };
         return super.getAdapter(adapter);
     }
-
-
 
 }

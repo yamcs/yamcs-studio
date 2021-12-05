@@ -14,7 +14,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-/**The cellEditor for macros property descriptor.
+/**
+ * The cellEditor for macros property descriptor.
+ * 
  * @author Xihui Chen
  *
  */
@@ -29,9 +31,8 @@ public class MacrosCellEditor extends AbstractDialogCellEditor {
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
 
-        MacrosInputDialog dialog =
-            new MacrosInputDialog(parentShell, macrosInput, dialogTitle);
-        if(dialog.open() == Window.OK){
+        MacrosInputDialog dialog = new MacrosInputDialog(parentShell, macrosInput, dialogTitle);
+        if (dialog.open() == Window.OK) {
             macrosInput = dialog.getResult();
         }
     }
@@ -48,10 +49,10 @@ public class MacrosCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if(value == null || !(value instanceof MacrosInput))
+        if (value == null || !(value instanceof MacrosInput))
             macrosInput = new MacrosInput(new LinkedHashMap<String, String>(), true);
         else
-            macrosInput = (MacrosInput)value;
+            macrosInput = (MacrosInput) value;
 
     }
 

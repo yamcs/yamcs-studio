@@ -22,7 +22,6 @@
 
 package org.csstudio.opibuilder.commands;
 
-
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.model.GuideModel;
 import org.csstudio.opibuilder.util.GuideUtil;
@@ -30,6 +29,7 @@ import org.eclipse.gef.commands.Command;
 
 /**
  * A command to change a Guide.
+ * 
  * @author Kai Meyer (original author)
  */
 public final class ChangeGuideCommand extends Command {
@@ -61,10 +61,11 @@ public final class ChangeGuideCommand extends Command {
 
     /**
      * Constructor.
+     * 
      * @param model
-     *             The AbstractWidgetModel
+     *            The AbstractWidgetModel
      * @param horizontalGuide
-     *             The horizontal guide
+     *            The horizontal guide
      */
     public ChangeGuideCommand(final AbstractWidgetModel model, final boolean horizontalGuide) {
         super();
@@ -74,10 +75,11 @@ public final class ChangeGuideCommand extends Command {
 
     /**
      * Changes the guide.
+     * 
      * @param newGuide
-     *             The new guide
+     *            The new guide
      * @param newAlignment
-     *             The new alignment
+     *            The new alignment
      */
     protected void changeGuide(final GuideModel newGuide, final int newAlignment) {
         // You need to re-attach the part even if the oldGuide and the newGuide are the same
@@ -87,9 +89,6 @@ public final class ChangeGuideCommand extends Command {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         // Cache the old values
@@ -100,9 +99,6 @@ public final class ChangeGuideCommand extends Command {
         redo();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void redo() {
         changeGuide(_newGuide, _newAlign);
@@ -110,22 +106,19 @@ public final class ChangeGuideCommand extends Command {
 
     /**
      * Sets the new guide.
+     * 
      * @param guide
-     *             The new guide
+     *            The new guide
      * @param alignment
-     *             The new alignment
+     *            The new alignment
      */
     public void setNewGuide(final GuideModel guide, final int alignment) {
         _newGuide = guide;
         _newAlign = alignment;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void undo() {
         changeGuide(_oldGuide, _oldAlign);
     }
-
 }

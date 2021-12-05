@@ -19,6 +19,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * Handler to handle lock/unlock grouping container children which has a key binding of Ctrl+L.
+ * 
  * @author Xihui Chen
  *
  */
@@ -27,21 +28,21 @@ public class LockUnlockChildrenHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
-            GraphicalViewer viewer = HandlerUtil.getActivePart(event).getAdapter(GraphicalViewer.class);
-            if(viewer == null) return null;
+        GraphicalViewer viewer = HandlerUtil.getActivePart(event).getAdapter(GraphicalViewer.class);
+        if (viewer == null)
+            return null;
 
-            ISelection currentSelection = viewer.getSelection();
-            if(currentSelection instanceof IStructuredSelection){
-                Object element = ((IStructuredSelection) currentSelection)
-                        .getFirstElement();
-                if(element instanceof GroupingContainerEditPart){
-                    CommandStack commandStack =
-                        HandlerUtil.getActivePart(event).getAdapter(CommandStack.class);
-                    if(commandStack != null)
-                        commandStack.execute(LockUnlockChildrenAction.createLockUnlockCommand
-                                (((GroupingContainerEditPart)element).getWidgetModel()));
-                }
+        ISelection currentSelection = viewer.getSelection();
+        if (currentSelection instanceof IStructuredSelection) {
+            Object element = ((IStructuredSelection) currentSelection)
+                    .getFirstElement();
+            if (element instanceof GroupingContainerEditPart) {
+                CommandStack commandStack = HandlerUtil.getActivePart(event).getAdapter(CommandStack.class);
+                if (commandStack != null)
+                    commandStack.execute(LockUnlockChildrenAction
+                            .createLockUnlockCommand(((GroupingContainerEditPart) element).getWidgetModel()));
             }
+        }
 
         return null;
     }

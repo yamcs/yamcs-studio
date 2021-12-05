@@ -19,7 +19,9 @@ import org.csstudio.opibuilder.properties.StringTableProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.ui.util.swt.stringtable.StringTableEditor.CellEditorType;
 
-/**Model for the Table widget.
+/**
+ * Model for the Table widget.
+ * 
  * @author Xihui Chen
  *
  */
@@ -28,34 +30,29 @@ public class TableModel extends AbstractWidgetModel {
     private static final int DEFAULT_COLUMN_WIDTH = 60;
 
     /**
-     * True if the table cell is editable. If false, it is still selectable,
-     * which is different with disabled.
+     * True if the table cell is editable. If false, it is still selectable, which is different with disabled.
      */
     public static final String PROP_EDITABLE = "editable";
 
     /**
-     *Column headers.
+     * Column headers.
      */
     public static final String PROP_COLUMN_HEADERS = "column_headers";
 
     /**
-     *Number of columns.
+     * Number of columns.
      */
     public static final String PROP_COLUMNS_COUNT = "columns_count";
 
-
     /**
-     *Default Content of the table.
+     * Default Content of the table.
      */
     public static final String PROP_DEFAULT_CONTENT = "default_content";
 
-
-
     /**
-     *Column header visible.
+     * Column header visible.
      */
-    public static final String PROP_COLUMN_HEADER_VISIBLE= "column_header_visible";
-
+    public static final String PROP_COLUMN_HEADER_VISIBLE = "column_header_visible";
 
     /**
      * The ID of this widget model.
@@ -68,23 +65,23 @@ public class TableModel extends AbstractWidgetModel {
         addProperty(new BooleanProperty(
                 PROP_EDITABLE, "Editable", WidgetPropertyCategory.Behavior, true));
 
-
         StringTableProperty contentProperty = new StringTableProperty(
                 PROP_DEFAULT_CONTENT, "Default Content", WidgetPropertyCategory.Display,
-                new String[][]{{""}}, new String[]{""});
+                new String[][] { { "" } }, new String[] { "" });
 
         addProperty(contentProperty);
 
-        String[] dropDownOptions = new String[org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.values().length];
-        for(int i=0; i<dropDownOptions.length; i++)
-            dropDownOptions[i]=org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.values()[i].name();
+        String[] dropDownOptions = new String[org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType
+                .values().length];
+        for (int i = 0; i < dropDownOptions.length; i++)
+            dropDownOptions[i] = org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.values()[i].name();
 
         StringTableProperty headersProperty = new StringTableProperty(
-                PROP_COLUMN_HEADERS, "Column Headers",WidgetPropertyCategory.Display,
-                new String[0][0], new String[]{"Column Title", "Column Width", "Editable", "CellEditor"},
-                new CellEditorType[]{CellEditorType.TEXT, CellEditorType.TEXT,
-                        CellEditorType.CHECKBOX, CellEditorType.DROPDOWN},
-                        new Object[]{null, null, new String[]{"Yes", "No"}, dropDownOptions});
+                PROP_COLUMN_HEADERS, "Column Headers", WidgetPropertyCategory.Display,
+                new String[0][0], new String[] { "Column Title", "Column Width", "Editable", "CellEditor" },
+                new CellEditorType[] { CellEditorType.TEXT, CellEditorType.TEXT,
+                        CellEditorType.CHECKBOX, CellEditorType.DROPDOWN },
+                new Object[] { null, null, new String[] { "Yes", "No" }, dropDownOptions });
 
         addProperty(headersProperty);
 
@@ -119,7 +116,7 @@ public class TableModel extends AbstractWidgetModel {
 
         String[] headers = getColumnHeaders();
         int c = getColumnsCount();
-        if(headers.length > c)
+        if (headers.length > c)
             c = headers.length;
 
         String[] titles = new String[c];
@@ -133,55 +130,53 @@ public class TableModel extends AbstractWidgetModel {
         ((StringTableProperty) getProperty(PROP_DEFAULT_CONTENT)).setTitles(titles);
     }
 
-
-    public boolean isEditable(){
-        return (Boolean)getPropertyValue(PROP_EDITABLE);
+    public boolean isEditable() {
+        return (Boolean) getPropertyValue(PROP_EDITABLE);
     }
 
-    public boolean[] isColumnEditable(){
+    public boolean[] isColumnEditable() {
         String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
         boolean[] r = new boolean[headers.length];
-        if(headers.length ==0 || headers[0].length <3){
+        if (headers.length == 0 || headers[0].length < 3) {
             Arrays.fill(r, true);
             return r;
         }
-        for(int i=0; i<headers.length; i++){
-            r[i] = headers[i][2].toLowerCase().equals("no")?false:true;
+        for (int i = 0; i < headers.length; i++) {
+            r[i] = headers[i][2].toLowerCase().equals("no") ? false : true;
         }
         return r;
     }
 
-    public org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[] getColumnCellEditorTypes(){
+    public org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[] getColumnCellEditorTypes() {
         String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
-        org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[] r =
-                new org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[headers.length];
-        if(headers.length ==0 || headers[0].length <4){
+        org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[] r = new org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType[headers.length];
+        if (headers.length == 0 || headers[0].length < 4) {
             Arrays.fill(r, org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.TEXT);
             return r;
         }
-        for(int i=0; i<headers.length; i++){
+        for (int i = 0; i < headers.length; i++) {
             try {
                 r[i] = org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.valueOf(headers[i][3]);
             } catch (Exception e) {
-                r[i]=org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.TEXT;
+                r[i] = org.csstudio.swt.widgets.natives.SpreadSheetTable.CellEditorType.TEXT;
             }
         }
         return r;
     }
 
-    public String[] getColumnHeaders(){
+    public String[] getColumnHeaders() {
         String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
         String[] r = new String[headers.length];
-        for(int i=0; i<headers.length; i++){
+        for (int i = 0; i < headers.length; i++) {
             r[i] = headers[i][0];
         }
         return r;
     }
 
-    public int[] getColumnWidthes(){
+    public int[] getColumnWidthes() {
         String[][] headers = (String[][]) getPropertyValue(PROP_COLUMN_HEADERS);
         int[] r = new int[headers.length];
-        for(int i=0; i<headers.length; i++){
+        for (int i = 0; i < headers.length; i++) {
             try {
                 r[i] = Integer.valueOf(headers[i][1]);
             } catch (Exception e) {
@@ -191,19 +186,17 @@ public class TableModel extends AbstractWidgetModel {
         return r;
     }
 
-    public int getColumnsCount(){
-        return (Integer)getPropertyValue(PROP_COLUMNS_COUNT);
+    public int getColumnsCount() {
+        return (Integer) getPropertyValue(PROP_COLUMNS_COUNT);
     }
 
-    public String[][] getDefaultContent(){
-        return (String[][])getPropertyValue(PROP_DEFAULT_CONTENT);
+    public String[][] getDefaultContent() {
+        return (String[][]) getPropertyValue(PROP_DEFAULT_CONTENT);
     }
 
-    public boolean isColumnHeaderVisible(){
-        return (Boolean)getPropertyValue(PROP_COLUMN_HEADER_VISIBLE);
+    public boolean isColumnHeaderVisible() {
+        return (Boolean) getPropertyValue(PROP_COLUMN_HEADER_VISIBLE);
     }
-
-
 
     /* (non-Javadoc)
      * @see org.csstudio.opibuilder.model.AbstractWidgetModel#getTypeID()

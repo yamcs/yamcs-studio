@@ -23,11 +23,11 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * The abstract widget action, which can be executed from the widget by click or context menu.
+ * 
  * @author Xihui Chen
  *
  */
 public abstract class AbstractWidgetAction implements IAdaptable {
-
 
     private Map<String, AbstractWidgetProperty> propertyMap;
 
@@ -40,13 +40,16 @@ public abstract class AbstractWidgetAction implements IAdaptable {
         propertyMap = new LinkedHashMap<String, AbstractWidgetProperty>();
         configureProperties();
         addProperty(new StringProperty(PROP_DESCRIPTION, "Description",
-                WidgetPropertyCategory.Basic, ""));       
+                WidgetPropertyCategory.Basic, ""));
     }
 
-    /**Add a property to the widget.
-     * @param property the property to be added.
+    /**
+     * Add a property to the widget.
+     * 
+     * @param property
+     *            the property to be added.
      */
-    public void addProperty(final AbstractWidgetProperty property){
+    public void addProperty(final AbstractWidgetProperty property) {
         Assert.isNotNull(property);
         property.setWidgetModel(getWidgetModel());
         propertyMap.put(property.getPropertyID(), property);
@@ -54,30 +57,28 @@ public abstract class AbstractWidgetAction implements IAdaptable {
 
     protected abstract void configureProperties();
 
-    public String getDefaultDescription(){
+    public String getDefaultDescription() {
         return getActionType().getDescription();
     }
 
-    public String getDescription(){
-        String description = (String)getPropertyValue(PROP_DESCRIPTION);
-        if(description.trim().length()==0)
+    public String getDescription() {
+        String description = (String) getPropertyValue(PROP_DESCRIPTION);
+        if (description.trim().length() == 0)
             description = getDefaultDescription();
         return description;
     }
 
     public abstract void run();
 
-
     public abstract ActionType getActionType();
 
-    public AbstractWidgetProperty[] getAllProperties(){
+    public AbstractWidgetProperty[] getAllProperties() {
         AbstractWidgetProperty[] propArray = new AbstractWidgetProperty[propertyMap.size()];
-        int i=0;
-        for(AbstractWidgetProperty p : propertyMap.values())
+        int i = 0;
+        for (AbstractWidgetProperty p : propertyMap.values())
             propArray[i++] = p;
         return propArray;
     }
-
 
     public Object getPropertyValue(Object id) {
         Assert.isTrue(propertyMap.containsKey(id));
@@ -91,7 +92,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
 
     @Override
     public <T> T getAdapter(Class<T> adapter) {
-        if(adapter == IWorkbenchAdapter.class)
+        if (adapter == IWorkbenchAdapter.class)
             return adapter.cast(new IWorkbenchAdapter() {
 
                 @Override
@@ -120,7 +121,7 @@ public abstract class AbstractWidgetAction implements IAdaptable {
 
     public AbstractWidgetAction getCopy() {
         AbstractWidgetAction action = WidgetActionFactory.createWidgetAction(getActionType());
-        for(String id : propertyMap.keySet()){
+        for (String id : propertyMap.keySet()) {
             action.setPropertyValue(id, getPropertyValue(id));
         }
         return action;
@@ -135,7 +136,8 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     }
 
     /**
-     * @param enabled the enabled to set
+     * @param enabled
+     *            the enabled to set
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -149,11 +151,12 @@ public abstract class AbstractWidgetAction implements IAdaptable {
     }
 
     /**
-     * @param widgetModel the widgetModel to set
+     * @param widgetModel
+     *            the widgetModel to set
      */
     public void setWidgetModel(AbstractWidgetModel widgetModel) {
         this.widgetModel = widgetModel;
-        for(AbstractWidgetProperty property : getAllProperties())
+        for (AbstractWidgetProperty property : getAllProperties())
             property.setWidgetModel(widgetModel);
     }
 

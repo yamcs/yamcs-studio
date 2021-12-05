@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 /**
  * A set of functions that can be used in the formulas.
  * <p>
- * Objects of this class can be registered in the {@link FormulaRegistry} and
- * the functions will be available in the formula language.
+ * Objects of this class can be registered in the {@link FormulaRegistry} and the functions will be available in the
+ * formula language.
  *
  * @author carcassi
  */
@@ -28,7 +28,8 @@ public abstract class FormulaFunctionSet {
     /**
      * Creates a new ser of functions to be registered in the formula language.
      *
-     * @param functionSetDescription the description of the function set
+     * @param functionSetDescription
+     *            the description of the function set
      */
     public FormulaFunctionSet(FormulaFunctionSetDescription functionSetDescription) {
         this.name = functionSetDescription.name;
@@ -70,7 +71,8 @@ public abstract class FormulaFunctionSet {
     /**
      * Returns all the functions in the set with the given name.
      *
-     * @param name the name of the function
+     * @param name
+     *            the name of the function
      * @return the matched functions; never null
      */
     public final Collection<FormulaFunction> findFunctions(String name) {

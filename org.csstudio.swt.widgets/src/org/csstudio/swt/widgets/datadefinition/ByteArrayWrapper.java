@@ -7,15 +7,15 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.datadefinition;
 
-/**A wrapper for byte[].
+/**
+ * A wrapper for byte[].
+ * 
  * @author Xihui Chen
  *
  */
 public class ByteArrayWrapper implements IPrimaryArrayWrapper {
 
     private byte[] data;
-
-
 
     public ByteArrayWrapper(byte[] data) {
         this.data = data;

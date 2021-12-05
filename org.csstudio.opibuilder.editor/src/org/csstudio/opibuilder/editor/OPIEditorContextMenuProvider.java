@@ -7,7 +7,6 @@
  ******************************************************************************/
 package org.csstudio.opibuilder.editor;
 
-
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.actions.ChangeOrderAction.OrderType;
 import org.csstudio.opibuilder.actions.ChangeOrientationAction.OrientationType;
@@ -55,9 +54,6 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         this.actionRegistry = actionRegistry;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void buildContextMenu(final IMenuManager menu) {
         menu.add(new Separator(GEFActionConstants.GROUP_UNDO));
@@ -72,7 +68,6 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         menu.add(new Separator(GROUP_GROUP));
         menu.add(new Separator(GEFActionConstants.MB_ADDITIONS));
 
-
         menu.appendToGroup(GEFActionConstants.GROUP_UNDO,
                 getAction(ActionFactory.UNDO.getId()));
         menu.appendToGroup(
@@ -84,7 +79,7 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         menu.appendToGroup(
                 GEFActionConstants.GROUP_COPY,
                 getAction(ActionFactory.CUT.getId()));
-        ((WorkbenchPartAction)getAction(ActionFactory.PASTE.getId())).update();
+        ((WorkbenchPartAction) getAction(ActionFactory.PASTE.getId())).update();
         menu.appendToGroup(
                 GEFActionConstants.GROUP_COPY,
                 getAction(ActionFactory.PASTE.getId()));
@@ -109,9 +104,10 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         String orderGroup = "Order";
         MenuManager orderMenu = new MenuManager(orderGroup,
                 CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                        OPIBuilderPlugin.PLUGIN_ID, "icons/shape_move_front.png"), null);    
+                        OPIBuilderPlugin.PLUGIN_ID, "icons/shape_move_front.png"),
+                null);
         orderMenu.add(new Separator(orderGroup));
-        for(OrderType orderType : OrderType.values()){
+        for (OrderType orderType : OrderType.values()) {
             orderMenu.appendToGroup(orderGroup, getAction(orderType.getActionID()));
         }
         menu.appendToGroup(GEFActionConstants.GROUP_COPY, orderMenu);
@@ -119,17 +115,18 @@ public class OPIEditorContextMenuProvider extends ContextMenuProvider {
         String orientationGroup = "Orientation";
         MenuManager orientationMenu = new MenuManager(orientationGroup,
                 CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
-                        OPIBuilderPlugin.PLUGIN_ID, "icons/flip_horizontal.png"), null);    
+                        OPIBuilderPlugin.PLUGIN_ID, "icons/flip_horizontal.png"),
+                null);
         orientationMenu.add(new Separator(orientationGroup));
-        for(OrientationType orientationType : OrientationType.values()){
+        for (OrientationType orientationType : OrientationType.values()) {
             orientationMenu.appendToGroup(orientationGroup, getAction(orientationType.getActionID()));
 
         }
         menu.appendToGroup(GEFActionConstants.GROUP_COPY, orientationMenu);
 
-//        MenuManager cssMenu = new MenuManager("CSS", "css");
-//        cssMenu.add(new Separator("additions"));
-//        menu.add(cssMenu);
+        // MenuManager cssMenu = new MenuManager("CSS", "css");
+        // cssMenu.add(new Separator("additions"));
+        // menu.add(cssMenu);
     }
 
     private IAction getAction(String actionId) {

@@ -15,13 +15,13 @@ import org.csstudio.ui.util.CustomMediaFactory;
 import org.eclipse.draw2d.geometry.Point;
 
 /**
- *The model of scroll bar widget.
+ * The model of scroll bar widget.
+ * 
  * @author Xihui Chen
  */
 public class ScrollBarModel extends AbstractPVWidgetModel {
 
     public final String ID = "org.csstudio.opibuilder.widgets.scrollbar";
-
 
     /** The ID of the minimum property. */
     public static final String PROP_MIN = "minimum";
@@ -29,15 +29,17 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
     /** The ID of the maximum property. */
     public static final String PROP_MAX = "maximum";
 
-    /** The amount the scrollbar will move when the page up or page down areas are
-    pressed.*/
+    /**
+     * The amount the scrollbar will move when the page up or page down areas are pressed.
+     */
     public static final String PROP_PAGE_INCREMENT = "page_increment";
 
-    /**the amount the scrollbar will move when the up or down arrow buttons are
-    pressed.*/
+    /**
+     * the amount the scrollbar will move when the up or down arrow buttons are pressed.
+     */
     public static final String PROP_STEP_INCREMENT = "step_increment";
 
-    /**The length of the dragging bar.*/
+    /** The length of the dragging bar. */
     public static final String PROP_BAR_LENGTH = "bar_length";
 
     /** The ID of the horizontal property. */
@@ -57,12 +59,10 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
     private static final double DEFAULT_STEP_INCREMENT = 1;
     private static final double DEFAULT_BAR_LENGTH = 10;
 
-
     public ScrollBarModel() {
         setSize(120, 20);
         setForegroundColor(CustomMediaFactory.COLOR_BLACK);
     }
-
 
     @Override
     protected void configureProperties() {
@@ -93,7 +93,6 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
 
     }
 
-
     /**
      * @return the minimum value
      */
@@ -101,14 +100,12 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
         return (Double) getProperty(PROP_MIN).getPropertyValue();
     }
 
-
     /**
      * @return the maximum value
      */
     public Double getMaximum() {
         return (Double) getProperty(PROP_MAX).getPropertyValue();
     }
-
 
     /**
      * @return true if the widget is in horizontal orientation, false otherwise
@@ -137,6 +134,7 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
     public Double getBarLength() {
         return (Double) getProperty(PROP_BAR_LENGTH).getPropertyValue();
     }
+
     /**
      * @return true if limits will be load from DB, false otherwise
      */
@@ -164,7 +162,5 @@ public class ScrollBarModel extends AbstractPVWidgetModel {
         setPropertyValue(PROP_HORIZONTAL, !isHorizontal());
         super.rotate90(true);
     }
-
-
 
 }

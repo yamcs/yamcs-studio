@@ -21,14 +21,12 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
      */
     private final String name;
     /**
-     * Implementation of {@link IAutoCompleteProvider} defined in the OSGI
-     * component.
+     * Implementation of {@link IAutoCompleteProvider} defined in the OSGI component.
      */
     private final IAutoCompleteProvider provider;
     /**
-     * High level provider are always displayed regardless of defined
-     * preferences. This boolean is optional (default=false) in the OSGI
-     * component declaration.
+     * High level provider are always displayed regardless of defined preferences. This boolean is optional
+     * (default=false) in the OSGI component declaration.
      */
     private final boolean highLevelProvider;
     /**
@@ -36,8 +34,8 @@ public class ProviderSettings implements Comparable<ProviderSettings> {
      */
     private Integer maxResults;
     /**
-     * Used to manage display order, high level provider always appears first
-     * and others follow the order defined in preferences.
+     * Used to manage display order, high level provider always appears first and others follow the order defined in
+     * preferences.
      */
     private Integer index = -1;
 

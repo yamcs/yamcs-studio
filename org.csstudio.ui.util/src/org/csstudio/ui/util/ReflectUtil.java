@@ -1,10 +1,8 @@
 package org.csstudio.ui.util;
 
 /**
- * Implementing some introspection functions based on the
- * class name instead of the class object. Using class
- * tokens would mean that this plugin has dependencies to
- * all plugins that have a single type.
+ * Implementing some introspection functions based on the class name instead of the class object. Using class tokens
+ * would mean that this plugin has dependencies to all plugins that have a single type.
  *
  * @author Gabriele Carcassi
  */
@@ -22,7 +20,8 @@ public class ReflectUtil {
     /**
      * Analogous to Class.isArray(). True if the class is an array
      *
-     * @param targetClass a class name
+     * @param targetClass
+     *            a class name
      * @return true if class name represents an array
      */
     public static boolean isArray(String targetClass) {
@@ -30,10 +29,10 @@ public class ReflectUtil {
     }
 
     /**
-     * Analogous to Class.getComponentType(). Return the type
-     * of the elements of the array.
+     * Analogous to Class.getComponentType(). Return the type of the elements of the array.
      *
-     * @param targetClass a class representing an array
+     * @param targetClass
+     *            a class representing an array
      * @return the class of the array
      */
     public static String getComponentType(String targetClass) {
@@ -45,7 +44,8 @@ public class ReflectUtil {
     /**
      * Returns the array class name for the given class name.
      *
-     * @param className a class name
+     * @param className
+     *            a class name
      * @return the corresponding array class
      */
     public static String toArrayClass(String className) {

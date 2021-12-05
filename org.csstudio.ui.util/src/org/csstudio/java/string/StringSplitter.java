@@ -9,15 +9,15 @@ package org.csstudio.java.string;
 
 import java.util.regex.Pattern;
 
-/** Split string into segments
+/**
+ * Split string into segments
  *
- *  @author Nick Battam
- *  @author Kay Kasemir
- *  @author Xihui Chen - Original <code> StringUtil.splitIgnoreInQuotes()</code>
+ * @author Nick Battam
+ * @author Kay Kasemir
+ * @author Xihui Chen - Original <code> StringUtil.splitIgnoreInQuotes()</code>
  *
  */
-public class StringSplitter
-{
+public class StringSplitter {
     private static final String QUOTE = "'\\\"";
     private static final String NOT_QUOTE = "^" + QUOTE;
 
@@ -32,42 +32,42 @@ public class StringSplitter
     static final String SUBSTITUTE_SINGLE_QUOTE = "\uE000";
 
     private static final String splitRegex = "(?="
-            + "([" + NOT_QUOTE + "]*"  // any number of non-quotes
-            +  "[" + QUOTE + "]"       // a quote
-            +  "[" + NOT_QUOTE + "]*"  // any number of non-quotes
-            +  "[" + QUOTE + "]"       // a quote, not preceeded by an escape
-            + ")*"                     // any number of times
-            +  "[" + NOT_QUOTE + "]*"  // any number of non quotes
+            + "([" + NOT_QUOTE + "]*" // any number of non-quotes
+            + "[" + QUOTE + "]" // a quote
+            + "[" + NOT_QUOTE + "]*" // any number of non-quotes
+            + "[" + QUOTE + "]" // a quote, not preceeded by an escape
+            + ")*" // any number of times
+            + "[" + NOT_QUOTE + "]*" // any number of non quotes
             + "$)";
 
     /** Prevent instantiation */
-    private StringSplitter()
-    {
+    private StringSplitter() {
         // NOP
     }
 
-
-    /** Split source string into an array of elements separated by the splitting character,
-     *  but ignoring split characters enclosed in quotes.
+    /**
+     * Split source string into an array of elements separated by the splitting character, but ignoring split characters
+     * enclosed in quotes.
      *
-     *  @param trimmedSource String to be split
-     *  @param splitChar Character used to split the source string, e.g. ',' or ' '
-     *  @param deleteHeadTailQuotes Delete quotes in the head and tail of individual elements
-     *                              if <code>true</code>
-     *  @return Array of individual elements
-     *  @throws Exception on parse error (missing end of quoted string)
+     * @param trimmedSource
+     *            String to be split
+     * @param splitChar
+     *            Character used to split the source string, e.g. ',' or ' '
+     * @param deleteHeadTailQuotes
+     *            Delete quotes in the head and tail of individual elements if <code>true</code>
+     * @return Array of individual elements
+     * @throws Exception
+     *             on parse error (missing end of quoted string)
      */
     public static String[] splitIgnoreInQuotes(final String source,
-                                               final char splitChar,
-                                               final boolean deleteHeadTailQuotes) throws Exception
-    {
+            final char splitChar,
+            final boolean deleteHeadTailQuotes) throws Exception {
         // Trim, replace tabs with spaces so we only need to handle
         // space in the following; only if not splitting on TAB
         final String trimmedSource;
         if (splitChar != TAB) {
             trimmedSource = source.replace(TAB, SPACE).trim();
-        }
-        else {
+        } else {
             trimmedSource = source;
         }
 
@@ -88,11 +88,11 @@ public class StringSplitter
     }
 
     /**
-     * Remove matching quotes from start/end of input string
-     * If there are no quotes or if the leading or trailing
-     * quotes do not match, this method has no effect.
+     * Remove matching quotes from start/end of input string If there are no quotes or if the leading or trailing quotes
+     * do not match, this method has no effect.
      *
-     * @param input String to parse
+     * @param input
+     *            String to parse
      * @return String with any wrapping quotes removed.
      */
     static String removeQuotes(String input) {
@@ -105,12 +105,13 @@ public class StringSplitter
     }
 
     /**
-     * Remove escaped quotes (single and double) from the input string.
-     * These may be found inside a 'quoted section' and should not be processed.
+     * Remove escaped quotes (single and double) from the input string. These may be found inside a 'quoted section' and
+     * should not be processed.
      *
      * Replace the character sequences with an unlikely unicode character.
      *
-     * @param source String to process
+     * @param source
+     *            String to process
      * @return
      */
     static String substituteEscapedQuotes(String source) {
@@ -122,10 +123,10 @@ public class StringSplitter
     }
 
     /**
-     * Restore 'escaped quotes' (single and double) removed with
-     * {@link StringSplitter.substitueEscapeQuotes}
+     * Restore 'escaped quotes' (single and double) removed with {@link StringSplitter.substitueEscapeQuotes}
      *
-     * @param source String to process
+     * @param source
+     *            String to process
      * @return
      */
     static String revertQuoteSubsitutions(String input) {

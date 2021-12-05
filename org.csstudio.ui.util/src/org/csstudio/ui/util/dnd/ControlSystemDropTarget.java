@@ -22,37 +22,36 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * General purpose utility to allowing Drag-and-Drop "Drop" of any
- * adaptable or serializable object.
+ * General purpose utility to allowing Drag-and-Drop "Drop" of any adaptable or serializable object.
  * <p>
- * Filters the received items to match the desired type, based on the
- * order or preference specified. Can also accept plain text.
+ * Filters the received items to match the desired type, based on the order or preference specified. Can also accept
+ * plain text.
  *
  * @author Gabriele Carcassi
  * @author Kay Kasemir
  */
-abstract public class ControlSystemDropTarget
-{
+abstract public class ControlSystemDropTarget {
     final private DropTarget target;
 
-    /** Initialize 'drop' target
-     *  @param control Control onto which items may be dropped
-     *  @param accepted (Base) class of accepted items
+    /**
+     * Initialize 'drop' target
+     * 
+     * @param control
+     *            Control onto which items may be dropped
+     * @param accepted
+     *            (Base) class of accepted items
      */
     public ControlSystemDropTarget(final Control control,
-            final Class<?>... accepted)
-    {
+            final Class<?>... accepted) {
         target = new DropTarget(control, DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
 
         final List<Transfer> supportedTransfers = new ArrayList<Transfer>();
-        for (Class<?> clazz : accepted)
-        {
+        for (Class<?> clazz : accepted) {
             if (clazz == String.class)
                 supportedTransfers.add(TextTransfer.getInstance());
             if (clazz == File.class)
                 supportedTransfers.add(FileTransfer.getInstance());
-            else
-            {
+            else {
                 final SerializableItemTransfer xfer = SerializableItemTransfer.getTransfer(clazz.getName());
                 if (xfer != null)
                     supportedTransfers.add(xfer);
@@ -60,14 +59,12 @@ abstract public class ControlSystemDropTarget
         }
         target.setTransfer(supportedTransfers.toArray(new Transfer[supportedTransfers.size()]));
 
-        target.addDropListener(new DropTargetAdapter()
-        {
-            /** Used internally by the system when a DnD operation enters the control.
-             *  {@inheritDoc}
+        target.addDropListener(new DropTargetAdapter() {
+            /**
+             * Used internally by the system when a DnD operation enters the control.
              */
             @Override
-            public void dragEnter(final DropTargetEvent event)
-            {
+            public void dragEnter(final DropTargetEvent event) {
                 // Seems DropTarget it is not honoring the order of the transferData:
                 // Making sure is right
                 boolean done = false;
@@ -89,23 +86,23 @@ abstract public class ControlSystemDropTarget
                     event.detail = DND.DROP_NONE;
             }
 
-            /** Data was dropped into the target.
-             *  Check the actual type, handle received data.
+            /**
+             * Data was dropped into the target. Check the actual type, handle received data.
              */
             @Override
-            public void drop(final DropTargetEvent event)
-            {
+            public void drop(final DropTargetEvent event) {
                 handleDrop(event.data);
             }
         });
     }
 
-    /** To be implemented by derived class.
+    /**
+     * To be implemented by derived class.
      *
-     *  Will be called for each 'dropped' item that
-     *  has the accepted data type
+     * Will be called for each 'dropped' item that has the accepted data type
      *
-     *  @param item Control system item
+     * @param item
+     *            Control system item
      */
     abstract public void handleDrop(Object item);
 

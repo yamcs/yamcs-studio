@@ -570,9 +570,6 @@ public class ThumbWheelFigure extends Figure implements Introspectable {
         return test;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void paintFigure(final Graphics graphics) {
         graphics.setBackgroundColor(this.getBackgroundColor());

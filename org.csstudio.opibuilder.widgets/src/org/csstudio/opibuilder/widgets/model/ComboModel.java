@@ -16,12 +16,13 @@ import org.csstudio.opibuilder.properties.StringListProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.eclipse.swt.graphics.RGB;
 
-/**The model for combo widget.
+/**
+ * The model for combo widget.
+ * 
  * @author Xihui Chen
  *
  */
 public class ComboModel extends AbstractPVWidgetModel {
-
 
     public final String ID = "org.csstudio.opibuilder.widgets.combo";
     /**
@@ -35,8 +36,8 @@ public class ComboModel extends AbstractPVWidgetModel {
     public static final String PROP_ITEMS_FROM_PV = "items_from_pv";
 
     public ComboModel() {
-        setBackgroundColor(new RGB(255,255,255));
-        setForegroundColor(new RGB(0,0,0));
+        setBackgroundColor(new RGB(255, 255, 255));
+        setForegroundColor(new RGB(0, 0, 0));
         setScaleOptions(true, false, false);
     }
 
@@ -50,14 +51,13 @@ public class ComboModel extends AbstractPVWidgetModel {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getItems(){
-        return (List<String>)getPropertyValue(PROP_ITEMS);
+    public List<String> getItems() {
+        return (List<String>) getPropertyValue(PROP_ITEMS);
     }
 
-    public boolean isItemsFromPV(){
-        return (Boolean)getPropertyValue(PROP_ITEMS_FROM_PV);
+    public boolean isItemsFromPV() {
+        return (Boolean) getPropertyValue(PROP_ITEMS_FROM_PV);
     }
-
 
     @Override
     public String getTypeID() {

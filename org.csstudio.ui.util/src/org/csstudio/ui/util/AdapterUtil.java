@@ -14,23 +14,21 @@ import static org.csstudio.ui.util.ReflectUtil.*;
 /**
  * Utilities for using adapters, particularly against selections.
  *
- *  @author Gabriele Carcassi
- *  @author Kay Kasemir
- *  @author Jaka Bobnar
+ * @author Gabriele Carcassi
+ * @author Kay Kasemir
+ * @author Jaka Bobnar
  */
-public class AdapterUtil
-{
+public class AdapterUtil {
 
     /**
-     * Returns all class names that an object of that class can be
-     * converted to.
+     * Returns all class names that an object of that class can be converted to.
      *
-     * @param clazz a class
+     * @param clazz
+     *            a class
      * @return all the class names with registered adapterFactories
      */
-    public static String[] getAdaptableTypes(Class<?> clazz)
-    {
-        if (Platform.isRunning()){
+    public static String[] getAdaptableTypes(Class<?> clazz) {
+        if (Platform.isRunning()) {
             // Check for adapters in platform
             return Platform.getAdapterManager().computeAdapterTypes(clazz);
         }
@@ -40,12 +38,14 @@ public class AdapterUtil
     }
 
     /**
-     * Returns the current selection converted to an array of the desired type,
-     * or to an empty array if not possible.
+     * Returns the current selection converted to an array of the desired type, or to an empty array if not possible.
      *
-     * @param <T> requested type
-     * @param selection a selection
-     * @param clazz the desired type
+     * @param <T>
+     *            requested type
+     * @param selection
+     *            a selection
+     * @param clazz
+     *            the desired type
      * @return an array of the desired type
      */
     @SuppressWarnings("unchecked")
@@ -57,17 +57,17 @@ public class AdapterUtil
             if (result != null)
                 return result;
 
-            //The selection might contain objects that are descendants of the requested class. In this case the above
-            //returns a null result. Check the type of the first element and try to convert. The elements are usually
-            //all of the same type. If they are of mixed type, tough luck (only those that are of the first type will
-            //be returned).
+            // The selection might contain objects that are descendants of the requested class. In this case the above
+            // returns a null result. Check the type of the first element and try to convert. The elements are usually
+            // all of the same type. If they are of mixed type, tough luck (only those that are of the first type will
+            // be returned).
             Object firstElement = ((IStructuredSelection) selection).getFirstElement();
             if (firstElement != null) {
-                //null check must be made, because null is a legitimate value in this case
+                // null check must be made, because null is a legitimate value in this case
                 Class<?> selectionClass = firstElement.getClass();
                 if (clazz.isAssignableFrom(selectionClass)) {
-                    Object[] s = (Object[])convert(strucSelection.toArray(),
-                        ReflectUtil.toArrayClass(selectionClass.getName()));
+                    Object[] s = (Object[]) convert(strucSelection.toArray(),
+                            ReflectUtil.toArrayClass(selectionClass.getName()));
                     result = (T[]) Array.newInstance(clazz, s.length);
                     System.arraycopy(s, 0, result, 0, s.length);
                     return result;
@@ -79,13 +79,13 @@ public class AdapterUtil
     }
 
     /**
-     * Adapts an object to the desired type. This method, on top of
-     * the standard adapter facility, adds support for arrays. If any of the
-     * arguments represents an array, it will
-     * use object to object adaptation to create it.
+     * Adapts an object to the desired type. This method, on top of the standard adapter facility, adds support for
+     * arrays. If any of the arguments represents an array, it will use object to object adaptation to create it.
      *
-     * @param obj Object to adapt
-     * @param targetClass Desired class name
+     * @param obj
+     *            Object to adapt
+     * @param targetClass
+     *            Desired class name
      * @return Object that matches the <code>targetClass</code> or <code>null</code>
      */
     public static Object convert(Object obj, String targetClass) {
@@ -117,7 +117,8 @@ public class AdapterUtil
                 } else if (elementsToAdapt.length == 1) {
                     return convert(elementsToAdapt[0], targetClass);
                 } else {
-                    throw new IllegalArgumentException("Trying to adapt an array " + obj + " to a single object of type " + targetClass);
+                    throw new IllegalArgumentException(
+                            "Trying to adapt an array " + obj + " to a single object of type " + targetClass);
                 }
             }
 
@@ -150,15 +151,15 @@ public class AdapterUtil
                     return null;
                 }
             } else {
-                Object[] result = (Object[]) Array.newInstance(adaptedElements.get(0).getClass(), adaptedElements.size());
+                Object[] result = (Object[]) Array.newInstance(adaptedElements.get(0).getClass(),
+                        adaptedElements.size());
                 return adaptedElements.toArray(result);
             }
         }
 
         // Time to try out the registered adapterFactories to the platform
         if (Platform.isRunning()) {
-            final Object adapted =
-                Platform.getAdapterManager().loadAdapter(obj, targetClass);
+            final Object adapted = Platform.getAdapterManager().loadAdapter(obj, targetClass);
             if (adapted != null)
                 return adapted;
         }

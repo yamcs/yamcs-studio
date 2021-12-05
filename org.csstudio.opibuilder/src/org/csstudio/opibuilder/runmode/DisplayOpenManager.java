@@ -20,7 +20,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 
-/**A manager help to manage the display open history and provide go back and forward functions.
+/**
+ * A manager help to manage the display open history and provide go back and forward functions.
+ * 
  * @author Xihui Chen
  *
  */
@@ -30,27 +32,28 @@ public class DisplayOpenManager {
     private List<IDisplayOpenManagerListener> listeners;
     private static int STACK_SIZE = 10;
     private IOPIRuntime opiRuntime;
+
     public DisplayOpenManager(IOPIRuntime opiRuntime) {
-        backStack =  new SizeLimitedStack<IRunnerInput>(STACK_SIZE);
+        backStack = new SizeLimitedStack<IRunnerInput>(STACK_SIZE);
         forwardStack = new SizeLimitedStack<IRunnerInput>(STACK_SIZE);
         listeners = new ArrayList<IDisplayOpenManagerListener>();
         this.opiRuntime = opiRuntime;
     }
 
-    public void openNewDisplay(){
+    public void openNewDisplay() {
         IRunnerInput input = getCurrentRunnerInputInEditor();
-        if(input !=null)
+        if (input != null)
             backStack.push(input);
         forwardStack.clear();
         fireOperationsHistoryChanged();
     }
 
-    public void goBack(){
-        if(backStack.size() ==0)
+    public void goBack() {
+        if (backStack.size() == 0)
             return;
 
         IRunnerInput input = getCurrentRunnerInputInEditor();
-        if(input !=null)
+        if (input != null)
             forwardStack.push(input);
 
         openOPI(backStack.pop());
@@ -61,24 +64,22 @@ public class DisplayOpenManager {
 
         IEditorInput input = opiRuntime.getOPIInput();
 
-        if(input instanceof IRunnerInput){
-            if(((IRunnerInput)input).getDisplayOpenManager() == null)
-                ((IRunnerInput)input).setDisplayOpenManager(
-                    opiRuntime.getAdapter(DisplayOpenManager.class));
-            return (IRunnerInput)input;
+        if (input instanceof IRunnerInput) {
+            if (((IRunnerInput) input).getDisplayOpenManager() == null)
+                ((IRunnerInput) input).setDisplayOpenManager(
+                        opiRuntime.getAdapter(DisplayOpenManager.class));
+            return (IRunnerInput) input;
         }
 
         else
             return new RunnerInput(getCurrentPathInEditor(),
                     opiRuntime.getAdapter(DisplayOpenManager.class));
 
-
     }
 
     private IPath getCurrentPathInEditor() {
         return ResourceUtil.getPathInEditor(
                 opiRuntime.getOPIInput());
-
 
     }
 
@@ -95,25 +96,25 @@ public class DisplayOpenManager {
         fireOperationsHistoryChanged();
     }
 
-    public void goForward(){
-        if(forwardStack.size() ==0)
+    public void goForward() {
+        if (forwardStack.size() == 0)
             return;
         IRunnerInput input = getCurrentRunnerInputInEditor();
-        if(input !=null)
+        if (input != null)
             backStack.push(input);
 
         openOPI(forwardStack.pop());
 
     }
 
-    public void goBack(int index){
-        if(backStack.size() > index){
+    public void goBack(int index) {
+        if (backStack.size() > index) {
 
             IRunnerInput input = getCurrentRunnerInputInEditor();
-            if(input !=null)
+            if (input != null)
                 forwardStack.push(input);
 
-            for(int i=0; i<index; i++){
+            for (int i = 0; i < index; i++) {
                 forwardStack.push(backStack.pop());
             }
 
@@ -121,14 +122,14 @@ public class DisplayOpenManager {
         }
     }
 
-    public void goForward(int index){
-        if(forwardStack.size() > index){
+    public void goForward(int index) {
+        if (forwardStack.size() > index) {
 
             IRunnerInput input = getCurrentRunnerInputInEditor();
-            if(input !=null)
+            if (input != null)
                 backStack.push(input);
 
-            for(int i=0; i<index; i++){
+            for (int i = 0; i < index; i++) {
                 backStack.push(forwardStack.pop());
             }
 
@@ -136,44 +137,46 @@ public class DisplayOpenManager {
         }
     }
 
-
-
-    public void addListener(IDisplayOpenManagerListener listener){
-        if(!listeners.contains(listener))
+    public void addListener(IDisplayOpenManagerListener listener) {
+        if (!listeners.contains(listener))
             listeners.add(listener);
     }
 
-    public boolean removeListener(IDisplayOpenManagerListener listener){
+    public boolean removeListener(IDisplayOpenManagerListener listener) {
         return listeners.remove(listener);
     }
-    private void fireOperationsHistoryChanged(){
-        for(IDisplayOpenManagerListener listener : listeners)
+
+    private void fireOperationsHistoryChanged() {
+        for (IDisplayOpenManagerListener listener : listeners)
             listener.displayOpenHistoryChanged(this);
     }
 
-
-    public boolean canBackward(){
+    public boolean canBackward() {
         return backStack.size() > 0;
     }
 
-    public boolean canForward(){
+    public boolean canForward() {
         return forwardStack.size() > 0;
     }
 
-    /**Return an array of all elements in the backward stack.
-     * The oldest element is the first element of the returned array.
+    /**
+     * Return an array of all elements in the backward stack. The oldest element is the first element of the returned
+     * array.
+     * 
      * @return the array contained all elements in the stack.
      */
-    public Object[] getBackStackEntries(){
-        return  backStack.toArray();
+    public Object[] getBackStackEntries() {
+        return backStack.toArray();
     }
 
-    /**Return an array of all elements in the forward stack.
-     * The oldest element is the first element of the returned array.
+    /**
+     * Return an array of all elements in the forward stack. The oldest element is the first element of the returned
+     * array.
+     * 
      * @return the array contained all elements in the stack.
      */
-    public Object[] getForwardStackEntries(){
-        return  forwardStack.toArray();
+    public Object[] getForwardStackEntries() {
+        return forwardStack.toArray();
     }
 
     /**

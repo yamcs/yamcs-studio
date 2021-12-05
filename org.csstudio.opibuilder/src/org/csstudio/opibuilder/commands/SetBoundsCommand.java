@@ -65,9 +65,6 @@ public final class SetBoundsCommand extends Command {
         setLabel("Changing widget bounds");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         // remember old bounds
@@ -76,9 +73,6 @@ public final class SetBoundsCommand extends Command {
         doApplyBounds(newBounds);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void undo() {
         doApplyBounds(oldBounds);
@@ -86,7 +80,9 @@ public final class SetBoundsCommand extends Command {
 
     /**
      * Applies the specified bounds to the widget model.
-     * @param bounds the bounds
+     * 
+     * @param bounds
+     *            the bounds
      */
     private void doApplyBounds(final Rectangle bounds) {
         // change element size

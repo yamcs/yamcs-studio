@@ -22,8 +22,10 @@ public class SVG12BridgeContext extends org.apache.batik.bridge.svg12.SVG12Bridg
     /**
      * Constructs a new bridge context.
      *
-     * @param userAgent the user agent
-     * @param loader document loader
+     * @param userAgent
+     *            the user agent
+     * @param loader
+     *            document loader
      */
     public SVG12BridgeContext(UserAgent userAgent, DocumentLoader loader) {
         super(userAgent, loader);

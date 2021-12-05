@@ -22,7 +22,7 @@
 
 package org.csstudio.opibuilder.editparts;
 
-/**The execution mode of the widget. */
+/** The execution mode of the widget. */
 public enum ExecutionMode {
     RUN_MODE,
     EDIT_MODE;

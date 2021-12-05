@@ -34,9 +34,6 @@ public class BufferInt extends ListInt {
         data = newData;
     }
 
-    /**
-     * {@inheritDoc }
-     */
     @Override
     public int getInt(int index) {
         if (index >= endOffset) {
@@ -45,9 +42,6 @@ public class BufferInt extends ListInt {
         return data[index];
     }
 
-    /**
-     * {@inheritDoc }
-     */
     @Override
     public int size() {
         int size = endOffset;

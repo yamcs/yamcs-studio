@@ -62,25 +62,16 @@ public final class PolyPointHandle extends SquareHandle {
         setCursor(Cursors.CROSS);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected DragTracker createDragTracker() {
         return new PolyPointDragTracker(getOwner(), _pointIndex);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Color getBorderColor() {
         return ColorConstants.darkGray;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Color getFillColor() {
         return ColorConstants.yellow;

@@ -53,16 +53,13 @@ abstract class AbstractPolyFeedbackFactory implements
     public static final String PROP_POINTS = "points";
 
     /**
-     * Subclasses should return an appropriate feedback figure. This basically
-     * supports code inheritance for the polyline and polygon implementations.
+     * Subclasses should return an appropriate feedback figure. This basically supports code inheritance for the
+     * polyline and polygon implementations.
      *
      * @return a polyline or polygon figure which is used for graphical feedback
      */
     protected abstract Polyline createFeedbackFigure();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final IFigure createDragSourceFeedbackFigure(
             final AbstractWidgetModel model, final Rectangle initalBounds) {
@@ -84,9 +81,6 @@ abstract class AbstractPolyFeedbackFactory implements
         return feedbackFigure;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void showChangeBoundsFeedback(
             final AbstractWidgetModel model, final PrecisionRectangle bounds,
@@ -121,9 +115,6 @@ abstract class AbstractPolyFeedbackFactory implements
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final Shape createSizeOnDropFeedback(
             final CreateRequest createRequest) {
@@ -146,9 +137,6 @@ abstract class AbstractPolyFeedbackFactory implements
         return feedbackFigure;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void showSizeOnDropFeedback(final CreateRequest createRequest,
             final IFigure feedbackFigure, final Insets insets) {
@@ -170,18 +158,12 @@ abstract class AbstractPolyFeedbackFactory implements
         polyline.setPoints(points);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SuppressWarnings("rawtypes")
     public final Class getCreationTool() {
         return PointListCreationTool.class;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final Command createInitialBoundsCommand(
             final AbstractWidgetModel widgetModel,
@@ -195,8 +177,8 @@ abstract class AbstractPolyFeedbackFactory implements
         PointList points = (PointList) request.getExtendedData().get(
                 PROP_POINTS);
         // necessary if the call was occurred by a "Drag and Drop" action
-        if (points==null) {
-            points = (PointList)widgetModel.getProperty(AbstractPolyModel.PROP_POINTS).getPropertyValue();
+        if (points == null) {
+            points = (PointList) widgetModel.getProperty(AbstractPolyModel.PROP_POINTS).getPropertyValue();
         }
 
         // the points are viewer relative and need to be translated to the
@@ -206,9 +188,6 @@ abstract class AbstractPolyFeedbackFactory implements
         return new ChangePolyPointsCommand(abstractPolyElement, scaledPoints);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final Command createChangeBoundsCommand(
             final AbstractWidgetModel model,
@@ -216,12 +195,12 @@ abstract class AbstractPolyFeedbackFactory implements
         assert model instanceof AbstractPolyModel : "model instanceof AbstractPolyModel";
 
         Rectangle correctedBounds = targetBounds;
-//        if (model instanceof PolyLineModel) {
-//            PolyLineModel polyline = (PolyLineModel) model;
-//            int correctedX = targetBounds.x + (polyline.getLineWidth() / 2);
-//            int correctedY = targetBounds.y + (polyline.getLineWidth() / 2);
-//            correctedBounds = new Rectangle(correctedX, correctedY, targetBounds.width, targetBounds.height);
-//        }
+        // if (model instanceof PolyLineModel) {
+        // PolyLineModel polyline = (PolyLineModel) model;
+        // int correctedX = targetBounds.x + (polyline.getLineWidth() / 2);
+        // int correctedY = targetBounds.y + (polyline.getLineWidth() / 2);
+        // correctedBounds = new Rectangle(correctedX, correctedY, targetBounds.width, targetBounds.height);
+        // }
 
         AbstractPolyModel abstractPolyElement = (AbstractPolyModel) model;
 
@@ -244,9 +223,6 @@ abstract class AbstractPolyFeedbackFactory implements
         return new ChangePolyPointsCommand(abstractPolyElement, points);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final List<Handle> createCustomHandles(final GraphicalEditPart hostEP) {
         assert hostEP != null;

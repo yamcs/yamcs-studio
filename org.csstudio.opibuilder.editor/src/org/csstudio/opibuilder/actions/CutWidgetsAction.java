@@ -12,8 +12,10 @@ import org.eclipse.gef.ui.actions.DeleteAction;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.actions.ActionFactory;
 
-/**Cut widgets to clipboard.
- *@author Joerg Rathlev (class of same name in SDS)
+/**
+ * Cut widgets to clipboard.
+ * 
+ * @author Joerg Rathlev (class of same name in SDS)
  * @author Xihui Chen
  *
  */
@@ -27,10 +29,9 @@ public class CutWidgetsAction extends CopyWidgetsAction {
         setText("Cut");
         setActionDefinitionId("org.eclipse.ui.edit.cut");
         setId(ActionFactory.CUT.getId());
-        ISharedImages sharedImages =
-            part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
+        ISharedImages sharedImages = part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
         setImageDescriptor(sharedImages
-        .getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+                .getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
     }
 
     @Override

@@ -28,8 +28,10 @@ public class BridgeContext extends org.apache.batik.bridge.BridgeContext {
     /**
      * Constructs a new bridge context.
      *
-     * @param userAgent the user agent
-     * @param loader document loader
+     * @param userAgent
+     *            the user agent
+     * @param loader
+     *            document loader
      */
     public BridgeContext(UserAgent userAgent, DocumentLoader loader) {
         super(userAgent, sharedPool, loader);

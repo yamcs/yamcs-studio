@@ -9,22 +9,21 @@ package org.csstudio.opibuilder.model;
 
 import org.osgi.framework.Version;
 
-
-
-/**The abstract widget model for all PV related widgets.
+/**
+ * The abstract widget model for all PV related widgets.
+ * 
  * @author Xihui Chen
  *
  */
-public abstract class AbstractPVWidgetModel extends AbstractWidgetModel implements IPVWidgetModel{
-
+public abstract class AbstractPVWidgetModel extends AbstractWidgetModel implements IPVWidgetModel {
 
     private PVWidgetModelDelegate delegate;
 
     public AbstractPVWidgetModel() {
     }
 
-    public PVWidgetModelDelegate getDelegate(){
-        if(delegate == null)
+    public PVWidgetModelDelegate getDelegate() {
+        if (delegate == null)
             delegate = new PVWidgetModelDelegate(this);
         return delegate;
     }
@@ -42,33 +41,32 @@ public abstract class AbstractPVWidgetModel extends AbstractWidgetModel implemen
     }
 
     @Override
-    public boolean isBorderAlarmSensitve(){
+    public boolean isBorderAlarmSensitve() {
         return getDelegate().isBorderAlarmSensitve();
     }
 
     @Override
-    public boolean isForeColorAlarmSensitve(){
+    public boolean isForeColorAlarmSensitve() {
         return getDelegate().isForeColorAlarmSensitve();
     }
 
     @Override
-    public boolean isBackColorAlarmSensitve(){
+    public boolean isBackColorAlarmSensitve() {
         return getDelegate().isBackColorAlarmSensitve();
     }
 
     @Override
-    public boolean isAlarmPulsing(){
+    public boolean isAlarmPulsing() {
         return getDelegate().isAlarmPulsing();
     }
 
     @Override
-    public String getPVName(){
+    public String getPVName() {
         return getDelegate().getPVName();
     }
 
     /**
-     * Override to prevent unsightly unresolved macros including
-     * $(pv_name) or $(pv_value).
+     * Override to prevent unsightly unresolved macros including $(pv_name) or $(pv_value).
      */
     @Override
     public String getTooltip() {

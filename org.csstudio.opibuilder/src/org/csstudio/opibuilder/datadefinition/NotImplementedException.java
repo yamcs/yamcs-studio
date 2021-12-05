@@ -1,6 +1,8 @@
 package org.csstudio.opibuilder.datadefinition;
 
-/**Exception for not implemented functions.
+/**
+ * Exception for not implemented functions.
+ * 
  * @author Xihui Chen
  *
  */

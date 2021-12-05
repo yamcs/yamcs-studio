@@ -7,15 +7,15 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.datadefinition;
 
-/**A wrapper for long[].
+/**
+ * A wrapper for long[].
+ * 
  * @author Xihui Chen
  *
  */
 public class LongArrayWrapper implements IPrimaryArrayWrapper {
 
     private long[] data;
-
-
 
     public LongArrayWrapper(long[] data) {
         this.data = data;

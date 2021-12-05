@@ -27,13 +27,12 @@ public class AutoCompleteResult {
      */
     private List<Proposal> proposals;
     /**
-     * Top proposals that will be handled by the top proposal manager and
-     * displayed on top of the main pop-up.
+     * Top proposals that will be handled by the top proposal manager and displayed on top of the main pop-up.
      */
     private List<Proposal> topProposals;
     /**
-     * Data that will be processed by {@link TooltipDataHandler} to display a
-     * tool-tip each time a new result is provided.
+     * Data that will be processed by {@link TooltipDataHandler} to display a tool-tip each time a new result is
+     * provided.
      */
     private List<TooltipData> tooltips;
     /**
@@ -41,8 +40,7 @@ public class AutoCompleteResult {
      */
     private int count;
     /**
-     * Provider name, if <code>null</code> provider will not be display, only
-     * top proposals.
+     * Provider name, if <code>null</code> provider will not be display, only top proposals.
      */
     private String provider;
 

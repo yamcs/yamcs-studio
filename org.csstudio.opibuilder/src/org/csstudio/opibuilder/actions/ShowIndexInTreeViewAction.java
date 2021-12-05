@@ -13,7 +13,9 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-/**The action to show/hide the index in tree view.
+/**
+ * The action to show/hide the index in tree view.
+ * 
  * @author Xihui Chen
  *
  */
@@ -26,11 +28,9 @@ public class ShowIndexInTreeViewAction extends Action {
 
     private boolean showIndex = false;
 
-    private ImageDescriptor showIndexImage =
-        CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
+    private ImageDescriptor showIndexImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
             OPIBuilderPlugin.PLUGIN_ID, "icons/show_index.png");
-    private ImageDescriptor hideIndexImage =
-        CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
+    private ImageDescriptor hideIndexImage = CustomMediaFactory.getInstance().getImageDescriptorFromPlugin(
             OPIBuilderPlugin.PLUGIN_ID, "icons/hide_index.png");
 
     public ShowIndexInTreeViewAction(EditPartViewer editPartViewer) {
@@ -40,16 +40,15 @@ public class ShowIndexInTreeViewAction extends Action {
         this.editPartViewer = editPartViewer;
     }
 
-
     @Override
     public void run() {
         showIndex = !showIndex;
         editPartViewer.setProperty(SHOW_INDEX_PROPERTY, showIndex);
         editPartViewer.getRootEditPart().getContents().refresh();
-        if(showIndex){
+        if (showIndex) {
             setText("Hide Index");
             setImageDescriptor(hideIndexImage);
-        }else{
+        } else {
             setText("Show Index");
             setImageDescriptor(showIndexImage);
         }

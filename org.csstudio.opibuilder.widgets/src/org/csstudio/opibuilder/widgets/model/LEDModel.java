@@ -17,14 +17,13 @@ import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.swt.widgets.figures.LEDFigure;
 import org.eclipse.swt.graphics.Color;
 
-
 /**
  * The widget model for LED.
+ * 
  * @author Xihui Chen
  *
  */
 public class LEDModel extends AbstractBoolWidgetModel {
-
 
     /** The ID of the effect 3D property. */
     public static final String PROP_EFFECT3D = "effect_3d";
@@ -65,9 +64,8 @@ public class LEDModel extends AbstractBoolWidgetModel {
     public static final int MINIMUM_SIZE = 10;
 
     /**
-     * Border around the bulb - this is drawn in addition to the 'widget border'
-     * set by the widget border style/color/width properties. For round LEDs this is a
-     * round border,
+     * Border around the bulb - this is drawn in addition to the 'widget border' set by the widget border
+     * style/color/width properties. For round LEDs this is a round border,
      */
     public static final String PROP_BULB_BORDER = "bulb_border";
     /** Color of bulb border LEDs */
@@ -108,9 +106,9 @@ public class LEDModel extends AbstractBoolWidgetModel {
         addProperty(new ColorProperty(PROP_BULB_BORDER_COLOR, "Bulb border color",
                 WidgetPropertyCategory.Display, LEDFigure.DEFAULT_BULB_BORDER_COLOR.getRGB()));
 
-        for(int state=0; state<LEDFigure.MAX_NSTATES; state++) {
+        for (int state = 0; state < LEDFigure.MAX_NSTATES; state++) {
 
-            category = new NameDefinedCategory(String.format("State %02d", state+1));
+            category = new NameDefinedCategory(String.format("State %02d", state + 1));
 
             addProperty(new StringProperty(String.format(PROP_STATE_LABEL, state),
                     "Label", category, LEDFigure.DEFAULT_STATE_LABELS[state]));
@@ -120,11 +118,12 @@ public class LEDModel extends AbstractBoolWidgetModel {
                     "Color", category, LEDFigure.DEFAULT_STATE_COLORS[state].getRGB()));
             setPropertyVisibleAndSavable(String.format(PROP_STATE_COLOR, state), false, false);
 
-            addProperty(new  DoubleProperty(String.format(PROP_STATE_VALUE, state),
+            addProperty(new DoubleProperty(String.format(PROP_STATE_VALUE, state),
                     "Value", category, LEDFigure.DEFAULT_STATE_VALUES[state]));
             setPropertyVisibleAndSavable(String.format(PROP_STATE_VALUE, state), false, false);
         }
     }
+
     /**
      * The ID of this widget model.
      */

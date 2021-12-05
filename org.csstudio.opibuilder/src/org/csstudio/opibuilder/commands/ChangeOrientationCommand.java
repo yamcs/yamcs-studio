@@ -11,7 +11,9 @@ import org.csstudio.opibuilder.actions.ChangeOrientationAction.OrientationType;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.eclipse.gef.commands.Command;
 
-/**Flip a widget horizontally.
+/**
+ * Flip a widget horizontally.
+ * 
  * @author Xihui Chen
  *
  */
@@ -65,6 +67,7 @@ public class ChangeOrientationCommand extends Command {
             break;
         default:
             break;
-        }    }
+        }
+    }
 
 }

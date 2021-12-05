@@ -25,12 +25,13 @@ import org.eclipse.swt.widgets.MessageBox;
 
 /**
  * Abstract boolean control figure for bool button, toggle switch...
+ * 
  * @author Xihui Chen
  *
  */
 public class AbstractBoolControlFigure extends AbstractBoolFigure {
 
-    public enum ShowConfirmDialog{
+    public enum ShowConfirmDialog {
         NO("No"),
         Both("Both"),
         PUSH("Push"),
@@ -42,10 +43,10 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
             this.description = desc;
         }
 
-        public static String[] stringValues(){
+        public static String[] stringValues() {
             String[] sv = new String[values().length];
-            int i=0;
-            for(ShowConfirmDialog p : values())
+            int i = 0;
+            for (ShowConfirmDialog p : values())
                 sv[i++] = p.toString();
             return sv;
         }
@@ -58,82 +59,82 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
 
     class ButtonPresser extends MouseListener.Stub {
         private boolean canceled = false;
-            @Override
-            public void mousePressed(MouseEvent me) {
-                final Figure figure = (Figure) me.getSource();
-                // Check location to ignore bogus mouse clicks,
-                // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
-                if (me.button != 1  ||
-                    ! figure.containsPoint(me.getLocation()))
-                    return;
-                boolean isOpen = false;
-                if(runMode){
-                     if(toggle){
-                         switch (showConfirmDialog) {
-                        case Both:
-                            isOpen = true;
-                            break;
-                        case NO:
-                            isOpen = false;
-                            break;
-                        case PUSH:
-                            isOpen = !booleanValue;
-                            break;
-                        case RELEASE:
-                            isOpen = booleanValue;
-                            break;
-                        default:
-                            break;
-                        }
-                         if(!isOpen || (isOpen && openConfirmDialog()))
-                                 fireManualValueChange(!booleanValue);
+
+        @Override
+        public void mousePressed(MouseEvent me) {
+            final Figure figure = (Figure) me.getSource();
+            // Check location to ignore bogus mouse clicks,
+            // see https://github.com/ControlSystemStudio/cs-studio/issues/1818
+            if (me.button != 1 ||
+                    !figure.containsPoint(me.getLocation()))
+                return;
+            boolean isOpen = false;
+            if (runMode) {
+                if (toggle) {
+                    switch (showConfirmDialog) {
+                    case Both:
+                        isOpen = true;
+                        break;
+                    case NO:
+                        isOpen = false;
+                        break;
+                    case PUSH:
+                        isOpen = !booleanValue;
+                        break;
+                    case RELEASE:
+                        isOpen = booleanValue;
+                        break;
+                    default:
+                        break;
                     }
-                    else{
-                         switch (showConfirmDialog) {
-                        case Both:
-                        case PUSH:
-                        case RELEASE:
-                            isOpen = true;
-                            break;
-                        case NO:
-                            isOpen = false;
-                            break;
-                        default:
-                            break;
-                        }
-                        if(!isOpen || (isOpen && openConfirmDialog())){
-                            canceled = false;
-                            fireManualValueChange(true);
-                            if(isOpen)
-                                Display.getCurrent().timerExec(100, new Runnable(){
-                                    @Override
-                                    public void run() {
-                                        fireManualValueChange(false);
-                                    }
-                                });
-                        }else
-                            canceled = true;
+                    if (!isOpen || (isOpen && openConfirmDialog()))
+                        fireManualValueChange(!booleanValue);
+                } else {
+                    switch (showConfirmDialog) {
+                    case Both:
+                    case PUSH:
+                    case RELEASE:
+                        isOpen = true;
+                        break;
+                    case NO:
+                        isOpen = false;
+                        break;
+                    default:
+                        break;
                     }
-                    me.consume();
-                    repaint();
+                    if (!isOpen || (isOpen && openConfirmDialog())) {
+                        canceled = false;
+                        fireManualValueChange(true);
+                        if (isOpen)
+                            Display.getCurrent().timerExec(100, new Runnable() {
+                                @Override
+                                public void run() {
+                                    fireManualValueChange(false);
+                                }
+                            });
+                    } else
+                        canceled = true;
                 }
+                me.consume();
+                repaint();
             }
-            @Override
-            public void mouseReleased(MouseEvent me) {
-                if (me.button != 1)
-                    return;
-                if(!toggle && runMode && !canceled){
-                    fireManualValueChange(false);
-                    me.consume();
-                    repaint();
-                }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent me) {
+            if (me.button != 1)
+                return;
+            if (!toggle && runMode && !canceled) {
+                fireManualValueChange(false);
+                me.consume();
+                repaint();
             }
+        }
     }
 
     protected boolean toggle = false;
 
     protected ShowConfirmDialog showConfirmDialog = ShowConfirmDialog.Both;
-
 
     protected String password = "";
 
@@ -151,24 +152,25 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     /**
      * Listeners that react on manual boolean value change events.
      */
-    private List<IManualValueChangeListener> boolControlListeners =
-        new ArrayList<IManualValueChangeListener>();
+    private List<IManualValueChangeListener> boolControlListeners = new ArrayList<IManualValueChangeListener>();
 
     public AbstractBoolControlFigure() {
         super();
         buttonPresser = new ButtonPresser();
     }
 
-
-    /**add a boolean control listener which will be executed when pressed or released
-     * @param listener the listener to add
+    /**
+     * add a boolean control listener which will be executed when pressed or released
+     * 
+     * @param listener
+     *            the listener to add
      */
-    public void addManualValueChangeListener(final IManualValueChangeListener listener){
+    public void addManualValueChangeListener(final IManualValueChangeListener listener) {
         boolControlListeners.add(listener);
     }
 
-    public void removeManualValueChangeListener(final IManualValueChangeListener listener){
-        if(boolControlListeners.contains(listener))
+    public void removeManualValueChangeListener(final IManualValueChangeListener listener) {
+        if (boolControlListeners.contains(listener))
             boolControlListeners.remove(listener);
     }
 
@@ -182,31 +184,37 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
 
         booleanValue = newManualValue;
         updateValue();
-        if(runMode){
+        if (runMode) {
             for (IManualValueChangeListener l : boolControlListeners) {
-                    l.manualValueChanged(value);
+                l.manualValueChanged(value);
             }
         }
     }
+
     /**
      * @return the confirmTip
      */
     public String getConfirmTip() {
         return confirmTip;
     }
+
     /**
      * @return the password
      */
     public String getPassword() {
         return password;
     }
+
     /**
      * @return the runMode
      */
     public boolean isRunMode() {
         return runMode;
     }
-    /**{@link Deprecated} use {@link #getShowConfirmDialog()}
+
+    /**
+     * {@link Deprecated} use {@link #getShowConfirmDialog()}
+     * 
      * @return the showConfirmDialog
      */
     @Deprecated
@@ -220,6 +228,7 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     public ShowConfirmDialog getShowConfirmDialog() {
         return showConfirmDialog;
     }
+
     /**
      * @return the toggle
      */
@@ -230,8 +239,7 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     /**
      * open a confirm dialog.
      *
-     * @return false if user canceled, true if user pressed OK or no confirm
-     *         dialog needed.
+     * @return false if user canceled, true if user pressed OK or no confirm dialog needed.
      */
     private boolean openConfirmDialog() {
         // confirm & password input dialog
@@ -269,30 +277,34 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     }
 
     /**
-     * @param confirmTip the confirmTip to set
+     * @param confirmTip
+     *            the confirmTip to set
      */
     public void setConfirmTip(String confirmTip) {
         this.confirmTip = confirmTip;
     }
 
     /**
-     * @param password the password to set
+     * @param password
+     *            the password to set
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * @param runMode the runMode to set
+     * @param runMode
+     *            the runMode to set
      */
     public void setRunMode(boolean runMode) {
         this.runMode = runMode;
     }
 
-
-
-    /**Deprecated. Use {@link #setShowConfirmDialog(ShowConfirmDialog)}
-     * @param showConfirmDialog the showConfirmDialog to set
+    /**
+     * Deprecated. Use {@link #setShowConfirmDialog(ShowConfirmDialog)}
+     * 
+     * @param showConfirmDialog
+     *            the showConfirmDialog to set
      */
     @Deprecated
     public void setShowConfirmDialog(boolean showConfirmDialog) {
@@ -304,11 +316,11 @@ public class AbstractBoolControlFigure extends AbstractBoolFigure {
     }
 
     /**
-     * @param toggle the toggle to set
+     * @param toggle
+     *            the toggle to set
      */
     public void setToggle(boolean toggle) {
         this.toggle = toggle;
     }
-
 
 }

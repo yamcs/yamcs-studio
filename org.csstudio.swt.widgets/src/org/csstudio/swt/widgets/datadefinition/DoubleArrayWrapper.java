@@ -7,15 +7,15 @@
  ******************************************************************************/
 package org.csstudio.swt.widgets.datadefinition;
 
-/**A wrapper for double[].
+/**
+ * A wrapper for double[].
+ * 
  * @author Xihui Chen
  *
  */
 public class DoubleArrayWrapper implements IPrimaryArrayWrapper {
 
     public double[] data;
-
-
 
     public DoubleArrayWrapper(double[] data) {
         this.data = data;

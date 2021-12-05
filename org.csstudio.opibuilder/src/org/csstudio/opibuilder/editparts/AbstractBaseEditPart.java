@@ -553,9 +553,6 @@ public abstract class AbstractBaseEditPart extends AbstractGraphicalEditPart imp
         return isSelectable;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected final void refreshVisuals() {
         doRefreshVisuals(getFigure());

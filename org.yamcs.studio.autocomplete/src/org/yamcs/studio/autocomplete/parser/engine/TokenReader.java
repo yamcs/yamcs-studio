@@ -62,7 +62,8 @@ public class TokenReader extends Reader {
     public int peek() throws IOException {
         if (peek != -1)
             return peek;
-        else return peek = read();
+        else
+            return peek = read();
     }
 
     public String readUntil(char token) throws IOException {

@@ -21,7 +21,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.GraphicalViewer;
 import org.osgi.framework.Version;
 
-/**The model for linking container widget.
+/**
+ * The model for linking container widget.
+ * 
  * @author Xihui Chen
  *
  */
@@ -51,7 +53,7 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
                 "Size the container to fit the linked *.opi",
                 "Don't resize anything, crop if *.opi too large for container",
                 "Don't resize anything, add scrollbars if *.opi too large for container",
-                };
+        };
     }
 
     /**
@@ -66,7 +68,7 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
     public static final String PROP_ZOOMTOFITALL = "zoom_to_fit";
 
     /**
-     *  The ID of the auto scale property.
+     * The ID of the auto scale property.
      */
     @Deprecated
     public static final String PROP_AUTO_SIZE = "auto_size";
@@ -105,7 +107,8 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
         setPropertyVisibleAndSavable(PROP_AUTO_SIZE, false, false);
 
         addProperty(new ComboProperty(PROP_RESIZE_BEHAVIOUR, "Resize Behaviour",
-                WidgetPropertyCategory.Display, ResizeBehaviour.stringValues, ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()));
+                WidgetPropertyCategory.Display, ResizeBehaviour.stringValues,
+                ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal()));
     }
 
     @Override
@@ -114,18 +117,16 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
         if (PROP_ZOOMTOFITALL.equals(id)) {
             Activator.getLogger().log(Level.CONFIG,
                     "Using deprecated parameter to setPropertyValue: \"" + PROP_ZOOMTOFITALL + "\"");
-            if((Boolean)value) {
+            if ((Boolean) value) {
                 super.setPropertyValue(PROP_RESIZE_BEHAVIOUR, 0);
             }
-        }
-        else if (PROP_AUTO_SIZE.equals(id)) {
+        } else if (PROP_AUTO_SIZE.equals(id)) {
             Activator.getLogger().log(Level.CONFIG,
                     "Using deprecated parameter to setPropertyValue: \"" + PROP_AUTO_SIZE + "\"");
-            if((Boolean)value) {
+            if ((Boolean) value) {
                 super.setPropertyValue(PROP_RESIZE_BEHAVIOUR, 1);
             }
-        }
-        else {
+        } else {
             super.setPropertyValue(id, value);
         }
     }
@@ -137,18 +138,21 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
 
     /**
      * Returns the auto zoom state.
+     * 
      * @return the auto zoom state
      */
     public boolean isAutoFit() {
-        return (int)getProperty(PROP_RESIZE_BEHAVIOUR).getPropertyValue() == ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal();
+        return (int) getProperty(PROP_RESIZE_BEHAVIOUR).getPropertyValue() == ResizeBehaviour.SIZE_OPI_TO_CONTAINER
+                .ordinal();
     }
 
     public boolean isAutoSize() {
-        return (int)getProperty(PROP_RESIZE_BEHAVIOUR).getPropertyValue() == ResizeBehaviour.SIZE_CONTAINER_TO_OPI.ordinal();
+        return (int) getProperty(PROP_RESIZE_BEHAVIOUR).getPropertyValue() == ResizeBehaviour.SIZE_CONTAINER_TO_OPI
+                .ordinal();
     }
 
     public boolean isShowScrollBars() {
-        return (int)getProperty(PROP_RESIZE_BEHAVIOUR).getPropertyValue() == ResizeBehaviour.SCROLL_OPI.ordinal();
+        return (int) getProperty(PROP_RESIZE_BEHAVIOUR).getPropertyValue() == ResizeBehaviour.SCROLL_OPI.ordinal();
     }
 
     @Override
@@ -159,7 +163,7 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
     @Override
     public void scale(double widthRatio, double heightRatio) {
         super.scale(widthRatio, heightRatio);
-        if(!isAutoFit())
+        if (!isAutoFit())
             scaleChildren();
 
     }
@@ -167,16 +171,16 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
     @Override
     public void processVersionDifference(org.osgi.framework.Version boyVersionOnFile) {
         super.processVersionDifference(boyVersionOnFile);
-//        if(boyVersionOnFile.compareTo(VERSION_CHANGE_OF_RESIZE_BEHAVIOUR) < 0) {
-//            Activator.getLogger().log(Level.CONFIG, "Converting linking container to new style of resizing behaviour.");
-//            if((Boolean)getPropertyValue(PROP_AUTO_SIZE)) {
-//                setPropertyValue(PROP_RESIZE_BEHAVIOUR, ResizeBehaviour.SIZE_CONTAINER_TO_OPI.ordinal());
-//            } else if((Boolean)getPropertyValue(PROP_ZOOMTOFITALL)) {
-//                setPropertyValue(PROP_RESIZE_BEHAVIOUR, ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal());
-//            } else {
-//                setPropertyValue(PROP_RESIZE_BEHAVIOUR, ResizeBehaviour.SCROLL_OPI.ordinal());
-//            }
-//        }
+        // if(boyVersionOnFile.compareTo(VERSION_CHANGE_OF_RESIZE_BEHAVIOUR) < 0) {
+        // Activator.getLogger().log(Level.CONFIG, "Converting linking container to new style of resizing behaviour.");
+        // if((Boolean)getPropertyValue(PROP_AUTO_SIZE)) {
+        // setPropertyValue(PROP_RESIZE_BEHAVIOUR, ResizeBehaviour.SIZE_CONTAINER_TO_OPI.ordinal());
+        // } else if((Boolean)getPropertyValue(PROP_ZOOMTOFITALL)) {
+        // setPropertyValue(PROP_RESIZE_BEHAVIOUR, ResizeBehaviour.SIZE_OPI_TO_CONTAINER.ordinal());
+        // } else {
+        // setPropertyValue(PROP_RESIZE_BEHAVIOUR, ResizeBehaviour.SCROLL_OPI.ordinal());
+        // }
+        // }
     };
 
     /**
@@ -184,24 +188,21 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
      */
     @Override
     public void scaleChildren() {
-        if(isAutoFit())
+        if (isAutoFit())
             return;
-        //The linking container model doesn't hold its children actually, so it
+        // The linking container model doesn't hold its children actually, so it
         // has to ask editpart to get its children.
         GraphicalViewer viewer = getRootDisplayModel().getViewer();
-        if(viewer == null)
+        if (viewer == null)
             return;
-        LinkingContainerEditpart editpart =
-                (LinkingContainerEditpart) viewer.
-                getEditPartRegistry().
-                get(this);
+        LinkingContainerEditpart editpart = (LinkingContainerEditpart) viewer.getEditPartRegistry().get(this);
         Dimension size = getSize();
-        double newWidthRatio = size.width/(double)getOriginSize().width;
-        double newHeightRatio = size.height/(double)getOriginSize().height;
+        double newWidthRatio = size.width / (double) getOriginSize().width;
+        double newHeightRatio = size.height / (double) getOriginSize().height;
         boolean allowScale = true;
-        if(getDisplayModel() != null){
+        if (getDisplayModel() != null) {
             allowScale = getDisplayModel().getDisplayScaleData().isAutoScaleWidgets();
-            if(allowScale){
+            if (allowScale) {
                 int minWidth = getDisplayModel().getDisplayScaleData()
                         .getMinimumWidth();
 
@@ -221,14 +222,14 @@ public class LinkingContainerModel extends AbstractLinkingContainerModel {
             }
 
         }
-        if(allowScale)
-            for(Object child : editpart.getChildren())
-                ((AbstractBaseEditPart)child).getWidgetModel().scale(newWidthRatio, newHeightRatio);
+        if (allowScale)
+            for (Object child : editpart.getChildren())
+                ((AbstractBaseEditPart) child).getWidgetModel().scale(newWidthRatio, newHeightRatio);
     }
 
     @Override
     public Dimension getOriginSize() {
-        if(childrenGeoSize == null)
+        if (childrenGeoSize == null)
             return super.getOriginSize();
         else
             return childrenGeoSize;

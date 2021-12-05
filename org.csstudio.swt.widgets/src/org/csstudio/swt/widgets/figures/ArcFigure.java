@@ -15,18 +15,18 @@ import org.csstudio.swt.widgets.introspection.ShapeWidgetIntrospector;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
 
-/**The arc figure
+/**
+ * The arc figure
  *
  * @author Xihui Chen
  *
  */
-public class ArcFigure extends Shape implements Introspectable{
+public class ArcFigure extends Shape implements Introspectable {
 
-//    private boolean cordFill = false;
+    // private boolean cordFill = false;
     private int startAngle = 0;
     private int totalAngle = 90;
     private boolean fill = false;
-
 
     /**
      * @return the startAngle
@@ -45,7 +45,7 @@ public class ArcFigure extends Shape implements Introspectable{
     @Override
     protected void fillShape(Graphics graphics) {
         graphics.fillArc(getClientArea().getCopy().shrink(
-                (int)(getLineWidth()*1.5), (int)(getLineWidth()*1.5)), startAngle, totalAngle);
+                (int) (getLineWidth() * 1.5), (int) (getLineWidth() * 1.5)), startAngle, totalAngle);
 
     }
 
@@ -57,21 +57,20 @@ public class ArcFigure extends Shape implements Introspectable{
     }
 
     public void setStartAngle(int start_angle) {
-        if(this.startAngle == start_angle)
+        if (this.startAngle == start_angle)
             return;
         this.startAngle = start_angle;
         repaint();
     }
 
-
     public void setTotalAngle(int total_angle) {
-        if(this.totalAngle == total_angle)
+        if (this.totalAngle == total_angle)
             return;
         this.totalAngle = total_angle;
         repaint();
     }
 
-    public boolean isFill(){
+    public boolean isFill() {
         return fill;
     }
 

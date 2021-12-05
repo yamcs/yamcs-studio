@@ -21,12 +21,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
-/**Field Editor for String table (a 2D String Array) input.
+/**
+ * Field Editor for String table (a 2D String Array) input.
+ * 
  * @author Xihui Chen
  *
  */
 public class StringTableFieldEditor extends FieldEditor {
-
 
     private static final String DECODE_ERROR_MESSAGE = "Failed to decode string table. No quotes are allowed in string table.\n";
 
@@ -47,10 +48,15 @@ public class StringTableFieldEditor extends FieldEditor {
     protected StringTableFieldEditor() {
     }
 
-    /** Creates an editable table.  The size of headers array implies the number of columns.
-     * @param parent The composite which the table resides in
-     * @param headers Contains the header for each column
-     * @param editable Whether it is editable for each column. The size must be same as headers.
+    /**
+     * Creates an editable table. The size of headers array implies the number of columns.
+     * 
+     * @param parent
+     *            The composite which the table resides in
+     * @param headers
+     *            Contains the header for each column
+     * @param editable
+     *            Whether it is editable for each column. The size must be same as headers.
      */
     public StringTableFieldEditor(String name, String labelText, final Composite parent, final String[] headers,
             final boolean[] editable, final RowEditDialog rowEditDialog,
@@ -67,9 +73,9 @@ public class StringTableFieldEditor extends FieldEditor {
 
     @Override
     protected void adjustForNumColumns(int numColumns) {
-        GridData gd = (GridData)tableEditor.getLayoutData();
+        GridData gd = (GridData) tableEditor.getLayoutData();
         gd.horizontalSpan = numColumns;
-        gd = (GridData)getLabelControl().getLayoutData();
+        gd = (GridData) getLabelControl().getLayoutData();
         gd.horizontalSpan = numColumns;
     }
 
@@ -93,7 +99,7 @@ public class StringTableFieldEditor extends FieldEditor {
 
     @Override
     protected void doLoad() {
-        if(tableEditor != null){
+        if (tableEditor != null) {
             try {
                 items = decodeStringTable(getPreferenceStore().getString(getPreferenceName()));
                 tableEditor.updateInput(items);
@@ -107,7 +113,7 @@ public class StringTableFieldEditor extends FieldEditor {
 
     @Override
     protected void doLoadDefault() {
-        if(tableEditor != null){
+        if (tableEditor != null) {
             try {
                 items = decodeStringTable(getPreferenceStore().getDefaultString(getPreferenceName()));
                 tableEditor.updateInput(items);
@@ -129,29 +135,31 @@ public class StringTableFieldEditor extends FieldEditor {
         return 1;
     }
 
-    /**Flatten a string table to a single line string.
+    /**
+     * Flatten a string table to a single line string.
+     * 
      * @param stringTable
      * @return
      */
-    public static String flattenStringTable(List<String[]> stringTable){
+    public static String flattenStringTable(List<String[]> stringTable) {
         StringBuilder result = new StringBuilder("");
-        for(String[] row : stringTable){
-            for(String item : row){
+        for (String[] row : stringTable) {
+            for (String item : row) {
                 result.append(QUOTE + item + QUOTE + ITEM_SEPARATOR);
             }
-            if(row.length > 0)
-                result.deleteCharAt(result.length()-1);
+            if (row.length > 0)
+                result.deleteCharAt(result.length() - 1);
             result.append(ROW_SEPARATOR);
         }
-        if(stringTable.size() > 0)
-                result.deleteCharAt(result.length()-1);
+        if (stringTable.size() > 0)
+            result.deleteCharAt(result.length() - 1);
         return result.toString();
     }
 
-    public static List<String[]> decodeStringTable(final String flattedString) throws Exception{
+    public static List<String[]> decodeStringTable(final String flattedString) throws Exception {
         final List<String[]> result = new ArrayList<String[]>();
         final String[] rows = StringSplitter.splitIgnoreInQuotes(flattedString, ROW_SEPARATOR, false);
-        for(String rowString : rows){
+        for (String rowString : rows) {
             // Skip empty rowString, don't split it into String[1] { "" }
             if (rowString.length() <= 0)
                 continue;

@@ -15,7 +15,7 @@ import java.util.EventListener;
  * @author Xihui Chen
  *
  */
-public interface IManualValueChangeListener extends EventListener{
+public interface IManualValueChangeListener extends EventListener {
     /**
      * React on a knob event.
      *
