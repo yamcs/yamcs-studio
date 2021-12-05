@@ -15,9 +15,6 @@ import org.eclipse.ui.PlatformUI;
  *
  * <code>LauncherHelper</code> is a utility class that provides common methods needed for launching the OPI from the
  * resource navigator.
- *
- * @author <a href="mailto:jaka.bobnar@cosylab.com">Jaka Bobnar</a>
- *
  */
 public final class LauncherHelper {
 

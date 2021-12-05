@@ -2,8 +2,6 @@ package org.yamcs.studio.data.vtype;
 
 /**
  * Provides a view of a wrapped list that only exposes the elements with the given indexes.
- *
- * @author carcassi
  */
 class ListView {
 

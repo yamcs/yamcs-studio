@@ -12,9 +12,6 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 
 /**
  * A service for storing related resources for each workbench window.
- * 
- * @author Xihui Chen
- *
  */
 @SuppressWarnings("restriction")
 public final class WorkbenchWindowService {

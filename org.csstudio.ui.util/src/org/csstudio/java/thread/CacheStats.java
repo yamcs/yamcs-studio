@@ -2,8 +2,6 @@ package org.csstudio.java.thread;
 
 /**
  * Cache statistics
- * 
- * @author Kay Kasemir
  */
 public class CacheStats {
     final long hits, misses, expirations, total;

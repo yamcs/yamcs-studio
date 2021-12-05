@@ -1,10 +1,5 @@
 package org.yamcs.studio.data.vtype;
 
-/**
- * An iterator of {@code short}s.
- *
- * @author Gabriele Carcassi
- */
 public abstract class IteratorShort implements IteratorNumber {
 
     @Override

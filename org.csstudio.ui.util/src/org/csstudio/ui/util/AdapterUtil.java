@@ -13,10 +13,6 @@ import static org.csstudio.ui.util.ReflectUtil.*;
 
 /**
  * Utilities for using adapters, particularly against selections.
- *
- * @author Gabriele Carcassi
- * @author Kay Kasemir
- * @author Jaka Bobnar
  */
 public class AdapterUtil {
 

@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2013 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2013 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
 import org.eclipse.draw2d.Connection;
@@ -17,9 +19,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 /**
  * A patched connection layer clipping strategy that will hide the connection when either one of the source or target is
  * not showing.
- * 
- * @author Xihui Chen
- *
  */
 public class PatchedConnectionLayerClippingStrategy extends ViewportAwareConnectionLayerClippingStrategy {
 

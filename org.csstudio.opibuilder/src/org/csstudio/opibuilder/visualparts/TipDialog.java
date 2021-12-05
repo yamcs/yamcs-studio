@@ -13,9 +13,6 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * A dialog with a tip and a check box to not show this dialog again.
- * 
- * @author Xihui Chen
- *
  */
 public class TipDialog extends MessageDialog {
 

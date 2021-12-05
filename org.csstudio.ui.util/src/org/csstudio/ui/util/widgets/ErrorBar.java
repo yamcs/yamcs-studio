@@ -24,8 +24,6 @@ import org.osgi.framework.FrameworkUtil;
 /**
  * An error bar to display an exception message and the details in a pop-up.
  *
- * @author carcassi
- *
  */
 public class ErrorBar extends Composite {
 

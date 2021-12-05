@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * Widget that display a range (currently only time, and only vertical) which can be modified using a mouse drag.
- *
- * @author carcassi
  */
 public class RangeWidget extends Canvas {
 

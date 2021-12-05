@@ -5,8 +5,6 @@ import java.util.Arrays;
 
 /**
  * Wraps a {@code boolean[]} into a {@link ListBoolean}.
- *
- * @author Gabriele Carcassi
  */
 public final class ArrayBoolean extends ListBoolean implements Serializable {
 

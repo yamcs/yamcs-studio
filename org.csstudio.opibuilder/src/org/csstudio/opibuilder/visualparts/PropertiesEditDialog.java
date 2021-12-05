@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
 import org.csstudio.opibuilder.datadefinition.PropertyData;
@@ -23,9 +25,6 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * The dialog to edit an array of properties.
- * 
- * @author Xihui Chen
- *
  */
 public class PropertiesEditDialog extends Dialog {
 
@@ -105,9 +104,6 @@ public class PropertiesEditDialog extends Dialog {
 //
 /// **
 // * The {@link EditingSupport} for the value columns of the property table.
-// *
-// * @author Xihui Chen
-// *
 // */
 // class PropertyDataEditingSupport extends EditingSupport {
 //
@@ -182,9 +178,6 @@ public class PropertiesEditDialog extends Dialog {
 //
 /// **
 // * The {@link LabelProvider} for the properties table.
-// *
-// * @author Xihui Chen
-// *
 // */
 // class PropertyDataLabelProvider extends LabelProvider implements
 // ITableLabelProvider {

@@ -14,8 +14,6 @@ import org.eclipse.swt.widgets.Widget;
  * need to cancel the previous submitted task in favor of the latest one. This class provides an easy implementation for
  * that case.
  *
- * @author carcassi
- *
  */
 public class DelayedNotificator {
 

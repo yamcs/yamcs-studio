@@ -5,9 +5,6 @@ import java.util.List;
 
 /**
  * Math operations defined on lists of numbers.
- *
- * @author carcassi
- * @author Mark Davis (NSCL/FRIB)
  */
 public class ListMath {
 

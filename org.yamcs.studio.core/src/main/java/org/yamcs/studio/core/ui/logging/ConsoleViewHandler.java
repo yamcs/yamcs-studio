@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2011 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2011 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.yamcs.studio.core.ui.logging;
 
 import java.util.logging.ErrorManager;
@@ -28,9 +30,6 @@ import org.eclipse.ui.console.MessageConsoleStream;
  * The {@link MessageConsoleStream} description mentions buffering and appears thread-safe, but lockups have been
  * observed if multiple threads try to access the console streams. This handler therefore logs in the UI thread, using
  * the {@link Display} that was available on initialization. This is suitable for RCP, but not RAP.
- *
- * @author Kay Kasemir
- * @author Alexander Will - Author of org.csstudio.platform.ui.internal.console.Console that was used with Log4j
  */
 public class ConsoleViewHandler extends Handler {
     /** Flag to prevent multiple instances */

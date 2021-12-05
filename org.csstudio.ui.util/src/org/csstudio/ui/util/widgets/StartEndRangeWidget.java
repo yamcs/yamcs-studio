@@ -22,9 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * A widget with which allows you to select a range from a predefine range of values.
- *
- * @author shroffk
- *
  */
 public class StartEndRangeWidget extends Canvas {
 

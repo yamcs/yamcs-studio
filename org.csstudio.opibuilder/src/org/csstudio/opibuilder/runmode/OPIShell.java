@@ -66,9 +66,6 @@ import org.eclipse.ui.services.IServiceLocator;
  *
  * In order for the OPIShell to be integrated with Eclipse functionality, in particular the right-click context menu, it
  * needs to be registered against an existing IViewPart.
- *
- * @author Will Rogers, Matthew Furseman
- *
  */
 public final class OPIShell implements IOPIRuntime {
 

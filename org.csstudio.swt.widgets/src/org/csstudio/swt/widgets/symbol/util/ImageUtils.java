@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2010-2016 ITER Organization.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 ITER Organization and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.swt.widgets.symbol.util;
 
 import java.awt.GradientPaint;
@@ -20,8 +22,6 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * Utility class to change image behavior like color, shape, rotation management, ...
- *
- * @author Fred Arnaud (Sopra Group)
  */
 public final class ImageUtils {
 

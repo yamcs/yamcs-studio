@@ -32,8 +32,6 @@ import org.eclipse.swt.widgets.Text;
 /**
  * This class represents a Dialog to choose a file (applying or not filters) in the workspace. There is an option to
  * return or not relative path.
- *
- * @author SOPRA Group
  */
 public final class FilePathDialogWithFilter extends Dialog implements Listener {
 

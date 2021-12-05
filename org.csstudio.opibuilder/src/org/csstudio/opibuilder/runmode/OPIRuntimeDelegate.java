@@ -48,10 +48,6 @@ import org.eclipse.ui.PartInitException;
 
 /**
  * The delegate to run an OPI in an editor or view.
- *
- * @author Xihui Chen
- * @author Takashi Nakamoto @ Cosylab (Enhanced to calculate frame rate)
- *
  */
 public class OPIRuntimeDelegate implements IAdaptable {
 

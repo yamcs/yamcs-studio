@@ -15,9 +15,6 @@ import org.eclipse.ui.PlatformUI;
  *
  * This thread sleeps for a time, which is below the processing capacity of human eyes and brain - so the user will not
  * feel any delay.
- *
- * @author Sven Wende, Xihui Chen
- *
  */
 public final class UIBundlingThread implements Runnable {
     /**

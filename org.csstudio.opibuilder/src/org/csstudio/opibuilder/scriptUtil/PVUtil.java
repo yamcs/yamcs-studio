@@ -32,9 +32,6 @@ import org.yamcs.studio.data.vtype.VType;
 
 /**
  * The utility class to facilitate Javascript programming for PV operation.
- *
- * @author Xihui Chen
- *
  */
 public class PVUtil {
 

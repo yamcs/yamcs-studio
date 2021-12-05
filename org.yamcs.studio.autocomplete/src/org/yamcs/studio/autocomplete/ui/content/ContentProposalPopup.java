@@ -1,15 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/********************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others
  *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Hannes Erven <hannes@erven.at> - Bug 293841 - [FieldAssist] NumLock keyDown event should not close the proposal popup [with patch]
- *     ITER - Adapted to fit CSS auto-completion requirements
- *******************************************************************************/
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.yamcs.studio.autocomplete.ui.content;
 
 import java.util.ArrayList;
@@ -55,8 +52,6 @@ import org.eclipse.swt.widgets.Text;
 /**
  * The lightweight popup used to show content proposals for a text field. If additional information exists for a
  * proposal, then selecting that proposal will result in the information being displayed in a secondary popup.
- *
- * @author Fred Arnaud (Sopra Group) - ITER
  */
 public class ContentProposalPopup extends PopupDialog {
 

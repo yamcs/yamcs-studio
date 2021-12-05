@@ -2,8 +2,6 @@ package org.yamcs.studio.data.vtype;
 
 /**
  * A sorted view of a list.
- *
- * @author carcassi
  */
 public class SortedListView extends ListDouble {
 

@@ -24,9 +24,6 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * A UI to display two lists of strings with button to move one or more selected strings between the two groups.
- *
- * @author shroffk
- *
  */
 public class StringListSelectionWidget extends Composite {
 

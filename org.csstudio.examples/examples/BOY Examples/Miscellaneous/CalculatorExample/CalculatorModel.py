@@ -1,7 +1,5 @@
 """
 The model of the calculator.
-
-@author: Xihui Chen
 """
 
 class CalculatorModel(object):

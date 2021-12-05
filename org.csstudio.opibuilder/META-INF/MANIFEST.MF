@@ -5,7 +5,7 @@ Bundle-Description: Base plugin of BOY
 Bundle-SymbolicName: org.csstudio.opibuilder;singleton:=true
 Bundle-Version: 1.6.1.qualifier
 Bundle-Activator: org.csstudio.opibuilder.OPIBuilderPlugin
-Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
+Bundle-Vendor: Space Applications Services
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.filesystem,

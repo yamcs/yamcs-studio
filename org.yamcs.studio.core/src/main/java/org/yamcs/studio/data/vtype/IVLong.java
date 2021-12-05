@@ -2,8 +2,6 @@ package org.yamcs.studio.data.vtype;
 
 /**
  * Immutable VInt implementation.
- *
- * @author carcassi
  */
 class IVLong extends IVNumeric implements VLong {
 

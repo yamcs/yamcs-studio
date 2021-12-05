@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.datadefinition;
 
 import org.csstudio.opibuilder.properties.AbstractWidgetProperty;
@@ -15,9 +17,6 @@ import org.eclipse.swt.widgets.Display;
  * The element in the {@link GUIRefreshThread}'s task queue. An existing task in the queue should be ignored when a new
  * task arrives that has the same identifyObject. For example, multiple tasks calling Gauge.setValue() are ignorable
  * since the widget only needs to display the latest value.
- * 
- * @author Xihui Chen
- * @author Kay Kasemir Reviewed, made immutable
  */
 public class WidgetIgnorableUITask {
 

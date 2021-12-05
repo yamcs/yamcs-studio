@@ -4,10 +4,6 @@ import java.util.Date;
 
 /**
  * Entry in the {@link TimedCache}
- *
- * @author Katia Danilova, Kay Kasemir
- *
- * @param <VALUETYPE>
  */
 public class TimedCacheEntry<VALUETYPE> {
     final private VALUETYPE value;

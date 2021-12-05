@@ -8,9 +8,6 @@ import org.eclipse.ui.PartInitException;
 
 /**
  * The common interface for OPI runtime, which could be an editor or view.
- * 
- * @author Xihui Chen
- *
  */
 public interface IOPIRuntime extends IWorkbenchPart, IAdaptable {
 

@@ -3,8 +3,6 @@ package org.csstudio.ui.util;
 /**
  * Implementing some introspection functions based on the class name instead of the class object. Using class tokens
  * would mean that this plugin has dependencies to all plugins that have a single type.
- *
- * @author Gabriele Carcassi
  */
 public class ReflectUtil {
 

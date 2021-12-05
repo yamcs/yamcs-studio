@@ -11,8 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Factory class for frequently used NumberFormats.
- *
- * @author carcassi
  */
 public final class NumberFormats {
 

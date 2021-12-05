@@ -24,8 +24,6 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * Tweak {@link ZoomComboContributionItem} to dedicate to a part. A ControlContribution that uses a
  * {@link org.eclipse.swt.widgets.Combo} as its control
- *
- * @author Eric Bordeau, Xihui Chen
  */
 public class PartZoomComboContributionItem extends ContributionItem implements
         ZoomListener {

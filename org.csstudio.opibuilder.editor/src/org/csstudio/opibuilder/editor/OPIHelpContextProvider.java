@@ -17,9 +17,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * The dynamic help provider for OPI Editor and widgets.
- * 
- * @author Xihui Chen
- *
  */
 public class OPIHelpContextProvider implements IContextProvider {
 

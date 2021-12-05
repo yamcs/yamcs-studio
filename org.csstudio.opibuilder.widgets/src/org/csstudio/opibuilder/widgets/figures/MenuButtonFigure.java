@@ -10,9 +10,6 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Figure for the menu button.
- *
- * @author Matthew Furseman
- *
  */
 public class MenuButtonFigure extends Label implements ITextFigure {
 

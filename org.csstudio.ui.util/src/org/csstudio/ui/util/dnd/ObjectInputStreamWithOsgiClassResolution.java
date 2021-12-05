@@ -16,8 +16,6 @@ import org.osgi.framework.Bundle;
  * De-serializes java classes looking for the classloaders in the appropriate osgi bundle. Using the normal
  * ObjectInputStream would resolve classes only according to this plugin classloader. This resolves the classes by
  * looking for the class in any plugin whose name is a package parent of the given class.
- *
- * @author Gabriele Carcassi
  */
 public class ObjectInputStreamWithOsgiClassResolution extends ObjectInputStream {
 

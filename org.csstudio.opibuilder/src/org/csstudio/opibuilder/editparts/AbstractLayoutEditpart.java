@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
 import java.util.List;
@@ -18,9 +20,6 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * The Abstract editpart for layout widgets.
- * 
- * @author Xihui Chen
- *
  */
 public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
 
@@ -71,9 +70,6 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
 
     /**
      * The figure for layout widgets.
-     * 
-     * @author Xihui Chen
-     *
      */
     static class LayoutterFigure extends Label {
 
@@ -94,5 +90,4 @@ public abstract class AbstractLayoutEditpart extends AbstractBaseEditPart {
             return new Dimension(16, 16);
         }
     }
-
 }

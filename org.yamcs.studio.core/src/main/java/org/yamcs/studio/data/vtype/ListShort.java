@@ -2,8 +2,6 @@ package org.yamcs.studio.data.vtype;
 
 /**
  * An ordered collection of {@code short}s.
- *
- * @author Gabriele Carcassi
  */
 public abstract class ListShort implements ListNumber, CollectionShort {
 

@@ -18,8 +18,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 /**
  * Abstract class for all commands that use AdapterUtil for conversion and displays the exception in a suitable dialog.
  *
- * @author carcassi
- *
  */
 public abstract class AbstractAdaptedHandler<T> extends AbstractHandler {
 

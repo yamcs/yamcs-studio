@@ -5,9 +5,6 @@ import org.eclipse.core.runtime.IAdapterFactory;
 
 /**
  * The adaptor factory to make a PV widget as a PV provider for css context menu.
- * 
- * @author Xihui Chen
- *
  */
 public class PVWidgetAdapterFactory implements IAdapterFactory {
 

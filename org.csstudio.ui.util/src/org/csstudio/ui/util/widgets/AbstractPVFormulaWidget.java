@@ -8,8 +8,6 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * An abstract class that handles the pvFormula property.
  *
- * @author carcassi
- *
  */
 public class AbstractPVFormulaWidget extends Composite {
 

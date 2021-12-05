@@ -4,8 +4,6 @@ import java.util.Date;
 
 /**
  * Helper for computing cache expiration info.
- *
- * @author Kay Kasemir, Xihui Chen
  */
 public class CacheHeader {
 

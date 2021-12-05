@@ -18,9 +18,6 @@ import org.eclipse.gef.EditPart;
 
 /**
  * The router that route a connection through fixed points
- * 
- * @author Xihui Chen
- *
  */
 public class FixedPointsConnectionRouter extends AbstractRouter {
 

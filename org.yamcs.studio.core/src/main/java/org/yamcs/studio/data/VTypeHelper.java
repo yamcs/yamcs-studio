@@ -45,8 +45,6 @@ import org.yamcs.studio.data.yamcs.Uint64VType;
 
 /**
  * A center place for VType related operations.
- *
- * @author Xihui Chen, Kay Kasemir, carcassi (some of code are learned from {@link ValueUtil})
  */
 public class VTypeHelper {
 

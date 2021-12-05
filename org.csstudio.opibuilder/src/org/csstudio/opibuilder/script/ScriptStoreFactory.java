@@ -23,8 +23,6 @@ import org.yamcs.studio.data.IPV;
 
 /**
  * The factory to return the corresponding script store according to the script type.
- * 
- * @author Xihui Chen
  */
 public class ScriptStoreFactory {
 

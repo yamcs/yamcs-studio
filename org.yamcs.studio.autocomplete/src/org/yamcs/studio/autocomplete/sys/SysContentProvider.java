@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2010-2016 ITER Organization.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 ITER Organization and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.yamcs.studio.autocomplete.sys;
 
 import java.util.ArrayList;
@@ -25,8 +27,6 @@ import org.yamcs.studio.autocomplete.proposals.TopProposalFinder;
 
 /**
  * System Data Source content provider Provides all available system functions & system properties.
- *
- * @author Fred Arnaud (Sopra Group) - ITER
  */
 public class SysContentProvider implements IAutoCompleteProvider {
 

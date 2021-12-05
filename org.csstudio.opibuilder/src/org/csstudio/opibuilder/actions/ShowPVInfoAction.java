@@ -25,9 +25,6 @@ import org.yamcs.studio.data.vtype.Display;
 
 /**
  * Show details information of widget's primary PV.
- *
- * @author Xihui Chen
- *
  */
 public class ShowPVInfoAction implements IObjectActionDelegate {
 

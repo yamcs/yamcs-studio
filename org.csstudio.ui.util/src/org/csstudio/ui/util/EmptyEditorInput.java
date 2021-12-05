@@ -9,8 +9,6 @@ import org.eclipse.ui.IPersistableElement;
  *
  * <p>
  * When an editor is started without a file, for example from the main menu, this can be used as its initial input.
- *
- * @author Kay Kasemir
  */
 public class EmptyEditorInput implements IEditorInput {
     final private ImageDescriptor icon;

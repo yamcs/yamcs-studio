@@ -6,11 +6,6 @@ import java.util.Map;
 
 /**
  * Thread-safe Cache for anything that times out after some time.
- *
- * @author Katia Danilova, Kay Kasemir
- *
- * @param <KEYTYPE>
- * @param <VALUETYPE>
  */
 public class TimedCache<KEYTYPE, VALUETYPE> {
     /**

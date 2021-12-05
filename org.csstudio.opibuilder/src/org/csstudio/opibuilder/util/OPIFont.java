@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.util;
 
 import org.csstudio.ui.util.CustomMediaFactory;
@@ -15,9 +17,6 @@ import org.eclipse.swt.widgets.Display;
 /**
  * The dedicated font type which supports predefined font name in OPI builder font file. If the font name doesn't exist
  * in the font file, the system font will be adopted.
- * 
- * @author Xihui Chen
- *
  */
 public class OPIFont {
 

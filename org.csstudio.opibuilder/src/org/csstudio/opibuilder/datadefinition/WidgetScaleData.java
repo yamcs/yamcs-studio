@@ -5,9 +5,6 @@ import org.csstudio.opibuilder.properties.BooleanProperty;
 
 /**
  * A complex properties data that holds the options for scaling a widget.
- * 
- * @author Xihui Chen
- *
  */
 public class WidgetScaleData extends AbstractComplexData {
 

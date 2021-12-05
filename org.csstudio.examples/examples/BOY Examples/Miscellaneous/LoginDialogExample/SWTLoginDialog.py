@@ -1,7 +1,5 @@
 '''
     A login dialog implemented in SWT
-    
-    @author: Xihui Chen    
 '''
 
 from org.eclipse.jface.dialogs import Dialog, MessageDialog

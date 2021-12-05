@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2014 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2014 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.runmode;
 
 import org.eclipse.core.runtime.IPath;
@@ -16,10 +18,6 @@ import org.eclipse.ui.IEditorLauncher;
  * <p>
  * Registered in plugin.xml as "Editor" for *.opi files, allowing users to launch displays from the Eclipse Navigator,
  * or by opening the file in the "default editor" based on the Eclipse registry.
- *
- * @author Kay Kasemir
- * @author Will Rogers
- * @author Jaka Bobnar
  */
 public class ShellLauncher implements IEditorLauncher {
     @Override

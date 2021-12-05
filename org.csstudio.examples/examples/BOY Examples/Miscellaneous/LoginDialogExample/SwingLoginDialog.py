@@ -1,7 +1,5 @@
 '''
     A login dialog implemented in Swing.
-    
-    @author: Xihui Chen    
 '''
 
 from javax.swing import JButton, JFrame, SwingUtilities, JOptionPane, JDialog,\

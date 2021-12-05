@@ -14,8 +14,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
  * This class is useful when constructing a composite that should behave like a standard JFace widget in term of
  * selection but with CSS business objects. To use, you implement the transform and reverseTransform that convert the
  * selection back and forth.
- *
- * @author carcassi
  */
 public abstract class AbstractSelectionProviderWrapper implements ISelectionProvider {
 

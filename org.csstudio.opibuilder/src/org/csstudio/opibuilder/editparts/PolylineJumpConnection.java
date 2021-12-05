@@ -1,10 +1,12 @@
-/****************************************************************************
-* Copyright (c) 2010-2017 ITER Organization.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-****************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 ITER Organization and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
 import java.util.HashMap;
@@ -23,9 +25,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * This class represents a polyline connection which is able to draw a "jump" over some other polyline connection.
- *
- * @author <a href="mailto:rohit.n.sarpotdar@gmail.com">Rohit Sarpotdar</a>
- * @author <a href="mailto:miha.vitorovic@cosylab.com">Miha Vitorovic</a>
  */
 public class PolylineJumpConnection extends PolylineConnection {
     private final static double RATIO_30_DEGREES = 0.577350269d;

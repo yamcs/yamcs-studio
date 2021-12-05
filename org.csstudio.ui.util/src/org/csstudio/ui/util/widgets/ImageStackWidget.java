@@ -49,9 +49,6 @@ import org.osgi.framework.FrameworkUtil;
 
 /**
  * A widget to display a set of Images
- *
- * @author shroffk
- *
  */
 public class ImageStackWidget extends Composite {
 

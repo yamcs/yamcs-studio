@@ -5,7 +5,7 @@ Bundle-Description: Widgets figure for draw2d and SWT applications.
 Bundle-SymbolicName: org.csstudio.swt.widgets
 Bundle-Version: 1.6.1.qualifier
 Bundle-Activator: org.csstudio.swt.widgets.Activator
-Bundle-Vendor: Xihui Chen<chenx1@ornl.gov> - SNS
+Bundle-Vendor: Space Applications Services
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.csstudio.utility.batik,

@@ -323,9 +323,6 @@ public class ThumbWheelEditPart extends AbstractPVWidgetEditPart {
      * <p>
      * Note the inherent precision of value double is 15 decimal places therefore you cannot have more than 15 wheels.
      * <p>
-     *
-     * @author Alen Vrecko
-     *
      */
     private static class ThumbWheelLogic {
 

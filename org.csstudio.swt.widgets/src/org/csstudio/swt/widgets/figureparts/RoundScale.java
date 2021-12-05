@@ -1,10 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2010 Oak Ridge National Laboratory.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- ******************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 Oak Ridge National Laboratory and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.swt.widgets.figureparts;
 
 import org.eclipse.draw2d.FigureUtilities;
@@ -21,9 +23,6 @@ import org.eclipse.swt.graphics.Font;
  * A round scale is comprised of Scale line, tick labels and tick marks which include minor ticks and major ticks. <br>
  * The endAngle is on the clockwise side of startAngle. Regardless the startAngle and endAngle, the scale will always be
  * drawn in a square. The bounds will be automatically cropped to the square with the max possible size.
- *
- * @author Xihui Chen
- *
  */
 public class RoundScale extends AbstractScale {
 

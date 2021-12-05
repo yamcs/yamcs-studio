@@ -6,8 +6,6 @@ import org.eclipse.gef.ui.actions.ZoomOutAction;
 
 /**
  * Tweak {@link ZoomOutAction}
- * 
- * @author danlee, Xihui Chen
  */
 @SuppressWarnings("restriction")
 public class PartZoomOutAction extends PartZoomAction {

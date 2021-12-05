@@ -1,10 +1,12 @@
-/****************************************************************************
-* Copyright (c) 2010-2017 ITER Organization.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-****************************************************************************/
+/********************************************************************************
+ * Copyright (c) 2010 ITER Organization and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.editparts;
 
 import org.eclipse.draw2d.AbstractConnectionAnchor;
@@ -15,15 +17,11 @@ import org.eclipse.draw2d.geometry.Point;
  * We have multiple implementations of the Anchor, and the {@link FixedPointsConnectionRouter} needs to know orientation
  * in which the connector connects to the widget in order to correctly calculate the route. This becomes especially
  * important once the widgets change positions (are animated) through some action.
- *
- * @author mvitorovic
  */
 abstract public class AbstractOpiBuilderAnchor extends AbstractConnectionAnchor {
 
     /**
      * This enum tells in which direction a connector is connected to the widget
-     *
-     * @author mvitorovic
      */
     public static enum ConnectorOrientation {
         HORIZONTAL, VERTICAL
@@ -40,8 +38,6 @@ abstract public class AbstractOpiBuilderAnchor extends AbstractConnectionAnchor 
      * found.
      * <p>
      * This is fixed by moving the anchor back into the bounds of linking container.
-     *
-     * @author Borut Terpinc
      *
      * @param point
      *            - reference to anchor point

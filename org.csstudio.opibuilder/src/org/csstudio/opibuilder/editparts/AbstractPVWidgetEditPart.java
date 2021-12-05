@@ -9,9 +9,6 @@ import org.eclipse.draw2d.IFigure;
 
 /**
  * The abstract edit part for all PV armed widgets. Widgets inheritate this class will have the CSS context menu on it.
- * 
- * @author Xihui Chen
- * @author Takashi Nakamoto - general support for alarm sensitive colors
  */
 public abstract class AbstractPVWidgetEditPart extends AbstractBaseEditPart implements IPVWidgetEditpart {
 

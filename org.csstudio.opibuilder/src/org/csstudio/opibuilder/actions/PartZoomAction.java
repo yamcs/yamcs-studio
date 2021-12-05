@@ -1,13 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/********************************************************************************
+ * Copyright (c) 2000 IBM Corporation and others
  *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ ********************************************************************************/
 package org.csstudio.opibuilder.actions;
 
 import org.eclipse.gef.Disposable;
@@ -21,8 +20,6 @@ import org.eclipse.ui.IWorkbenchPart;
  * Tweak GEF ZoomAction Base zoom action that only dedicates to a part. The GEF ZoomAction's zoom manager is not
  * changeable, which result in using RetargetAction to switch parts. This doesn't work for OPIView which has its own
  * toolbar. Sub-classes can perform zoom in or zoom out.
- *
- * @author danlee, Xihui Chen
  */
 abstract class PartZoomAction extends Action implements ZoomListener, Disposable {
 

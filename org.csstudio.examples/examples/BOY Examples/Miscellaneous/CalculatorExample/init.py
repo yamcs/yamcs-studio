@@ -1,7 +1,5 @@
 """
 Initialize the calculator model.
-
-@author: Xihui Chen
 """
 
 from CalculatorModel import CalculatorModel

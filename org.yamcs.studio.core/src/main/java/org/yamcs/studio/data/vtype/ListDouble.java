@@ -2,8 +2,6 @@ package org.yamcs.studio.data.vtype;
 
 /**
  * An ordered collection of {@code double}s.
- *
- * @author Gabriele Carcassi
  */
 public abstract class ListDouble implements ListNumber, CollectionDouble {
 
@@ -86,7 +84,6 @@ public abstract class ListDouble implements ListNumber, CollectionDouble {
      * @param lists
      *            the lists to concatenate
      * @return the given lists concatenated together
-     * @author mjchao
      */
     public static ListDouble concatenate(final ListNumber... lists) {
 

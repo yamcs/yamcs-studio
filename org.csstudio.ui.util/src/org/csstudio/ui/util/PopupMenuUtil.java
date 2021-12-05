@@ -13,8 +13,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
  * <p>
  * In Eclipse RCP, pop-up have to be independently defined and attached for each part. This class provides utility
  * method to register the pop-ups so that it's easier and more consistent through-out CSS.
- *
- * @author carcassi
  */
 public class PopupMenuUtil {
 

@@ -19,9 +19,6 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * Simple meter widget.
- *
- * @author Kay Kasemir
- * @author Gabriele Carcassi
  */
 public class MeterWidget extends Canvas {
     /** Line width for scale outline (rest uses width 1) */

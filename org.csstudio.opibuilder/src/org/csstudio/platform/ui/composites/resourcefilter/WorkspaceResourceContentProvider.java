@@ -15,8 +15,6 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * Provides workspace filtering resources as content for a tree viewer.
- *
- * @author SOPRA Group
  */
 
 final class WorkspaceResourceContentProvider implements ITreeContentProvider {

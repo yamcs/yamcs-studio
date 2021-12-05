@@ -6,9 +6,6 @@ import org.csstudio.opibuilder.properties.IntegerProperty;
 
 /**
  * A complex properties data that holds display scale options.
- * 
- * @author Xihui Chen
- *
  */
 public class DisplayScaleData extends AbstractComplexData {
 

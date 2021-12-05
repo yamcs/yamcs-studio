@@ -21,9 +21,6 @@ import org.yamcs.studio.data.IPV;
 
 /**
  * An actions writing value to a PV.
- *
- * @author Xihui Chen
- *
  */
 public class WritePVAction extends AbstractWidgetAction {
 

@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * A custom cell dialog editor to browse file path applying filters.
- *
- * @author SOPRA Group
  */
 public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCellEditor {
 
