@@ -33,8 +33,6 @@ import org.w3c.dom.svg.SVGDocument;
 
 /**
  * Manages display of {@link SVGDocument} using {@link SVGHandler}.
- *
- * @author Fred Arnaud (Sopra Steria Group) - ITER
  */
 public class SVGSymbolImage extends AbstractSymbolImage {
 
@@ -78,10 +76,6 @@ public class SVGSymbolImage extends AbstractSymbolImage {
             svgHandler.suspendProcessing();
         }
     }
-
-    // ************************************************************
-    // Image color & paint
-    // ************************************************************
 
     @Override
     public void paintFigure(final Graphics gfx) {
@@ -191,10 +185,6 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         needRender = false;
     }
 
-    // ************************************************************
-    // Image size calculation
-    // ************************************************************
-
     @Override
     public void setAbsoluteScale(double newScale) {
         double oldScale = scale;
@@ -210,10 +200,6 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         // generateSVGData();
         return imgDimension;
     }
-
-    // ************************************************************
-    // Animated images
-    // ************************************************************
 
     @Override
     public void setAnimationDisabled(final boolean stop) {
@@ -240,16 +226,12 @@ public class SVGSymbolImage extends AbstractSymbolImage {
         svgHandler.setAlignedToNearestSecond(aligned);
     }
 
-    // ************************************************************
-    // Image loading
-    // ************************************************************
-
     @Override
     public void syncLoadImage() {
         svgHandler = null;
         failedToLoadDocument = false;
         try {
-            final InputStream inputStream = ResourceUtil.pathToInputStream(imagePath.toPortableString());
+            InputStream inputStream = ResourceUtil.pathToInputStream(imagePath);
             loadDocument(inputStream);
         } catch (Exception e) {
             Activator.getLogger().log(Level.WARNING, "Error loading SVG image " + imagePath, e);

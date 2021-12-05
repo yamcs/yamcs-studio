@@ -96,10 +96,6 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         }
     }
 
-    // ************************************************************
-    // Image color & paint
-    // ************************************************************
-
     @Override
     public void paintFigure(final Graphics gfx) {
         if (disposed || loadingImage || originalImageData == null) {
@@ -242,10 +238,6 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         imgDimension = newImgDimension;
     }
 
-    // ************************************************************
-    // Image size calculation
-    // ************************************************************
-
     @Override
     public void resizeImage() {
         super.resizeImage();
@@ -261,10 +253,6 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         // generateAnimatedData();
         return imgDimension;
     }
-
-    // ************************************************************
-    // Animated images
-    // ************************************************************
 
     @Override
     public void setAnimationDisabled(final boolean stop) {
@@ -378,10 +366,6 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         repaint();
     }
 
-    // ************************************************************
-    // Image loading
-    // ************************************************************
-
     @Override
     public void syncLoadImage() {
         if (imagePath == null) {
@@ -396,7 +380,7 @@ public class GIFSymbolImage extends AbstractSymbolImage {
         InputStream stream = null;
         Image tempImage = null;
         try {
-            stream = ResourceUtil.pathToInputStream(imagePath.toPortableString());
+            stream = ResourceUtil.pathToInputStream(imagePath);
             ImageData[] dataArray = loader.load(stream);
             if (dataArray == null || dataArray.length < 1) {
                 return;

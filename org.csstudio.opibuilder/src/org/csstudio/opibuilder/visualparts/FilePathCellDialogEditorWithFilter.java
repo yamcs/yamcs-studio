@@ -19,18 +19,15 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @author SOPRA Group
  */
-public final class FilePathCellDialogEditorWithFilter extends
-        AbstractDialogCellEditor {
+public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCellEditor {
 
     /**
      * The default value for the file extensions.
      */
-    private static final String[] IMAGE_EXTENSIONS = new String[] { "gif",
-            "GIF", "png", "PNG", "svg", "SVG" };
+    private static final String[] IMAGE_EXTENSIONS = new String[] { "gif", "GIF", "png", "PNG", "svg", "SVG" };
 
     /**
-     * The regular expression for TTT pattern like FFF-FFF-FFF:TTT1234-AAAA TODO
-     * store it in INI file
+     * The regular expression for TTT pattern like FFF-FFF-FFF:TTT1234-AAAA TODO store it in INI file
      */
     private static String TTT_REGEX;
 
@@ -73,8 +70,7 @@ public final class FilePathCellDialogEditorWithFilter extends
     }
 
     /**
-     * Convert the file extensions. Add '*.' to each extension if it does not
-     * start with it.
+     * Convert the file extensions. Add '*.' to each extension if it does not start with it.
      */
     private void convertFileExtensions() {
         if (onlyWorkSpace) {
@@ -93,17 +89,11 @@ public final class FilePathCellDialogEditorWithFilter extends
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Object doGetValue() {
         return path;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void doSetValue(final Object value) {
         if (value == null || !(value instanceof IPath)) {
@@ -113,16 +103,13 @@ public final class FilePathCellDialogEditorWithFilter extends
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void openDialog(final Shell parentShell, final String dialogTitle) {
         if (onlyWorkSpace) {
             String pvName = (String) widgetModel
                     .getPropertyValue(AbstractPVWidgetModel.PROP_PVNAME);
             if (!pvName.isEmpty()) {
-                ArrayList<String> listToFind = new ArrayList<String>();
+                ArrayList<String> listToFind = new ArrayList<>();
                 Pattern pattern = Pattern.compile(TTT_REGEX);
                 Matcher matcher = pattern.matcher(pvName);
                 if (matcher.find()) {
@@ -137,6 +124,7 @@ public final class FilePathCellDialogEditorWithFilter extends
             } else {
                 filters = IMAGE_EXTENSIONS;
             }
+
             FilePathDialogWithFilter rsd = new FilePathDialogWithFilter(
                     parentShell, widgetModel.getRootDisplayModel()
                             .getOpiFilePath().removeLastSegments(1),
@@ -150,12 +138,8 @@ public final class FilePathCellDialogEditorWithFilter extends
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean shouldFireChanges() {
         return path != null;
     }
-
 }

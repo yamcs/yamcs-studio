@@ -42,9 +42,11 @@ public class PNGSymbolImage extends AbstractSymbolImage {
     // Image color & paint
     // ************************************************************
 
+    @Override
     public void paintFigure(final Graphics gfx) {
-        if (disposed || loadingImage || originalImageData == null)
+        if (disposed || loadingImage || originalImageData == null) {
             return;
+        }
         // Generate Data
         if (imageData == null) {
             generatePNGData();
@@ -55,13 +57,15 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         }
         // Create image
         if (image == null) {
-            if (imageData == null)
+            if (imageData == null) {
                 return;
+            }
             image = new Image(Display.getDefault(), imageData);
         }
         // Calculate areas
-        if (bounds == null || imgDimension == null)
+        if (bounds == null || imgDimension == null) {
             return;
+        }
         Rectangle srcArea = new Rectangle(leftCrop, topCrop, imgDimension.width, imgDimension.height);
         Rectangle destArea = new Rectangle(bounds.x, bounds.y, imgDimension.width, imgDimension.height);
         if (backgroundColor != null) {
@@ -80,12 +84,14 @@ public class PNGSymbolImage extends AbstractSymbolImage {
     }
 
     private void generatePNGData() {
-        if (disposed || originalImageData == null)
+        if (disposed || originalImageData == null) {
             return;
+        }
 
         imageData = (ImageData) originalImageData.clone();
-        if (!colorToChange.equals(currentColor))
+        if (!colorToChange.equals(currentColor)) {
             imageData = ImageUtils.changeImageColor(currentColor, imageData);
+        }
         imageData = ImageUtils.applyMatrix(imageData, permutationMatrix);
         if (stretch && bounds != null) {
             imageData = imageData.scaledTo(bounds.width + leftCrop + rightCrop,
@@ -105,8 +111,9 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         int cropedHeight = imageData.height - bottomCrop - topCrop;
         Dimension newImgDimension = new Dimension(cropedWidth, cropedHeight);
         if (imgDimension == null || newImgDimension.width != imgDimension.width
-                || newImgDimension.height != imgDimension.height)
+                || newImgDimension.height != imgDimension.height) {
             fireSizeChanged();
+        }
         imgDimension = newImgDimension;
     }
 
@@ -114,6 +121,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
     // Image size calculation
     // ************************************************************
 
+    @Override
     public Dimension getAutoSizedDimension() {
         // if (imgDimension == null)
         // generatePNGData();
@@ -124,13 +132,15 @@ public class PNGSymbolImage extends AbstractSymbolImage {
     // Image loading
     // ************************************************************
 
+    @Override
     public void syncLoadImage() {
-        if (imagePath == null)
+        if (imagePath == null) {
             return;
+        }
         InputStream stream = null;
         Image tempImage = null;
         try {
-            stream = ResourceUtil.pathToInputStream(imagePath.toPortableString());
+            stream = ResourceUtil.pathToInputStream(imagePath);
             tempImage = new Image(Display.getDefault(), stream);
             ImageData imgData = tempImage.getImageData();
             setOriginalImageData(imgData);
@@ -139,9 +149,12 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                     "ERROR in loading PNG image " + imagePath, e);
         } finally {
             try {
-                if (stream != null) stream.close();
-                if (tempImage != null && !tempImage.isDisposed())
+                if (stream != null) {
+                    stream.close();
+                }
+                if (tempImage != null && !tempImage.isDisposed()) {
                     tempImage.dispose();
+                }
             } catch (IOException e) {
                 Activator.getLogger().log(Level.WARNING,
                         "ERROR in closing PNG image stream ", e);
@@ -149,13 +162,16 @@ public class PNGSymbolImage extends AbstractSymbolImage {
         }
     }
 
+    @Override
     public void asyncLoadImage() {
-        if (imagePath == null)
+        if (imagePath == null) {
             return;
+        }
         loadingImage = true;
         loadImage(new IJobErrorHandler() {
             private int maxAttempts = 5;
 
+            @Override
             public void handleError(Exception exception) {
                 if (maxAttempts-- > 0) {
                     try {
@@ -195,11 +211,7 @@ public class PNGSymbolImage extends AbstractSymbolImage {
                         }
                     }
                     loadingImage = false;
-                    Display.getDefault().syncExec(new Runnable() {
-                        public void run() {
-                            fireSymbolImageLoaded();
-                        }
-                    });
+                    Display.getDefault().syncExec(() -> fireSymbolImageLoaded());
                 }
             }
         };

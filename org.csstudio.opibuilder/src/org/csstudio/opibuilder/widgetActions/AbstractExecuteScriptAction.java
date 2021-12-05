@@ -18,7 +18,6 @@ import org.csstudio.opibuilder.properties.StringProperty;
 import org.csstudio.opibuilder.properties.WidgetPropertyCategory;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 
 /**
  * The abstract action for executing script.
@@ -38,7 +37,7 @@ public abstract class AbstractExecuteScriptAction extends AbstractWidgetAction {
     @Override
     protected void configureProperties() {
         addProperty(new FilePathProperty(
-                PROP_PATH, "File Path", WidgetPropertyCategory.Basic, new Path(""),
+                PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "",
                 new String[] { getFileExtension() }, false));
         addProperty(new StringProperty(
                 PROP_SCRIPT_TEXT, "Script Text", WidgetPropertyCategory.Basic,

@@ -24,7 +24,6 @@ import org.csstudio.swt.widgets.util.GraphicsUtil;
 import org.csstudio.swt.widgets.util.ResourceUtil;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.Draw2dSingletonUtil;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
@@ -104,7 +103,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
 
     private Image image, grayImage;
 
-    private IPath imagePath;
+    private String imagePath;
 
     private int textAlignment;
 
@@ -174,7 +173,6 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
      * Dispose the resources on this figure.
      */
     public void dispose() {
-
         if (image != null) {
             image.dispose();
             image = null;
@@ -198,7 +196,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
     /**
      * @return the imagePath
      */
-    public IPath getImagePath() {
+    public String getImagePath() {
         return imagePath;
     }
 
@@ -336,7 +334,7 @@ public class ActionButtonFigure extends Figure implements Introspectable, ITextF
         label.revalidate();
     }
 
-    public void setImagePath(final IPath path) {
+    public void setImagePath(String path) {
         dispose();
         AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
 

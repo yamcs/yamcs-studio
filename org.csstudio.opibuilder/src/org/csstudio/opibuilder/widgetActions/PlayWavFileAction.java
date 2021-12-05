@@ -20,7 +20,6 @@ import org.csstudio.opibuilder.widgetActions.WidgetActionFactory.ActionType;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
@@ -37,8 +36,7 @@ public class PlayWavFileAction extends AbstractWidgetAction {
     @Override
     protected void configureProperties() {
         addProperty(new FilePathProperty(PROP_PATH, "WAV File Path",
-                WidgetPropertyCategory.Basic, new Path(""),
-                new String[] { "wav" }));
+                WidgetPropertyCategory.Basic, "", new String[] { "wav" }));
 
     }
 

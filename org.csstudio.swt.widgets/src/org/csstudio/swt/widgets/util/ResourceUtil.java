@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
@@ -35,16 +36,9 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.io.ByteStreams;
 
-/**
- * Utility functions for resources.
- * 
- * @author Xihui Chen
- *
- */
 public class ResourceUtil {
 
     private static final LoadingCache<String, byte[]> cache = CacheBuilder.newBuilder()
-            .recordStats()
             .expireAfterWrite(2, TimeUnit.MINUTES)
             .maximumSize(1000)
             .build(new CacheLoader<String, byte[]>() {
@@ -84,22 +78,20 @@ public class ResourceUtil {
      * @param errorHandler
      *            the handler to handle IO exception.
      */
-    public static void pathToInputStreamInJob(final IPath path,
-            final AbstractInputStreamRunnable uiTask, final String jobName,
-            final IJobErrorHandler errorHandler) {
-        final Display display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
+    public static void pathToInputStreamInJob(String path, AbstractInputStreamRunnable uiTask, String jobName,
+            IJobErrorHandler errorHandler) {
+        Display display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
         Job job = new Job(jobName) {
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 monitor.beginTask("Connecting to " + path, IProgressMonitor.UNKNOWN);
                 try {
-                    InputStream inputStream = workspaceFileToInputStream(path);
+                    InputStream inputStream = null;
+                    if (!path.contains("://")) {
+                        inputStream = workspaceFileToInputStream(Path.fromPortableString(path));
+                    }
                     if (inputStream == null) {
-                        inputStream = new ByteArrayInputStream(cache.getUnchecked(path.toPortableString()));
-                        // System.out.println("hit: "+cache.stats().hitCount()+
-                        // ", miss: "+cache.stats().missCount()+
-                        // ", load time: "+cache.stats().totalLoadTime()+
-                        // ", entries: "+cache.asMap().size());
+                        inputStream = new ByteArrayInputStream(cache.getUnchecked(path));
                     }
                     uiTask.setInputStream(inputStream);
                     display.asyncExec(uiTask);
@@ -116,7 +108,7 @@ public class ResourceUtil {
 
     private static InputStream workspaceFileToInputStream(IPath path) {
         // Try workspace location
-        final IFile workspace_file = getIFileFromIPath(path);
+        IFile workspace_file = getIFileFromIPath(path);
         // Valid file should either open, or give meaningful exception
         if (workspace_file != null && workspace_file.exists()) {
             try {
@@ -136,12 +128,11 @@ public class ResourceUtil {
      *            Path to file in workspace
      * @return the IFile. <code>null</code> if no IFile on the path, file does not exist, internal error.
      */
-    private static IFile getIFileFromIPath(final IPath path) {
+    private static IFile getIFileFromIPath(IPath path) {
         try {
-            final IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(
-                    path, false);
+            IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(path, false);
             if (r != null && r instanceof IFile) {
-                final IFile file = (IFile) r;
+                IFile file = (IFile) r;
                 if (file.exists()) {
                     return file;
                 }
@@ -161,10 +152,9 @@ public class ResourceUtil {
      * @return The corresponding {@link InputStream}. Never <code>null</code>
      * @throws Exception
      */
-    public static InputStream pathToInputStream(final String path) throws Exception {
+    public static InputStream pathToInputStream(String path) throws Exception {
         // Not a workspace file. Try local file system
         File local_file = new File(path);
-        // Path URL for "file:..." so that it opens as FileInputStream
         if (local_file.getPath().startsWith("file:")) {
             local_file = new File(local_file.getPath().substring(5));
         }
@@ -172,17 +162,8 @@ public class ResourceUtil {
         try {
             return new FileInputStream(local_file);
         } catch (Exception ex) {
-            // Could not open as local file.
-            // Does it look like a URL?
-            // TODO:
-            // Eclipse Path collapses "//" into "/", revert that: Is this true?
-            // Need test on Mac.
             urlString = path.toString();
-            // if(!urlString.startsWith("platform") && !urlString.contains("://"))
-            // urlString = urlString.replaceFirst(":/", "://");
-            // Does it now look like a URL? If not, report the original local
-            // file problem
-            if (!isURL(urlString)) {
+            if (!urlString.contains(":/")) {
                 throw new Exception("Cannot open " + ex.getMessage(), ex);
             }
         }
@@ -191,72 +172,9 @@ public class ResourceUtil {
         // Allow URLs with spaces. Ideally, the URL class would handle this?
         urlString = urlString.replaceAll(" ", "%20");
         URI uri = new URI(urlString);
-        final URL url = uri.toURL();
-        return openURLStream(url);
-    }
-
-    private static InputStream openURLStream(final URL url) throws IOException {
+        URL url = uri.toURL();
         URLConnection connection = url.openConnection();
         connection.setReadTimeout(5000);
         return connection.getInputStream();
     }
-
-    /**
-     * Check if a URL is actually a URL
-     * 
-     * @param url
-     *            Possible URL
-     * @return <code>true</code> if considered a URL
-     */
-    public static boolean isURL(final String url) {
-        return url.contains(":/");
-    }
-
-    // /**
-    // * Return the {@link InputStream} of the file that is available on the
-    // * specified path.
-    // *
-    // * @param path
-    // * The {@link IPath} to the file
-    // *
-    // * @return The corresponding {@link InputStream} or null
-    // * @throws Exception
-    // */
-    // public static InputStream pathToInputStream(final IPath path) throws Exception{
-    // InputStream result = null;
-    //
-    // IResource r = null;
-    // try {
-    // // try workspace
-    // r = ResourcesPlugin.getWorkspace().getRoot().findMember(
-    // path, false);
-    // if (r!= null && r instanceof IFile) {
-    // result = ((IFile) r).getContents();
-    // return result;
-    // }else
-    // throw new Exception();
-    // } catch (Exception e) {
-    // // try from local file system
-    // try {
-    // result = new FileInputStream(path.toFile());
-    // if(result != null)
-    // return result;
-    // else
-    // throw new Exception();
-    // } catch (Exception e1) {
-    // try {
-    // //try from URL
-    // String urlString = path.toString();
-    // if(!urlString.contains("://"))
-    // urlString = urlString.replaceFirst(":/", "://");
-    // URL url = new URL(urlString);
-    // result = url.openStream();
-    // return result;
-    // } catch (Exception e2) {
-    // throw new Exception("This exception includes three sub-exceptions:\n"+
-    // e+ "\n" + e1 + "\n" + e2);
-    // }
-    // }
-    // }
-    // }
 }

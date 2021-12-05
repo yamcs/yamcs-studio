@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -42,10 +41,8 @@ public class OpenFileAction extends AbstractWidgetAction {
 
     @Override
     protected void configureProperties() {
-        addProperty(new FilePathProperty(
-                PROP_PATH, "File Path", WidgetPropertyCategory.Basic, new Path(""),
-                new String[] { "*" }));
-
+        addProperty(
+                new FilePathProperty(PROP_PATH, "File Path", WidgetPropertyCategory.Basic, "", new String[] { "*" }));
     }
 
     @Override

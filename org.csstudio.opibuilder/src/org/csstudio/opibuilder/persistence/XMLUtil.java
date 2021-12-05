@@ -466,7 +466,7 @@ public class XMLUtil {
                             model.getProperty(propId).readValueFromXML(subElement));
                 } catch (Exception e) {
                     String errorMessage = "Failed to read the " + propId + " property for " + model.getName() + ". " +
-                            "The default property value will be setted instead. \n" + e;
+                            "The default property value will be set instead. \n" + e;
                     // MessageDialog.openError(null, "OPI File format error", errorMessage + "\n" + e.getMessage());
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, errorMessage, e);
                 }

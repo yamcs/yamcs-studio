@@ -40,11 +40,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-/**The tab figure.
- * @author Xihui Chen
- *
- */
-public class TabFigure extends Figure implements Introspectable{
+public class TabFigure extends Figure implements Introspectable {
 
     private static final int GAP = 2;
 
@@ -54,10 +50,11 @@ public class TabFigure extends Figure implements Introspectable{
      * @author Xihui Chen
      *
      */
-    public interface ITabListener extends EventListener{
+    public interface ITabListener extends EventListener {
 
         void activeTabIndexChanged(int oldIndex, int newIndex);
     }
+
     private static final int MARGIN = 10;
     private List<Label> tabLabelList;
     private List<Color> tabColorList;
@@ -66,10 +63,10 @@ public class TabFigure extends Figure implements Introspectable{
     private final static Color BORDER_COLOR = CustomMediaFactory.getInstance().getColor(
             CustomMediaFactory.COLOR_DARK_GRAY);
     private final static Color TAB_3D_COLOR = CustomMediaFactory.getInstance().getColor(
-            255,255,255);
+            255, 255, 255);
 
-//    private final static Font DEFAULT_TITLE_FONT = CustomMediaFactory.getInstance().getFont(
-//            new FontData("Arial", 12, SWT.BOLD));
+    // private final static Font DEFAULT_TITLE_FONT = CustomMediaFactory.getInstance().getFont(
+    // new FontData("Arial", 12, SWT.BOLD));
 
     private final static Color DEFAULT_TABCOLOR = CustomMediaFactory.getInstance().getColor(
             CustomMediaFactory.COLOR_WHITE);
@@ -84,13 +81,12 @@ public class TabFigure extends Figure implements Introspectable{
     /**
      * Listeners that react on tab index events.
      */
-    private List<ITabListener> tabListeners =
-        new ArrayList<ITabListener>();
+    private List<ITabListener> tabListeners = new ArrayList<>();
 
     public TabFigure() {
-        tabLabelList = new ArrayList<Label>();
-        tabColorList = new ArrayList<Color>();
-        tabEnabledList = new ArrayList<Boolean>();
+        tabLabelList = new ArrayList<>();
+        tabColorList = new ArrayList<>();
+        tabEnabledList = new ArrayList<>();
         activeTabIndex = -1;
         tabArea = new ScrollPane();
         tabArea.setScrollBarVisibility(ScrollPane.NEVER);
@@ -101,38 +97,36 @@ public class TabFigure extends Figure implements Introspectable{
         tabArea.setViewport(new FreeformViewport());
         tabArea.setContents(pane);
 
-
     }
 
-    public synchronized void addTab(String title){
+    public synchronized void addTab(String title) {
         Label tabLabel = createTabLabel(title, tabLabelList.size());
         tabLabelList.add(tabLabel);
         tabColorList.add(DEFAULT_TABCOLOR);
         tabEnabledList.add(true);
         add(tabLabel);
-//        if(activeTabIndex <0)
-//            setActiveTabIndex(0);
+        // if(activeTabIndex <0)
+        // setActiveTabIndex(0);
         revalidate();
     }
 
-    public synchronized void addTab(String title, int index){
+    public synchronized void addTab(String title, int index) {
         Label tabLabel = createTabLabel(title, index);
         tabLabelList.add(index, tabLabel);
         tabColorList.add(index, DEFAULT_TABCOLOR);
         tabEnabledList.add(index, true);
         add(tabLabel);
-//        if(activeTabIndex <0)
-//            setActiveTabIndex(0);
+        // if(activeTabIndex <0)
+        // setActiveTabIndex(0);
         revalidate();
     }
 
-    public void addTabListener(ITabListener listener){
+    public void addTabListener(ITabListener listener) {
         tabListeners.add(listener);
     }
 
-
     private Label createTabLabel(String title, final int index) {
-        final Label tabLabel = new Label(title){
+        final Label tabLabel = new Label(title) {
             @Override
             protected void paintFigure(Graphics graphics) {
                 graphics.pushState();
@@ -146,63 +140,64 @@ public class TabFigure extends Figure implements Introspectable{
         tabLabel.setOpaque(false);
         tabLabel.setBorder(new LineBorder(BORDER_COLOR));
         tabLabel.setBackgroundColor(getDarkColor(DEFAULT_TABCOLOR));
-    //    tabLabel.setCursor(Cursors.HAND);
-        tabLabel.addMouseListener(new MouseListener.Stub(){
+        // tabLabel.setCursor(Cursors.HAND);
+        tabLabel.addMouseListener(new MouseListener.Stub() {
             @Override
             public void mousePressed(MouseEvent me) {
-                if(me.button != 1)
+                if (me.button != 1) {
                     return;
+                }
                 setActiveTabIndex(tabLabelList.indexOf(tabLabel));
             }
         });
         return tabLabel;
     }
 
-
-    private void fireActiveTabIndexChanged(int oldIndex, int newIndex){
-        for(ITabListener listener : tabListeners)
+    private void fireActiveTabIndexChanged(int oldIndex, int newIndex) {
+        for (ITabListener listener : tabListeners) {
             listener.activeTabIndexChanged(oldIndex, newIndex);
+        }
     }
-
 
     public int getActiveTabIndex() {
         return activeTabIndex;
     }
 
+    @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
     }
 
-    public IFigure getContentPane(){
+    public IFigure getContentPane() {
         return pane;
     }
 
-    private Color getDarkColor(Color color){
+    private Color getDarkColor(Color color) {
         int d = 30;
         int r = color.getRed();
         int g = color.getGreen();
         int b = color.getBlue();
-        r = Math.max(0, r-d);
-        g = Math.max(0, g-d);
-        b = Math.max(0, b-d);
-        return CustomMediaFactory.getInstance().getColor(r,g,b);
+        r = Math.max(0, r - d);
+        g = Math.max(0, g - d);
+        b = Math.max(0, b - d);
+        return CustomMediaFactory.getInstance().getColor(r, g, b);
     }
 
-    public int getTabAmount(){
+    public int getTabAmount() {
         return tabLabelList.size();
     }
 
-
-    public Label getTabLabel(int index){
-        if(index >= getTabAmount())
+    public Label getTabLabel(int index) {
+        if (index >= getTabAmount()) {
             throw new IndexOutOfBoundsException();
+        }
         return tabLabelList.get(index);
     }
 
-    public int getTabLabelHeight(){
+    public int getTabLabelHeight() {
         int h = minimumTabHeight;
-        for(Label label : tabLabelList){
-            if(label.getPreferredSize().height > h){
+        for (Label label : tabLabelList) {
+            if (label.getPreferredSize().height > h) {
                 h = label.getPreferredSize().height;
             }
         }
@@ -228,16 +223,22 @@ public class TabFigure extends Figure implements Introspectable{
         int width = getTabLabelWidth();
         int height = getTabLabelHeight();
         int i = 0;
-        for(Label label : tabLabelList){
+        for (Label label : tabLabelList) {
             Dimension labelSize = label.getPreferredSize();
             if (horizontal) {
-                if (getActiveTabIndex() == i) label.setBounds(new Rectangle(left, top, labelSize.width + MARGIN + GAP, height));
-                else label.setBounds(new Rectangle(left + GAP, top + 2, labelSize.width + MARGIN - GAP, height - 2));
+                if (getActiveTabIndex() == i) {
+                    label.setBounds(new Rectangle(left, top, labelSize.width + MARGIN + GAP, height));
+                } else {
+                    label.setBounds(new Rectangle(left + GAP, top + 2, labelSize.width + MARGIN - GAP, height - 2));
+                }
                 left += (labelSize.width + MARGIN - 1);
             } else {
                 int labelH = Math.max(labelSize.height, minimumTabHeight);
-                if (getActiveTabIndex() == i) label.setBounds(new Rectangle(left, top, width, labelH + MARGIN + GAP));
-                else label.setBounds(new Rectangle(left + 2, top + GAP, width - 2, labelH + MARGIN - GAP));
+                if (getActiveTabIndex() == i) {
+                    label.setBounds(new Rectangle(left, top, width, labelH + MARGIN + GAP));
+                } else {
+                    label.setBounds(new Rectangle(left + 2, top + GAP, width - 2, labelH + MARGIN - GAP));
+                }
                 top += (labelH + MARGIN - 1);
             }
             i++;
@@ -254,15 +255,15 @@ public class TabFigure extends Figure implements Introspectable{
     @Override
     protected void paintClientArea(Graphics graphics) {
         super.paintClientArea(graphics);
-        //paint tabArea bounds
+        // paint tabArea bounds
         graphics.setForegroundColor(BORDER_COLOR);
         graphics.drawRectangle(tabArea.getBounds());
-        //paint hidding rect
-        if(activeTabIndex >= 0 && activeTabIndex < tabLabelList.size()){
+        // paint hidding rect
+        if (activeTabIndex >= 0 && activeTabIndex < tabLabelList.size()) {
             graphics.setBackgroundColor(tabLabelList.get(activeTabIndex).getBackgroundColor());
             Rectangle tabLabelBounds = tabLabelList.get(activeTabIndex).getBounds();
-        //    graphics.fillRectangle(tabLabelBounds.x+1, tabLabelBounds.y +tabLabelBounds.height-2,
-        //        tabLabelBounds.width -2, 4);
+            // graphics.fillRectangle(tabLabelBounds.x+1, tabLabelBounds.y +tabLabelBounds.height-2,
+            // tabLabelBounds.width -2, 4);
             graphics.setForegroundColor(tabLabelList.get(activeTabIndex).getBackgroundColor());
             if (horizontal) {
                 graphics.drawLine(tabLabelBounds.x + 1,
@@ -278,15 +279,14 @@ public class TabFigure extends Figure implements Introspectable{
         }
     }
 
-
-
-    public void removeTab(){
-        removeTab(tabLabelList.size()-1);
+    public void removeTab() {
+        removeTab(tabLabelList.size() - 1);
     }
 
-    public synchronized void removeTab(int index){
-        if(index <0 || index >=getTabAmount())
+    public synchronized void removeTab(int index) {
+        if (index < 0 || index >= getTabAmount()) {
             throw new IndexOutOfBoundsException();
+        }
         remove(tabLabelList.get(index));
         dispose(index);
         tabLabelList.remove(index);
@@ -298,17 +298,19 @@ public class TabFigure extends Figure implements Introspectable{
     }
 
     public void setActiveTabIndex(int activeTabIndex) {
-        if(activeTabIndex >= getTabAmount())
+        if (activeTabIndex >= getTabAmount()) {
             throw new IndexOutOfBoundsException();
+        }
 
         // If disabled we do not show
-        if (!tabEnabledList.get(activeTabIndex))
+        if (!tabEnabledList.get(activeTabIndex)) {
             return;
+        }
 
-        int i=0;
-        for(Label l : tabLabelList){
+        int i = 0;
+        for (Label l : tabLabelList) {
             l.setBackgroundColor(
-                getDarkColor(tabColorList.get(i++)));
+                    getDarkColor(tabColorList.get(i++)));
         }
 
         getTabLabel(activeTabIndex).setBackgroundColor(tabColorList.get(activeTabIndex));
@@ -320,64 +322,68 @@ public class TabFigure extends Figure implements Introspectable{
 
     }
 
-    public void setIconPath(final int index, final IPath path, final IJobErrorHandler errorHandler){
+    public void setIconPath(int index, IPath path, IJobErrorHandler errorHandler) {
         dispose(index);
 
-        if(path != null && !path.isEmpty()){
+        if (path != null && !path.isEmpty()) {
 
-                AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
+            AbstractInputStreamRunnable uiTask = new AbstractInputStreamRunnable() {
 
-                    @Override
-                    public void runWithInputStream(InputStream stream) {
-                        Image image = new Image(null, stream);
-                        try {
-                            stream.close();
-                        } catch (IOException e) {
-                        }
-                        getTabLabel(index).setIcon(image);
+                @Override
+                public void runWithInputStream(InputStream stream) {
+                    Image image = new Image(null, stream);
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
                     }
-                };
-                ResourceUtil.pathToInputStreamInJob(path, uiTask, "Loading Tab Icon...", errorHandler);
+                    getTabLabel(index).setIcon(image);
+                }
+            };
+            ResourceUtil.pathToInputStreamInJob(path.toPortableString(), uiTask, "Loading Tab Icon...", errorHandler);
 
         }
     }
-
 
     /**
      * Dispose image resources.
      */
     public void dispose() {
-        for(int i=0; i<tabLabelList.size(); i++)
+        for (int i = 0; i < tabLabelList.size(); i++) {
             dispose(i);
-    }
-
-    private void dispose(int index){
-        Label label = tabLabelList.get(index);
-
-        Image image = label.getIcon();
-        if(image != null){
-            image.dispose();
-            image = null;
-            //only do this if it is in UI thread and the rap session is not end.
-            if(Display.getCurrent() != null && !Display.getCurrent().isDisposed())
-                label.setIcon(null);
         }
     }
 
-    public void setTabColor(int index, Color color){
-        if(index >= getTabAmount())
+    private void dispose(int index) {
+        Label label = tabLabelList.get(index);
+
+        Image image = label.getIcon();
+        if (image != null) {
+            image.dispose();
+            image = null;
+            // only do this if it is in UI thread and the rap session is not end.
+            if (Display.getCurrent() != null && !Display.getCurrent().isDisposed()) {
+                label.setIcon(null);
+            }
+        }
+    }
+
+    public void setTabColor(int index, Color color) {
+        if (index >= getTabAmount()) {
             throw new IndexOutOfBoundsException();
+        }
         tabColorList.set(index, color);
         getTabLabel(index).setBackgroundColor(
-            index == activeTabIndex ? color : getDarkColor(color));
-        if(index == activeTabIndex)
+                index == activeTabIndex ? color : getDarkColor(color));
+        if (index == activeTabIndex) {
             tabArea.setBackgroundColor(color);
+        }
         repaint();
     }
 
     public void setTabEnabled(int index, boolean enabled) {
-        if (index >= getTabAmount())
+        if (index >= getTabAmount()) {
             throw new IndexOutOfBoundsException();
+        }
         tabEnabledList.set(index, enabled);
         getTabLabel(index).setEnabled(enabled);
         repaint();
@@ -392,5 +398,4 @@ public class TabFigure extends Figure implements Introspectable{
         this.minimumTabHeight = minimumTabHeight;
         revalidate();
     }
-
 }

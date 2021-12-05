@@ -19,7 +19,6 @@ import org.csstudio.swt.widgets.symbol.SymbolImageFactory;
 import org.csstudio.swt.widgets.symbol.SymbolImageListener;
 import org.csstudio.swt.widgets.symbol.SymbolImageProperties;
 import org.csstudio.swt.widgets.symbol.util.IImageListener;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
@@ -27,26 +26,19 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 
-/**
- * The image boolean button figure.
- *
- * @author Xihui Chen
- *
- */
-public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
-        SymbolImageListener {
+public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements SymbolImageListener {
 
     /**
      * The image itself.
      */
-    private SymbolImage onImage, offImage;
+    private SymbolImage onImage;
+    private SymbolImage offImage;
     private SymbolImageProperties symbolProperties;
 
     private boolean indicatorMode = false;
 
-    private IPath onImagePath;
-
-    private IPath offImagePath;
+    private String onImagePath;
+    private String offImagePath;
 
     private AtomicInteger remainingImagesToLoad = new AtomicInteger(0);
 
@@ -63,8 +55,9 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
     @Override
     protected void updateBoolValue() {
         super.updateBoolValue();
-        if (onImage == null || offImage == null)
+        if (onImage == null || offImage == null) {
             return;
+        }
         if (booleanValue) {
             onImage.setVisible(true);
             offImage.setVisible(false);
@@ -75,13 +68,11 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
         sizeChanged();
     }
 
-    /**
-     * @param indicatorMode
-     */
     public ImageBoolButtonFigure(boolean indicatorMode) {
         this.indicatorMode = indicatorMode;
-        if (!indicatorMode)
+        if (!indicatorMode) {
             addMouseListener(buttonPresser);
+        }
         add(boolLabel);
     }
 
@@ -100,9 +91,13 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
      * Return all mapped images.
      */
     public Collection<SymbolImage> getAllImages() {
-        Collection<SymbolImage> list = new ArrayList<SymbolImage>();
-        if (onImage != null) list.add(onImage);
-        if (offImage != null) list.add(offImage);
+        Collection<SymbolImage> list = new ArrayList<>();
+        if (onImage != null) {
+            list.add(onImage);
+        }
+        if (offImage != null) {
+            list.add(offImage);
+        }
         return list;
     }
 
@@ -129,7 +124,9 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
         SymbolImage temp = booleanValue ? onImage : offImage;
         if (temp != null) {
             Dimension dim = temp.getAutoSizedDimension();
-            if (dim == null) return null;
+            if (dim == null) {
+                return null;
+            }
             return new Dimension(dim.width + getInsets().left + getInsets().right,
                     dim.height + getInsets().bottom + getInsets().top);
         }
@@ -160,20 +157,25 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
         if (boolLabel.isVisible()) {
             Dimension labelSize = boolLabel.getPreferredSize();
             boolLabel.setBounds(new Rectangle(getLabelLocation(clientArea.x + clientArea.width
-                    / 2 - labelSize.width / 2, clientArea.y + clientArea.height
-                    / 2 - labelSize.height / 2), new Dimension(labelSize.width,
-                    labelSize.height)));
+                    / 2 - labelSize.width / 2, clientArea.y
+                            + clientArea.height
+                                    / 2
+                            - labelSize.height / 2),
+                    new Dimension(labelSize.width,
+                            labelSize.height)));
         }
         super.layout();
     }
 
     @Override
     protected void paintClientArea(Graphics graphics) {
-        if (isLoadingImage())
+        if (isLoadingImage()) {
             return;
+        }
         Rectangle clientArea = getClientArea();
-        if (clientArea.width <= 0 || clientArea.height <= 0)
+        if (clientArea.width <= 0 || clientArea.height <= 0) {
             return;
+        }
         if (!isEnabled() && !indicatorMode) {
             graphics.setAlpha(DISABLED_ALPHA);
             graphics.setBackgroundColor(DISABLE_COLOR);
@@ -194,30 +196,33 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
     @Override
     public void setEnabled(boolean value) {
         super.setEnabled(value);
-        if (!indicatorMode && runMode && value)
+        if (!indicatorMode && runMode && value) {
             setCursor(Cursors.HAND);
+        }
     }
 
-    public void setOffImagePath(IPath offImagePath) {
+    public void setOffImagePath(String offImagePath) {
         this.offImagePath = offImagePath;
         if (offImage != null) {
             offImage.dispose();
             offImage = null;
         }
-        if (offImagePath != null && !offImagePath.isEmpty())
+        if (offImagePath != null && !offImagePath.isEmpty()) {
             incrementLoadingCounter();
+        }
         offImage = SymbolImageFactory.asynCreateSymbolImage(this.offImagePath,
                 true, symbolProperties, this);
     }
 
-    public void setOnImagePath(IPath onImagePath) {
+    public void setOnImagePath(String onImagePath) {
         this.onImagePath = onImagePath;
         if (onImage != null) {
             onImage.dispose();
             onImage = null;
         }
-        if (onImagePath != null && !onImagePath.isEmpty())
+        if (onImagePath != null && !onImagePath.isEmpty()) {
             incrementLoadingCounter();
+        }
         onImage = SymbolImageFactory.asynCreateSymbolImage(this.onImagePath,
                 true, symbolProperties, this);
     }
@@ -232,8 +237,9 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
         if (symbolProperties != null) {
             symbolProperties.setStretch(strech);
         }
-        for (SymbolImage si : getAllImages())
+        for (SymbolImage si : getAllImages()) {
             si.setStretch(strech);
+        }
         repaint();
     }
 
@@ -249,8 +255,9 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
         if (symbolProperties != null) {
             symbolProperties.setBackgroundColor(backgroundColor);
         }
-        for (SymbolImage si : getAllImages())
+        for (SymbolImage si : getAllImages()) {
             si.setBackgroundColor(backgroundColor);
+        }
         repaint();
     }
 
@@ -266,14 +273,16 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
     }
 
     public void setAnimationDisabled(final boolean stop) {
-        if (animationDisabled == stop)
+        if (animationDisabled == stop) {
             return;
+        }
         animationDisabled = stop;
         if (symbolProperties != null) {
             symbolProperties.setAnimationDisabled(stop);
         }
-        for (SymbolImage asi : getAllImages())
+        for (SymbolImage asi : getAllImages()) {
             asi.setAnimationDisabled(stop);
+        }
         repaint();
     }
 
@@ -281,8 +290,9 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
         if (symbolProperties != null) {
             symbolProperties.setAlignedToNearestSecond(aligned);
         }
-        for (SymbolImage asi : getAllImages())
+        for (SymbolImage asi : getAllImages()) {
             asi.setAlignedToNearestSecond(aligned);
+        }
         repaint();
     }
 
@@ -309,8 +319,9 @@ public class ImageBoolButtonFigure extends AbstractBoolControlFigure implements
 
     @Override
     public void sizeChanged() {
-        if (imageListener != null)
+        if (imageListener != null) {
             imageListener.imageResized(this);
+        }
     }
 
 }

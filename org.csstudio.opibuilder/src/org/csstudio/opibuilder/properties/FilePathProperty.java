@@ -28,15 +28,11 @@ import org.csstudio.opibuilder.script.RuleData;
 import org.csstudio.opibuilder.util.OPIBuilderMacroUtil;
 import org.csstudio.opibuilder.util.ResourceUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.jdom.Element;
 
 /**
- * The property for file path, which is represented as an {@link IPath}.
- * 
- * @author Xihui Chen, Kai Meyer (similar class as in SDS)
- *
+ * The property for file path, which is represented as a String.
  */
 public class FilePathProperty extends AbstractWidgetProperty {
 
@@ -62,8 +58,7 @@ public class FilePathProperty extends AbstractWidgetProperty {
      * @param fileExtensions
      *            the allowed file extensions in the file open dialog.
      */
-    public FilePathProperty(String prop_id, String description,
-            WidgetPropertyCategory category, IPath defaultValue,
+    public FilePathProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue,
             String[] fileExtensions) {
         this(prop_id, description, category, defaultValue, fileExtensions, true);
 
@@ -85,11 +80,9 @@ public class FilePathProperty extends AbstractWidgetProperty {
      * @param buildAbsolutePath
      *            true if it should automatically build the absolute path from widget model.
      */
-    public FilePathProperty(String prop_id, String description,
-            WidgetPropertyCategory category, IPath defaultValue,
+    public FilePathProperty(String prop_id, String description, WidgetPropertyCategory category, String defaultValue,
             String[] fileExtensions, boolean buildAbsolutePath) {
-        super(prop_id, description, category,
-                defaultValue == null ? new Path("") : defaultValue);
+        super(prop_id, description, category, defaultValue == null ? "" : defaultValue);
         this.fileExtensions = fileExtensions;
         this.buildAbsolutePath = buildAbsolutePath;
     }
@@ -102,15 +95,17 @@ public class FilePathProperty extends AbstractWidgetProperty {
         Object acceptedValue = null;
 
         if (value instanceof IPath || value instanceof String) {
-            IPath path;
+            String path;
             if (value instanceof String) {
-                path = ResourceUtil.getPathFromString((String) value);
+                path = (String) value;
             } else {
-                path = (IPath) value;
+                path = ((IPath) value).toPortableString();
             }
+            int idx = path.lastIndexOf('.');
+            String dotExt = (idx != -1) ? path.substring(idx) : "";
             if (fileExtensions != null && fileExtensions.length > 0) {
                 for (String extension : fileExtensions) {
-                    if (extension.equalsIgnoreCase(path.getFileExtension())) {
+                    if (("." + extension).equalsIgnoreCase(dotExt)) {
                         acceptedValue = path;
                     }
                     if (extension.equals("*")) {
@@ -136,15 +131,16 @@ public class FilePathProperty extends AbstractWidgetProperty {
     @Override
     public Object getPropertyValue() {
         if (widgetModel != null && widgetModel.getExecutionMode() == ExecutionMode.RUN_MODE
-                && propertyValue != null &&
-                !((IPath) propertyValue).isEmpty()) {
-            String s = OPIBuilderMacroUtil.replaceMacros(
-                    widgetModel, propertyValue.toString());
-            IPath path = ResourceUtil.getPathFromString(s);
-            if (buildAbsolutePath && !path.isAbsolute()) {
-                return ResourceUtil.buildAbsolutePath(widgetModel, path);
+                && propertyValue != null && !((String) propertyValue).isEmpty()) {
+            String s = OPIBuilderMacroUtil.replaceMacros(widgetModel, (String) propertyValue);
+            if (s.contains("://")) {
+                return s;
             } else {
-                return path;
+                IPath path = ResourceUtil.getPathFromString(s);
+                if (buildAbsolutePath && !path.isAbsolute()) {
+                    path = ResourceUtil.buildAbsolutePath(widgetModel, path);
+                }
+                return path.toPortableString();
             }
         }
         return super.getPropertyValue();
@@ -152,12 +148,18 @@ public class FilePathProperty extends AbstractWidgetProperty {
 
     @Override
     public Object readValueFromXML(Element propElement) {
-        return Path.fromPortableString(propElement.getText());
+        return propElement.getText();
     }
 
     @Override
     public void writeToXML(Element propElement) {
-        propElement.setText(((IPath) getPropertyValue()).toPortableString());
+        String value = (String) getPropertyValue();
+        if (value.contains("://")) {
+            propElement.setText(value);
+        } else {
+            IPath path = ResourceUtil.getPathFromString(value);
+            propElement.setText(path.toPortableString());
+        }
     }
 
     @Override
@@ -169,5 +171,4 @@ public class FilePathProperty extends AbstractWidgetProperty {
     public String toStringInRuleScript(Object propValue) {
         return RuleData.QUOTE + super.toStringInRuleScript(propValue) + RuleData.QUOTE;
     }
-
 }

@@ -37,8 +37,6 @@ import org.csstudio.swt.widgets.symbol.util.IImageListener;
 import org.csstudio.swt.widgets.symbol.util.ImageUtils;
 import org.csstudio.swt.widgets.symbol.util.PermutationMatrix;
 import org.csstudio.swt.widgets.util.TextPainter;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -46,15 +44,11 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * An image figure.
- *
- * @author Fred Arnaud (Sopra Steria Group) - ITER
  */
 public final class ImageFigure extends Figure implements Introspectable, SymbolImageListener {
 
-    /**
-     * The {@link IPath} to the image.
-     */
-    private IPath filePath = new Path("");
+    private String filePath;
+
     /**
      * The image itself.
      */
@@ -88,9 +82,10 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
     /**
      * Sets the path to the image.
      *
-     * @param newval The path to the image
+     * @param newval
+     *            The path to the image
      */
-    public void setFilePath(final IPath newval) {
+    public void setFilePath(String newval) {
         if (newval == null) {
             return;
         }
@@ -338,8 +333,9 @@ public final class ImageFigure extends Figure implements Introspectable, SymbolI
 
     @Override
     public void sizeChanged() {
-        if (imageListener != null)
+        if (imageListener != null) {
             imageListener.imageResized(this);
+        }
     }
 
 }

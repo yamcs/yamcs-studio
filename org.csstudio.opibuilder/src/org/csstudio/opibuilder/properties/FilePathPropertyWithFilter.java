@@ -1,7 +1,6 @@
 package org.csstudio.opibuilder.properties;
 
 import org.csstudio.opibuilder.properties.support.FilePathPropertyDescriptorWithFilter;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
 /**
@@ -17,8 +16,7 @@ public class FilePathPropertyWithFilter extends FilePathProperty {
     private String[] filters;
 
     public FilePathPropertyWithFilter(String propertyID, String description,
-            WidgetPropertyCategory category, IPath defaultValue,
-            String[] filters) {
+            WidgetPropertyCategory category, String defaultValue, String[] filters) {
         super(propertyID, description, category, defaultValue, filters);
         this.filters = filters;
     }

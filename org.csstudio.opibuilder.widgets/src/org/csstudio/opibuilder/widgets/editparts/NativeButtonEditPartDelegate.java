@@ -16,6 +16,7 @@ import org.csstudio.opibuilder.widgetActions.OpenDisplayAction;
 import org.csstudio.opibuilder.widgets.figures.NativeButtonFigure;
 import org.csstudio.opibuilder.widgets.model.ActionButtonModel;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -24,9 +25,6 @@ import org.eclipse.swt.widgets.Button;
 
 /**
  * EditPart controller delegate for Native Button widget.
- * 
- * @author Xihui Chen
- *
  */
 public final class NativeButtonEditPartDelegate implements IButtonEditPartDelegate {
 
@@ -84,9 +82,6 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void registerPropertyChangeHandlers() {
 
@@ -101,10 +96,11 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
         // image
         IWidgetPropertyChangeHandler imageHandler = (oldValue, newValue, refreshableFigure) -> {
             NativeButtonFigure figure = (NativeButtonFigure) refreshableFigure;
-            IPath absolutePath = (IPath) newValue;
-            if (absolutePath != null && !absolutePath.isEmpty() && !absolutePath.isAbsolute()) {
-                absolutePath = ResourceUtil.buildAbsolutePath(
-                        editpart.getWidgetModel(), absolutePath);
+            String absolutePath = (String) newValue;
+            if (absolutePath != null && !absolutePath.contains("://")) {
+                IPath path = Path.fromPortableString(absolutePath);
+                path = ResourceUtil.buildAbsolutePath(editpart.getWidgetModel(), path);
+                absolutePath = path.toPortableString();
             }
             figure.setImagePath(absolutePath);
             return true;
@@ -112,7 +108,7 @@ public final class NativeButtonEditPartDelegate implements IButtonEditPartDelega
         editpart.setPropertyChangeHandler(ActionButtonModel.PROP_IMAGE, imageHandler);
 
         // button style
-        final IWidgetPropertyChangeHandler buttonStyleHandler = (oldValue, newValue, refreshableFigure) -> {
+        IWidgetPropertyChangeHandler buttonStyleHandler = (oldValue, newValue, refreshableFigure) -> {
             editpart.updatePropSheet();
             return true;
         };

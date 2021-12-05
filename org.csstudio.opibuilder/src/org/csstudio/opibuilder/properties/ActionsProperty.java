@@ -130,7 +130,7 @@ public class ActionsProperty extends AbstractWidgetProperty {
                         } catch (Exception e) {
                             String errorMessage = "Failed to read the " + propId + " property for "
                                     + action.getDescription() + ". " +
-                                    "The default property value will be setted instead. \n" + e;
+                                    "The default property value will be set instead. \n" + e;
                             OPIBuilderPlugin.getLogger().log(Level.WARNING, errorMessage, e);
                         }
                     }

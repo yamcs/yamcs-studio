@@ -61,8 +61,7 @@ public class OpenDisplayAction extends AbstractWidgetAction {
     @Override
     protected void configureProperties() {
         addProperty(new FilePathProperty(PROP_PATH, "File Path",
-                WidgetPropertyCategory.Basic, new Path(""),
-                new String[] { "opi" }, false) {
+                WidgetPropertyCategory.Basic, "", new String[] { "opi" }, false) {
             @Override
             public Object readValueFromXML(Element propElement) {
                 handleLegacySettings(propElement);
@@ -201,7 +200,8 @@ public class OpenDisplayAction extends AbstractWidgetAction {
     }
 
     protected IPath getPath() {
-        return (IPath) getPropertyValue(PROP_PATH);
+        String path = (String) getPropertyValue(PROP_PATH);
+        return path != null ? Path.fromPortableString(path) : null;
     }
 
     protected MacrosInput getMacrosInput() {

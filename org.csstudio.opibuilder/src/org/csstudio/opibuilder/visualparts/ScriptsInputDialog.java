@@ -368,10 +368,10 @@ public class ScriptsInputDialog extends TrayDialog {
                     RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
                             Display.getCurrent().getActiveShell(), startPath,
                             "Select a script file", new String[] { ScriptService.JS });
-                    rsd.setSelectedResource(new Path("./"));
+                    rsd.setSelectedResource("./");
                     if (rsd.open() == Window.OK) {
                         if (rsd.getSelectedResource() != null) {
-                            path = rsd.getSelectedResource();
+                            path = Path.fromPortableString(rsd.getSelectedResource());
                             scriptData = new ScriptData(path);
                         }
                     }
@@ -408,10 +408,11 @@ public class ScriptsInputDialog extends TrayDialog {
                         RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
                                 getShell(), startPath, "Select a script file",
                                 new String[] { ScriptService.JS });
-                        rsd.setSelectedResource(((ScriptData) selection.getFirstElement()).getPath());
+                        rsd.setSelectedResource(
+                                ((ScriptData) selection.getFirstElement()).getPath().toPortableString());
                         if (rsd.open() == Window.OK) {
                             if (rsd.getSelectedResource() != null) {
-                                path = rsd.getSelectedResource();
+                                path = Path.fromPortableString(rsd.getSelectedResource());
                                 sd.setPath(path);
                                 setScriptsViewerSelection(sd);
                             }

@@ -9,7 +9,6 @@ package org.csstudio.swt.widgets.symbol;
 
 import org.csstudio.swt.widgets.symbol.util.PermutationMatrix;
 import org.csstudio.ui.util.CustomMediaFactory;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -29,9 +28,9 @@ public interface SymbolImage {
     /** The alpha (0 is transparency and 255 is opaque) for disabled paint */
     public static final int DISABLED_ALPHA = 100;
 
-    public void setImagePath(IPath imagePath);
+    public void setImagePath(String imagePath);
 
-    public IPath getImagePath();
+    public String getImagePath();
 
     public ImageData getOriginalImageData();
 
@@ -57,9 +56,10 @@ public interface SymbolImage {
     /**
      * The main drawing routine.
      *
-     * @param gfx The {@link Graphics} to use
+     * @param gfx
+     *            The {@link Graphics} to use
      */
-    public void paintFigure(final Graphics gfx);
+    public void paintFigure(Graphics gfx);
 
     public void setBounds(Rectangle newArea);
 
@@ -71,8 +71,7 @@ public interface SymbolImage {
     public void resizeImage();
 
     /**
-     * Automatically adjust the widget bounds to fit the size of the static
-     * image
+     * Automatically adjust the widget bounds to fit the size of the static image
      *
      * @param autoSize
      */
@@ -81,7 +80,8 @@ public interface SymbolImage {
     /**
      * Set the stretch state for the image.
      *
-     * @param newval true, if it should be stretched, false otherwise)
+     * @param newval
+     *            true, if it should be stretched, false otherwise)
      */
     public void setStretch(final boolean newval);
 
@@ -95,28 +95,28 @@ public interface SymbolImage {
     /**
      * Sets the amount of pixels, which are cropped from the left.
      */
-    public void setLeftCrop(final int newval);
+    public void setLeftCrop(int newval);
 
     /**
      * Sets the amount of pixels, which are cropped from the right.
      */
-    public void setRightCrop(final int newval);
+    public void setRightCrop(int newval);
 
     /**
      * Sets the amount of pixels, which are cropped from the bottom.
      */
-    public void setBottomCrop(final int newval);
+    public void setBottomCrop(int newval);
 
     /**
      * Sets the amount of pixels, which are cropped from the top.
      */
-    public void setTopCrop(final int newval);
+    public void setTopCrop(int newval);
 
-    public void setPermutationMatrix(final PermutationMatrix permutationMatrix);
+    public void setPermutationMatrix(PermutationMatrix permutationMatrix);
 
     public PermutationMatrix getPermutationMatrix();
 
-    public void setAnimationDisabled(final boolean stop);
+    public void setAnimationDisabled(boolean stop);
 
     public void setListener(SymbolImageListener listener);
 
@@ -125,5 +125,4 @@ public interface SymbolImage {
     public void asyncLoadImage();
 
     public void setAlignedToNearestSecond(boolean aligned);
-
 }

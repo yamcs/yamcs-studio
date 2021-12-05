@@ -8,7 +8,6 @@
 package org.csstudio.swt.widgets.symbol;
 
 import org.csstudio.swt.widgets.symbol.util.PermutationMatrix;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
@@ -29,7 +28,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     protected double scale = 1.0;
     protected Rectangle bounds;
 
-    protected IPath imagePath;
+    protected String imagePath;
 
     protected Image image;
     protected ImageData imageData;
@@ -64,8 +63,9 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     }
 
     private void fillProperties(SymbolImageProperties sip) {
-        if (sip == null)
+        if (sip == null) {
             return;
+        }
         this.topCrop = sip.getTopCrop();
         this.bottomCrop = sip.getBottomCrop();
         this.leftCrop = sip.getLeftCrop();
@@ -81,18 +81,22 @@ public abstract class AbstractSymbolImage implements SymbolImage {
                 Display.getCurrent(), new RGB(0, 0, 0)) : sip.getColorToChange();
     }
 
-    public IPath getImagePath() {
+    @Override
+    public String getImagePath() {
         return imagePath;
     }
 
-    public void setImagePath(IPath imagePath) {
+    @Override
+    public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
+    @Override
     public ImageData getOriginalImageData() {
         return originalImageData;
     }
 
+    @Override
     public void dispose() {
         disposed = true;
         if (image != null && !image.isDisposed()) {
@@ -101,18 +105,22 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         }
     }
 
+    @Override
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
 
+    @Override
     public boolean isDisposed() {
         return disposed;
     }
 
+    @Override
     public boolean isEditMode() {
         return !runMode;
     }
 
+    @Override
     public boolean isEmpty() {
         return originalImageData == null;
     }
@@ -123,30 +131,38 @@ public abstract class AbstractSymbolImage implements SymbolImage {
 
     public abstract void resetData();
 
+    @Override
     public void setCurrentColor(Color newColor) {
-        if (isEditMode())
+        if (isEditMode()) {
             return;
+        }
         if (newColor == null
-                || (currentColor != null && currentColor.equals(newColor)))
+                || (currentColor != null && currentColor.equals(newColor))) {
             return;
+        }
         this.currentColor = newColor;
         resetData();
     }
 
+    @Override
     public void setColorToChange(Color newColor) {
-        if (isEditMode())
+        if (isEditMode()) {
             return;
+        }
         if (newColor == null
-                || (colorToChange != null && colorToChange.equals(newColor)))
+                || (colorToChange != null && colorToChange.equals(newColor))) {
             return;
+        }
         this.colorToChange = newColor;
         resetData();
     }
 
+    @Override
     public void setBackgroundColor(Color newColor) {
         if ((this.backgroundColor == null && newColor == null)
-                || (this.backgroundColor != null && this.backgroundColor.equals(newColor)))
+                || (this.backgroundColor != null && this.backgroundColor.equals(newColor))) {
             return;
+        }
         this.backgroundColor = newColor;
     }
 
@@ -154,16 +170,20 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // Image size calculation
     // ************************************************************
 
+    @Override
     public abstract Dimension getAutoSizedDimension();
 
+    @Override
     public void resizeImage() {
         resetData();
     }
 
+    @Override
     public void setBounds(Rectangle newBounds) {
         if (newBounds == null || newBounds.equals(this.bounds)
-                || newBounds.width <= 0 || newBounds.height <= 0)
+                || newBounds.width <= 0 || newBounds.height <= 0) {
             return;
+        }
         if (this.bounds == null) {
             this.bounds = newBounds.getCopy();
             resizeImage();
@@ -173,34 +193,44 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         this.bounds = newBounds.getCopy();
         if (autoSize) {
             Dimension dim = getAutoSizedDimension();
-            if (dim == null)
+            if (dim == null) {
                 return;
-            if (newBounds.width != dim.width || newBounds.height != dim.height)
+            }
+            if (newBounds.width != dim.width || newBounds.height != dim.height) {
                 resizeImage();
+            }
         } else {
             if (oldBounds.width != newBounds.width
-                    || oldBounds.height != newBounds.height)
+                    || oldBounds.height != newBounds.height) {
                 resizeImage();
+            }
         }
     }
 
+    @Override
     public void setAbsoluteScale(double newScale) {
-        if (this.scale == newScale)
+        if (this.scale == newScale) {
             return;
+        }
         this.scale = newScale;
     }
 
+    @Override
     public void setAutoSize(final boolean autoSize) {
-        if (this.autoSize == autoSize)
+        if (this.autoSize == autoSize) {
             return;
+        }
         this.autoSize = autoSize;
-        if (!stretch && autoSize)
+        if (!stretch && autoSize) {
             resizeImage();
+        }
     }
 
+    @Override
     public void setStretch(final boolean newval) {
-        if (stretch == newval)
+        if (stretch == newval) {
             return;
+        }
         stretch = newval;
         resizeImage();
     }
@@ -209,6 +239,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // Image crop calculation
     // ************************************************************
 
+    @Override
     public void setLeftCrop(final int newval) {
         if (leftCrop == newval || newval < 0) {
             return;
@@ -217,6 +248,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         resizeImage();
     }
 
+    @Override
     public void setRightCrop(final int newval) {
         if (rightCrop == newval || newval < 0) {
             return;
@@ -225,6 +257,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         resizeImage();
     }
 
+    @Override
     public void setBottomCrop(final int newval) {
         if (bottomCrop == newval || newval < 0) {
             return;
@@ -233,6 +266,7 @@ public abstract class AbstractSymbolImage implements SymbolImage {
         resizeImage();
     }
 
+    @Override
     public void setTopCrop(final int newval) {
         if (topCrop == newval || newval < 0) {
             return;
@@ -245,16 +279,19 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // Image rotation calculation
     // ************************************************************
 
+    @Override
     public void setPermutationMatrix(final PermutationMatrix permutationMatrix) {
         this.oldPermutationMatrix = this.permutationMatrix;
         this.permutationMatrix = permutationMatrix;
         if (permutationMatrix == null
                 || (oldPermutationMatrix != null && oldPermutationMatrix
-                        .equals(permutationMatrix)))
+                        .equals(permutationMatrix))) {
             return;
+        }
         resizeImage();
     }
 
+    @Override
     public PermutationMatrix getPermutationMatrix() {
         return permutationMatrix;
     }
@@ -263,12 +300,15 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // Animated images
     // ************************************************************
 
+    @Override
     public void setAnimationDisabled(final boolean stop) {
-        if (animationDisabled == stop)
+        if (animationDisabled == stop) {
             return;
+        }
         animationDisabled = stop;
     }
 
+    @Override
     public void setAlignedToNearestSecond(boolean aligned) {
         this.alignedToNearestSecond = aligned;
     }
@@ -277,23 +317,26 @@ public abstract class AbstractSymbolImage implements SymbolImage {
     // Image loading
     // ************************************************************
 
+    @Override
     public void setListener(SymbolImageListener listener) {
         this.listener = listener;
     }
 
     protected void fireSymbolImageLoaded() {
-        if (listener != null)
+        if (listener != null) {
             listener.symbolImageLoaded();
+        }
     }
 
     protected void fireSizeChanged() {
-        if (listener != null && visible)
+        if (listener != null && visible) {
             listener.sizeChanged();
+        }
     }
 
     protected void repaint() {
-        if (listener != null && visible)
+        if (listener != null && visible) {
             listener.repaintRequested();
+        }
     }
-
 }

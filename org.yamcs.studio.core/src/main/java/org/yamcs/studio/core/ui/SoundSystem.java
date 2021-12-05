@@ -21,8 +21,7 @@ public class SoundSystem {
     private static final String ALARM_SOUND = "/sounds/alarm.wav";
     private static final String BEEP_SOUND = "/sounds/beep.wav";
 
-    private ExecutorService executorService = Executors
-            .newSingleThreadExecutor();
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private boolean alarmState = false;
     private boolean muted = false;
@@ -56,8 +55,7 @@ public class SoundSystem {
             }
             beepClip = AudioSystem.getClip();
             InputStream in = SoundSystem.class.getResourceAsStream(BEEP_SOUND);
-            AudioInputStream audioIn = AudioSystem
-                    .getAudioInputStream(new BufferedInputStream(in));
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
             beepClip.open(audioIn);
             beepClip.start();
 
@@ -70,7 +68,6 @@ public class SoundSystem {
             });
 
         } catch (Exception e) {
-            System.out.println(e);
             log.log(Level.WARNING, "Error playing beep sound", e);
         }
     }
@@ -107,8 +104,7 @@ public class SoundSystem {
         try {
             alarmClip = AudioSystem.getClip();
             InputStream in = SoundSystem.class.getResourceAsStream(ALARM_SOUND);
-            AudioInputStream audioIn = AudioSystem
-                    .getAudioInputStream(new BufferedInputStream(in));
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
             alarmClip.open(audioIn);
             alarmClip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (Exception e) {

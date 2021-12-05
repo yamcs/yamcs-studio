@@ -23,10 +23,6 @@ import org.osgi.framework.Version;
 
 /**
  * An action button widget model.
- *
- * @author Sven Wende (class of same name in SDS)
- * @author Xihui Chen
- *
  */
 public class ActionButtonModel extends AbstractPVWidgetModel implements ITextModel {
     public enum Style {
@@ -108,26 +104,17 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
 
     private static final String[] FILE_EXTENSIONS = new String[] { "jpg", "jpeg", "gif", "bmp", "png" };
 
-    /**
-     * Standard constructor.
-     */
     public ActionButtonModel() {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setForegroundColor(CustomMediaFactory.COLOR_BLACK);
         setPropertyValue(PROP_BORDER_ALARMSENSITIVE, false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getTypeID() {
         return ID;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void configureProperties() {
 
@@ -146,7 +133,7 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
                 WidgetPropertyCategory.Behavior, DEFAULT_TOGGLE_BUTTON));
 
         addProperty(new FilePathProperty(PROP_IMAGE, "Icon File",
-                WidgetPropertyCategory.Display, new Path(""), FILE_EXTENSIONS));
+                WidgetPropertyCategory.Display, "", FILE_EXTENSIONS));
 
         removeProperty(PROP_ACTIONS);
         addProperty(new ActionsProperty(PROP_ACTIONS, "Actions",
@@ -159,8 +146,6 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
     /**
      * Return the index of the selected WidgetAction from the ActionData. The Action is running when the button is
      * released.
-     * 
-     * @return The index
      */
     public int getActionIndex() {
         return (Integer) getProperty(PROP_ACTION_INDEX).getPropertyValue();
@@ -169,8 +154,6 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
     /**
      * Return the index of the selected WidgetAction from the ActionData. The Action is running when the button is
      * released.
-     * 
-     * @return The index
      */
     public int getReleasedActionIndex() {
         return (Integer) getProperty(PROP_RELEASED_ACTION_INDEX).getPropertyValue();
@@ -178,8 +161,6 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
 
     /**
      * Return the label text.
-     *
-     * @return The label text.
      */
     @Override
     public String getText() {
@@ -191,18 +172,21 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
         setPropertyValue(PROP_TEXT, text);
     }
 
-    public IPath getImagePath() {
-        IPath absolutePath = (IPath) getProperty(PROP_IMAGE).getPropertyValue();
-        if (!absolutePath.isAbsolute()) {
-            absolutePath = ResourceUtil.buildAbsolutePath(this, absolutePath);
+    public String getImagePath() {
+        String absolutePath = (String) getProperty(PROP_IMAGE).getPropertyValue();
+        if (!absolutePath.contains("://")) {
+            IPath path = Path.fromPortableString(absolutePath);
+            if (!path.isAbsolute()) {
+                path = ResourceUtil.buildAbsolutePath(this, path);
+                absolutePath = path.toPortableString();
+            }
         }
+
         return absolutePath;
     }
 
     /**
      * Returns whether the button is a toggle button.
-     * 
-     * @return false = Push, true=Toggle
      */
     public boolean isToggleButton() {
         return (Boolean) getProperty(PROP_TOGGLE_BUTTON).getPropertyValue();
@@ -220,5 +204,4 @@ public class ActionButtonModel extends AbstractPVWidgetModel implements ITextMod
     public void setStyle(Style style) {
         setPropertyValue(PROP_STYLE, style.ordinal());
     }
-
 }

@@ -44,8 +44,6 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * This class represents a Dialog to choose a file in the workspace. There is an option to return relative path.
- *
- * @author Kai Meyer, Joerg Rathlev, Xihui Chen
  */
 public final class RelativePathSelectionDialog extends Dialog implements Listener {
     /**
@@ -66,7 +64,7 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
     /**
      * The path of the selected resource.
      */
-    private IPath _path;
+    private String _path;
 
     private IPath refPath;
 
@@ -107,13 +105,13 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
      * @param path
      *            the path to the initially selected resource.
      */
-    public void setSelectedResource(final IPath path) {
+    public void setSelectedResource(String path) {
         _path = path;
-        relative = !path.isAbsolute();
+        relative = path.contains("://") || !Path.fromPortableString(path).isAbsolute();
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText("Resources");
     }
@@ -145,14 +143,17 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
         _resourcePathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         if (_path != null && !_path.isEmpty()) {
             _resourcePathText.setText(_path.toString());
-            if (relative) {
-                _resourceSelectionGroup.setSelectedResource(refPath.append(_path));
-            } else {
-                _resourceSelectionGroup.setSelectedResource(_path);
+            if (!_path.contains("://")) {
+                IPath relPath = Path.fromPortableString(_path);
+                if (relative) {
+                    _resourceSelectionGroup.setSelectedResource(refPath.append(relPath));
+                } else {
+                    _resourceSelectionGroup.setSelectedResource(relPath);
+                }
             }
         }
         // the check box for relative path
-        final Button checkBox = new Button(composite, SWT.CHECK);
+        Button checkBox = new Button(composite, SWT.CHECK);
         checkBox.setSelection(relative);
         checkBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         checkBox.setText("Return relative path");
@@ -160,11 +161,11 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
             @Override
             public void widgetSelected(SelectionEvent e) {
                 relative = checkBox.getSelection();
-                if (relative) {
-                    _resourcePathText.setText(
-                            ResourceUtil.buildRelativePath(refPath, _path).toString());
+                if (relative && !_path.contains("://")) {
+                    IPath relPath = Path.fromPortableString(_path);
+                    _resourcePathText.setText(ResourceUtil.buildRelativePath(refPath, relPath).toString());
                 } else {
-                    _resourcePathText.setText(_path.toString());
+                    _resourcePathText.setText(_path);
                 }
             }
         });
@@ -174,7 +175,7 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
 
     @Override
     protected void okPressed() {
-        _path = new Path(_resourcePathText.getText());
+        _path = _resourcePathText.getText();
         super.okPressed();
     }
 
@@ -183,7 +184,7 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
      *
      * @return the path to the selected resource, or <code>null</code> if no resource was selected.
      */
-    public IPath getSelectedResource() {
+    public String getSelectedResource() {
         return _path;
     }
 
@@ -191,15 +192,15 @@ public final class RelativePathSelectionDialog extends Dialog implements Listene
     public void handleEvent(Event event) {
         ResourceSelectionGroup widget = (ResourceSelectionGroup) event.widget;
 
-        _path = widget.getFullPath();
+        IPath fullPath = widget.getFullPath();
+        _path = (fullPath == null) ? null : fullPath.toPortableString();
         if (_path == null) {
             return;
         }
         if (relative) {
-            _resourcePathText.setText(ResourceUtil.buildRelativePath(refPath,
-                    _path).toString());
+            _resourcePathText.setText(ResourceUtil.buildRelativePath(refPath, fullPath).toString());
         } else {
-            _resourcePathText.setText(_path.toString());
+            _resourcePathText.setText(fullPath.toString());
         }
 
         if (event.type == SWT.MouseDoubleClick) {

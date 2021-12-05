@@ -26,6 +26,7 @@ import org.csstudio.swt.widgets.figures.TabFigure;
 import org.csstudio.ui.util.CustomMediaFactory;
 import org.csstudio.ui.util.thread.UIBundlingThread;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -478,12 +479,11 @@ public class TabEditPart extends AbstractContainerEditpart {
             getTabFigure().setTabEnabled(index, (Boolean) newValue);
             break;
         case ICON_PATH:
-            getTabFigure().setIconPath(index,
-                    getWidgetModel().toAbsolutePath((IPath) newValue),
-                    e -> {
-                        String message = "Failed to load image from " + newValue + "\n" + e;
-                        Activator.getLogger().log(Level.SEVERE, message, e);
-                    });
+            IPath iconPath = Path.fromPortableString((String) newValue);
+            getTabFigure().setIconPath(index, getWidgetModel().toAbsolutePath(iconPath), e -> {
+                String message = "Failed to load image from " + newValue + "\n" + e;
+                Activator.getLogger().log(Level.SEVERE, message, e);
+            });
             break;
         default:
             break;

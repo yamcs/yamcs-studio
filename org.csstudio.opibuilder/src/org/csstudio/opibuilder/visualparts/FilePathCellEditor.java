@@ -21,9 +21,7 @@
  */
 package org.csstudio.opibuilder.visualparts;
 
-
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -31,17 +29,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- * A table cell editor for values of type PointList.
- *
- * @author Kai Meyer, Xihui Chen
- */
 public final class FilePathCellEditor extends AbstractDialogCellEditor {
 
     /**
      * The current IPath.
      */
-    private IPath _path;
+    private String _path;
 
     /**
      * The filter path for the dialog.
@@ -64,20 +57,17 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
 
     private AbstractWidgetModel widgetModel;
 
-
     /**
-     * Creates a new string cell editor parented under the given control. The
-     * cell editor value is a PointList.
+     * Creates a new string cell editor parented under the given control. The cell editor value is a PointList.
      *
      * @param parent
      *            The parent table.
-      * @param widgetModel
-     *               the reference path which doesn't include the file name.
+     * @param widgetModel
+     *            the reference path which doesn't include the file name.
      * @param fileExtensions
      *            The accepted file extensions
      */
-    public FilePathCellEditor(final Composite parent, final AbstractWidgetModel widgetModel,
-            final String[] fileExtensions) {
+    public FilePathCellEditor(Composite parent, AbstractWidgetModel widgetModel, String[] fileExtensions) {
         super(parent, "Open File");
         _orgFileExtensions = fileExtensions;
         this.widgetModel = widgetModel;
@@ -85,8 +75,7 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
     }
 
     /**
-     * Converts the file extensions. Adds '*.' to every extension if it doesn't
-     * start with it
+     * Converts the file extensions. Adds '*.' to every extension if it doesn't start with it
      */
     private void convertFileExtensions() {
         if (_onlyWorkSpace) {
@@ -105,40 +94,31 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Object doGetValue() {
         return _path;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void doSetValue(final Object value) {
-//        Assert.isTrue(value instanceof IPath);
-        if (value == null || !(value instanceof IPath)) {
-            _path = new Path("");
+    protected void doSetValue(Object value) {
+        if (value == null || !(value instanceof String)) {
+            _path = "";
         } else {
-            _path = (IPath) value;
+            _path = (String) value;
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void openDialog(final Shell parentShell, final String dialogTitle) {
+    protected void openDialog(Shell parentShell, String dialogTitle) {
         if (_onlyWorkSpace) {
             RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
-                    parentShell, widgetModel.getRootDisplayModel().getOpiFilePath().removeLastSegments(1), "Select a resource", _fileExtensions);
-            if(_path!=null && !_path.isEmpty())
+                    parentShell, widgetModel.getRootDisplayModel().getOpiFilePath().removeLastSegments(1),
+                    "Select a resource", _fileExtensions);
+            if (_path != null && !_path.isEmpty()) {
                 rsd.setSelectedResource(_path);
-            else{
-                //select current path
-                rsd.setSelectedResource(new Path("./"));
+            } else {
+                // select current path
+                rsd.setSelectedResource("./");
             }
 
             if (rsd.open() == Window.OK) {
@@ -147,8 +127,7 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
                 }
             }
         } else {
-            FileDialog dialog = new FileDialog(parentShell, SWT.OPEN
-                    | SWT.MULTI);
+            FileDialog dialog = new FileDialog(parentShell, SWT.OPEN | SWT.MULTI);
             dialog.setText(dialogTitle);
             if (_path != null) {
                 _filterPath = _path.toString();
@@ -158,16 +137,12 @@ public final class FilePathCellEditor extends AbstractDialogCellEditor {
             dialog.open();
             String name = dialog.getFileName();
             _filterPath = dialog.getFilterPath();
-            _path = new Path(_filterPath + Path.SEPARATOR + name);
+            _path = new Path(_filterPath + Path.SEPARATOR + name).toPortableString();
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected boolean shouldFireChanges() {
         return _path != null;
     }
-
 }

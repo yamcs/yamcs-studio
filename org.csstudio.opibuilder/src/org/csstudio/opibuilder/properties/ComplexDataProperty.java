@@ -93,7 +93,7 @@ public class ComplexDataProperty extends AbstractWidgetProperty {
                             + " sub property for "
                             + getPropertyID()
                             + ". "
-                            + "The default property value will be setted instead. \n"
+                            + "The default property value will be set instead. \n"
                             + e;
                     OPIBuilderPlugin.getLogger().log(Level.WARNING, errorMessage, e);
                 }
