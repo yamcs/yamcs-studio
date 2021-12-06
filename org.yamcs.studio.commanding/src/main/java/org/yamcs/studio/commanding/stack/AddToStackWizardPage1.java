@@ -268,7 +268,6 @@ public class AddToStackWizardPage1 extends WizardPage {
                 // setMessage(getMessage(cmd));
 
                 command.setMetaCommand(cmd);
-                command.setSelectedAliase(cmd.getQualifiedName());
                 setPageComplete(true);
             } else {
                 setPageComplete(false);

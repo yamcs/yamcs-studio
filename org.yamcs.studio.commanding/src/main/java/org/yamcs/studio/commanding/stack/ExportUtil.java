@@ -40,30 +40,28 @@ public class ExportUtil {
             attr.setValue(command.getMetaCommand().getQualifiedName());
             commandElement.setAttributeNode(attr);
 
-            attr = doc.createAttribute("selectedAlias");
-            attr.setValue(command.getSelectedAlias());
-            commandElement.setAttributeNode(attr);
-
             if (command.getComment() != null) {
                 attr = doc.createAttribute("comment");
                 attr.setValue(command.getComment());
                 commandElement.setAttributeNode(attr);
             }
 
-            Element extraEl = doc.createElement("extraOptions");
-            commandElement.appendChild(extraEl);
+            if (!command.getExtra().isEmpty()) {
+                Element extraEl = doc.createElement("extraOptions");
+                commandElement.appendChild(extraEl);
 
-            command.getExtra().forEach((option, value) -> {
-                Element optionEl = doc.createElement("extraOption");
-                extraEl.appendChild(optionEl);
-                Attr idAttr = doc.createAttribute("id");
-                idAttr.setValue(option);
-                optionEl.setAttributeNode(idAttr);
+                command.getExtra().forEach((option, value) -> {
+                    Element optionEl = doc.createElement("extraOption");
+                    extraEl.appendChild(optionEl);
+                    Attr idAttr = doc.createAttribute("id");
+                    idAttr.setValue(option);
+                    optionEl.setAttributeNode(idAttr);
 
-                Attr valueAttr = doc.createAttribute("value");
-                valueAttr.setValue(StringConverter.toString(value));
-                optionEl.setAttributeNode(valueAttr);
-            });
+                    Attr valueAttr = doc.createAttribute("value");
+                    valueAttr.setValue(StringConverter.toString(value));
+                    optionEl.setAttributeNode(valueAttr);
+                });
+            }
 
             if (command.getDelayMs() > 0) {
                 attr = doc.createAttribute("delayMs");

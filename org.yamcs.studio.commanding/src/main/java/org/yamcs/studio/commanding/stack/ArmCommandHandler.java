@@ -40,7 +40,7 @@ public class ArmCommandHandler extends AbstractHandler {
             throws ExecutionException {
 
         ProcessorClient processorClient = YamcsPlugin.getProcessorClient();
-        String qname = command.getSelectedAlias();
+        String qname = command.getName();
 
         CommandBuilder builder = processorClient.prepareCommand(qname)
                 .withDryRun(true)

@@ -121,7 +121,7 @@ public class IssueAllCommandsHandler extends AbstractHandler {
             }
 
             StackedCommand command = CommandStack.getInstance().getCommands().get(commandIndex);
-            String qname = command.getSelectedAlias();
+            String qname = command.getName();
 
             ProcessorClient processor = YamcsPlugin.getProcessorClient();
             CommandBuilder builder = processor.prepareCommand(qname)

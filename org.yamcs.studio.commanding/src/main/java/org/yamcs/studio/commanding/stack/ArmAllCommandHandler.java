@@ -41,7 +41,7 @@ public class ArmAllCommandHandler extends AbstractHandler {
     private void armAllCommands(Shell activeShell, CommandStackView view, CommandStack stack, int commandIndex)
             throws ExecutionException {
         StackedCommand command = stack.getCommands().get(commandIndex);
-        String qname = command.getSelectedAlias();
+        String qname = command.getName();
 
         ProcessorClient processorClient = YamcsPlugin.getProcessorClient();
         CommandBuilder builder = processorClient.prepareCommand(qname)

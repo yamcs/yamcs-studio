@@ -16,7 +16,6 @@ import org.yamcs.client.Command;
 import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
 import org.yamcs.protobuf.Mdb.ArgumentInfo;
 import org.yamcs.protobuf.Mdb.CommandInfo;
-import org.yamcs.protobuf.Yamcs.NamedObjectId;
 import org.yamcs.protobuf.Yamcs.Value;
 import org.yamcs.studio.core.YamcsPlugin;
 
@@ -53,7 +52,6 @@ public class StackedCommand {
     private StackedState state = StackedState.DISARMED;
 
     private String comment;
-    private String selectedAlias;
 
     private Command execution;
 
@@ -74,7 +72,7 @@ public class StackedCommand {
         Styler numberStyler = styleProvider != null ? styleProvider.getNumberStyler(this) : null;
 
         StyledString str = new StyledString();
-        str.append(getSelectedAlias(), identifierStyler);
+        str.append(meta.getQualifiedName(), identifierStyler);
         str.append("(", bracketStyler);
         boolean first = true;
         for (TelecommandArgument arg : getEffectiveAssignments()) {
@@ -134,6 +132,10 @@ public class StackedCommand {
 
     public void setMetaCommand(CommandInfo meta) {
         this.meta = meta;
+    }
+
+    public String getName() {
+        return meta.getQualifiedName();
     }
 
     public CommandInfo getMetaCommand() {
@@ -285,16 +287,6 @@ public class StackedCommand {
         return meta.getQualifiedName();
     }
 
-    public void setSelectedAliase(String alias) {
-        this.selectedAlias = alias;
-
-    }
-
-    public String getSelectedAlias() {
-        return selectedAlias;
-
-    }
-
     public static StackedCommand buildCommandFromSource(String commandSource) throws Exception {
         StackedCommand result = new StackedCommand();
 
@@ -313,27 +305,14 @@ public class StackedCommand {
         int indexStopOfArguments = commandSource.lastIndexOf(")");
         String commandArguments = commandSource.substring(indexStartOfArguments + 1, indexStopOfArguments);
         commandArguments = commandArguments.replaceAll("[\n]", "");
-        String commandAlias = commandSource.substring(0, indexStartOfArguments);
+        String qualifiedName = commandSource.substring(0, indexStartOfArguments);
 
-        // Retrieve meta command and selected namespace
-        CommandInfo commandInfo = null;
-        String selectedAlias = "";
-        for (CommandInfo ci : YamcsPlugin.getMissionDatabase().getCommands()) {
-
-            for (NamedObjectId noi : ci.getAliasList()) {
-                String alias = noi.getNamespace() + "/" + noi.getName();
-                if (alias.equals(commandAlias)) {
-                    commandInfo = ci;
-                    selectedAlias = alias;
-                    break;
-                }
-            }
-        }
+        // Retrieve meta command
+        CommandInfo commandInfo = YamcsPlugin.getMissionDatabase().getCommandInfo(qualifiedName);
         if (commandInfo == null) {
             throw new Exception("Unable to retrieved this command in the MDB");
         }
         result.setMetaCommand(commandInfo);
-        result.setSelectedAliase(selectedAlias);
 
         // Retrieve arguments assignment
         // TODO: write formal source grammar

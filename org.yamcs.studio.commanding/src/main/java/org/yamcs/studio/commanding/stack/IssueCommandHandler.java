@@ -31,7 +31,7 @@ public class IssueCommandHandler extends AbstractHandler {
 
     private void issueCommand(Shell activeShell, CommandStackView view, StackedCommand command)
             throws ExecutionException {
-        String qname = command.getSelectedAlias();
+        String qname = command.getName();
 
         ProcessorClient processor = YamcsPlugin.getProcessorClient();
         CommandBuilder builder = processor.prepareCommand(qname)

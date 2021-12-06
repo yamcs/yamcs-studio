@@ -94,9 +94,6 @@ public class CommandClipboard {
             sc.getExtra().forEach((option, value) -> {
                 copy.setExtra(option, value);
             });
-            if (sc.getSelectedAlias() != null) {
-                copy.setSelectedAliase(sc.getSelectedAlias());
-            }
             for (Entry<ArgumentInfo, String> entry : sc.getAssignments().entrySet()) {
                 copy.addAssignment(entry.getKey(), entry.getValue());
             }
