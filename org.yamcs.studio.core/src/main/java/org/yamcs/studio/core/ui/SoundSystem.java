@@ -1,13 +1,12 @@
 package org.yamcs.studio.core.ui;
 
 import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
@@ -27,6 +26,8 @@ public class SoundSystem {
     private boolean muted = false;
     private Clip alarmClip;
 
+    private AtomicBoolean beepRunning = new AtomicBoolean(false);
+
     public void mute() {
         executorService.execute(() -> {
             muted = true;
@@ -43,32 +44,26 @@ public class SoundSystem {
         });
     }
 
-    static Clip beepClip = null;
-
     /**
-     * Plays a beep, only if there is not currently a previous beep playing.
+     * Plays a beep, unless there is already a clip playing.
      */
-    synchronized public static void beep() {
-        try {
-            if (beepClip != null) {
-                return;
+    public void beep() {
+        if (beepRunning.compareAndSet(false, true)) {
+            try {
+                var beepClip = AudioSystem.getClip();
+                var in = SoundSystem.class.getResourceAsStream(BEEP_SOUND);
+                var audioIn = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
+                beepClip.addLineListener(event -> {
+                    if (event.getType() == LineEvent.Type.STOP) {
+                        beepClip.close();
+                        beepRunning.set(false);
+                    }
+                });
+                beepClip.open(audioIn);
+                beepClip.start();
+            } catch (Exception e) {
+                beepRunning.set(false);
             }
-            beepClip = AudioSystem.getClip();
-            InputStream in = SoundSystem.class.getResourceAsStream(BEEP_SOUND);
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
-            beepClip.open(audioIn);
-            beepClip.start();
-
-            // explicitly stop the clip when sound has stopped
-            beepClip.addLineListener(event -> {
-                if (event.getType() == LineEvent.Type.STOP) {
-                    event.getLine().close();
-                    beepClip = null;
-                }
-            });
-
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Error playing beep sound", e);
         }
     }
 
@@ -103,8 +98,8 @@ public class SoundSystem {
     private void playAlarm() {
         try {
             alarmClip = AudioSystem.getClip();
-            InputStream in = SoundSystem.class.getResourceAsStream(ALARM_SOUND);
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
+            var in = SoundSystem.class.getResourceAsStream(ALARM_SOUND);
+            var audioIn = AudioSystem.getAudioInputStream(new BufferedInputStream(in));
             alarmClip.open(audioIn);
             alarmClip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (Exception e) {
@@ -121,6 +116,9 @@ public class SoundSystem {
     }
 
     public void dispose() {
+        if (alarmClip != null) {
+            alarmClip.close();
+        }
         executorService.shutdown();
     }
 }

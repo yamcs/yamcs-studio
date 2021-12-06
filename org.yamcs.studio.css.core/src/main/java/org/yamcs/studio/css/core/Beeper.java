@@ -10,7 +10,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.yamcs.protobuf.Pvalue.MonitoringResult;
 import org.yamcs.protobuf.Pvalue.ParameterValue;
 import org.yamcs.protobuf.Yamcs.NamedObjectId;
-import org.yamcs.studio.core.ui.SoundSystem;
+import org.yamcs.studio.core.YamcsPlugin;
 import org.yamcs.studio.css.core.prefs.SoundCommandHandler;
 import org.yamcs.studio.data.yamcs.YamcsSubscriptionService.ParameterValueListener;
 
@@ -75,7 +75,7 @@ public class Beeper implements ParameterValueListener {
         }
 
         if (beep) {
-            SoundSystem.beep();
+            YamcsPlugin.getSoundSystem().beep();
         }
     }
 }

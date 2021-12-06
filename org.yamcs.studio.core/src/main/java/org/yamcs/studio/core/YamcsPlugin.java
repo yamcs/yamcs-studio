@@ -41,6 +41,7 @@ import org.yamcs.protobuf.ProcessorInfo;
 import org.yamcs.protobuf.SubscribeProcessorsRequest;
 import org.yamcs.protobuf.SubscribeTimeRequest;
 import org.yamcs.protobuf.UserInfo;
+import org.yamcs.studio.core.ui.SoundSystem;
 import org.yamcs.studio.core.ui.prefs.DateFormatPreferencePage;
 import org.yamcs.studio.data.PVFactory;
 import org.yamcs.studio.data.yamcs.YamcsSubscriptionService;
@@ -60,6 +61,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
     private SimpleDateFormat tzFormat;
 
     private YamcsClient yamcsClient;
+    private SoundSystem soundSystem;
 
     private String instance;
     private ProcessorInfo processor;
@@ -111,6 +113,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
         // Warning to future self: don't access preference store here. It triggers before workspace selection, causing
         // chaos.
 
+        soundSystem = new SoundSystem();
         pluginServices.add(new YamcsSubscriptionService());
         pluginServices.add(new DisplayService());
     }
@@ -212,6 +215,7 @@ public class YamcsPlugin extends AbstractUIPlugin {
 
     @Override
     public void stop(BundleContext context) throws Exception {
+        soundSystem.dispose();
         for (PluginService pluginService : pluginServices) {
             pluginService.dispose();
         }
@@ -272,6 +276,10 @@ public class YamcsPlugin extends AbstractUIPlugin {
             format.setTimeZone(cal.getTimeZone());
             return format.format(cal.getTime());
         }
+    }
+
+    public static SoundSystem getSoundSystem() {
+        return plugin.soundSystem;
     }
 
     public static YamcsClient getYamcsClient() {
