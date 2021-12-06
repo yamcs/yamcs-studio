@@ -142,7 +142,7 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
     }
 
     /*
-     * (non-Javadoc) Method declared on Dialog. Handles the pressing of the Ok
+     * Handles the pressing of the Ok
      * or Details button in this dialog. If the Ok button was pressed then close
      * this dialog. If the Details button was pressed then toggle the displaying
      * of the error details area. Note that the Details button will only be
@@ -157,17 +157,11 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
         }
     }
 
-    /*
-     * (non-Javadoc) Method declared in Window.
-     */
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText(title);
     }
 
-    /*
-     * (non-Javadoc) Method declared on Dialog.
-     */
     protected void createButtonsForButtonBar(Composite parent) {
         // create OK and Details buttons
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
@@ -177,10 +171,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
 
     /**
      * Create the details button if it should be included.
-     *
-     * @param parent
-     *            the parent composite
-     * @since 3.2
      */
     protected void createDetailsButton(Composite parent) {
         if (shouldShowDetailsButton()) {
@@ -226,11 +216,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.dialogs.IconAndMessageDialog#getImage()
-     */
     protected Image getImage() {
         if (status != null) {
             if (status.getSeverity() == IStatus.WARNING) {
@@ -289,9 +274,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
         return text;
     }
 
-    /*
-     * (non-Javadoc) Method declared on Window.
-     */
     /**
      * Extends <code>Window.open()</code>. Opens an error dialog to display the error. If you specified a mask to filter
      * the displaying of these children, the error dialog will only be displayed if there is at least one child status
@@ -540,11 +522,6 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
                 new Transfer[] { TextTransfer.getInstance() });
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.window.Window#close()
-     */
     public boolean close() {
         if (clipboard != null) {
             clipboard.dispose();

@@ -38,17 +38,11 @@ public class RunnerInput implements IRunnerInput {
         this(path, displayOpenManager, null);
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.runmode.IRunnerInput#setDisplayOpenManager(org.csstudio.opibuilder.runmode.DisplayOpenManager)
-     */
     @Override
     public void setDisplayOpenManager(DisplayOpenManager displayOpenManager) {
         this.displayOpenManager = displayOpenManager;
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.runmode.IRunnerInput#getDisplayOpenManager()
-     */
     @Override
     public DisplayOpenManager getDisplayOpenManager() {
         return displayOpenManager;
@@ -112,9 +106,6 @@ public class RunnerInput implements IRunnerInput {
     //
     // }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.runmode.IRunnerInput#getMacrosInput()
-     */
     @Override
     public MacrosInput getMacrosInput() {
         return macrosInput;

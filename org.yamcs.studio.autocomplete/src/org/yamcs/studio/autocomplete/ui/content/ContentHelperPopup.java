@@ -248,21 +248,11 @@ public class ContentHelperPopup extends PopupDialog {
         getShell().setBounds(proposedBounds);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
-     */
     @Override
     protected Color getForeground() {
         return control.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
-     */
     @Override
     protected Color getBackground() {
         return control.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND);

@@ -234,11 +234,6 @@ public class ByteMonitorFigure extends Figure implements Introspectable {
         return spacing;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.draw2d.Figure#layout()
-     */
     @Override
     protected void layout() {
         super.layout();

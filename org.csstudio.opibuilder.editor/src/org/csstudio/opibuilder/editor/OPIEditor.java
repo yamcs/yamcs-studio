@@ -122,7 +122,6 @@ import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gef.ui.properties.UndoablePropertySheetEntry;
 import org.eclipse.gef.ui.rulers.RulerComposite;
-import org.eclipse.help.IContextProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -151,7 +150,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -195,8 +193,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
     private Clipboard clipboard;
 
     private SelectionSynchronizer synchronizer;
-
-    private OPIHelpContextProvider helpContextProvider;
 
     public OPIEditor() {
         if (getPalettePreferences().getPaletteState() <= 0) {
@@ -630,11 +626,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         } else if (type == IContentOutlinePage.class) {
             outlinePage = new OutlinePage(new TreeViewer());
             return outlinePage;
-        } else if (type.equals(IContextProvider.class)) {
-            if (helpContextProvider == null) {
-                helpContextProvider = new OPIHelpContextProvider(getGraphicalViewer());
-            }
-            return helpContextProvider;
         } else if (type.equals(IGotoMarker.class)) {
             return (IGotoMarker) marker -> {
                 try {
@@ -869,9 +860,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         super.initializeGraphicalViewer();
         GraphicalViewer viewer = getGraphicalViewer();
 
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(),
-                "org.csstudio.opibuilder.opi_editor");
-
         viewer.setContents(displayModel);
         displayModel.setViewer(viewer);
 
@@ -879,7 +867,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         viewer.addDropTargetListener(new ProcessVariableNameTransferDropPVTargetListener(viewer));
         viewer.addDropTargetListener(new TextTransferDropPVTargetListener(viewer));
         setPartName(getEditorInput().getName());
-
     }
 
     @Override
@@ -1093,11 +1080,6 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
                 return type.cast(getGraphicalViewer().getProperty(ZoomManager.class.toString()));
             } else if (type == CommandStack.class) {
                 return type.cast(getCommandStack());
-            } else if (type.equals(IContextProvider.class)) {
-                if (helpContextProvider == null) {
-                    helpContextProvider = new OPIHelpContextProvider(getGraphicalViewer());
-                }
-                return type.cast(helpContextProvider);
             }
             return type.cast(OPIEditor.this.getAdapter(type));
         }
@@ -1169,9 +1151,7 @@ public class OPIEditor extends GraphicalEditorWithFlyoutPalette {
         }
 
         /*
-         * Override this function, so the selection if actually provided by OPIEditor graphical viewer. (non-Javadoc)
-         * 
-         * @see org.eclipse.gef.ui.parts.ContentOutlinePage#getSelection()
+         * Override this function, so the selection if actually provided by OPIEditor graphical viewer.
          */
         @Override
         public ISelection getSelection() {

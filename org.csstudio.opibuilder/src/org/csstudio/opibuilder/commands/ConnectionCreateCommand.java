@@ -48,11 +48,6 @@ public class ConnectionCreateCommand extends Command {
         this.sourceTerminal = sourceTerminal;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.gef.commands.Command#canExecute()
-     */
     @Override
     public boolean canExecute() {
         // disallow source -> source connections
@@ -63,11 +58,6 @@ public class ConnectionCreateCommand extends Command {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.gef.commands.Command#execute()
-     */
     @Override
     public void execute() {
         // create a new connection between source and target

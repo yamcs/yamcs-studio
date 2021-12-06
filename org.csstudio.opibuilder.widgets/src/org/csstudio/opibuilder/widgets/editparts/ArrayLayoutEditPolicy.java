@@ -131,8 +131,6 @@ public class ArrayLayoutEditPolicy extends WidgetXYLayoutEditPolicy {
     }
 
     /* Override super method because array widget only allows adding one child.
-     * (non-Javadoc)
-     * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#getAddCommand(org.eclipse.gef.Request)
      */
     @Override
     protected Command getAddCommand(Request generic) {

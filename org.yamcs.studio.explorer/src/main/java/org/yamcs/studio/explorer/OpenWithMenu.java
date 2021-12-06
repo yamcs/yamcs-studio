@@ -170,7 +170,7 @@ public class OpenWithMenu extends ContributionItem {
         });
     }
 
-    /* (non-Javadoc)
+    /*
      * Fills the menu with perspective items.
      */
     @Override

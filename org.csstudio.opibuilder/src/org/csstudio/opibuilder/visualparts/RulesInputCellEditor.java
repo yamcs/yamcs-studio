@@ -9,13 +9,11 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.script.RulesInput;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * The cell editor for rules input.
@@ -35,15 +33,9 @@ public class RulesInputCellEditor extends AbstractDialogCellEditor {
     protected void openDialog(Shell parentShell, String dialogTitle) {
         RulesInputDialog dialog = new RulesInputDialog(parentShell, rulesInput, widgetModel, dialogTitle);
 
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
-                "org.eclipse.help.ui.HelpView") != null)
-            PlatformUI.getWorkbench().getHelpSystem().displayHelp(
-                    OPIBuilderPlugin.PLUGIN_ID + ".rule");
-
         if (dialog.open() == Window.OK) {
             rulesInput = new RulesInput(dialog.getRuleDataList());
         }
-
     }
 
     @Override
@@ -58,11 +50,10 @@ public class RulesInputCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof RulesInput))
+        if (value == null || !(value instanceof RulesInput)) {
             rulesInput = new RulesInput();
-        else
+        } else {
             rulesInput = (RulesInput) value;
-
+        }
     }
-
 }

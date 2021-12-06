@@ -39,9 +39,6 @@ public class TableEditPart extends AbstractBaseEditPart {
 
     private String[] allowedHeaders;
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.editparts.AbstractBaseEditPart#doCreateFigure()
-     */
     @Override
     protected IFigure doCreateFigure() {
         SpreadSheetTableFigure figure = new SpreadSheetTableFigure(this);
@@ -114,9 +111,6 @@ public class TableEditPart extends AbstractBaseEditPart {
         return super.getAdapter(key);
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.editparts.AbstractBaseEditPart#registerPropertyChangeHandlers()
-     */
     @Override
     protected void registerPropertyChangeHandlers() {
 

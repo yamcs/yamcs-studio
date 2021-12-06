@@ -203,12 +203,6 @@ public class ArrayFigure extends Figure implements Introspectable {
 
     }
 
-    /**
-     * Add an index change listener.
-     *
-     * @param listener
-     *            The listener to add.
-     */
     public void addIndexChangeListener(final IManualValueChangeListener listener) {
         listeners.add(listener);
     }
@@ -219,18 +213,10 @@ public class ArrayFigure extends Figure implements Introspectable {
         }
     }
 
-    /**
-     * @return the arrayLength
-     */
     public int getArrayLength() {
         return arrayLength;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.csstudio.swt.widgets.introspection.Introspectable#getBeanInfo()
-     */
     @Override
     public BeanInfo getBeanInfo() throws IntrospectionException {
         return new DefaultWidgetIntrospector().getBeanInfo(this.getClass());
@@ -243,9 +229,6 @@ public class ArrayFigure extends Figure implements Introspectable {
         return pane;
     }
 
-    /**
-     * @return the index
-     */
     public int getIndex() {
         return index;
     }
@@ -254,9 +237,6 @@ public class ArrayFigure extends Figure implements Introspectable {
         return spinner;
     }
 
-    /**
-     * @return the spinnerWidth
-     */
     public int getSpinnerWidth() {
         return spinnerWidth;
     }
@@ -324,30 +304,18 @@ public class ArrayFigure extends Figure implements Introspectable {
         return ((IFigure) pane.getChildren().get(0)).getSize();
     }
 
-    /**
-     * @return the visibleElementsCount
-     */
     public int getVisibleElementsCount() {
         return pane.getChildren().size();
     }
 
-    /**
-     * @return the horizontal
-     */
     public boolean isHorizontal() {
         return horizontal;
     }
 
-    /**
-     * @return the showIndexSpinner
-     */
     public boolean isShowIndexSpinner() {
         return showSpinner;
     }
 
-    /**
-     * @return the showScrollbar
-     */
     public boolean isShowScrollbar() {
         return showScrollbar;
     }
@@ -419,10 +387,6 @@ public class ArrayFigure extends Figure implements Introspectable {
         pane.setBounds(clientArea);
     }
 
-    /**
-     * @param arrayLength
-     *            the arrayLength to set
-     */
     public void setArrayLength(int arrayLength) {
         this.arrayLength = arrayLength;
         scrollbar.setMaximum(arrayLength - 1);
@@ -446,20 +410,12 @@ public class ArrayFigure extends Figure implements Introspectable {
 
     }
 
-    /**
-     * @param horizontal
-     *            the horizontal to set
-     */
     public void setHorizontal(boolean horizontal) {
         this.horizontal = horizontal;
         scrollbar.setHorizontal(horizontal);
         revalidate();
     }
 
-    /**
-     * @param index
-     *            the index to set
-     */
     public void setIndex(int index) {
         if (index > getArrayLength() - 1 || index < 0)
             throw new IndexOutOfBoundsException();
@@ -493,30 +449,18 @@ public class ArrayFigure extends Figure implements Introspectable {
         }
     }
 
-    /**
-     * @param showSpinner
-     *            true if the index spinner is visible.
-     */
     public void setShowSpinner(boolean showSpinner) {
         this.showSpinner = showSpinner;
         spinner.setVisible(showSpinner);
         revalidate();
     }
 
-    /**
-     * @param showScrollbar
-     *            the showScrollbar to set
-     */
     public void setShowScrollbar(boolean showScrollbar) {
         this.showScrollbar = showScrollbar;
         scrollbar.setVisible(showScrollbar);
         revalidate();
     }
 
-    /**
-     * @param spinnerWidth
-     *            the spinnerWidth to set
-     */
     public void setSpinnerWidth(int spinnerWidth) {
         this.spinnerWidth = spinnerWidth;
         revalidate();

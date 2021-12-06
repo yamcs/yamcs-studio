@@ -77,9 +77,6 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
         setSize(292, 20);
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.model.AbstractWidgetModel#configureProperties()
-     */
     @Override
     protected void configureProperties() {
         addProperty(new IntegerProperty(PROP_NUM_BITS, "Number of Bits",
@@ -108,9 +105,6 @@ public class ByteMonitorModel extends AbstractPVWidgetModel {
                 WidgetPropertyCategory.Display, false));
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.model.AbstractWidgetModel#getTypeID()
-     */
     @Override
     public String getTypeID() {
         return ID;

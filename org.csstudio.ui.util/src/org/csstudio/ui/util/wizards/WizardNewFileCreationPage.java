@@ -133,8 +133,6 @@ public class WizardNewFileCreationPage extends WizardPage implements Listener {
         topLevel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
                 | GridData.HORIZONTAL_ALIGN_FILL));
         topLevel.setFont(parent.getFont());
-        // PlatformUI.getWorkbench().getHelpSystem().setHelp(topLevel,
-        // IIDEHelpContextIds.NEW_FILE_WIZARD_PAGE);
 
         // resource and container group
         _resourceGroup = new ResourceAndContainerGroup(topLevel, this,

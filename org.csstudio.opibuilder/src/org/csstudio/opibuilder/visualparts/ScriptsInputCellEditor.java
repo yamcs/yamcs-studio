@@ -9,13 +9,11 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
 import org.csstudio.opibuilder.script.ScriptsInput;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * The cell editor for scripts input.
@@ -33,16 +31,11 @@ public class ScriptsInputCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
-                "org.eclipse.help.ui.HelpView") != null)
-            PlatformUI.getWorkbench().getHelpSystem().displayHelp(
-                    OPIBuilderPlugin.PLUGIN_ID + ".script");
         ScriptsInputDialog dialog = new ScriptsInputDialog(parentShell, scriptsInput,
                 dialogTitle, widgetModel);
         if (dialog.open() == Window.OK) {
             scriptsInput = new ScriptsInput(dialog.getScriptDataList());
         }
-
     }
 
     @Override
@@ -57,11 +50,10 @@ public class ScriptsInputCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof ScriptsInput))
+        if (value == null || !(value instanceof ScriptsInput)) {
             scriptsInput = new ScriptsInput();
-        else
+        } else {
             scriptsInput = (ScriptsInput) value;
-
+        }
     }
-
 }

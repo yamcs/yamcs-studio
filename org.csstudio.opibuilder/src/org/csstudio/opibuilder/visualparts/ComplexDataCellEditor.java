@@ -9,13 +9,11 @@
  ********************************************************************************/
 package org.csstudio.opibuilder.visualparts;
 
-import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.datadefinition.AbstractComplexData;
 import org.csstudio.opibuilder.datadefinition.PropertyData;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * The cell editor for complex data.
@@ -30,18 +28,13 @@ public class ComplexDataCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void openDialog(Shell parentShell, String dialogTitle) {
-        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
-                "org.eclipse.help.ui.HelpView") != null)
-            PlatformUI.getWorkbench().getHelpSystem().displayHelp(
-                    OPIBuilderPlugin.PLUGIN_ID + ".action");
         PropertiesEditDialog dialog = new PropertiesEditDialog(parentShell, complexData.getAllProperties(),
                 dialogTitle);
 
         if (dialog.open() == Window.OK) {
             complexData = complexData.getCopy();
             for (PropertyData propertyData : dialog.getOutput()) {
-                complexData.setPropertyValue(
-                        propertyData.property.getPropertyID(), propertyData.tmpValue);
+                complexData.setPropertyValue(propertyData.property.getPropertyID(), propertyData.tmpValue);
             }
         }
     }
@@ -58,10 +51,10 @@ public class ComplexDataCellEditor extends AbstractDialogCellEditor {
 
     @Override
     protected void doSetValue(Object value) {
-        if (value == null || !(value instanceof AbstractComplexData))
+        if (value == null || !(value instanceof AbstractComplexData)) {
             throw new RuntimeException(value + " is not instance of AbstractComplexData");
-        else
+        } else {
             complexData = (AbstractComplexData) value;
+        }
     }
-
 }

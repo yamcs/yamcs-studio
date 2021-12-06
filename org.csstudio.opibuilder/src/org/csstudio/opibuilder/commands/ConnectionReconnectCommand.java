@@ -47,11 +47,6 @@ public class ConnectionReconnectCommand extends Command {
         this.oldTargetTerminal = conn.getTargetTerminal();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.gef.commands.Command#canExecute()
-     */
     @Override
     public boolean canExecute() {
         if (newSource != null) {
@@ -84,11 +79,6 @@ public class ConnectionReconnectCommand extends Command {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.gef.commands.Command#execute()
-     */
     @Override
     public void execute() {
         if (newSource != null && newSourceTerminal != null) {

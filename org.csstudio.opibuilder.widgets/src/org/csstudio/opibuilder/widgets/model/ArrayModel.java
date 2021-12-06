@@ -206,10 +206,6 @@ public class ArrayModel extends AbstractContainerModel implements IPVWidgetModel
         delegate.processVersionDifference(boyVersionOnFile);
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.model.AbstractContainerModel#getChildren()
-     * Array widget only needs to save the first one child.
-     */
     @Override
     public List<AbstractWidgetModel> getChildren() {
         if (super.getChildren().size() > 1) {

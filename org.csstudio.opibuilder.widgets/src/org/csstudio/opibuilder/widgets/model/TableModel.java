@@ -197,12 +197,8 @@ public class TableModel extends AbstractWidgetModel {
         return (Boolean) getPropertyValue(PROP_COLUMN_HEADER_VISIBLE);
     }
 
-    /* (non-Javadoc)
-     * @see org.csstudio.opibuilder.model.AbstractWidgetModel#getTypeID()
-     */
     @Override
     public String getTypeID() {
         return ID;
     }
-
 }

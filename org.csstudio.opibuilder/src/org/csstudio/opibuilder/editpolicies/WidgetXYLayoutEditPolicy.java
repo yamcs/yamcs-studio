@@ -464,9 +464,6 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
     }
 
     // The minumum size should come from widget figure.
-    /* (non-Javadoc)
-     * @see org.eclipse.gef.editpolicies.XYLayoutEditPolicy#getMinimumSizeFor(org.eclipse.gef.GraphicalEditPart)
-     */
     @SuppressWarnings("deprecation")
     @Override
     protected Dimension getMinimumSizeFor(GraphicalEditPart child) {
@@ -477,9 +474,6 @@ public class WidgetXYLayoutEditPolicy extends XYLayoutEditPolicy {
     }
 
     // This has been overriden to fix a bug when handle bounds does not equal with bounds. For example, polyline figue.
-    /* (non-Javadoc)
-     * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
-     */
     @Override
     protected Command getResizeChildrenCommand(ChangeBoundsRequest request) {
         CompoundCommand resize = new CompoundCommand();
