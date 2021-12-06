@@ -57,22 +57,25 @@ public class ScrollBarFigureLayout
     /**
      * @see AbstractLayout#setConstraint(IFigure, Object)
      */
+    @Override
     public void setConstraint(IFigure figure, Object constraint) {
-        if (constraint.equals(UP_ARROW))
+        if (constraint.equals(UP_ARROW)) {
             up = figure;
-        else if (constraint.equals(DOWN_ARROW))
+        } else if (constraint.equals(DOWN_ARROW)) {
             down = figure;
-        else if (constraint.equals(THUMB))
+        } else if (constraint.equals(THUMB)) {
             thumb = figure;
-        else if (constraint.equals(PAGE_UP))
+        } else if (constraint.equals(PAGE_UP)) {
             pageUp = figure;
-        else if (constraint.equals(PAGE_DOWN))
+        } else if (constraint.equals(PAGE_DOWN)) {
             pageDown = figure;
+        }
     }
 
     /**
      * @see AbstractLayout#calculatePreferredSize(IFigure, int, int)
      */
+    @Override
     protected Dimension calculatePreferredSize(IFigure parent, int w, int h) {
         Insets insets = transposer.t(parent.getInsets());
         Dimension d = new Dimension(16, 16 * 4);
@@ -83,6 +86,7 @@ public class ScrollBarFigureLayout
     /**
      * @see LayoutManager#layout(IFigure)
      */
+    @Override
     public void layout(IFigure parent) {
         ScrollbarFigure scrollBar = (ScrollbarFigure) parent;
 
@@ -93,34 +97,39 @@ public class ScrollBarFigureLayout
         double min = scrollBar.getMinimum();
         double totalRange = max - min;
         double valueRange = totalRange - extent;
-        if (!scrollBar.isEnabled()) {
+        if (!scrollBar.isEnabled() || Double.isNaN(min) || Double.isNaN(max)) {
             Rectangle boundsUpper = new Rectangle(trackBounds),
                     boundsLower = new Rectangle(trackBounds);
             boundsUpper.height /= 2;
             boundsLower.y += boundsUpper.height;
             boundsLower.height = trackBounds.height - boundsUpper.height;
-            if (pageUp != null)
+            if (pageUp != null) {
                 pageUp.setBounds(transposer.t(boundsUpper));
-            if (pageDown != null)
+            }
+            if (pageDown != null) {
                 pageDown.setBounds(transposer.t(boundsLower));
+            }
             return;
         }
 
-        if (totalRange == 0)
+        if (totalRange == 0) {
             return;
+        }
         int thumbHeight = (int) Math.max(thumb == null ? 0 : thumb.getMinimumSize().height,
                 trackBounds.height * extent / totalRange);
 
-        if (thumb != null)
+        if (thumb != null) {
             thumb.setVisible(trackBounds.height > thumbHeight);
+        }
         int thumbY;
         if (valueRange <= 0) {
             thumbHeight = 0;
             thumb.setVisible(false);
             thumbY = trackBounds.y;
-        } else
+        } else {
             thumbY = (int) (trackBounds.y + (trackBounds.height - thumbHeight)
                     * (scrollBar.getCoercedValue() - min) / valueRange);
+        }
 
         Rectangle thumbBounds = new Rectangle(
                 trackBounds.x,
@@ -128,22 +137,25 @@ public class ScrollBarFigureLayout
                 trackBounds.width,
                 thumbHeight);
 
-        if (thumb != null && thumb.isVisible())
+        if (thumb != null && thumb.isVisible()) {
             thumb.setBounds(transposer.t(thumbBounds));
+        }
 
-        if (pageUp != null)
+        if (pageUp != null) {
             pageUp.setBounds(transposer.t(new Rectangle(
                     trackBounds.x,
                     trackBounds.y,
                     trackBounds.width,
                     thumbBounds.y - trackBounds.y)));
+        }
 
-        if (pageDown != null)
+        if (pageDown != null) {
             pageDown.setBounds(transposer.t(new Rectangle(
                     trackBounds.x,
                     thumbBounds.y + thumbHeight,
                     trackBounds.width,
                     trackBounds.bottom() - thumbBounds.bottom())));
+        }
     }
 
     /**
@@ -162,9 +174,10 @@ public class ScrollBarFigureLayout
                 bounds.width,
                 Math.min(bounds.width, bounds.height / 2));
 
-        if (up != null)
+        if (up != null) {
             up.setBounds(transposer.t(
                     new Rectangle(bounds.getTopLeft(), buttonSize)));
+        }
         if (down != null) {
             Rectangle r = new Rectangle(
                     bounds.x, bounds.bottom() - buttonSize.height,
@@ -183,6 +196,7 @@ public class ScrollBarFigureLayout
     /**
      * @see LayoutManager#remove(IFigure)
      */
+    @Override
     public void remove(IFigure child) {
         if (child == up) {
             up = null;
