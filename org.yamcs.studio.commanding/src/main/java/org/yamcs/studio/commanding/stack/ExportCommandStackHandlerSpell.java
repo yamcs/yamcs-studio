@@ -3,6 +3,7 @@ package org.yamcs.studio.commanding.stack;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -45,9 +46,20 @@ public class ExportCommandStackHandlerSpell extends AbstractHandler {
             buf.append("Send(command=\"")
                     .append(command.getMetaCommand().getQualifiedName())
                     .append("\"");
-            if (command.getAssignments().entrySet().size() > 0) {
+
+            // Reduce to only the non-default assignments
+            var assignments = new LinkedHashMap<>(command.getAssignments());
+            var it = assignments.entrySet().iterator();
+            while (it.hasNext()) {
+                var entry = it.next();
+                if (entry.getKey().hasInitialValue() && !command.isDefaultChanged(entry.getKey())) {
+                    it.remove();
+                }
+            }
+
+            if (!assignments.entrySet().isEmpty()) {
                 buf.append(", args=[\n");
-                for (var entry : command.getAssignments().entrySet()) {
+                for (var entry : assignments.entrySet()) {
                     buf.append("    [\"")
                             .append(entry.getKey().getName())
                             .append("\", ")

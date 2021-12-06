@@ -44,7 +44,9 @@ public class IssueCommandHandler extends AbstractHandler {
             builder.withExtra(option, value);
         });
         command.getAssignments().forEach((argument, value) -> {
-            builder.withArgument(argument.getName(), value);
+            if (!argument.hasInitialValue() || command.isDefaultChanged(argument)) {
+                builder.withArgument(argument.getName(), value);
+            }
         });
 
         builder.issue().whenComplete((response, exc) -> {

@@ -53,7 +53,9 @@ public class ArmCommandHandler extends AbstractHandler {
             builder.withExtra(option, value);
         });
         command.getAssignments().forEach((arg, value) -> {
-            builder.withArgument(arg.getName(), value);
+            if (!arg.hasInitialValue() || command.isDefaultChanged(arg)) {
+                builder.withArgument(arg.getName(), value);
+            }
         });
 
         builder.issue().whenComplete((data, exc) -> {
