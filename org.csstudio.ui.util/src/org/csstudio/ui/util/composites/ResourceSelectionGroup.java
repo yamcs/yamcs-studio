@@ -355,7 +355,7 @@ public final class ResourceSelectionGroup extends Composite {
     protected void createTreeViewer(final String[] fileExtensions,
             final int heightHint) {
         // Create drill down.
-        DrillDownComposite drillDown = new DrillDownComposite(this, SWT.BORDER);
+        DrillDownComposite drillDown = new DrillDownComposite(this, SWT.NONE);
         GridData spec = new GridData(SWT.FILL, SWT.FILL, true, true);
         spec.widthHint = SIZING_SELECTION_PANE_WIDTH;
         spec.heightHint = heightHint;

@@ -123,7 +123,7 @@ public final class FilePathCellDialogEditorWithFilter extends AbstractDialogCell
                 filters = IMAGE_EXTENSIONS;
             }
 
-            FilePathDialogWithFilter rsd = new FilePathDialogWithFilter(
+            var rsd = new FilePathDialogWithFilter(
                     parentShell, widgetModel.getRootDisplayModel()
                             .getOpiFilePath().removeLastSegments(1),
                     "Select a resource", filters);

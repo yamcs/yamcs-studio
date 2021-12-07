@@ -1,6 +1,5 @@
 package org.csstudio.opibuilder.visualparts;
 
-import java.io.InputStream;
 import java.util.logging.Level;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
@@ -38,8 +37,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
     /**
      * The default value for the file extensions.
      */
-    private static final String[] IMAGE_EXTENSIONS = new String[] { "gif",
-            "GIF", "png", "PNG", "svg", "SVG" };
+    private static final String[] IMAGE_EXTENSIONS = new String[] { "gif", "GIF", "png", "PNG", "svg", "SVG" };
 
     /**
      * The message to display, or <code>null</code> if none.
@@ -92,12 +90,9 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
      *            the dialog message, or <code>null</code> if none
      * @param filters
      */
-    public FilePathDialogWithFilter(final Shell parentShell,
-            final IPath refPath, final String dialogMessage,
-            final String[] filters) {
+    public FilePathDialogWithFilter(Shell parentShell, IPath refPath, String dialogMessage, String[] filters) {
         super(parentShell);
-        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE
-                | SWT.BORDER | SWT.RESIZE);
+        this.setShellStyle(SWT.MODELESS | SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.RESIZE);
         this.message = dialogMessage;
         this.refPath = refPath;
         relative = true;
@@ -111,19 +106,19 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
      * @param path
      *            the path to the initially selected resource.
      */
-    public void setSelectedResource(final IPath path) {
+    public void setSelectedResource(IPath path) {
         this.path = path;
         relative = !path.isAbsolute();
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText("Resources");
     }
 
     @Override
-    protected Control createDialogArea(final Composite parent) {
+    protected Control createDialogArea(Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
         composite.setLayout(new GridLayout(1, false));
         if (message != null) {
@@ -143,17 +138,17 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
         resourceSelectionGroup = new ResourceSelectionGroup(composite, this,
                 filters, showNewContainerActions);
 
-        Group wrapper = new Group(composite, SWT.NONE);
+        var wrapper = new Group(composite, SWT.NONE);
         wrapper.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        GridLayout gridLayout = new GridLayout(2, false);
+        var gridLayout = new GridLayout(2, false);
         wrapper.setLayout(gridLayout);
 
-        Label text = new Label(wrapper, SWT.NONE);
+        var text = new Label(wrapper, SWT.NONE);
         text.setText("Resource Path:");
 
         // Image overview
         imgOverview = new Label(wrapper, SWT.NONE);
-        GridData gridData = new GridData();
+        var gridData = new GridData();
         gridData.widthHint = MAX_ICON_WIDTH;
         gridData.verticalSpan = 4;
         gridData.verticalAlignment = GridData.VERTICAL_ALIGN_CENTER;
@@ -174,7 +169,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
         }
 
         // the check box for relative path
-        final Button checkBox = new Button(wrapper, SWT.CHECK);
+        var checkBox = new Button(wrapper, SWT.CHECK);
         checkBox.setSelection(relative);
         checkBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         checkBox.setText("Return relative path");
@@ -192,7 +187,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
         });
 
         // the check box for name filter
-        final Button filterCheckBox = new Button(wrapper, SWT.CHECK);
+        var filterCheckBox = new Button(wrapper, SWT.CHECK);
         filterCheckBox.setSelection(filtered);
         filterCheckBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         filterCheckBox.setText("Filter file name with PV name");
@@ -217,18 +212,13 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
         super.okPressed();
     }
 
-    /**
-     * Returns the path to the selected resource.
-     *
-     * @return the path to the selected resource, or <code>null</code> if no resource was selected.
-     */
     public IPath getSelectedResource() {
         return path;
     }
 
     @Override
     public void handleEvent(Event event) {
-        ResourceSelectionGroup widget = (ResourceSelectionGroup) event.widget;
+        var widget = (ResourceSelectionGroup) event.widget;
         path = widget.getFullPath();
         if (path == null) {
             return;
@@ -250,8 +240,7 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
             ImageData data = null;
             if (GIF_EXT.equalsIgnoreCase(imgPath.getFileExtension())
                     || PNG_EXT.equalsIgnoreCase(imgPath.getFileExtension())) {
-                final InputStream inputStream = ResourceUtil
-                        .pathToInputStream(imgPath);
+                var inputStream = ResourceUtil.pathToInputStream(imgPath);
                 ImageData tmpData = new ImageData(inputStream);
 
                 float ratio = (float) tmpData.width / tmpData.height;
@@ -269,13 +258,12 @@ public final class FilePathDialogWithFilter extends Dialog implements Listener {
                     data = tmpData;
                 }
             } else if (SVG_EXT.equalsIgnoreCase(imgPath.getFileExtension())) {
-                final InputStream inputStream = ResourceUtil
-                        .pathToInputStream(imgPath);
+                var inputStream = ResourceUtil.pathToInputStream(imgPath);
                 data = SVGUtils.loadSVG(imgPath, inputStream, MAX_ICON_WIDTH, MAX_ICON_HEIGHT);
             }
             if (data != null && data.width <= MAX_ICON_WIDTH
                     && data.height <= MAX_ICON_HEIGHT && imgOverview != null) {
-                Image img = new Image(Display.getCurrent(), data);
+                var img = new Image(Display.getCurrent(), data);
                 imgOverview.setImage(img);
             }
         } catch (Exception e) {

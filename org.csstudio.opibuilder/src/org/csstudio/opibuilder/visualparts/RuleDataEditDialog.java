@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * The dialog for rule data editing.
@@ -155,19 +154,17 @@ public class RuleDataEditDialog extends TrayDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
+        var parentComposite = (Composite) super.createDialogArea(parent);
 
-        // Parent composite has GridLayout with 1 columns.
-        // Create embedded composite w/ 2 columns
-        final Composite mainComposite = new Composite(parent_Composite, SWT.None);
+        var mainComposite = new Composite(parentComposite, SWT.NONE);
         mainComposite.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        var gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = 500;
         mainComposite.setLayoutData(gridData);
 
-        final Composite topComposite = new Composite(mainComposite, SWT.None);
+        var topComposite = new Composite(mainComposite, SWT.NONE);
         topComposite.setLayout(new GridLayout(2, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+        var gd = new GridData(SWT.FILL, SWT.FILL, true, false);
         gd.horizontalSpan = 2;
         topComposite.setLayoutData(gd);
         createLabel(topComposite, "Rule Name: ");
@@ -180,8 +177,8 @@ public class RuleDataEditDialog extends TrayDialog {
 
         propCombo = new Combo(topComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
         propCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        String[] comboItems = new String[propIDList.size()];
-        int i = 0;
+        var comboItems = new String[propIDList.size()];
+        var i = 0;
         for (String id : propIDList) {
             comboItems[i++] = ruleData.getWidgetModel().getProperty(id).getDescription() +
                     " (" + id + ")";
@@ -246,15 +243,15 @@ public class RuleDataEditDialog extends TrayDialog {
         });
 
         // Left Panel: List of scripts
-        final Composite leftComposite = new Composite(mainComposite, SWT.NONE);
+        var leftComposite = new Composite(mainComposite, SWT.NONE);
         leftComposite.setLayout(new GridLayout(1, false));
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 350;
         leftComposite.setLayoutData(gd);
         createLabel(leftComposite, "Expressions");
 
-        Composite toolBarComposite = new Composite(leftComposite, SWT.BORDER);
-        GridLayout gridLayout = new GridLayout(1, false);
+        var toolBarComposite = new Composite(leftComposite, SWT.NONE);
+        var gridLayout = new GridLayout(1, false);
         gridLayout.marginLeft = 0;
         gridLayout.marginRight = 0;
         gridLayout.marginBottom = 0;
@@ -265,9 +262,9 @@ public class RuleDataEditDialog extends TrayDialog {
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         toolBarComposite.setLayoutData(gd);
 
-        ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
-        ToolBar toolBar = toolbarManager.createControl(toolBarComposite);
-        GridData grid = new GridData();
+        var toolbarManager = new ToolBarManager(SWT.FLAT);
+        var toolBar = toolbarManager.createControl(toolBarComposite);
+        var grid = new GridData();
         grid.horizontalAlignment = GridData.FILL;
         grid.verticalAlignment = GridData.BEGINNING;
         toolBar.setLayoutData(grid);
@@ -285,7 +282,7 @@ public class RuleDataEditDialog extends TrayDialog {
         expressionViewer.addSelectionChangedListener(event -> refreshActionBarOnSelection());
 
         // Right panel: Input PVs for selected script
-        final Composite rightComposite = new Composite(mainComposite, SWT.NONE);
+        var rightComposite = new Composite(mainComposite, SWT.NONE);
         gridLayout = new GridLayout(1, false);
         rightComposite.setLayout(gridLayout);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -293,14 +290,14 @@ public class RuleDataEditDialog extends TrayDialog {
         rightComposite.setLayoutData(gd);
         this.createLabel(rightComposite, "Input PVs");
 
-        pvsEditor = new PVTupleTableEditor(rightComposite, ruleData.getPVList(), SWT.BORDER);
+        pvsEditor = new PVTupleTableEditor(rightComposite, ruleData.getPVList(), SWT.NONE);
         pvsEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         if (expressionList.size() > 0) {
             setExpressionViewerSelection(expressionList.get(0));
         }
 
-        final Composite bottomComposite = new Composite(mainComposite, SWT.None);
+        var bottomComposite = new Composite(mainComposite, SWT.NONE);
         bottomComposite.setLayout(new GridLayout(1, false));
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.horizontalSpan = 2;
@@ -322,7 +319,7 @@ public class RuleDataEditDialog extends TrayDialog {
                 scriptText.setText(ruleData.generateScript());
             }
         });
-        return parent_Composite;
+        return parentComposite;
     }
 
     /**

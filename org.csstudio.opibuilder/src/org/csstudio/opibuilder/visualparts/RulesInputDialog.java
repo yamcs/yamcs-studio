@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.csstudio.opibuilder.OPIBuilderPlugin;
 import org.csstudio.opibuilder.model.AbstractWidgetModel;
-import org.csstudio.opibuilder.script.PVTuple;
 import org.csstudio.opibuilder.script.RuleData;
 import org.csstudio.opibuilder.script.RulesInput;
 import org.csstudio.ui.util.CustomMediaFactory;
@@ -24,16 +23,13 @@ import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
@@ -66,9 +62,9 @@ public class RulesInputDialog extends TrayDialog {
 
     @Override
     protected void okPressed() {
-        for (RuleData ruleData : ruleDataList) {
-            boolean hasTrigger = false;
-            for (PVTuple pvTuple : ruleData.getPVList()) {
+        for (var ruleData : ruleDataList) {
+            var hasTrigger = false;
+            for (var pvTuple : ruleData.getPVList()) {
                 hasTrigger |= pvTuple.trigger;
             }
             if (!hasTrigger) {
@@ -81,9 +77,6 @@ public class RulesInputDialog extends TrayDialog {
         super.okPressed();
     }
 
-    /**
-     * @return the ruleData List
-     */
     public final List<RuleData> getRuleDataList() {
         return ruleDataList;
     }
@@ -96,52 +89,26 @@ public class RulesInputDialog extends TrayDialog {
         }
     }
 
-    /**
-     * Creates 'wrapping' label with the given text.
-     *
-     * @param parent
-     *            The parent for the label
-     * @param text
-     *            The text for the label
-     */
-    private void createLabel(final Composite parent, final String text) {
-        Label label = new Label(parent, SWT.WRAP);
-        label.setText(text);
-        label.setLayoutData(new GridData(SWT.FILL, 0, false, false));
-    }
-
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
+        var parentComposite = (Composite) super.createDialogArea(parent);
 
-        // Parent composite has GridLayout with 1 columns.
-        // Create embedded composite w/ 2 columns
-        final Composite mainComposite = new Composite(parent_Composite, SWT.None);
-        mainComposite.setLayout(new GridLayout(1, false));
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.heightHint = 200;
-        mainComposite.setLayoutData(gridData);
+        var topComposite = new Composite(parentComposite, SWT.NONE);
+        var gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        gl.horizontalSpacing = 0;
+        topComposite.setLayout(gl);
 
-        createLabel(mainComposite, "Rules");
+        var gd = new GridData(GridData.FILL_BOTH);
+        topComposite.setLayoutData(gd);
 
-        Composite toolBarComposite = new Composite(mainComposite, SWT.BORDER);
-        GridLayout gridLayout = new GridLayout(1, false);
-        gridLayout.marginLeft = 0;
-        gridLayout.marginRight = 0;
-        gridLayout.marginBottom = 0;
-        gridLayout.marginTop = 0;
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        toolBarComposite.setLayout(gridLayout);
-        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        toolBarComposite.setLayoutData(gridData);
-
-        ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
-        ToolBar toolBar = toolbarManager.createControl(toolBarComposite);
-        GridData grid = new GridData();
-        grid.horizontalAlignment = GridData.FILL;
-        grid.verticalAlignment = GridData.BEGINNING;
-        toolBar.setLayoutData(grid);
+        var toolbarManager = new ToolBarManager(SWT.FLAT);
+        var toolBar = toolbarManager.createControl(topComposite);
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        toolBar.setLayoutData(gd);
         createActions();
         toolbarManager.add(addAction);
         toolbarManager.add(editAction);
@@ -152,11 +119,20 @@ public class RulesInputDialog extends TrayDialog {
 
         toolbarManager.update(true);
 
-        rulesViewer = createRulsListViewer(toolBarComposite);
+        var mainComposite = new Composite(topComposite, SWT.NONE);
+        gl = new GridLayout(1, false);
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;
+        mainComposite.setLayout(gl);
+        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd.heightHint = 200;
+        mainComposite.setLayoutData(gd);
+
+        rulesViewer = createRulesListViewer(mainComposite);
         rulesViewer.setInput(ruleDataList);
         rulesViewer.addSelectionChangedListener(event -> refreshToolbarOnSelection());
 
-        return parent_Composite;
+        return parentComposite;
     }
 
     private void setRulesViewerSelection(RuleData ruleData) {
@@ -178,16 +154,8 @@ public class RulesInputDialog extends TrayDialog {
         moveDownAction.setEnabled(enabled);
     }
 
-    /**
-     * Creates and configures a {@link TableViewer}.
-     *
-     * @param parent
-     *            The parent for the table
-     * @return The {@link TableViewer}
-     */
-    private ListViewer createRulsListViewer(final Composite parent) {
-        final ListViewer viewer = new ListViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
+    private ListViewer createRulesListViewer(Composite parent) {
+        var viewer = new ListViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @SuppressWarnings("unchecked")
             @Override
@@ -197,20 +165,15 @@ public class RulesInputDialog extends TrayDialog {
         });
         viewer.setLabelProvider(new WorkbenchLabelProvider());
         viewer.addDoubleClickListener(event -> invokeRuleDataDialog());
-        viewer.getList().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
 
-    /**
-     * Creates the actions.
-     */
     private void createActions() {
         addAction = new Action("Add") {
             @Override
             public void run() {
-                RuleDataEditDialog dialog = new RuleDataEditDialog(getShell(), new RuleData(widgetModel));
-
+                var dialog = new RuleDataEditDialog(getShell(), new RuleData(widgetModel));
                 if (dialog.open() == OK) {
                     ruleDataList.add(dialog.getOutput());
                     rulesViewer.refresh();
@@ -219,8 +182,7 @@ public class RulesInputDialog extends TrayDialog {
         };
         addAction.setToolTipText("Add a Rule");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
 
         editAction = new Action("Edit") {
             @Override
@@ -230,19 +192,15 @@ public class RulesInputDialog extends TrayDialog {
         };
         editAction.setToolTipText("Edit Selected Rule");
         editAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/edit.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/edit.gif"));
         editAction.setEnabled(false);
 
         copyAction = new Action("Copy") {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) rulesViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof RuleData) {
-                    RuleData ruleData = ((RuleData) selection
-                            .getFirstElement()).getCopy();
+                var selection = (IStructuredSelection) rulesViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof RuleData) {
+                    var ruleData = ((RuleData) selection.getFirstElement()).getCopy();
                     ruleDataList.add(ruleData);
                     setRulesViewerSelection(ruleData);
                 }
@@ -250,40 +208,32 @@ public class RulesInputDialog extends TrayDialog {
         };
         copyAction.setToolTipText("Copy Selected Rule");
         copyAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/copy.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/copy.gif"));
         copyAction.setEnabled(false);
 
         removeAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) rulesViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof RuleData) {
+                var selection = (IStructuredSelection) rulesViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof RuleData) {
                     ruleDataList.remove((RuleData) selection.getFirstElement());
                     setRulesViewerSelection(null);
                     this.setEnabled(false);
                 }
             }
         };
-        removeAction
-                .setToolTipText("Remove Selected Rule");
+        removeAction.setToolTipText("Remove Selected Rule");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) rulesViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof RuleData) {
-                    RuleData ruleData = (RuleData) selection
-                            .getFirstElement();
-                    int i = ruleDataList.indexOf(ruleData);
+                var selection = (IStructuredSelection) rulesViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof RuleData) {
+                    var ruleData = (RuleData) selection.getFirstElement();
+                    var i = ruleDataList.indexOf(ruleData);
                     if (i > 0) {
                         ruleDataList.remove(ruleData);
                         ruleDataList.add(i - 1, ruleData);
@@ -295,19 +245,15 @@ public class RulesInputDialog extends TrayDialog {
         moveUpAction.setText("Move Rule Up");
         moveUpAction.setToolTipText("Move Selected Rule up");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) rulesViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof RuleData) {
-                    RuleData ruleData = (RuleData) selection
-                            .getFirstElement();
+                var selection = (IStructuredSelection) rulesViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof RuleData) {
+                    RuleData ruleData = (RuleData) selection.getFirstElement();
                     int i = ruleDataList.indexOf(ruleData);
                     if (i < ruleDataList.size() - 1) {
                         ruleDataList.remove(ruleData);
@@ -320,23 +266,19 @@ public class RulesInputDialog extends TrayDialog {
         moveDownAction.setText("Move Rule Down");
         moveDownAction.setToolTipText("Move Selected Rule Down");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
     }
 
-    /**
-     *
-     */
     private void invokeRuleDataDialog() {
-        RuleData selection = (RuleData) ((IStructuredSelection) rulesViewer.getSelection()).getFirstElement();
+        var selection = (RuleData) ((IStructuredSelection) rulesViewer.getSelection()).getFirstElement();
         if (selection == null) {
             return;
         }
-        RuleDataEditDialog dialog = new RuleDataEditDialog(rulesViewer.getControl().getShell(), selection);
+        var dialog = new RuleDataEditDialog(rulesViewer.getControl().getShell(), selection);
         if (dialog.open() == OK) {
-            RuleData result = dialog.getOutput();
-            int index = ruleDataList.indexOf(selection);
+            var result = dialog.getOutput();
+            var index = ruleDataList.indexOf(selection);
             ruleDataList.remove(index);
             ruleDataList.add(index, result);
             rulesViewer.refresh();

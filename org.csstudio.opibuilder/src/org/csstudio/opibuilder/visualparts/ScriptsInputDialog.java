@@ -36,18 +36,15 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
@@ -88,7 +85,7 @@ public class ScriptsInputDialog extends TrayDialog {
     @Override
     protected void okPressed() {
         pvsEditor.forceFocus();
-        for (ScriptData scriptData : scriptDataList) {
+        for (var scriptData : scriptDataList) {
             boolean hasTrigger = false;
             for (PVTuple pvTuple : scriptData.getPVList()) {
                 hasTrigger |= pvTuple.trigger;
@@ -108,65 +105,33 @@ public class ScriptsInputDialog extends TrayDialog {
     }
 
     @Override
-    protected void configureShell(final Shell shell) {
+    protected void configureShell(Shell shell) {
         super.configureShell(shell);
         if (title != null) {
             shell.setText(title);
         }
     }
 
-    /**
-     * Creates 'wrapping' label with the given text.
-     *
-     * @param parent
-     *            The parent for the label
-     * @param text
-     *            The text for the label
-     */
-    private void createLabel(final Composite parent, final String text) {
-        Label label = new Label(parent, SWT.WRAP);
-        label.setText(text);
-        label.setLayoutData(new GridData(SWT.FILL, 0, false, false));
-    }
-
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
+        var parentComposite = (Composite) super.createDialogArea(parent);
 
-        // Parent composite has GridLayout with 1 columns.
-        // Create embedded composite w/ 2 columns
-        final Composite mainComposite = new Composite(parent_Composite, SWT.None);
-        mainComposite.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.heightHint = 250;
-        mainComposite.setLayoutData(gridData);
+        var topComposite = new Composite(parentComposite, SWT.NONE);
+        var gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        gl.horizontalSpacing = 0;
+        topComposite.setLayout(gl);
 
-        // Left Panel: List of scripts
-        final Composite leftComposite = new Composite(mainComposite, SWT.NONE);
-        leftComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.widthHint = 350;
-        leftComposite.setLayoutData(gd);
-        createLabel(leftComposite, "Scripts");
+        var gd = new GridData(GridData.FILL_BOTH);
+        topComposite.setLayoutData(gd);
 
-        Composite toolBarComposite = new Composite(leftComposite, SWT.BORDER);
-        GridLayout gridLayout = new GridLayout(1, false);
-        gridLayout.marginLeft = 0;
-        gridLayout.marginRight = 0;
-        gridLayout.marginBottom = 0;
-        gridLayout.marginTop = 0;
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        toolBarComposite.setLayout(gridLayout);
-        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        toolBarComposite.setLayoutData(gd);
-
-        ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
-        ToolBar toolBar = toolbarManager.createControl(toolBarComposite);
-        GridData grid = new GridData();
-        grid.horizontalAlignment = GridData.FILL;
-        grid.verticalAlignment = GridData.BEGINNING;
-        toolBar.setLayoutData(grid);
+        var toolbarManager = new ToolBarManager(SWT.FLAT);
+        var toolBar = toolbarManager.createControl(topComposite);
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        toolBar.setLayoutData(gd);
         createActions();
         toolbarManager.add(addAction);
         toolbarManager.add(editAction);
@@ -177,47 +142,61 @@ public class ScriptsInputDialog extends TrayDialog {
 
         toolbarManager.update(true);
 
-        scriptsViewer = createScriptsTableViewer(toolBarComposite);
+        var mainComposite = new Composite(topComposite, SWT.NONE);
+        gl = new GridLayout(2, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        mainComposite.setLayout(gl);
+        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd.heightHint = 250;
+        mainComposite.setLayoutData(gd);
+
+        var leftComposite = new Composite(mainComposite, SWT.NONE);
+        gl = new GridLayout(1, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        leftComposite.setLayout(gl);
+        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd.widthHint = 350;
+        leftComposite.setLayoutData(gd);
+
+        scriptsViewer = createScriptsTableViewer(leftComposite);
         scriptsViewer.setInput(scriptDataList);
 
-        // Right panel: Input PVs for selected script
-        final Composite rightComposite = new Composite(mainComposite, SWT.NONE);
-        gridLayout = new GridLayout(1, false);
-        rightComposite.setLayout(gridLayout);
+        var rightComposite = new Composite(mainComposite, SWT.NONE);
+        gl = new GridLayout(1, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        rightComposite.setLayout(gl);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.minimumWidth = 250; // Account for the StringTableEditor's minimum size
         rightComposite.setLayoutData(gd);
-        this.createLabel(rightComposite, "");
 
-        TabFolder tabFolder = new TabFolder(rightComposite, SWT.None);
+        var tabFolder = new TabFolder(rightComposite, SWT.NONE);
         tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        TabItem pvTab = new TabItem(tabFolder, SWT.NONE);
+        var pvTab = new TabItem(tabFolder, SWT.NONE);
         pvTab.setText("Input PVs");
-        TabItem optionTab = new TabItem(tabFolder, SWT.NONE);
-        optionTab.setText("Options");
-
         pvsEditor = new PVTupleTableEditor(tabFolder, new ArrayList<PVTuple>(), SWT.NONE);
         pvsEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         pvsEditor.setEnabled(false);
-
         pvTab.setControl(pvsEditor);
 
-        final Composite optionTabComposite = new Composite(tabFolder, SWT.None);
+        var optionTab = new TabItem(tabFolder, SWT.NONE);
+        optionTab.setText("Options");
+        var optionTabComposite = new Composite(tabFolder, SWT.None);
         optionTabComposite.setLayout(new GridLayout(1, false));
-        optionTab.setControl(optionTabComposite);
 
-        checkConnectivityButton = new Button(optionTabComposite, SWT.CHECK | SWT.WRAP);
+        checkConnectivityButton = new Button(optionTabComposite, SWT.CHECK);
         checkConnectivityButton.setSelection(false);
-        checkConnectivityButton.setText(
-                "Execute anyway even if some PVs are disconnected.");
+        checkConnectivityButton.setText("Run even if some PVs\nare disconnected");
         checkConnectivityButton.setToolTipText(
-                "This is only useful if you want to handle PVs' disconnection in script.\nOtherwise, please keep it unchecked.");
+                "Useful when you want to handle PV disconnection inside the script");
         checkConnectivityButton.setEnabled(false);
         checkConnectivityButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer.getSelection();
+                var selection = (IStructuredSelection) scriptsViewer.getSelection();
                 if (!selection.isEmpty()) {
                     ((ScriptData) selection.getFirstElement()).setCheckConnectivity(
                             !checkConnectivityButton.getSelection());
@@ -225,53 +204,39 @@ public class ScriptsInputDialog extends TrayDialog {
                 if (checkConnectivityButton.getSelection()) {
                     MessageDialog.openWarning(getShell(), "Warning",
                             "If this option is checked, " +
-                                    "the script itself is responsible for checking PV's connectivity before using that PV in the script.\n"
-                                    +
-                                    "Otherwise, you will probably get an error message with java.lang.NullPointerException. \n"
-                                    +
-                                    "PV's connectivity can be checked via this method: pvArray[#].isConnected()");
+                                    "the script is responsible for checking PV connectivity. For example using:\n" +
+                                    "pvs[#].isConnected()");
                 }
             }
         });
-        gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-        Point preferredSize = checkConnectivityButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        gd.widthHint = preferredSize.x;
-        gd.minimumHeight = preferredSize.y;
-        checkConnectivityButton.setLayoutData(gd);
 
-        stopExecuteOnErrorButton = new Button(optionTabComposite, SWT.CHECK | SWT.WRAP);
+        stopExecuteOnErrorButton = new Button(optionTabComposite, SWT.CHECK);
         stopExecuteOnErrorButton.setSelection(false);
-        stopExecuteOnErrorButton.setText(
-                "Do not execute the script if error was detected.");
-        stopExecuteOnErrorButton.setToolTipText(
-                "If this option is selected, the script will not be executed \n" +
-                        "on next trigger if error was detected in the script.");
+        stopExecuteOnErrorButton.setText("Stop on error");
+        stopExecuteOnErrorButton
+                .setToolTipText("If enabled and an error was detected, the script will no longer trigger");
         stopExecuteOnErrorButton.setEnabled(false);
         stopExecuteOnErrorButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer.getSelection();
+                var selection = (IStructuredSelection) scriptsViewer.getSelection();
                 if (!selection.isEmpty()) {
                     ((ScriptData) selection.getFirstElement()).setStopExecuteOnError(
                             stopExecuteOnErrorButton.getSelection());
                 }
             }
         });
-        gd = new GridData(SWT.FILL, SWT.FILL, true, false);
-        preferredSize = stopExecuteOnErrorButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        gd.widthHint = preferredSize.x;
-        gd.minimumHeight = preferredSize.y;
-        stopExecuteOnErrorButton.setLayoutData(gd);
 
         if (scriptDataList.size() > 0) {
             setScriptsViewerSelection(scriptDataList.get(0));
-            checkConnectivityButton.setSelection(
-                    !scriptDataList.get(0).isCheckConnectivity());
-            stopExecuteOnErrorButton.setSelection(
-                    scriptDataList.get(0).isStopExecuteOnError());
+            checkConnectivityButton.setSelection(!scriptDataList.get(0).isCheckConnectivity());
+            stopExecuteOnErrorButton.setSelection(scriptDataList.get(0).isStopExecuteOnError());
 
         }
-        return parent_Composite;
+
+        optionTab.setControl(optionTabComposite);
+
+        return parentComposite;
     }
 
     /**
@@ -279,10 +244,8 @@ public class ScriptsInputDialog extends TrayDialog {
      */
     private void refreshGUIOnSelection() {
 
-        IStructuredSelection selection = (IStructuredSelection) scriptsViewer
-                .getSelection();
-        if (!selection.isEmpty()
-                && selection.getFirstElement() instanceof ScriptData) {
+        var selection = (IStructuredSelection) scriptsViewer.getSelection();
+        if (!selection.isEmpty() && selection.getFirstElement() instanceof ScriptData) {
             removeAction.setEnabled(true);
             moveUpAction.setEnabled(true);
             moveDownAction.setEnabled(true);
@@ -320,16 +283,8 @@ public class ScriptsInputDialog extends TrayDialog {
         }
     }
 
-    /**
-     * Creates and configures a {@link TableViewer}.
-     *
-     * @param parent
-     *            The parent for the table
-     * @return The {@link TableViewer}
-     */
     private TableViewer createScriptsTableViewer(final Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @SuppressWarnings("unchecked")
             @Override
@@ -344,28 +299,23 @@ public class ScriptsInputDialog extends TrayDialog {
         return viewer;
     }
 
-    /**
-     * Creates the actions.
-     */
     private void createActions() {
         addAction = new Action("Add") {
             @Override
             public void run() {
-                ScriptChoiceDialog scriptChoiceDialog = new ScriptChoiceDialog(
-                        getShell());
+                var scriptChoiceDialog = new ScriptChoiceDialog(getShell());
                 if (scriptChoiceDialog.open() == Window.CANCEL) {
                     return;
                 }
                 ScriptData scriptData = null;
                 if (scriptChoiceDialog.isEmbedded()) {
-                    EmbeddedScriptEditDialog scriptEditDialog = new EmbeddedScriptEditDialog(getShell(), null);
+                    var scriptEditDialog = new EmbeddedScriptEditDialog(getShell(), null);
                     if (scriptEditDialog.open() == Window.OK) {
                         scriptData = scriptEditDialog.getResult();
                     }
                 } else {
                     IPath path;
-                    RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
-                            Display.getCurrent().getActiveShell(), startPath,
+                    var rsd = new RelativePathSelectionDialog(Display.getCurrent().getActiveShell(), startPath,
                             "Select a script file", new String[] { ScriptService.JS });
                     rsd.setSelectedResource("./");
                     if (rsd.open() == Window.OK) {
@@ -383,29 +333,26 @@ public class ScriptsInputDialog extends TrayDialog {
         };
         addAction.setToolTipText("Add a script");
         addAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/add.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/add.gif"));
 
         editAction = new Action("Edit") {
             @Override
             public void run() {
                 IPath path;
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer.getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof ScriptData) {
-                    ScriptData sd = (ScriptData) selection.getFirstElement();
+                var selection = (IStructuredSelection) scriptsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof ScriptData) {
+                    var sd = (ScriptData) selection.getFirstElement();
                     if (sd.isEmbedded()) {
-                        EmbeddedScriptEditDialog scriptEditDialog = new EmbeddedScriptEditDialog(getShell(), sd);
+                        var scriptEditDialog = new EmbeddedScriptEditDialog(getShell(), sd);
                         if (scriptEditDialog.open() == Window.OK) {
-                            ScriptData newSd = scriptEditDialog.getResult();
+                            var newSd = scriptEditDialog.getResult();
                             sd.setScriptName(newSd.getScriptName());
                             sd.setScriptType(newSd.getScriptType());
                             sd.setScriptText(newSd.getScriptText());
                             setScriptsViewerSelection(sd);
                         }
                     } else {
-                        RelativePathSelectionDialog rsd = new RelativePathSelectionDialog(
-                                getShell(), startPath, "Select a script file",
+                        var rsd = new RelativePathSelectionDialog(getShell(), startPath, "Select a script file",
                                 new String[] { ScriptService.JS });
                         rsd.setSelectedResource(
                                 ((ScriptData) selection.getFirstElement()).getPath().toPortableString());
@@ -424,16 +371,13 @@ public class ScriptsInputDialog extends TrayDialog {
         };
         editAction.setToolTipText("Edit/Change script path");
         editAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/edit.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/edit.gif"));
         editAction.setEnabled(false);
         removeAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof ScriptData) {
+                var selection = (IStructuredSelection) scriptsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof ScriptData) {
                     scriptDataList.remove((ScriptData) selection.getFirstElement());
                     setScriptsViewerSelection(null);
                     this.setEnabled(false);
@@ -441,23 +385,18 @@ public class ScriptsInputDialog extends TrayDialog {
             }
         };
         removeAction.setText("Remove Script");
-        removeAction
-                .setToolTipText("Remove the selected script from the list");
+        removeAction.setToolTipText("Remove the selected script from the list");
         removeAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/delete.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/delete.gif"));
         removeAction.setEnabled(false);
 
         moveUpAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof ScriptData) {
-                    ScriptData scriptData = (ScriptData) selection
-                            .getFirstElement();
-                    int i = scriptDataList.indexOf(scriptData);
+                var selection = (IStructuredSelection) scriptsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof ScriptData) {
+                    var scriptData = (ScriptData) selection.getFirstElement();
+                    var i = scriptDataList.indexOf(scriptData);
                     if (i > 0) {
                         scriptDataList.remove(scriptData);
                         scriptDataList.add(i - 1, scriptData);
@@ -469,20 +408,16 @@ public class ScriptsInputDialog extends TrayDialog {
         moveUpAction.setText("Move Script Up");
         moveUpAction.setToolTipText("Move selected script up");
         moveUpAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_prev.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_prev.gif"));
         moveUpAction.setEnabled(false);
 
         moveDownAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer
-                        .getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof ScriptData) {
-                    ScriptData scriptData = (ScriptData) selection
-                            .getFirstElement();
-                    int i = scriptDataList.indexOf(scriptData);
+                var selection = (IStructuredSelection) scriptsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof ScriptData) {
+                    var scriptData = (ScriptData) selection.getFirstElement();
+                    var i = scriptDataList.indexOf(scriptData);
                     if (i < scriptDataList.size() - 1) {
                         scriptDataList.remove(scriptData);
                         scriptDataList.add(i + 1, scriptData);
@@ -494,39 +429,35 @@ public class ScriptsInputDialog extends TrayDialog {
         moveDownAction.setText("Move Script Down");
         moveDownAction.setToolTipText("Move selected script down");
         moveDownAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/search_next.gif"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/search_next.gif"));
         moveDownAction.setEnabled(false);
 
         convertToEmbedAction = new Action() {
             @Override
             public void run() {
-                IStructuredSelection selection = (IStructuredSelection) scriptsViewer.getSelection();
-                if (!selection.isEmpty()
-                        && selection.getFirstElement() instanceof ScriptData) {
-                    ScriptData sd = (ScriptData) selection.getFirstElement();
+                var selection = (IStructuredSelection) scriptsViewer.getSelection();
+                if (!selection.isEmpty() && selection.getFirstElement() instanceof ScriptData) {
+                    var sd = (ScriptData) selection.getFirstElement();
                     if (!sd.isEmbedded()) {
-                        IPath absoluteScriptPath = sd.getPath();
+                        var absoluteScriptPath = sd.getPath();
                         if (!absoluteScriptPath.isAbsolute()) {
                             absoluteScriptPath = ResourceUtil.buildAbsolutePath(widgetModel, absoluteScriptPath);
                         }
 
                         try {
-                            String text = FileUtil.readTextFile(absoluteScriptPath.toString());
-                            String ext = absoluteScriptPath.getFileExtension().trim().toLowerCase();
+                            var text = FileUtil.readTextFile(absoluteScriptPath.toString());
+                            var ext = absoluteScriptPath.getFileExtension().trim().toLowerCase();
                             if (ext.equals(ScriptService.JS)) {
                                 sd.setScriptType(ScriptType.JAVASCRIPT);
                             } else if (ext.equals(ScriptService.PY)) {
                                 sd.setScriptType(ScriptType.PYTHON);
                             } else {
-                                MessageDialog.openError(getShell(),
-                                        "Failed", "The script type is not recognized.");
+                                MessageDialog.openError(getShell(), "Failed", "The script type is not recognized.");
                                 return;
                             }
                             sd.setEmbedded(true);
                             sd.setScriptText(text);
-                            sd.setScriptName(
-                                    absoluteScriptPath.removeFileExtension().lastSegment());
+                            sd.setScriptName(absoluteScriptPath.removeFileExtension().lastSegment());
                             setScriptsViewerSelection(sd);
                         } catch (Exception e) {
                             MessageDialog.openError(getShell(),
@@ -541,9 +472,7 @@ public class ScriptsInputDialog extends TrayDialog {
         convertToEmbedAction.setText("Convert to Embedded Script");
         convertToEmbedAction.setToolTipText("Convert to Embedded Script");
         convertToEmbedAction.setImageDescriptor(CustomMediaFactory.getInstance()
-                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID,
-                        "icons/convertToEmbedded.png"));
+                .getImageDescriptorFromPlugin(OPIBuilderPlugin.PLUGIN_ID, "icons/convertToEmbedded.png"));
         convertToEmbedAction.setEnabled(false);
     }
-
 }

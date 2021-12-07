@@ -27,7 +27,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -40,10 +39,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
@@ -71,8 +68,8 @@ public class ActionsInputDialog extends TrayDialog {
     private String title;
     private Button hookFirstCheckBox;
 
-    public ActionsInputDialog(Shell parentShell,
-            ActionsInput actionsInput, String dialogTitle, boolean showHookOption) {
+    public ActionsInputDialog(Shell parentShell, ActionsInput actionsInput, String dialogTitle,
+            boolean showHookOption) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
         this.actionsInput = actionsInput.getCopy();
@@ -84,7 +81,7 @@ public class ActionsInputDialog extends TrayDialog {
     }
 
     public ActionsInput getOutput() {
-        ActionsInput actionsInput = new ActionsInput(actionsList);
+        var actionsInput = new ActionsInput(actionsList);
         actionsInput.setHookUpFirstActionToWidget(hookedUpFirstActionToWidget);
         actionsInput.setHookUpAllActionsToWidget(hookedUpAllActionsToWidget);
         return actionsInput;
@@ -104,55 +101,26 @@ public class ActionsInputDialog extends TrayDialog {
         }
     }
 
-    /**
-     * Creates a label with the given text.
-     *
-     * @param parent
-     *            The parent for the label
-     * @param text
-     *            The text for the label
-     */
-    private void createLabel(final Composite parent, final String text) {
-        Label label = new Label(parent, SWT.WRAP);
-        label.setText(text);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false,
-                false, 2, 1));
-    }
-
     @Override
     protected Control createDialogArea(Composite parent) {
-        final Composite parent_Composite = (Composite) super.createDialogArea(parent);
+        var parentComposite = (Composite) super.createDialogArea(parent);
 
-        final Composite mainComposite = new Composite(parent_Composite, SWT.None);
-        mainComposite.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.heightHint = 250;
-        mainComposite.setLayoutData(gridData);
-        final Composite leftComposite = new Composite(mainComposite, SWT.None);
-        leftComposite.setLayout(new GridLayout(1, false));
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.widthHint = 250;
-        leftComposite.setLayoutData(gd);
-        createLabel(leftComposite, "Actions:");
+        var topComposite = new Composite(parentComposite, SWT.NONE);
+        var gl = new GridLayout();
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        gl.horizontalSpacing = 0;
+        topComposite.setLayout(gl);
 
-        Composite toolBarComposite = new Composite(leftComposite, SWT.BORDER);
-        GridLayout gridLayout = new GridLayout(1, false);
-        gridLayout.marginLeft = 0;
-        gridLayout.marginRight = 0;
-        gridLayout.marginBottom = 0;
-        gridLayout.marginTop = 0;
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        toolBarComposite.setLayout(gridLayout);
-        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        toolBarComposite.setLayoutData(gd);
+        var gd = new GridData(GridData.FILL_BOTH);
+        topComposite.setLayoutData(gd);
 
-        ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
-        ToolBar toolBar = toolbarManager.createControl(toolBarComposite);
-        GridData grid = new GridData();
-        grid.horizontalAlignment = GridData.FILL;
-        grid.verticalAlignment = GridData.BEGINNING;
-        toolBar.setLayoutData(grid);
+        var toolbarManager = new ToolBarManager(SWT.FLAT);
+        var toolBar = toolbarManager.createControl(topComposite);
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        toolBar.setLayoutData(gd);
         createActions();
         toolbarManager.add(addAction);
         toolbarManager.add(copyAction);
@@ -162,18 +130,37 @@ public class ActionsInputDialog extends TrayDialog {
 
         toolbarManager.update(true);
 
-        actionsViewer = createActionsTableViewer(toolBarComposite);
+        var mainComposite = new Composite(topComposite, SWT.NONE);
+        gl = new GridLayout(2, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        mainComposite.setLayout(gl);
+        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd.heightHint = 250;
+        mainComposite.setLayoutData(gd);
+        var leftComposite = new Composite(mainComposite, SWT.NONE);
+        gl = new GridLayout(1, false);
+        gl.marginHeight = 0;
+        gl.marginWidth = 0;
+        leftComposite.setLayout(gl);
+        gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd.widthHint = 250;
+        leftComposite.setLayoutData(gd);
+
+        actionsViewer = createActionsTableViewer(leftComposite);
         actionsViewer.setInput(actionsList);
 
-        Composite rightComposite = new Composite(mainComposite, SWT.NONE);
-        rightComposite.setLayout(new GridLayout(1, false));
+        var rightComposite = new Composite(mainComposite, SWT.NONE);
+        gl = new GridLayout(1, false);
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;
+        rightComposite.setLayout(gl);
         gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         gd.widthHint = 350;
         rightComposite.setLayoutData(gd);
-        this.createLabel(rightComposite, "Properties:");
 
         propertiesViewer = createPropertiesViewer(rightComposite);
-        Composite bottomComposite = new Composite(mainComposite, SWT.NONE);
+        var bottomComposite = new Composite(mainComposite, SWT.NONE);
         bottomComposite.setLayout(new GridLayout(1, false));
         bottomComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
         if (showHookOption) {
@@ -189,7 +176,7 @@ public class ActionsInputDialog extends TrayDialog {
             });
         }
 
-        final Button hookAllCheckBox = new Button(bottomComposite, SWT.CHECK);
+        var hookAllCheckBox = new Button(bottomComposite, SWT.CHECK);
         hookAllCheckBox.setSelection(hookedUpAllActionsToWidget);
         hookAllCheckBox.setText("Hook all actions to the mouse click event on widget.");
         hookAllCheckBox.addSelectionListener(new SelectionAdapter() {
@@ -206,16 +193,14 @@ public class ActionsInputDialog extends TrayDialog {
             refreshActionsViewer(actionsList.get(0));
         }
 
-        return parent_Composite;
-
+        return parentComposite;
     }
 
     private TableViewer createPropertiesViewer(Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getTable().setLinesVisible(true);
         viewer.getTable().setHeaderVisible(true);
-        TableViewerColumn tvColumn = new TableViewerColumn(viewer, SWT.NONE);
+        var tvColumn = new TableViewerColumn(viewer, SWT.NONE);
         tvColumn.getColumn().setText("Property");
         tvColumn.getColumn().setMoveable(false);
         tvColumn.getColumn().setWidth(100);
@@ -223,14 +208,13 @@ public class ActionsInputDialog extends TrayDialog {
         tvColumn.getColumn().setText("Value");
         tvColumn.getColumn().setMoveable(false);
         tvColumn.getColumn().setWidth(300);
-        EditingSupport editingSupport = new PropertiesEditingSupport(viewer,
-                viewer.getTable());
+
+        var editingSupport = new PropertiesEditingSupport(viewer, viewer.getTable());
         tvColumn.setEditingSupport(editingSupport);
 
         viewer.setContentProvider(new WidgetPropertiesContentProvider());
         viewer.setLabelProvider(new PropertiesLabelProvider());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         viewer.getTable().setEnabled(false);
         return viewer;
     }
@@ -239,9 +223,7 @@ public class ActionsInputDialog extends TrayDialog {
      * Refreshes the enabled-state of the actions.
      */
     private void refreshGUIOnSelection() {
-
-        IStructuredSelection selection = (IStructuredSelection) actionsViewer
-                .getSelection();
+        var selection = (IStructuredSelection) actionsViewer.getSelection();
         if (!selection.isEmpty()
                 && selection.getFirstElement() instanceof AbstractWidgetAction) {
             removeAction.setEnabled(true);
@@ -277,12 +259,11 @@ public class ActionsInputDialog extends TrayDialog {
      * @return The {@link TableViewer}
      */
     private TableViewer createActionsTableViewer(final Composite parent) {
-        TableViewer viewer = new TableViewer(parent, SWT.V_SCROLL
-                | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
+        var viewer = new TableViewer(parent, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.SINGLE);
         viewer.setContentProvider(new BaseWorkbenchContentProvider() {
             @SuppressWarnings("unchecked")
             @Override
-            public Object[] getElements(final Object element) {
+            public Object[] getElements(Object element) {
                 return (((List<AbstractWidgetAction>) element).toArray());
             }
         });
@@ -293,8 +274,7 @@ public class ActionsInputDialog extends TrayDialog {
             }
         });
         viewer.addSelectionChangedListener(event -> refreshGUIOnSelection());
-        viewer.getTable().setLayoutData(
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         return viewer;
     }
 
@@ -307,10 +287,9 @@ public class ActionsInputDialog extends TrayDialog {
      *            Indicates if an action to remove a {@link AbstractWidgetActionModel} should be added
      * @return The resulting menu
      */
-    private Menu createMenu(final Control control,
-            final boolean withRemoveAction) {
-        MenuManager listMenu = new MenuManager();
-        for (ActionType type : ActionType.values()) {
+    private Menu createMenu(Control control, boolean withRemoveAction) {
+        var listMenu = new MenuManager();
+        for (var type : ActionType.values()) {
             listMenu.add(new MenuAction(type));
         }
         if (withRemoveAction) {
@@ -320,9 +299,6 @@ public class ActionsInputDialog extends TrayDialog {
         return listMenu.createContextMenu(control);
     }
 
-    /**
-     * Creates the actions.
-     */
     private void createActions() {
         addAction = new Action("Add") {
             @Override
@@ -462,16 +438,15 @@ public class ActionsInputDialog extends TrayDialog {
     private final class MenuAction extends Action {
         private ActionType type;
 
-        public MenuAction(final ActionType type) {
+        public MenuAction(ActionType type) {
             this.type = type;
             this.setText("Add " + type.getDescription());
             this.setImageDescriptor(type.getIconImage());
-
         }
 
         @Override
         public void run() {
-            AbstractWidgetAction widgetAction = WidgetActionFactory.createWidgetAction(type);
+            var widgetAction = WidgetActionFactory.createWidgetAction(type);
             if (widgetAction != null) {
                 actionsInput.addAction(widgetAction);
                 refreshActionsViewer(widgetAction);
@@ -480,14 +455,13 @@ public class ActionsInputDialog extends TrayDialog {
         }
     }
 
-    final static class WidgetPropertiesContentProvider extends
-            ArrayContentProvider {
+    final static class WidgetPropertiesContentProvider extends ArrayContentProvider {
         @Override
         public Object[] getElements(Object inputElement) {
             if (inputElement instanceof AbstractWidgetProperty[]) {
-                AbstractWidgetProperty[] oldProperties = (AbstractWidgetProperty[]) inputElement;
-                List<AbstractWidgetProperty> newPropertiesList = new ArrayList<>();
-                for (AbstractWidgetProperty property : oldProperties) {
+                var oldProperties = (AbstractWidgetProperty[]) inputElement;
+                var newPropertiesList = new ArrayList<AbstractWidgetProperty>();
+                for (var property : oldProperties) {
                     if (property.isVisibleInPropSheet()) {
                         newPropertiesList.add(property);
                     }
@@ -498,5 +472,4 @@ public class ActionsInputDialog extends TrayDialog {
             return super.getElements(inputElement);
         }
     }
-
 }

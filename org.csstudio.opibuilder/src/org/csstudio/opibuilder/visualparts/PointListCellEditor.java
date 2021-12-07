@@ -38,10 +38,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * A table cell editor for values of type PointList.
@@ -59,17 +57,14 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
     /**
      * Creates a new string cell editor parented under the given control. The cell editor value is a PointList.
-     *
-     * @param parent
-     *            The parent table.
      */
-    public PointListCellEditor(final Composite parent) {
+    public PointListCellEditor(Composite parent) {
         super(parent, "Points");
     }
 
     @Override
-    protected void openDialog(final Shell parentShell, final String dialogTitle) {
-        PointListInputDialog dialog = new PointListInputDialog(parentShell, dialogTitle, "Add or remove Points");
+    protected void openDialog(Shell parentShell, String dialogTitle) {
+        var dialog = new PointListInputDialog(parentShell, dialogTitle);
         if (dialog.open() == Window.CANCEL) {
             _pointList = _orgPointList;
         }
@@ -78,9 +73,9 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
     @Override
     protected boolean shouldFireChanges() {
         if (_pointList.size() == _orgPointList.size()) {
-            for (int i = 0; i < _pointList.size(); i++) {
-                Point p1 = _pointList.get(i);
-                Point p2 = _orgPointList.get(i);
+            for (var i = 0; i < _pointList.size(); i++) {
+                var p1 = _pointList.get(i);
+                var p2 = _orgPointList.get(i);
                 if (p1.x != p2.x || p1.y != p2.y) {
                     return true;
                 }
@@ -102,21 +97,21 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
      *            A {@link List} which contains the Points
      * @return PointList The new {@link PointList}
      */
-    private PointList listToPointList(final List<Point> list) {
-        PointList result = new PointList();
-        for (Point p : list) {
+    private PointList listToPointList(List<Point> list) {
+        var result = new PointList();
+        for (var p : list) {
             result.addPoint(p);
         }
         return result;
     }
 
     @Override
-    protected void doSetValue(final Object value) {
+    protected void doSetValue(Object value) {
         Assert.isTrue(value instanceof PointList);
-        PointList list = (PointList) value;
-        _orgPointList = new LinkedList<Point>();
-        _pointList = new LinkedList<Point>();
-        for (int i = 0; i < list.size(); i++) {
+        var list = (PointList) value;
+        _orgPointList = new LinkedList<>();
+        _pointList = new LinkedList<>();
+        for (var i = 0; i < list.size(); i++) {
             _pointList.add(list.getPoint(i));
             _orgPointList.add(list.getPoint(i));
         }
@@ -126,63 +121,22 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
      * This class represents a Dialog to add, edit and remove Points of a PointList.
      */
     private final class PointListInputDialog extends Dialog {
-        /**
-         * The title of the dialog.
-         */
+
         private String _title;
-        /**
-         * The message to display, or <code>null</code> if none.
-         */
-        private String _message;
-        /**
-         * The List-Widget.
-         */
         private ListViewer _viewer;
-        /**
-         * Adds new entries to the List.
-         */
         private Action _addAction;
-        /**
-         * Edits the selected entry.
-         */
         private Action _editAction;
-        /**
-         * Removes the selected entries from the List.
-         */
         private Action _removeAction;
-        /**
-         * Edits the selected entry.
-         */
         private Action _upAction;
-        /**
-         * Removes the selected entries from the List.
-         */
         private Action _downAction;
 
-        /**
-         * Creates an input dialog with OK and Cancel buttons. Note that the dialog will have no visual representation
-         * (no widgets) until it is told to open.
-         * <p>
-         * Note that the <code>open</code> method blocks for input dialogs.
-         * </p>
-         *
-         * @param parentShell
-         *            the parent shell, or <code>null</code> to create a top-level shell
-         * @param dialogTitle
-         *            the dialog title, or <code>null</code> if none
-         * @param dialogMessage
-         *            the dialog message, or <code>null</code> if none
-         * 
-         */
-        public PointListInputDialog(final Shell parentShell, final String dialogTitle,
-                final String dialogMessage) {
+        public PointListInputDialog(Shell parentShell, String dialogTitle) {
             super(parentShell);
             _title = dialogTitle;
-            _message = dialogMessage;
         }
 
         @Override
-        protected void configureShell(final Shell shell) {
+        protected void configureShell(Shell shell) {
             super.configureShell(shell);
             if (_title != null) {
                 shell.setText(_title);
@@ -190,54 +144,35 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         }
 
         @Override
-        protected Control createDialogArea(final Composite parent) {
-            Composite composite = (Composite) super.createDialogArea(parent);
-            composite.setLayout(new GridLayout(1, false));
-            if (_message != null) {
-                Label label = new Label(composite, SWT.WRAP);
-                label.setText(_message);
-                GridData data = new GridData(GridData.GRAB_HORIZONTAL
-                        | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
-                        | GridData.VERTICAL_ALIGN_CENTER);
-                data.horizontalSpan = 2;
-                data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
-                label.setLayoutData(data);
-            }
+        protected Control createDialogArea(Composite parent) {
+            var parentComposite = (Composite) super.createDialogArea(parent);
 
-            Composite toolBarComposite = new Composite(composite, SWT.BORDER);
-            GridLayout gridLayout = new GridLayout(1, false);
-            gridLayout.marginLeft = 0;
-            gridLayout.marginRight = 0;
-            gridLayout.marginBottom = 0;
-            gridLayout.marginTop = 0;
-            gridLayout.marginHeight = 0;
-            gridLayout.marginWidth = 0;
-            toolBarComposite.setLayout(gridLayout);
-            GridData grid = new GridData(SWT.FILL, SWT.FILL, true, true);
-            toolBarComposite.setLayoutData(grid);
+            var topComposite = new Composite(parentComposite, SWT.NONE);
+            var gl = new GridLayout();
+            gl.marginHeight = 0;
+            gl.marginWidth = 0;
+            gl.horizontalSpacing = 0;
+            topComposite.setLayout(gl);
 
-            ToolBarManager toolbarManager = new ToolBarManager(SWT.FLAT);
-            ToolBar toolBar = toolbarManager.createControl(toolBarComposite);
-            GridData gid = new GridData();
+            var gd = new GridData(GridData.FILL_BOTH);
+            topComposite.setLayoutData(gd);
+
+            var toolbarManager = new ToolBarManager(SWT.FLAT);
+            var toolBar = toolbarManager.createControl(topComposite);
+            var gid = new GridData();
             gid.horizontalAlignment = GridData.FILL;
             gid.verticalAlignment = GridData.BEGINNING;
+            createActions(toolbarManager);
             toolBar.setLayoutData(gid);
 
-            this.createActions(toolbarManager);
-            _viewer = this.createListViewer(toolBarComposite);
-            this.hookPopupMenu(_viewer);
-            this.hookDoubleClick(_viewer);
+            _viewer = createListViewer(topComposite);
+            hookPopupMenu(_viewer);
+            hookDoubleClick(_viewer);
 
-            return composite;
+            return parentComposite;
         }
 
-        /**
-         * Creates Actions and adds them to the given {@link ToolBarManager}.
-         * 
-         * @param manager
-         *            The ToolBarManager, which should contain the actions
-         */
-        private void createActions(final ToolBarManager manager) {
+        private void createActions(ToolBarManager manager) {
             _addAction = new Action() {
                 @Override
                 public void run() {
@@ -308,19 +243,12 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             manager.update(true);
         }
 
-        /**
-         * Creates the viewer for the List.
-         * 
-         * @param parent
-         *            The parent composite for the viewer
-         * @return ListViewer The ListViewer
-         */
-        private ListViewer createListViewer(final Composite parent) {
-            final ListViewer viewer = new ListViewer(parent);
+        private ListViewer createListViewer(Composite parent) {
+            var viewer = new ListViewer(parent);
             viewer.setContentProvider(new ArrayContentProvider());
             viewer.setLabelProvider(new LabelProvider() {
                 @Override
-                public String getText(final Object element) {
+                public String getText(Object element) {
                     if (element instanceof Point) {
                         Point p = (Point) element;
                         return p.toString();// p.x+","+p.y;
@@ -329,13 +257,13 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                 }
             });
             viewer.setInput(_pointList.toArray(new Point[_pointList.size()]));
-            GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
+            var gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
             gridData.verticalSpan = 6;
             gridData.heightHint = 150;
             viewer.getList().setLayoutData(gridData);
             viewer.getList().addSelectionListener(new SelectionAdapter() {
                 @Override
-                public void widgetSelected(final SelectionEvent e) {
+                public void widgetSelected(SelectionEvent e) {
                     refreshActions();
                 }
             });
@@ -345,12 +273,9 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
 
         /**
          * Adds a Popup menu to the given ListViewer.
-         * 
-         * @param viewer
-         *            The ListViewer
          */
-        private void hookPopupMenu(final ListViewer viewer) {
-            MenuManager popupMenu = new MenuManager();
+        private void hookPopupMenu(ListViewer viewer) {
+            var popupMenu = new MenuManager();
             popupMenu.add(_addAction);
             popupMenu.add(_editAction);
             popupMenu.add(new Separator());
@@ -358,20 +283,17 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             popupMenu.add(new Separator());
             popupMenu.add(_upAction);
             popupMenu.add(_downAction);
-            Menu menu = popupMenu.createContextMenu(viewer.getList());
+            var menu = popupMenu.createContextMenu(viewer.getList());
             viewer.getList().setMenu(menu);
         }
 
         /**
          * Adds doubleclick support to the given ListViewer.
-         * 
-         * @param viewer
-         *            The Listviewer
          */
-        private void hookDoubleClick(final ListViewer viewer) {
+        private void hookDoubleClick(ListViewer viewer) {
             viewer.getControl().addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseDoubleClick(final MouseEvent e) {
+                public void mouseDoubleClick(MouseEvent e) {
                     if (_viewer.getList().getSelectionCount() == 1) {
                         _editAction.run();
                     } else {
@@ -387,18 +309,18 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
          * @param isNew
          *            True, if a new Point should be created, false otherwise
          */
-        private void openPointDialog(final boolean isNew) {
-            int index = _viewer.getList().getItemCount();
-            int[] selectedIndices = _viewer.getList().getSelectionIndices();
+        private void openPointDialog(boolean isNew) {
+            var index = _viewer.getList().getItemCount();
+            var selectedIndices = _viewer.getList().getSelectionIndices();
             if (selectedIndices.length > 0) {
                 index = selectedIndices[0];
             }
-            PointDialog dialog = new PointDialog(this.getParentShell(), "Point", null, index, isNew);
+            var dialog = new PointDialog(this.getParentShell(), "Point", null, index, isNew);
             if (dialog.open() == Window.OK) {
-                this.setInput();
+                setInput();
             }
             _viewer.getList().setSelection(index);
-            this.refreshActions();
+            refreshActions();
         }
 
         /**
@@ -406,14 +328,14 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
          */
         private void removePoint() {
             if (_viewer.getList().getSelectionIndices().length > 0) {
-                int[] selectedIndices = _viewer.getList().getSelectionIndices();
+                var selectedIndices = _viewer.getList().getSelectionIndices();
                 Arrays.sort(selectedIndices);
-                int i = 0;
-                for (int s : selectedIndices) {
+                var i = 0;
+                for (var s : selectedIndices) {
                     _pointList.remove(s - i);
                     i++;
                 }
-                this.setInput();
+                setInput();
             }
             refreshActions();
         }
@@ -440,7 +362,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
          * @param up
          *            True, if the Point should be moved up, false otherwise
          */
-        private void movePoint(final boolean up) {
+        private void movePoint(boolean up) {
             int newIndex = _viewer.getList().getSelectionIndex();
             Point point = _pointList.get(newIndex);
             _pointList.remove(newIndex);
@@ -456,9 +378,9 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
                 newIndex = _pointList.size();
             }
             _pointList.add(newIndex, point);
-            this.setInput();
+            setInput();
             _viewer.getList().setSelection(newIndex);
-            this.refreshActions();
+            refreshActions();
         }
 
         /**
@@ -518,8 +440,8 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
          * @param isNew
          *            true id the Point is new, false otherwise
          */
-        public PointDialog(final Shell parentShell, final String dialogTitle,
-                final String dialogMessage, final int initialValue, final boolean isNew) {
+        public PointDialog(Shell parentShell, String dialogTitle, String dialogMessage, int initialValue,
+                boolean isNew) {
             super(parentShell);
             _title = dialogTitle;
             _message = dialogMessage;
@@ -530,7 +452,7 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         }
 
         @Override
-        protected void configureShell(final Shell shell) {
+        protected void configureShell(Shell shell) {
             super.configureShell(shell);
             if (_title != null) {
                 shell.setText(_title);
@@ -538,20 +460,20 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
         }
 
         @Override
-        protected Control createDialogArea(final Composite parent) {
-            Composite composite = (Composite) super.createDialogArea(parent);
+        protected Control createDialogArea(Composite parent) {
+            var composite = (Composite) super.createDialogArea(parent);
             composite.setLayout(new GridLayout(2, false));
             if (_message != null) {
-                Label label = new Label(composite, SWT.WRAP);
+                var label = new Label(composite, SWT.WRAP);
                 label.setText(_message);
-                GridData data = new GridData(GridData.GRAB_HORIZONTAL
+                var data = new GridData(GridData.GRAB_HORIZONTAL
                         | GridData.GRAB_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL
                         | GridData.VERTICAL_ALIGN_CENTER);
                 data.horizontalSpan = 2;
                 data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
                 label.setLayoutData(data);
             }
-            Label label = new Label(composite, SWT.NONE);
+            var label = new Label(composite, SWT.NONE);
             label.setText("x:");
             _xSpinner = new Spinner(composite, SWT.BORDER);
             _xSpinner.setMaximum(10000);
@@ -587,5 +509,4 @@ public final class PointListCellEditor extends AbstractDialogCellEditor {
             super.okPressed();
         }
     }
-
 }
